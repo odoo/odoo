@@ -2579,24 +2579,20 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'include_base_amount': include_base_amount,
             'invoice_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, tags[(i * 4)].ids)],
                 }),
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'tag_ids': [(6, 0, tags[(i * 4) + 1].ids)],
                 }),
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, tags[(i * 4) + 2].ids)],
                 }),
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'tag_ids': [(6, 0, tags[(i * 4) + 3].ids)],
                 }),
@@ -2888,16 +2884,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 (0, 0, {
                     'value': 'percent',
                     'value_amount': 100.0,
-                    'sequence': 10,
                     'days': 0,
-                    'option': 'day_after_invoice_date',
                 }),
                 (0, 0, {
                     'value': 'balance',
                     'value_amount': 0.0,
-                    'sequence': 20,
                     'days': 0,
-                    'option': 'day_after_invoice_date',
                 }),
             ],
         })
@@ -3190,12 +3182,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'cash_basis_transition_account_id': tax_waiting_account.id,
             'invoice_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
                 }),
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': tax_final_account.id,
                     'tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
@@ -3203,12 +3193,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, tax_tags['refund']['base'].ids)],
                 }),
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': tax_final_account.id,
                     'tag_ids': [(6, 0, tax_tags['refund']['tax'].ids)],

@@ -18,6 +18,10 @@
         margin-right: $o-we-sidebar-width !important;
     }
 
+    &.o_is_blocked {
+        pointer-events: none;
+    }
+
     .o_iframe_container {
         position: relative;
         height: 100%;
@@ -43,7 +47,7 @@
                     box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
                 }
 
-                .o_block_iframe {
+                .o_block_preview {
                     border-radius: 25px;
                 }
             }
@@ -57,13 +61,17 @@
     }
 }
 
-.o_website_fullscreen, .editor_has_snippets {
+.o_website_fullscreen, .editor_has_snippets, .editor_has_dummy_snippets {
     header {
         .o_main_navbar {
             height: 0px;
             transform: translateY(-$o-navbar-height);
             border-bottom: 0px;
         }
+    }
+
+    .o_block_preview {
+        z-index: $zindex-modal-backdrop + 1 !important;
     }
 }
 
@@ -73,6 +81,6 @@ header {
     }
 }
 
-.o_block_iframe {
-    z-index: $zindex-dropdown - 1;
+.o_block_preview {
+    z-index: $zindex-dropdown - 1 !important;
 }

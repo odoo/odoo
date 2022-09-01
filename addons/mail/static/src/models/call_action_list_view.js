@@ -41,6 +41,12 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
+        onClickMore(ev) {
+            this.update({ moreMenuPopoverView: this.moreMenuPopoverView ? clear() : {} });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
         async onClickRejectCall(ev) {
             if (this.thread.hasPendingRtcRequest) {
                 return;
@@ -170,9 +176,9 @@ registerModel({
         microphoneButtonTitle: attr({
             compute: '_computeMicrophoneButtonTitle',
         }),
-        callOptionMenu: one('CallOptionMenu', {
-            default: {},
-            inverse: 'callActionListView',
+        moreButtonRef: attr(),
+        moreMenuPopoverView: one('PopoverView', {
+            inverse: 'callActionListViewOwnerAsMoreMenu',
             isCausal: true,
         }),
         screenSharingButtonTitle: attr({

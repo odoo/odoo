@@ -76,14 +76,6 @@ odoo.define('payment.post_processing', function (require) {
                 'tx_error': [],
             };
 
-            if (display_values_list.length > 0) {
-                // In almost every cases there will be a single transaction to display. If there are
-                // more than one transaction, the last one will most likely be the one that was
-                // confirmed. We use this one to redirect the user to the final page.
-                window.location = display_values_list[0].landing_route;
-                return;
-            }
-
             // group the transaction according to their state
             display_values_list.forEach(function (display_values) {
                 var key = 'tx_' + display_values.state;
@@ -129,4 +121,6 @@ odoo.define('payment.post_processing', function (require) {
             });
         },
     });
+
+    return publicWidget.registry.PaymentPostProcessing;
 });

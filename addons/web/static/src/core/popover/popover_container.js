@@ -45,6 +45,10 @@ class PopoverController extends Component {
         if (this.target.contains(ev.target) || ev.target.closest(".o_popover")) {
             return;
         }
+        if (this.props.preventClose && this.props.preventClose(ev)) {
+            return;
+        }
+
         if (this.props.closeOnClickAway) {
             this.props.close();
         }

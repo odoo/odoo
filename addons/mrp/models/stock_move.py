@@ -268,7 +268,8 @@ class StockMove(models.Model):
         product_id_to_product = defaultdict(lambda: self.env['product.product'])
         for values in vals_list:
             mo_id = values.get('raw_material_production_id', False) or values.get('production_id', False)
-            if mo_id:
+            location_dest = self.env['stock.location'].browse(values.get('location_dest_id'))
+            if mo_id and not values.get('scrapped') and not location_dest.scrap_location:
                 mo = mo_id_to_mo[mo_id]
                 if not mo:
                     mo = mo.browse(mo_id)
@@ -551,3 +552,15 @@ class StockMove(models.Model):
         if 'manufacture' in self.product_id._get_rules_from_location(self.location_id).mapped('action'):
             date -= relativedelta(days=self.company_id.manufacturing_lead)
         return date
+
+    def action_open_reference(self):
+        res = super().action_open_reference()
+        source = self.production_id or self.raw_material_production_id
+        if source and source.check_access_rights('read', raise_exception=False):
+            return {
+                'res_model': source._name,
+                'type': 'ir.actions.act_window',
+                'views': [[False, "form"]],
+                'res_id': source.id,
+            }
+        return res

@@ -2,13 +2,32 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, increment } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
+import { Markup } from 'web.utils';
 
 registerModel({
     name: 'Chatbot',
     recordMethods: {
+        /**
+         * Add message posted by the bot into the conversation.
+         * This allows not having to wait for the bus (since we run checks based on messages in the
+         * conversation, having the result be there immediately eases the process).
+         *
+         * It also helps while running test tours since those don't have the bus enabled.
+         */
+        addMessage(message, options) {
+            message.body = Markup(message.body);
+            this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(message, options);
+            if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()) {
+                this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
+            }
+
+            if (!options || !options.skipRenderMessages) {
+                this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
+            }
+        },
         /**
          * Once the script ends, adds a visual element at the end of the chat window allowing to restart
          * the whole script.
@@ -23,9 +42,145 @@ registerModel({
                 // handle the display
                 return;
             }
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').show();
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
+        },
+        onKeydownInput() {
+            if (
+                this.currentStep &&
+                this.currentStep.data &&
+                this.currentStep.data.chatbot_step_type === 'free_input_multi'
+            ) {
+                this.debouncedAwaitUserInput();
+            }
+        },
+        /**
+         * When the user first interacts with the bot, we want to make sure to actually post the welcome
+         * messages into the conversation.
+         *
+         * Indeed, before that, they are 'virtual' messages that are not tied to mail.messages, see
+         * #_sendWelcomeChatbotMessage() for more information.
+         *
+         * Posting them as real messages allows to have a cleaner model and conversation, that will be
+         * kept intact when changing page on the website.
+         *
+         * It also allows tying any first response / question_selection choice to a chatbot.message
+         * that has a linked mail.message.
+         */
+        async postWelcomeMessages() {
+            const welcomeMessages = this.messaging.publicLivechatGlobal.welcomeMessages;
+
+            if (welcomeMessages.length === 0) {
+                // we already posted the welcome messages, nothing to do
+                return;
+            }
+
+            const postedWelcomeMessages = await this.messaging.rpc({
+                route: '/chatbot/post_welcome_steps',
+                params: {
+                    channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                    chatbot_script_id: this.scriptId,
+                },
+            });
+
+            const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage.id);
+            this.messaging.publicLivechatGlobal.update({
+                messages: this.messaging.publicLivechatGlobal.messages.filter((message) => {
+                    !welcomeMessagesIds.includes(message.id);
+                }),
+            });
+
+            postedWelcomeMessages.reverse();
+            postedWelcomeMessages.forEach((message) => {
+                this.addMessage(message, {
+                    prepend: true,
+                    skipRenderMessages: true,
+                });
+            });
+
+            this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
+        },
+        /**
+         * Processes the step, depending on the current state of the script and the author of the last
+         * message that was typed into the conversation.
+         *
+         * This is a rather complicated process since we have many potential states to handle.
+         * Here are the detailed possible outcomes:
+         *
+         * - Check if the script is finished, and if so end it.
+         *
+         * - If a human operator has taken over the conversation
+         *   -> enable the input and let the operator handle the visitor.
+         *
+         * - If the received step is of type expecting an input from the user
+         *   - the last message if from the user (he has already answered)
+         *     -> trigger the next step
+         *   - otherwise
+         *     -> enable the input and let the user type
+         *
+         * - Otherwise
+         *   - if the the step is of type 'question_selection' and we are still waiting for the user to
+         *     select one of the options
+         *     -> don't do anything, wait for the user to click one of the options
+         *   - otherwise
+         *     -> trigger the next step
+         */
+        processStep() {
+            if (this.shouldEndScript) {
+                this.endScript();
+            } else if (
+                this.currentStep.data.chatbot_step_type === 'forward_operator' &&
+                this.currentStep.data.chatbot_operator_found
+            ) {
+                this.messaging.publicLivechatGlobal.chatWindow.enableInput();
+            } else if (this.isExpectingUserInput) {
+                if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
+                    // user has already typed a message in -> trigger next step
+                    this.setIsTyping();
+                    this.update({
+                        nextStepTimeout: setTimeout(
+                            this.triggerNextStep,
+                            this.messageDelay,
+                        ),
+                    });
+                } else {
+                    this.messaging.publicLivechatGlobal.chatWindow.enableInput();
+                }
+            } else {
+                let triggerNextStep = true;
+                if (this.currentStep.data.chatbot_step_type === 'question_selection') {
+                    if (!this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
+                        // if there is no last message or if the last message is from the bot
+                        // -> don't trigger the next step, we are waiting for the user to pick an option
+                        triggerNextStep = false;
+                    }
+                }
+
+                if (triggerNextStep) {
+                    let nextStepDelay = this.messageDelay;
+                    if (this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_typing').length !== 0) {
+                        // special case where we already have a "is typing" message displayed
+                        // can happen when the previous step did not trigger any message posted from the bot
+                        // e.g: previous step was "forward_operator" and no-one is available
+                        // -> in that case, don't wait and trigger the next step immediately
+                        nextStepDelay = 0;
+                    } else {
+                        this.setIsTyping();
+                    }
+
+                    this.update({
+                        nextStepTimeout: setTimeout(
+                            this.triggerNextStep,
+                            nextStepDelay,
+                        ),
+                    });
+                }
+            }
+
+            if (!this.hasRestartButton) {
+                this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            }
         },
         /**
          * See 'Chatbot/saveSession'.
@@ -74,11 +229,11 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout) {
                 clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout);
             }
-            this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotDisableInput('');
+            this.messaging.publicLivechatGlobal.chatWindow.disableInput('');
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
                 isTypingTimeout: setTimeout(
                     () => {
-                        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
+                        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_mail_thread_content').append(
                             $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
                                 'chatbotImageSrc': `/im_livechat/operator/${
                                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id
@@ -104,7 +259,7 @@ registerModel({
                 this.currentStep.data &&
                 this.currentStep.data.chatbot_step_type === 'question_email'
             ) {
-                triggerNextStep = await this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotValidateEmail();
+                triggerNextStep = await this.validateEmail();
             }
 
             if (!triggerNextStep) {
@@ -121,22 +276,52 @@ registerModel({
 
             if (nextStep) {
                 if (nextStep.chatbot_posted_message) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotAddMessage(nextStep.chatbot_posted_message);
+                    this.addMessage(nextStep.chatbot_posted_message);
                 }
 
                 this.update({ currentStep: { data: nextStep.chatbot_step } });
 
-                this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotProcessStep();
+                this.processStep();
             } else {
                 // did not find next step -> end the script
                 this.currentStep.data.chatbot_step_is_last = true;
-                this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                 this.endScript();
             }
 
             this.saveSession();
 
             return nextStep;
+        },
+        /**
+         * A special case is handled for email steps, where we first validate the email (server side)
+         * and we allow the user to try again in case the format is incorrect.
+         *
+         * The validation is made server-side to have the same test when we validate here and when we
+         * register the answer, but also to easily post a message as the bot ("Sorry, try again...").
+         *
+         * Returns a boolean stating whether the email was valid or not.
+         */
+        async validateEmail() {
+            let emailValidResult = await this.messaging.rpc({
+                route: '/chatbot/step/validate_email',
+                params: { channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid },
+            });
+
+            if (emailValidResult.success) {
+                this.currentStep.data.is_email_valid = true;
+                this.saveSession();
+
+                return true;
+            } else {
+                // email is not valid, let the user try again
+                this.messaging.publicLivechatGlobal.chatWindow.enableInput();
+                if (emailValidResult.posted_message) {
+                    this.addMessage(emailValidResult.posted_message);
+                }
+
+                return false;
+            }
         },
         /**
          * This method will be transformed into a 'debounced' version (see init).
@@ -205,6 +390,28 @@ registerModel({
                 this.awaitUserInput,
                 this.awaitUserInputDebounceTime,
             );
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsActive() {
+            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
+                return true;
+            }
+            if (this.messaging.publicLivechatGlobal.rule && this.messaging.publicLivechatGlobal.rule.chatbot) {
+                return true;
+            }
+            if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
+                return true;
+            }
+            if (this.state === 'welcome') {
+                return true;
+            }
+            if (this.localStorageState) {
+                return true;
+            }
+            return clear();
         },
         /**
          * @private
@@ -360,6 +567,15 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
                 return 'welcome';
             }
+            if (
+                !this.messaging.publicLivechatGlobal.rule && 
+                this.messaging.publicLivechatGlobal.history !== null &&
+                this.messaging.publicLivechatGlobal.history.length !== 0 &&
+                this.sessionCookieKey &&
+                localStorage.getItem(this.sessionCookieKey)
+            ) {
+                return 'restore_session';
+            }
             return clear();
         },
         /**
@@ -389,6 +605,10 @@ registerModel({
         }),
         hasRestartButton: attr({
             compute: '_computeHasRestartButton',
+            default: false,
+        }),
+        isActive: attr({
+            compute: '_computeIsActive',
             default: false,
         }),
         isExpectingUserInput: attr({

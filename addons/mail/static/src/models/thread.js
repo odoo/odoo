@@ -40,9 +40,6 @@ registerModel({
             if ('authorizedGroupFullName' in data) {
                 data2.authorizedGroupFullName = data.authorizedGroupFullName;
             }
-            if ('avatarCacheKey' in data) {
-                data2.avatarCacheKey = data.avatarCacheKey;
-            }
             if ('channel' in data) {
                 data2.channel = data.channel;
                 data2.model = 'mail.channel';
@@ -59,14 +56,8 @@ registerModel({
             if ('create_uid' in data) {
                 data2.creator = insert({ id: data.create_uid });
             }
-            if ('custom_channel_name' in data) {
-                data2.custom_channel_name = data.custom_channel_name;
-            }
             if ('group_based_subscription' in data) {
                 data2.group_based_subscription = data.group_based_subscription;
-            }
-            if ('guestMembers' in data) {
-                data2.guestMembers = data.guestMembers;
             }
             if ('id' in data) {
                 data2.id = data.id;
@@ -102,9 +93,6 @@ registerModel({
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
             }
-            if ('message_unread_counter' in data) {
-                data2.serverMessageUnreadCounter = data.message_unread_counter;
-            }
             if ('name' in data) {
                 data2.name = data.name;
             }
@@ -119,15 +107,6 @@ registerModel({
             }
 
             // relations
-            if ('members' in data) {
-                if (!data.members) {
-                    data2.members = [];
-                } else {
-                    data2.members = data.members.map(memberData =>
-                        this.messaging.models['Partner'].convertData(memberData)
-                    );
-                }
-            }
             if ('rtc_inviting_session' in data) {
                 data2.rtcInvitingSession = insert(data.rtc_inviting_session);
             }
@@ -235,8 +214,8 @@ registerModel({
                 if (!isAPublic && isBPublic) {
                     return 1;
                 }
-                const isMemberOfA = a.model === 'mail.channel' && a.members.includes(this.messaging.currentPartner);
-                const isMemberOfB = b.model === 'mail.channel' && b.members.includes(this.messaging.currentPartner);
+                const isMemberOfA = a.channel && a.channel.memberOfCurrentUser;
+                const isMemberOfB = b.channel && b.channel.memberOfCurrentUser;
                 if (isMemberOfA && !isMemberOfB) {
                     return -1;
                 }
@@ -360,40 +339,12 @@ registerModel({
          * @param {string} [param0.privacy]
          * @returns {Thread} the created channel
          */
-        async performRpcCreateChannel({ name, privacy }) {
+        async performRpcCreateChannel({ name, group_id, privacy }) {
             const data = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_create',
-                args: [name, privacy],
+                args: [name, group_id, privacy],
             });
-            return this.messaging.models['Thread'].insert(
-                this.messaging.models['Thread'].convertData(data)
-            );
-        },
-        /**
-         * Performs the `channel_get` RPC on `mail.channel`.
-         *
-         * `openChat` is preferable in business code because it will avoid the
-         * RPC if the chat already exists.
-         *
-         * @param {Object} param0
-         * @param {integer[]} param0.partnerIds
-         * @param {boolean} [param0.pinForCurrentPartner]
-         * @returns {Thread|undefined} the created or existing chat
-         */
-        async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
-            // TODO FIX: potential duplicate chat task-2276490
-            const data = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_get',
-                kwargs: {
-                    partners_to: partnerIds,
-                    pin: pinForCurrentPartner,
-                },
-            });
-            if (!data) {
-                return;
-            }
             return this.messaging.models['Thread'].insert(
                 this.messaging.models['Thread'].convertData(data)
             );
@@ -691,13 +642,13 @@ registerModel({
             }
         },
         /**
-         * Returns the name of the given partner in the context of this thread.
+         * Returns the name of the given persona in the context of this thread.
          *
-         * @param {mail.partner} partner
+         * @param {Persona} persona
          * @returns {string}
          */
-        getMemberName(partner) {
-            return partner.nameOrDisplayName;
+        getMemberName(persona) {
+            return persona.name;
         },
         /**
          * Joins this thread. Only makes sense on channels of type channel.
@@ -859,17 +810,17 @@ registerModel({
             });
         },
         /**
-         * Called to refresh a registered other member partner that is typing
-         * something.
+         * Called to refresh a registered other member that is typing something.
          *
-         * @param {Partner} partner
+         * @param {Member} member
          */
-        refreshOtherMemberTypingMember(partner) {
-            this.update({
-                otherMembersLongTypingTimers: [
-                    insertAndUnlink({ partner }),
-                    insert({ partner }),
-                ],
+        refreshOtherMemberTypingMember(member) {
+            this.messaging.models['OtherMemberLongTypingInThreadTimer'].insert({
+                member,
+                thread: this,
+                timer: {
+                    doReset: true,
+                },
             });
         },
         /**
@@ -884,34 +835,33 @@ registerModel({
                 currentPartnerLongTypingTimer: {},
             });
             // Manage typing member relation.
-            const currentPartner = this.messaging.currentPartner;
+            const memberOfCurrentUser = this.channel.memberOfCurrentUser;
             const newOrderedTypingMembers = [
-                ...this.orderedTypingMembers.filter(member => member !== currentPartner),
-                currentPartner,
+                ...this.orderedTypingMembers.filter(member => member !== memberOfCurrentUser),
+                memberOfCurrentUser,
             ];
             this.update({
                 isCurrentPartnerTyping: true,
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: link(currentPartner),
+                typingMembers: link(memberOfCurrentUser),
             });
             // Notify typing status to other members.
             await this.throttleNotifyCurrentPartnerTypingStatus.do();
         },
         /**
-         * Called to register a new other member partner that is typing
-         * something.
+         * Called to register a new other member partner is typing something.
          *
-         * @param {Partner} partner
+         * @param {Member} member
          */
-        registerOtherMemberTypingMember(partner) {
-            this.update({ otherMembersLongTypingTimers: insert({ partner }) });
+        registerOtherMemberTypingMember(member) {
+            this.update({ otherMembersLongTypingTimers: insert({ member }) });
             const newOrderedTypingMembers = [
-                ...this.orderedTypingMembers.filter(member => member !== partner),
-                partner,
+                ...this.orderedTypingMembers.filter(currentMember => currentMember !== member),
+                member,
             ];
             this.update({
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: link(partner),
+                typingMembers: link(member),
             });
         },
         /**
@@ -949,10 +899,6 @@ registerModel({
          */
         async setMainAttachment(attachment) {
             this.update({ mainAttachment: attachment });
-            if (this.model === 'account.move.line') {
-                // account.move.line is not actually a thread in python
-                return;
-            }
             await this.messaging.rpc({
                 model: 'ir.attachment',
                 method: 'register_as_main_attachment',
@@ -993,12 +939,12 @@ registerModel({
                 currentPartnerLongTypingTimer: clear(),
             });
             // Manage typing member relation.
-            const currentPartner = this.messaging.currentPartner;
-            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== currentPartner);
+            const memberOfCurrentUser = this.channel.memberOfCurrentUser;
+            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== memberOfCurrentUser);
             this.update({
                 isCurrentPartnerTyping: false,
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: unlink(currentPartner),
+                typingMembers: unlink(memberOfCurrentUser),
             });
             // Notify typing status to other members.
             if (immediateNotify) {
@@ -1010,14 +956,14 @@ registerModel({
          * Called to unregister an other member partner that is no longer typing
          * something.
          *
-         * @param {Partner} partner
+         * @param {Member} member
          */
-        unregisterOtherMemberTypingMember(partner) {
-            this.update({ otherMembersLongTypingTimers: insertAndUnlink({ partner }) });
-            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== partner);
+        unregisterOtherMemberTypingMember(member) {
+            this.update({ otherMembersLongTypingTimers: insertAndUnlink({ member }) });
+            const newOrderedTypingMembers = this.orderedTypingMembers.filter(currentMember => currentMember !== member);
             this.update({
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: unlink(partner),
+                typingMembers: unlink(member),
             });
         },
         /**
@@ -1059,75 +1005,11 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
-         */
-        _computeCorrespondent() {
-            if (!this.channel) {
-                return clear();
-            }
-            if (this.channel.channel_type === 'channel') {
-                return clear();
-            }
-            const correspondents = this.members.filter(partner =>
-                partner !== this.messaging.currentPartner
-            );
-            if (correspondents.length === 1) {
-                // 2 members chat
-                return correspondents[0];
-            }
-            if (this.members.length === 1) {
-                // chat with oneself
-                return this.members[0];
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCorrespondentOfDmChat() {
-            if (
-                this.channel &&
-                this.channel.channel_type === 'chat' &&
-                this.correspondent &&
-                this.public === 'private'
-            ) {
-                return this.correspondent;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeDiscussSidebarCategoryItem() {
-            if (!this.channel) {
-                return clear();
-            }
-            if (!this.isPinned) {
-                return clear();
-            }
-            if (!this.messaging.discuss) {
-                return clear();
-            }
-            const discussSidebarCategory = this._getDiscussSidebarCategory();
-            if (!discussSidebarCategory) {
-                return clear();
-            }
-            return { category: discussSidebarCategory };
-        },
-        /**
-         * @private
          * @returns {string}
          */
         _computeDisplayName() {
-            if (this.channel && this.channel.channel_type === 'chat' && this.correspondent) {
-                return this.custom_channel_name || this.correspondent.nameOrDisplayName;
-            }
-            if (this.channel && this.channel.channel_type === 'group' && !this.name) {
-                const partnerNames = this.members.map(partner => partner.nameOrDisplayName);
-                const guestNames = this.guestMembers.map(guest => guest.name);
-                return [...partnerNames, ...guestNames].join(this.env._t(", "));
+            if (this.channel) {
+                return this.channel.displayName;
             }
             if (this.mailbox) {
                 return this.mailbox.name;
@@ -1394,54 +1276,12 @@ registerModel({
         },
         /**
          * @private
-         * @returns {integer}
-         */
-        _computeLocalMessageUnreadCounter() {
-            if (this.model !== 'mail.channel') {
-                // unread counter only makes sense on channels
-                return clear();
-            }
-            // By default trust the server up to the last message it used
-            // because it's not possible to do better.
-            let baseCounter = this.serverMessageUnreadCounter;
-            let countFromId = this.serverLastMessage ? this.serverLastMessage.id : 0;
-            // But if the client knows the last seen message that the server
-            // returned (and by assumption all the messages that come after),
-            // the counter can be computed fully locally, ignoring potentially
-            // obsolete values from the server.
-            const firstMessage = this.orderedMessages[0];
-            if (
-                firstMessage &&
-                this.lastSeenByCurrentPartnerMessageId &&
-                this.lastSeenByCurrentPartnerMessageId >= firstMessage.id
-            ) {
-                baseCounter = 0;
-                countFromId = this.lastSeenByCurrentPartnerMessageId;
-            }
-            // Include all the messages that are known locally but the server
-            // didn't take into account.
-            return this.orderedMessages.reduce((total, message) => {
-                if (message.id <= countFromId) {
-                    return total;
-                }
-                return total + 1;
-            }, baseCounter);
-        },
         /**
          * @private
          * @return {FieldCommand}
          */
          _computeMessagingAsAllCurrentClientThreads() {
-            // The current client is linked to this thread if any of
-            // those conditions is met:
-            //  - `isServerPinned` is true.
-            //  - `messaging.currentPartner` is set and this partner is
-            //     a member of this thread.
-            //  - `messaging.currentGuest` is set and this guest is a
-            //     guest member of this thread.
-            const isPartnerMember = this.members.includes(this.messaging.currentPartner);
-            const isGuestMember = this.guestMembers.includes(this.messaging.currentGuest);
-            if (!this.messaging || !isPartnerMember && !isGuestMember && !this.isServerPinned) {
+            if (!this.messaging || !this.channel || !this.channel.memberOfCurrentUser || !this.isServerPinned) {
                 return clear();
             }
             return this.messaging;
@@ -1458,15 +1298,16 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
+         * @returns {MessagingMenu|FieldCommand}
          */
         _computeMessagingMenuAsPinnedAndUnreadChannel() {
             if (!this.messaging || !this.messaging.messagingMenu) {
                 return clear();
             }
-            return (this.model === 'mail.channel' && this.isPinned && this.localMessageUnreadCounter > 0)
-                ? this.messaging.messagingMenu
-                : clear();
+            if (this.channel && this.isPinned && this.channel.localMessageUnreadCounter > 0) {
+                return this.messaging.messagingMenu;
+            }
+            return clear();
         },
         /**
          * @private
@@ -1480,10 +1321,10 @@ registerModel({
          * @returns {Message|undefined}
          */
         _computeMessageAfterNewMessageSeparator() {
-            if (this.model !== 'mail.channel') {
+            if (!this.channel) {
                 return clear();
             }
-            if (this.localMessageUnreadCounter === 0) {
+            if (this.channel.localMessageUnreadCounter === 0) {
                 return clear();
             }
             const index = this.orderedMessages.findIndex(message =>
@@ -1517,9 +1358,7 @@ registerModel({
          * @returns {Partner[]}
          */
         _computeOrderedOtherTypingMembers() {
-            return this.orderedTypingMembers.filter(
-                member => member !== this.messaging.currentPartner
-            );
+            return this.orderedTypingMembers.filter(member => !member.isMemberOfCurrentUser);
         },
         /**
          * @private
@@ -1565,20 +1404,20 @@ registerModel({
             if (this.orderedOtherTypingMembers.length === 1) {
                 return sprintf(
                     this.env._t("%s is typing..."),
-                    this.getMemberName(this.orderedOtherTypingMembers[0])
+                    this.getMemberName(this.orderedOtherTypingMembers[0].persona)
                 );
             }
             if (this.orderedOtherTypingMembers.length === 2) {
                 return sprintf(
                     this.env._t("%s and %s are typing..."),
-                    this.getMemberName(this.orderedOtherTypingMembers[0]),
-                    this.getMemberName(this.orderedOtherTypingMembers[1])
+                    this.getMemberName(this.orderedOtherTypingMembers[0].persona),
+                    this.getMemberName(this.orderedOtherTypingMembers[1].persona)
                 );
             }
             return sprintf(
                 this.env._t("%s, %s and more are typing..."),
-                this.getMemberName(this.orderedOtherTypingMembers[0]),
-                this.getMemberName(this.orderedOtherTypingMembers[1])
+                this.getMemberName(this.orderedOtherTypingMembers[0].persona),
+                this.getMemberName(this.orderedOtherTypingMembers[1].persona)
             );
         },
         /**
@@ -1602,22 +1441,6 @@ registerModel({
             return this.rtcSessions.filter(session => session.videoStream).length;
         },
         /**
-         * Returns the discuss sidebar category that corresponds to this channel
-         * type.
-         *
-         * @private
-         * @returns {DiscussSidebarCategory}
-         */
-        _getDiscussSidebarCategory() {
-            switch (this.channel.channel_type) {
-                case 'channel':
-                    return this.messaging.discuss.categoryChannel;
-                case 'chat':
-                case 'group':
-                    return this.messaging.discuss.categoryChat;
-            }
-        },
-        /**
          * @private
          */
         async _notifyCurrentPartnerTypingStatus() {
@@ -1627,10 +1450,11 @@ registerModel({
             ) {
                 if (this.model === 'mail.channel') {
                     await this.messaging.rpc({
-                        model: 'mail.channel',
-                        method: 'notify_typing',
-                        args: [this.id],
-                        kwargs: { is_typing: this.isCurrentPartnerTyping },
+                        route: '/mail/channel/notify_typing',
+                        params: {
+                            'channel_id': this.id,
+                            'is_typing': this.isCurrentPartnerTyping,
+                        },
                     }, { shadow: true });
                     if (!this.exists()) {
                         return;
@@ -1700,26 +1524,6 @@ registerModel({
             ];
         },
         /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortGuestMembers() {
-            return [
-                ['truthy-first', 'name'],
-                ['case-insensitive-asc', 'name'],
-            ];
-        },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortPartnerMembers() {
-            return [
-                ['truthy-first', 'nameOrDisplayName'],
-                ['case-insensitive-asc', 'nameOrDisplayName'],
-            ];
-        },
-        /**
          * Event handler for clicking thread in discuss app.
          */
         async onClick() {
@@ -1766,11 +1570,6 @@ registerModel({
             sort: '_sortAttachmentsInWebClientView',
         }),
         authorizedGroupFullName: attr(),
-        /**
-         * Cache key to force a reload of the avatar when avatar is changed.
-         * It only makes sense for channels.
-         */
-        avatarCacheKey: attr(),
         cache: one('ThreadCache', {
             default: {},
             inverse: 'thread',
@@ -1797,13 +1596,6 @@ registerModel({
             compute: '_computeComposer',
             inverse: 'thread',
             isCausal: true,
-        }),
-        correspondent: one('Partner', {
-            compute: '_computeCorrespondent',
-        }),
-        correspondentOfDmChat: one('Partner', {
-            compute: '_computeCorrespondentOfDmChat',
-            inverse: 'dmChatWithCurrentPartner',
         }),
         creator: one('User'),
         /**
@@ -1845,7 +1637,6 @@ registerModel({
             inverse: 'threadAsCurrentPartnerLongTypingTimerOwner',
             isCausal: true,
         }),
-        custom_channel_name: attr(),
         /**
          * Determines the default display mode of this channel. Should contain
          * either no value (to display the chat), or 'video_full_screen' to
@@ -1856,15 +1647,6 @@ registerModel({
          * States the description of this thread. Only applies to channels.
          */
         description: attr(),
-        /**
-         * Determines the discuss sidebar category item that displays this
-         * thread (if any). Only applies to channels.
-         */
-        discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', {
-            compute: '_computeDiscussSidebarCategoryItem',
-            inverse: 'thread',
-            isCausal: true,
-        }),
         displayName: attr({
             compute: '_computeDisplayName',
         }),
@@ -1903,9 +1685,6 @@ registerModel({
         }),
         group_based_subscription: attr({
             default: false,
-        }),
-        guestMembers: many('Guest', {
-            sort: '_sortGuestMembers',
         }),
         /**
          * States whether the current user has read access for this thread.
@@ -2080,20 +1859,10 @@ registerModel({
             compute: '_computeLastSeenByCurrentPartnerMessageId',
             default: 0,
         }),
-        /**
-         * Local value of message unread counter, that means it is based on initial server value and
-         * updated with interface updates.
-         */
-        localMessageUnreadCounter: attr({
-            compute: '_computeLocalMessageUnreadCounter',
-        }),
         mailbox: one('Mailbox', {
             inverse: 'thread',
         }),
         mainAttachment: one('Attachment'),
-        members: many('Partner', {
-            sort: '_sortPartnerMembers',
-        }),
         /**
          * Determines the last mentioned channels of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
@@ -2177,13 +1946,13 @@ registerModel({
         /**
          * Ordered typing members on this thread, excluding the current partner.
          */
-        orderedOtherTypingMembers: many('Partner', {
+        orderedOtherTypingMembers: many('ChannelMember', {
             compute: '_computeOrderedOtherTypingMembers',
         }),
         /**
          * Ordered list of typing members.
          */
-        orderedTypingMembers: many('Partner'),
+        orderedTypingMembers: many('ChannelMember'),
         originThreadAttachments: many('Attachment', {
             inverse: 'originThread',
             isCausal: true,
@@ -2270,19 +2039,6 @@ registerModel({
          * @see localMessageUnreadCounter
          */
         serverLastMessage: one('Message'),
-        /**
-         * Message unread counter coming from server.
-         *
-         * Value of this field is unreliable, due to dynamic nature of
-         * messaging. So likely outdated/unsync with server. Should use
-         * localMessageUnreadCounter instead, which smartly guess the actual
-         * message unread counter at all time.
-         *
-         * @see localMessageUnreadCounter
-         */
-        serverMessageUnreadCounter: attr({
-            default: 0,
-        }),
         suggestable: one('ComposerSuggestable', {
             default: {},
             inverse: 'thread',
@@ -2362,7 +2118,7 @@ registerModel({
          * Members that are currently typing something in the composer of this
          * thread, including current partner.
          */
-        typingMembers: many('Partner'),
+        typingMembers: many('ChannelMember'),
         /**
          * Text that represents the status on this thread about typing members.
          */

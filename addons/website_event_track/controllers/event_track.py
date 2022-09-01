@@ -11,6 +11,7 @@ import babel
 import babel.dates
 import base64
 import json
+import operator
 import pytz
 
 from odoo import exceptions, http, fields, tools, _
@@ -203,7 +204,7 @@ class EventTrackController(http.Controller):
         tracks_sudo = request.env['event.track'].sudo().search(base_track_domain)
 
         locations = list(set(track.location_id for track in tracks_sudo))
-        locations.sort(key=lambda x: x.id)
+        locations.sort(key=operator.itemgetter('sequence', 'id'))
 
         # First split day by day (based on start time)
         time_slots_by_tracks = {track: self._split_track_by_days(track, local_tz) for track in tracks_sudo}
@@ -260,7 +261,7 @@ class EventTrackController(http.Controller):
                 locations_by_days[track_day].append(track.location_id)
 
         for used_locations in locations_by_days.values():
-            used_locations.sort(key=lambda location: location.id if location else 0)
+            used_locations.sort(key=operator.itemgetter('sequence', 'id'))
 
         return {
             'days': days,

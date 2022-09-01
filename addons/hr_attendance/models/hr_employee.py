@@ -164,7 +164,7 @@ class HrEmployee(models.Model):
         action_message['hours_today'] = employee.hours_today
 
         if employee.user_id:
-            modified_attendance = employee.with_user(employee.user_id)._attendance_action_change()
+            modified_attendance = employee.with_user(employee.user_id).sudo()._attendance_action_change()
         else:
             modified_attendance = employee._attendance_action_change()
         action_message['attendance'] = modified_attendance.read()[0]

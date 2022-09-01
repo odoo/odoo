@@ -65,7 +65,7 @@ tour.register('project_tour', {
     position: 'bottom',
     width: 200,
 }, {
-    trigger: '.o_kanban_quick_create input.o_field_char[name=name]',
+    trigger: '.o_kanban_quick_create div.o_field_char[name=name] input',
     extra_trigger: '.o_kanban_project_tasks',
     content: Markup(_t('Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>')),
     position: 'right',

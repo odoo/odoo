@@ -255,11 +255,13 @@ describe('Editor', () => {
                 });
                 it('should not break unbreakables', async () => {
                     await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[]<br></div>` +
+                            `<div class="oe_unbreakable">abc</div></div></div></div>`,
                         stepFunction: deleteForward,
-                        contentAfter:
-                            '<table><tbody><tr><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[]<br></div>` +
+                            `<div class="oe_unbreakable">abc</div></div></div></div>`,
                     });
                 });
                 it('should remove empty unbreakable', async () => {
@@ -1140,10 +1142,13 @@ X[]
             });
             it('should not break unbreakables', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore:
-                        '<table><tbody><tr><td>a[bc</td><td>de]f</td></tr></tbody></table>',
+                    contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                        `<div class="oe_unbreakable"><div class="oe_unbreakable">a[bc</div>` +
+                        `<div class="oe_unbreakable">de]f</div></div></div></div>`,
                     stepFunction: deleteForward,
-                    contentAfter: '<table><tbody><tr><td>a[]</td><td>f</td></tr></tbody></table>',
+                    contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                        `<div class="oe_unbreakable"><div class="oe_unbreakable">a[]</div>` +
+                        `<div class="oe_unbreakable">f</div></div></div></div>`,
                 });
                 await testEditor(BasicEditor, {
                     contentBefore:
@@ -1357,64 +1362,94 @@ X[]
                 });
                 it('should not break unbreakables', async () => {
                     await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[]<br></div>` +
+                            `<div class="oe_unbreakable">abc</div></div></div></div>`,
                         stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td>[]<br></td><td>abc</td></tr></tbody></table>',
-                    });
-                });
-                it('should not break a table', async () => {
-                    await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>[ab</td><td>cd</td><td>e]f</td></tr></tbody></table>',
-                        stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td>[]<br></td><td></td><td>f</td></tr></tbody></table>',
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[]<br></div>` +
+                            `<div class="oe_unbreakable">abc</div></div></div></div>`,
                     });
                     await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>a[b</td><td>cd</td><td>e]f</td></tr></tbody></table>',
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[ab</div>` +
+                            `<div class="oe_unbreakable">cd</div>` +
+                            `<div class="oe_unbreakable">e]f</div></div></div></div>`,
                         stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td>a[]</td><td></td><td>f</td></tr></tbody></table>',
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[]<br></div>` +
+                            `<div class="oe_unbreakable">f</div></div></div></div>`,
                     });
                     await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>a[b</td><td>cd</td><td>ef]</td></tr></tbody></table>',
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">a[b</div>` +
+                            `<div class="oe_unbreakable">cd</div>` +
+                            `<div class="oe_unbreakable">e]f</div></div></div></div>`,
                         stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td>a[]</td><td></td><td></td></tr></tbody></table>',
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">a[]</div>` +
+                            `<div class="oe_unbreakable">f</div></div></div></div>`,
                     });
                     await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>[ab</td><td>cd</td><td>ef]</td></tr></tbody></table>',
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">a[b</div>` +
+                            `<div class="oe_unbreakable">cd</div>` +
+                            `<div class="oe_unbreakable">ef]</div></div></div></div>`,
                         stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td>[]<br></td><td></td><td></td></tr></tbody></table>',
-                    });
-                });
-                it('should not break a table (cross rows)', async () => {
-                    await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>[ab</td><td>cd</td><td>ef</td></tr><tr><td>gh</td><td>ij</td><td>k]l</td></tr></tbody></table>',
-                        stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td>[]<br></td><td></td><td></td></tr><tr><td></td><td></td><td>l</td></tr></tbody></table>',
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">a[]</div>` +
+                            `</div></div></div>`,
                     });
                     await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>a[b</td><td>cd</td><td>ef</td></tr><tr><td>gh</td><td>ij</td><td>k]l</td></tr></tbody></table>',
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[ab</div>` +
+                            `<div class="oe_unbreakable">cd</div>` +
+                            `<div class="oe_unbreakable">ef]</div></div></div></div>`,
                         stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td>a[]</td><td></td><td></td></tr><tr><td></td><td></td><td>l</td></tr></tbody></table>',
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[]<br></div>` +
+                            `</div></div></div>`,
                     });
                     await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td>a[b</td><td>cd</td><td>ef</td></tr><tr><td>gh</td><td>ij</td><td>kl]</td></tr></tbody></table>',
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[ab</div>` +
+                            `<div class="oe_unbreakable">cd</div>` +
+                            `<div class="oe_unbreakable">ef</div></div>` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">gh</div>` +
+                            `<div class="oe_unbreakable">ij</div>` +
+                            `<div class="oe_unbreakable">k]l</div></div></div></div>`,
                         stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td>a[]</td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr></tbody></table>',
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">[]<br></div>` +
+                            `</div><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable">l</div></div></div></div>`,
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">a[b</div>` +
+                            `<div class="oe_unbreakable">cd</div>` +
+                            `<div class="oe_unbreakable">ef</div></div>` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">gh</div>` +
+                            `<div class="oe_unbreakable">ij</div>` +
+                            `<div class="oe_unbreakable">k]l</div></div></div></div>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">a[]</div>` +
+                            `</div><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable">l</div></div></div></div>`,
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">a[b</div>` +
+                            `<div class="oe_unbreakable">cd</div>` +
+                            `<div class="oe_unbreakable">ef</div></div>` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">gh</div>` +
+                            `<div class="oe_unbreakable">ij</div>` +
+                            `<div class="oe_unbreakable">kl]</div></div></div></div>`,
+                        stepFunction: editor => deleteBackward(editor),
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable">a[]</div>` +
+                            `</div></div></div>`,
                     });
                 });
                 it('should merge the following inline text node', async () => {
@@ -1915,11 +1950,13 @@ X[]
                 });
                 it('should not break unbreakables', async () => {
                     await testEditor(BasicEditor, {
-                        contentBefore:
-                            '<table><tbody><tr><td><br></td><td>[]abc</td></tr></tbody></table>',
+                        contentBefore: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable"><br></div>` +
+                            `<div class="oe_unbreakable">[]abc</div></div></div></div>`,
                         stepFunction: deleteBackward,
-                        contentAfter:
-                            '<table><tbody><tr><td><br></td><td>[]abc</td></tr></tbody></table>',
+                        contentAfter: `<div class="oe_unbreakable"><div class="oe_unbreakable">` +
+                            `<div class="oe_unbreakable"><div class="oe_unbreakable"><br></div>` +
+                            `<div class="oe_unbreakable">[]abc</div></div></div></div>`,
                     });
                 });
                 it('should merge a text preceding a paragraph (removing the paragraph)', async () => {
@@ -3878,6 +3915,952 @@ X[]
                                       '<p><br></p>' +
                                   '</div></div></div>',
                 })
+            });
+        });
+    });
+
+    describe('tables', () => {
+        describe('add children', () => {
+            describe('row', () => {
+                describe('above', async () => {
+                    it('should add a row above the top row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addRow', 'before'),
+                            contentAfter: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;"><br></td>' +
+                                            '<td style="width: 25px;"><br></td>' +
+                                            '<td style="width: 30px;"><br></td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 20px;">' +
+                                            '<td style="">ab</td>' +
+                                            '<td style="">cd</td>' +
+                                            '<td style="">ef[]</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                    it('should add a row above the middle row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef[]</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addRow', 'before'),
+                            contentAfter: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef[]</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                });
+                describe('below', () => {
+                    it('should add a row below the bottom row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addRow', 'after'),
+                            contentAfter: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 20px;">' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                    it('should add a row below the middle row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addRow', 'after'),
+                            contentAfter: '<table><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 20px;">ab</td>' +
+                                            '<td style="width: 25px;">cd</td>' +
+                                            '<td style="width: 30px;">ef[]</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 20px;">' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                            '<td><br></td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                });
+            });
+            describe('column', () => {
+                describe('left', () => {
+                    it('should add a column left of the leftmost column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 40px;">ab[]</td>' +
+                                            '<td style="width: 50px;">cd</td>' +
+                                            '<td style="width: 60px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addColumn', 'before'),
+                            contentAfter: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 32px;"><br></td>' +
+                                            '<td style="width: 32px;">ab[]</td>' +
+                                            '<td style="width: 40px;">cd</td>' +
+                                            '<td style="width: 45px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td><br></td>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                    it('should add a column left of the middle column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 50px;">ab</td>' +
+                                            '<td style="width: 65px;">cd</td>' +
+                                            '<td style="width: 85px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd[]</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 40px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addColumn', 'before'),
+                            contentAfter: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 38px;">ab</td>' +
+                                            '<td style="width: 50px;"><br></td>' +
+                                            '<td style="width: 50px;">cd</td>' +
+                                            '<td style="width: 61px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td><br></td>' +
+                                            '<td>cd[]</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 40px;">' +
+                                            '<td>ab</td>' +
+                                            '<td><br></td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                });
+                describe('right', () => {
+                    it('should add a column right of the rightmost column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 40px;">ab</td>' +
+                                            '<td style="width: 50px;">cd</td>' +
+                                            '<td style="width: 60px;">ef[]</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addColumn', 'after'),
+                            contentAfter: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 29px;">ab</td>' +
+                                            '<td style="width: 36px;">cd</td>' +
+                                            '<td style="width: 41px;">ef[]</td>' +
+                                            // size was slightly adjusted to
+                                            // preserve table width in view on
+                                            // fractional division results
+                                            '<td style="width: 43px;"><br></td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                            '<td><br></td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                    it('should add a column right of the middle column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 50px;">ab</td>' +
+                                            '<td style="width: 65px;">cd</td>' +
+                                            '<td style="width: 85px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd[]</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 40px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('addColumn', 'after'),
+                            contentAfter: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                                            '<td style="width: 38px;">ab</td>' +
+                                            '<td style="width: 50px;">cd</td>' +
+                                            '<td style="width: 50px;"><br></td>' +
+                                            '<td style="width: 61px;">ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 30px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd[]</td>' +
+                                            '<td><br></td>' +
+                                            '<td>ef</td>' +
+                                        '</tr>' +
+                                        '<tr style="height: 40px;">' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td><br></td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                        });
+                    });
+                });
+            });
+        });
+        describe('tab', () => {
+            it('should add a new row on press tab at the end of a table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
+                    stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab'}),
+                    contentAfter: '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef</td></tr><tr style="height: 20px;"><td>[]<br></td><td><br></td><td><br></td></tr></tbody></table>',
+                });
+            });
+        });
+        describe('rectangular selections', () => {
+            describe('select a full table on cross over', () => {
+                describe('select', () => {
+                    it('should select some characters and a table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                            contentAfterEdit: '<p>a[bc</p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td">a]b</td>' +
+                                                '<td class="o_selected_td">cd</td>' +
+                                                '<td class="o_selected_td">ef</td>' +
+                                            '</tr></tbody></table>',
+                        });
+                    });
+                    it('should select a table and some characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr><td>ab</td><td>cd</td><td>e[f</td></tr></tbody></table><p>a]bc</p>',
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                            '<td class="o_selected_td">ab</td>' +
+                                            '<td class="o_selected_td">cd</td>' +
+                                            '<td class="o_selected_td">e[f</td></tr></tbody></table><p>a]bc</p>',
+                        });
+                    });
+                    it('should select some characters, a table and some more characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>a]bc</p>',
+                            contentAfterEdit: '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                                            '<td class="o_selected_td">ab</td>' +
+                                            '<td class="o_selected_td">cd</td>' +
+                                            '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+                        });
+                    });
+                    it('should select some characters, a table, some more characters and another table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>abc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                            contentAfterEdit: '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                                            '<td class="o_selected_td">ab</td>' +
+                                            '<td class="o_selected_td">cd</td>' +
+                                            '<td class="o_selected_td">ef</td></tr></tbody></table>' +
+                                            '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
+                                            '<td class="o_selected_td">a]b</td>' +
+                                            '<td class="o_selected_td">cd</td>' +
+                                            '<td class="o_selected_td">ef</td></tr></tbody></table>',
+                        });
+                    });
+                    it('should select some characters, a table, some more characters, another table and some more characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>abc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>a]bc</p>',
+                            contentAfterEdit: '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                                            '<td class="o_selected_td">ab</td>' +
+                                            '<td class="o_selected_td">cd</td>' +
+                                            '<td class="o_selected_td">ef</td></tr></tbody></table>' +
+                                            '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
+                                            '<td class="o_selected_td">ab</td>' +
+                                            '<td class="o_selected_td">cd</td>' +
+                                            '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+                        });
+                    });
+                });
+                describe('toggleFormat', () => {
+                    it('should apply bold to some characters and a table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p><table><tbody><tr>' +
+                                                '<td>a]b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<p>a<span style="font-weight: bolder;">[bc</span></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ef]</span></td>' +
+                                            '</tr></tbody></table>',
+                        });
+                    });
+                    it('should apply bold to a table and some characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>e[f</td>' +
+                                            '</tr></tbody></table><p>a]bc</p>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">[ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ef</span></td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><span style="font-weight: bolder;">a]</span>bc</p>',
+                        });
+                    });
+                    it('should apply bold to some characters, a table and some more characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>' +
+                                        '<p>a]bc</p>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<p>a<span style="font-weight: bolder;">[bc</span></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ef</span></td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><span style="font-weight: bolder;">a]</span>bc</p>',
+                        });
+                    });
+                    it('should apply bold to some characters, a table, some more characters and another table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>' +
+                                        '<p>abc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>a]b</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<p>a<span style="font-weight: bolder;">[bc</span></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ef</span></td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><span style="font-weight: bolder;">abc</span></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ef]</span></td>' +
+                                            '</tr></tbody></table>',
+                        });
+                    });
+                    it('should apply bold to some characters, a table, some more characters, another table and some more characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>' +
+                                        '<p>abc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>' +
+                                        '<p>a]bc</p>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<p>a<span style="font-weight: bolder;">[bc</span></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ef</span></td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><span style="font-weight: bolder;">abc</span></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ef</span></td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><span style="font-weight: bolder;">a]</span>bc</p>',
+                        });
+                    });
+                });
+                describe('color', () => {
+                    it('should apply a color to some characters and a table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p><table><tbody><tr>' +
+                                                '<td>a]b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<p>a<font style="color: aquamarine;">[bc</font></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">a]b</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ef</td>' +
+                                            '</tr></tbody></table>',
+                        });
+                    });
+                    it('should apply a color to a table and some characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>e[f</td>' +
+                                            '</tr></tbody></table><p>a]bc</p>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">e[f</td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><font style="color: aquamarine;">a]</font>bc</p>',
+                        });
+                    });
+                    it('should apply a color to some characters, a table and some more characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>' +
+                                        '<p>a]bc</p>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<p>a<font style="color: aquamarine;">[bc</font></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ef</td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><font style="color: aquamarine;">a]</font>bc</p>',
+                        });
+                    });
+                    it('should apply a color to some characters, a table, some more characters and another table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>' +
+                                        '<p>abc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>a]b</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<p>a<font style="color: aquamarine;">[bc</font></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ef</td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><font style="color: aquamarine;">abc</font></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">a]b</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ef</td>' +
+                                            '</tr></tbody></table>',
+                        });
+                    });
+                    it('should apply a color to some characters, a table, some more characters, another table and some more characters', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>a[bc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>' +
+                                        '<p>abc</p>' +
+                                        '<table><tbody><tr>' +
+                                            '<td>ab</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>' +
+                                        '<p>a]bc</p>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<p>a<font style="color: aquamarine;">[bc</font></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ef</td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><font style="color: aquamarine;">abc</font></p>' +
+                                            '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">ef</td>' +
+                                            '</tr></tbody></table>' +
+                                            '<p><font style="color: aquamarine;">a]</font>bc</p>',
+                        });
+                    });
+                });
+            });
+            describe('select columns on cross over', () => {
+                describe('select', () => {
+                    it('should select two columns', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr><td>a[b</td><td>c]d</td><td>ef</td></tr></tbody></table>',
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td">a[b</td>' +
+                                                '<td class="o_selected_td">c]d</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr></tbody></table>',
+                        });
+                    });
+                    it('should select a whole row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr><td>a[b</td><td>cd</td><td>e]f</td></tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td">a[b</td>' +
+                                                '<td class="o_selected_td">cd</td>' +
+                                                '<td class="o_selected_td">e]f</td>' +
+                                            '</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                        });
+                    });
+                    it('should select a whole column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                        '<tr><td>a[b</td><td>cd</td><td>ef</td></tr>' +
+                                        '<tr><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                                        '<tr><td>a]b</td><td>cd</td><td>ef</td></tr>' +
+                                    '</tbody></table>',
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td">a[b</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td">ab</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td">a]b</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                    it('should select from (0,0) to (1,1) in a 3x3 table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                        '<tr><td>a[b</td><td>cd</td><td>ef</td></tr>' +
+                                        '<tr><td>ab</td><td>c]d</td><td>ef</td></tr>' +
+                                        '<tr><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                                    '</tbody></table>',
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td">a[b</td>' +
+                                                    '<td class="o_selected_td">cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td">ab</td>' +
+                                                    '<td class="o_selected_td">c]d</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td>ab</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                    it('should select a whole table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                        '<tr><td>a[b</td><td>cd</td><td>ef</td></tr>' +
+                                        '<tr><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                                        '<tr><td>ab</td><td>cd</td><td>e]f</td></tr>' +
+                                    '</tbody></table>',
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td">a[b</td>' +
+                                                    '<td class="o_selected_td">cd</td>' +
+                                                    '<td class="o_selected_td">ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td">ab</td>' +
+                                                    '<td class="o_selected_td">cd</td>' +
+                                                    '<td class="o_selected_td">ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td">ab</td>' +
+                                                    '<td class="o_selected_td">cd</td>' +
+                                                    '<td class="o_selected_td">e]f</td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                });
+                describe('toggleFormat', () => {
+                    it('should apply bold to two columns', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr>' +
+                                            '<td>a[b</td>' +
+                                            '<td>c]d</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">[ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd]</span></td>' +
+                                                '<td>ef</td>' +
+                                            '</tr></tbody></table>',
+                        });
+                    });
+                    it('should apply bold to a whole row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr>' +
+                                            '<td>a[b</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>e]f</td>' +
+                                        '</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">[ab</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                '<td class="o_selected_td"><span style="font-weight: bolder;">ef]</span></td>' +
+                                            '</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                        });
+                    });
+                    it('should apply bold to a whole column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                            '<tr>' +
+                                                '<td>a[b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>a]b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                        '</tbody></table>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">[ab</span></td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">ab]</span></td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                    it('should apply bold from (0,0) to (1,1) in a 3x3 table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                            '<tr>' +
+                                                '<td>a[b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>c]d</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                        '</tbody></table>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">[ab</span></td>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">cd]</span></td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td>ab</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                    it('should apply bold to a whole table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                            '<tr>' +
+                                                '<td>a[b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>e]f</td>' +
+                                            '</tr>' +
+                                        '</tbody></table>',
+                            stepFunction: async editor => editor.execCommand('bold'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">[ab</span></td>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">ef</span></td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">ef</span></td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">ab</span></td>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">cd</span></td>' +
+                                                    '<td class="o_selected_td"><span style="font-weight: bolder;">ef]</span></td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                });
+                describe('color', () => {
+                    it('should apply a color to two columns', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr>' +
+                                            '<td>a[b</td>' +
+                                            '<td>c]d</td>' +
+                                            '<td>ef</td>' +
+                                        '</tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">a[b</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">c]d</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr></tbody></table>',
+                        });
+                    });
+                    it('should apply a color to a whole row', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody><tr>' +
+                                            '<td>a[b</td>' +
+                                            '<td>cd</td>' +
+                                            '<td>e]f</td>' +
+                                        '</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody><tr>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">a[b</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                '<td class="o_selected_td" style="color: aquamarine;">e]f</td>' +
+                                            '</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                        });
+                    });
+                    it('should apply a color to a whole column', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                            '<tr>' +
+                                                '<td>a[b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>a]b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                        '</tbody></table>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">a[b</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">a]b</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                    it('should apply a color from (0,0) to (1,1) in a 3x3 table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                            '<tr>' +
+                                                '<td>a[b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>c]d</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                        '</tbody></table>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">a[b</td>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">c]d</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td>ab</td>' +
+                                                    '<td>cd</td>' +
+                                                    '<td>ef</td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                    it('should apply a color to a whole table', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<table><tbody>' +
+                                            '<tr>' +
+                                                '<td>a[b</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>ef</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td>ab</td>' +
+                                                '<td>cd</td>' +
+                                                '<td>e]f</td>' +
+                                            '</tr>' +
+                                        '</tbody></table>',
+                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            contentAfterEdit: '<table class="o_selected_table"><tbody>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">a[b</td>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">ef</td>' +
+                                                '</tr>' +
+                                                '<tr>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">ab</td>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">cd</td>' +
+                                                    '<td class="o_selected_td" style="color: aquamarine;">e]f</td>' +
+                                                '</tr>' +
+                                            '</tbody></table>',
+                        });
+                    });
+                });
             });
         });
     });

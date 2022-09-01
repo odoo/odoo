@@ -132,10 +132,9 @@
         <field name="name">account.invoice.report.search_analytic_accounting</field>
         <field name="model">account.invoice.report</field>
         <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
-        <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
         <field name="arch" type="xml">
             <filter name="status" position="after">
-                <filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}"/>
+                <filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
             </filter>
         </field>
     </record>

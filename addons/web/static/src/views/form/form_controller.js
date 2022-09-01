@@ -3,7 +3,6 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
-import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -154,7 +153,14 @@ export class FormController extends Component {
 
         const beforeExecuteAction = (clickParams) => {
             if (clickParams.special !== "cancel") {
-                return this.model.root.save({ stayInEdition: true });
+                return this.model.root.save({ stayInEdition: true }).then((saved) => {
+                    if (saved && this.props.onSave) {
+                        this.props.onSave(this.model.root);
+                    }
+                    return saved;
+                });
+            } else if (this.props.onDiscard) {
+                this.props.onDiscard(this.model.root);
             }
         };
         const rootRef = useRef("root");
@@ -171,7 +177,7 @@ export class FormController extends Component {
                 // TODO: export the whole model?
                 return {
                     resId: this.model.root.resId,
-                    ...this.exportTranslateAlertState(),
+                    fieldsToTranslate: toRaw(this.fieldsToTranslate),
                 };
             },
         });
@@ -209,30 +215,28 @@ export class FormController extends Component {
             this.env.config.setDisplayName(this.displayName());
         });
 
-        const { autofocusFieldId, disableAutofocus } = this.archInfo;
+        const { disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             useEffect(
                 (isInEdition) => {
-                    let elementToFocus;
-                    if (isInEdition) {
-                        elementToFocus =
-                            (autofocusFieldId &&
-                                rootRef.el.querySelector(`#${autofocusFieldId}`)) ||
-                            rootRef.el.querySelector(".o_content .o_field_widget input");
-                    } else {
-                        elementToFocus =
+                    if (
+                        !isInEdition &&
+                        !rootRef.el.querySelector(".o_content").contains(document.activeElement)
+                    ) {
+                        const elementToFocus =
                             rootRef.el.querySelector(".o_content button.btn-primary") ||
                             rootRef.el.querySelector(".o_control_panel .o_form_button_edit");
-                    }
-                    if (elementToFocus) {
-                        elementToFocus.focus();
+                        if (elementToFocus) {
+                            elementToFocus.focus();
+                        }
                     }
                 },
                 () => [this.model.root.isInEdition]
             );
         }
 
-        this.setupTranslateAlert();
+        const { fieldsToTranslate } = this.props.state || {};
+        this.fieldsToTranslate = useState(fieldsToTranslate || {});
     }
 
     displayName() {
@@ -332,17 +336,36 @@ export class FormController extends Component {
 
     async save(params = {}) {
         const disabledButtons = this.disableButtons();
+        const record = this.model.root;
+        let saved = false;
 
-        this.computeTranslateAlert();
+        // Before we save, we gather dirty translate fields data. It needs to be done before the
+        // save as nothing will be dirty after. It is why there is a compute part and a show part.
+        if (record.dirtyTranslatableFields.length) {
+            const { resId } = record;
+            this.fieldsToTranslate[resId] = new Set([
+                ...toRaw(this.fieldsToTranslate[resId] || []),
+                ...record.dirtyTranslatableFields,
+            ]);
+        }
 
         if (this.props.saveRecord) {
-            await this.props.saveRecord(this.model.root, params);
+            saved = await this.props.saveRecord(record, params);
         } else {
-            await this.model.root.save();
+            saved = await record.save();
         }
         this.enableButtons(disabledButtons);
+        if (saved && this.props.onSave) {
+            this.props.onSave(record);
+        }
 
-        this.showTranslateAlert();
+        // After we saved, we show the previously computed data in the alert (if there is any).
+        // It needs to be done after the save because if we were in record creation, the resId
+        // changed from false to a number. So it first needs to update the computed data to the new id.
+        if (this.fieldsToTranslate.false) {
+            this.fieldsToTranslate[record.resId] = this.fieldsToTranslate.false;
+            delete this.fieldsToTranslate.false;
+        }
     }
 
     async discard() {
@@ -351,74 +374,25 @@ export class FormController extends Component {
             return;
         }
         await this.model.root.discard();
+        if (this.props.onDiscard) {
+            this.props.onDiscard(this.model.root);
+        }
         if (this.model.root.isVirtual) {
             this.env.config.historyBack();
         }
     }
 
-    get shouldShowTranslateAlert() {
-        return localization.multiLang && this.model.root.dirtyTranslatableFields.length;
-    }
-
-    /**
-     * Before we save, we gather dirty translate fields data.
-     * It needs to be done before the save as nothing will be dirty after.
-     * It is why there is a compute part and a show part.
-     */
-    computeTranslateAlert() {
-        if (this.shouldShowTranslateAlert) {
-            this.translateAlertData[this.model.root.resId] = new Set([
-                ...(this.translateAlertData[this.model.root.resId]
-                    ? toRaw(this.translateAlertData[this.model.root.resId])
-                    : []),
-                ...this.model.root.dirtyTranslatableFields,
-            ]);
+    get translateAlert() {
+        const { resId } = this.model.root;
+        if (!this.fieldsToTranslate[resId]) {
+            return null;
         }
-    }
 
-    /**
-     * After we saved, we show the previously computed data in the alert (if there is any).
-     * It needs to be done after the save because if we were in record creation, the resId
-     * changed from false to a number. So it first needs to update the computed data to the new id.
-     */
-    showTranslateAlert() {
-        if (this.translateAlertData[false]) {
-            this.translateAlertData[this.model.root.resId] = this.translateAlertData[false];
-            delete this.translateAlertData[false];
-        }
-        if (this.translateAlertData[this.model.root.resId]) {
-            this.showingTranslateAlert[this.model.root.resId] = true;
-        }
-    }
-
-    closeTranslateAlert() {
-        this.showingTranslateAlert[this.model.root.resId] = false;
-        this.translateAlertData[this.model.root.resId] = [];
-    }
-
-    /**
-     * The translation alert needs to live in the scope of the action.
-     * So some state may have been exported.
-     * Either get the state exported data, or define new empty values.
-     */
-    setupTranslateAlert() {
-        if (this.props.state) {
-            this.showingTranslateAlert = useState(this.props.state.showingTranslateAlert || {});
-            this.translateAlertData = useState(this.props.state.translateAlertData || {});
-        } else {
-            this.showingTranslateAlert = useState({});
-            this.translateAlertData = useState({});
-        }
-    }
-
-    /**
-     * The translation alert needs to live in the scope of the action.
-     * So some state has to be exported.
-     */
-    exportTranslateAlertState() {
         return {
-            showingTranslateAlert: toRaw(this.showingTranslateAlert),
-            translateAlertData: toRaw(this.translateAlertData),
+            fields: this.fieldsToTranslate[resId],
+            close: () => {
+                delete this.fieldsToTranslate[resId];
+            },
         };
     }
 
@@ -428,7 +402,7 @@ export class FormController extends Component {
         if (size <= SIZES.XS) {
             sizeClass = "o_xxs_form_view";
         } else if (size === SIZES.XXL) {
-            sizeClass = "o_xxl_form_view";
+            sizeClass = "o_xxl_form_view h-100";
         }
         return {
             [this.props.className]: true,
@@ -454,6 +428,8 @@ FormController.props = {
     buttonTemplate: String,
     preventCreate: { type: Boolean, optional: true },
     preventEdit: { type: Boolean, optional: true },
+    onDiscard: { type: Function, optional: true },
+    onSave: { type: Function, optional: true },
 };
 FormController.defaultProps = {
     preventCreate: false,

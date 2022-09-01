@@ -67,26 +67,23 @@ registerModel({
              * Manually updating the volume field as it will not update based on
              * the change of the volume property of the audioElement alone.
              */
-            this.update({ volume });
+            this.update({ localVolume: volume });
             if (this.audioElement) {
-                this.audioElement.volume = volume;
+                this.audioElement.volume = this.volume;
             }
             if (this.isOwnSession) {
                 return;
             }
-            if (this.channelMember.persona.partner && this.channelMember.persona.partner.volumeSetting) {
-                this.channelMember.persona.partner.volumeSetting.update({ volume });
-            }
-            if (this.channelMember.persona.guest && this.channelMember.persona.guest.volumeSetting) {
-                this.channelMember.persona.guest.volumeSetting.update({ volume });
-            }
             if (this.messaging.isCurrentUserGuest) {
                 return;
+            }
+            if (this.channelMember.persona.volumeSetting) {
+                this.channelMember.persona.volumeSetting.update({ volume: this.volume });
             }
             this.messaging.userSetting.saveVolumeSetting({
                 partnerId: this.channelMember.persona.partner && this.channelMember.persona.partner.id,
                 guestId: this.channelMember.persona.guest && this.channelMember.persona.guest.id,
-                volume,
+                volume: this.volume,
             });
         },
         /**
@@ -259,12 +256,11 @@ registerModel({
          * @returns {number} float
          */
         _computeVolume() {
-            if (this.channelMember) {
-                if (this.channelMember.persona.partner && this.channelMember.persona.partner.volumeSetting) {
-                    return this.channelMember.persona.partner.volumeSetting.volume;
-                } else if (this.channelMember.persona.guest && this.channelMember.persona.guest.volumeSetting) {
-                    return this.channelMember.persona.guest.volumeSetting.volume;
-                }
+            if (this.localVolume !== undefined) {
+                return this.localVolume;
+            }
+            if (this.channelMember && this.channelMember.persona.volumeSetting) {
+                return this.channelMember.persona.volumeSetting.volume;
             }
             if (this.audioElement) {
                 return this.audioElement.volume;
@@ -469,6 +465,7 @@ registerModel({
          * RTCIceCandidate.type String
          */
         localCandidateType: attr(),
+        localVolume: attr(),
         /**
          * Token to identify the session, it is currently just the toString
          * id of the record.

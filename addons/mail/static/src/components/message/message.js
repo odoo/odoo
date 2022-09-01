@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { _lt } from 'web.core';
-import Popover from "web.Popover";
 
 const { Component, useRef } = owl;
 
@@ -21,6 +21,7 @@ export class Message extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'notificationIconRef', refName: 'notificationIcon' });
         useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
         /**
@@ -259,7 +260,6 @@ export class Message extends Component {
 Object.assign(Message, {
     props: { record: Object },
     template: 'mail.Message',
-    components: { Popover },
 });
 
 registerMessagingComponent(Message);

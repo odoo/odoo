@@ -4,10 +4,9 @@
         <field name="name">res.config.settings.view.form.inherit.website.slides</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
-        <field name="groups_id" eval="[(4, ref('website_slides.group_website_slides_manager'), 0)]"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='website_marketing_automation']" position="after">
-                <div class="col-12 col-lg-6 o_setting_box" id="slides_install_setting">
+                <div class="col-12 col-lg-6 o_setting_box" id="slides_install_setting" groups="website_slides.group_website_slides_manager">
                     <div class="o_setting_right_pane">
                         <span class="o_form_label">Slides</span>
                         <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
@@ -29,7 +28,7 @@
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="eLearning" string="eLearning" data-key="website_slides">
+                <div class="app_settings_block" data-string="eLearning" string="eLearning" data-key="website_slides" groups="website_slides.group_website_slides_manager">
                     <h2>eLearning</h2>
                     <div class="row mt16 o_settings_container" id="website_slides_selection_settings">
                         <group>

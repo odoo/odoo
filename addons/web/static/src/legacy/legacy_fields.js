@@ -5,7 +5,6 @@ import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "web.Domain";
 import legacyFieldRegistry from "web.field_registry";
 import { ComponentAdapter } from "web.OwlCompatibility";
-import viewUtils from "web.viewUtils";
 import { useWowlService } from "@web/legacy/utils";
 import { RPCError } from "@web/core/network/rpc_service";
 import { useTranslationDialog } from "@web/views/fields/translation_button";
@@ -14,7 +13,7 @@ const { Component, useEffect, xml } = owl;
 const fieldRegistry = registry.category("fields");
 
 const legacyFieldTemplate = xml`
-    <FieldAdapter Component="FieldWidget" fieldParams="fieldParams" update.bind="update" record="props.record"/>`;
+    <FieldAdapter Component="FieldWidget" fieldParams="fieldParams" update.bind="update" record="props.record" id="props.id"/>`;
 
 // -----------------------------------------------------------------------------
 // FieldAdapter
@@ -31,6 +30,15 @@ class FieldAdapter extends ComponentAdapter {
             if (!this.widgetEl || !this.widgetEl.parentElement) {
                 return;
             }
+
+            const fieldId = this.props.id;
+            if (!this.widgetEl.querySelector(`#${fieldId}`)) {
+                const $el = this.widget.getFocusableElement();
+                if ($el && $el[0]) {
+                    $el[0].setAttribute("id", fieldId);
+                }
+            }
+
             // if classNames are given to the field, we only want
             // to add those classes to the legacy field without
             // the parent element affecting the style of the field
@@ -300,23 +308,13 @@ function registerField(name, LegacyFieldWidget) {
             const { name, record } = this.props;
             let legacyRecord;
             const fieldInfo = record.activeFields[name];
-            const views = {};
-            for (const viewType in fieldInfo.views || {}) {
-                let arch = fieldInfo.views[viewType].arch;
-                if (viewType === "list") {
-                    const editable = fieldInfo.views.list.editable;
-                    arch = `<tree editable='${editable}'></tree>`;
-                }
-                // FIXME: need the legacy fieldInfo here
-                views[viewType] = {
-                    ...fieldInfo.views[viewType],
-                    arch: viewUtils.parseArch(arch),
-                };
-            }
+            let views = {};
             const modifiers = JSON.parse(fieldInfo.rawAttrs.modifiers || "{}");
             const hasReadonlyModifier = record.isReadonly(name);
             if (record.model.__bm__) {
                 legacyRecord = record.model.__bm__.get(record.__bm_handle__);
+                const form = legacyRecord.fieldsInfo.form;
+                views = form && form[name].views;
             } else {
                 legacyRecord = mapRecordDatapoint(record);
             }

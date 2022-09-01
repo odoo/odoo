@@ -149,7 +149,7 @@ class AccountChartTemplate(models.Model):
                         'partner_id': ref('base.res_partner_2').id
                     }),
                     Command.create({
-                        'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 96.67, currency_obj=self.env.company.currency_id)} C/ croip',
+                        'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 100.0, digits=2)} C/ croip',
                         'amount': 96.67,
                         'date': time.strftime('%Y-01-01'),
                     }),
@@ -166,7 +166,6 @@ class AccountChartTemplate(models.Model):
                 'rule_type': 'writeoff_suggestion',
                 'match_label': 'contains',
                 'match_label_param': 'BRT',
-                'decimal_separator': ',',
                 'line_ids': [
                     Command.create({
                         'label': 'Due amount',
@@ -176,7 +175,7 @@ class AccountChartTemplate(models.Model):
                             self.env.company,
                         ).id,
                         'amount_type': 'regex',
-                        'amount_string': r'BRT: ([\d,]+)',
+                        'amount_string': r'BRT: ([\d,.]+)',
                     }),
                     Command.create({
                         'label': 'Bank Fees',

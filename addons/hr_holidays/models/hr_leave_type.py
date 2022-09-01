@@ -376,7 +376,7 @@ class HolidaysType(models.Model):
                         if quantity_available <= remaining_days_allocation:
                             search_date = future_allocation_interval[1].date() + timedelta(days=1)
                         days_consumed['virtual_remaining_leaves'] += min(quantity_available, remaining_days_allocation)
-                        days_consumed['max_leaves'] = allocation.number_of_days if allocation.type_request_unit == 'day' else allocation.number_of_hours_display
+                        days_consumed['max_leaves'] = allocation.number_of_days if allocation.type_request_unit in ['day', 'half_day'] else allocation.number_of_hours_display
                         days_consumed['remaining_leaves'] = days_consumed['max_leaves'] - days_consumed['leaves_taken']
                         if remaining_days_allocation >= quantity_available:
                             break

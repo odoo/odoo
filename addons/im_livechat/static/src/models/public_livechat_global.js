@@ -26,7 +26,9 @@ registerModel({
                 }
                 set_cookie(this.LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60 * 60 * 24); // 1 day cookie
             }
-            this.willStart();
+            if (this.isAvailable) {
+                this.willStart();
+            }
         },
     },
     recordMethods: {
@@ -83,6 +85,11 @@ registerModel({
             }
             return clear();
         },
+        _computeWelcomeMessages() {
+            return this.messages.filter((message) => {
+                return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
+            });
+        },
         async _willStart() {
             const cookie = get_cookie('im_livechat_session');
             if (cookie) {
@@ -128,7 +135,7 @@ registerModel({
          * @override
          */
         async _willStartChatbot() {
-            if (this.rule && !!this.chatbot) {
+            if (this.rule) {
                 // noop
             } else if (this.history !== null && this.history.length === 0) {
                 this.update({
@@ -141,9 +148,6 @@ registerModel({
                 const sessionCookie = get_cookie('im_livechat_session');
                 if (sessionCookie) {
                     this.update({ sessionCookie });
-                    if (localStorage.getItem(this.chatbot.sessionCookieKey)) {
-                        this.chatbot.update({ state: 'restore_session' });
-                    }
                 }
             }
 
@@ -249,5 +253,8 @@ registerModel({
         }),
         sessionCookie: attr(),
         testChatbotData: attr(),
+        welcomeMessages: many('PublicLivechatMessage', {
+            compute: '_computeWelcomeMessages',
+        }),
     },
 });

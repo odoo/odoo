@@ -58,19 +58,17 @@ class IrQWeb(models.AbstractModel):
         """
         irQweb = super()._prepare_frontend_environment(values)
 
-        Website = irQweb.env['website']
-        editable = request.website.is_publisher()
+        current_website = request.website
+        editable = request.env.user.has_group('website.group_website_designer')
         translatable = editable and irQweb.env.context.get('lang') != irQweb.env['ir.http']._get_default_lang().code
         editable = editable and not translatable
 
-        current_website = Website.get_current_website()
-
-        has_group_publisher = irQweb.env.user.has_group('website.group_website_publisher')
-        if has_group_publisher and irQweb.env.user.has_group('website.group_multi_website'):
+        has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
+        if has_group_restricted_editor and irQweb.env.user.has_group('website.group_multi_website'):
             values['multi_website_websites_current'] = lazy(lambda: current_website.name)
             values['multi_website_websites'] = lazy(lambda: [
                 {'website_id': website.id, 'name': website.name, 'domain': website.domain}
-                for website in Website.search([('id', '!=', current_website.id)])
+                for website in current_website.search([('id', '!=', current_website.id)])
             ])
 
             cur_company = irQweb.env.company
@@ -92,7 +90,7 @@ class IrQWeb(models.AbstractModel):
 
         if editable:
             # form editable object, add the backend configuration link
-            if 'main_object' in values and has_group_publisher:
+            if 'main_object' in values and has_group_restricted_editor:
                 func = getattr(values['main_object'], 'get_backend_menu_id', False)
                 values['backend_menu_id'] = lazy(lambda: func and func() or irQweb.env['ir.model.data']._xmlid_to_res_id('website.menu_website_configuration'))
 
@@ -104,7 +102,7 @@ class IrQWeb(models.AbstractModel):
             if editable:
                 # in edit mode add brancding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
-            elif has_group_publisher and not translatable:
+            elif has_group_restricted_editor and not translatable:
                 # will add the branding on fields (into values)
                 irQweb = irQweb.with_context(inherit_branding_auto=True)
 

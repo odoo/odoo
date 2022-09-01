@@ -11,32 +11,27 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_vat_return_sale_base_fourteen')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_sale_base_fourteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201017'),
-                'plus_report_line_ids': [ref('tax_report_vat_return_sale_tax_fourteen')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_fourteen_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_vat_return_sale_base_fourteen')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_sale_base_fourteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201017'),
-                'minus_report_line_ids': [ref('tax_report_vat_return_sale_tax_fourteen')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_fourteen_tag')],
             }),
         ]"/>
     </record>
-
     <record id="eg_standard_purchase_14" model="account.tax.template">
         <field name="name">VAT 14%</field>
         <field name="type_tax_use">purchase</field>
@@ -48,32 +43,27 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_vat_return_expense_base_fourteen')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_expense_base_fourteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104041'),
-                'plus_report_line_ids': [ref('tax_report_vat_return_expense_tax_fourteen')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_fourteen_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_vat_return_expense_base_fourteen')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_expense_base_fourteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104041'),
-                'minus_report_line_ids': [ref('tax_report_vat_return_expense_tax_fourteen')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_fourteen_tag')],
             }),
         ]"/>
     </record>
-
     <record id="eg_zero_sale_0" model="account.tax.template">
         <field name="name">Zero Rated 0%</field>
         <field name="type_tax_use">sale</field>
@@ -84,32 +74,27 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_vat_return_sale_base_zero')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_sale_base_zero_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
-                'plus_report_line_ids': [ref('tax_report_vat_return_sale_tax_zero')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_zero_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_vat_return_sale_base_zero')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_sale_base_zero_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
-                'minus_report_line_ids': [ref('tax_report_vat_return_sale_tax_zero')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_zero_tag')],
             }),
         ]"/>
     </record>
-
     <record id="eg_zero_purchase_0" model="account.tax.template">
         <field name="name">Zero Rated 0%</field>
         <field name="type_tax_use">purchase</field>
@@ -120,32 +105,27 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_vat_return_expense_base_zero')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_expense_base_zero_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
-                'plus_report_line_ids': [ref('tax_report_vat_return_expense_tax_zero')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_zero_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_vat_return_expense_base_zero')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_expense_base_zero_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
-                'minus_report_line_ids': [ref('tax_report_vat_return_expense_tax_zero')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_zero_tag')],
             }),
         ]"/>
     </record>
-
     <record id="eg_exempt_sale" model="account.tax.template">
         <field name="name">Exempt</field>
         <field name="type_tax_use">sale</field>
@@ -157,32 +137,27 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_vat_return_sale_base_exempt')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_sale_base_exempt_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
-                'plus_report_line_ids': [ref('tax_report_vat_return_sale_tax_exempt')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_exempt_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_vat_return_sale_base_exempt')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_sale_base_exempt_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
-                'minus_report_line_ids': [ref('tax_report_vat_return_sale_tax_exempt')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_exempt_tag')],
             }),
         ]"/>
     </record>
-
     <record id="eg_exempt_purchase" model="account.tax.template">
         <field name="name">Exempt</field>
         <field name="type_tax_use">purchase</field>
@@ -194,32 +169,27 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_vat_return_expense_base_exempt')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_expense_base_exempt_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
-                'plus_report_line_ids': [ref('tax_report_vat_return_expense_tax_exempt')],
+                'plus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_exempt_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_vat_return_expense_base_exempt')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_expense_base_exempt_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
-                'minus_report_line_ids': [ref('tax_report_vat_return_expense_tax_exempt')],
+                'minus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_exempt_tag')],
             }),
         ]"/>
     </record>
-
     <record id="eg_stamp_tax_20_sale" model="account.tax.template">
         <field name="name">Stamp</field>
         <field name="type_tax_use">sale</field>
@@ -231,34 +201,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_other_taxes_stamp_tax_base_sales')],
+                'plus_report_expression_ids': [ref('tax_report_other_taxes_stamp_tax_base_sales_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201025'),
-                'plus_report_line_ids': [ref('tax_report_other_taxes_stamp_tax_tax_sales')],
+                'plus_report_expression_ids': [ref('tax_report_other_taxes_stamp_tax_tax_sales_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_other_taxes_stamp_tax_base_sales')],
+                'minus_report_expression_ids': [ref('tax_report_other_taxes_stamp_tax_base_sales_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201025'),
-                'minus_report_line_ids': [ref('tax_report_other_taxes_stamp_tax_tax_sales')],
+                'minus_report_expression_ids': [ref('tax_report_other_taxes_stamp_tax_tax_sales_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_stamp_tax_20_purchase" model="account.tax.template">
         <field name="name">Stamp</field>
         <field name="type_tax_use">purchase</field>
@@ -270,34 +235,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_base_purchase')],
+                'plus_report_expression_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_base_purchase_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400077'),
-                'plus_report_line_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_tax_purchase')],
+                'plus_report_expression_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_tax_purchase_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_base_purchase')],
+                'minus_report_expression_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_base_purchase_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400077'),
-                'minus_report_line_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_tax_purchase')],
+                'minus_report_expression_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_tax_purchase_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_8_purchase" model="account.tax.template">
         <field name="name">Schedule 8%</field>
         <field name="type_tax_use">purchase</field>
@@ -309,34 +269,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_eight')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_eight_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_eight')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_eight_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_eight')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_eight_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_eight')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_eight_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_8_sale" model="account.tax.template">
         <field name="name">Schedule 8%</field>
         <field name="type_tax_use">sale</field>
@@ -348,34 +303,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_eight')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_eight_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_eight')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_eight_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_eight')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_eight_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_eight')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_eight_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_withholding_1_sale" model="account.tax.template">
         <field name="name">Withholding -1%</field>
         <field name="type_tax_use">sale</field>
@@ -386,34 +336,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_sale_base_one')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_sale_tax_one')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_one_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_sale_base_one')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_sale_tax_one')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_one_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_10_purchase" model="account.tax.template">
         <field name="name">Schedule 10%</field>
         <field name="type_tax_use">purchase</field>
@@ -424,34 +369,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_ten')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_ten_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_ten')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_ten_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_ten')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_ten_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_ten')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_ten_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_withholding_05_sale" model="account.tax.template">
         <field name="name">Withholding -0.5%</field>
         <field name="type_tax_use">sale</field>
@@ -462,34 +402,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_sale_base_half')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_sale_tax_half')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_half_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_sale_base_half')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_sale_tax_half')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_half_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_withholding_05_purchase" model="account.tax.template">
         <field name="name">Withholding -0.5%</field>
         <field name="type_tax_use">purchase</field>
@@ -500,34 +435,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_purchase_base_half')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_purchase_tax_half')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_half_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_purchase_base_half')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_purchase_tax_half')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_half_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_withholding_1_purchase" model="account.tax.template">
         <field name="name">Withholding -1%</field>
         <field name="type_tax_use">purchase</field>
@@ -538,34 +468,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_purchase_base_one')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_purchase_tax_one')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_one_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_purchase_base_one')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_purchase_tax_one')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_one_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_10_sale" model="account.tax.template">
         <field name="name">Schedule 10%</field>
         <field name="type_tax_use">sale</field>
@@ -576,34 +501,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_ten')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_ten_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_ten')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_ten_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_ten')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_ten_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_ten')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_ten_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_withholding_3_sale" model="account.tax.template">
         <field name="name">Withholding -3%</field>
         <field name="type_tax_use">sale</field>
@@ -615,34 +535,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_sale_base_three')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_three_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_sale_tax_three')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_three_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_sale_base_three')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_three_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_sale_tax_three')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_three_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_1_sale" model="account.tax.template">
         <field name="name">Schedule 1%</field>
         <field name="type_tax_use">sale</field>
@@ -653,34 +568,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_one')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_one')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_one_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_one')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_one')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_one_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_withholding_3_purchase" model="account.tax.template">
         <field name="name">Withholding -3%</field>
         <field name="type_tax_use">purchase</field>
@@ -692,34 +602,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_purchase_base_three')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_three_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_purchase_tax_three')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_three_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_purchase_base_three')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_three_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_purchase_tax_three')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_three_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_1_purchase" model="account.tax.template">
         <field name="name">Schedule 1%</field>
         <field name="type_tax_use">purchase</field>
@@ -730,34 +635,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_one')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_one')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_one_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_one')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_one')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_one_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_withholding_5_sale" model="account.tax.template">
         <field name="name">Withholding -5%</field>
         <field name="type_tax_use">sale</field>
@@ -768,34 +668,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_sale_base_five')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_sale_tax_five')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_five_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_sale_base_five')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_sale_tax_five')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_five_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_15_purchase" model="account.tax.template">
         <field name="name">Schedule 15%</field>
         <field name="type_tax_use">purchase</field>
@@ -806,34 +701,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_fifteen')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_fifteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_fifteen')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_fifteen_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_fifteen')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_fifteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_fifteen')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_fifteen_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_withholding_5_purchase" model="account.tax.template">
         <field name="name">Withholding -5%</field>
         <field name="type_tax_use">purchase</field>
@@ -844,34 +734,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_purchase_base_five')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_purchase_tax_five')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_five_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_withholding_tax_purchase_base_five')],
+                'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
-                'plus_report_line_ids': [ref('tax_report_withholding_tax_purchase_tax_five')],
+                'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_five_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_15_sale" model="account.tax.template">
         <field name="name">Schedule 15%</field>
         <field name="type_tax_use">sale</field>
@@ -882,34 +767,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_fifteen')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_fifteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_fifteen')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_fifteen_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_fifteen')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_fifteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_fifteen')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_fifteen_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_30_sale" model="account.tax.template">
         <field name="name">Schedule 30%</field>
         <field name="type_tax_use">sale</field>
@@ -920,34 +800,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_thirty')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_thirty_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_thirty')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_thirty_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_thirty')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_thirty_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_thirty')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_thirty_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_30_purchase" model="account.tax.template">
         <field name="name">Schedule 30%</field>
         <field name="type_tax_use">purchase</field>
@@ -958,34 +833,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_thirty')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_thirty_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_thirty')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_thirty_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_thirty')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_thirty_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_thirty')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_thirty_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_05_purchase" model="account.tax.template">
         <field name="name">Schedule 0.5%</field>
         <field name="type_tax_use">purchase</field>
@@ -996,34 +866,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_half')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_half')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_half_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_half')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_half')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_half_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_05_sale" model="account.tax.template">
         <field name="name">Schedule 0.5%</field>
         <field name="type_tax_use">sale</field>
@@ -1034,34 +899,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_half')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_half')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_half_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
              Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_half')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_half_tag')],
             }),
              Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_half')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_half_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_5_purchase" model="account.tax.template">
         <field name="name">Schedule 5%</field>
         <field name="type_tax_use">purchase</field>
@@ -1072,34 +932,29 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_five')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_five')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_five_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_five')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_five')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_five_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
     </record>
-
     <record id="eg_schedule_tax_5_sale" model="account.tax.template">
         <field name="name">Schedule 5%</field>
         <field name="type_tax_use">sale</field>
@@ -1110,29 +965,25 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_five')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'plus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_five')],
+                'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_five_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_five')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
-                'minus_report_line_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_five')],
+                'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_five_tag')],
                 'use_in_tax_closing': False,
             }),
         ]"/>

@@ -23,13 +23,13 @@ class CreateConfirmationDialog extends Component {
 CreateConfirmationDialog.components = { Dialog };
 CreateConfirmationDialog.template = "web.Many2OneField.CreateConfirmationDialog";
 
-function m2oTupleFromData(data) {
+export function m2oTupleFromData(data) {
     const id = data.id;
     let name;
     if ("display_name" in data) {
         name = data.display_name;
     } else {
-        let _name = data.name;
+        const _name = data.name;
         name = Array.isArray(_name) ? _name[1] : _name;
     }
     return [id, name];
@@ -78,9 +78,6 @@ export class Many2OneField extends Component {
         this.update = (value, params = {}) => {
             if (value) {
                 value = m2oTupleFromData(value[0]);
-            }
-            if (!value && !this.updateOnEmpty) {
-                return;
             }
             this.state.isFloating = false;
             return this.props.update(value);
@@ -132,10 +129,6 @@ export class Many2OneField extends Component {
     get resId() {
         return this.props.value && this.props.value[0];
     }
-    get updateOnEmpty() {
-        return true;
-    }
-
     getDomain() {
         return this.domain.toList(this.context);
     }
@@ -232,11 +225,4 @@ Many2OneField.extractProps = ({ attrs, field }) => {
 };
 
 registry.category("fields").add("many2one", Many2OneField);
-
-export class ListMany2OneField extends Many2OneField {
-    get updateOnEmpty() {
-        return false;
-    }
-}
-
-registry.category("fields").add("list.many2one", ListMany2OneField); // TODO WOWL: link isn't clickable in lists
+registry.category("fields").add("list.many2one", Many2OneField);

@@ -43,14 +43,14 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this.__onSelectionChange = ev => {
             this._toggleAnimatedTextButton();
         };
-        this.ownerDocument.addEventListener('selectionchange', this.__onSelectionChange);
+        this.$body[0].addEventListener('selectionchange', this.__onSelectionChange);
     },
     /**
      * @override
      */
     destroy() {
         this._super(...arguments);
-        this.ownerDocument.removeEventListener('selectionchange', this.__onSelectionChange);
+        this.$body[0].removeEventListener('selectionchange', this.__onSelectionChange);
         this.$body[0].classList.remove('o_animated_text_highlighted');
     },
 

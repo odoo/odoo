@@ -72,15 +72,6 @@ export class ModelManager {
          */
         this._listenersObservingAllByModel = new Map();
         /**
-         * Map between record and a set of listeners that are using it.
-         */
-        this._listenersObservingRecord = new Map();
-        /**
-         * Map between fields of record and a set of listeners that are
-         * using it.
-         */
-        this._listenersObservingFieldOfRecord = new Map();
-        /**
          * Map of listeners that should be notified at the end of the current
          * update cycle. Value contains list of info to help for debug.
          */
@@ -237,10 +228,7 @@ export class ModelManager {
         }
         for (const listener of this._listeners) {
             listener.lastObservedRecords.add(record);
-            if (!this._listenersObservingRecord.has(record)) {
-                this._listenersObservingRecord.set(record, new Map());
-            }
-            const entry = this._listenersObservingRecord.get(record);
+            const entry = record.__listenersObservingRecord;
             const info = {
                 listener,
                 reason: this.isDebug && `findFromIdentifyingData record - ${record}`,
@@ -310,8 +298,11 @@ export class ModelManager {
         this._listenersToNotifyInUpdateCycle.delete(listener);
         this._listenersToNotifyAfterUpdateCycle.delete(listener);
         for (const record of listener.lastObservedRecords) {
-            this._listenersObservingRecord.get(record).delete(listener);
-            const listenersObservingFieldOfRecord = this._listenersObservingFieldOfRecord.get(record);
+            if (!record.exists()) {
+                continue;
+            }
+            record.__listenersObservingRecord.delete(listener);
+            const listenersObservingFieldOfRecord = record.__listenersObservingFieldsOfRecord;
             for (const field of listener.lastObservedFieldsByRecord.get(record) || []) {
                 listenersObservingFieldOfRecord.get(field).delete(listener);
             }
@@ -648,6 +639,16 @@ export class ModelManager {
             // Listeners that are bound to this record, to be notified of
             // change in dependencies of compute, related and "on change".
             __listeners: [],
+            /**
+             * Map between listeners that are observing this record and array of
+             * information about how the record is observed.
+             */
+            __listenersObservingRecord: new Map(),
+            /**
+             * Map between fields and a Map between listeners that are observing
+             * the field and array of information about how the field is observed.
+             */
+            __listenersObservingFieldsOfRecord: new Map(),
             // Field values of record.
             __values: new Map(),
             [IS_RECORD]: true,
@@ -655,7 +656,7 @@ export class ModelManager {
         const record = owl.markRaw(!this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {
                 if (
-                    !model.__fieldMap.has(prop) &&
+                    (model.__fieldMap && !model.__fieldMap.has(prop)) &&
                     !['_super', 'then', 'localId'].includes(prop) &&
                     typeof prop !== 'symbol' &&
                     !(prop in record)
@@ -665,6 +666,9 @@ export class ModelManager {
                 return record[prop];
             },
         }));
+        if (this.isDebug) {
+            record.__proxifiedRecord = record;
+        }
         // Ensure X2many relations are Set initially (other fields can stay undefined).
         for (const field of model.__fieldList) {
             if (field.fieldType === 'relation') {
@@ -673,10 +677,6 @@ export class ModelManager {
                 }
             }
         }
-        if (!this._listenersObservingRecord.has(record)) {
-            this._listenersObservingRecord.set(record, new Map());
-        }
-        this._listenersObservingFieldOfRecord.set(record, new Map());
         /**
          * Register record.
          */
@@ -699,13 +699,6 @@ export class ModelManager {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_create: allByModel - ${record}`,
-                infoList,
-            });
-        }
-        for (const [listener, infoList] of this._listenersObservingRecord.get(record)) {
-            this._markListenerToNotify(listener, {
-                listener,
-                reason: this.isDebug && `_create: record - ${record}`,
                 infoList,
             });
         }
@@ -745,7 +738,7 @@ export class ModelManager {
         this._createdRecordsCreated.delete(record);
         this._createdRecordsOnChange.delete(record);
         this._updatedRecordsCheckRequired.delete(record);
-        for (const [listener, infoList] of this._listenersObservingRecord.get(record)) {
+        for (const [listener, infoList] of record.__listenersObservingRecord) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_delete: record - ${record}`,
@@ -761,6 +754,8 @@ export class ModelManager {
         }
         delete record.__values;
         delete record.__listeners;
+        delete record.__listenersObservingRecord;
+        delete record.__listenersObservingFieldsOfRecord;
         model.__records.delete(record);
         delete record.localId;
     }
@@ -1036,7 +1031,7 @@ export class ModelManager {
      * @param {ModelField} field
      */
     _markRecordFieldAsChanged(record, field) {
-        for (const [listener, infoList] of this._listenersObservingFieldOfRecord.get(record).get(field) || []) {
+        for (const [listener, infoList] of record.__listenersObservingFieldsOfRecord.get(field) || []) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: this.isDebug && `_update: ${field} of ${record}`,
@@ -1096,7 +1091,7 @@ export class ModelManager {
     _preInsertIdentifyingFieldsFromData(model, data) {
         for (const fieldName of model.__identifyingFieldNames) {
             if (data[fieldName] === undefined) {
-                return;
+                continue;
             }
             const field = model.__fieldMap.get(fieldName);
             if (!field.to) {
@@ -1222,30 +1217,27 @@ export class ModelManager {
                 // Add field accessors.
                 Object.defineProperty(model.prototype, fieldName, {
                     get: function getFieldValue() { // this is bound to record
+                        const record = this.modelManager.isDebug ? this.__proxifiedRecord : this;
                         if (this.modelManager._listeners.size) {
-                            let entryRecord = this.modelManager._listenersObservingRecord.get(this);
-                            if (!entryRecord) {
-                                entryRecord = new Map();
-                                this.modelManager._listenersObservingRecord.set(this, entryRecord);
-                            }
-                            const reason = this.modelManager.isDebug && `getField - ${field} of ${this}`;
-                            let entryField = this.modelManager._listenersObservingFieldOfRecord.get(this).get(field);
+                            let entryRecord = record.__listenersObservingRecord;
+                            const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;
+                            let entryField = record.__listenersObservingFieldsOfRecord.get(field);
                             if (!entryField) {
                                 entryField = new Map();
-                                this.modelManager._listenersObservingFieldOfRecord.get(this).set(field, entryField);
+                                record.__listenersObservingFieldsOfRecord.set(field, entryField);
                             }
-                            for (const listener of this.modelManager._listeners) {
-                                listener.lastObservedRecords.add(this);
+                            for (const listener of record.modelManager._listeners) {
+                                listener.lastObservedRecords.add(record);
                                 const info = { listener, reason };
                                 if (entryRecord.has(listener)) {
                                     entryRecord.get(listener).push(info);
                                 } else {
                                     entryRecord.set(listener, [info]);
                                 }
-                                if (!listener.lastObservedFieldsByRecord.has(this)) {
-                                    listener.lastObservedFieldsByRecord.set(this, new Set());
+                                if (!listener.lastObservedFieldsByRecord.has(record)) {
+                                    listener.lastObservedFieldsByRecord.set(record, new Set());
                                 }
-                                listener.lastObservedFieldsByRecord.get(this).add(field);
+                                listener.lastObservedFieldsByRecord.get(record).add(field);
                                 if (entryField.has(listener)) {
                                     entryField.get(listener).push(info);
                                 } else {
@@ -1253,7 +1245,7 @@ export class ModelManager {
                                 }
                             }
                         }
-                        return field.get(this);
+                        return field.get(record);
                     },
                 });
             }
@@ -1286,14 +1278,15 @@ export class ModelManager {
             }
             const field = model.__fieldMap.get(fieldName);
             if (!field) {
-                throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record}", non-field attempted update: "${fieldName}")`);
+                console.warn(`Cannot create/update record with data unrelated to a field. (record: "${record}", non-field attempted update: "${fieldName}")`);
+                continue;
             }
             const newVal = data[fieldName];
             if (!field.parseAndExecuteCommands(record, newVal, options)) {
                 continue;
             }
             if (field.readonly && !allowWriteReadonly) {
-                throw new Error(`read-only ${field} on ${record} was updated`);
+                console.warn(`read-only ${field} on ${record} was updated`);
             }
             hasChanged = true;
             this._markRecordFieldAsChanged(record, field);

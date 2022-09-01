@@ -95,7 +95,7 @@ class Website(Home):
         different session.
         """
         if not (request.env.user.has_group('website.group_multi_website')
-           and request.env.user.has_group('website.group_website_publisher')):
+           and request.env.user.has_group('website.group_website_restricted_editor')):
             # The user might not be logged in on the forced website, so he won't
             # have rights. We just redirect to the path as the user is already
             # on the domain (basically a no-op as it won't change domain or
@@ -270,11 +270,10 @@ class Website(Home):
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
-        website_id = request.env['website'].get_current_website()
-        if website_id.configurator_done:
+        if request.website.configurator_done:
             return request.redirect('/')
-        if request.env.lang != website_id.default_lang_id.code:
-            return request.redirect('/%s%s' % (website_id.default_lang_id.url_code, request.httprequest.path))
+        if request.env.lang != request.website.default_lang_id.code:
+            return request.redirect('/%s%s' % (request.website.default_lang_id.url_code, request.httprequest.path))
         action_url = '/web#action=website.website_configurator&menu_id=%s' % request.env.ref('website.menu_website_configuration').id
         if step > 1:
             action_url += '&step=' + str(step)
@@ -561,7 +560,7 @@ class Website(Home):
     # ------------------------------------------------------
 
     @http.route(['/website/add', '/website/add/<path:path>'], type='http', auth="user", website=True, methods=['POST'])
-    def pagenew(self, path="", add_menu=False, template=False, **kwargs):
+    def pagenew(self, path="", add_menu=False, template=False, redirect=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
         ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
@@ -575,9 +574,14 @@ class Website(Home):
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
         url = page['url']
 
-        if ext_special_case:  # redirect non html pages to backend to edit
-            return request.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
-        return request.redirect(request.env['website'].get_client_action_url(url, True))
+        if redirect:
+            if ext_special_case:  # redirect non html pages to backend to edit
+                return request.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
+            return request.redirect(request.env['website'].get_client_action_url(url, True))
+
+        if ext_special_case:
+            return json.dumps({'view_id': page.get('view_id')})
+        return json.dumps({'url': url})
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
@@ -626,7 +630,7 @@ class Website(Home):
 
     @http.route(['/website/get_seo_data'], type='json', auth="user", website=True)
     def get_seo_data(self, res_id, res_model):
-        if not request.env.user.has_group('website.group_website_publisher'):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']

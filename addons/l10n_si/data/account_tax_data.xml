@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="gd_taxr_1" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Izstopni DDV 0%</field>
@@ -12,28 +11,19 @@
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_opr')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_odb_izstopni_opr_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_opr')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_odb_izstopni_opr_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
-
     <record id="gd_taxr_2" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Izstopni DDV 9.5%</field>
@@ -45,32 +35,27 @@
         <field name="tax_group_id" ref="tax_group_95"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_odb_izstopni_zni_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'account_id': ref('gd_acc_260001'),
                 'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_odb_izstopni_zni_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'account_id': ref('gd_acc_260001'),
                 'repartition_type': 'tax',
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni_tag')],
             }),
         ]"/>
     </record>
-
     <record id="gd_taxr_3" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Izstopni DDV 22%</field>
@@ -82,32 +67,27 @@
         <field name="tax_group_id" ref="tax_group_22"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_osn')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_odb_izstopni_osn_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_osn')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_odb_izstopni_osn_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn_tag')],
             }),
         ]"/>
     </record>
-
     <record id="gd_taxp_1" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Vstopni DDV 0%</field>
@@ -119,28 +99,19 @@
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_opr')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_opr_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_opr')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_opr_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
-
     <record id="gd_taxp_2" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Vstopni DDV 9.5%</field>
@@ -152,32 +123,27 @@
         <field name="tax_group_id" ref="tax_group_95"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni_tag')],
             }),
         ]"/>
     </record>
-
     <record id="gd_taxp_3" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Vstopni DDV 22%</field>
@@ -189,32 +155,27 @@
         <field name="tax_group_id" ref="tax_group_22"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160003'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160003'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn_tag')],
             }),
         ]"/>
     </record>
-
     <record id="gd_taxp_nr_1" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Vstopni DDV 9.5% - neodbitni</field>
@@ -226,32 +187,27 @@
         <field name="tax_group_id" ref="tax_group_95"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_neo_sdtopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_neo_sdtopni_zni_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160001'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_neo_vstopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_neo_vstopni_zni_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_neo_sdtopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_neo_sdtopni_zni_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160001'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_neo_vstopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_neo_vstopni_zni_tag')],
             }),
         ]"/>
     </record>
-
     <record id="gd_taxp_nr_2" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Vstopni DDV 22% - neodbitni</field>
@@ -263,32 +219,27 @@
         <field name="tax_group_id" ref="tax_group_22"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_neo_sdtopni_osno')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_neo_sdtopni_osno_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160001'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_neo_vstopni_osnnovna')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_neo_vstopni_osnnovna_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_neo_sdtopni_osno')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_neo_sdtopni_osno_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160001'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_neo_vstopni_osnnovna')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_neo_vstopni_osnnovna_tag')],
             }),
         ]"/>
     </record>
-
     <record id="gd_taxp_st_1" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Vstopni DDV 9.5% - samoobdavčitev</field>
@@ -300,44 +251,39 @@
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni_tag')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260001'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni_tag')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260001'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni_tag')],
             }),
         ]"/>
     </record>
-
     <record id="gd_taxp_st_2" model="account.tax.template">
         <field name="chart_template_id" ref="gd_chart"/>
         <field name="name">Vstopni DDV 22% - samoobdavčitev</field>
@@ -349,42 +295,37 @@
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn')],
+                'plus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160003'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn_tag')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
+                'plus_report_expression_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn')],
+                'minus_report_expression_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_160003'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn_tag')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('gd_acc_260002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
+                'minus_report_expression_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn_tag')],
             }),
         ]"/>
     </record>
-
 </odoo>

@@ -3,7 +3,7 @@
     <t t-name="mail.ComposerSuggestedRecipient" owl="1">
         <t t-if="composerSuggestedRecipientView">
             <div class="o_ComposerSuggestedRecipient" t-attf-class="{{ className }}" t-att-data-partner-id="composerSuggestedRecipientView.suggestedRecipientInfo.partner and composerSuggestedRecipientView.suggestedRecipientInfo.partner.id ? composerSuggestedRecipientView.suggestedRecipientInfo.partner.id : false" t-att-title="composerSuggestedRecipientView.suggestedRecipientInfo.titleText" t-ref="root">
-                <div class="custom-control form-check">
+                <div class="form-check">
                     <input t-attf-id="{{ id }}_checkbox" class="form-check-input" type="checkbox" t-att-checked="composerSuggestedRecipientView.suggestedRecipientInfo.isSelected ? 'checked' : undefined" t-on-change="_onChangeCheckbox" t-ref="checkbox" />
                     <label class="form-check-label" t-attf-for="{{ id }}_checkbox">
                         <t t-if="composerSuggestedRecipientView.suggestedRecipientInfo.name">

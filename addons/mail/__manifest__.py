@@ -73,6 +73,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_tracking_views.xml',
         'views/mail_notification_views.xml',
         'views/mail_message_views.xml',
+        'views/mail_message_schedule_views.xml',
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_ice_server_views.xml',
@@ -209,7 +210,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/tours/**/*',
         ],
         'web.tests_assets': [
-            'mail/static/tests/helpers/*.js',
+            'mail/static/tests/helpers/**/*.js',
             'mail/static/tests/models/*.js',
         ],
         'web.qunit_suite_tests': [

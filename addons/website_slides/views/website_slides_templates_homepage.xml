@@ -330,21 +330,21 @@
 
 <template id='course_card' name="Course Card">
     <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}" t-cache="channel if is_public_user else None">
-        <t t-set="course_image" t-value="website.image_url(channel, 'image_1024')"/>
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
-        <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
-            <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/> 
-            <div t-if="channel.image_1024" class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
-            <div t-else="" class="o_wslides_card_default_background card-img-top position-relative" style="padding-top: 50%; opacity: 0.8">
-                <i class="fa fa-graduation-cap fa-2x me-3 mb-3 position-absolute text-white-75" style="right:0; bottom: 0"/>
+        <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" style="height:120px">
+            <div t-if="channel.image_1920" t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100 ">
+                <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
+            </div>
+            <div t-else="" class="o_wslides_background_image">
+                <img t-att-src="channel.website_background_image_url" class=" img img-fluid"/>
             </div>
         </a>
-        <div class="card-body p-3">
+        <div class="card-body d-flex flex-column p-3">
             <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
             <span t-if="not channel.is_published" class="badge text-bg-danger p-1">Unpublished</span>
-            <div class="card-text mt-1">
+            <div class="card-text d-flex flex-column flex-grow-1 mt-1">
                 <div class="fw-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
-                <div t-if="channel_frontend_tags" class="mt-2 pt-1 o_wslides_desc_truncate_2">
+                <div t-if="channel_frontend_tags" class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
                             <a t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category)" t-attf-class="badge post_link #{'text-bg-primary' if tag in search_tags else 'o_wslides_channel_tag o_tag_color_0'}" t-att-rel="search_tags and 'nofollow'" t-esc="tag.name"/>

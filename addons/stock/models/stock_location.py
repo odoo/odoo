@@ -90,7 +90,7 @@ class Location(models.Model):
     last_inventory_date = fields.Date("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
     next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
     warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
-    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id')
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', store=True)
     storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category', check_company=True)
     outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id') # used to compute weight
     incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id') # used to compute weight

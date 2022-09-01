@@ -86,22 +86,22 @@ const FIELD_OPERATORS = {
     ],
 };
 
-function parseField(field, value, opts = {}) {
+function parseField(field, value) {
     if (FIELD_TYPES[field.type] === "char") {
         return value;
     }
     const type = field.type === "id" ? "integer" : field.type;
     const parse = parsers.contains(type) ? parsers.get(type) : (v) => v;
-    return parse(value, { field, ...opts });
+    return parse(value);
 }
 
-function formatField(field, value, opts = {}) {
+function formatField(field, value) {
     if (FIELD_TYPES[field.type] === "char") {
         return value;
     }
     const type = field.type === "id" ? "integer" : field.type;
     const format = formatters.contains(type) ? formatters.get(type) : (v) => v;
-    return format(value, { digits: field.digits, ...opts });
+    return format(value, { digits: field.digits });
 }
 
 export class CustomFilterItem extends Component {
@@ -224,7 +224,7 @@ export class CustomFilterItem extends Component {
                 domainValue = condition.value.map(serialize);
                 descriptionArray.push(
                     `"${condition.value
-                        .map((val) => formatField(field, val, { timezone: true }))
+                        .map((val) => formatField(field, val))
                         .join(" " + this.env._t("and") + " ")}"`
                 );
             } else {

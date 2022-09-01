@@ -820,13 +820,7 @@ class MrpProduction(models.Model):
             if not vals.get('procurement_group_id'):
                 procurement_group_vals = self._prepare_procurement_group_vals(vals)
                 vals['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
-        productions = super().create(vals_list)
-        for production in productions:
-            # Trigger move_raw creation when importing a file
-            if 'import_file' in self.env.context:
-                production._onchange_move_raw()
-                production._onchange_move_finished()
-        return productions
+        return super().create(vals_list)
 
     def unlink(self):
         self.action_cancel()
@@ -2028,10 +2022,10 @@ class MrpProduction(models.Model):
         for move in self.move_finished_ids:
             dests.setdefault(move.byproduct_id.id, []).extend(move.move_dest_ids.ids)
 
-        production = self.env['mrp.production'].create({
+        production = self.env['mrp.production'].with_context(default_picking_type_id=self.picking_type_id.id).create({
             'product_id': product_id.id,
             'bom_id': bom_id.id,
-            'picking_type_id': bom_id.picking_type_id or self._get_default_picking_type_id(self.env.company.id),
+            'picking_type_id': self.picking_type_id.id,
             'product_qty': sum(production.product_uom_qty for production in self),
             'product_uom_id': product_id.uom_id.id,
             'user_id': user_id.id,

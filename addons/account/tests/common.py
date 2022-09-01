@@ -20,7 +20,7 @@ class AccountTestInvoicingCommon(TransactionCase):
     def copy_account(cls, account, default=None):
         suffix_nb = 1
         while True:
-            new_code = '%s (%s)' % (account.code, suffix_nb)
+            new_code = '%s.%s' % (account.code, suffix_nb)
             if account.search_count([('company_id', '=', account.company_id.id), ('code', '=', new_code)]):
                 suffix_nb += 1
             else:
@@ -129,16 +129,13 @@ class AccountTestInvoicingCommon(TransactionCase):
                 (0, 0, {
                     'value': 'percent',
                     'value_amount': 30.0,
-                    'sequence': 400,
                     'days': 0,
-                    'option': 'day_after_invoice_date',
                 }),
                 (0, 0, {
                     'value': 'balance',
                     'value_amount': 0.0,
-                    'sequence': 500,
-                    'days': 31,
-                    'option': 'day_following_month',
+                    'months': 1,
+                    'end_month': True,
                 }),
             ],
         })
@@ -314,7 +311,6 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'tax_exigibility': 'on_invoice',
                     'invoice_repartition_line_ids': [
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'base',
                         }),
                         (0, 0, {
@@ -330,7 +326,6 @@ class AccountTestInvoicingCommon(TransactionCase):
                     ],
                     'refund_repartition_line_ids': [
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'base',
                         }),
                         (0, 0, {
@@ -354,23 +349,19 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'cash_basis_transition_account_id': cls.safe_copy(company_data['default_account_tax_sale']).id,
                     'invoice_repartition_line_ids': [
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'base',
                         }),
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'tax',
                             'account_id': company_data['default_account_tax_sale'].id,
                         }),
                     ],
                     'refund_repartition_line_ids': [
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'base',
                         }),
 
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'tax',
                             'account_id': company_data['default_account_tax_sale'].id,
                         }),
@@ -640,24 +631,20 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             'cash_basis_transition_account_id': cls.tax_waiting_account.id,
             'invoice_repartition_line_ids': [
                     (0,0, {
-                        'factor_percent': 100,
                         'repartition_type': 'base',
                     }),
 
                     (0,0, {
-                        'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_final_account.id,
                     }),
                 ],
             'refund_repartition_line_ids': [
                     (0,0, {
-                        'factor_percent': 100,
                         'repartition_type': 'base',
                     }),
 
                     (0,0, {
-                        'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_final_account.id,
                     }),

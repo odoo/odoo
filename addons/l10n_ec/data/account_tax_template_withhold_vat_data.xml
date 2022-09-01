@@ -15,26 +15,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_10'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_721')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_721_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_10'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_721')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_721_tag')],
                 }),]"/>
         </record>
         <record id="tax_withhold_vat_20" model="account.tax.template">
@@ -48,26 +42,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_20'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_723')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_723_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_20'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_723')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_723_tag')],
                 }),]"/>
         </record>
         <record id="tax_withhold_vat_30" model="account.tax.template">
@@ -81,26 +69,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_30'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_725')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_725_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_30'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_725')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_725_tag')],
                 }),]"/>
         </record>
         <record id="tax_withhold_vat_50" model="account.tax.template">
@@ -114,26 +96,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_50'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_727')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_727_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_50'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_727')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_727_tag')],
                 }),]"/>
         </record>
         <record id="tax_withhold_vat_70" model="account.tax.template">
@@ -147,26 +123,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_70'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_729')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_729_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_70'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_729')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_729_tag')],
                 }),]"/>
         </record>
         <record id="tax_withhold_vat_100" model="account.tax.template">
@@ -180,26 +150,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_100'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_731')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_731_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_vat_withhold_100'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_731')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_731_tag')],
                 }),]"/>
         </record>
         <!-- 
@@ -216,26 +180,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
         </record>
         <record id="tax_sale_withhold_vat_20" model="account.tax.template">
@@ -249,26 +207,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
         </record>
         <record id="tax_sale_withhold_vat_30" model="account.tax.template">
@@ -282,26 +234,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
         </record>
         <record id="tax_sale_withhold_vat_50" model="account.tax.template">
@@ -315,26 +261,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
         </record>
         <record id="tax_sale_withhold_vat_70" model="account.tax.template">
@@ -348,26 +288,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
         </record>
         <record id="tax_sale_withhold_vat_100" model="account.tax.template">
@@ -381,26 +315,20 @@
             <field name="chart_template_id" ref="l10n_ec.l10n_ec_ifrs"/>
             <field name="tax_group_id" ref="tax_group_withhold_vat"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'plus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'plus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
                     'factor_percent': 12,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_ec.ec_sale_vat_outstanding_withholds'),
-                    'minus_report_line_ids': [ref('tax_report_line_104_609')],
+                    'minus_report_expression_ids': [ref('tax_report_line_104_609_tag')],
                 }),]"/>
         </record>
     </data>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="ri_tax_percepcion_iva_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IVA Aplicada</field>
@@ -10,25 +9,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_percepcion_iva_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_percepcion_iva_aplicada'),
             }),
@@ -36,7 +25,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iva"/>
     </record>
-
     <record id="ri_tax_percepcion_ganancias_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción Ganancias Aplicada</field>
@@ -46,25 +34,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_percepcion_ganancias_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_percepcion_ganancias_aplicada'),
             }),
@@ -72,7 +50,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_ganancias"/>
     </record>
-
     <record id="ri_tax_percepcion_ganancias_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción Ganancias Sufrida</field>
@@ -81,25 +58,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_ganancias_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_ganancias_sufrida'),
             }),
@@ -107,7 +74,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_ganancias"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_caba_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB CABA Sufrida</field>
@@ -116,25 +82,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_caba_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_caba_sufrida'),
             }),
@@ -142,7 +98,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_caba"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ba_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB ARBA Sufrida</field>
@@ -151,25 +106,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ba_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ba_sufrida'),
             }),
@@ -177,7 +122,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ba"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ca_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Catamarca Sufrida</field>
@@ -186,25 +130,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ca_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ca_sufrida'),
             }),
@@ -212,7 +146,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ca"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_co_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Córdoba Sufrida</field>
@@ -221,25 +154,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_co_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_co_sufrida'),
             }),
@@ -247,7 +170,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_co"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_rr_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Corrientes Sufrida</field>
@@ -256,25 +178,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_rr_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_rr_sufrida'),
             }),
@@ -282,7 +194,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_rr"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_er_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Entre Ríos Sufrida</field>
@@ -291,25 +202,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_er_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_er_sufrida'),
             }),
@@ -317,7 +218,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_er"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ju_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Jujuy Sufrida</field>
@@ -326,25 +226,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ju_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ju_sufrida'),
             }),
@@ -352,7 +242,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ju"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_za_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Mendoza Sufrida</field>
@@ -361,25 +250,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_za_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_za_sufrida'),
             }),
@@ -387,7 +266,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_za"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_lr_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB La Rioja Sufrida</field>
@@ -396,25 +274,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_lr_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_lr_sufrida'),
             }),
@@ -422,7 +290,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_lr"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_sa_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Salta Sufrida</field>
@@ -431,25 +298,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_sa_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_sa_sufrida'),
             }),
@@ -457,7 +314,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_sa"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_nn_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB San Juan Sufrida</field>
@@ -466,25 +322,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_nn_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_nn_sufrida'),
             }),
@@ -492,7 +338,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_nn"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_sl_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB San Luis Sufrida</field>
@@ -501,25 +346,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_sl_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_sl_sufrida'),
             }),
@@ -527,7 +362,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_sl"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_sf_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Santa Fe Sufrida</field>
@@ -536,25 +370,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_sf_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_sf_sufrida'),
             }),
@@ -562,7 +386,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_sf"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_se_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Santiago del Estero Sufrida</field>
@@ -571,25 +394,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_se_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_se_sufrida'),
             }),
@@ -597,7 +410,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_se"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_tn_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Tucumán Sufrida</field>
@@ -606,25 +418,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_tn_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_tn_sufrida'),
             }),
@@ -632,7 +434,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_tn"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ha_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Chaco Sufrida</field>
@@ -641,25 +442,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ha_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ha_sufrida'),
             }),
@@ -667,7 +458,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ha"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ct_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Chubut Sufrida</field>
@@ -676,25 +466,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ct_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ct_sufrida'),
             }),
@@ -702,7 +482,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ct"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_fo_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Formosa Sufrida</field>
@@ -711,25 +490,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_fo_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_fo_sufrida'),
             }),
@@ -737,7 +506,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_fo"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_mi_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Misiones Sufrida</field>
@@ -746,25 +514,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_mi_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_mi_sufrida'),
             }),
@@ -772,7 +530,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_mi"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ne_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Neuquén Sufrida</field>
@@ -781,25 +538,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ne_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_ne_sufrida'),
             }),
@@ -807,7 +554,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ne"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_lp_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB La Pampa Sufrida</field>
@@ -816,25 +562,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_lp_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_lp_sufrida'),
             }),
@@ -842,7 +578,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_lp"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_rn_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Río Negro Sufrida</field>
@@ -851,25 +586,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_rn_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_rn_sufrida'),
             }),
@@ -877,7 +602,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_rn"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_az_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Santa Cruz Sufrida</field>
@@ -886,25 +610,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_az_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_az_sufrida'),
             }),
@@ -912,7 +626,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_az"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_tf_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_base_chart_template"/>
         <field name="name">Percepción IIBB Tierra del Fuego Sufrida</field>
@@ -921,25 +634,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_tf_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('base_percepcion_iibb_tf_sufrida'),
             }),
@@ -947,7 +650,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_tf"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_caba_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB CABA Aplicada</field>
@@ -957,25 +659,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_caba_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_caba_aplicada'),
             }),
@@ -983,7 +675,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_caba"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ba_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB ARBA Aplicada</field>
@@ -993,25 +684,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ba_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ba_aplicada'),
             }),
@@ -1019,7 +700,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ba"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ca_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Catamarca Aplicada</field>
@@ -1029,25 +709,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ca_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ca_aplicada'),
             }),
@@ -1055,7 +725,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ca"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_co_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Córdoba Aplicada</field>
@@ -1065,25 +734,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_co_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_co_aplicada'),
             }),
@@ -1091,7 +750,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_co"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_rr_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Corrientes Aplicada</field>
@@ -1101,25 +759,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_rr_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_rr_aplicada'),
             }),
@@ -1127,7 +775,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_rr"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_er_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Entre Ríos Aplicada</field>
@@ -1137,25 +784,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_er_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_er_aplicada'),
             }),
@@ -1163,7 +800,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_er"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ju_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Jujuy Aplicada</field>
@@ -1173,25 +809,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ju_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ju_aplicada'),
             }),
@@ -1199,7 +825,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ju"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_za_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Mendoza Aplicada</field>
@@ -1209,25 +834,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_za_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_za_aplicada'),
             }),
@@ -1235,7 +850,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_za"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_lr_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB La Rioja Aplicada</field>
@@ -1245,25 +859,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_lr_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_lr_aplicada'),
             }),
@@ -1271,7 +875,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_lr"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_sa_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Salta Aplicada</field>
@@ -1281,25 +884,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_sa_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_sa_aplicada'),
             }),
@@ -1307,7 +900,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_sa"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_nn_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB San Juan Aplicada</field>
@@ -1317,25 +909,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_nn_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_nn_aplicada'),
             }),
@@ -1343,7 +925,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_nn"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_sl_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB San Luis Aplicada</field>
@@ -1353,25 +934,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_sl_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_sl_aplicada'),
             }),
@@ -1379,7 +950,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_sl"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_sf_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Santa Fe Aplicada</field>
@@ -1389,25 +959,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_sf_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_sf_aplicada'),
             }),
@@ -1415,7 +975,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_sf"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_se_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Santiago del Estero Aplicada</field>
@@ -1425,25 +984,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_se_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_se_aplicada'),
             }),
@@ -1451,7 +1000,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_se"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_tn_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Tucumán Aplicada</field>
@@ -1461,25 +1009,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_tn_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_tn_aplicada'),
             }),
@@ -1487,7 +1025,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_tn"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ha_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Chaco Aplicada</field>
@@ -1497,25 +1034,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ha_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ha_aplicada'),
             }),
@@ -1523,7 +1050,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ha"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ct_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Chubut Aplicada</field>
@@ -1533,25 +1059,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ct_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ct_aplicada'),
             }),
@@ -1559,7 +1075,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ct"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_fo_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Formosa Aplicada</field>
@@ -1569,25 +1084,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_fo_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_fo_aplicada'),
             }),
@@ -1595,7 +1100,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_fo"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_mi_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Misiones Aplicada</field>
@@ -1605,25 +1109,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_mi_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_mi_aplicada'),
             }),
@@ -1631,7 +1125,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_mi"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_ne_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Neuquén Aplicada</field>
@@ -1641,25 +1134,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ne_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_ne_aplicada'),
             }),
@@ -1667,7 +1150,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_ne"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_lp_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB La Pampa Aplicada</field>
@@ -1677,25 +1159,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_lp_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_lp_aplicada'),
             }),
@@ -1703,7 +1175,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_lp"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_rn_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Río Negro Aplicada</field>
@@ -1713,25 +1184,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_rn_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_rn_aplicada'),
             }),
@@ -1739,7 +1200,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_rn"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_az_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Santa Cruz Aplicada</field>
@@ -1749,25 +1209,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_az_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_az_aplicada'),
             }),
@@ -1775,7 +1225,6 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_az"/>
     </record>
-
     <record id="ri_tax_percepcion_iibb_tf_aplicada" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ex_chart_template"/>
         <field name="name">Percepción IIBB Tierra del Fuego Aplicada</field>
@@ -1785,25 +1234,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_tf_aplicada'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_ar.ri_percepcion_iibb_tf_aplicada'),
             }),
@@ -1811,9 +1250,7 @@
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iibb_tf"/>
     </record>
-
     <!-- Only for Responsable Inscription account.chart.template -->
-
     <!-- Remove this record in V14 -->
     <record id="ri_tax_vat_no_corresponde_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
@@ -1824,25 +1261,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -1850,7 +1277,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_no_corresponde"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_no_corresponde_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA No Corresponde</field>
@@ -1859,25 +1285,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -1885,7 +1301,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_no_corresponde"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_vat_no_gravado_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA No Gravado</field>
@@ -1894,25 +1309,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -1920,7 +1325,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_no_gravado"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_no_gravado_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA No Gravado</field>
@@ -1929,25 +1333,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -1955,7 +1349,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_no_gravado"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_vat_exento_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA Exento</field>
@@ -1964,25 +1357,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -1990,7 +1373,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_exento"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_exento_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA Exento</field>
@@ -1999,25 +1381,15 @@
         <field name="amount_type">fixed</field>
         <field eval="0.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -2025,7 +1397,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_exento"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_vat_0_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA 0%</field>
@@ -2034,25 +1405,15 @@
         <field eval="0.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -2060,7 +1421,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_0"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_0_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA 0%</field>
@@ -2069,25 +1429,15 @@
         <field eval="0.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -2095,7 +1445,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_0"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_vat_10_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA 10.5%</field>
@@ -2104,25 +1453,15 @@
         <field eval="10.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -2130,7 +1469,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_105"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_10_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="description">IVA 10.5%</field>
@@ -2139,25 +1477,15 @@
         <field eval="10.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -2165,7 +1493,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_105"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_vat_21_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA 21%</field>
@@ -2174,25 +1501,15 @@
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -2200,7 +1517,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_21"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_21_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA 21%</field>
@@ -2209,25 +1525,15 @@
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -2235,7 +1541,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_21"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_vat_27_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA 27%</field>
@@ -2244,25 +1549,15 @@
         <field eval="27" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -2270,7 +1565,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_27"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_27_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA 27%</field>
@@ -2279,25 +1573,15 @@
         <field eval="27" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -2305,7 +1589,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_27"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_vat_25_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA 2,5%</field>
@@ -2315,25 +1598,15 @@
         <field eval="2.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -2341,7 +1614,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_025"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_25_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA 2,5%</field>
@@ -2351,25 +1623,15 @@
         <field eval="2.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -2377,7 +1639,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_025"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_vat_5_ventas" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA 5%</field>
@@ -2387,25 +1648,15 @@
         <field eval="5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
@@ -2413,7 +1664,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_5"/>
         <field name="type_tax_use">sale</field>
     </record>
-
     <record id="ri_tax_vat_5_compras" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA 5%</field>
@@ -2423,25 +1673,15 @@
         <field eval="5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_credito_fiscal'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_iva_debito_fiscal'),
             }),
@@ -2449,7 +1689,6 @@
         <field name="tax_group_id" ref="l10n_ar.tax_group_iva_5"/>
         <field name="type_tax_use">purchase</field>
     </record>
-
     <record id="ri_tax_percepcion_iva_sufrida" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">Percepción IVA Sufrida</field>
@@ -2458,25 +1697,15 @@
         <field name="amount_type">fixed</field>
         <field eval="1.0" name="amount"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_percepcion_iva_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_percepcion_iva_sufrida'),
             }),
@@ -2484,7 +1713,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="l10n_ar.tax_group_percepcion_iva"/>
     </record>
-
     <record id="ri_tax_ganancias_iva_adicional" model="account.tax.template">
         <field name="chart_template_id" ref="l10nar_ri_chart_template"/>
         <field name="name">IVA Adicional 20%</field>
@@ -2493,25 +1721,15 @@
         <field eval="20.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_percepcion_iva_sufrida'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('ri_percepcion_iva_sufrida'),
             }),

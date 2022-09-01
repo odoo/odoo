@@ -14,6 +14,7 @@ import { escape } from "@web/core/utils/strings";
 import { mapDoActionOptionAPI } from "@web/legacy/backend_utils";
 import { Model } from "@web/views/model";
 import { evalDomain } from "@web/views/utils";
+import { localization } from "@web/core/l10n/localization";
 import BasicModel from "web.BasicModel";
 import Context from "web.Context";
 import fieldRegistry from "web.field_registry";
@@ -300,6 +301,9 @@ export class Record extends DataPoint {
     }
 
     get translatableFields() {
+        if (!localization.multiLang) {
+            return [];
+        }
         return Object.values(this.fields)
             .filter((f) => f.translate)
             .map((f) => this.activeFields[f.name]);
@@ -351,8 +355,8 @@ export class Record extends DataPoint {
         }
         for (const fieldName in this.activeFields) {
             const fieldType = this.fields[fieldName].type;
+            const activeField = this.activeFields[fieldName];
             if (fieldName in this._requiredFields) {
-                const activeField = this.activeFields[fieldName];
                 if (
                     !evalDomain(this._requiredFields[fieldName], this.evalContext) ||
                     (activeField && activeField.alwaysInvisible)
@@ -361,21 +365,35 @@ export class Record extends DataPoint {
                     continue;
                 }
             }
+
+            const isSet =
+                activeField && activeField.FieldComponent && activeField.FieldComponent.isSet;
+
+            if (this.isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
+                this.setInvalidField(fieldName);
+                continue;
+            }
+
             switch (fieldType) {
                 case "boolean":
                 case "float":
                 case "integer":
                 case "monetary":
                     continue;
+                case "properties":
+                    if (!this.checkPropertiesValidity(fieldName)) {
+                        this._setInvalidField(fieldName);
+                    }
+                    break;
                 case "one2many":
                 case "many2many":
                     if (!(await this.checkX2ManyValidity(fieldName))) {
-                        this.setInvalidField(fieldName);
+                        this._setInvalidField(fieldName);
                     }
                     break;
                 default:
-                    if (this.isRequired(fieldName) && !this.data[fieldName]) {
-                        this.setInvalidField(fieldName);
+                    if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
+                        this._setInvalidField(fieldName);
                     }
             }
         }
@@ -436,7 +454,7 @@ export class Record extends DataPoint {
         const list = this.data[fieldName];
         const record = list.editedRecord;
         if (record && record.isNew && !(await record.checkValidity())) {
-            if (record.canBeAbandoned) {
+            if (record.canBeAbandoned && !record.isDirty) {
                 list.abandonRecord(record.id);
             } else {
                 return false;
@@ -445,11 +463,33 @@ export class Record extends DataPoint {
         return true;
     }
 
-    setInvalidField(fieldName) {
+    /**
+     * The label and the id of the properties are always required.
+     *
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    checkPropertiesValidity(fieldName) {
+        const value = this.data[fieldName];
+        if (!value) {
+            return true;
+        }
+        return value.every(
+            (propertyDefinition) =>
+                !propertyDefinition.id ||
+                (propertyDefinition.string && propertyDefinition.string.length)
+        );
+    }
+
+    _setInvalidField(fieldName) {
         this._invalidFields.add(fieldName);
+        this.model.notify();
+    }
+
+    setInvalidField(fieldName) {
         const bm = this.model.__bm__;
         bm.setDirty(this.__bm_handle__);
-        this.model.notify();
+        this._setInvalidField(fieldName);
     }
 
     isInvalid(fieldName) {
@@ -1098,31 +1138,24 @@ export class StaticList extends DataPoint {
     async unselectRecord(canDiscard = false) {
         // something seems wrong with switchMode --> review system?
         const editedRecord = this.editedRecord;
-        if (editedRecord) {
-            const handle = editedRecord.__bm_handle__;
-            if (canDiscard && editedRecord.isNew && !editedRecord.isDirty) {
-                this.model.__bm__.discardChanges(handle);
-                if (editedRecord.canBeAbandoned) {
-                    this.model.__bm__.removeLine(handle);
-                }
-                this.__syncData();
-                this.editedRecord = null;
-                return await editedRecord.switchMode("readonly");
-            } else if (await editedRecord.checkValidity()) {
-                return await editedRecord.switchMode("readonly");
-            } else {
-                if (!editedRecord.isDirty) {
-                    this.model.__bm__.discardChanges(handle);
-                    if (editedRecord.canBeAbandoned) {
-                        this.model.__bm__.removeLine(handle);
-                    }
-                    this.editedRecord = null;
-                    return await editedRecord.switchMode("readonly");
-                }
-                return false;
-            }
+        if (!editedRecord) {
+            return true;
         }
-        return true;
+
+        const isValid = await editedRecord.checkValidity();
+        const handle = editedRecord.__bm_handle__;
+        if (!editedRecord.isDirty && ((canDiscard && editedRecord.isNew) || !isValid)) {
+            this.model.__bm__.discardChanges(handle);
+            if (editedRecord.canBeAbandoned) {
+                this.model.__bm__.removeLine(handle);
+            }
+            this.__syncData();
+            this.editedRecord = null;
+            return await editedRecord.switchMode("readonly");
+        } else if (isValid) {
+            return await editedRecord.switchMode("readonly");
+        }
+        return false;
     }
 }
 

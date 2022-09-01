@@ -722,6 +722,17 @@ class MailCase(MockEmail):
             self.assertEqual(self._new_bus_notifs, found_bus_notifs)
 
     @contextmanager
+    def assertMsgWithoutNotifications(self, mail_unlink_sent=False):
+        try:
+            with self.mock_mail_gateway(mail_unlink_sent=mail_unlink_sent), self.mock_bus(), self.mock_mail_app():
+                yield
+        finally:
+            self.assertTrue(self._new_msgs)
+            self.assertFalse(bool(self._new_notifs))
+            self.assertFalse(bool(self._new_mails))
+            self.assertFalse(bool(self._mails))
+
+    @contextmanager
     def assertNoNotifications(self):
         try:
             with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_bus(), self.mock_mail_app():

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0326
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
 
@@ -52,27 +53,46 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'sequence': 40,
         })
 
-        cls.tax_report = cls.env['account.tax.report'].create({
+        tax_report = cls.env['account.report'].create({
             'name': "Tax report",
             'country_id': cls.company_data['company'].country_id.id,
+            'column_ids': [
+                Command.create({
+                    'name': "Balance",
+                    'expression_label': 'balance',
+                }),
+            ],
         })
 
-        cls.tax_report_line = cls.env['account.tax.report.line'].create({
+        tax_report_line = cls.env['account.report.line'].create({
             'name': 'test_tax_report_line',
-            'tag_name': 'test_tax_report_line',
-            'report_id': cls.tax_report.id,
+            'report_id': tax_report.id,
             'sequence': 10,
+            'expression_ids': [
+                Command.create({
+                    'label': 'balance',
+                    'engine': 'tax_tags',
+                    'formula': 'test_tax_report_line',
+                }),
+            ],
         })
-        cls.tax_tag_pos = cls.tax_report_line.tag_ids.filtered(lambda x: not x.tax_negate)
-        cls.tax_tag_neg = cls.tax_report_line.tag_ids.filtered(lambda x: x.tax_negate)
-        cls.base_tax_report_line = cls.env['account.tax.report.line'].create({
+        tax_tags = tax_report_line.expression_ids._get_matching_tags()
+        cls.tax_tag_pos, cls.tax_tag_neg = tax_tags.sorted('tax_negate')
+
+        base_report_line = cls.env['account.report.line'].create({
             'name': 'base_test_tax_report_line',
-            'tag_name': 'base_test_tax_report_line',
-            'report_id': cls.tax_report.id,
+            'report_id': tax_report.id,
             'sequence': 10,
+            'expression_ids': [
+                Command.create({
+                    'label': 'balance',
+                    'engine': 'tax_tags',
+                    'formula': 'base_test_tax_report_line',
+                }),
+            ],
         })
-        cls.base_tag_pos = cls.base_tax_report_line.tag_ids.filtered(lambda x: not x.tax_negate)
-        cls.base_tag_neg = cls.base_tax_report_line.tag_ids.filtered(lambda x: x.tax_negate)
+        base_tags = base_report_line.expression_ids._get_matching_tags()
+        cls.base_tag_pos, cls.base_tag_neg = base_tags.sorted('tax_negate')
 
     def _create_invoice(self, taxes_per_line, inv_type='out_invoice', currency_id=False, invoice_payment_term_id=False):
         ''' Create an invoice on the fly.
@@ -195,7 +215,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'amount': 42,
             'invoice_repartition_line_ids': [
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(4, inv_base_tag.id, 0)],
                 }),
@@ -216,7 +235,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             ],
             'refund_repartition_line_ids': [
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(4, ref_base_tag.id, 0)],
                 }),
@@ -314,24 +332,20 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'invoice_repartition_line_ids': [
                 (0, 0, {
                     'repartition_type': 'base',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_pos.ids)],
                 }),
                 (0, 0, {
                     'repartition_type': 'tax',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
                 }),
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
                     'repartition_type': 'base',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_neg.ids)],
                 }),
                 (0, 0, {
                     'repartition_type': 'tax',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
                 }),
             ],
@@ -404,24 +418,20 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'invoice_repartition_line_ids': [
                 (0, 0, {
                     'repartition_type': 'base',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_pos.ids)],
                 }),
                 (0, 0, {
                     'repartition_type': 'tax',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
                 }),
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
                     'repartition_type': 'base',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_neg.ids)],
                 }),
                 (0, 0, {
                     'repartition_type': 'tax',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
                 }),
             ],
@@ -499,24 +509,16 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'invoice_repartition_line_ids': [
                     (0, 0, {
                         'repartition_type': 'base',
-                        'factor_percent': 100.0,
                         'tag_ids': [(6, 0, self.base_tag_pos.ids)],
                     }),
                     (0, 0, {
                         'repartition_type': 'tax',
-                        'factor_percent': 100.0,
                         'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
                     }),
                 ],
                 'refund_repartition_line_ids': [
-                    (0, 0, {
-                        'repartition_type': 'base',
-                        'factor_percent': 100.0,
-                    }),
-                    (0, 0, {
-                        'repartition_type': 'tax',
-                        'factor_percent': 100.0,
-                    }),
+                    (0, 0, {'repartition_type': 'base'}),
+                    (0, 0, {'repartition_type': 'tax'}),
                 ],
             })
             child2_sale_tax = self.env['account.tax'].create({
@@ -526,24 +528,16 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'amount_type': 'percent',
                 'amount': 10,
                 'invoice_repartition_line_ids': [
-                    (0, 0, {
-                        'repartition_type': 'base',
-                        'factor_percent': 100.0,
-                    }),
-                    (0, 0, {
-                        'repartition_type': 'tax',
-                        'factor_percent': 100.0,
-                    }),
+                    (0, 0, {'repartition_type': 'base'}),
+                    (0, 0, {'repartition_type': 'tax'}),
                 ],
                 'refund_repartition_line_ids': [
                     (0, 0, {
                         'repartition_type': 'base',
-                        'factor_percent': 100.0,
                         'tag_ids': [(6, 0, self.base_tag_neg.ids)],
                     }),
                     (0, 0, {
                         'repartition_type': 'tax',
-                        'factor_percent': 100.0,
                         'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
                     }),
                 ],

@@ -83,6 +83,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         .o_thread_window_title {
             cursor: pointer;
             flex: 1 1 auto;
+            height: 100%;
             @include o-text-overflow;
 
             .o_mail_thread_typing_icon {
@@ -221,11 +222,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
     .o_thread_bottom_free_space {
         height: 15px;
-    }
-
-    .o_thread_tooltip_container {
-        display: inline;
-        position: relative;
     }
 
     .o_thread_date_separator {
@@ -419,21 +415,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                     margin-bottom: $grid-gutter-width;
                 }
             }
-
-            .o_thread_tooltip_container {
-                display: inline;
-                position: relative;
-            }
         }
     }
 
     .o_thread_message .o_thread_message_core .o_mail_read_more {
         display: block;
     }
-}
-
-.o_web_client .popover .o_thread_tooltip_icon {
-    min-width: 1rem;
 }
 
 .o_web_client.o_touch_device {
@@ -687,6 +674,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
 .o_PublicLivechatMessage_background {
     position: absolute;
+    z-index: -1;
     left: 0;
     top: 0;
     width: 100%;

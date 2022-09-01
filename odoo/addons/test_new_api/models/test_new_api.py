@@ -96,6 +96,8 @@ class Discussion(models.Model):
     important_emails = fields.One2many('test_new_api.emailmessage', 'discussion',
                                        domain=[('important', '=', True)])
 
+    attributes_definition = fields.PropertiesDefinition('Message Properties')  # see message@attributes
+
     def _domain_very_important(self):
         """Ensure computed O2M domains work as expected."""
         return [("important", "=", True)]
@@ -141,6 +143,11 @@ class Message(models.Model):
     important = fields.Boolean()
     label = fields.Char(translate=True)
     priority = fields.Integer()
+
+    attributes = fields.Properties(
+        string='Properties',
+        definition='discussion.attributes_definition',
+    )
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
@@ -220,6 +227,18 @@ class EmailMessage(models.Model):
     message = fields.Many2one('test_new_api.message', 'Message',
                               required=True, ondelete='cascade')
     email_to = fields.Char('To')
+
+
+class DiscussionPartner(models.Model):
+    """
+    Simplified model for partners. Having a specific model avoids all the
+    overrides from other modules that may change which fields are being read,
+    how many queries it takes to use that model, etc.
+    """
+    _name = 'test_new_api.partner'
+    _description = 'Discussion Partner'
+
+    name = fields.Char(string='Name')
 
 
 class Multi(models.Model):

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+from freezegun import freeze_time
 
+from odoo import fields
 from odoo.tests.common import TransactionCase
 
 
@@ -61,43 +64,82 @@ class TestGetMailChannel(TransactionCase):
         # ensure visitor info are correct with anonymous
         operator = self.operators[0]
         channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='Visitor 22', previous_operator_id=operator.partner_id.id, country_id=belgium.id)
-        visitor_info = channel_info['livechat_visitor']
-        self.assertFalse(visitor_info['id'])
-        self.assertEqual(visitor_info['name'], "Visitor 22")
-        self.assertEqual(visitor_info['country'], (20, "Belgium"))
+        self.assertEqual(channel_info['channel']['anonymous_name'], "Visitor 22")
+        self.assertEqual(channel_info['channel']['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
 
         # ensure member info are hidden (in particular email and real name when livechat username is present)
-        self.assertEqual(sorted(channel_info['members'], key=lambda m: m['id']), sorted([{
+        # shape of channelMembers is [('insert', data...)], [0][1] accesses the data
+        self.assertEqual(sorted(map(lambda m: m['persona']['partner'], channel_info['channel']['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
             'active': True,
-            'email': False,
+            'country': [('clear',)],
             'id': operator.partner_id.id,
-            'im_status': False,
-            'livechat_username': 'Michel Operator',
-            'name': 'Michel Operator',
+            'is_public': False,
+            'user_livechat_username': 'Michel Operator',
         }, {
             'active': False,
-            'email': False,
             'id': public_user.partner_id.id,
-            'im_status': False,
-            'livechat_username': False,
+            'is_public': True,
             'name': 'Public user',
         }], key=lambda m: m['id']))
 
         # ensure visitor info are correct with real user
-        channel_info = self.livechat_channel.with_user(test_user)._open_livechat_mail_channel(anonymous_name='whatever', user_id=test_user.id)
-        visitor_info = channel_info['livechat_visitor']
-        self.assertEqual(visitor_info['id'], test_user.partner_id.id)
-        self.assertEqual(visitor_info['name'], "Roger")
-        self.assertEqual(visitor_info['country'], (20, "Belgium"))
+        channel_info = self.livechat_channel.with_user(test_user)._open_livechat_mail_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=test_user.id)
+        self.assertFalse(channel_info['channel']['anonymous_name'])
+        self.assertEqual(channel_info['channel']['anonymous_country'], [('clear',)])
+        self.assertEqual(channel_info['channel']['channelMembers'], [('insert', [
+            {
+                'channel': {'id': channel_info['id']},
+                'id': self.env['mail.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
+                'persona': {
+                    'partner': {
+                        'active': True,
+                        'country': [('clear',)],
+                        'id': operator.partner_id.id,
+                        'is_public': False,
+                        'user_livechat_username': 'Michel Operator',
+                    },
+                },
+            },
+            {
+                'channel': {'id': channel_info['id']},
+                'id': self.env['mail.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', test_user.partner_id.id)]).id,
+                'persona': {
+                    'partner': {
+                        'active': True,
+                        'country': {
+                            'code': 'BE',
+                            'id': belgium.id,
+                            'name': 'Belgium',
+                        },
+                        'id': test_user.partner_id.id,
+                        'is_public': False,
+                        'name': 'Roger',
+                    },
+                },
+            },
+        ])])
 
         # ensure visitor info are correct when operator is testing themselves
         operator = self.operators[0]
         channel_info = self.livechat_channel.with_user(operator)._open_livechat_mail_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=operator.id)
         self.assertEqual(channel_info['operator_pid'], (operator.partner_id.id, "Michel Operator"))
-        visitor_info = channel_info['livechat_visitor']
-        self.assertEqual(visitor_info['id'], operator.partner_id.id)
-        self.assertEqual(visitor_info['name'], "Michel")
-        self.assertFalse(visitor_info['country'])
+        self.assertFalse(channel_info['channel']['anonymous_name'])
+        self.assertEqual(channel_info['channel']['anonymous_country'], [('clear',)])
+        self.assertEqual(channel_info['channel']['channelMembers'], [('insert', [
+            {
+                'channel': {'id': channel_info['id']},
+                'id': self.env['mail.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
+                'persona': {
+                    'partner': {
+                        'active': True,
+                        'country': [('clear',)],
+                        'id': operator.partner_id.id,
+                        'is_public': False,
+                        'user_livechat_username': 'Michel Operator',
+                    },
+                },
+            },
+        ])])
 
     def _open_livechat_mail_channel(self):
         mail_channels = []
@@ -134,7 +176,27 @@ class TestGetMailChannel(TransactionCase):
         channel.with_user(operator).message_post(body='Hello', message_type='comment', subtype_xmlid='mail.mt_comment')
         message_formats = channel.with_user(public_user).sudo()._channel_fetch_message()
         self.assertEqual(len(message_formats), 1)
-        self.assertEqual(message_formats[0]['author_id'][0], operator.partner_id.id)
-        self.assertEqual(message_formats[0]['author_id'][1], operator.livechat_username)
-        self.assertEqual(message_formats[0]['author_id'][2], operator.livechat_username)
+        self.assertEqual(message_formats[0]['author']['id'], operator.partner_id.id)
+        self.assertEqual(message_formats[0]['author']['user_livechat_username'], operator.livechat_username)
         self.assertFalse(message_formats[0].get('email_from'), "should not send email_from to livechat user")
+
+    def test_read_channel_unpined_for_operator_after_one_day(self):
+        public_user = self.env.ref('base.public_user')
+        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='visitor')
+        member_of_operator = self.env['mail.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
+        message = self.env['mail.channel'].browse(channel_info['id']).message_post(body='cc')
+        member_of_operator.channel_id.with_user(self.operators.filtered(
+            lambda operator: operator.partner_id == member_of_operator.partner_id
+        ))._channel_seen(message.id)
+        with freeze_time(fields.Datetime.to_string(fields.datetime.now() + timedelta(days=1))):
+            member_of_operator._gc_unpin_livechat_sessions()
+        self.assertFalse(member_of_operator.is_pinned, "read channel should be unpinned after one day")
+
+    def test_unread_channel_not_unpined_for_operator_after_autovacuum(self):
+        public_user = self.env.ref('base.public_user')
+        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='visitor')
+        member_of_operator = self.env['mail.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
+        self.env['mail.channel'].browse(channel_info['id']).message_post(body='cc')
+        with freeze_time(fields.Datetime.to_string(fields.datetime.now() + timedelta(days=1))):
+            member_of_operator._gc_unpin_livechat_sessions()
+        self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")

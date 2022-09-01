@@ -22,7 +22,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { openDiscuss } = await start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -35,16 +35,17 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
         "Should display no one is currently typing"
     );
 
-    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
-            channel_id: mailChannelId1,
-            is_typing: true,
-            partner_id: resPartnerId1,
-            partner_name: "Demo",
-        });
-    });
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
+            'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
+            'is_typing': true,
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "Demo is typing...",
@@ -63,7 +64,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { openDiscuss } = await start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -76,16 +77,17 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
         "Should display no one is currently typing"
     );
 
-    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': true,
-            'partner_id': resPartnerId1,
-            'partner_name': "Demo",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "Demo is typing...",
@@ -93,14 +95,16 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     );
 
     // simulate receive typing notification from demo "is no longer typing"
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': false,
-            'partner_id': resPartnerId1,
-            'partner_name': "Demo",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "",
@@ -119,7 +123,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { advanceTime, openDiscuss } = await start({
+    const { advanceTime, messaging, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -133,16 +137,17 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
         "Should display no one is currently typing"
     );
 
-    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': true,
-            'partner_id': resPartnerId1,
-            'partner_name': "Demo",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "Demo is typing...",
@@ -168,7 +173,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { advanceTime, openDiscuss } = await start({
+    const { advanceTime, messaging, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -182,16 +187,17 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         "Should display no one is currently typing"
     );
 
-    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': true,
-            'partner_id': resPartnerId1,
-            'partner_name': "Demo",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
         "Demo is typing...",
@@ -200,11 +206,15 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
 
     // simulate receive typing notification from demo "is typing" again after 50s.
     await advanceTime(50 * 1000);
-    pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
-        'channel_id': mailChannelId1,
-        'is_typing': true,
-        'partner_id': resPartnerId1,
-        'partner_name': "Demo",
+    messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
+            'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
+            'is_typing': true,
+        },
     });
     await advanceTime(50 * 1000);
     await nextAnimationFrame();
@@ -239,7 +249,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             [0, 0, { partner_id: resPartnerId3 }],
         ],
     });
-    const { openDiscuss } = await start({
+    const { messaging, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -252,80 +262,89 @@ QUnit.test('receive several other members typing status "is typing"', async func
         "Should display no one is currently typing"
     );
 
-    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
-    // simulate receive typing notification from other10 (is typing)
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    // simulate receive typing notification from other 10 (is typing)
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': true,
-            'partner_id': resPartnerId1,
-            'partner_name': "Other10",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "Other10 is typing...",
-        "Should display that 'Other10' member is typing"
+        "Other 10 is typing...",
+        "Should display that 'Other 10' member is typing"
     );
 
-    // simulate receive typing notification from other11 (is typing)
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    // simulate receive typing notification from other 11 (is typing)
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId2,
+            },
             'is_typing': true,
-            'partner_id': resPartnerId2,
-            'partner_name': "Other11",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "Other10 and Other11 are typing...",
-        "Should display that members 'Other10' and 'Other11' are typing (order: longer typer named first)"
+        "Other 10 and Other 11 are typing...",
+        "Should display that members 'Other 10' and 'Other 11' are typing (order: longer typer named first)"
     );
 
-    // simulate receive typing notification from other12 (is typing)
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    // simulate receive typing notification from other 12 (is typing)
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId3,
+            },
             'is_typing': true,
-            'partner_id': resPartnerId3,
-            'partner_name': "Other12",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "Other10, Other11 and more are typing...",
-        "Should display that members 'Other10', 'Other11' and more (at least 1 extra member) are typing (order: longer typer named first)"
+        "Other 10, Other 11 and more are typing...",
+        "Should display that members 'Other 10', 'Other 11' and more (at least 1 extra member) are typing (order: longer typer named first)"
     );
 
-    // simulate receive typing notification from other10 (no longer is typing)
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    // simulate receive typing notification from other 10 (no longer is typing)
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': false,
-            'partner_id': resPartnerId1,
-            'partner_name': "Other10",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "Other11 and Other12 are typing...",
-        "Should display that members 'Other11' and 'Other12' are typing ('Other10' stopped typing)"
+        "Other 11 and Other 12 are typing...",
+        "Should display that members 'Other 11' and 'Other 12' are typing ('Other 10' stopped typing)"
     );
 
-    // simulate receive typing notification from other10 (is typing again)
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    // simulate receive typing notification from other 10 (is typing again)
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': true,
-            'partner_id': resPartnerId1,
-            'partner_name': "Other10",
-        });
-    });
+        },
+    }));
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "Other11, Other12 and more are typing...",
-        "Should display that members 'Other11' and 'Other12' and more (at least 1 extra member) are typing (order by longer typer, 'Other10' just recently restarted typing)"
+        "Other 11, Other 12 and more are typing...",
+        "Should display that members 'Other 11' and 'Other 12' and more (at least 1 extra member) are typing (order by longer typer, 'Other 10' just recently restarted typing)"
     );
 });
 

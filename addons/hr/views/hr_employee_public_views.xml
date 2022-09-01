@@ -128,7 +128,7 @@
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                            <field name="image_1024" class="o_kanban_image_fill_left" preview_image="image_128"
+                            <field name="image_1024" class="o_kanban_image_fill_left d-block" preview_image="image_128"
                                 widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
 
                             <div class="oe_kanban_details">
@@ -175,7 +175,7 @@
                                     <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
                                     <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                 </ul>
-                                <div class="oe_kanban_content position-absolute fixed-bottom me-2">
+                                <div class="oe_kanban_content position-absolute start-0 bottom-0 end-0 me-2">
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left"/>
                                         <div class="oe_kanban_bottom_right">

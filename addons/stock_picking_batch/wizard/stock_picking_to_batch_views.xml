@@ -13,6 +13,7 @@
                         <field name="mode" widget="radio" nolabel="1"/>
                         <field name="batch_id" options="{'no_create_edit': True, 'no_open': True}" attrs="{'invisible': [('mode', '=', 'new')], 'required': [('mode', '=', 'existing')]}"/>
                         <field name="user_id" options="{'no_create_edit': True}" attrs="{'invisible': [('mode', '=', 'existing')]}"/>
+                        <field name="is_create_draft"  attrs="{'invisible': [('mode', '!=', 'new')]}"/>
                     </group>
                 </group>
 

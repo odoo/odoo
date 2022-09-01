@@ -601,32 +601,4 @@ QUnit.module("Fields", (hooks) => {
             "the end date should only show date when option formatType is Date"
         );
     });
-
-    QUnit.test("Date field with option format type is 'datetime'", async function (assert) {
-        serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
-        serverData.models.partner.records[0].date_end = "2017-03-13";
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
-                <form>
-                    <field name="date" widget="daterange" options="{'related_end_date': 'date_end', 'format_type': 'datetime'}"/>
-                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date', 'format_type': 'datetime'}"/>
-                </form>`,
-        });
-
-        assert.strictEqual(
-            target.querySelector(".o_field_daterange[name='date']").textContent,
-            "02/03/2017 05:30:00",
-            "the start date should show date with time when option format_type is datatime"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_daterange[name='date_end']").textContent,
-            "03/13/2017 05:30:00",
-            "the end date should show date with time when option format_type is datatime"
-        );
-    });
 });

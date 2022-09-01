@@ -172,6 +172,7 @@
                             <label for="subject">Subject</label>
                             <div class="o_mass_mailing_subject d-flex flex-row align-items-baseline">
                                 <field class="text-break" name="subject" string="Subject"
+                                    options="{'dynamic_placeholder': true}"
                                     attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"
                                     widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
                                 <field name="favorite" invisible="1"/>
@@ -240,6 +241,7 @@
                                                 'snippets': 'mass_mailing.email_designer_snippets',
                                                 'cssEdit': 'mass_mailing.iframe_css_assets_edit',
                                                 'inline-field': 'body_html',
+                                                'dynamic_placeholder': true,
                                                 'cssReadonly': 'mass_mailing.iframe_css_assets_edit'
                                         }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </div>
@@ -255,21 +257,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </page>
-                            <page string="Dynamic Placeholder Generator"
-                                name="dynamic_placeholder_generator"
-                                groups="base.group_no_one">
-                                <group>
-                                    <field name="model_object_field" attrs="{'invisible': True}"/>
-                                    <field name="model_object_field"
-                                        domain="[('model_id','=',mailing_model_real),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
-                                    <field name="sub_object" readonly="1"/> 
-                                    <field name="sub_model_object_field" 
-                                        domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                        attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"/>
-                                    <field name="null_value"/>
-                                    <field name="copyvalue"/>
-                                </group>
                             </page>
                             <page string="A/B Tests" name="ab_testing">
                                 <group>
@@ -320,7 +307,10 @@
                             <page string="Settings" name="settings">
                                 <group>
                                     <group string="Email Content" name="email_content" attrs="{'invisible': [('mailing_type', '!=', 'mail')]}">
-                                        <field class="o_text_overflow" name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
+                                        <field class="o_text_overflow" name="preview" string="Preview Text"
+                                            options="{'dynamic_placeholder': true}"
+                                            attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"
+                                            widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">
@@ -478,12 +468,6 @@
                             </div>
                         </div>
                     </page>
-                </xpath>
-                <xpath expr="//notebook/page[@name='dynamic_placeholder_generator']" position="inside">
-                    <group/>
-                </xpath>
-                <xpath expr="//notebook/page[@name='dynamic_placeholder_generator']/group[2]" position="inside">
-                    <xpath expr="//notebook/page[@name='dynamic_placeholder_generator']/group[1]" position="move"/>
                 </xpath>
                 <xpath expr="//sheet" position="replace"/>
             </field>

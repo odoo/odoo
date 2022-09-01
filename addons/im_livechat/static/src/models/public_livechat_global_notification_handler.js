@@ -38,18 +38,21 @@ registerModel({
                     return;
                 }
                 case 'mail.channel.member/typing_status': {
-                    if (payload.channel_id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
+                    const channelMemberData = payload;
+                    if (channelMemberData.channel.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
-                    const partnerID = payload.partner_id;
-                    if (partnerID === this.messaging.publicLivechatGlobal.livechatButtonView.currentPartnerId) {
+                    if (!channelMemberData.persona.partner) {
+                        return;
+                    }
+                    if (channelMemberData.persona.partner.id === this.messaging.publicLivechatGlobal.livechatButtonView.currentPartnerId) {
                         // ignore typing display of current partner.
                         return;
                     }
-                    if (payload.is_typing) {
-                        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.registerTyping({ partnerID });
+                    if (channelMemberData.isTyping) {
+                        this.messaging.publicLivechatGlobal.publicLivechat.widget.registerTyping({ partnerID: channelMemberData.persona.partner.id });
                     } else {
-                        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.unregisterTyping({ partnerID });
+                        this.messaging.publicLivechatGlobal.publicLivechat.widget.unregisterTyping({ partnerID: channelMemberData.persona.partner.id });
                     }
                     return;
                 }
@@ -67,7 +70,7 @@ registerModel({
                     if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()) {
                         this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
                     }
-                    this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                    this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                     return;
                 }
                 case 'mail.message/insert': {
@@ -75,8 +78,8 @@ registerModel({
                     if (!message) {
                         return;
                     }
-                    message.legacyPublicLivechatMessage._body = utils.Markup(payload.body);
-                    this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                    message.widget._body = utils.Markup(payload.body);
+                    this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                     return;
                 }
             }

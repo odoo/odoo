@@ -297,12 +297,12 @@ export function triggerEvent(el, selector, eventType, eventAttrs = {}, options =
     return event;
 }
 
-export async function triggerEvents(el, querySelector, events) {
+export async function triggerEvents(el, querySelector, events, options) {
     for (let e = 0; e < events.length; e++) {
         if (Array.isArray(events[e])) {
-            triggerEvent(el, querySelector, events[e][0], events[e][1]);
+            triggerEvent(el, querySelector, events[e][0], events[e][1], options);
         } else {
-            triggerEvent(el, querySelector, events[e]);
+            triggerEvent(el, querySelector, events[e], {}, options);
         }
     }
     await nextTick();
@@ -329,7 +329,9 @@ export async function triggerScroll(
     const isScrollable =
         (target.scrollHeight > target.clientHeight && target.clientHeight > 0) ||
         (target.scrollWidth > target.clientWidth && target.clientWidth > 0);
-    if (!isScrollable && !canPropagate) return;
+    if (!isScrollable && !canPropagate) {
+        return;
+    }
     if (isScrollable) {
         const canScrollFrom = {
             left:
@@ -351,7 +353,9 @@ export async function triggerScroll(
         target.scrollTo(scrollCoordinates);
         target.dispatchEvent(new UIEvent("scroll"));
         await nextTick();
-        if (!canPropagate || !Object.entries(coordinates).length) return;
+        if (!canPropagate || !Object.entries(coordinates).length) {
+            return;
+        }
     }
     target.parentElement
         ? triggerScroll(target.parentElement, coordinates)
@@ -429,15 +433,36 @@ export async function mouseEnter(el, selector, coordinates) {
 
 export async function editInput(el, selector, value) {
     const input = findElement(el, selector);
-    if (
-        !["INPUT", "TEXTAREA"].includes(input.tagName) ||
-        !["text", "textarea", "email", "number", "search", "color"].includes(input.type)
-    ) {
-        throw new Error("Only inputs tag and textarea tag can be edited with editInput.");
+    if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)) {
+        throw new Error("Only 'input' and 'textarea' elements can be edited with 'editInput'.");
     }
-    input.value = value;
-    await triggerEvent(input, null, "input");
-    return triggerEvent(input, null, "change");
+    if (!["text", "textarea", "email", "search", "color", "number", "file"].includes(input.type)) {
+        throw new Error(`Type "${input.type}" not supported by 'editInput'.`);
+    }
+
+    const eventOpts = {};
+    if (input.type === "file") {
+        const files = Array.isArray(value) ? value : [value];
+        const dataTransfer = new DataTransfer();
+        for (const file of files) {
+            if (!(file instanceof File)) {
+                throw new Error(`File input value should be one or several File objects.`);
+            }
+            dataTransfer.items.add(file);
+        }
+        input.files = dataTransfer.files;
+        eventOpts.skipVisibilityCheck = true;
+    } else {
+        input.value = value;
+    }
+
+    await triggerEvents(input, null, ["input", "change"], eventOpts);
+
+    if (input.type === "file") {
+        // Need to wait for the file to be loaded by the input
+        await nextTick();
+        await nextTick();
+    }
 }
 
 export function editSelect(el, selector, value) {
@@ -672,6 +697,25 @@ function getDifferentParents(n1, n2) {
  * @returns {Promise<void>}
  */
 export async function dragAndDrop(from, to, position) {
+    const dropFunction = drag(from, to, position);
+    await dropFunction();
+}
+
+/**
+ * Helper performing a drag.
+ *
+ * - the 'from' selector is used to determine the element on which the drag will
+ *  start;
+ * - the 'to' selector will determine the element on which the dragged element will be
+ * moved.
+ *
+ * Returns a drop function
+ * @param {Element|string} from
+ * @param {Element|string} to
+ * @param {string} [position] "top" | "bottom" | "left" | "right"
+ * @returns {function: Promise<void>}
+ */
+export function drag(from, to, position) {
     const fixture = getFixture();
     from = from instanceof Element ? from : fixture.querySelector(from);
     to = to instanceof Element ? to : fixture.querySelector(to);
@@ -715,7 +759,14 @@ export async function dragAndDrop(from, to, position) {
     for (const target of getDifferentParents(from, to)) {
         triggerEvent(target, null, "mouseenter", toPos);
     }
-    await triggerEvent(from, null, "mouseup", toPos);
+
+    return function () {
+        return drop(from, toPos);
+    };
+}
+
+function drop(from, toPos) {
+    return triggerEvent(from, null, "mouseup", toPos);
 }
 
 export async function clickDropdown(target, fieldName) {

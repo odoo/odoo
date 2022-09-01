@@ -158,7 +158,9 @@ registerModel({
         /**
          * The rtc session that is the main card of the view.
          */
-        activeRtcSession: one('RtcSession'),
+        activeRtcSession: one('RtcSession', {
+            related: 'channel.activeRtcSession',
+        }),
         /**
          * The aspect ratio of the tiles.
          */

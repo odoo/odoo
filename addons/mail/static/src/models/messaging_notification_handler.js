@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { decrement, increment, insert, unlink } from '@mail/model/model_field_command';
+import { decrement, increment, insert } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
@@ -107,7 +107,7 @@ registerModel({
                         case 'mail.channel/legacy_insert':
                             return this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData({ model: 'mail.channel', ...message.payload }));
                         case 'mail.channel/insert':
-                            return this._handleNotificationChannelUpdate(message.payload);
+                            return this.messaging.models['Channel'].insert(message.payload);
                         case 'mail.guest/insert':
                             return this.messaging.models['Guest'].insert(message.payload);
                         case 'mail.message/insert':
@@ -120,6 +120,8 @@ registerModel({
                             return this._handleNotificationRtcSessionUpdate(message.payload);
                         case 'mail.channel.rtc.session/ended':
                             return this._handleNotificationRtcSessionEnded(message.payload);
+                        case 'mail.thread/insert':
+                            return this.messaging.models['Thread'].insert(message.payload);
                         case 'res.users.settings/insert':
                             return this.messaging.models['res.users.settings'].insert(message.payload);
                         case 'res.users.settings.volumes/insert':
@@ -212,9 +214,10 @@ registerModel({
          * @private
          * @param {object} payload
          * @param {integer} payload.id
+         * @param {boolean} payload.isServerPinned
          * @param {string} payload.last_interest_dt
          */
-        _handleNotificationChannelLastInterestDateTimeChanged({ id, last_interest_dt }) {
+        _handleNotificationChannelLastInterestDateTimeChanged({ id, isServerPinned, last_interest_dt }) {
             const channel = this.messaging.models['Thread'].findFromIdentifyingData({
                 id: id,
                 model: 'mail.channel',
@@ -222,6 +225,7 @@ registerModel({
             if (channel) {
                 channel.update({
                     lastInterestDateTime: str_to_datetime(last_interest_dt),
+                    isServerPinned,
                 });
             }
         },
@@ -265,8 +269,8 @@ registerModel({
             // Chat from OdooBot is considered disturbing and should only be
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
-                channel.thread.correspondent &&
-                channel.thread.correspondent === this.messaging.partnerRoot
+                channel.correspondent &&
+                channel.correspondent === this.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
                 const isOdooFocused = this.env.services['presence'].isOdooFocused();
@@ -333,49 +337,28 @@ registerModel({
         },
         /**
          * @private
-         * @param {Object} param1
-         * @param {integer} param1.channel_id
-         * @param {boolean} param1.is_typing
-         * @param {integer} param1.partner_id
-         * @param {string} param1.partner_name
+         * @param {Object} channelMemberData
          */
-        _handleNotificationChannelMemberTypingStatus({ channel_id, is_typing, partner_id, partner_name }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id: channel_id,
-                model: 'mail.channel',
-            });
-            if (!channel) {
+        _handleNotificationChannelMemberTypingStatus(channelMemberData) {
+            const member = this.messaging.models['ChannelMember'].insert(channelMemberData);
+            if (member.isMemberOfCurrentUser) {
+                // Ignore management of current persona is typing notification.
                 return;
             }
-            const partner = this.messaging.models['Partner'].insert({
-                id: partner_id,
-                name: partner_name,
-            });
-            if (partner === this.messaging.currentPartner) {
-                // Ignore management of current partner is typing notification.
-                return;
-            }
-            if (is_typing) {
-                if (channel.typingMembers.includes(partner)) {
-                    channel.refreshOtherMemberTypingMember(partner);
+            if (member.isTyping) {
+                if (member.channel.thread.typingMembers.includes(member)) {
+                    member.channel.thread.refreshOtherMemberTypingMember(member);
                 } else {
-                    channel.registerOtherMemberTypingMember(partner);
+                    member.channel.thread.registerOtherMemberTypingMember(member);
                 }
             } else {
-                if (!channel.typingMembers.includes(partner)) {
+                if (!member.channel.thread.typingMembers.includes(member)) {
                     // Ignore no longer typing notifications of members that
                     // are not registered as typing something.
                     return;
                 }
-                channel.unregisterOtherMemberTypingMember(partner);
+                member.channel.thread.unregisterOtherMemberTypingMember(member);
             }
-        },
-        /**
-         * @private
-         * @param {Object} channelData
-         */
-        _handleNotificationChannelUpdate(channelData) {
-            this.messaging.models['Thread'].insert({ model: 'mail.channel', ...channelData });
         },
         /**
          * @private
@@ -567,21 +550,23 @@ registerModel({
          * @param {integer} payload.id
          */
         _handleNotificationChannelLeave({ id }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
+            const thread = this.messaging.models['Thread'].findFromIdentifyingData({
                 id,
                 model: 'mail.channel',
             });
-            if (!channel) {
+            if (!thread) {
                 return;
             }
-            const message = sprintf(this.env._t("You unsubscribed from %s."), channel.displayName);
+            const message = sprintf(this.env._t("You unsubscribed from %s."), thread.displayName);
             this.messaging.notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
-            channel.update({
+            thread.update({
                 isServerPinned: false,
-                members: unlink(this.messaging.currentPartner)
             });
+            if (thread.channel && thread.channel.memberOfCurrentUser) {
+                thread.channel.memberOfCurrentUser.delete();
+            }
         },
         /**
          * @private
@@ -589,21 +574,23 @@ registerModel({
          * @param {integer} payload.id
          */
         _handleNotificationChannelUnpin({ id }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
+            const thread = this.messaging.models['Thread'].findFromIdentifyingData({
                 id,
                 model: 'mail.channel',
             });
-            if (!channel) {
+            if (!thread) {
                 return;
             }
-            const message = sprintf(this.env._t("You unpinned your conversation with %s."), channel.displayName);
+            const message = sprintf(this.env._t("You unpinned your conversation with %s."), thread.displayName);
             this.messaging.notify({ message, type: 'info' });
             // We assume that arriving here the server has effectively
             // unpinned the channel
-            channel.update({
+            thread.update({
                 isServerPinned: false,
-                members: unlink(this.messaging.currentPartner)
             });
+            if (thread.channel && thread.channel.memberOfCurrentUser) {
+                thread.channel.memberOfCurrentUser.delete();
+            }
         },
         /**
          * @private
@@ -622,7 +609,7 @@ registerModel({
             if (!this.exists() || !chat || this.messaging.device.isSmall) {
                 return;
             }
-            this.messaging.chatWindowManager.openThread(chat);
+            this.messaging.chatWindowManager.openThread(chat.thread);
         },
         /**
          * @private

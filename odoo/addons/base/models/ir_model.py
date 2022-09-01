@@ -15,7 +15,7 @@ from psycopg2 import sql
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import pycompat, unique
+from odoo.tools import pycompat, unique, OrderedSet
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -296,8 +296,6 @@ class IrModel(models.Model):
         return res
 
     def write(self, vals):
-        if '__last_update' in self._context:
-            self = self.with_context({k: v for k, v in self._context.items() if k != '__last_update'})
         if 'model' in vals and any(rec.model != vals['model'] for rec in self):
             raise UserError(_('Field "Model" cannot be modified on models.'))
         if 'state' in vals and any(rec.state != vals['state'] for rec in self):
@@ -821,17 +819,15 @@ class IrModelFields(models.Model):
         self._prepare_update()
 
         # determine registry fields corresponding to self
-        triggers = self.pool.field_triggers
-        fields = []
+        fields = OrderedSet()
         for record in self:
             try:
-                fields.append(self.pool[record.model]._fields[record.name])
+                fields.add(self.pool[record.model]._fields[record.name])
             except KeyError:
                 pass
 
-        model_names = self.mapped('model')
-        self._drop_column()
-        res = super(IrModelFields, self).unlink()
+        # clean the registry from the fields to remove
+        self.pool.registry_invalidated = True
 
         # discard the removed fields from field triggers
         def discard_fields(tree):
@@ -845,8 +841,18 @@ class IrModelFields(models.Model):
                 if field is not None:
                     discard_fields(subtree)
 
-        discard_fields(triggers)
-        self.pool.registry_invalidated = True
+        discard_fields(self.pool.field_triggers)
+
+        # discard the removed fields from field inverses
+        self.pool.field_inverses.discard_keys_and_values(fields)
+
+        # discard the removed fields from fields to compute
+        for field in fields:
+            self.env.all.tocompute.pop(field, None)
+
+        model_names = self.mapped('model')
+        self._drop_column()
+        res = super(IrModelFields, self).unlink()
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.

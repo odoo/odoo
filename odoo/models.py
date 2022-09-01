@@ -2049,19 +2049,26 @@ class BaseModel(metaclass=MetaModel):
             if not avoid(field)
         }
 
-        if not missing_defaults:
-            return values
+        if missing_defaults:
+            # override defaults with the provided values, never allow the other way around
+            defaults = self.default_get(list(missing_defaults))
+            for name, value in defaults.items():
+                if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
+                    # convert a list of ids into a list of commands
+                    defaults[name] = [Command.set(value)]
+                elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
+                    # convert a list of dicts into a list of commands
+                    defaults[name] = [Command.create(x) for x in value]
+            defaults.update(values)
 
-        # override defaults with the provided values, never allow the other way around
-        defaults = self.default_get(list(missing_defaults))
-        for name, value in defaults.items():
-            if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
-                # convert a list of ids into a list of commands
-                defaults[name] = [Command.set(value)]
-            elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
-                # convert a list of dicts into a list of commands
-                defaults[name] = [Command.create(x) for x in value]
-        defaults.update(values)
+        else:
+            defaults = values
+
+        # delegate the default properties to the properties field
+        for field in self._fields.values():
+            if field.type == 'properties':
+                defaults[field.name] = field._add_default_values(self.env, defaults)
+
         return defaults
 
     @classmethod
@@ -3568,31 +3575,6 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
-    def _check_concurrency(self):
-        if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
-            return
-        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp)"
-        for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            nclauses = 0
-            params = []
-            for id in sub_ids:
-                id_ref = "%s,%s" % (self._name, id)
-                update_date = self._context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
-                if update_date:
-                    nclauses += 1
-                    params.extend([id, update_date])
-            if not nclauses:
-                continue
-            query = "SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause] * nclauses))
-            self._cr.execute(query, tuple(params))
-            res = self._cr.fetchone()
-            if res:
-                # mention the first one only to keep the error message readable
-                raise ValidationError(_(
-                    "A document was modified since you last viewed it (%s:%d)",
-                    self._description, res[0],
-                ))
-
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.
 
@@ -3764,7 +3746,6 @@ class BaseModel(metaclass=MetaModel):
 
         self.check_access_rights('unlink')
         self.check_access_rule('unlink')
-        self._check_concurrency()
 
         from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
         for func in self._ondelete_methods:
@@ -4050,7 +4031,6 @@ class BaseModel(metaclass=MetaModel):
         if not self:
             return
 
-        self._check_concurrency()
         cr = self._cr
 
         # determine records that require updating parent_path
@@ -4346,6 +4326,11 @@ class BaseModel(metaclass=MetaModel):
                         else:
                             row.append(SQL_DEFAULT)
                 else:
+                    other_fields.add(field)
+
+                if field.type == 'properties':
+                    # force calling fields.create for properties field because
+                    # we might want to update the parent definition
                     other_fields.add(field)
 
             if not columns:
@@ -6755,6 +6740,18 @@ class BaseModel(metaclass=MetaModel):
 
         # make a snapshot based on the initial values of record
         snapshot0 = Snapshot(record, nametree, fetch=(not first_call))
+
+        for name in initial_values:
+            # TODO: The parent field on "record" can be False, if it was changed,
+            # (even if if was changed to a not Falsy value) because of
+            # >>> initial_values = dict(values, **dict.fromkeys(names, False))
+            # If it's the case when we will read the properties field on this record,
+            # it will return False as well (no parent == no definition) but we need
+            # "snapshot0" to have the old value to be able to compare it with the new one
+            # and trigger the onchange if necessary.
+            field = self._fields.get(name)
+            if field and field.type == 'properties':
+                snapshot0[name] = initial_values[name]
 
         # store changed values in cache; also trigger recomputations based on
         # subfields (e.g., line.a has been modified, line.b is computed stored

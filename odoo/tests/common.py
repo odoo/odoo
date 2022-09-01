@@ -775,12 +775,12 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
     def assertHTMLEqual(self, original, expected):
         return self._assertXMLEqual(original, expected, 'html')
 
-    def profile(self, **kwargs):
+    def profile(self, description='', **kwargs):
         test_method = getattr(self, '_testMethodName', 'Unknown test method')
         if not hasattr(self, 'profile_session'):
             self.profile_session = profiler.make_session(test_method)
         return profiler.Profiler(
-            description='%s uid:%s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold'),
+            description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
             db=self.env.cr.dbname,
             profile_session=self.profile_session,
             **kwargs)
@@ -1491,7 +1491,7 @@ which leads to stray network requests and inconsistencies."""))
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
-        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=15.0)
+        nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=20.0)
         self._logger.info("Navigation result: %s", nav_result)
         if wait_stop:
             frame_id = nav_result['frameId']
@@ -1679,7 +1679,7 @@ class HttpCase(TransactionCase):
             cls.browser.stop()
             cls.browser = None
 
-    def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True, head=False):
+    def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):
             url = self.base_url() + url
         if head:
@@ -1841,6 +1841,16 @@ class HttpCase(TransactionCase):
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
         ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
         return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
+
+    def profile(self, **kwargs):
+        """
+        for http_case, also patch _get_profiler_context_manager in order to profile all requests
+        """
+        sup = super()
+        _profiler = sup.profile(**kwargs)
+        def route_profiler(request):
+            return sup.profile(description=request.httprequest.full_path)
+        return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
 
 
 # kept for backward compatibility

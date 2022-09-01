@@ -444,12 +444,6 @@ class AccountMove(models.Model):
         tracking=True,
     )
 
-    # ==== Early payment cash discount field ====
-    invoice_early_pay_amount_after_discount = fields.Monetary(
-        compute='_compute_early_pay_amount_after_discount',
-        help="Total amount left to pay after the discount was applied",
-    )
-
     # === Reverse feature fields === #
     reversed_entry_id = fields.Many2one(
         comodel_name='account.move',
@@ -1075,11 +1069,9 @@ class AccountMove(models.Model):
                 payments_widget_vals['content'].append({
                     'journal_name': line.ref or line.move_id.name,
                     'amount': amount,
-                    'currency': move.currency_id.symbol,
+                    'currency_id': move.currency_id.id,
                     'id': line.id,
                     'move_id': line.move_id.id,
-                    'position': move.currency_id.position,
-                    'digits': [69, move.currency_id.decimal_places],
                     'date': fields.Date.to_string(line.date),
                     'account_payment_id': line.payment_id.id,
                 })
@@ -1109,9 +1101,7 @@ class AccountMove(models.Model):
                         'name': counterpart_line.name,
                         'journal_name': counterpart_line.journal_id.name,
                         'amount': reconciled_partial['amount'],
-                        'currency': reconciled_partial['currency'].symbol,
-                        'digits': [69, reconciled_partial['currency'].decimal_places],
-                        'position': reconciled_partial['currency'].position,
+                        'currency_id': reconciled_partial['currency'].id,
                         'date': counterpart_line.date,
                         'partial_id': reconciled_partial['partial_id'],
                         'account_payment_id': counterpart_line.payment_id.id,
@@ -1161,21 +1151,6 @@ class AccountMove(models.Model):
             else:
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
                 move.tax_totals = None
-
-    def _get_report_early_payment_totals_values(self):
-        self.ensure_one()
-
-        if self.move_type not in ['out_invoice', 'out_receipt', 'in_invoice', 'in_receipt'] or \
-                not self.payment_state == 'not_paid' or \
-                not self.invoice_payment_term_id.has_early_payment:
-            return
-
-        base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
-        return self.env['account.tax']._prepare_tax_totals(
-            [x._convert_to_tax_base_line_dict() for x in base_lines],
-            self.currency_id,
-            early_payment_term=self.invoice_payment_term_id,
-        )
 
     @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
     def _compute_invoice_partner_display_info(self):
@@ -1243,7 +1218,7 @@ class AccountMove(models.Model):
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
 
-    @api.depends('tax_country_id.code')
+    @api.depends('tax_country_id')
     def _compute_tax_country_code(self):
         for record in self:
             record.tax_country_code = record.tax_country_id.code
@@ -1294,36 +1269,6 @@ class AccountMove(models.Model):
             if show_warning:
                 updated_credit = move.partner_id.credit + move.amount_total_signed
                 move.partner_credit_warning = self._build_credit_warning_message(move, updated_credit)
-
-    @api.depends('invoice_payment_term_id', 'amount_residual_signed', 'currency_id')
-    def _compute_early_pay_amount_after_discount(self):
-        for record in self:
-            if record.invoice_payment_term_id.has_early_payment:
-                percentage_to_discount = record.invoice_payment_term_id.percentage_to_discount
-                discount_computation = self.invoice_payment_term_id.discount_computation
-
-                discounted_amount_untaxed = (100 - percentage_to_discount) * record.amount_untaxed / 100
-                if discount_computation == 'included':
-                    discounted_amount_tax = (100 - percentage_to_discount) * record.amount_tax / 100
-                else:
-                    discounted_amount_tax = record.amount_tax
-                record.invoice_early_pay_amount_after_discount = discounted_amount_untaxed + discounted_amount_tax
-                if record.currency_id.compare_amounts(record.invoice_early_pay_amount_after_discount, 0.0) <= 0.0:
-                    record.invoice_early_pay_amount_after_discount = 0
-            else:
-                record.invoice_early_pay_amount_after_discount = 0
-
-    def _is_eligible_for_early_discount(self, payment_date):
-        '''
-        An early payment discount is possible if the option has been activated,
-        no partial payment was registered,
-        and the payment date is before the last early_payment_date possible.
-        '''
-        self.ensure_one()
-        return self.move_type in ['out_invoice', 'out_receipt', 'in_invoice', 'in_receipt'] and \
-               self.invoice_payment_term_id.has_early_payment and \
-               self.payment_state == 'not_paid' and \
-               payment_date <= self.invoice_payment_term_id._get_last_date_for_discount(self.invoice_date)
 
     def _build_credit_warning_message(self, record, updated_credit):
         ''' Build the warning message that will be displayed in a yellow banner on top of the current record
@@ -2621,6 +2566,25 @@ class AccountMove(models.Model):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
+    def _prepare_invoice_aggregated_taxes(self, filter_invl_to_apply=None, filter_tax_values_to_apply=None, grouping_key_generator=None):
+        self.ensure_one()
+
+        base_lines = [
+            x._convert_to_tax_base_line_dict()
+            for x in self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
+        ]
+
+        to_process = []
+        for base_line in base_lines:
+            to_update_vals, tax_values_list = self.env['account.tax']._compute_taxes_for_single_line(base_line)
+            to_process.append((base_line, to_update_vals, tax_values_list))
+
+        return self.env['account.tax']._aggregate_taxes(
+            to_process,
+            filter_tax_values_to_apply=filter_tax_values_to_apply,
+            grouping_key_generator=grouping_key_generator,
+        )
+
     def _affect_tax_report(self):
         return any(line._affect_tax_report() for line in self.line_ids)
 
@@ -3684,3 +3648,15 @@ class AccountMove(models.Model):
         Down-payments can be created from a sale order. This method is overridden in the sale order module.
         '''
         return False
+
+    @api.model
+    def get_invoice_localisation_fields_required_to_invoice(self, country_id):
+        """ Returns the list of fields that needs to be filled when creating an invoice for the selected country.
+        This is required for some flows that would allow a user to request an invoice from the portal.
+        Using these, we can get their information and dynamically create form inputs based for the fields required legally for the company country_id.
+        The returned fields must be of type ir.model.fields in order to handle translations
+
+        :param country_id: The country for which we want the fields.
+        :return: an array of ir.model.fields for which the user should provide values.
+        """
+        return []

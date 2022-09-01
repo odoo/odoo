@@ -90,8 +90,7 @@
             'mass_mailing/static/src/scss/mass_mailing.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
             'mass_mailing/static/src/css/email_template.css',
-            'mass_mailing/static/src/js/mailing_contact_view_kanban.js',
-            'mass_mailing/static/src/js/mailing_contact_view_list.js',
+            'mass_mailing/static/src/views/*.js',
             'mass_mailing/static/src/js/mailing_filter_widget.js',
             'mass_mailing/static/src/js/mass_mailing.js',
             'mass_mailing/static/src/js/mass_mailing_design_constants.js',
@@ -126,6 +125,7 @@
         ],
         'web.assets_qweb': [
             'mass_mailing/static/src/xml/*.xml',
+            'mass_mailing/static/src/views/*.xml',
         ],
     },
     'license': 'LGPL-3',

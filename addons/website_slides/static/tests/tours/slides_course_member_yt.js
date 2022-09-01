@@ -21,7 +21,7 @@ FullScreen.include({
 
 /**
  * Global use case:
- * an user (either employee, website publisher or portal) joins a public
+ * an user (either employee, website restricted editor or portal) joins a public
     course;
  * they have access to the full course content when they are a member of the
     course;
@@ -38,7 +38,7 @@ tour.register('course_member_youtube', {
 }, {
     trigger: 'a:contains("Choose your wood")'
 }, {
-    trigger: 'a:contains("Join Course")'
+    trigger: 'a:contains("Join this Course")'
 }, {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership

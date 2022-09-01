@@ -7,6 +7,7 @@ import { session } from "@web/session";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
 import {
+    addRow,
     click,
     clickDiscard,
     clickDropdown,
@@ -753,19 +754,46 @@ QUnit.module("Fields", (hooks) => {
         // Select two records
         await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
         await click(target.querySelectorAll(".o_data_row")[1], ".o_list_record_selector input");
-
         await click(target.querySelector(".o_data_row .o_data_cell"));
-
-        await editInput(target, ".o_field_widget[name=trululu] input", "");
-        await triggerEvent(target, ".o_field_widget[name=trululu] input", "blur");
-
+        const input = target.querySelector(".o_field_widget[name=trululu] input");
+        input.value = "";
+        await triggerEvent(input, null, "input");
         assert.containsNone(target, ".modal", "No save should be triggered when removing value");
 
-        await click(target.querySelector(".o_field_widget[name=trululu] input"));
         await click(target.querySelector(".o_field_widget[name=trululu] .ui-menu-item"));
-
         assert.containsOnce(target, ".modal", "Saving should be triggered when selecting a value");
+
         await click(target, ".modal .btn-primary");
+    });
+
+    QUnit.test("empty a many2one field in list view", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="trululu"/>
+                </tree>`,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.step(method);
+                    assert.deepEqual(args[1], { trululu: false });
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".o_field_widget[name=trululu] input", "");
+        assert.strictEqual(
+            target.querySelector(".o_data_row .o_field_widget[name=trululu] input").textContent,
+            ""
+        );
+
+        await click(target, ".o_list_view");
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "");
+
+        assert.verifySteps(["write"]);
     });
 
     QUnit.test("focus tracking on a many2one in a list", async function (assert) {
@@ -2093,24 +2121,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // Click on "Add an item"
-            await click(target, ".o_field_x2many_list_row_add a");
-            target.querySelector(".o_field_widget.o_field_char[name=display_name] input").value =
-                "some text";
-            assert.containsOnce(
-                target,
-                ".o_field_widget.o_field_char[name=display_name]",
-                "should have a char field 'display_name' on this record"
-            );
-            assert.doesNotHaveClass(
-                target.querySelector(".o_field_widget.o_field_char[name=display_name]"),
-                "o_required_modifier",
-                "the char field should not be required on this record"
-            );
-            assert.strictEqual(
-                target.querySelector(".o_field_widget.o_field_char[name=display_name] input").value,
-                "some text",
-                "should have entered text in the char field on this record"
-            );
+            await addRow(target);
             assert.containsOnce(
                 target,
                 ".o_field_widget.o_required_modifier[name=trululu]",

@@ -5,7 +5,6 @@
             <field name="model">res.config.settings</field>
             <field name="priority" eval="50"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form" />
-            <field name="groups_id" eval="[(4, ref('project.group_project_manager'), 0)]"/>
             <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block" data-string="Project" string="Project" data-key="project" groups="project.group_project_manager">
@@ -92,7 +91,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_project_forecast"/>
                                     <div class="text-muted" name="project_forecast_msg">
-                                        Plan resource allocation across projects and tasks, and estimate deadlines more accurately
+                                        Plan resource allocation across projects and estimate deadlines more accurately
                                     </div>
                                 </div>
                             </div>

@@ -100,7 +100,7 @@ export async function makeTestEnv(config = {}) {
     while (servicesToProcess.length) {
         const service = servicesToProcess.pop();
         if (service.dependencies) {
-            for (let depName of service.dependencies) {
+            for (const depName of service.dependencies) {
                 if (depName in mocks && !serviceRegistry.contains(depName)) {
                     const dep = mocks[depName]();
                     serviceRegistry.add(depName, dep);

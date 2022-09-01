@@ -1,7 +1,7 @@
 // Define left and right padding according to screen resolution
 @mixin o-form-sheet-inner-left-padding {
     padding-left: $o-horizontal-padding;
-    @include media-breakpoint-between(lg, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         padding-left: $o-horizontal-padding*2;
     }
 }
@@ -10,7 +10,7 @@
 }
 @mixin o-form-sheet-inner-right-padding {
     padding-right: $o-horizontal-padding;
-    @include media-breakpoint-between(lg, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         padding-right: $o-horizontal-padding*2;
     }
 }
@@ -18,7 +18,7 @@
 @mixin o-form-sheet-negative-margin {
     margin-left: -$o-horizontal-padding;
     margin-right: -$o-horizontal-padding;
-    @include media-breakpoint-between(lg, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         margin-left: -$o-horizontal-padding*2;
         margin-right: -$o-horizontal-padding*2;
     }
@@ -174,7 +174,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // No sheet
-    &.o_form_nosheet, .o_form_nosheet {
+    .o_form_nosheet {
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
 
         .o_form_statusbar {
@@ -192,14 +192,10 @@ $o-form-label-margin-right: 0px;
 
     // Statusbar
     .o_form_statusbar {
-        position: relative; // Needed for the "More" dropdown
-        display: flex;
-        justify-content: space-between;
         padding-left: $o-horizontal-padding;
-        border-bottom: 1px solid $border-color;
         background-color: $o-view-background-color;
 
-        > .o_statusbar_buttons, > .o_statusbar_status {
+        > .o_statusbar_status {
             display: flex;
             align-items: center;
             align-content: space-around;
@@ -211,8 +207,6 @@ $o-form-label-margin-right: 0px;
         }
 
         > .o_statusbar_buttons {
-            flex-flow: row wrap;
-
             > .btn, .o_widget > .btn {
                 $o-statusbar-buttons-vmargin: 4px;
                 min-height: $o-statusbar-height - 2 * $o-statusbar-buttons-vmargin;
@@ -380,10 +374,6 @@ $o-form-label-margin-right: 0px;
 
     // Separators
     .o_horizontal_separator {
-        font-size: $font-size-sm;
-        font-weight: $font-weight-bold;
-        margin: 1.2em ($grid-gutter-width * .5) .8em 0;
-
         &:not(:empty) {
             box-shadow: 0 $border-width 0 $o-form-separator-color;
         }
@@ -405,8 +395,7 @@ $o-form-label-margin-right: 0px;
 
     // Labels
     .o_form_label {
-        margin: 0 $o-form-spacing-unit 0 0;
-        color: $headings-color;
+        margin-right: $o-form-spacing-unit;
         font-size: $font-size-base; // The label muse have the same size whatever their position
         line-height: $line-height-base;
         font-weight: $font-weight-bold;
@@ -482,7 +471,7 @@ $o-form-label-margin-right: 0px;
 
             .o_form_label {
                 padding-right: 20px;
-
+                margin-right: 0;
                 min-width: 0;
                 white-space: nowrap;
                 &:after {
@@ -500,11 +489,10 @@ $o-form-label-margin-right: 0px;
         > tbody > tr:first-child > td {
             padding-top: 4px;
         }
-
         .oe_subtotal_footer_separator {
             width: 100%;
             text-align: right;
-            border-top: 1px solid map-get($grays, '300');
+            border-top: 1px solid $border-color;
             font-weight: $font-weight-bold;
             font-size: 1.3em;
         }
@@ -650,7 +638,7 @@ $o-form-label-margin-right: 0px;
         display: none;  // Hide the handler on readonly fields
     }
 
-    &.oe_form_configuration {
+    .oe_form_configuration {
         .o_group .o_form_label {
             white-space: nowrap;
         }
@@ -658,7 +646,7 @@ $o-form-label-margin-right: 0px;
             margin-top: 32px !important;
         }
     }
-    &.o_company_document_layout {
+    .o_company_document_layout {
         .report_layout_container {
             display: inline-block;
             div {
@@ -757,6 +745,7 @@ $o-form-label-margin-right: 0px;
         > tr {
             display: flex;
             flex-flow: row wrap;
+            padding-bottom: map-get($spacers, 3);
 
             > td {
                 flex: 1 0 auto;
@@ -790,9 +779,8 @@ $o-form-label-margin-right: 0px;
     }
 }
 
-.o_xxl_form_view {
+.o_form_view.o_xxl_form_view {
     flex-flow: row nowrap;
-    height: 100%;
 
     .o_form_sheet_bg {
         flex: 1 1 auto; // Side chatter is disabled if this has to shrink but this was added for safety

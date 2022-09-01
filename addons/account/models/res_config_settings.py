@@ -104,8 +104,6 @@ class ResConfigSettings(models.TransientModel):
              '-This installs the account_batch_payment module.')
     module_account_sepa = fields.Boolean(string='SEPA Credit Transfer (SCT)')
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
-    module_l10n_fr_fec_import = fields.Boolean("Import FEC files",
-        help='Allows you to import FEC files.\n' '-This installs the l10n_fr_fec_import module.')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format")
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
@@ -160,21 +158,6 @@ class ResConfigSettings(models.TransientModel):
 
     # Quick encoding (fiduciary mode)
     quick_edit_mode = fields.Selection(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode')
-
-    account_journal_cash_discount_income_id = fields.Many2one(
-        comodel_name='account.account',
-        string='Cash Discount Write-Off Income Account',
-        readonly=False,
-        related='company_id.account_journal_cash_discount_income_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'in', ('income', 'income_other'))]")
-    account_journal_cash_discount_expense_id = fields.Many2one(
-        comodel_name='account.account',
-        string='Cash Discount Write-Off Expense Account',
-        readonly=False,
-        related='company_id.account_journal_cash_discount_expense_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', '=', 'expense')]")
 
     def set_values(self):
         super().set_values()

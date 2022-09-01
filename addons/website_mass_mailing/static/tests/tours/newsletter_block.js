@@ -14,7 +14,7 @@ wTourUtils.registerEditionTour('newsletter_block_edition', {
     }),
     {
         content: 'Wait for the list id to be set.',
-        trigger: 'iframe .s_newsletter_subscribe_form[data-list-id]:not([data-list-id="0"])',
+        trigger: 'iframe .s_newsletter_block[data-list-id]:not([data-list-id="0"]) .s_newsletter_subscribe_form',
         run: () => null, // it's a check
     },
     ...wTourUtils.clickOnSave(),

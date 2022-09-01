@@ -37,7 +37,7 @@ class HrEmployeePrivate(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     company_id = fields.Many2one('res.company', required=True)
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True)
-    company_country_code = fields.Char(related='company_country_id.code', readonly=True)
+    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Address', help='Enter here the private address of the employee, not the one linked to your company.',
@@ -165,10 +165,14 @@ class HrEmployeePrivate(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'res.users',
             'view_mode': 'form',
-            'view_id': self.env.ref('base.view_users_simple_form').id,
+            'view_id': self.env.ref('hr.view_users_simple_form').id,
             'target': 'new',
             'context': {
                 'default_create_employee_id': self.id,
+                'default_name': self.name,
+                'default_phone': self.work_phone,
+                'default_mobile': self.mobile_phone,
+                'default_login': self.work_email,
             }
         }
 

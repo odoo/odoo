@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { executeGracefully } from '@mail/utils/utils';
-import { link, insert } from '@mail/model/model_field_command';
+import { insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessagingInitializer',
@@ -48,7 +48,6 @@ registerModel({
          * @param {Object} param0.current_user_settings
          * @param {integer} [param0.needaction_inbox_counter=0]
          * @param {Object} param0.partner_root
-         * @param {Array[]} param0.publicPartners
          * @param {Object[]} [param0.shortcodes=[]]
          * @param {integer} [param0.starred_counter=0]
          */
@@ -60,10 +59,10 @@ registerModel({
             currentGuest,
             current_user_id,
             current_user_settings,
+            internalUserGroupId,
             menu_id,
             needaction_inbox_counter = 0,
             partner_root,
-            publicPartners,
             shortcodes = [],
             starred_counter = 0
         }) {
@@ -75,7 +74,6 @@ registerModel({
                 current_user_id,
                 partner_root,
             });
-            this.messaging.update({ publicPartners });
             // mailboxes after partners and before other initializers that might
             // manipulate threads or messages
             this._initMailboxes({
@@ -102,6 +100,8 @@ registerModel({
             discuss.update({ menu_id });
             // company related data
             this.messaging.update({ companyName });
+
+            this.messaging.update({ internalUserGroupId });
         },
         /**
          * @private
@@ -119,20 +119,6 @@ registerModel({
         async _initChannels(channelsData) {
             return executeGracefully(channelsData.map(channelData => () => {
                 const convertedData = this.messaging.models['Thread'].convertData(channelData);
-                if (!convertedData.members) {
-                    // channel_info does not return all members of channel for
-                    // performance reasons, but code is expecting to know at
-                    // least if the current partner is member of it.
-                    // (e.g. to know when to display "invited" notification)
-                    // Current partner can always be assumed to be a member of
-                    // channels received at init.
-                    if (this.messaging.currentPartner) {
-                        convertedData.members = link(this.messaging.currentPartner);
-                    }
-                    if (this.messaging.currentGuest) {
-                        convertedData.guestMembers = link(this.messaging.currentGuest);
-                    }
-                }
                 const channel = this.messaging.models['Thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
                 );
@@ -214,15 +200,14 @@ registerModel({
                 this.messaging.update({ currentGuest: insert(currentGuest) });
             }
             if (current_partner) {
-                const partnerData = this.messaging.models['Partner'].convertData(current_partner);
                 this.messaging.update({
-                    currentPartner: insert(partnerData),
+                    currentPartner: current_partner,
                     currentUser: insert({ id: currentUserId }),
                 });
             }
             if (partner_root) {
                 this.messaging.update({
-                    partnerRoot: insert(this.messaging.models['Partner'].convertData(partner_root)),
+                    partnerRoot: partner_root,
                 });
             }
         },

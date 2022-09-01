@@ -230,7 +230,7 @@
                         attrs="{'invisible': [('invoice_count', '=', 0)]}">
                         <field name="invoice_count" widget="statinfo" string="Invoices"/>
                     </button>
-                    <button name="preview_sale_order"
+                    <button name="action_preview_sale_order"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-globe icon">
@@ -265,12 +265,12 @@
                         <label for="pricelist_id" groups="product.group_product_pricelist"/>
                         <div groups="product.group_product_pricelist" class="o_row">
                             <field name="pricelist_id" options="{'no_open':True,'no_create': True}"/>
-                            <button name="update_prices" type="object"
+                            <button name="action_update_prices" type="object"
                                 string=" Update Prices"
                                 help="Recompute all prices based on this pricelist"
                                 class="btn-link mb-1 px-0" icon="fa-refresh"
                                 confirm="This will update all unit prices based on the currently set pricelist."
-                                attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done','cancel'])]}"/>
+                                attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                         </div>
                         <field name="company_id" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
@@ -503,8 +503,9 @@
                                     optional="show"
                                 />
                                 <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="product_discount"/>
-                                <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
+                                <field name="is_downpayment" invisible="1"/>
+                                <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded" attrs="{'invisible': [('is_downpayment', '=', True)]}"/>
+                                <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included" attrs="{'invisible': [('is_downpayment', '=', True)]}"/>
                                 <field name="state" invisible="1"/>
                                 <field name="invoice_status" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
@@ -654,15 +655,16 @@
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="groups_id" eval="[(4, ref('sale.group_auto_done_setting'))]"/>
         <field name="arch" type="xml">
             <button name="action_draft" position="after">
-                <button name="action_done" type="object" string="Lock"
-                    states="sale"
-                    help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver." groups="sales_team.group_sale_manager"/>
-                <button name="action_unlock" type="object" string="Unlock"
-                    states="done"
-                    groups="sales_team.group_sale_manager"/>
+                <t groups="sale.group_auto_done_setting">
+                    <button name="action_done" type="object" string="Lock"
+                        states="sale"
+                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver." groups="sales_team.group_sale_manager"/>
+                    <button name="action_unlock" type="object" string="Unlock"
+                        states="done"
+                        groups="sales_team.group_sale_manager"/>
+                </t>
             </button>
         </field>
     </record>

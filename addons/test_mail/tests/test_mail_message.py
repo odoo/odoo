@@ -65,13 +65,13 @@ class TestMessageValues(TestMailCommon):
         self.assertFalse(message.sudo().tracking_value_ids)
 
         # Reset body case
-        message._update_content('<p><br /></p>', attachment_ids=message.attachment_ids.ids)
+        record._message_update_content(message, '<p><br /></p>', attachment_ids=message.attachment_ids.ids)
         self.assertTrue(is_html_empty(message.body))
         self.assertFalse(message.sudo()._filter_empty(), 'Still having attachments')
 
         # Subtype content
         note_subtype.write({'description': 'Very important discussions'})
-        message._update_content('', None)
+        record._message_update_content(message, '', [])
         self.assertFalse(message.attachment_ids)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
         self.assertEqual(message.starred_partner_ids, self.partner_admin)
@@ -80,7 +80,7 @@ class TestMessageValues(TestMailCommon):
         # Completely void now
         note_subtype.write({'description': ''})
         self.assertEqual(message.sudo()._filter_empty(), message)
-        message._update_content('', None)
+        record._message_update_content(message, '', [])
         self.assertFalse(message.notified_partner_ids)
         self.assertFalse(message.starred_partner_ids)
 
@@ -93,7 +93,7 @@ class TestMessageValues(TestMailCommon):
         self.assertFalse(tracking_message.subtype_id.description)
         self.assertFalse(tracking_message.sudo()._filter_empty(), 'Has tracking values')
         with self.assertRaises(UserError, msg='Tracking values prevent from updating content'):
-            tracking_message._update_content('', None)
+            record._message_update_content(tracking_message, '', [])
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_format(self):
@@ -332,7 +332,7 @@ class TestMessageAccess(TestMailCommon):
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=cls.env.ref('base.group_user').id)['id'])
-        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', privacy='public')['id'])
+        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', privacy='public', group_id=None)['id'])
         cls.private_group = cls.env['mail.channel'].browse(cls.env['mail.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")['id'])
         cls.message = cls.env['mail.message'].create({
             'body': 'My Body',

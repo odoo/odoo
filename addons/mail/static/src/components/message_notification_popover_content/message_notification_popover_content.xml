@@ -2,20 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageNotificationPopoverContent" owl="1">
-        <t t-if="messageView">
-            <div class="o_MessageNotificationPopoverContent" t-attf-class="{{ className }}" t-ref="root">
-                <t t-if="messageView.message">
-                    <t t-foreach="messageView.message.notifications" t-as="notification" t-key="notification.localId">
-                        <div class="o_MessageNotificationPopoverContent_notification">
-                            <i class="o_MessageNotificationPopoverContent_notificationIcon me-2" t-att-class="notification.iconClass" t-att-title="notification.iconTitle" role="img"/>
-                            <t t-if="notification.partner">
-                                <span class="o_MessageNotificationPopoverContent_notificationPartnerName" t-esc="notification.partner.nameOrDisplayName"/>
-                            </t>
-                        </div>
+        <div class="o_MessageNotificationPopoverContent m-2" t-attf-class="{{ className }}" t-ref="root">
+            <t t-foreach="messageNotificationPopoverContentView.messageView.message.notifications" t-as="notification" t-key="notification.localId">
+                <div class="o_MessageNotificationPopoverContent_notification">
+                    <i class="o_MessageNotificationPopoverContent_notificationIcon me-2" t-att-class="notification.iconClass" t-att-title="notification.iconTitle" role="img"/>
+                    <t t-if="notification.partner">
+                        <span class="o_MessageNotificationPopoverContent_notificationPartnerName" t-esc="notification.partner.nameOrDisplayName"/>
                     </t>
-                </t>
-            </div>
-        </t>
+                </div>
+            </t>
+        </div>
     </t>
 
 </templates>

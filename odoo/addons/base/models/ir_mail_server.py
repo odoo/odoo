@@ -143,6 +143,50 @@ class IrMailServer(models.Model):
             elif mail_server.smtp_ssl_private_key and not mail_server.smtp_ssl_certificate:
                 raise UserError(_('SSL certificate is missing for %s.', mail_server.name))
 
+    def write(self, vals):
+        """Ensure we cannot archive a server in-use"""
+        usages_per_server = {}
+        if not vals.get('active', True):
+            usages_per_server = self._active_usages_compute()
+
+        if not usages_per_server:
+            return super().write(vals)
+
+        # Write cannot be performed as some server are used, build detailed usage per server
+        usage_details_per_server = {}
+        is_multiple_server_usage = len(usages_per_server) > 1
+        for server in self:
+            if server.id not in usages_per_server:
+                continue
+            usage_details = []
+            if is_multiple_server_usage:
+                usage_details.append(_('%s (Dedicated Outgoing Mail Server):', server.display_name))
+            usage_details.extend(map(lambda u: f'- {u}', usages_per_server[server.id]))
+            usage_details_per_server[server] = usage_details
+
+        # Raise the error with the ordered list of servers and concatenated detailed usages
+        servers_ordered_by_name = sorted(usage_details_per_server.keys(), key=lambda r: r.display_name)
+        error_server_usage = ', '.join(server.display_name for server in servers_ordered_by_name)
+        error_usage_details = '\n'.join(line
+                                        for server in servers_ordered_by_name
+                                        for line in usage_details_per_server[server])
+        if is_multiple_server_usage:
+            raise UserError(
+                _('You cannot archive these Outgoing Mail Servers (%s) because they are still used in the following case(s):\n%s',
+                  error_server_usage, error_usage_details))
+        raise UserError(
+            _('You cannot archive this Outgoing Mail Server (%s) because it is still used in the following case(s):\n%s',
+              error_server_usage, error_usage_details))
+
+    def _active_usages_compute(self):
+        """Compute a dict server id to list of user-friendly outgoing mail servers usage of this record set.
+
+        This method must be overridden by all modules that uses this class in order to complete the list with
+        user-friendly string describing the active elements that could send mail through the instance of this class.
+        :return dict: { ir_mail_server.id: usage_str_list }.
+        """
+        return dict()
+
     def _get_test_email_addresses(self):
         self.ensure_one()
         email_from = self.env.user.email
@@ -155,7 +199,7 @@ class IrMailServer(models.Model):
         for server in self:
             smtp = False
             try:
-                smtp = self.connect(mail_server_id=server.id)
+                smtp = self.connect(mail_server_id=server.id, allow_archived=True)
                 # simulate sending an email from current user's address - without sending it!
                 email_from, email_to = server._get_test_email_addresses()
                 # Testing the MAIL FROM step should detect sender filter problems
@@ -214,7 +258,8 @@ class IrMailServer(models.Model):
         }
 
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
-                smtp_from=None, ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None):
+                smtp_from=None, ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None,
+                allow_archived=False):
         """Returns a new SMTP connection to the given SMTP server.
            When running in test mode, this method does nothing and returns `None`.
 
@@ -231,6 +276,9 @@ class IrMailServer(models.Model):
            :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
            :param mail_server_id: ID of specific mail server to use (overrides other parameters)
+           :param bool allow_archived: by default (False), an exception is raised when calling this method on an
+           archived record (using mail_server_id param). It can be set to True for testing so that the exception is no
+           longer raised.
         """
         # Do not actually connect while running in test mode
         if self._is_test_mode():
@@ -239,6 +287,8 @@ class IrMailServer(models.Model):
         mail_server = smtp_encryption = None
         if mail_server_id:
             mail_server = self.sudo().browse(mail_server_id)
+            if not allow_archived and not mail_server.active:
+                raise UserError(_('The server "%s" cannot be used because it is archived.', mail_server.display_name))
         elif not host:
             mail_server, smtp_from = self.sudo()._find_mail_server(smtp_from)
 

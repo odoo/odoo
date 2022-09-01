@@ -4,7 +4,6 @@
 import base64
 import logging
 
-
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 from odoo.tools import is_html_empty
@@ -70,11 +69,21 @@ class MailTemplate(models.Model):
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
 
+    # access
+    can_write = fields.Boolean(compute='_compute_can_write',
+                               help='The current user can edit the template.')
+
     # Overrides of mail.render.mixin
     @api.depends('model')
     def _compute_render_model(self):
         for template in self:
             template.render_model = template.model
+
+    @api.depends_context('uid')
+    def _compute_can_write(self):
+        writable_templates = self._filter_access_rules('write')
+        for template in self:
+            template.can_write = template in writable_templates
 
     # ------------------------------------------------------------
     # CRUD
@@ -205,6 +214,12 @@ class MailTemplate(models.Model):
                 values = results[res_id]
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
+                # if asked in fields to return, parse generated date into tz agnostic UTC as expected by ORM
+                scheduled_date = values.pop('scheduled_date', None)
+                if 'scheduled_date' in fields and scheduled_date:
+                    parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
+                    values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+
                 # technical settings
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,

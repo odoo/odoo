@@ -3,6 +3,7 @@
 
 import logging
 
+from ast import literal_eval
 from psycopg2 import Error
 
 from odoo import _, api, fields, models
@@ -67,6 +68,7 @@ class StockQuant(models.Model):
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
         auto_join=True, ondelete='restrict', required=True, index=True, check_company=True)
+    warehouse_id = fields.Many2one('stock.warehouse', related='location_id.warehouse_id')
     storage_category_id = fields.Many2one(related='location_id.storage_category_id', store=True)
     cyclic_inventory_frequency = fields.Integer(related='location_id.cyclic_inventory_frequency')
     lot_id = fields.Many2one(
@@ -329,7 +331,6 @@ class StockQuant(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
         action['domain'] = [
-            ('product_id', '=', self.product_id.id),
             '|',
                 ('location_id', '=', self.location_id.id),
                 ('location_dest_id', '=', self.location_id.id),
@@ -338,6 +339,13 @@ class StockQuant(models.Model):
                 ('package_id', '=', self.package_id.id),
                 ('result_package_id', '=', self.package_id.id),
         ]
+        action['context'] = literal_eval(action.get('context'))
+        action['context']['search_default_product_id'] = self.product_id.id
+        return action
+
+    def action_view_orderpoints(self):
+        action = self.env['product.product'].action_view_orderpoints()
+        action['domain'] = [('product_id', '=', self.product_id.id)]
         return action
 
     @api.model
@@ -426,9 +434,9 @@ class StockQuant(models.Model):
             'context': {
                 'search_default_inventory': 1,
                 'search_default_done': 1,
+                'search_default_product_id': self.product_id.id,
             },
             'domain': [
-                ('product_id', '=', self.product_id.id),
                 ('company_id', '=', self.company_id.id),
                 '|',
                     ('location_id', '=', self.location_id.id),
@@ -890,9 +898,6 @@ class StockQuant(models.Model):
         else:
             name = _('Product Quantity Updated')
 
-        if self.inventory_date:
-            name += _(' [Scheduled on %s]', self.inventory_date)
-
         return {
             'name': self.env.context.get('inventory_name') or name,
             'product_id': self.product_id.id,
@@ -923,7 +928,7 @@ class StockQuant(models.Model):
             company_user = self.env.company
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
             if warehouse:
-                self = self.with_context(default_location_id=warehouse.lot_stock_id.id, hide_location=True)
+                self = self.with_context(default_location_id=warehouse.lot_stock_id.id, hide_location=not self.env.context.get('always_show_loc', False))
 
         # If user have rights to write on quant, we set quants in inventory mode.
         if self.user_has_groups('stock.group_stock_user'):
@@ -945,7 +950,7 @@ class StockQuant(models.Model):
         ctx['inventory_report_mode'] = True
         ctx.pop('group_by', None)
         action = {
-            'name': _('Stock On Hand'),
+            'name': _('Locations'),
             'view_type': 'tree',
             'view_mode': 'list,form',
             'res_model': 'stock.quant',

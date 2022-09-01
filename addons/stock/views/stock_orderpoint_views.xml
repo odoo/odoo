@@ -43,7 +43,7 @@
                 <field name="company_id" invisible="1"/>
                 <field name="product_category_id" invisible="1"/>
                 <field name="product_tmpl_id" invisible="1"/>
-                <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" invisible="context.get('default_product_id')" force_save="1"/>
+                <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1"/>
                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
                 <field name="qty_on_hand" force_save="1"/>
@@ -51,7 +51,7 @@
                 <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="visibility_days" optional="hidden"/>
                 <field name="route_id" options="{'no_create': True, 'no_open': True}"/>
-                <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Resplenishment Information" attrs="{'invisible': [('id', '=', False)]}"/>
+                <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="trigger" optional="hide"/>
                 <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" optional="show"/>
@@ -227,7 +227,7 @@
     <menuitem
         id="menu_reordering_rules_replenish"
         action="action_replenishment"
-        name="Replenishment" parent="menu_stock_warehouse_mgmt" sequence="10"
+        name="Replenishment" parent="menu_stock_warehouse_mgmt" sequence="5"
         groups="stock.group_stock_manager"/>
     <menuitem
         id="menu_reordering_rules_config"

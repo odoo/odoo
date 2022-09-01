@@ -167,8 +167,23 @@ export class ListController extends Component {
     }
 
     async openRecord(record) {
-        const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        this.props.selectRecord(record.resId, { activeIds });
+        if (this.archInfo.openAction) {
+            this.actionService.doActionButton({
+                name: this.archInfo.openAction.action,
+                type: this.archInfo.openAction.type,
+                resModel: record.resModel,
+                resId: record.resId,
+                resIds: record.resIds,
+                context: record.context,
+                onClose: async () => {
+                    await record.model.root.load();
+                    record.model.notify();
+                },
+            });
+        } else {
+            const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
+            this.props.selectRecord(record.resId, { activeIds });
+        }
     }
 
     onClickCreate() {
@@ -262,6 +277,10 @@ export class ListController extends Component {
             const resIds = await this.model.root.getResIds(true);
             this.props.onSelectionChanged(resIds);
         }
+    }
+
+    get className() {
+        return this.props.className;
     }
 
     get nbSelected() {
@@ -424,8 +443,8 @@ ListController.template = `web.ListView`;
 ListController.components = { ActionMenus, ListViewHeaderButton, Layout, ViewButton };
 ListController.props = {
     ...standardViewProps,
+    allowSelectors: { type: Boolean, optional: true },
     editable: { type: Boolean, optional: true },
-    hasSelectors: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },
     showButtons: { type: Boolean, optional: true },
     Model: Function,
@@ -434,9 +453,9 @@ ListController.props = {
     archInfo: Object,
 };
 ListController.defaultProps = {
+    allowSelectors: true,
     createRecord: () => {},
     editable: true,
-    hasSelectors: true,
     selectRecord: () => {},
     showButtons: true,
 };

@@ -24,7 +24,7 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`,
         "should have the only channel of which user is member in discuss sidebar"
     );
 });
@@ -37,7 +37,7 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     const { click, openDiscuss } = await start();
     await openDiscuss();
 
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
     assert.containsOnce(
         document.body,
         `.o_Discuss_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
@@ -68,7 +68,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
     });
     await openDiscuss();
 
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
     assert.verifySteps([], "action_unfollow is not called yet");
 
     await click('.o_DiscussSidebarCategoryItem_commandLeave');
@@ -80,7 +80,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`,
         "The channel must have been removed from discuss sidebar"
     );
     assert.containsOnce(
@@ -105,11 +105,11 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`,
         "1 channel is present in discuss sidebar and it is 'general'"
     );
 
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`);
     assert.containsOnce(
         document.body,
         `.o_Discuss_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
@@ -134,7 +134,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`,
         "The channel must have been removed from discuss sidebar"
     );
 });
@@ -155,12 +155,12 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
         }]],
         group_based_subscription: true,
     });
-    const {openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss();
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`,
         "The channel #General is in discuss sidebar"
     );
     assert.containsNone(

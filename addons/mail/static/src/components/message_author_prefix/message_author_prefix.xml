@@ -8,7 +8,7 @@
                     <t t-if="messageAuthorPrefixView.message.author and messageAuthorPrefixView.message.author === messaging.currentPartner">
                         <i class="o_MessageAuthorPrefixIcon fa fa-mail-reply me-1"/>You:
                     </t>
-                    <t t-elif="messageAuthorPrefixView.thread and messageAuthorPrefixView.message.author !== messageAuthorPrefixView.thread.correspondent">
+                    <t t-elif="messageAuthorPrefixView.thread and (!messageAuthorPrefixView.thread.channel or messageAuthorPrefixView.message.author !== messageAuthorPrefixView.thread.channel.correspondent)">
                         <t t-esc="messageAuthorPrefixView.message.author.nameOrDisplayName"/>:
                     </t>
                 </t>

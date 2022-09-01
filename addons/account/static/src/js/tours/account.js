@@ -59,14 +59,14 @@ tour.register('account_tour', {
         content: Markup(_t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu.")),
         auto: true,
     }, {
-        trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a:not([data-context])",
+        trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
         content: _t("Add a line to your invoice"),
     }, {
-        trigger: "div[name=invoice_line_ids] textarea[name=name]",
+        trigger: "div[name=invoice_line_ids] div[name=name] textarea",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only
@@ -74,7 +74,7 @@ tour.register('account_tour', {
         content: _t("Fill in the details of the line."),
         position: "bottom",
     }, {
-        trigger: "div[name=invoice_line_ids] input[name=price_unit]",
+        trigger: "div[name=invoice_line_ids] div[name=price_unit] input",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only

@@ -1118,7 +1118,7 @@ QUnit.module("Search", (hooks) => {
                 </searchpanel>
             </search>`;
 
-        let promise = makeDeferred();
+        const promise = makeDeferred();
         const { TestComponent } = makeTestComponent();
         const compPromise = makeWithSearch({
             serverData,
@@ -1158,7 +1158,7 @@ QUnit.module("Search", (hooks) => {
                 </searchpanel>
             </search>`;
 
-        let promise = makeDeferred();
+        const promise = makeDeferred();
         const { TestComponent } = makeTestComponent();
         const compPromise = makeWithSearch({
             serverData,

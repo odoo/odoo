@@ -228,7 +228,7 @@ class WebsitePublishedMixin(models.AbstractModel):
         return self.create(kwargs).website_url
 
     def _compute_can_publish(self):
-        """ This method can be overridden if you need more complex rights management than just 'website_publisher'
+        """ This method can be overridden if you need more complex rights management than just 'website_restricted_editor'
         The publish widget will be hidden and the user won't be able to change the 'website_published' value
         if this method sets can_publish False """
         for record in self:

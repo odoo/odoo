@@ -42,14 +42,17 @@
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
             <tree default_order="create_date desc, id desc" create="0"
-                  import="0" js_class="inventory_report_list">
+                  import="0" js_class="inventory_report_list"
+                  action="action_open_reference" type="object">
                 <field name="create_date" string="Date" />
+                <field name="reference"/>
                 <field name="product_id" />
-                <field name="quantity" />
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="quantity" string="Moved Quantity"/>
+                <field name="unit_cost" />
                 <field name="uom_id" groups="uom.group_uom" />
                 <field name="currency_id" invisible="1" />
                 <field name="value" sum="Total Value"/>
-                <field name="company_id" groups="base.group_multi_company" />
                 <groupby name="product_id">
                     <field name="cost_method" invisible="1"/>
                     <field name="quantity_svl" invisible="1"/>
@@ -77,11 +80,10 @@
         <field name="view_mode">tree,form,pivot</field>
         <field name="view_id" ref="stock_valuation_layer_tree"/>
         <field name="domain">[('product_id.type', '=', 'product')]</field>
-        <field name="context">{'search_default_group_by_product_id': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face"/>
             <p>
-                There is no valuation layers. Valuation layers are created when some product moves should impact the valuation of the stock.
+                There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock.
             </p>
         </field>
     </record>
@@ -95,6 +97,10 @@
                 <field name="categ_id" />
                 <field name="product_tmpl_id" />
                 <separator/>
+                <filter string="Incoming" name="incoming" domain="[('stock_move_id.location_id.usage', 'not in', ('internal', 'transit')), ('stock_move_id.location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
+                <filter string="Outgoing" name="outgoing" domain="[('stock_move_id.location_id.usage', 'in', ('internal', 'transit')), ('stock_move_id.location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
+                <separator/>
+                <filter string="Has Remaining Qty" name="has_remaining_qty" domain="[('remaining_qty', '>', 0)]"/>
                 <group expand='0' string='Group by...'>
                     <filter string='Product' name="group_by_product_id" context="{'group_by': 'product_id'}"/>
                 </group>
@@ -102,7 +108,38 @@
         </field>
     </record>
 
-    <menuitem id="menu_valuation" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="110" action="stock_valuation_layer_action"/>
+    <!-- reporting view -->
+    <record id="stock_valuation_layer_report_tree" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.report.tree</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_valuation_layer_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="unit_cost" position="after">
+                <field name="remaining_qty" sum="Total Remaining Quantity"/>
+            </field>
+            <field name="value" position="replace">
+                <field name="remaining_value" sum="Total Remaining Value"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="stock_valuation_layer_report_action" model="ir.actions.act_window">
+        <field name="name">Stock Valuation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.valuation.layer</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="view_id" ref="stock_valuation_layer_report_tree"/>
+        <field name="context">{'search_default_has_remaining_qty': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face"/>
+            <p>
+                There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_report_action" groups="base.group_no_one"/>
 
     <record id="stock_valuation_layer_picking" model="ir.ui.view">
         <field name="name">stock.valuation.layer.picking</field>

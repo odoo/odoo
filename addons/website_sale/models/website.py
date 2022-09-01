@@ -8,6 +8,11 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.addons.website.models.website import SEARCH_TYPE_MODELS
+
+SEARCH_TYPE_MODELS['products'] |= 'product.public.category', 'product.template'
+SEARCH_TYPE_MODELS['product_categories_only'] |= 'product.public.category',
+SEARCH_TYPE_MODELS['products_only'] |= 'product.template',
 
 _logger = logging.getLogger(__name__)
 
@@ -46,7 +51,8 @@ class Website(models.Model):
             return False
 
     cart_recovery_mail_template_id = fields.Many2one('mail.template', string='Cart Recovery Email', default=_default_recovery_mail_template, domain="[('model', '=', 'sale.order')]")
-    cart_abandoned_delay = fields.Float("Abandoned Delay", default=1.0)
+    cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
+    send_abandoned_cart_email = fields.Boolean(string="Send email to customers who abandoned their cart.")
 
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
@@ -105,6 +111,7 @@ class Website(models.Model):
     prevent_zero_price_sale_text = fields.Char(string="Text to show instead of price", translate=True,
                                                default="Not Available For Sale")
     contact_us_button_url = fields.Char(string="Contact Us Button URL", translate=True, default="/contactus")
+    enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal")
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
@@ -387,7 +394,7 @@ class Website(models.Model):
         if update_pricelist:
             request.session['website_sale_current_pl'] = pricelist_id
             sale_order_sudo.write({'pricelist_id': pricelist_id})
-            sale_order_sudo.update_prices()
+            sale_order_sudo._recompute_prices()
 
         return sale_order_sudo
 
@@ -480,14 +487,6 @@ class Website(models.Model):
         suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
         return suggested_controllers
 
-    def _search_get_details(self, search_type, order, options):
-        result = super()._search_get_details(search_type, order, options)
-        if search_type in ['products', 'product_categories_only', 'all']:
-            result.append(self.env['product.public.category']._search_get_detail(self, order, options))
-        if search_type in ['products', 'products_only', 'all']:
-            result.append(self.env['product.template']._search_get_detail(self, order, options))
-        return result
-
     def _get_product_page_proportions(self):
         """
         Returns the number of columns (css) that both the images and the product details should take.
@@ -515,6 +514,27 @@ class Website(models.Model):
         }
         return spacing_map.get(self.product_page_image_spacing) + ' ' +\
                 columns_map.get(self.product_page_grid_columns)
+
+    @api.model
+    def _send_abandoned_cart_email(self):
+        for website in self.search([]):
+            if not website.send_abandoned_cart_email:
+                continue
+            all_abandoned_carts = self.env['sale.order'].search([
+                ('is_abandoned_cart', '=', True),
+                ('cart_recovery_email_sent', '=', False),
+                ('website_id', '=', website.id),
+            ])
+            if not all_abandoned_carts:
+                continue
+
+            abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
+            # Mark abandoned carts that failed the filter as sent to avoid rechecking them again and again.
+            (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
+            for sale_order in abandoned_carts:
+                template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
+                template.send_mail(sale_order.id, email_values=dict(email_to=sale_order.partner_id.email))
+                sale_order.cart_recovery_email_sent = True
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'

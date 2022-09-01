@@ -129,11 +129,11 @@ export class SearchBar extends Component {
             try {
                 switch (type) {
                     case "date": {
-                        value = serializeDate(parser(trimmedQuery, { timezone: false }));
+                        value = serializeDate(parser(trimmedQuery));
                         break;
                     }
                     case "datetime": {
-                        value = serializeDateTime(parser(trimmedQuery, { timezone: true }));
+                        value = serializeDateTime(parser(trimmedQuery));
                         break;
                     }
                     case "many2one": {
@@ -192,7 +192,7 @@ export class SearchBar extends Component {
             limit: 8,
             name: query.trim(),
         });
-        let subItems = [];
+        const subItems = [];
         if (options.length) {
             const operator = searchItem.operator || "=";
             for (const [value, label] of options) {

@@ -52,7 +52,8 @@ QUnit.test("context is combined with user context in read request", async (asser
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
-    await env.services.orm.read("my.model", [3], ["id", "descr"], { earth: "isfucked" });
+    const context = { earth: "isfucked" };
+    await env.services.orm.read("my.model", [3], ["id", "descr"], { context });
     assert.strictEqual(query.route, "/web/dataset/call_kw/my.model/read");
     assert.deepEqual(query.params, {
         args: [[3], ["id", "descr"]],
@@ -94,7 +95,7 @@ QUnit.test("create method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
-    await env.services.orm.create("partner", { color: "red" });
+    await env.services.orm.create("partner", [{ color: "red" }]);
     assert.strictEqual(query.route, "/web/dataset/call_kw/partner/create");
     assert.deepEqual(query.params, {
         args: [
@@ -118,7 +119,8 @@ QUnit.test("nameGet method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
-    await env.services.orm.nameGet("sale.order", [2, 5], { complete: true });
+    const context = { complete: true };
+    await env.services.orm.nameGet("sale.order", [2, 5], { context });
     assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/name_get");
     assert.deepEqual(query.params, {
         args: [[2, 5]],
@@ -131,6 +133,35 @@ QUnit.test("nameGet method", async (assert) => {
             },
         },
         method: "name_get",
+        model: "sale.order",
+    });
+});
+
+QUnit.test("read method", async (assert) => {
+    const [query, rpc] = makeFakeRPC();
+    serviceRegistry.add("rpc", rpc);
+    const env = await makeTestEnv();
+    const context = { abc: 3 };
+    await env.services.orm.read("sale.order", [2, 5], ["name", "amount"], {
+        load: "none",
+        context,
+    });
+    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/read");
+    assert.deepEqual(query.params, {
+        args: [
+            [2, 5],
+            ["name", "amount"],
+        ],
+        kwargs: {
+            load: "none",
+            context: {
+                abc: 3,
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+            },
+        },
+        method: "read",
         model: "sale.order",
     });
 });

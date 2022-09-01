@@ -750,17 +750,15 @@ class AccountMoveLine(models.Model):
             for tag in record.tax_tag_ids:
                 tag_amount = (record.tax_tag_invert and -1 or 1) * (tag.tax_negate and -1 or 1) * record.balance
 
-                if tag.tax_report_line_ids:
-                    #Then, the tag comes from a report line, and hence has a + or - sign (also in its name)
-                    for report_line in tag.tax_report_line_ids:
-                        audit_str += separator if audit_str else ''
-                        audit_str += report_line.tag_name + ': ' + formatLang(self.env, tag_amount, currency_obj=currency)
+                if tag.applicability == 'taxes' and tag.name[0] in {'+', '-'}:
+                    # Then, the tag comes from a report expression, and hence has a + or - sign (also in its name)
+                    tag_name = tag.name[1:]
                 else:
                     # Then, it's a financial tag (sign is always +, and never shown in tag name)
-                    audit_str += separator if audit_str else ''
-                    audit_str += tag.name + ': ' + formatLang(self.env, tag_amount, currency_obj=currency)
+                    tag_name = tag.name
 
-            record.tax_audit = audit_str
+                audit_str += separator if audit_str else ''
+                audit_str += tag_name + ': ' + formatLang(self.env, tag_amount, currency_obj=currency)
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):
@@ -2339,78 +2337,6 @@ class AccountMoveLine(models.Model):
     # MISC
     # -------------------------------------------------------------------------
 
-    @api.model
-    def _query_get(self, domain=None):
-        self.check_access_rights('read')
-
-        context = dict(self._context or {})
-        domain = domain or []
-        if not isinstance(domain, (list, tuple)):
-            domain = ast.literal_eval(domain)
-
-        date_field = 'date'
-        if context.get('aged_balance'):
-            date_field = 'date_maturity'
-        if context.get('date_to'):
-            domain += [(date_field, '<=', context['date_to'])]
-        if context.get('date_from'):
-            if not context.get('strict_range'):
-                domain += ['|', (date_field, '>=', context['date_from']), ('account_id.include_initial_balance', '=', True)]
-            elif context.get('initial_bal'):
-                domain += [(date_field, '<', context['date_from'])]
-            else:
-                domain += [(date_field, '>=', context['date_from'])]
-
-        if context.get('journal_ids'):
-            domain += [('journal_id', 'in', context['journal_ids'])]
-
-        state = context.get('state')
-        if state and state.lower() != 'all':
-            domain += [('parent_state', '=', state)]
-
-        if context.get('company_id'):
-            domain += [('company_id', '=', context['company_id'])]
-        elif context.get('allowed_company_ids'):
-            domain += [('company_id', 'in', self.env.companies.ids)]
-        else:
-            domain += [('company_id', '=', self.env.company.id)]
-
-        if context.get('reconcile_date'):
-            domain += ['|', ('reconciled', '=', False), '|', ('matched_debit_ids.max_date', '>', context['reconcile_date']), ('matched_credit_ids.max_date', '>', context['reconcile_date'])]
-
-        if context.get('account_tag_ids'):
-            domain += [('account_id.tag_ids', 'in', context['account_tag_ids'].ids)]
-
-        if context.get('account_ids'):
-            domain += [('account_id', 'in', context['account_ids'].ids)]
-
-        if context.get('analytic_tag_ids'):
-            domain += [('analytic_tag_ids', 'in', context['analytic_tag_ids'].ids)]
-
-        if context.get('analytic_account_ids'):
-            domain += [('analytic_account_id', 'in', context['analytic_account_ids'].ids)]
-
-        if context.get('partner_ids'):
-            domain += [('partner_id', 'in', context['partner_ids'].ids)]
-
-        if context.get('partner_categories'):
-            domain += [('partner_id.category_id', 'in', context['partner_categories'].ids)]
-
-        where_clause = ""
-        where_clause_params = []
-        tables = ''
-        if domain:
-            domain.append(('display_type', 'not in', ('line_section', 'line_note')))
-            domain.append(('parent_state', '!=', 'cancel'))
-
-            query = self._where_calc(domain)
-
-            # Wrap the query with 'company_id IN (...)' to avoid bypassing company access rights.
-            self._apply_ir_rules(query)
-
-            tables, where_clause, where_clause_params = query.get_sql()
-        return tables, where_clause, where_clause_params
-
     def _reconciled_lines(self):
         ids = []
         for aml in self.filtered('account_id.reconcile'):
@@ -2470,6 +2396,7 @@ class AccountMoveLine(models.Model):
             analytic_tags=self.analytic_tag_ids,
             price_subtotal=sign * self.amount_currency,
             is_refund=self.is_refund,
+            rate=(abs(self.amount_currency) / abs(self.balance)) if self.balance else 1.0
         )
 
     def _convert_to_tax_line_dict(self):
@@ -2515,6 +2442,13 @@ class AccountMoveLine(models.Model):
             'fiscal': fiscal_fnames,
             'reconciliation': reconciliation_fnames,
         }
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Journal Items'),
+            'template': '/account/static/xls/aml_import_template.xlsx'
+        }]
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS

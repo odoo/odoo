@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListView" owl="1">
-        <div t-att-class="props.className" t-ref="root">
+        <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
                 <t t-set-slot="layout-buttons">
                     <t t-if="env.isSmall and nbSelected">
@@ -25,7 +25,7 @@
                             resModel="model.root.resModel"/>
                     </t>
                 </t>
-                <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" hasSelectors="props.hasSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord"/>
+                <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" allowSelectors="props.allowSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord"/>
             </Layout>
         </div>
     </t>

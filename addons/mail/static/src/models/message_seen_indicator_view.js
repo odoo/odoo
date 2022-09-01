@@ -12,10 +12,10 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessageSeenIndicator() {
-            if (this.messageViewOwner.messageListViewMessageViewItemOwner && this.messageViewOwner.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread) {
+            if (this.messageViewOwner.messageListViewItemOwner && this.messageViewOwner.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread) {
                 return {
                     message: this.messageViewOwner.message,
-                    thread: this.messageViewOwner.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread,
+                    thread: this.messageViewOwner.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread,
                 };
             }
             return clear();

@@ -34,6 +34,19 @@ registerModel({
             }
             return clear();
         },
+        /**
+         * @private
+         * @returns {res.users.settings.volumes|FieldCommand}
+         */
+        _computeVolumeSetting() {
+            if (this.guest) {
+                return this.guest.volumeSetting || clear();
+            }
+            if (this.partner) {
+                return this.partner.volumeSetting || clear();
+            }
+            return clear();
+        },
     },
     fields: {
         channelMembers: many('ChannelMember', {
@@ -53,6 +66,9 @@ registerModel({
         partner: one('Partner', {
             identifying: true,
             inverse: 'persona',
+        }),
+        volumeSetting: one('res.users.settings.volumes', {
+            compute: '_computeVolumeSetting',
         }),
     },
 });

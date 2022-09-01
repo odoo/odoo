@@ -11,12 +11,12 @@ registerModel({
             const data2 = {};
             if ('country_id' in data) {
                 if (data.country_id) {
-                    data2.country = insert({
+                    data2.serverCountry = insert({
                         id: data.country_id,
                         code: data.country_code,
                     });
                 } else {
-                    data2.country = clear();
+                    data2.serverCountry = clear();
                 }
             }
             if ('history' in data) {
@@ -60,14 +60,14 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Country}
+         * @returns {Country|FieldCommand}
          */
         _computeCountry() {
             if (this.partner && this.partner.country) {
                 return this.partner.country;
             }
-            if (this.country) {
-                return this.country;
+            if (this.serverCountry) {
+                return this.serverCountry;
             }
             return clear();
         },
@@ -124,6 +124,7 @@ registerModel({
          * Partner linked to this visitor, if any.
          */
         partner: one('Partner'),
+        serverCountry: one('Country'),
         /**
          * Threads with this visitor as member
          */

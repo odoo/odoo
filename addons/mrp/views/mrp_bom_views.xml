@@ -3,7 +3,7 @@
     <data>
         <!-- Bill of Materials -->
         <record id="action_report_mrp_bom" model="ir.actions.client">
-            <field name="name">BoM Structure &amp; Cost</field>
+            <field name="name">BoM Overview</field>
             <field name="tag">mrp_bom_report</field>
             <field name="context" eval="{'model': 'report.mrp.report_bom_structure'}" />
         </record>
@@ -45,7 +45,7 @@
                                 </div>
                             </button>
                             <button name="%(action_report_mrp_bom)d" type="action"
-                                class="oe_stat_button" icon="fa-bars" string="Structure &amp; Cost"/>
+                                class="oe_stat_button" icon="fa-bars" string="Overview"/>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>

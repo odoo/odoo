@@ -80,6 +80,8 @@ class StockMove(models.Model):
         auto_join=True, index=True, required=True,
         check_company=True,
         help="Location where the system will stock the finished products.")
+    location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
+    location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     partner_id = fields.Many2one(
         'res.partner', 'Destination Address ',
         states={'done': [('readonly', True)]},
@@ -2120,3 +2122,22 @@ class StockMove(models.Model):
                     result[out] = (-remaining, False)
 
         return result
+
+    def action_open_reference(self):
+        """ Open the form view of the move's reference document, if one exists, otherwise open form view of self
+        """
+        self.ensure_one()
+        source = self.picking_id
+        if source and source.check_access_rights('read', raise_exception=False):
+            return {
+                'res_model': source._name,
+                'type': 'ir.actions.act_window',
+                'views': [[False, "form"]],
+                'res_id': source.id,
+            }
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }

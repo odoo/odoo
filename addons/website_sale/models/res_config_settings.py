@@ -34,13 +34,14 @@ class ResConfigSettings(models.TransientModel):
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",
                                                   related='website_id.cart_recovery_mail_template_id', readonly=False)
-    cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
-                                        related='website_id.cart_abandoned_delay', readonly=False)
+    cart_abandoned_delay = fields.Float(string="Send After", related='website_id.cart_abandoned_delay', readonly=False)
+    send_abandoned_cart_email = fields.Boolean('Abandoned Email', related='website_id.send_abandoned_cart_email', readonly=False)
     add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
     terms_url = fields.Char(compute='_compute_terms_url', string="URL", help="A preview will be available at this URL.")
 
     module_delivery = fields.Boolean(
         compute='_compute_module_delivery', store=True, readonly=False)
+    module_delivery_mondialrelay = fields.Boolean("Mondial Relay Connector")
     module_website_sale_delivery = fields.Boolean(
         compute='_compute_module_delivery', store=True, readonly=False)
     group_product_pricelist = fields.Boolean(
@@ -61,6 +62,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False, required=True)
     website_sale_prevent_zero_price_sale = fields.Boolean(string="Prevent Sale of Zero Priced Product", related='website_id.prevent_zero_price_sale', readonly=False)
     website_sale_contact_us_button_url = fields.Char(string="Button URL", related='website_id.contact_us_button_url', readonly=False)
+    website_sale_enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal", related='website_id.enabled_portal_reorder_button', readonly=False)
 
     @api.depends('website_id')
     def _compute_terms_url(self):
@@ -145,4 +147,14 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'mail.template',
             'view_id': False,
             'view_mode': 'tree,form',
+        }
+
+    def action_open_abandoned_cart_mail_template(self):
+        return {
+            'name': _('Customize Email Templates'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mail.template',
+            'view_id': False,
+            'view_mode': 'form',
+            'res_id': 15
         }

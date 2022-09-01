@@ -19,6 +19,7 @@ import {
     makeSeparator,
 } from "@web/views/view_compiler";
 import { ViewCompiler } from "../view_compiler";
+import { localization } from "@web/core/l10n/localization";
 
 const compilersRegistry = registry.category("form_compilers");
 
@@ -148,8 +149,24 @@ export class FormCompiler extends ViewCompiler {
                         ? `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`
                         : true,
             });
-            if (child.tagName === "button") {
-                child.classList.add("oe_stat_button");
+            if (child.tagName === "button" || child.children.tagName === "button") {
+                child.classList.add(
+                    "oe_stat_button",
+                    "btn-light",
+                    "flex-shrink-0",
+                    "mb-0",
+                    "py-0",
+                    "border-0",
+                    "border-start",
+                    "border-bottom",
+                    "rounded-0",
+                    "text-start",
+                    "text-nowrap",
+                    "text-capitalize"
+                );
+            }
+            if (child.tagName === "field") {
+                child.classList.add("d-inline-block", "mb-0");
             }
             append(mainSlot, this.compileNode(child, params, false));
             append(buttonBox, mainSlot);
@@ -223,6 +240,20 @@ export class FormCompiler extends ViewCompiler {
                 }
             }
             append(form, compiledList);
+        }
+        if (localization.multiLang) {
+            const statusBar = form.querySelector(".o_form_statusbar");
+            const translateAlert = createElement("t", {
+                "t-if": "props.translateAlert",
+                "t-call": "web.TranslateAlert",
+            });
+            if (statusBar) {
+                statusBar.parentElement.insertBefore(translateAlert, statusBar.nextSibling);
+            } else if (form.querySelector(".o_form_sheet_bg")) {
+                form.querySelector(".o_form_sheet_bg").prepend(translateAlert);
+            } else {
+                form.prepend(translateAlert);
+            }
         }
         return form;
     }
@@ -361,7 +392,8 @@ export class FormCompiler extends ViewCompiler {
      */
     compileHeader(el, params) {
         const statusBar = createElement("div");
-        statusBar.className = "o_form_statusbar";
+        statusBar.className =
+            "o_form_statusbar position-relative d-flex justify-content-between border-bottom";
         const buttons = [];
         const others = [];
         for (const child of el.childNodes) {

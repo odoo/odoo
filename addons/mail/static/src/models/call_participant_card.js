@@ -5,18 +5,10 @@ import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
-import { sprintf } from '@web/core/utils/strings';
-
 registerModel({
     name: 'CallParticipantCard',
     identifyingMode: 'xor',
     recordMethods: {
-        /**
-         * @param {Event} ev
-         */
-        onChangeVolume(ev) {
-            this.rtcSession && this.rtcSession.setVolume(parseFloat(ev.target.value));
-        },
         /**
          * @param {MouseEvent} ev
          */
@@ -26,9 +18,9 @@ registerModel({
             }
             if (this.rtcSession) {
                 if (this.callView.activeRtcSession === this.rtcSession && this.mainViewTileOwner) {
-                    this.callView.update({ activeRtcSession: clear() });
+                    this.callView.channel.update({ activeRtcSession: clear() });
                 } else {
-                    this.callView.update({ activeRtcSession: this.rtcSession });
+                    this.callView.channel.update({ activeRtcSession: this.rtcSession });
                 }
                 return;
             }
@@ -52,6 +44,7 @@ registerModel({
          */
         async onClickVolumeAnchor(ev) {
             markEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor');
+            this.update({ callParticipantCardPopoverView: this.callParticipantCardPopoverView ? clear() : {} });
         },
         /**
          * This listens to the right click event, and used to redirect the event
@@ -90,29 +83,6 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeHasConnectionInfo() {
-            return Boolean(this.rtcSession && this.env.debug && this.channelMember.channel.thread.rtc);
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeInboundConnectionTypeText() {
-            if (!this.rtcSession || !this.rtcSession.remoteCandidateType) {
-                return sprintf(this.env._t('From %s: no connection'), this.channelMember.persona.name);
-            }
-            return sprintf(
-                this.env._t('From %(name)s: %(candidateType)s (%(protocol)s)'), {
-                    candidateType: this.rtcSession.remoteCandidateType,
-                    name: this.channelMember.persona.name,
-                    protocol: this.messaging.rtc.protocolsByCandidateTypes[this.rtcSession.remoteCandidateType],
-                },
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeIsMinimized() {
             return Boolean(this.callView && this.callView.isMinimized);
         },
@@ -122,22 +92,6 @@ registerModel({
          */
         _computeIsTalking() {
             return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute);
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeOutboundConnectionTypeText() {
-            if (!this.rtcSession || !this.rtcSession.localCandidateType) {
-                return sprintf(this.env._t('To %s: no connection'), this.channelMember.persona.name);
-            }
-            return sprintf(
-                this.env._t('To %(name)s: %(candidateType)s (%(protocol)s)'), {
-                    candidateType: this.rtcSession.localCandidateType,
-                    name: this.channelMember.persona.name,
-                    protocol: this.messaging.rtc.protocolsByCandidateTypes[this.rtcSession.localCandidateType],
-                },
-            );
         },
         /**
          * @private
@@ -151,21 +105,13 @@ registerModel({
         },
     },
     fields: {
+        callParticipantCardPopoverView: one('PopoverView', {
+            inverse: 'callParticipantCardOwner',
+            isCausal: true,
+        }),
         channelMember: one('ChannelMember', {
             compute: '_computeChannelMember',
             inverse: 'callParticipantCards',
-        }),
-        /**
-         * Determines whether or not we show the connection info.
-         */
-        hasConnectionInfo: attr({
-            compute: '_computeHasConnectionInfo',
-        }),
-        /**
-         * The text describing the inbound ice connection candidate type.
-         */
-        inboundConnectionTypeText: attr({
-            compute: '_computeInboundConnectionTypeText',
         }),
         mainViewTileOwner: one('CallMainViewTile', {
             identifying: true,
@@ -184,12 +130,6 @@ registerModel({
         isTalking: attr({
             default: false,
             compute: '_computeIsTalking',
-        }),
-        /**
-         * The text describing the outbound ice connection candidate type.
-         */
-        outboundConnectionTypeText: attr({
-            compute: '_computeOutboundConnectionTypeText',
         }),
         /**
          * The callView that displays this card.

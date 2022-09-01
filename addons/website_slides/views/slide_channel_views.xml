@@ -6,7 +6,7 @@
             <field name="name">slide.channel.view.form</field>
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
-                <form string="Channels" js_class="legacy_form">
+                <form string="Channels">
                     <header>
                         <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight" attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
                     </header>
@@ -96,7 +96,7 @@
                             <page name="options" string="Options">
                                 <group>
                                     <group name="course" string="Course">
-                                        <field name="user_id" domain="[('share', '=', False)]"/>
+                                        <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">

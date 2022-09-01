@@ -16,6 +16,7 @@
         'data/mail_template_data.xml',
         'data/product_snippet_template_data.xml',
         'data/digest_data.xml',
+        'data/ir_cron_data.xml',
         'views/product_attribute_views.xml',
         'views/product_tag_views.xml',
         'views/product_views.xml',
@@ -59,6 +60,10 @@
             'website_sale/static/src/js/website_sale_tracking.js',
             'website/static/lib/multirange/multirange_custom.js',
             'website_sale/static/src/js/website_sale_category_link.js',
+            'website_sale/static/src/xml/website_sale_image_viewer.xml',
+            'website_sale/static/src/js/components/website_sale_image_viewer.js',
+            'website_sale/static/src/xml/website_sale_reorder_modal.xml',
+            'website_sale/static/src/js/website_sale_reorder.js',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',

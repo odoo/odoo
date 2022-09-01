@@ -304,7 +304,11 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _credit_debit_get(self):
-        tables, where_clause, where_params = self.env['account.move.line'].with_context(state='posted', company_id=self.env.company.id)._query_get()
+        tables, where_clause, where_params = self.env['account.move.line']._where_calc([
+            ('parent_state', '=', 'posted'),
+            ('company_id', '=', self.env.company.id)
+        ]).get_sql()
+
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause
@@ -651,3 +655,15 @@ class ResPartner(models.Model):
                     _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
                 else:
                     raise e
+
+    @api.model
+    def get_partner_localisation_fields_required_to_invoice(self, country_id):
+        """ Returns the list of fields that needs to be filled when creating an invoice for the selected country.
+        This is required for some flows that would allow a user to request an invoice from the portal.
+        Using these, we can get their information and dynamically create form inputs based for the fields required legally for the company country_id.
+        The returned fields must be of type ir.model.fields in order to handle translations
+
+        :param country_id: The country for which we want the fields.
+        :return: an array of ir.model.fields for which the user should provide values.
+        """
+        return []

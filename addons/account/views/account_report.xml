@@ -40,16 +40,6 @@
             <field name="binding_type">report</field>
         </record>
 
-        <record id="action_report_journal" model="ir.actions.report">
-            <field name="name">Journals Audit</field>
-            <field name="model">account.common.journal.report</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">account.report_journal</field>
-            <field name="report_file">account.report_journal</field>
-            <field name="binding_model_id" ref="model_account_common_journal_report"/>
-            <field name="binding_type">report</field>
-        </record>
-
         <record id="action_report_payment_receipt" model="ir.actions.report">
             <field name="name">Payment Receipt</field>
             <field name="model">account.payment</field>

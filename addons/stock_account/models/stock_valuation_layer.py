@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class StockValuationLayer(models.Model):
@@ -29,6 +29,7 @@ class StockValuationLayer(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
     stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True, index=True)
     account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True)
+    reference = fields.Char(related='stock_move_id.reference')
 
     def init(self):
         tools.create_index(
@@ -55,3 +56,22 @@ class StockValuationLayer(models.Model):
     def _validate_analytic_accounting_entries(self):
         for svl in self:
             svl.stock_move_id._account_analytic_entry_move()
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if 'unit_cost' in fields:
+            fields.remove('unit_cost')
+        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+
+    def action_open_reference(self):
+        self.ensure_one()
+        if self.stock_move_id:
+            action = self.move_id.action_open_reference()
+            if action['res_model'] != 'stock.move':
+                return action
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }

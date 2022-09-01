@@ -91,7 +91,6 @@
     <record id="view_sale_project_inherit_form" model="ir.ui.view">
         <field name="name">project.task.view.inherit</field>
         <field name="model">project.task</field>
-        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <xpath expr="//span[@id='start_rating_buttons']" position="before">
@@ -107,23 +106,11 @@
             </xpath>
             <xpath expr="//field[@name='partner_phone']" position="after">
                 <field name="sale_order_id" attrs="{'invisible': True}" groups="sales_team.group_sale_salesman"/>
-                <field name="sale_line_id" string="Sales Order Item" options='{"no_open": True}' readonly="1" context="{'create': False, 'edit': False, 'delete': False}"/>
+                <field name="sale_line_id" groups="!sales_team.group_sale_salesman" string="Sales Order Item" options='{"no_open": True}' readonly="1" context="{'create': False, 'edit': False, 'delete': False}"/>
+                <field name="sale_line_id" groups="sales_team.group_sale_salesman" string="Sales Order Item" options='{"no_create": True}' readonly="0" context="{'create': False, 'edit': False, 'delete': False}"/>
                 <field name="commercial_partner_id" invisible="1" />
             </xpath>
         </field>
-    </record>
-
-    <record id="project_task_view_form_inherit_sale_line_editable" model="ir.ui.view">
-        <field name="name">project.task.form.inherit.sale.line.editable.salesman</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="view_sale_project_inherit_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='sale_line_id']" position="attributes">
-                <attribute name="options">{"no_create": True}</attribute>
-                <attribute name="readonly">0</attribute>
-            </xpath>
-        </field>
-        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
     <record id="project_task_view_search" model="ir.ui.view">
@@ -149,26 +136,12 @@
                 <field name="allow_billable" invisible="1"/>
                 <group attrs="{'invisible': [('allow_billable', '=', False)]}">
                     <field name="project_partner_id" invisible="1"/>
-                    <field name="sale_line_id" options="{'no_open': True}" readonly="1"/>
-                    <field name="quantity_percentage" widget="percentage" readonly="1"/>
+                    <field name="sale_line_id" groups="!sales_team.group_sale_salesman" options="{'no_open': True}" readonly="1"/>
+                    <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True}" readonly="0"/>
+                    <field name="quantity_percentage" groups="!sales_team.group_sale_salesman" widget="percentage" readonly="1"/>
+                    <field name="quantity_percentage" groups="sales_team.group_sale_salesman" widget="percentage" readonly="0"/>
                 </group>
             </xpath>
-        </field>
-    </record>
-
-    <record id="project_milestone_view_form_salesman" model="ir.ui.view">
-        <field name="name">project.milestone.view.form.inherit.salesman</field>
-        <field name="model">project.milestone</field>
-        <field name="inherit_id" ref="project_milestone_view_form"/>
-        <field name="groups_id" eval="[Command.link(ref('sales_team.group_sale_salesman'))]"/>
-        <field name="arch" type="xml">
-            <field name="sale_line_id" position="attributes">
-                <attribute name="options">{'no_create': True}</attribute>
-                <attribute name="readonly">0</attribute>
-            </field>
-            <field name="quantity_percentage" position="attributes">
-                <attribute name="readonly">0</attribute>
-            </field>
         </field>
     </record>
 
@@ -181,8 +154,10 @@
             <xpath expr="//field[@name='name']" position="after">
                 <field name="project_partner_id" invisible="1"/>
                 <field name="allow_billable" invisible="1"/>
-                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1"/>
-                <field name="quantity_percentage" optional="hide" widget="percentage" readonly="1"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_create': True}" groups="sales_team.group_sale_salesman"/>
+                <field name="quantity_percentage" optional="hide" widget="percentage" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                <field name="quantity_percentage" optional="hide" widget="percentage" groups="sales_team.group_sale_salesman"/>
             </xpath>
         </field>
     </record>
@@ -193,28 +168,19 @@
         <field name="inherit_id" ref="sale_project.project_milestone_view_tree"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <field name="sale_line_id" position="attributes">
+            <xpath expr="//field[@name='sale_line_id'][1]" position="attributes">
                 <attribute name="optional">show</attribute>
-            </field>
-            <field name="quantity_percentage" position="attributes">
+            </xpath>
+            <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
                 <attribute name="optional">show</attribute>
-            </field>
+            </xpath>
+            <xpath expr="//field[@name='quantity_percentage'][1]" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='quantity_percentage'][2]" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
         </field>
     </record>
 
-    <record id="project_milestone_view_tree_salesman" model="ir.ui.view">
-        <field name="name">project.milestone.view.tree.inherit.salesman</field>
-        <field name="model">project.milestone</field>
-        <field name="inherit_id" ref="project_milestone_view_tree"/>
-        <field name="groups_id" eval="[Command.link(ref('sales_team.group_sale_salesman'))]"/>
-        <field name="arch" type="xml">
-            <field name="sale_line_id" position="attributes">
-                <attribute name="options">{'no_create': True}</attribute>
-                <attribute name="readonly">0</attribute>
-            </field>
-            <field name="quantity_percentage" position="attributes">
-                <attribute name="readonly">0</attribute>
-            </field>
-        </field>
-    </record>
 </odoo>

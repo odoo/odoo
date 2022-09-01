@@ -438,6 +438,26 @@ export function getAdjacents(node, predicate = n => !!n) {
 //------------------------------------------------------------------------------
 
 /**
+ * Returns true if the given editable area contains a table with selected cells.
+ *
+ * @param {Element} editable
+ * @returns {boolean}
+ */
+export function hasTableSelection(editable) {
+    return !!editable.querySelector('.o_selected_table');
+}
+/**
+ * Returns true if the given editable area contains a "valid" selection, by
+ * which we mean a browser selection whose elements are defined, or a table with
+ * selected cells.
+ *
+ * @param {Element} editable
+ * @returns {boolean}
+ */
+export function hasValidSelection(editable) {
+    return hasTableSelection(editable) || editable.ownerDocument.getSelection().rangeCount > 0;
+}
+/**
  * From a given position, returns the normalized version.
  *
  * E.g. <b>abc</b>[]def -> <b>abc[]</b>def
@@ -624,19 +644,29 @@ export function getCursorDirection(anchorNode, anchorOffset, focusNode, focusOff
  * @returns {Node[]}
  */
 export function getTraversedNodes(editable, range = getDeepRange(editable)) {
+    const selectedTableCells = editable.querySelectorAll('.o_selected_td');
     const document = editable.ownerDocument;
     if (!range) return [];
     const iterator = document.createNodeIterator(range.commonAncestorContainer);
     let node;
     do {
         node = iterator.nextNode();
-    } while (node && node !== range.startContainer);
-    const traversedNodes = [node];
+    } while (node && node !== range.startContainer && !(selectedTableCells.length && node === selectedTableCells[0]));
+    const traversedNodes = new Set([node]);
     while (node && node !== range.endContainer) {
         node = iterator.nextNode();
-        node && traversedNodes.push(node);
+        if (node) {
+            const selectedTable = closestElement(node, '.o_selected_table');
+            if (selectedTable) {
+                for (const selectedTd of selectedTable.querySelectorAll('.o_selected_td')) {
+                    traversedNodes.add(selectedTd, ...descendants(selectedTd));
+                }
+            } else {
+                traversedNodes.add(node);
+            }
+        }
     }
-    return traversedNodes;
+    return [...traversedNodes];
 }
 /**
  * Returns an array containing all the nodes fully contained in the selection.
@@ -645,14 +675,24 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
  * @returns {Node[]}
  */
 export function getSelectedNodes(editable) {
+    const selectedTableCells = editable.querySelectorAll('.o_selected_td');
     const document = editable.ownerDocument;
     const sel = document.getSelection();
-    if (!sel.rangeCount) {
+    if (!sel.rangeCount && !selectedTableCells.length) {
         return [];
     }
     const range = sel.getRangeAt(0);
-    return getTraversedNodes(editable).filter(
-        node => range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)),
+    return getTraversedNodes(editable).flatMap(
+        node => {
+            const td = closestElement(node, '.o_selected_td');
+            if (td) {
+                return descendants(td);
+            } else if (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node))) {
+                return node;
+            } else {
+                return [];
+            }
+        },
     );
 }
 
@@ -670,8 +710,8 @@ export function getSelectedNodes(editable) {
  * @returns {Range}
  */
 export function getDeepRange(editable, { range, sel, splitText, select, correctTripleClick } = {}) {
-    sel = sel || editable.ownerDocument.getSelection();
-    range = range ? range.cloneRange() : sel.rangeCount && sel.getRangeAt(0).cloneRange();
+    sel = sel || editable.parentElement && editable.ownerDocument.getSelection();
+    range = range ? range.cloneRange() : sel && sel.rangeCount && sel.getRangeAt(0).cloneRange();
     if (!range) return;
     let start = range.startContainer;
     let startOffset = range.startOffset;
@@ -1098,6 +1138,39 @@ export function getInSelection(document, selector) {
     );
 }
 
+/**
+ * Get the index of the given table row/cell.
+ *
+ * @private
+ * @param {HTMLTableRowElement|HTMLTableCellElement} trOrTd
+ * @returns {number}
+ */
+export function getRowIndex(trOrTd) {
+    const tr = closestElement(trOrTd, 'tr');
+    const trParent = tr && tr.parentElement;
+    if (!trParent) {
+        return -1;
+    }
+    const trSiblings = [...trParent.children].filter(child => child.nodeName === 'TR');
+    return trSiblings.findIndex(child => child === tr);
+}
+
+/**
+ * Get the index of the given table cell.
+ *
+ * @private
+ * @param {HTMLTableCellElement} td
+ * @returns {number}
+ */
+export function getColumnIndex(td) {
+    const tdParent = td.parentElement;
+    if (!tdParent) {
+        return -1;
+    }
+    const tdSiblings = [...tdParent.children].filter(child => child.nodeName === 'TD' || child.nodeName === 'TH');
+    return tdSiblings.findIndex(child => child === td);
+}
+
 // This is a list of "paragraph-related elements", defined as elements that
 // behave like paragraphs.
 const paragraphRelatedElements = [
@@ -1237,7 +1310,7 @@ export function isVisible(node, areBlocksAlwaysVisible = true) {
     return [...node.childNodes].some(n => isVisible(n));
 }
 
-function isVisibleTextNode(testedNode) {
+export function isVisibleTextNode(testedNode) {
     if (!testedNode.length) {
         return false;
     }
@@ -2107,9 +2180,19 @@ export function rgbToHex(rgb = '') {
     }
 }
 
+/**
+ * Take a string containing a size in pixels, return that size as a float.
+ *
+ * @param {string} sizeString
+ * @returns {number}
+ */
+export function pxToFloat(sizeString) {
+    return parseFloat(sizeString.replace('px', ''));
+}
+
 export function getRangePosition(el, document, options = {}) {
     const selection = document.getSelection();
-    if (!selection.isCollapsed || !selection.rangeCount) return;
+    if (!selection.rangeCount) return;
     const range = selection.getRangeAt(0);
 
     const marginRight = options.marginRight || 20;

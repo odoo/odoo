@@ -1,17 +1,17 @@
 /** @odoo-module */
 
 import { ComponentAdapter } from 'web.OwlCompatibility';
-import { _t } from '@web/core/l10n/translation';
 
 import { useWowlService } from '@web/legacy/utils';
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { setEditableWindow } from 'web_editor.utils';
+import { useBus } from "@web/core/utils/hooks";
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
 
-const { onWillStart, useEffect } = owl;
+const { onWillStart, useEffect, onWillUnmount } = owl;
 
 /**
  * This component adapts the Wysiwyg widget from @web_editor/wysiwyg.js.
@@ -31,6 +31,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         this.orm = useWowlService('orm');
         this.dialogs = useWowlService('dialog');
         this.action = useWowlService('action');
+
+        useBus(this.websiteService.bus, 'LEAVE-EDIT-MODE', (ev) => this.leaveEditMode(ev.detail));
 
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])';
@@ -98,6 +100,37 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             };
         }, () => []);
 
+        useEffect(() => {
+            // Back navigation is handled with an additional state in the
+            // history, used to capture the popstate event.
+            history.pushState(null, '');
+            let hasFakeState = true;
+            const leaveOnBackNavigation = () => {
+                hasFakeState = false;
+                this.leaveEditMode({
+                    onStay: () => {
+                        history.pushState(null, '');
+                        hasFakeState = true;
+                    },
+                    onLeave: () => history.back(),
+                    reloadIframe: false
+                });
+            };
+            window.addEventListener('popstate', leaveOnBackNavigation);
+            return () => {
+                window.removeEventListener('popstate', leaveOnBackNavigation);
+                if (hasFakeState) {
+                    history.back();
+                }
+            };
+        }, () => []);
+
+        onWillUnmount(() => {
+            if (this.dummyWidgetEl) {
+                this.dummyWidgetEl.remove();
+                document.body.classList.remove('editor_has_dummy_snippets');
+            }
+        });
     }
     /**
      * @override
@@ -177,6 +210,38 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 lang: (this.websiteService.pageDocument.documentElement.getAttribute('lang') || 'en_US').replace('-', '_'),
             },
         );
+    }
+    leaveEditMode({ onLeave, forceLeave, onStay, reloadIframe = true } = {}) {
+        const leave = () => {
+            this.dummyWidgetEl = this._getDummmySnippetsEl();
+            this.widget.el.parentElement.appendChild(this.dummyWidgetEl);
+            document.body.classList.add('editor_has_dummy_snippets');
+            // The wysiwyg is destroyed to avoid listeners from the OdooEditor
+            // and the SnippetsMenu to be triggered when reloading the iframe.
+            this.widget.destroy();
+            this.props.quitCallback({ onLeave, reloadIframe });
+        };
+
+        if (!forceLeave && this._isDirty()) {
+            let leaving = false;
+            // The onStay/leave callbacks are not passed directly as
+            // primaryClick/secondaryClick props, so that closing the dialog
+            // with "esc" or the top right cross icon also executes onStay.
+            this.dialogs.add(WebsiteDialog, {
+                body: this.env._t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
+                primaryClick: () => leaving = true,
+            }, {
+                onClose: () => {
+                    if (leaving) {
+                        leave();
+                    } else if (onStay) {
+                        onStay();
+                    }
+                }
+            });
+        } else {
+            leave();
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -277,7 +342,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     _addEditorMessages() {
         const $wrap = this.$editable.find('.oe_structure.oe_empty, [data-oe-type="html"]');
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
-                .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+                .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
         $wrap.filter(':empty').attr('contenteditable', false);
     }
     /**
@@ -559,10 +624,10 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @private
      */
     async _onSaveRequest(event) {
-        let callback = () => this.props.quitCallback();
+        let callback = () => this.leaveEditMode({ forceLeave: true });
         if (event.data.reload || event.data.reloadEditor) {
             this.widget.trigger_up('disable_loading_effects');
-            this.props.willReload(this.widget.el);
+            this.props.willReload(this._getDummmySnippetsEl());
             callback = async () => {
                 if (event.data.onSuccess) {
                     await event.data.onSuccess();
@@ -581,12 +646,15 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             callback = () => window.location = `/web#action=website.website_preview&website_id=${websiteId}&path=${currentPath}&enable_editor=1`;
         } else if (event.data.action) {
             callback = () => {
-                this.websiteService.leaveEditMode();
-                this.action.doAction(event.data.action);
+                this.leaveEditMode({
+                    onLeave: () => this.action.doAction(event.data.action),
+                    forceLeave: true,
+                    reloadIframe: false,
+                });
             };
         }
         if (this._isDirty()) {
-            return this.save().then(callback);
+            return this.save().then(callback, event.data.onFailure);
         } else {
             return callback();
         }
@@ -610,24 +678,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @private
      */
     _onCancelRequest(event) {
-        if (this._isDirty()) {
-            let discarding = false;
-            this.dialogs.add(WebsiteDialog, {
-                body: _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
-                primaryClick: () => {
-                    discarding = true;
-                },
-            }, {
-                onClose: () => {
-                    if (discarding) {
-                        return this.props.quitCallback();
-                    }
-                    return event.data.onReject();
-                }
-            });
-        } else {
-            return this.props.quitCallback();
-        }
+        this.leaveEditMode({ onStay: event.data.onReject });
     }
     /**
      * Called when a snippet is about to be cloned in the page. Notifies the
@@ -760,6 +811,21 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     async _onGetSwitchableRelatedViews(event) {
         const views = await this.switchableRelatedViews;
         event.data.onSuccess(views);
+    }
+    /**
+     * This method returns a visual skeleton of the snippets menu, by making a
+     * copy of the Wysiwyg element. This is used when reloading the iframe or
+     * leaving the edit mode, so that the widget can be destroyed under the
+     * hood (ideally, the Wysiwyg would remove its listeners on the document,
+     * so that they are not triggered during a reload).
+     */
+    _getDummmySnippetsEl() {
+        const dummySnippetsEl = this.widget.el.cloneNode(true);
+        dummySnippetsEl.querySelectorAll('#oe_manipulators, .d-none, .oe_snippet_body').forEach(el => el.remove());
+        dummySnippetsEl.querySelectorAll('we-input input').forEach(input => {
+            input.setAttribute('value', input.closest('we-input').dataset.selectStyle || '');
+        });
+        return dummySnippetsEl;
     }
 }
 WysiwygAdapterComponent.prototype.events = {

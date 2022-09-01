@@ -406,7 +406,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "left",
 }, {
     mobile: true,
-    trigger: '.o_field_widget[name=name]input',
+    trigger: '.o_field_widget[name=name] input',
     extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Project')",
     content: _t('Let\'s enter the name.'),
     position: 'left',
@@ -706,20 +706,6 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
 },
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
 {
-// Run the schedulers
-    trigger: ".o_menu_sections button:contains('Operations')",
-    content: _t("Go to Run Schedulers"),
-    position: "bottom"
-}, {
-    trigger: ".o_menu_sections .dropdown-item[data-menu-xmlid='stock.menu_procurement_compute']",
-    content: _t("Click on schedulers"),
-    position: "bottom"
-}, {
-    trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".modal-dialog",
-    content: _t("Run Schedulers"),
-    position: "bottom",
-}, {
 //Go to purchase:
     edition: "enterprise",
     trigger: '.o_menu_toggle',
@@ -729,7 +715,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
 ...tour.stepUtils.goToAppSteps('purchase.menu_purchase_root', _t('Go to Purchase')),
 {
     mobile: false,
-    trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.vendor"))',
+    trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.vendor")) .o_data_cell:first',
     content: _t('Select the generated request for quotation'),
     position: 'bottom',
 }, {
@@ -787,7 +773,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     position: 'bottom',
 }, {
     mobile: false,
-    trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.product")):first',
+    trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.product")):first .o_data_cell:first',
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
 }, {
@@ -861,14 +847,14 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('See Tasks'),
     position: 'bottom',
 }, {
-    trigger: '.o_field_widget[name=project_id]',
+    trigger: '.o_field_widget[name=project_id] a',
     content: _t('See Project'),
     position: 'right',
 },
 tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the_flow.project")'),
 {
-    trigger: '.oe_button_box .oe_stat_button:has(span:contains("Recorded"))',
-    extra_trigger: '.o_form_readonly',
+    trigger: '.oe_button_box button.oe_stat_button:has(span:contains("Recorded"))',
+    extra_trigger: '.o_form_readonly .oe_stat_button.dropdown > .dropdown-menu',
     content: _t('See Timesheets'),
     position: 'bottom',
 }, {
@@ -937,6 +923,13 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     content: _t("Select the the_flow.vendor"),
     position: "bottom",
 }, {
+    edition: 'community',
+    trigger: '.o_selected_row .o_field_widget[name=unit_amount] input',
+    content: _t('Set time'),
+    position: 'bottom',
+    run: 'text 10',
+}, {
+    edition: 'enterprise',
     trigger: '.o_selected_row .o_field_widget[name=unit_amount]input',
     content: _t('Set time'),
     position: 'bottom',
@@ -989,8 +982,9 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     content: _t('Go to Accounting'),
     position: 'bottom',
 }, {
+    // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
     edition: "enterprise",
-    trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement]',
+    trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement], div[name=bank_statement_create_button] > a[name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',
 }, {

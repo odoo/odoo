@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.BomOverviewDisplayFilter" owl="1">
+        <Dropdown class="'btn-group'" togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <span class="fa fa-filter"/>
+                Display: <span t-esc="currentDisplayedNames"/>
+            </t>
+            <t t-foreach="displayableOptions" t-as="optionKey" t-key="optionKey">
+                <DropdownItem parentClosingMode="'none'" class="{ o_menu_item: true, selected: this.props.showOptions[optionKey] }" onSelected="() => this.onClickDisplay(optionKey)" t-esc="displayOptions[optionKey]"/>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

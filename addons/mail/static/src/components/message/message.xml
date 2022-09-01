@@ -8,7 +8,7 @@
                     'o_Message_active': messageView.isActive,
                     'o-clicked': messageView.messagingAsClickedMessageView,
                     'o-discussion': messageView.message.isDiscussionOrNotification,
-                    'o-has-message-selection': messageView.messageListViewMessageViewItemOwner and messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView,
+                    'o-has-message-selection': messageView.messageListViewItemOwner and messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView,
                     'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
                     'o-isReplyHighlighted bg-white shadow-lg': messageView.isHighlighted,
                     'o-isDeviceSmall': messaging.device.isSmall,
@@ -18,11 +18,10 @@
                     'o-squashed pt-1': messageView.isSquashed,
                     'o-starred': messageView.message.isStarred,
                     'o-currentAuthor': messageView.message.isCurrentUserOrGuestAuthor,
-                    'mt-1': !messageView.isSquashed,
-                    'mt-5': !messageView.isSquashed and messageView.messageListViewOwner,
+                    'mt-1': !messageView.isSquashed and messageView.messageListViewItemOwner,
                     'px-3': !messageView.isInChatWindow,
                     'px-1': messageView.isInChatWindow,
-                    'opacity-50': (messageView.messageListViewMessageViewItemOwner and messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView) and !messageView.isSelected,
+                    'opacity-50': (messageView.messageListViewItemOwner and messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView) and !messageView.isSelected,
                 }" t-attf-class="{{ messageView.extraClass }} {{ className }}" role="group" t-att-aria-label="messageView.message.messageTypeText" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-id="messageView.message.id" t-att-data-message-id="messageView.message.id"
                 t-ref="root"
             >
@@ -68,7 +67,7 @@
                                 <t t-if="messageView.message.author">
                                     <strong t-if="messageView.isShowingAuthorName" class="o_Message_authorName o_redirect me-1 text-truncate" t-att-class="{ 'cursor-pointer': messageView.hasAuthorOpenChat }" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorName" t-att-title="messageView.authorTitleText">
                                         <t t-if="messageView.message.originThread">
-                                            <t t-esc="messageView.message.originThread.getMemberName(messageView.message.author)"/>
+                                            <t t-esc="messageView.message.originThread.getMemberName(messageView.message.author.persona)"/>
                                         </t>
                                         <t t-else="">
                                             <t t-esc="messageView.message.author.nameOrDisplayName"/>
@@ -100,7 +99,7 @@
                                 <t t-if="messageView.messageSeenIndicatorView">
                                     <MessageSeenIndicator className="'o_Message_seenIndicator ms-1'" record="messageView.messageSeenIndicatorView"/>
                                 </t>
-                                <t t-if="messageView.messageListViewMessageViewItemOwner and messageView.message.originThread and messageView.message.originThread !== messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread">
+                                <t t-if="messageView.messageListViewItemOwner and messageView.message.originThread and messageView.message.originThread !== messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread">
                                     <small class="o_Message_originThread me-2" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }">
                                         <t t-if="messageView.message.originThread.model === 'mail.channel'">
                                             (from <a class="o_Message_originThreadLink fs-6" t-att-href="messageView.message.originThread.url" t-on-click="messageView.onClickOriginThread"><t t-if="messageView.message.originThread.displayName">#<t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">channel</t></a>)
@@ -110,28 +109,23 @@
                                         </t>
                                     </small>
                                 </t>
-                                <t t-if="messageView.messageListViewMessageViewItemOwner and messageView.message.originThread and messageView.message.originThread === messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread and messageView.message.notifications.length > 0">
+                                <t t-if="messageView.messageListViewItemOwner and messageView.message.originThread and messageView.message.originThread === messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread and messageView.message.notifications.length > 0">
                                     <div t-att-class="{ 'ms-2': messageView.isInChatWindowAndIsAlignedRight }">
                                         <t t-if="messageView.message.failureNotifications.length > 0">
                                             <span class="o_Message_notificationIconClickable o-error cursor-pointer text-danger" role="button" tabindex="0" t-on-click="messageView.onClickFailure">
-                                                <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>
+                                                <i class="o_Message_notificationIcon" t-att-class="messageView.failureNotificationIconClassName" role="img" aria-label="Delivery failure"/> <span t-if="messageView.failureNotificationIconLabel" t-out="messageView.failureNotificationIconLabel"/>
                                             </span>
                                         </t>
                                         <t t-else="">
-                                            <Popover>
-                                                <span class="o_Message_notificationIconClickable text-600 cursor-pointer">
-                                                    <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
-                                                </span>
-                                                <t t-set-slot="opened">
-                                                    <MessageNotificationPopoverContent record="messageView"/>
-                                                </t>
-                                            </Popover>
+                                            <span class="o_Message_notificationIconClickable text-600 cursor-pointer" t-on-click="messageView.onClickNotificationIcon" t-ref="notificationIcon">
+                                                <i class="o_Message_notificationIcon" t-att-class="messageView.notificationIconClassName"/> <span t-if="messageView.notificationIconLabel" t-out="messageView.notificationIconLabel"/>
+                                            </span>
                                         </t>
                                     </div>
                                 </t>
                             </div>
                         </t>
-                        <div 
+                        <div
                             class="o_Message_bubbleWrap position-relative d-flex align-items-start"
                             t-att-class="{
                                 'd-flex justify-content-end': messageView.isInChatWindowAndIsAlignedRight,
@@ -148,8 +142,8 @@
                                     'w-100': !(messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms') and !messageView.isInChatWindow,
                                     'me-2': messageView.isInChatWindowAndIsAlignedLeft and !messageView.composerViewInEditing,
                                     'ms-2': messageView.isInChatWindowAndIsAlignedRight and !messageView.composerViewInEditing,
-                                    'p-3': messageView.message.prettyBody !== '' and !messageView.composerViewInEditing and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'), 
-                                    'p-2': messageView.composerViewInEditing, 
+                                    'p-3': messageView.message.prettyBody !== '' and !messageView.composerViewInEditing and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
+                                    'p-2': messageView.composerViewInEditing,
                                     'text-muted': messageView.message.is_note and messageView.message.message_type !== 'sms',
                                 }"
                             >
@@ -158,9 +152,9 @@
                                     class="o_Message_background position-absolute start-0 top-0 w-100 h-100"
                                     t-att-class="{
                                         'rounded-end-3': !messageView.isInChatWindowAndIsAlignedRight and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
-                                        'rounded-start-3': messageView.isInChatWindowAndIsAlignedRight and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),      
+                                        'rounded-start-3': messageView.isInChatWindowAndIsAlignedRight and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
                                         'rounded-bottom-3 border': messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms',
-                                        'o-isAuthorNotCurrentUserOrGuest border-info bg-info-light': !messageView.message.isCurrentUserOrGuestAuthor and !messageView.message.isHighlighted and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'), 
+                                        'o-isAuthorNotCurrentUserOrGuest border-info bg-info-light': !messageView.message.isCurrentUserOrGuestAuthor and !messageView.message.isHighlighted and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
                                         'border-success bg-success-light opacity-25': messageView.message.isCurrentUserOrGuestAuthor and !messageView.message.isHighlighted and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
                                         'border-warning bg-warning-light opacity-50': messageView.message.isHighlighted and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
                                     }"

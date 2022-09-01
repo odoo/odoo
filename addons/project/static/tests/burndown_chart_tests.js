@@ -7,6 +7,7 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { makeView } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { getFirstElementForXpath } from './project_test_utils';
 
 const serviceRegistry = registry.category("services");
 QUnit.module("Project", {}, () => {
@@ -126,11 +127,6 @@ QUnit.module("Project", {}, () => {
             assert.verifySteps(['notification_triggered']);
         }
 
-        function getFirstElementForXpath(xpath) {
-            const xPathResult = document.evaluate(xpath, target, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-            return xPathResult.singleNodeValue;
-        }
-
         async function openGroupByMainMenu(target) {
             await toggleGroupByMenu(target);
         }
@@ -156,7 +152,7 @@ QUnit.module("Project", {}, () => {
                                                          /span
                                                           [contains(@class, 'o_item_option')]
                                                           [contains(@class, 'selected')]`;
-            const selectedGroupByDateItemElement = getFirstElementForXpath(selectedGroupByDateItemXpath);
+            const selectedGroupByDateItemElement = getFirstElementForXpath(target, selectedGroupByDateItemXpath);
             await toggleMenuItemOption(target, 'Date', selectedGroupByDateItemElement.innerText);
         }
 
@@ -167,7 +163,7 @@ QUnit.module("Project", {}, () => {
                                                 [.//span[@class='o_facet_value']
                                                 [contains(., 'Date: Month')]]
                                             /i[contains(@class, 'o_facet_remove')]`;
-                const removeFilterElement = getFirstElementForXpath(removeFilterXpath);
+                const removeFilterElement = getFirstElementForXpath(target, removeFilterXpath);
                 await click(removeFilterElement);
             };
             await testBurnDownChartWithSearchView(stepsTriggeringNotification, assert);
@@ -199,7 +195,7 @@ QUnit.module("Project", {}, () => {
                                          /span
                                           [contains(@class, 'o_item_option')]
                                           [not(contains(@class, 'selected'))]`;
-            const firstNotSelectedGroupByDateItemElement = getFirstElementForXpath(firstNotSelectedGroupByDateItemXpath);
+            const firstNotSelectedGroupByDateItemElement = getFirstElementForXpath(target, firstNotSelectedGroupByDateItemXpath);
             await toggleMenuItemOption(target, 'Date', firstNotSelectedGroupByDateItemElement.innerText);
             const groupByDateSubMenuXpath = `//div
                                             [contains(@class, 'o_group_by_menu')]
@@ -207,7 +203,7 @@ QUnit.module("Project", {}, () => {
                                               [contains(@class, 'o_menu_item')]
                                               [contains(., 'Date')]
                                                /following-sibling::div`;
-            const groupByDateSubMenuElement = getFirstElementForXpath(groupByDateSubMenuXpath);
+            const groupByDateSubMenuElement = getFirstElementForXpath(target, groupByDateSubMenuXpath);
             const selectedGroupByDateItemElements = groupByDateSubMenuElement.querySelectorAll('span.o_item_option.selected');
             assert.equal(selectedGroupByDateItemElements.length, 1, 'There is only one selected item.');
             assert.equal(firstNotSelectedGroupByDateItemElement.innerText, selectedGroupByDateItemElements[0].innerText, 'The selected item is the one we clicked on.');
@@ -217,7 +213,7 @@ QUnit.module("Project", {}, () => {
             const dateSearchFacetXpath = `//div[contains(@class, 'o_searchview_facet')]
                                             [.//span[@class='o_facet_value']
                                             [contains(., 'Date: Month')]]`;
-            const dateSearchFacetElement = getFirstElementForXpath(dateSearchFacetXpath);
+            const dateSearchFacetElement = getFirstElementForXpath(target, dateSearchFacetXpath);
             const dateSearchFacetParts = dateSearchFacetElement.querySelectorAll('.o_facet_value');
             assert.equal(dateSearchFacetParts.length, 2);
             assert.equal(dateSearchFacetParts[0].innerText, 'Date: Month');

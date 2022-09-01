@@ -1621,7 +1621,7 @@
                                     <div t-foreach="posts_ids.mapped('create_uid')" t-as="user" class="col-6">
                                         <div class="card mb-2">
                                             <div class="card-body py-2">
-                                                <div class="custom-control form-check">
+                                                <div class="form-check">
                                                     <input type="checkbox" t-att-value="user.id" class="form-check-input" t-attf-id="user_#{user.id}"/>
                                                     <label class="form-check-label" t-attf-for="user_#{user.id}">
                                                         <img class="d-inline img o_forum_avatar" t-att-src="website.image_url(user, 'avatar_128', '40x40')" alt="Avatar"/>
@@ -1638,7 +1638,7 @@
                                     <div t-foreach="posts_ids.mapped('create_uid.country_id')" t-as="country" class="col-6">
                                         <div class="card mb-2">
                                             <div class="card-body py-2">
-                                                <div class="custom-control form-check">
+                                                <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" t-attf-id="country_#{country.id}" t-att-value="country.id"/>
                                                     <label class="form-check-label" t-attf-for="country_#{country.id}">
                                                         <span t-field="country.image_url" t-options='{"widget": "image_url", "class": "country_flag"}' class="me-2"/>

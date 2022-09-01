@@ -31,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
-                    <t t-call="web.ListRenderer.Rows">
+                    <t t-call="{{ constructor.rowsTemplate }}">
                         <t t-set="list" t-value="props.list"/>
                     </t>
                 </tbody>
@@ -71,7 +71,7 @@
     <t t-name="web.ListRenderer.Rows" owl="1">
         <t t-if="!list.isGrouped">
             <t t-foreach="list.records" t-as="record" t-key="record.id">
-                <t t-call="web.ListRenderer.RecordRow"/>
+                <t t-call="{{ constructor.recordRowTemplate }}"/>
             </t>
             <tr t-if="displayRowCreates">
                 <td t-if="withHandleColumn"/>
@@ -86,7 +86,7 @@
                             role="button"
                             t-att-class="create_index !== 0 ? 'ml16' : ''"
                             t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
-                            t-on-click.stop.prevent="() => this.props.onAdd({context: create.context})"
+                            t-on-click.stop.prevent="() => this.add({ context: create.context })"
                         >
                             <t t-esc="create.string"/>
                         </a>
@@ -111,9 +111,9 @@
         </t>
         <t t-else="">
             <t t-foreach="list.groups" t-as="group" t-key="group.id">
-                <t t-call="web.ListRenderer.GroupRow"/>
+                <t t-call="{{ constructor.groupRowTemplate }}"/>
                 <t t-if="!group.isFolded">
-                    <t t-call="web.ListRenderer.Rows">
+                    <t t-call="{{ constructor.rowsTemplate }}">
                         <t t-set="list" t-value="group.list"/>
                     </t>
                     <tr t-if="!group.list.isGrouped and props.editable and props.activeActions['create']">
@@ -170,8 +170,8 @@
             <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="showGroupPager(group)">
                 <Pager t-props="getGroupPagerProps(group)"/>
             </th>
-            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" class="o_list_number">
-                <t t-esc="formatAggregateValue(group, column)"/>
+            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+                <t t-if="column.type === 'field'" t-esc="formatAggregateValue(group, column)"/>
             </td>
             <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
             <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
@@ -189,9 +189,9 @@
             <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
                 <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="record.selected" onChange.bind="() => this.toggleRecordSelection(record)" />
             </td>
-            <t t-foreach="state.columns" t-as="column" t-key="column.id">
+            <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-name="column.name" t-att-class="getCellClass(column, record)" t-att-data-tooltip="getCellTitle(column, record)" data-tooltip-delay="1000" t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-name="column.name" t-att-colspan="column.colspan"  t-att-class="getCellClass(column, record)" t-att-data-tooltip="getCellTitle(column, record)" data-tooltip-delay="1000" t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
                         <t t-if="!evalModifier(column.modifiers.invisible, record)">
                             <t t-if="canUseFormatter(column, record)" t-esc="getFormattedValue(column, record)"/>
                             <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/>

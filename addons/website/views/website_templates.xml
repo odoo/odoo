@@ -169,7 +169,7 @@
 
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
-        <t groups="website.group_website_publisher">
+        <t groups="website.group_website_restricted_editor">
             <t t-foreach="['header_overlay', 'header_color', 'header_visible', 'footer_visible']" t-as="optionName">
                 <!-- Firefox autocomplete is too aggressive and works on hidden inputs,
                 so we need to disable it (https://bugzilla.mozilla.org/show_bug.cgi?id=520561) -->
@@ -188,7 +188,7 @@
                        t-as="menu" t-foreach="env['ir.ui.menu'].load_menus_root()['children']"
                        t-attf-href="/web#menu_id=#{menu['id']}&amp;action=#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
                 </div>
-                <a groups="website.group_website_publisher" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
+                <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
                     <i class="fa fa-pencil me-1"/>Edit
                 </a>
             </div>
@@ -1895,7 +1895,7 @@
 
 <template id="language_selector_add_language">
     <a t-attf-class="o_add_language d-none #{dropdown and 'd-sm-block dropdown-item' or 'd-sm-inline-block list-inline-item'}"
-       groups="website.group_website_publisher"
+       groups="website.group_website_restricted_editor"
        t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{quote_plus(url_for('', '[lang]') + '?' + keep_query())}">
         <i class="fa fa-plus-circle"/>
         <span>Add a language...</span>
@@ -1958,7 +1958,7 @@
     </xpath>
     <xpath expr="//t[@t-call='website.language_selector_add_language']" position="replace">
         <span class="o_add_language list-inline-item"
-            groups="website.group_website_publisher">|</span>
+            groups="website.group_website_restricted_editor">|</span>
         <t t-call="website.language_selector_add_language">
             <t t-set="dropdown" t-value="False"/>
         </t>
@@ -2046,7 +2046,7 @@
 
 <!-- Util template -->
 <template id="publish_management">
-    <div groups="website.group_website_publisher" t-ignore="true" class="float-end css_editable_mode_hidden" t-att-style="style or None">
+    <div groups="website.group_website_restricted_editor" t-ignore="true" class="float-end css_editable_mode_hidden" t-att-style="style or None">
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-description="env['ir.model']._get(object._name).display_name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
@@ -2098,7 +2098,7 @@
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
-                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_restricted_editor" role="status">
                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                    <p>
                      Note: To hide this page, uncheck it from the Customize tab in edit mode.
@@ -2187,7 +2187,7 @@
             <div class="container">
                 <div class="alert alert-info text-center d-lg-flex justify-content-between align-items-center">
                     <p class="m-lg-0 text-info">This page does not exist, but you can create it as you are editor of this site.</p>
-                    <a role="button" class="btn btn-info js_disable_on_click post_link" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+                    <a role="button" class="btn btn-info js_disable_on_click post_link" t-attf-href="/website/add/#{path}?redirect=1#{from_template and '&amp;template=%s' % from_template}">Create Page</a>
                 </div>
                 <div class="text-center text-muted p-3"><i class="fa fa-info-circle"></i> Edit the content below this line to adapt the default <strong>Page not found</strong> page.</div>
             </div>

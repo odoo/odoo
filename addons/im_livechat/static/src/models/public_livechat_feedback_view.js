@@ -13,10 +13,10 @@ registerModel({
                 widget: new Feedback(
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
-                    this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
+                    this.messaging.publicLivechatGlobal.publicLivechat.widget,
                 ),
             });
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.replaceContentWith(this.widget);
+            this.messaging.publicLivechatGlobal.chatWindow.widget.replaceContentWith(this.widget);
             this.widget.on('feedback_sent', null, this._onFeedbackSent);
             this.widget.on('send_message', null, this._onSendMessage);
         },

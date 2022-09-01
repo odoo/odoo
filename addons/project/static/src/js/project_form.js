@@ -188,6 +188,6 @@ export const ProjectFormView = FormDescriptionExpanderView.extend({
     }),
 });
 
-viewRegistry.add('project_form', ProjectFormView);
+viewRegistry.add('project_task_form', ProjectFormView);
 
 viewRegistry.add('form_description_expander', FormDescriptionExpanderView)

@@ -144,6 +144,10 @@ class Warehouse(models.Model):
             if vals.get('partner_id'):
                 self._update_partner_data(vals['partner_id'], vals.get('company_id'))
 
+            # manually update locations' warehouse since it didn't exist at their creation time
+            view_location_id = self.env['stock.location'].browse(vals.get('view_location_id'))
+            (view_location_id | view_location_id.with_context(active_test=False).child_ids).write({'warehouse_id': warehouse.id})
+
         self._check_multiwarehouse_group()
 
         return warehouses
@@ -1070,3 +1074,6 @@ class Warehouse(models.Model):
             'limit': 20,
             'context': dict(self._context, default_warehouse_selectable=True, default_warehouse_ids=self.ids)
         }
+
+    def get_current_warehouses(self):
+        return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'], order='name')

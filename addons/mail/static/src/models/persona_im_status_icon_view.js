@@ -10,7 +10,7 @@ registerModel({
     recordMethods: {
         /**
          * @private
-         * @returns {FieldCommand}
+         * @returns {FieldCommand|Persona}
          */
         _computePersona() {
             if (this.channelInvitationFormSelectablePartnerViewOwner) {
@@ -34,10 +34,10 @@ registerModel({
                 return this.messaging.partnerRoot.persona;
             }
             if (this.threadNeedactionPreviewViewOwner) {
-                return this.threadNeedactionPreviewViewOwner.thread.correspondent.persona;
+                return this.threadNeedactionPreviewViewOwner.thread.channel.correspondent.persona;
             }
             if (this.threadPreviewViewOwner) {
-                return this.threadPreviewViewOwner.thread.correspondent.persona;
+                return this.threadPreviewViewOwner.thread.channel.correspondent.persona;
             }
             return clear();
         },

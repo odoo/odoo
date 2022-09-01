@@ -2644,6 +2644,32 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("nested buttons in form view header", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <button name="0"/>
+                        <button name="1"/>
+                        <div>
+                            <button name="2"/>
+                            <button name="3"/>
+                        </div>
+                    </header>
+                </form>`,
+            resId: 2,
+        });
+
+        const buttons = target.querySelectorAll(".o_form_statusbar button");
+        assert.strictEqual(buttons[0].attributes.name.textContent, "0");
+        assert.strictEqual(buttons[1].attributes.name.textContent, "1");
+        assert.strictEqual(buttons[2].attributes.name.textContent, "2");
+        assert.strictEqual(buttons[3].attributes.name.textContent, "3");
+    });
+
     QUnit.test("button in form view and long willStart", async function (assert) {
         const mockedActionService = {
             start() {
@@ -8129,6 +8155,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `
                 <form>
+                    <header>
+                        <button string="Additionnal button" class="btn btn-primary"/>
+                    </header>
                     <sheet>
                         <group>
                             <field name="foo"/>
@@ -8158,6 +8187,13 @@ QUnit.module("Views", (hooks) => {
             2,
             "should have two translate fields in translation alert"
         );
+        const statusBarY = target.querySelector(".o_form_statusbar").getBoundingClientRect().top;
+        const translateAlertY = target
+            .querySelector(".alert .o_field_translate")
+            .getBoundingClientRect().top;
+        assert.ok(translateAlertY > statusBarY, "translation alert should be below status bar");
+        await click(target, ".alert .btn-close");
+        assert.containsNone(target, ".alert", "should have closed the translate alert");
     });
 
     QUnit.test("can save without any dirty translatable fields", async function (assert) {
@@ -8242,7 +8278,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             `translate args ["partner",1,"foo"]`,
             `translate context {"lang":"en","uid":7,"tz":"taht"}`,
-            `search_read translations args: [] ; kwargs: {"context":{"lang":"en","uid":7,"tz":"taht"},"domain":[["res_id","=",1],["name","=","partner_type,foo"],["lang","in",["CUST","CUST2"]]],"fields":["lang","src","value"]}`,
+            `search_read translations args: [] ; kwargs: {"domain":[["res_id","=",1],["name","=","partner_type,foo"],["lang","in",["CUST","CUST2"]]],"fields":["lang","src","value"],"context":{"lang":"en","uid":7,"tz":"taht"}}`,
         ]);
 
         assert.containsOnce(target, ".modal");
@@ -11949,5 +11985,23 @@ QUnit.module("Views", (hooks) => {
             JSON.parse(target.querySelector(".o_field_widget").dataset.tooltipInfo).field.help,
             "xmlHelp"
         );
+    });
+
+    QUnit.test("onSave/onDiscard props", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+            resId: 1,
+            onSave: () => assert.step("save"),
+            onDiscard: () => assert.step("discard"),
+        });
+
+        await click(target, ".o_form_button_edit");
+        await click(target, ".o_form_button_save");
+        await click(target, ".o_form_button_edit");
+        await click(target, ".o_form_button_cancel");
+        assert.verifySteps(["save", "discard"]);
     });
 });

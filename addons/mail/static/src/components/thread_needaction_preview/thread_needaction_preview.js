@@ -28,13 +28,13 @@ export class ThreadNeedactionPreview extends Component {
         if (this.threadNeedactionPreviewView.thread.moduleIcon) {
             return this.threadNeedactionPreviewView.thread.moduleIcon;
         }
-        if (this.threadNeedactionPreviewView.thread.correspondent) {
-            return this.threadNeedactionPreviewView.thread.correspondent.avatarUrl;
+        if (!this.threadNeedactionPreviewView.thread.channel) {
+            return '/mail/static/src/img/smiley/avatar.jpg';
         }
-        if (this.threadNeedactionPreviewView.thread.model === 'mail.channel') {
-            return `/web/image/mail.channel/${this.threadNeedactionPreviewView.thread.id}/avatar_128?unique=${this.threadNeedactionPreviewView.thread.avatarCacheKey}`;
+        if (this.threadNeedactionPreviewView.thread.channel.correspondent) {
+            return this.threadNeedactionPreviewView.thread.channel.correspondent.avatarUrl;
         }
-        return '/mail/static/src/img/smiley/avatar.jpg';
+        return `/web/image/mail.channel/${this.threadNeedactionPreviewView.thread.id}/avatar_128?unique=${this.threadNeedactionPreviewView.thread.channel.avatarCacheKey}`;
     }
 
     /**

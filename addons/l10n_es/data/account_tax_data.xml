@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- © 2009-2011 Jordi Esteve - Zikzakmedia
-     © 2011 Ignacio Ibeas - Acysos
-     © 2014 Pablo Cayuela - Aserti Global Solutions
-     © 2014 Ángel Moya - Domatix
-     © 2015 Carlos Liébana - Factor Libre
-     © 2015 Albert Cabedo - GAFIC consultores
-     © 2015 Vicent Cubells
-     © 2013-2020 Pedro M. Baeza
-     © 2020 Harald Panten - Sygel Technology
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-
     <record id="mod_111_02" model="account.account.tag">
         <field name="name">mod111[02]</field>
         <field name="applicability">taxes</field>
@@ -41,7 +30,6 @@
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.es"/>
     </record>
-
     <record id="mod_115_02" model="account.account.tag">
         <field name="name">mod115[02]</field>
         <field name="applicability">taxes</field>
@@ -52,7 +40,6 @@
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.es"/>
     </record>
-
     <record id="mod_303_01" model="account.account.tag">
         <field name="name">mod303[01]</field>
         <field name="applicability">taxes</field>
@@ -270,10 +257,11 @@
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.es"/>
     </record>
-
     <record id="account_tax_template_s_iva21b" model="account.tax.template">
-        <field name="sequence" eval="0"/> <!-- Para que sea el impuesto por defecto de ventas -->
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="sequence" eval="0"/>
+        <!-- Para que sea el impuesto por defecto de ventas -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 21% (Bienes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -282,28 +270,21 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_07')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_sale')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_15')],
@@ -311,7 +292,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva21s" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 21% (Servicios)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -320,28 +302,21 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_07')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_sale')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_15')],
@@ -349,7 +324,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva21isp" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 21% (ISP)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -358,28 +334,21 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_07')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_sale')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_15')],
@@ -387,8 +356,10 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva21_bc" model="account.tax.template">
-        <field name="sequence" eval="0"/> <!-- Para que sea el impuesto por defecto de compras -->
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="sequence" eval="0"/>
+        <!-- Para que sea el impuesto por defecto de compras -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">21% IVA soportado (bienes corrientes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -397,28 +368,21 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_29')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
@@ -426,7 +390,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva21_sc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">21% IVA soportado (servicios corrientes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -435,28 +400,21 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_29')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -465,7 +423,8 @@
     </record>
     <record id="account_tax_template_p_iva21_sp_in" model="account.tax.template">
         <field name="name">IVA 21% Adquisición de servicios intracomunitarios</field>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
@@ -473,40 +432,31 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_10'), ref('mod_303_36')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_37')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_11')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_purchase'), ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -516,7 +466,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva21_ic_bc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="amount_type">percent</field>
         <field name="amount" eval="21"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -525,40 +476,31 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_36'), ref('mod_303_10')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_37')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_11')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -569,7 +511,8 @@
     </record>
     <record id="account_tax_template_p_iva21_ic_bi" model="account.tax.template">
         <field name="name">IVA 21% Adquisición Intracomunitaria. Bienes de inversión</field>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount" eval="21"/>
@@ -577,40 +520,31 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_10'), ref('mod_303_38')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_39')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_11')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -620,7 +554,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva21_ibc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 21% Importaciones bienes corrientes</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -629,28 +564,21 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_32')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_33')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -658,7 +586,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva21_ibi" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 21% Importaciones bienes de inversión</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -667,28 +596,21 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_34')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_35')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -696,7 +618,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf21td" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF (Trabajadores) dinerarios</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -706,28 +629,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_03')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_03')],
@@ -736,7 +652,8 @@
     </record>
     <record id="account_tax_template_p_iva4_sp_ex" model="account.tax.template">
         <field name="amount" eval="4"/>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -744,42 +661,33 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_12'), ref('mod_303_28')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_13')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_29')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_purchase'), ref('mod_303_40')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_15')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -788,7 +696,8 @@
     </record>
     <record id="account_tax_template_p_iva10_sp_ex" model="account.tax.template">
         <field name="amount" eval="10"/>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -796,40 +705,31 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28'), ref('mod_303_12')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_29')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_13')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -840,7 +740,8 @@
     </record>
     <record id="account_tax_template_p_iva21_sp_ex" model="account.tax.template">
         <field name="name">IVA 21% Adquisición de servicios extracomunitarios</field>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="amount" eval="21"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -848,18 +749,14 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28'), ref('mod_303_12')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_29')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -869,18 +766,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -891,7 +784,8 @@
     </record>
     <record id="account_tax_template_p_iva4_ic_bc" model="account.tax.template">
         <field name="amount" eval="4"/>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -899,40 +793,31 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_36'), ref('mod_303_10')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_37')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_11')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -943,7 +828,8 @@
     </record>
     <record id="account_tax_template_p_iva4_ic_bi" model="account.tax.template">
         <field name="amount" eval="4"/>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -951,18 +837,14 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_38'), ref('mod_303_10')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_39')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -972,18 +854,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -994,7 +872,8 @@
     </record>
     <record id="account_tax_template_p_iva10_ic_bc" model="account.tax.template">
         <field name="amount" eval="10"/>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1002,18 +881,14 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_36'), ref('mod_303_10')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_37')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -1023,18 +898,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -1045,7 +916,8 @@
     </record>
     <record id="account_tax_template_p_iva10_ic_bi" model="account.tax.template">
         <field name="amount" eval="10"/>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1053,18 +925,14 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_38'), ref('mod_303_10')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_39')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -1074,18 +942,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -1104,28 +968,17 @@
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_59')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_59')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_s_iva_ns" model="account.tax.template">
@@ -1138,28 +991,17 @@
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_120')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_120')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_s_iva_ns_b" model="account.tax.template">
@@ -1172,28 +1014,17 @@
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_120')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_120')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_s_iva_e" model="account.tax.template">
@@ -1206,32 +1037,22 @@
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_122')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_122')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_p_iva4_ibc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Importaciones bienes corrientes</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1240,28 +1061,21 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_32')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_33')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1269,7 +1083,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva4_ibi" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Importaciones bienes de inversión</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1278,28 +1093,21 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_34')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_35')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1307,7 +1115,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva10_ibc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Importaciones bienes corrientes</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1316,28 +1125,21 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_32')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_33')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1345,7 +1147,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva10_ibi" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Importaciones bienes de inversión</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1354,28 +1157,21 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_34')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_35')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1383,7 +1179,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva4_bi" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">4% IVA Soportado (bienes de inversión)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1392,28 +1189,21 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_30')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_31')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1421,7 +1211,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva4_sc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">4% IVA soportado (servicios corrientes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1430,28 +1221,21 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_29')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1459,7 +1243,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva10_bi" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">10% IVA Soportado (bienes de inversión)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1468,28 +1253,21 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_30')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_31')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1497,7 +1275,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva21_bi" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">21% IVA Soportado (bienes de inversión)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1506,28 +1285,21 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_30')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_31')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1535,7 +1307,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva10_bc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">10% IVA soportado (bienes corrientes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1544,28 +1317,21 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_29')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1573,7 +1339,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva4_bc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">4% IVA soportado (bienes corrientes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1582,28 +1349,21 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_29')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
@@ -1611,7 +1371,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva10_sc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">10% IVA soportado (servicios corrientes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1620,28 +1381,21 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_29')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
@@ -1657,26 +1411,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
             }),
@@ -1691,27 +1434,12 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_s_req05" model="account.tax.template">
@@ -1724,28 +1452,21 @@
         <field name="tax_group_id" ref="tax_group_recargo_0-5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_16')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_18')],
                 'account_id': ref('l10n_es.account_common_477'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_25')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_26')],
                 'account_id': ref('l10n_es.account_common_477'),
@@ -1753,7 +1474,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva4b" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 4% (Bienes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1762,28 +1484,21 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_01')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_03')],
                 'account_id': ref('l10n_es.account_common_477'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_sale')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_15')],
                 'account_id': ref('l10n_es.account_common_477'),
@@ -1791,7 +1506,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva10b" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 10% (Bienes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1800,28 +1516,21 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_04')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_06')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_sale')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_15')],
@@ -1829,7 +1538,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva0_nd" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">21% IVA Soportado no deducible</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1838,27 +1548,12 @@
         <field name="analytic" eval="True"/>
         <field name="tax_group_id" ref="tax_group_iva_nd"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_p_iva10_nd" model="account.tax.template">
@@ -1870,27 +1565,12 @@
         <field name="analytic" eval="True"/>
         <field name="tax_group_id" ref="tax_group_iva_nd"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_p_iva4_nd" model="account.tax.template">
@@ -1902,31 +1582,17 @@
         <field name="analytic" eval="True"/>
         <field name="tax_group_id" ref="tax_group_iva_nd"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_s_iva4s" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 4% (Servicios)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1935,28 +1601,21 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_01')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_03')],
                 'account_id': ref('l10n_es.account_common_477'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_sale')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_15')],
                 'account_id': ref('l10n_es.account_common_477'),
@@ -1964,7 +1623,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva10s" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 10% (Servicios)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1973,28 +1633,21 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_04')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_06')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_14_sale')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_15')],
@@ -2011,28 +1664,21 @@
         <field name="tax_group_id" ref="tax_group_recargo_1-4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_19')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_21')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_25')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_26')],
@@ -2049,28 +1695,21 @@
         <field name="tax_group_id" ref="tax_group_recargo_5-2"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_22')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_24')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_25')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_477'),
                 'tag_ids': [ref('mod_303_26')],
@@ -2078,7 +1717,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva0_bc" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA Soportado exento (operaciones corrientes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2086,31 +1726,17 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_p_iva0_ns" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA Soportado no sujeto (Servicios)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2118,31 +1744,17 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_p_iva0_ns_b" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA Soportado no sujeto (Bienes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2150,27 +1762,12 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_s_irpf9" model="account.tax.template">
@@ -2182,26 +1779,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_9"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -2216,26 +1802,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_18"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -2250,26 +1825,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -2284,26 +1848,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -2318,33 +1871,23 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_19-5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf19" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 19%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2353,28 +1896,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -2382,7 +1918,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf20a" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones 20% (Arrendamientos)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2391,28 +1928,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_115_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_115_03')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_115_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_115_03')],
@@ -2420,7 +1950,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf18" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 18%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2429,28 +1960,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_18"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -2458,7 +1982,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf19a" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones 19% (Arrendamientos)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2467,28 +1992,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_115_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_115_03')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_115_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_115_03')],
@@ -2496,7 +2014,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf195a" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones 19,5% (Arrendamientos)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2505,28 +2024,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_19-5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_115_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_115_03')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_115_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_115_03')],
@@ -2534,7 +2046,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf7" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 7%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2543,28 +2056,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_7"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -2572,7 +2078,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf9" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 9%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2581,28 +2088,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_9"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -2618,28 +2118,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_24"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -2655,26 +2148,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -2689,26 +2171,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -2723,33 +2194,23 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_24"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
         ]"/>
     </record>
     <record id="account_tax_template_p_iva12_agr" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">12% IVA Soportado régimen agricultura</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2758,27 +2219,16 @@
         <field name="include_base_amount" eval="1"/>
         <field name="tax_group_id" ref="tax_group_iva_12"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_42')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_42')],
@@ -2786,7 +2236,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva105_gan" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">10,5% IVA Soportado régimen ganadero o pesca</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2795,27 +2246,16 @@
         <field name="tax_group_id" ref="tax_group_iva_10-5"/>
         <field name="include_base_amount" eval="1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_42')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_42')],
@@ -2832,28 +2272,17 @@
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_60')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_60')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_s_iva0_ic" model="account.tax.template">
@@ -2866,32 +2295,22 @@
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_59')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_59')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_p_req014" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">1.4% Recargo Equivalencia Compras</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2900,28 +2319,21 @@
         <field name="tax_group_id" ref="tax_group_recargo_1-4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_29')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
@@ -2929,7 +2341,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_req05" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">0.50% Recargo Equivalencia Compras</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2938,28 +2351,21 @@
         <field name="tax_group_id" ref="tax_group_recargo_0-5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_29')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
@@ -2967,7 +2373,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_req52" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">5.2% Recargo Equivalencia Compras</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -2976,28 +2383,21 @@
         <field name="tax_group_id" ref="tax_group_recargo_5-2"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_29')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
@@ -3013,26 +2413,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -3047,26 +2436,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_2"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -3081,26 +2459,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -3115,26 +2482,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -3149,26 +2505,15 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_7"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
@@ -3183,33 +2528,23 @@
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_473'),
             }),
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf1" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 1%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3218,28 +2553,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -3247,7 +2575,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf15" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 15%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3256,28 +2585,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -3285,7 +2607,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf21t" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF (Trabajadores)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3295,28 +2618,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_03')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_03')],
@@ -3325,7 +2641,8 @@
     </record>
     <record id="account_tax_template_p_iva10_sp_in" model="account.tax.template">
         <field name="amount" eval="10"/>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -3333,18 +2650,14 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_36'), ref('mod_303_10')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_37')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3354,18 +2667,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3376,7 +2685,8 @@
     </record>
     <record id="account_tax_template_p_iva4_sp_in" model="account.tax.template">
         <field name="amount" eval="4"/>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -3384,18 +2694,14 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_36'), ref('mod_303_10')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_37')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3405,18 +2711,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'tag_ids': [ref('mod_303_41')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3426,7 +2728,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf21te" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF (Trabajadores) en especie</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3436,28 +2739,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_05')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_06')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_05')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_06')],
@@ -3465,7 +2761,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf20" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 20%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3474,28 +2771,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -3503,7 +2793,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf21a" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones 21% (Arrendamientos)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3512,28 +2803,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_115_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_115_03')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_115_02')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_115_03')],
@@ -3541,7 +2825,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf21p" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 21%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3550,28 +2835,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -3579,7 +2857,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_irpf2" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">Retenciones IRPF 2%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -3589,28 +2868,21 @@
         <field name="tax_group_id" ref="tax_group_retenciones_2"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_111_08')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_09')],
@@ -3627,32 +2899,22 @@
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_122')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-
-        ]"/>
+            (0,0, {'repartition_type': 'tax'}),
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_122')],
             }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_template_p_iva4_isp" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 4% Compra con Inversión del Sujeto Pasivo Nacional</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
@@ -3661,18 +2923,14 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28'), ref('mod_303_12')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_29')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3682,18 +2940,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3703,7 +2957,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva10_isp" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 10% Compra con Inversión del Sujeto Pasivo Nacional</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
@@ -3712,18 +2967,14 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28'), ref('mod_303_12')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_29')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3733,18 +2984,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3754,7 +3001,8 @@
         ]"/>
     </record>
     <record id="account_tax_template_p_iva21_isp" model="account.tax.template">
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 21% Compra con Inversión del Sujeto Pasivo Nacional</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
@@ -3763,18 +3011,14 @@
         <field name="tax_group_id" ref="tax_group_iva_21"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_28'), ref('mod_303_12')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_29')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3784,18 +3028,14 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_40'), ref('mod_303_14_purchase')],
             }),
-
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_472'),
                 'tag_ids': [ref('mod_303_41')],
             }),
-
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
@@ -3806,33 +3046,23 @@
     </record>
     <record id="account_tax_template_p_rp19" model="account.tax.template">
         <field name="type_tax_use">purchase</field>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="name">Retenciones 19% (préstamos)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="-19"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
             }),
@@ -3840,33 +3070,23 @@
     </record>
     <record id="account_tax_template_p_rrD19" model="account.tax.template">
         <field name="type_tax_use">purchase</field>
-        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="description"/>
+        <!-- for resetting the value on existing DBs -->
         <field name="name">Retenciones 19% (reparto de dividendos)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="-19"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
             }),
-
-        ]"/>
+         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
             }),

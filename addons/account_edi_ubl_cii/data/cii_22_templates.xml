@@ -22,7 +22,11 @@
                         <ram:SellerAssignedID
                             t-if="line.product_id and line.product_id.default_code"
                             t-out="line.product_id.default_code"/>
-                        <ram:Name t-out="line.name"/>
+                        <!-- TODO:
+                        <ram:Name t-esc="line.product_id.name or line.name"/>
+                        <ram:Description t-esc="line.name" t-if="line.name != line.product_id.name"/>
+                        -->
+                        <ram:Name t-esc="line.name"/>
                     </ram:SpecifiedTradeProduct>
 
                     <!-- Amounts. -->
@@ -53,7 +57,7 @@
                     </ram:SpecifiedLineTradeDelivery>
 
                     <ram:SpecifiedLineTradeSettlement>
-                        <t t-foreach="tax_details['invoice_line_tax_details'][line]['tax_details'].values()"
+                        <t t-foreach="tax_details['tax_details_per_record'][line]['tax_details'].values()"
                            t-as="tax_detail_vals">
                             <ram:ApplicableTradeTax t-if="tax_detail_vals['amount_type'] == 'percent'">
                                 <ram:TypeCode>VAT</ram:TypeCode>
@@ -235,7 +239,7 @@
                                 <ram:TypeCode>VAT</ram:TypeCode>
                                 <ram:ExemptionReason t-out="tax_detail_vals.get('tax_exemption_reason')"/>
                                 <ram:BasisAmount
-                                    t-out="format_monetary(balance_multiplicator * tax_detail_vals['base_amount_currency'], 2)"/>
+                                    t-out="format_monetary(tax_detail_vals['base_amount_currency'], 2)"/>
                                 <ram:CategoryCode t-out="tax_detail_vals['tax_category_code']"/>
                                 <ram:ExemptionReasonCode t-out="tax_detail_vals['tax_exemption_reason_code']"/>
                                 <!-- 5 = Tax is exigible on the date on the invoice -->

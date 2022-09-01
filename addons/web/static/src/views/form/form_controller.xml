@@ -4,7 +4,6 @@
     <t t-name="web.FormView" owl="1">
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
-                <t t-if="showingTranslateAlert[model.root.resId]" t-call="web.TranslateAlert" />
                 <t t-set-slot="layout-buttons">
                     <t t-if="footerArchInfo and env.inDialog">
                         <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo"/>
@@ -26,7 +25,7 @@
                     </t>
                 </t>
                 <t t-set-slot="control-panel-bottom-right"> </t>
-                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo"/>
+                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert"/>
             </Layout>
         </div>
     </t>
@@ -52,14 +51,14 @@
         </div>
     </t>
 
+    <!-- Used in FormRenderer -->
     <t t-name="web.TranslateAlert" owl="1">
         <div class="alert alert-info alert-dismissible" role="alertdialog">
             Please update translations of :
-            <t t-foreach="Array.from(this.translateAlertData[this.model.root.resId])" t-as="field" t-key="field.name">
+            <t t-foreach="Array.from(props.translateAlert.fields)" t-as="field" t-key="field.name">
                 <strong><a class="o_field_translate" t-att-name="field.name" href="#"><t t-esc="field.string"/><t t-if="!field_last">, </t></a></strong>
             </t>
-            <button t-on-click="() => this.closeTranslateAlert()" type="button" class="btn-close" aria-label="Close"></button>
+            <button t-on-click="props.translateAlert.close" type="button" class="btn-close" aria-label="Close"></button>
         </div>
     </t>
-
 </templates>

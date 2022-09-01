@@ -356,6 +356,7 @@ QUnit.test('new message chat window should close on selecting the user if chat w
         message: "should wait until autocomplete ui sourced its data",
         predicate: () => true,
     });
+    await nextAnimationFrame();
     const link = document.querySelector('.ui-autocomplete .ui-menu-item a');
 
     await afterNextRender(() => link.click());

@@ -1,4 +1,4 @@
-.editor_has_snippets {
+.editor_has_snippets, .editor_has_dummy_snippets {
     .o_notification_manager {
         @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
     }
@@ -92,7 +92,7 @@
 
 .o_loading_dummy {
     position: absolute;
-    z-index: 100000;
+    z-index: $zindex-modal-backdrop;
 }
 
 .o_website_fullscreen {

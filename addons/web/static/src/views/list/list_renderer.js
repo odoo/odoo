@@ -189,7 +189,11 @@ export class ListRenderer extends Component {
     }
 
     get hasSelectors() {
-        return this.props.hasSelectors && !this.env.isSmall;
+        return this.props.allowSelectors && !this.env.isSmall;
+    }
+
+    add(params) {
+        this.props.onAdd(params);
     }
 
     // The following code manipulates the DOM directly to avoid having to wait for a
@@ -583,6 +587,10 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
+    getColumns(record) {
+        return this.state.columns;
+    }
+
     /**
      * Returns the classnames to apply to the row representing the given record.
      * @param {Record} record
@@ -682,7 +690,6 @@ export class ListRenderer extends Component {
             isPassword: "password" in column.rawAttrs,
             digits: column.rawAttrs.digits ? JSON.parse(column.rawAttrs.digits) : field.digits,
             field: record.fields[fieldName],
-            timezone: true,
         };
         return formatter(record.data[fieldName], formatOptions);
     }
@@ -831,7 +838,7 @@ export class ListRenderer extends Component {
             await recordAfterResequence();
             await record.switchMode("edit");
             this.cellToFocus = { column, record };
-        } else if (this.props.editable) {
+        } else if (this.isInlineEditable(record)) {
             if (record.isInEdition) {
                 this.focusCell(column);
                 this.cellToFocus = null;
@@ -925,6 +932,12 @@ export class ListRenderer extends Component {
             }
         }
         return futureCell && getElementToFocus(futureCell);
+    }
+
+    isInlineEditable(record) {
+        // /!\ the keyboard navigation works under the hypothesis that all or
+        // none records are editable.
+        return !!this.props.editable;
     }
 
     /**
@@ -1076,7 +1089,7 @@ export class ListRenderer extends Component {
             record.checkValidity() &&
             (isEnterBehavior || isTabBehavior)
         ) {
-            this.props.onAdd({ group });
+            this.add({ group });
             return true;
         }
         return false;
@@ -1116,14 +1129,14 @@ export class ListRenderer extends Component {
                     // add a line
                     if (record.checkValidity()) {
                         const { context } = this.creates[0];
-                        this.props.onAdd({ context });
+                        this.add({ context });
                     }
                 } else if (
                     activeActions.create &&
                     !record.canBeAbandoned &&
                     (record.isDirty || this.lastIsDirty)
                 ) {
-                    this.props.onAdd({ group });
+                    this.add({ group });
                 } else if (cycleOnTab) {
                     if (record.canBeAbandoned) {
                         list.unselectRecord(true);
@@ -1157,6 +1170,7 @@ export class ListRenderer extends Component {
         const { activeActions, cycleOnTab, list } = this.props;
         const row = cell.parentElement;
         const applyMultiEditBehavior = record && record.selected && list.model.multiEdit;
+        const topReCreate = this.props.editable === "top" && record.isNew;
 
         if (
             applyMultiEditBehavior &&
@@ -1176,7 +1190,8 @@ export class ListRenderer extends Component {
         switch (hotkey) {
             case "tab": {
                 const index = list.records.indexOf(record);
-                if (index === list.records.length - 1) {
+                const lastIndex = topReCreate ? 0 : list.records.length - 1;
+                if (index === lastIndex) {
                     if (this.displayRowCreates) {
                         if (record.isNew && !record.isDirty) {
                             list.unselectRecord(true);
@@ -1185,14 +1200,14 @@ export class ListRenderer extends Component {
                         // add a line
                         if (record.checkValidity()) {
                             const { context } = this.creates[0];
-                            this.props.onAdd({ context });
+                            this.add({ context });
                         }
                     } else if (
                         activeActions.create &&
                         !record.canBeAbandoned &&
                         (record.isDirty || this.lastIsDirty)
                     ) {
-                        this.props.onAdd({ group });
+                        this.add({ group });
                     } else if (cycleOnTab) {
                         if (record.canBeAbandoned) {
                             list.unselectRecord(true);
@@ -1243,6 +1258,9 @@ export class ListRenderer extends Component {
             case "enter": {
                 const index = list.records.indexOf(record);
                 let futureRecord = list.records[index + 1];
+                if (topReCreate && index === 0) {
+                    futureRecord = null;
+                }
 
                 if (!futureRecord) {
                     if (activeActions && activeActions.create === false) {
@@ -1253,7 +1271,7 @@ export class ListRenderer extends Component {
                 if (futureRecord) {
                     futureRecord.switchMode("edit");
                 } else if (this.lastIsDirty || !record.canBeAbandoned || this.displayRowCreates) {
-                    this.props.onAdd({ group });
+                    this.add({ group });
                 } else {
                     futureRecord = list.records.at(0);
                     futureRecord.switchMode("edit");
@@ -1390,7 +1408,7 @@ export class ListRenderer extends Component {
                     return true;
                 }
 
-                if (this.props.editable || applyMultiEditBehavior) {
+                if (this.isInlineEditable(record) || applyMultiEditBehavior) {
                     const column = this.state.columns.find(
                         (c) => c.name === cell.getAttribute("name")
                     );
@@ -1422,7 +1440,7 @@ export class ListRenderer extends Component {
         if (this.createProm) {
             return;
         }
-        this.props.onAdd({ context });
+        this.add({ context });
         this.createProm = Promise.resolve();
         this.createProm.then(() => {
             this.lastCreatingAction = true;
@@ -1661,6 +1679,9 @@ export class ListRenderer extends Component {
     }
 
     onRowTouchStart(record, ev) {
+        if (!this.props.allowSelectors) {
+            return;
+        }
         if (this.props.list.selection.length) {
             // in selection mode, only selection is allowed.
             ev.preventDefault();
@@ -1687,6 +1708,11 @@ export class ListRenderer extends Component {
 }
 
 ListRenderer.template = "web.ListRenderer";
+
+ListRenderer.rowsTemplate = "web.ListRenderer.Rows";
+ListRenderer.recordRowTemplate = "web.ListRenderer.RecordRow";
+ListRenderer.groupRowTemplate = "web.ListRenderer.GroupRow";
+
 ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager };
 ListRenderer.props = [
     "activeActions?",
@@ -1695,7 +1721,7 @@ ListRenderer.props = [
     "openRecord",
     "onAdd?",
     "cycleOnTab?",
-    "hasSelectors?",
+    "allowSelectors?",
     "editable?",
     "noContentHelp?",
     "nestedKeyOptionalFieldsData?",

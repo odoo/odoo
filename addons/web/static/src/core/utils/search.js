@@ -16,7 +16,7 @@ import { unaccent } from "./strings";
 function match(pattern, str) {
     let totalScore = 0;
     let currentScore = 0;
-    let len = str.length;
+    const len = str.length;
     let patternIndex = 0;
 
     pattern = unaccent(pattern, false);

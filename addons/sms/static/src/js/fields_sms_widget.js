@@ -1,14 +1,17 @@
 /** @odoo-module **/
 
 import { _t } from 'web.core';
+import basic_fields from 'web.basic_fields';
 import fieldRegistry from 'web.field_registry';
 import FieldTextEmojis from '@mail/js/field_text_emojis';
+
+var DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
  * time the user changes the body.
  */
-var SmsWidget = FieldTextEmojis.extend({
+var SmsWidget = FieldTextEmojis.extend(DynamicPlaceholderFieldMixin, {
     className: 'o_field_text',
     enableEmojis: false,
     /**
@@ -30,6 +33,21 @@ var SmsWidget = FieldTextEmojis.extend({
         if (this.enableEmojis) {
             this._super.apply(this, arguments);
         }
+    },
+
+    /**
+     * Open a Model Field Selector in order to select fields
+     * and create a dynamic placeholder string with or without
+     * a default text value.
+     *
+     * @public
+     * @param {String} baseModel
+     * @param {Array} chain
+     *
+     */
+    openDynamicPlaceholder: async function (baseModel, chain = []) {
+        const modelSelector = await this._openNewModelSelector(baseModel, chain);
+        modelSelector.$el.css('margin-top', 4);
     },
 
     //--------------------------------------------------------------------------
@@ -169,8 +187,17 @@ var SmsWidget = FieldTextEmojis.extend({
      * @override
      * @private
      */
-    _onInput: function () {
+    _onInput: function (ev) {
         this._super.apply(this, arguments);
+        const key = ev.originalEvent ? ev.originalEvent.data : '';
+        if (this.nodeOptions &&
+            this.nodeOptions.dynamic_placeholder &&
+            key === this.DYNAMIC_PLACEHOLDER_TRIGGER_KEY) {
+            const baseModel = this.recordData && this.recordData.mailing_model_real ? this.recordData.mailing_model_real : undefined;
+            if (baseModel) {
+                this.openDynamicPlaceholder(baseModel);
+            }
+        }
         this._updateSMSInfo();
     },
 });

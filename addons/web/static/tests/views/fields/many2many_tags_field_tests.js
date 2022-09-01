@@ -1559,4 +1559,90 @@ QUnit.module("Fields", (hooks) => {
             "goldsilver"
         );
     });
+
+    QUnit.test("save a record with an empty many2many_tags required", async function (assert) {
+        assert.expect(3);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="timmy" widget="many2many_tags" required="1"/></form>',
+        });
+
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, params) => {
+                assert.strictEqual(message.toString(), "<ul><li>pokemon</li></ul>");
+                assert.deepEqual(params, { title: "Invalid fields: ", type: "danger" });
+            },
+        });
+
+        await clickSave(target);
+        assert.containsOnce(target, "[name='timmy'].o_field_invalid");
+    });
+
+    QUnit.test("Many2ManyTagsField with option 'no_quick_create' set to true", async (assert) => {
+        serverData.views = {
+            "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
+        };
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" options="{'no_quick_create': 1}"/>
+                </form>`,
+        });
+
+        assert.containsNone(target, ".o_tag");
+        await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
+        assert.containsOnce(target, ".o-autocomplete.dropdown li.o_m2o_dropdown_option");
+        assert.hasClass(
+            target.querySelector(".o-autocomplete.dropdown li.o_m2o_dropdown_option"),
+            "o_m2o_dropdown_option_create_edit"
+        );
+        await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=name] input").value,
+            "new tag"
+        );
+        await click(target.querySelector(".modal .o_form_button_save"));
+        assert.containsOnce(target, ".o_tag");
+        assert.strictEqual(target.querySelector(".o_tag").innerText, "new tag");
+    });
+
+    QUnit.test("Many2ManyTagsField with option 'no_create' set to true", async (assert) => {
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="timmy" widget="many2many_tags" options="{'no_create': 1}"/></form>`,
+        });
+
+        await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
+        assert.containsNone(target, ".o-autocomplete.dropdown li.o_m2o_dropdown_option");
+    });
+
+    QUnit.test("Many2ManyTagsField with attribute 'can_create' set to false", async (assert) => {
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="timmy" widget="many2many_tags" can_create="0"/></form>`,
+        });
+
+        await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
+        assert.containsNone(target, ".o-autocomplete.dropdown li.o_m2o_dropdown_option");
+    });
 });

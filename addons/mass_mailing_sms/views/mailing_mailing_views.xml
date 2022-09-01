@@ -120,7 +120,7 @@
                 <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
                     <field name="body_plaintext" widget="sms_widget"
                         attrs="{'required': [('mailing_type', '=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))]}"
-                        options='{"enable_emojis": True}'/>
+                        options='{"enable_emojis": True, "dynamic_placeholder": true}'/>
                 </page>
             </xpath>
             <xpath expr="//page[@name='settings']/group/group[@name='email_content']" position="after">

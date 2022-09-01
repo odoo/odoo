@@ -3,8 +3,10 @@
 
 import odoo
 
-from odoo import tools
+from odoo import fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from freezegun import freeze_time
+from dateutil.relativedelta import relativedelta
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -829,3 +831,47 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         # calling load_pos_data should not raise an error
         self.pos_session.load_pos_data()
+
+    def test_invoice_past_order(self):
+        # create 1 uninvoiced order then close the session
+        self._run_test({
+            'payment_methods': self.cash_pm1 | self.bank_pm1,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product99, 1)], 'payments': [(self.bank_pm1, 99)], 'customer': False, 'is_invoiced': False, 'uid': '00100-010-0001'},
+            ],
+            'journal_entries_before_closing': {},
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 99, 'reconciled': False},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 99, 'credit': 0, 'reconciled': True},
+                    ],
+                },
+                'cash_statement': [],
+                'bank_payments': [
+                    ((99, ), {
+                        'line_ids': [
+                            {'account_id': self.bank_pm1.outstanding_account_id.id, 'partner_id': False, 'debit': 99, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 99, 'reconciled': True},
+                        ]
+                    })
+                ],
+            },
+        })
+
+        # keep reference of the closed session
+        closed_session = self.pos_session
+        self.assertTrue(closed_session.state == 'closed', 'Session should be closed.')
+
+        order_to_invoice = closed_session.order_ids[0]
+        test_customer = self.env['res.partner'].create({'name': 'Test Customer'})
+
+        with freeze_time(fields.Datetime.now() + relativedelta(days=2)):
+            # create new session after 2 days
+            self.open_new_session(0)
+            # invoice the uninvoiced order
+            order_to_invoice.write({'partner_id': test_customer.id})
+            order_to_invoice.action_pos_order_invoice()
+            # check invoice
+            self.assertTrue(order_to_invoice.account_move, 'Invoice should be created.')
+            self.assertTrue(order_to_invoice.account_move.invoice_date != order_to_invoice.date_order.date(), 'Invoice date should not be the same as order date since the session was closed.')

@@ -189,6 +189,7 @@
                     <field name="amount_residual" sum="Total Residual" string="Residual" optional="hide" attrs="{'invisible':[('is_account_reconcile', '=', False)]}"/>
                     <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" attrs="{'invisible':['|', ('is_same_currency', '=', True), ('is_account_reconcile', '=', False)]}"/>
 
+                    <field name="move_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                     <field name="account_type" invisible="1"/>
                     <field name="statement_id" invisible="1"/>
@@ -1329,7 +1330,7 @@
         <record id="action_move_line_select" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="context">{'search_default_account_id': [active_id]}</field>
+            <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
         </record>
 
         <record id="action_automatic_entry" model="ir.actions.server">

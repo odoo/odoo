@@ -3,6 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tests.common import Form
+from odoo import Command, fields
 
 
 @tagged('post_install', '-at_install')
@@ -413,3 +414,46 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         ]
         for line in invoice.invoice_line_ids.sorted('sequence'):
             self.assertEqual(line.purchase_order_id, expected_purchase.pop(0))
+
+    def test_partial_billing_interaction_with_invoicing_switch_threshold(self):
+        """ Let's say you create a partial bill 'B' for a given PO. Now if you change the
+            'Invoicing Switch Threshold' such that the bill date of 'B' is before the new threshold,
+            the PO should still take bill 'B' into account.
+        """
+        if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
+            self.skipTest("This test requires the installation of the account_account module")
+
+        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_deliver.name,
+                    'product_id': self.product_deliver.id,
+                    'product_qty': 20.0,
+                    'product_uom': self.product_deliver.uom_id.id,
+                    'price_unit': self.product_deliver.list_price,
+                    'taxes_id': False,
+                }),
+            ],
+        })
+        line = purchase_order.order_line[0]
+
+        purchase_order.button_confirm()
+        line.qty_received = 10
+        purchase_order.action_create_invoice()
+
+        invoice = purchase_order.invoice_ids
+        invoice.invoice_date = invoice.date
+        invoice.action_post()
+
+        self.assertEqual(line.qty_invoiced, 10)
+
+        self.env['res.config.settings'].create({
+            'invoicing_switch_threshold': fields.Date.add(invoice.invoice_date, days=30),
+        }).execute()
+
+        invoice.invalidate_model(fnames=['payment_state'])
+
+        self.assertEqual(line.qty_invoiced, 10)
+        line.qty_received = 15
+        self.assertEqual(line.qty_invoiced, 10)

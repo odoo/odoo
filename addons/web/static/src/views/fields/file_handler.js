@@ -47,7 +47,9 @@ export class FileUploader extends Component {
      * @param {Event} ev
      */
     async onFileChange(ev) {
-        if (!ev.target.files.length) return;
+        if (!ev.target.files.length) {
+            return;
+        }
         for (const file of ev.target.files) {
             if (file.size > this.maxUploadSize) {
                 this.notification.add(
@@ -72,7 +74,7 @@ export class FileUploader extends Component {
                     }
                 );
             }
-            this.props.onUploaded({
+            await this.props.onUploaded({
                 name: file.name,
                 size: file.size,
                 type: file.type,
@@ -81,11 +83,15 @@ export class FileUploader extends Component {
             });
             this.state.isUploading = false;
         }
+        if (this.props.multiUpload && this.props.onUploadComplete) {
+            this.props.onUploadComplete({});
+        }
     }
 
     onSelectFileButtonClick() {
         this.fileInputRef.el.click();
     }
 }
+
 FileUploader.template = "web.FileUploader";
 FileUploader.nextId = 0;

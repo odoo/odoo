@@ -3,7 +3,7 @@
 from markupsafe import Markup
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.modules.module import get_module_resource
 from odoo.tests import Form, users
 from odoo.tools import convert_file
@@ -163,6 +163,21 @@ class TestMailTemplate(MailCommon):
         # Employee without mail_template_editor group cannot create dynamic translation for mail.render.mixin
         with self.assertRaises(AccessError):
             Translation.with_user(self.user_employee).create(subject_translation_vals)
+
+    def test_server_archived_usage_protection(self):
+        """ Test the protection against using archived server (servers used cannot be archived) """
+        IrMailServer = self.env['ir.mail_server']
+        server = IrMailServer.create({
+            'name': 'Server',
+            'smtp_host': 'archive-test.smtp.local',
+        })
+        self.mail_template.mail_server_id = server.id
+        with self.assertRaises(UserError, msg='Server cannot be archived because it is used'):
+            server.action_archive()
+        self.assertTrue(server.active)
+        self.mail_template.mail_server_id = IrMailServer
+        server.action_archive()  # No more usage -> can be archived
+        self.assertFalse(server.active)
 
 
 class TestMailTemplateReset(MailCommon):

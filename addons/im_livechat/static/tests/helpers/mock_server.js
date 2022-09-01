@@ -21,12 +21,6 @@ patch(MockServer.prototype, 'im_livechat', {
             const context = args.context;
             return this._mockRouteImLivechatGetSession(channel_id, anonymous_name, previous_operator_id, context);
         }
-        if (route === '/im_livechat/notify_typing') {
-            const uuid = args.uuid;
-            const is_typing = args.is_typing;
-            const context = args.context;
-            return this._mockRouteImLivechatNotifyTyping(uuid, is_typing, context);
-        }
         return this._super(...arguments);
     },
 
@@ -68,60 +62,11 @@ patch(MockServer.prototype, 'im_livechat', {
         }
         return this._mockImLivechatChannel_openLivechatMailChannel(channel_id, anonymous_name, previous_operator_id, user_id, country_id);
     },
-    /**
-     * Simulates the `/im_livechat/notify_typing` route.
-     *
-     * @private
-     * @param {string} uuid
-     * @param {boolean} is_typing
-     * @param {Object} [context]
-     */
-    _mockRouteImLivechatNotifyTyping(uuid, is_typing, context) {
-        const mailChannel = this.getRecords('mail.channel', [['uuid', '=', uuid]])[0];
-        this._mockMailChannelNotifyTyping([mailChannel.id], is_typing, context);
-    },
 
     //--------------------------------------------------------------------------
     // Private Mocked Methods
     //--------------------------------------------------------------------------
 
-    /**
-     * Simulates `_channel_get_livechat_visitor_info` on `mail.channel`.
-     *
-     * @private
-     * @param {integer[]} ids
-     * @returns {Object}
-     */
-    _mockMailChannel_ChannelGetLivechatVisitorInfo(ids) {
-        const id = ids[0]; // ensure_one
-        const mailChannel = this.getRecords('mail.channel', [['id', '=', id]])[0];
-        // remove active test to ensure public partner is taken into account
-        const members = this.getRecords('mail.channel.member', [['id', 'in', mailChannel.channel_member_ids]]);
-        let partners = this.getRecords(
-            'res.partner',
-            [['id', 'in', members.filter(member => member.partner_id).map(member => member.partner_id)]],
-            { active_test: false },
-        );
-        partners = partners.filter(partner => partner.id !== mailChannel.livechat_operator_id);
-        if (partners.length === 0 && mailChannel.livechat_operator_id) {
-            // operator probably testing the livechat with his own user
-            partners = [mailChannel.livechat_operator_id];
-        }
-        if (partners.length > 0 && partners[0].id !== this.publicPartnerId) {
-            // legit non-public partner
-            const country = this.getRecords('res.country', [['id', '=', partners[0].country_id]])[0];
-            return {
-                'country': country ? [country.id, country.name] : false,
-                'id': partners[0].id,
-                'name': partners[0].name,
-            };
-        }
-        return {
-            'country': false,
-            'id': false,
-            'name': mailChannel.anonymous_name || "Visitor",
-        };
-    },
     /**
      * @override
      */
@@ -129,6 +74,7 @@ patch(MockServer.prototype, 'im_livechat', {
         const channelInfos = this._super(...arguments);
         for (const channelInfo of channelInfos) {
             const channel = this.getRecords('mail.channel', [['id', '=', channelInfo.id]])[0];
+            channelInfo['channel']['anonymous_name'] = channel.anonymous_name;
             // add the last message date
             if (channel.channel_type === 'livechat') {
                 // add the operator id
@@ -137,8 +83,6 @@ patch(MockServer.prototype, 'im_livechat', {
                     // livechat_username ignored for simplicity
                     channelInfo.operator_pid = [operator.id, operator.display_name.replace(',', '')];
                 }
-                // add the anonymous or partner name
-                channelInfo.livechat_visitor = this._mockMailChannel_ChannelGetLivechatVisitorInfo([channel.id]);
             }
         }
         return channelInfos;

@@ -48,6 +48,7 @@
             </t>
             <div class="container o_wslides_lesson_main">
                 <div class="row">
+                    <t t-set="can_access_channel" t-value="slide.channel_id.is_member or slide.channel_id.can_publish"/>
                     <div t-attf-class="o_wslides_lesson_aside col-lg-3 #{'order-2' if slide.channel_id.channel_type == 'documentation' else ''}">
                         <t t-if="slide.channel_id.channel_type == 'training'" t-call="website_slides.slide_aside_training"/>
                         <t t-if="slide.channel_id.channel_type == 'documentation'" t-call="website_slides.slide_aside_documentation"/>
@@ -98,10 +99,8 @@
 <!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->
 <template id="slide_aside_card" name="Related Slide">
     <a class="list-group-item list-group-item-action d-flex align-items-start px-2" t-att-href="'/slides/slide/%s' % (slug(aside_slide))">
-        <t t-set="slide_image" t-value="website.image_url(aside_slide, 'image_1024')"/>
-
-        <div t-if="aside_slide.image_1024" class="flex-shrink-0 me-1 border" t-attf-style="width: 20%; padding-top: 20%; background-image: url(#{slide_image}); background-size: cover; background-position:center"/>
-        <div t-else="" class="o_wslides_card_default_background flex-shrink-0 me-1" t-attf-style="width: 20%; padding-top: 20%;"/>
+        <t t-set="slide_image" t-value="website.image_url(aside_slide, 'image_256') if can_access_channel or aside_slide.is_preview else slide.channel_id.website_background_image_url"/>
+        <div class="me-1 border o_wslides_background_image_aside_card" t-attf-style="background-image: url(#{slide_image});"/>
         <div class="overflow-hidden d-flex flex-column justify-content-start">
             <h6 t-esc="aside_slide.name" class="o_wslides_desc_truncate_2 mb-1" style="line-height: 1.15"/>
             <small class="text-600">
@@ -159,7 +158,7 @@
                             <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
                         </t>
                         <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
-                            t-attf-class="d-flex align-items-center text-decoration-none mw-100 overflow-hidden ms-2">
+                            t-attf-class="d-flex align-items-center text-decoration-none mw-100 overflow-hidden ms-2 #{'text-muted' if not can_access else ''}">
                             <t t-call="website_slides.slide_icon">
                                 <t t-set="slide" t-value="aside_slide"/>
                             </t>
@@ -193,7 +192,9 @@
                         <div t-else="" class="o_wslides_js_course_join o_wslides_no_access">
                             <li t-if="aside_slide.channel_id.enroll == 'public'" class="text-decoration-none small">
                                 <i class="fa fa-download me-1"/>
-                                <t t-call="website_slides.join_course_link"/>
+                                <t t-call="website_slides.join_course_link">
+                                    <t t-set="for_resources" t-value="1"/>
+                                </t>
                             </li>
                         </div>
                         <li t-if="aside_slide.question_ids and aside_slide.slide_category != 'quiz'" class="ps-4">
@@ -289,9 +290,9 @@
             <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info py-1 px-2" t-esc="tag.name"/>
         </t>
     </div>
-    <div class="o_wslides_lesson_content_type">
-        <img t-if="slide.slide_category == 'infographic'"
-            t-att-src="website.image_url(slide, 'image_1024')" class="img-fluid" style="width:100%" t-att-alt="slide.name"/>
+    <div class="oe_structure oe_empty"/>
+    <div t-if="slide.slide_category == 'infographic'" class="o_wslides_lesson_content_type" t-field='slide.image_1920' t-options="{'widget': 'image', 'style': 'width: 100%;'}"/>
+    <div t-else="" class="o_wslides_lesson_content_type">
         <div t-if="slide.slide_category == 'document'" class="ratio ratio-4x3 embed-responsive-item mb8" style="height: 600px;">
             <t t-out="slide.embed_code"/>
         </div>
@@ -308,19 +309,19 @@
         </div>
     </div>
 
-    <div class="mb-5">
+    <div class="mb-5 position-relative">
         <ul class="nav nav-tabs o_wslides_lesson_nav" role="tablist">
             <li class="nav-item">
-                <a href="#about" aria-controls="about" class="nav-link active" role="tab" data-bs-toggle="tab">
+                <a href="#about" aria-controls="about" t-att-class="'nav-link active' if not comments else 'nav-link'" role="tab" data-bs-toggle="tab">
                     <i class="fa fa-home"></i> About
                 </a>
             </li>
-            <li t-if="slide.channel_id.allow_comment" class="nav-item">
-                <a href="#discuss" aria-controls="discuss" class="nav-link" role="tab" data-bs-toggle="tab">
+            <li class="nav-item">
+                <a href="#discuss" aria-controls="discuss" t-att-class="'nav-link active' if comments else 'nav-link'" role="tab" data-bs-toggle="tab">
                     <i class="fa fa-comments"></i> Comments (<span t-esc="slide.comments_count"/>)
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" groups="base.group_user">
                 <a href="#statistic" aria-controls="statistic" class="nav-link" role="tab" data-bs-toggle="tab">
                     <i class="fa fa-bar-chart"></i> Statistics
                 </a>
@@ -351,13 +352,36 @@
                 </div>
             </div>
             <div role="tabpanel" t-att-class="comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="discuss">
-                <t t-call="portal.message_thread">
+                <t t-set="enable_slide_comments" t-value="0"/>
+                <p t-if="not (slide.channel_id.allow_comment and slide.channel_id.channel_type == 'training')">
+                    Commenting is not enabled on this course.
+                </p>
+                <t t-elif="not slide.comments_count">
+                    <p t-if="not can_access_channel">
+                        There are no comments for now.
+                        <t t-if="slide.channel_id.enroll != 'invite'">
+                            <div class="o_wslides_js_course_join o_wslides_no_access_comments d-inline">
+                                <t t-if="slide.channel_id.enroll == 'public'" t-call="website_slides.join_course_link"/>
+                            </div>
+                            to be the first to leave a comment.
+                        </t>
+                    </p>
+                    <p t-elif="not slide.channel_id.can_comment">
+                        There are no comments for now. Earn more Karma to be the first to leave a comment.
+                    </p>
+                    <t t-else="" t-set="enable_slide_comments" t-value="1"/>
+                </t>
+                <t t-else="">
+                    <t t-set="enable_slide_comments" t-value="1"/>
+                    <t t-if="not slide.channel_id.can_comment and slide.channel_id.can_access_channel"><p>Earn more Karma to leave a comment.</p></t>
+                </t>
+                <t t-if="enable_slide_comments" t-call="portal.message_thread">
                     <t t-set="object" t-value="slide"/>
                     <t t-set="disable_composer" t-value="not (slide.channel_id.can_comment and slide.channel_id.allow_comment)"/>
                     <t t-set="display_rating" t-value="False"/>
                 </t>
             </div>
-            <div role="tabpanel" class="tab-pane fade" id="statistic" t-att-slide-url="slide.website_url">
+            <div role="tabpanel" class="tab-pane fade" groups="base.group_user" id="statistic" t-att-slide-url="slide.website_url">
                 <div class="row">
                     <div class="col-md-6">
                         <table class="table table-sm">
@@ -456,12 +480,17 @@
                 </group>
             </t>
             <t t-else="">
-                <span t-if="slide.is_preview or slide.channel_id.enroll in ['private', 'payment']" class="text-muted fw-bold me-3">
+                <span t-if="slide.is_preview" class="text-muted fw-bold me-3">
                     Additional Resources
                 </span>
                 <div class="o_wslides_js_course_join o_wslides_no_access">
+                    <div t-if="slide.channel_id.enroll == 'invite'">
+                        <span>Content only accessible to course members.</span>
+                    </div>
                     <div t-if="slide.channel_id.enroll == 'public'" class="text-muted me-auto border-start ps-3">
-                        <t t-call="website_slides.join_course_link"/>
+                        <t t-call="website_slides.join_course_link">
+                            <t t-set="for_resources" t-value="1"/>
+                        </t>
                     </div>
                 </div>
             </t>

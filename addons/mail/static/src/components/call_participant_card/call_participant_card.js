@@ -3,8 +3,6 @@
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-import Popover from "web.Popover";
-
 const { Component } = owl;
 
 export class CallParticipantCard extends Component {
@@ -33,7 +31,6 @@ export class CallParticipantCard extends Component {
 Object.assign(CallParticipantCard, {
     props: { record: Object },
     template: 'mail.CallParticipantCard',
-    components: { Popover },
 });
 
 registerMessagingComponent(CallParticipantCard);

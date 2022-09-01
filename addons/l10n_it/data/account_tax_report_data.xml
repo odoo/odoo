@@ -1,275 +1,500 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="tax_report_vat" model="account.tax.report">
+    <record id="tax_report_vat" model="account.report">
         <field name="name">VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.it"/>
-        <field name="root_line_ids">
-            <record id="tax_report_line_operazione_imponibile" model="account.tax.report.line">
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_vat_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_line_operazione_imponibile" model="account.report.line">
                 <field name="name">Operazione Imponibile</field>
                 <field name="code">h1</field>
-                <field name="sequence">1</field>
-                <field name="formula">None</field>
-                <field name="children_line_ids">
-                    <record id="tax_report_line_vp2" model="account.tax.report.line">
+                <field name="children_ids">
+                    <record id="tax_report_line_vp2" model="account.report.line">
                         <field name="name">VP2 - Totale operazioni attive</field>
                         <field name="code">VP2</field>
-                        <field name="tag_name">02</field>
-                        <field name="sequence">1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">02</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vp3" model="account.tax.report.line">
+                    <record id="tax_report_line_vp3" model="account.report.line">
                         <field name="name">VP3 - Totale operazioni passive</field>
                         <field name="code">VP3</field>
-                        <field name="tag_name">03</field>
-                        <field name="sequence">2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp3_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">03</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_iva" model="account.tax.report.line">
+            <record id="tax_report_line_iva" model="account.report.line">
                 <field name="name">IVA</field>
                 <field name="code">h2</field>
-                <field name="sequence">2</field>
-                <field name="formula">None</field>
-                <field name="children_line_ids">
-                    <record id="tax_report_line_vp4" model="account.tax.report.line">
+                <field name="children_ids">
+                    <record id="tax_report_line_vp4" model="account.report.line">
                         <field name="name">VP4 - IVA esigibile</field>
                         <field name="code">VP4</field>
-                        <field name="tag_name">4v</field>
-                        <field name="sequence">1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp4_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">4v</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vp5" model="account.tax.report.line">
+                    <record id="tax_report_line_vp5" model="account.report.line">
                         <field name="name">VP5 - IVA detraibile</field>
                         <field name="code">VP5</field>
-                        <field name="tag_name">5v</field>
-                        <field name="sequence">2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">5v</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_saldi_riporti_e_interessi" model="account.tax.report.line">
+            <record id="tax_report_line_saldi_riporti_e_interessi" model="account.report.line">
                 <field name="name">Saldi, riporti e interessi</field>
                 <field name="code">h3</field>
-                <field name="sequence">3</field>
-                <field name="formula">None</field>
-                <field name="children_line_ids">
-                    <record id="tax_report_line_vp6" model="account.tax.report.line">
+                <field name="children_ids">
+                    <record id="tax_report_line_vp6" model="account.report.line">
                         <field name="name">VP6 - IVA dovuta</field>
                         <field name="code">VP6</field>
-                        <field name="sequence">1</field>
-                        <field name="formula">None</field>
-                        <field name="children_line_ids">
-                            <record id="tax_report_line_vp6a" model="account.tax.report.line">
+                        <field name="children_ids">
+                            <record id="tax_report_line_vp6a" model="account.report.line">
                                 <field name="name">VP6a - IVA dovuta (debito)</field>
                                 <field name="code">VP6a</field>
-                                <field name="formula">VP4&gt;VP5 and VP4-VP5 or 0</field>
-                                <field name="sequence">1</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_vp6a_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
                             </record>
-                            <record id="tax_report_line_vp6b" model="account.tax.report.line">
+                            <record id="tax_report_line_vp6b" model="account.report.line">
                                 <field name="name">VP6b - IVA dovuta (credito)</field>
                                 <field name="code">VP6b</field>
-                                <field name="formula">VP5&gt;VP4 and VP5-VP4 or 0</field>
-                                <field name="sequence">2</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_vp6b_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_vp7" model="account.tax.report.line">
+                    <record id="tax_report_line_vp7" model="account.report.line">
                         <field name="name">VP7 - Debito periodo precedente non superiore 25,82</field>
                         <field name="code">VP7</field>
-                        <field name="sequence">2</field>
-                        <field name="tag_name">vp7</field>
-                        <field name="is_carryover_used_in_balance">True</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp7_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp7</field>
+                            </record>
+                            <record id="tax_report_line_vp7_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="tax_report_line_vp7_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP7._applied_carryover_balance + VP7.tag</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vp8" model="account.tax.report.line">
+                    <record id="tax_report_line_vp8" model="account.report.line">
                         <field name="name">VP8 - Credito periodo precedente</field>
                         <field name="code">VP8</field>
-                        <field name="sequence">3</field>
-                        <field name="tag_name">vp8</field>
-                        <field name="is_carryover_used_in_balance">True</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp8_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp8</field>
+                            </record>
+                            <record id="tax_report_line_vp8_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="tax_report_line_vp8_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP8._applied_carryover_balance + VP8.tag</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vp9" model="account.tax.report.line">
+                    <record id="tax_report_line_vp9" model="account.report.line">
                         <field name="name">VP9 - Credito anno precedente</field>
                         <field name="code">VP9</field>
-                        <field name="sequence">4</field>
-                        <field name="tag_name">vp9</field>
-                        <field name="is_carryover_used_in_balance">True</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp9_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp9</field>
+                            </record>
+                            <record id="tax_report_line_vp9_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="tax_report_line_vp9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VP9._applied_carryover_balance + VP9.tag</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vp10" model="account.tax.report.line">
+                    <record id="tax_report_line_vp10" model="account.report.line">
                         <field name="name">VP10 - Versamenti auto UE</field>
                         <field name="code">VP10</field>
-                        <field name="sequence">5</field>
-                        <field name="tag_name">vp10</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp10_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp10</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vp11" model="account.tax.report.line">
+                    <record id="tax_report_line_vp11" model="account.report.line">
                         <field name="name">VP11 - Credito d'imposta</field>
                         <field name="code">VP11</field>
-                        <field name="sequence">6</field>
-                        <field name="tag_name">vp11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp11</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vp12" model="account.tax.report.line">
+                    <record id="tax_report_line_vp12" model="account.report.line">
                         <field name="name">VP12 - Interessi dovuti per liquidazioni trimestrali</field>
                         <field name="code">VP12</field>
-                        <field name="sequence">7</field>
-                        <field name="tag_name">vp12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp12_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp12</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vp13" model="account.tax.report.line">
+                    <record id="tax_report_line_vp13" model="account.report.line">
                         <field name="name">VP13 - Acconto dovuto</field>
                         <field name="code">VP13</field>
-                        <field name="sequence">8</field>
-                        <field name="tag_name">vp13</field>
-                    </record>
-                </field>
-            </record>
-            <record id="tax_report_line_conto_corrente_iva" model="account.tax.report.line">
-                <field name="name">Conto corrente IVA</field>
-                <field name="code">h4</field>
-                <field name="sequence">4</field>
-                <field name="formula">None</field>
-                <field name="children_line_ids">
-                    <record id="tax_report_line_vp14" model="account.tax.report.line">
-                        <field name="name">VP14 - IVA da versare</field>
-                        <field name="code">VP14</field>
-                        <field name="sequence">1</field>
-                        <field name="formula">None</field>
-                        <field name="children_line_ids">
-                            <record id="tax_report_line_vp14a" model="account.tax.report.line">
-                                <field name="name">VP14a - IVA da versare (debito)</field>
-                                <field name="code">VP14a</field>
-                                <field name="sequence">1</field>
-                                <field name="formula">max(((VP4&gt;VP5 and VP4-VP5 or 0) + VP7 + VP12) - ((VP5&gt;VP4 and VP5-VP4 or 0) + VP8 + VP9 + VP10 + VP11 + VP13), 0) </field>
-                                <field name="carry_over_condition_method">vp14_debt_carryover_condition</field>
-                                <field name="carry_over_destination_line_id" ref="tax_report_line_vp7"/>
-                                <field name="is_carryover_persistent">False</field>
-                            </record>
-                            <record id="tax_report_line_vp14b" model="account.tax.report.line">
-                                <field name="name">VP14b - IVA da versare (credito)</field>
-                                <field name="code">VP14b</field>
-                                <field name="sequence">2</field>
-                                <field name="formula">max(((VP5&gt;VP4 and VP5-VP4 or 0) + VP8 + VP9 + VP10 + VP11 + VP13) - ((VP4&gt;VP5 and VP4-VP5 or 0) + VP7 + VP12), 0) </field>
-                                <field name="carry_over_condition_method">vp14_credit_carryover_condition</field>
-                                <field name="carry_over_destination_line_id" ref="tax_report_line_vp8"/>
-                                <field name="is_carryover_persistent">False</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vp13_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vp13</field>
                             </record>
                         </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_reverse_charge_iva" model="account.tax.report.line">
+            <record id="tax_report_line_conto_corrente_iva" model="account.report.line">
+                <field name="name">Conto corrente IVA</field>
+                <field name="code">h4</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_vp14" model="account.report.line">
+                        <field name="name">VP14 - IVA da versare</field>
+                        <field name="code">VP14</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_vp14a" model="account.report.line">
+                                <field name="name">VP14a - IVA da versare (debito)</field>
+                                <field name="code">VP14a</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_vp14a_vp4_vp5_dif_pos" model="account.report.expression">
+                                        <field name="label">vp4_vp5_dif_pos</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_vp14a_vp4_vp5_dif_neg" model="account.report.expression">
+                                        <field name="label">vp4_vp5_dif_neg</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_vp14a_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(VP14a.vp4_vp5_dif_pos + VP7.balance + VP12.balance) - (-VP14a.vp4_vp5_dif_neg + VP8.balance + VP9.balance + VP10.balance + VP11.balance + VP13.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_vp14a_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP14a.balance</field>
+                                        <field name="subformula">if_between(EUR(0), EUR(25.82))</field>
+                                        <field name="carryover_target">VP7._applied_carryover_balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_vp14b" model="account.report.line">
+                                <field name="name">VP14b - IVA da versare (credito)</field>
+                                <field name="code">VP14b</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_vp14b_vp4_vp5_dif_pos" model="account.report.expression">
+                                        <field name="label">vp4_vp5_dif_pos</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_vp14b_vp4_vp5_dif_neg" model="account.report.expression">
+                                        <field name="label">vp4_vp5_dif_neg</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP4.balance - VP5.balance</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_vp14b_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(-VP14b.vp4_vp5_dif_neg + VP8.balance + VP9.balance + VP10.balance + VP11.balance + VP13.balance) - (VP14b.vp4_vp5_dif_pos + VP7.balance + VP12.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_vp14b_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VP14b.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                        <field name="carryover_target">VP8._applied_carryover_balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_reverse_charge_iva" model="account.report.line">
                 <field name="name">Reverse Charge</field>
                 <field name="code">VJ</field>
-                <field name="sequence">5</field>
-                <field name="formula">None</field>
-                <field name="children_line_ids">
-                    <record id="tax_report_line_vj1" model="account.tax.report.line">
+                <field name="children_ids">
+                    <record id="tax_report_line_vj1" model="account.report.line">
                         <field name="name">VJ1 - Acquisti di beni dalla Città del Vaticano e da San Marino</field>
                         <field name="code">VJ1</field>
-                        <field name="sequence">1</field>
-                        <field name="tag_name">vj1</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj1</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj2" model="account.tax.report.line">
+                    <record id="tax_report_line_vj2" model="account.report.line">
                         <field name="name">VJ2 - Estrazione di beni da depositi Iva</field>
                         <field name="code">VJ2</field>
-                        <field name="sequence">2</field>
-                        <field name="tag_name">vj2</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj2</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj3" model="account.tax.report.line">
+                    <record id="tax_report_line_vj3" model="account.report.line">
                         <field name="name">VJ3 - Acquisti di beni giá presenti in Italia o servizi, da soggetti non residenti</field>
                         <field name="code">VJ3</field>
-                        <field name="sequence">3</field>
-                        <field name="tag_name">vj3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj3_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj3</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj4" model="account.tax.report.line">
+                    <record id="tax_report_line_vj4" model="account.report.line">
                         <field name="name">VJ4 - Compensi corrisposti ai rivenditori di biglietti di viaggio ed ai rivenditori di documenti di sosta </field>
                         <field name="code">VJ4</field>
-                        <field name="sequence">4</field>
-                        <field name="tag_name">vj4</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj4_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj4</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj5" model="account.tax.report.line">
+                    <record id="tax_report_line_vj5" model="account.report.line">
                         <field name="name">VJ5 - Provvigioni corrisposte dalle agenzie di viaggio ai propri intermediari</field>
                         <field name="code">VJ5</field>
-                        <field name="sequence">5</field>
-                        <field name="tag_name">vj5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj5</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj6" model="account.tax.report.line">
+                    <record id="tax_report_line_vj6" model="account.report.line">
                         <field name="name">VJ6 - Acquisti di rottami e altri materiali di recupero</field>
                         <field name="code">VJ6</field>
-                        <field name="sequence">6</field>
-                        <field name="tag_name">vj6</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj6_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj6</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj7" model="account.tax.report.line">
+                    <record id="tax_report_line_vj7" model="account.report.line">
                         <field name="name">VJ7 - Acquisti di oro industriale e argento puro effettuati in Italia</field>
                         <field name="code">VJ7</field>
-                        <field name="sequence">7</field>
-                        <field name="tag_name">vj7</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj7_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj7</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj8" model="account.tax.report.line">
+                    <record id="tax_report_line_vj8" model="account.report.line">
                         <field name="name">VJ8 - Acquisti di oro da investimento effettuati in Italia</field>
                         <field name="code">VJ8</field>
-                        <field name="sequence">8</field>
-                        <field name="tag_name">vj8</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj8_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj8</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj9" model="account.tax.report.line">
+                    <record id="tax_report_line_vj9" model="account.report.line">
                         <field name="name">VJ9 - Acquisti intracomunitari di beni</field>
                         <field name="code">VJ9</field>
-                        <field name="sequence">9</field>
-                        <field name="tag_name">vj9</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj9_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj9</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj10" model="account.tax.report.line">
+                    <record id="tax_report_line_vj10" model="account.report.line">
                         <field name="name">VJ10 - Importazioni di rottami e altri materiali di recupero</field>
                         <field name="code">VJ10</field>
-                        <field name="sequence">10</field>
-                        <field name="tag_name">vj10</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj10_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj10</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj11" model="account.tax.report.line">
+                    <record id="tax_report_line_vj11" model="account.report.line">
                         <field name="name">VJ11 - Importazioni di oro industriale e argento puro</field>
                         <field name="code">VJ11</field>
-                        <field name="sequence">11</field>
-                        <field name="tag_name">vj11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj11</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj12" model="account.tax.report.line">
+                    <record id="tax_report_line_vj12" model="account.report.line">
                         <field name="name">VJ12 - Subappalto di servizi in campo edile</field>
                         <field name="code">VJ12</field>
-                        <field name="sequence">12</field>
-                        <field name="tag_name">vj12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj12_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj12</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj13" model="account.tax.report.line">
+                    <record id="tax_report_line_vj13" model="account.report.line">
                         <field name="name">VJ13 - Acquisti di fabbricati o porzioni di fabbricati strumentali</field>
                         <field name="code">VJ13</field>
-                        <field name="sequence">13</field>
-                        <field name="tag_name">vj13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj13_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj13</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj14" model="account.tax.report.line">
+                    <record id="tax_report_line_vj14" model="account.report.line">
                         <field name="name">VJ14 - Acquisti di telefoni cellulari</field>
                         <field name="code">VJ14</field>
-                        <field name="sequence">14</field>
-                        <field name="tag_name">vj14</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj14_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj14</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj15" model="account.tax.report.line">
+                    <record id="tax_report_line_vj15" model="account.report.line">
                         <field name="name">VJ15 - Acquisti di prodotti elettronici</field>
                         <field name="code">VJ15</field>
-                        <field name="sequence">15</field>
-                        <field name="tag_name">vj15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj15_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj15</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj16" model="account.tax.report.line">
+                    <record id="tax_report_line_vj16" model="account.report.line">
                         <field name="name">VJ16 - Prestazioni di servizi in campo edile</field>
                         <field name="code">VJ16</field>
-                        <field name="sequence">16</field>
-                        <field name="tag_name">vj16</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj16_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj16</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj17" model="account.tax.report.line">
+                    <record id="tax_report_line_vj17" model="account.report.line">
                         <field name="name">VJ17 - Acquiti di beni e servizi del settore energetico</field>
                         <field name="code">VJ17</field>
-                        <field name="sequence">17</field>
-                        <field name="tag_name">vj17</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj17_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj17</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj18" model="account.tax.report.line">
+                    <record id="tax_report_line_vj18" model="account.report.line">
                         <field name="name">VJ18 - acquisti effettuati dalle pubbliche amministrazioni titolari di partita IVA</field>
                         <field name="code">VJ18</field>
-                        <field name="sequence">18</field>
-                        <field name="tag_name">vj18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_vj18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">vj18</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_vj19" model="account.tax.report.line">
+                    <record id="tax_report_line_vj19" model="account.report.line">
                         <field name="name">VJ19 - Totale quadro VJ</field>
                         <field name="code">VJ19</field>
-                        <field name="sequence">19</field>
-                        <field name="formula">VJ1 + VJ2 + VJ3 + VJ4 + VJ5 + VJ6 + VJ7 + VJ8 + VJ9 + VJ10 + VJ11 + VJ12 + VJ13 + VJ14 + VJ15 + VJ16 + VJ17 + VJ18</field>
+                        <field name="aggregation_formula">VJ1.balance + VJ2.balance + VJ3.balance + VJ4.balance + VJ5.balance + VJ6.balance + VJ7.balance + VJ8.balance + VJ9.balance + VJ10.balance + VJ11.balance + VJ12.balance + VJ13.balance + VJ14.balance + VJ15.balance + VJ16.balance + VJ17.balance + VJ18.balance</field>
                     </record>
                 </field>
             </record>

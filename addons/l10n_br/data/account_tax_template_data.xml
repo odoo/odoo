@@ -1,1291 +1,1022 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<record id="tax_template_out_icms_interno17" model="account.tax.template">
-		<field name="description">ICMS Interno 17%</field>
-		<field name="name">ICMS Saída Interno 17%</field>
-		<field name="amount">17</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_17"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010903'),
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020302'),
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_icms_externo17" model="account.tax.template">
-		<field name="description">ICMS Externo 17%</field>
-		<field name="name">ICMS Saída Externo 17%</field>
-		<field name="amount">17</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_17"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010903'),
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020302'),
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_icms_interno17" model="account.tax.template">
-		<field name="description">ICMS Interno 17%</field>
-		<field name="name">ICMS Entrada Interno 17%</field>
-		<field name="amount">17</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_17"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020302'),
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010903'),
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_icms_externo17" model="account.tax.template">
-		<field name="description">ICMS Externo 17%</field>
-		<field name="name">ICMS Entrada Externo 17%</field>
-		<field name="amount">17</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_17"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020302'),
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010903'),
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_icms_interno" model="account.tax.template">
-		<field name="description">ICMS Interno</field>
-		<field name="name">ICMS Saída Interno 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_icms_externo" model="account.tax.template">
-		<field name="description">ICMS Externo</field>
-		<field name="name">ICMS Saída Externo 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_icms_interno" model="account.tax.template">
-		<field name="description">ICMS Interno</field>
-		<field name="name">ICMS Saída Interno 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_icms_externo" model="account.tax.template">
-		<field name="description">ICMS Externo</field>
-		<field name="name">ICMS Saída Externo 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_icms_interno" model="account.tax.template">
-		<field name="description">ICMS Interno</field>
-		<field name="name">ICMS Entrada Interno 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_icms_externo" model="account.tax.template">
-		<field name="description">ICMS Externo</field>
-		<field name="name">ICMS Entrada Externo 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_icms_externo7" model="account.tax.template">
-		<field name="description">ICMS Externo 7%</field>
-		<field name="name">ICMS Saída Externo 7%</field>
-		<field name="amount">7</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_7"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010903'),
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020302'),
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_icms_externo7" model="account.tax.template">
-		<field name="description">ICMS Externo 7%</field>
-		<field name="name">ICMS Entrada Externo 7%</field>
-		<field name="amount">7</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_7"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010903'),
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020302'),
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_icms_externo12" model="account.tax.template">
-		<field name="description">ICMS Externo 12%</field>
-		<field name="name">ICMS Saída Externo 12%</field>
-		<field name="amount">12</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_12"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010903'),
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020302'),
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_icms_externo12" model="account.tax.template">
-		<field name="description">ICMS Externo 12%</field>
-		<field name="name">ICMS Entrada Externo 12%</field>
-		<field name="amount">12</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_12"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010903'),
-				'plus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icms_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020302'),
-				'minus_report_line_ids': [ref('tax_report_icms_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_icms_subist" model="account.tax.template">
-		<field name="description">ICMS Subist</field>
-		<field name="name">ICMS Saída Subist 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icmsst_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icmsst_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_icms_subist" model="account.tax.template">
-		<field name="description">ICMS Subist</field>
-		<field name="name">ICMS Entrada Subist 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_icms_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_icmsst_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_icmsst_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_ipi10" model="account.tax.template">
-		<field name="description">IPI 10%</field>
-		<field name="name">IPI Saída 10%</field>
-		<field name="amount">10</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_ipi_10"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_ipi_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010902'),
-				'plus_report_line_ids': [ref('tax_report_ipi_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_ipi_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020301'),
-				'minus_report_line_ids': [ref('tax_report_ipi_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_ipi10" model="account.tax.template">
-		<field name="description">IPI 10%</field>
-		<field name="name">IPI Entrada 10%</field>
-		<field name="amount">10</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_ipi_10"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_ipi_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020301'),
-				'minus_report_line_ids': [ref('tax_report_ipi_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_ipi_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010902'),
-				'plus_report_line_ids': [ref('tax_report_ipi_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_ipi" model="account.tax.template">
-		<field name="description">IPI</field>
-		<field name="name">IPI Saída 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_ipi_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_ipi_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_ipi_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_ipi" model="account.tax.template">
-		<field name="description">IPI</field>
-		<field name="name">IPI Entrada 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_ipi_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_ipi_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_ipi_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_pis" model="account.tax.template">
-		<field name="description">PIS</field>
-		<field name="name">PIS Saída 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_pis_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_pis_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_pis_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_pis065" model="account.tax.template">
-		<field name="description">PIS 0,65%</field>
-		<field name="name">PIS Saída 0,65%</field>
-		<field name="amount">0.65</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_pis_065"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_pis_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010904'),
-				'plus_report_line_ids': [ref('tax_report_pis_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_pis_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020303'),
-				'minus_report_line_ids': [ref('tax_report_pis_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_pis" model="account.tax.template">
-		<field name="description">PIS</field>
-		<field name="name">PIS Entrada 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_pis_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_pis_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_pis_2')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_pis065" model="account.tax.template">
-		<field name="description">PIS 0,65%</field>
-		<field name="name">PIS Entrada 0,65%</field>
-		<field name="amount">0.65</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_pis_065"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_pis_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020303'),
-				'minus_report_line_ids': [ref('tax_report_pis_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_pis_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010904'),
-				'plus_report_line_ids': [ref('tax_report_pis_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_cofins" model="account.tax.template">
-		<field name="description">COFINS</field>
-		<field name="name">COFINS Saída 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_cofins_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_cofins_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_cofins_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_cofins3" model="account.tax.template">
-		<field name="description">COFINS 3%</field>
-		<field name="name">COFINS Saída 3%</field>
-		<field name="amount">3</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_cofins_3"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_cofins_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010905'),
-				'plus_report_line_ids': [ref('tax_report_cofins_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_cofins_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020305'),
-				'minus_report_line_ids': [ref('tax_report_cofins_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_cofins" model="account.tax.template">
-		<field name="description">COFINS</field>
-		<field name="name">COFINS Entrada 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_cofins_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_cofins_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_cofins_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_cofins3" model="account.tax.template">
-		<field name="description">COFINS 3%</field>
-		<field name="name">COFINS Entrada 3%</field>
-		<field name="amount">3</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_cofins_3"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_cofins_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020305'),
-				'minus_report_line_ids': [ref('tax_report_cofins_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_cofins_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010905'),
-				'plus_report_line_ids': [ref('tax_report_cofins_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_irpj" model="account.tax.template">
-		<field name="description">IRPJ</field>
-		<field name="name">IRPJ 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_irpj_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_irpj_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_irpj_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_ir" model="account.tax.template">
-		<field name="description">IR</field>
-		<field name="name">IR 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_ir_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_ir_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_ir_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_issqn2" model="account.tax.template">
-		<field name="description">ISSQN 2%</field>
-		<field name="name">ISSQN Saída 2%</field>
-		<field name="amount">2</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_issqn_2"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_issqn_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020340'),
-				'plus_report_line_ids': [ref('tax_report_issqn_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_issqn_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010928'),
-				'minus_report_line_ids': [ref('tax_report_issqn_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_issqn2" model="account.tax.template">
-		<field name="description">ISSQN 2%</field>
-		<field name="name">ISSQN Entrada 2%</field>
-		<field name="amount">2</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_issqn_2"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_issqn_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_101020340'),
-				'minus_report_line_ids': [ref('tax_report_issqn_2')],
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_issqn_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-				'account_id': ref('account_template_201010928'),
-				'plus_report_line_ids': [ref('tax_report_issqn_2')],
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_csll" model="account.tax.template">
-		<field name="description">CSLL</field>
-		<field name="name">CSLL 0%</field>
-		<field name="amount">0.00</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="1" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_csll_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_csll_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_csll_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_ii0" model="account.tax.template">
-		<field name="description">II</field>
-		<field name="name">II Saída 0%</field>
-		<field name="amount">0</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_ii_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_ii_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_ii_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_ii0" model="account.tax.template">
-		<field name="description">II</field>
-		<field name="name">II Entrada 0%</field>
-		<field name="amount">0</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_ii_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_ii_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_ii_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_out_inss0" model="account.tax.template">
-		<field name="description">INSS</field>
-		<field name="name">INSS Saída 0%</field>
-		<field name="amount">0</field>
-		<field name="type_tax_use">sale</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_inss_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_inss_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_inss_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<record id="tax_template_in_inss0" model="account.tax.template">
-		<field name="description">INSS</field>
-		<field name="name">INSS Entrada 0%</field>
-		<field name="amount">0</field>
-		<field name="type_tax_use">purchase</field>
-		<field eval="0" name="price_include"/>
-		<field eval="0" name="tax_discount"/>
-		<field ref="l10n_br_account_chart_template" name="chart_template_id"/>
-		<field name="tax_group_id" ref="tax_group_inss_0"/>
-		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'plus_report_line_ids': [ref('tax_report_inss_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'base',
-				'minus_report_line_ids': [ref('tax_report_inss_1')],
-			}),
-			(0,0, {
-				'factor_percent': 100,
-				'repartition_type': 'tax',
-			}),
-		]"/>
-	</record>
-
-	<data noupdate="1">
-		<function model="account.chart.template" name="try_loading">
-			<value eval="[ref('l10n_br.l10n_br_account_chart_template')]"/>
-		</function>
-	</data>
+    <record id="tax_template_out_icms_interno17" model="account.tax.template">
+        <field name="description">ICMS Interno 17%</field>
+        <field name="name">ICMS Saída Interno 17%</field>
+        <field name="amount">17</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010903'),
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020302'),
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_out_icms_externo17" model="account.tax.template">
+        <field name="description">ICMS Externo 17%</field>
+        <field name="name">ICMS Saída Externo 17%</field>
+        <field name="amount">17</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010903'),
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020302'),
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_in_icms_interno17" model="account.tax.template">
+        <field name="description">ICMS Interno 17%</field>
+        <field name="name">ICMS Entrada Interno 17%</field>
+        <field name="amount">17</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020302'),
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010903'),
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_in_icms_externo17" model="account.tax.template">
+        <field name="description">ICMS Externo 17%</field>
+        <field name="name">ICMS Entrada Externo 17%</field>
+        <field name="amount">17</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_17"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020302'),
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010903'),
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_out_icms_interno" model="account.tax.template">
+        <field name="description">ICMS Interno</field>
+        <field name="name">ICMS Saída Interno 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_icms_externo" model="account.tax.template">
+        <field name="description">ICMS Externo</field>
+        <field name="name">ICMS Saída Externo 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_icms_interno" model="account.tax.template">
+        <field name="description">ICMS Interno</field>
+        <field name="name">ICMS Saída Interno 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_icms_externo" model="account.tax.template">
+        <field name="description">ICMS Externo</field>
+        <field name="name">ICMS Saída Externo 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_in_icms_interno" model="account.tax.template">
+        <field name="description">ICMS Interno</field>
+        <field name="name">ICMS Entrada Interno 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_in_icms_externo" model="account.tax.template">
+        <field name="description">ICMS Externo</field>
+        <field name="name">ICMS Entrada Externo 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_icms_externo7" model="account.tax.template">
+        <field name="description">ICMS Externo 7%</field>
+        <field name="name">ICMS Saída Externo 7%</field>
+        <field name="amount">7</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_7"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010903'),
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020302'),
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_in_icms_externo7" model="account.tax.template">
+        <field name="description">ICMS Externo 7%</field>
+        <field name="name">ICMS Entrada Externo 7%</field>
+        <field name="amount">7</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_7"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010903'),
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020302'),
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_out_icms_externo12" model="account.tax.template">
+        <field name="description">ICMS Externo 12%</field>
+        <field name="name">ICMS Saída Externo 12%</field>
+        <field name="amount">12</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_12"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010903'),
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020302'),
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_in_icms_externo12" model="account.tax.template">
+        <field name="description">ICMS Externo 12%</field>
+        <field name="name">ICMS Entrada Externo 12%</field>
+        <field name="amount">12</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_12"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010903'),
+                'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020302'),
+                'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_out_icms_subist" model="account.tax.template">
+        <field name="description">ICMS Subist</field>
+        <field name="name">ICMS Saída Subist 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icmsst_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icmsst_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_in_icms_subist" model="account.tax.template">
+        <field name="description">ICMS Subist</field>
+        <field name="name">ICMS Entrada Subist 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_icms_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_icmsst_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_icmsst_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_ipi10" model="account.tax.template">
+        <field name="description">IPI 10%</field>
+        <field name="name">IPI Saída 10%</field>
+        <field name="amount">10</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_ipi_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010902'),
+                'plus_report_expression_ids': [ref('tax_report_ipi_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020301'),
+                'minus_report_expression_ids': [ref('tax_report_ipi_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_in_ipi10" model="account.tax.template">
+        <field name="description">IPI 10%</field>
+        <field name="name">IPI Entrada 10%</field>
+        <field name="amount">10</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_ipi_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020301'),
+                'minus_report_expression_ids': [ref('tax_report_ipi_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010902'),
+                'plus_report_expression_ids': [ref('tax_report_ipi_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_out_ipi" model="account.tax.template">
+        <field name="description">IPI</field>
+        <field name="name">IPI Saída 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_ipi_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_in_ipi" model="account.tax.template">
+        <field name="description">IPI</field>
+        <field name="name">IPI Entrada 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_ipi_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_pis" model="account.tax.template">
+        <field name="description">PIS</field>
+        <field name="name">PIS Saída 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_pis_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_pis_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_pis_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_pis065" model="account.tax.template">
+        <field name="description">PIS 0,65%</field>
+        <field name="name">PIS Saída 0,65%</field>
+        <field name="amount">0.65</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_pis_065"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_pis_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010904'),
+                'plus_report_expression_ids': [ref('tax_report_pis_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_pis_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020303'),
+                'minus_report_expression_ids': [ref('tax_report_pis_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_in_pis" model="account.tax.template">
+        <field name="description">PIS</field>
+        <field name="name">PIS Entrada 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_pis_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_pis_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_pis_2_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_in_pis065" model="account.tax.template">
+        <field name="description">PIS 0,65%</field>
+        <field name="name">PIS Entrada 0,65%</field>
+        <field name="amount">0.65</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_pis_065"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_pis_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020303'),
+                'minus_report_expression_ids': [ref('tax_report_pis_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_pis_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010904'),
+                'plus_report_expression_ids': [ref('tax_report_pis_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_out_cofins" model="account.tax.template">
+        <field name="description">COFINS</field>
+        <field name="name">COFINS Saída 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_cofins_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_cofins3" model="account.tax.template">
+        <field name="description">COFINS 3%</field>
+        <field name="name">COFINS Saída 3%</field>
+        <field name="amount">3</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_cofins_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010905'),
+                'plus_report_expression_ids': [ref('tax_report_cofins_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020305'),
+                'minus_report_expression_ids': [ref('tax_report_cofins_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_in_cofins" model="account.tax.template">
+        <field name="description">COFINS</field>
+        <field name="name">COFINS Entrada 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_cofins_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_in_cofins3" model="account.tax.template">
+        <field name="description">COFINS 3%</field>
+        <field name="name">COFINS Entrada 3%</field>
+        <field name="amount">3</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_cofins_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020305'),
+                'minus_report_expression_ids': [ref('tax_report_cofins_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010905'),
+                'plus_report_expression_ids': [ref('tax_report_cofins_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_out_irpj" model="account.tax.template">
+        <field name="description">IRPJ</field>
+        <field name="name">IRPJ 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_irpj_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_irpj_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_irpj_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_ir" model="account.tax.template">
+        <field name="description">IR</field>
+        <field name="name">IR 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_ir_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_ir_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_ir_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_issqn2" model="account.tax.template">
+        <field name="description">ISSQN 2%</field>
+        <field name="name">ISSQN Saída 2%</field>
+        <field name="amount">2</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_issqn_2"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_issqn_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020340'),
+                'plus_report_expression_ids': [ref('tax_report_issqn_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_issqn_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010928'),
+                'minus_report_expression_ids': [ref('tax_report_issqn_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_in_issqn2" model="account.tax.template">
+        <field name="description">ISSQN 2%</field>
+        <field name="name">ISSQN Entrada 2%</field>
+        <field name="amount">2</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_issqn_2"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_issqn_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_101020340'),
+                'minus_report_expression_ids': [ref('tax_report_issqn_2_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_issqn_1_tag')],
+            }),
+            (0, 0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_201010928'),
+                'plus_report_expression_ids': [ref('tax_report_issqn_2_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="tax_template_out_csll" model="account.tax.template">
+        <field name="description">CSLL</field>
+        <field name="name">CSLL 0%</field>
+        <field name="amount">0.00</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="1" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_csll_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_csll_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_csll_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_ii0" model="account.tax.template">
+        <field name="description">II</field>
+        <field name="name">II Saída 0%</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_ii_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_ii_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_ii_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_in_ii0" model="account.tax.template">
+        <field name="description">II</field>
+        <field name="name">II Entrada 0%</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_ii_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_ii_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_ii_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_out_inss0" model="account.tax.template">
+        <field name="description">INSS</field>
+        <field name="name">INSS Saída 0%</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_inss_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_inss_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_inss_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tax_template_in_inss0" model="account.tax.template">
+        <field name="description">INSS</field>
+        <field name="name">INSS Entrada 0%</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field eval="0" name="price_include"/>
+        <field eval="0" name="tax_discount"/>
+        <field ref="l10n_br_account_chart_template" name="chart_template_id"/>
+        <field name="tax_group_id" ref="tax_group_inss_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_inss_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0, 0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_inss_1_tag')],
+            }),
+            (0, 0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[ref('l10n_br.l10n_br_account_chart_template')]"/>
+        </function>
+    </data>
 </odoo>

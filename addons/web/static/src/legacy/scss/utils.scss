@@ -237,14 +237,6 @@
 }
 
 // ------- Kanban grouped mixins -------
-@mixin o-kanban-icon($base-opacity: 0.5) {
-    display: block;
-    text-align: center;
-    color: $o-main-text-color;
-    font-size: $font-size-sm;
-    cursor: pointer;
-    @include o-hover-opacity($base-opacity);
-}
 @mixin o-kanban-tag-color {
     @for $size from 1 through length($o-colors) {
         // Note: the first color is supposed to be invisible if there is a color
@@ -285,8 +277,6 @@
     transform-origin: left bottom 0;
     transform: rotate(90deg);
     overflow: visible;
-    white-space: nowrap;
-    font-size: 15px;
 }
 
 // ------- Kanban records mixins -------
@@ -299,7 +289,7 @@
 }
 @mixin o-kanban-dropdown($padding-base: $o-kanban-inside-vgutter) {
     margin: -1px -1px 1px;
-    padding: $padding-base/2 $padding-base;
+    padding: if(type-of($padding-base) == 'string', calc(#{$padding-base}/2) $padding-base, $padding-base/2 $padding-base);
     border: 1px solid transparent;
     border-bottom: none;
     vertical-align: top;

@@ -1,51 +1,18 @@
 /** @odoo-module **/
 
 import { registry } from '@web/core/registry';
-import { useService } from '@web/core/utils/hooks';
+import { useService, useBus } from '@web/core/utils/hooks';
 import core from 'web.core';
 import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
+import { routeToUrl } from "@web/core/browser/router_service";
 
-const { Component, onWillStart, useRef, useEffect, useState } = owl;
+const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
-class BlockIframe extends Component {
-    setup() {
-        this.websiteService = useService('website');
-        this.state = useState({
-            blockIframe: false,
-            showLoader: false,
-        });
-        this.processes = [];
-        this.ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
-        this.websiteService.bus.addEventListener("BLOCK", this.block.bind(this));
-        this.websiteService.bus.addEventListener("UNBLOCK", this.unblock.bind(this));
-    }
-    block(event) {
-        if (event.detail.showLoader && !this.state.showLoader) {
-            setTimeout(() => {
-                this.state.showLoader = true;
-            }, event.detail.loaderDelay);
-        }
-        if (!this.processes.length) {
-            this.state.blockIframe = true;
-        }
-        this.processes.push(event.detail.processId || this.ANONYMOUS_PROCESS_ID);
-    }
-    unblock(event) {
-        const processId = event.detail.processId || this.ANONYMOUS_PROCESS_ID;
-        const processIndex = this.processes.indexOf(processId);
-        if (processIndex > -1) {
-            this.processes.splice(processIndex, 1);
-        }
-        if (this.processes.length === 0) {
-            this.state.blockIframe = false;
-            this.state.showLoader = false;
-        }
-    }
-}
-BlockIframe.template = 'website.BlockIframe';
+class BlockPreview extends Component {}
+BlockPreview.template = 'website.BlockPreview';
 
 export class WebsitePreview extends Component {
     setup() {
@@ -62,6 +29,13 @@ export class WebsitePreview extends Component {
         this.iframefallback = useRef('iframefallback');
         this.container = useRef('container');
         this.websiteContext = useState(this.websiteService.context);
+        this.blockedState = useState({
+            isBlocked: false,
+            showLoader: false,
+        });
+
+        useBus(this.websiteService.bus, 'BLOCK', (event) => this.block(event.detail));
+        useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
 
         onWillStart(async () => {
             await this.websiteService.fetchWebsites();
@@ -95,21 +69,40 @@ export class WebsitePreview extends Component {
             if (this.props.action.context.params && this.props.action.context.params.with_loader) {
                 this.websiteService.showLoader({ showTips: true });
             }
-
-            return () => {
-                this.websiteService.currentWebsiteId = null;
-                this.websiteService.websiteRootInstance = undefined;
-                this.websiteService.pageDocument = null;
-            };
         }, () => [this.props.action.context.params]);
 
-        useEffect(() => {
-            this.websiteService.blockIframe(true, 0, 'load-iframe');
-            this.iframe.el.addEventListener('load', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
+        onMounted(() => {
+            this.websiteService.blockPreview(true, 'load-iframe');
+            this.iframe.el.addEventListener('load', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
             // For a frontend page, it is better to use the
             // OdooFrameContentLoaded event to unblock the iframe, as it is
             // triggered faster than the load event.
-            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
+        });
+
+        onWillUnmount(() => {
+            this.websiteService.currentWebsiteId = null;
+            this.websiteService.websiteRootInstance = undefined;
+            this.websiteService.pageDocument = null;
+        });
+
+        useEffect(() => {
+            // When reaching a "regular" url of the webclient's router, an
+            // hashchange event should be dispatched to properly display the
+            // content of the previous URL before reaching the client action,
+            // which was lost after being replaced for the frontend's URL.
+            const handleBackNavigation = () => {
+                if (!window.location.pathname.startsWith('/@')) {
+                    window.dispatchEvent(new HashChangeEvent('hashchange', {
+                        newURL: window.location.href.toString()
+                    }));
+                }
+            };
+            window.addEventListener('popstate', handleBackNavigation);
+            return () => {
+                history.pushState({}, null, this.backendUrl);
+                window.removeEventListener('popstate', handleBackNavigation);
+            };
         }, () => []);
     }
 
@@ -173,8 +166,18 @@ export class WebsitePreview extends Component {
         });
     }
 
+    block({ showLoader = true } = {}) {
+        this.blockedState.isBlocked = true;
+        this.blockedState.showLoader = showLoader;
+    }
+
+    unblock() {
+        this.blockedState.isBlocked = false;
+        this.blockedState.showLoader = false;
+    }
+
     addWelcomeMessage() {
-        if (this.websiteService.isPublisher) {
+        if (this.websiteService.isRestrictedEditor) {
             const $wrap = $(this.iframe.el.contentDocument.querySelector('#wrapwrap.homepage')).find('#wrap');
             if ($wrap.length && $wrap.html().trim() === '') {
                 this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
@@ -209,6 +212,12 @@ export class WebsitePreview extends Component {
      * the iframe's url (it is clearer for the user).
      */
     _replaceBrowserUrl() {
+        // The original /web#action=... url is saved to be pushed on top of the
+        // history when leaving the component, so that the webclient can
+        // correctly find back and replay the client action.
+        if (!this.backendUrl) {
+            this.backendUrl = routeToUrl(this.router.current);
+        }
         const currentUrl = new URL(this.iframe.el.contentDocument.location.href);
         currentUrl.pathname = `/@${currentUrl.pathname}`;
         this.currentTitle = this.iframe.el.contentDocument.title;
@@ -268,9 +277,19 @@ export class WebsitePreview extends Component {
                 });
             } else if (classList.contains('js_change_lang') && isEditing) {
                 ev.preventDefault();
-                // The switch to the right language is handled by the
-                // Website Root, inside the iframe.
-                this.websiteService.leaveEditMode();
+                const lang = linkEl.dataset['url_code'];
+                // The "edit_translations" search param coming from keep_query
+                // is removed, and the hash is added.
+                const destinationUrl = new URL(href, window.location);
+                destinationUrl.searchParams.delete('edit_translations');
+                destinationUrl.hash = this.websiteService.contentWindow.location.hash;
+                const forceLangUrl = `/website/lang/${lang}?r=${destinationUrl.toString()}`;
+                this.websiteService.bus.trigger('LEAVE-EDIT-MODE', {
+                    onLeave: () => {
+                        this.websiteService.goToWebsite({ path: forceLangUrl });
+                    },
+                    reloadIframe: false,
+                });
             } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
                 ev.preventDefault();
                 this.router.redirect(href);
@@ -303,7 +322,7 @@ export class WebsitePreview extends Component {
 WebsitePreview.template = 'website.WebsitePreview';
 WebsitePreview.components = {
     WebsiteEditorComponent,
-    BlockIframe,
+    BlockPreview,
     WebsiteTranslator,
     AceEditorAdapterComponent,
 };

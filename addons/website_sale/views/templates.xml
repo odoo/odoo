@@ -438,7 +438,7 @@
     </template>
 
     <template id="categorie_link" name="Category Link">
-        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="custom-control form-check mb-1 d-inline-block">
+        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="form-check mb-1 d-inline-block">
             <input type="radio" style="pointer-events:none;" class="form-check-input" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
             <label class="form-check-label fw-normal" t-att-for="c.id" t-field="c.name"/>
         </div>
@@ -461,7 +461,7 @@
                 <ul class="nav flex-column my-2">
                     <form>
                         <li class="nav-item">
-                            <div t-att-data-link-href="keep('/shop', category=0)" class="custom-control form-check mb-1 d-inline-block">
+                            <div t-att-data-link-href="keep('/shop', category=0)" class="form-check mb-1 d-inline-block">
                                 <input type="radio" style="pointer-events:none;" class="form-check-input o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
                                 <label class="form-check-label fw-normal" t-att-for="all_products">All Products</label>
                             </div>
@@ -535,7 +535,7 @@
                                 <t t-if="a.display_type == 'radio' or a.display_type == 'pills'">
                                     <div class="flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
-                                            <div class="custom-control form-check mb-1">
+                                            <div class="form-check mb-1">
                                                 <input type="checkbox" name="attrib" class="form-check-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
                                                 <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
                                             </div>
@@ -630,12 +630,14 @@
                         t-att-data-image_width="website.product_page_image_width"
                         t-att-data-image_layout="website.product_page_image_layout">
                         <t t-set="image_cols" t-value="website._get_product_page_proportions()"/>
-                        <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images" t-if="website.product_page_image_width != 'none'">
+                        <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images position-relative" t-if="website.product_page_image_width != 'none'">
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
                         <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
+                            <t t-set="base_url" t-value="product.get_base_url()"/>
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="product.website_url"/>
+                            <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
+                            <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
                             <t t-if="is_view_active('website_sale.product_comment')">
                                 <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
                                     <t t-call="portal_rating.rating_widget_stars_static">
@@ -770,17 +772,26 @@
         </xpath>
     </template>
 
-    <template inherit_id='website_sale.product' id="product_picture_magnify" name="Image Zoom">
-        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
+    <!-- Product options: Zoom -->
+    <template inherit_id='website_sale.product' id="product_picture_magnify_hover" name="Automatic Image Zoom">
+        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
+            <attribute name="data-ecom-zoom-auto">1</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
         </xpath>
     </template>
 
-    <template inherit_id='website_sale.product' id="product_picture_magnify_auto" active="False" name="Automatic Image Zoom">
-        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
-            <attribute name="data-ecom-zoom-auto">1</attribute>
+    <template inherit_id='website_sale.product' id="product_picture_magnify_click" active="False" name="Image Zoom On Click">
+        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
+            <attribute name="data-ecom-zoom-click">1</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+        </xpath>
+    </template>
 
+    <template inherit_id='website_sale.product' id="product_picture_magnify_both" active="False" name="Automatic Image Zoom And On Click">
+        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
+            <attribute name="data-ecom-zoom-auto">1</attribute>
+            <attribute name="data-ecom-zoom-click">1</attribute>
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
         </xpath>
     </template>
 
@@ -896,7 +907,7 @@
                 <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
                 <t t-if="len(filtered_sorted_variants) &gt; 1">
                     <div class="mb-4">
-                        <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control form-check mb-1">
+                        <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="form-check mb-1">
                             <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
                             <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
                             <input type="radio" name="product_id" class="form-check-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
@@ -1688,7 +1699,7 @@
 
     <template id="payment_footer" name="Payment">
         <div name="o_checkbox_container"
-             class="custom-control form-check mt-2 o_accept_tc_button"/>
+             class="form-check mt-2 o_accept_tc_button"/>
         <div class="float-start mt-2">
             <a role="button" href="/shop/cart" class="btn btn-secondary">
                 <i class="fa fa-chevron-left"/> Return to Cart
@@ -1992,10 +2003,10 @@
     </template>
 
     <template id="website_sale.shop_product_image">
-        <div t-if="product_image._name == 'product.image' and product_image.embed_code" t-att-class="image_classes + 'ratio ratio-16x9'">
+        <div t-if="product_image._name == 'product.image' and product_image.embed_code" t-att-class="image_classes + ' ratio ratio-16x9'">
             <t t-out="product_image.embed_code"/>
         </div>
-        <div t-else="" t-field="product_image.image_1920" t-att-class="image_classes + ' oe_unmovable'" t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
+        <div t-else="" t-field="product_image.image_1920" t-att-class="image_classes + ' oe_unmovable'" t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
     </template>
 
     <!-- Product page images: Carousel -->
@@ -2114,5 +2125,16 @@
             <button class="btn btn-link btn-sm p-0" t-out="category.name"
                 t-attf-onclick="location.href='/shop/category/#{slug(category)}';return false;"/>
         </t>
+    </template>
+
+    <template id="sale_order_re_order_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
+        <xpath expr="//t[@t-set='entries']/ul/li" position="after">
+            <li t-if="request.website.enabled_portal_reorder_button and sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()" class="list-group-item flex-grow-1">
+                <button class="btn btn-primary w-100 o_wsale_reorder_button" t-att-data-sale-order-id="sale_order.id">
+                    <i class="fa fa-rotate-right me-1"/>
+                    Order Again
+                </button>
+            </li>
+        </xpath>
     </template>
 </odoo>

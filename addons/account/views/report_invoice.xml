@@ -197,33 +197,17 @@
                             </div>
                         </div>
                     </div>
-                    <t t-set="early_pay_totals" t-value="o._get_report_early_payment_totals_values()"/>
-                    <t t-if="early_pay_totals">
-                        <div>
-                            <p>
-                                <strong>
-                                    Early Payment (before <span t-esc="o.invoice_payment_term_id._get_last_date_for_discount(o.invoice_date)"/>):
-                                    <span t-esc="early_pay_totals['formatted_amount_total']"/>
-                                    (<span t-esc="o.invoice_payment_term_id.percentage_to_discount"/> % discount)
-                                </strong>
-                            </p>
-                        </div>
-                        <div id="total-early" class="row">
-                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}">
-                                <table class="table table-sm" style="page-break-inside: avoid;">
-                                    <t t-call="account.document_tax_totals">
-                                        <t t-set="tax_totals" t-value="early_pay_totals"/>
-                                    </t>
-                                </table>
-                            </div>
-                        </div>
-                    </t>
-
-                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication" class="mt-4">
+                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
                     </p>
                     <div t-if="o.invoice_payment_term_id" name="payment_term">
-                        <span t-field="o.invoice_payment_term_id.note"/>
+                        <div t-field="o.invoice_payment_term_id.note"/>
+                        <t t-set="terms" t-value="o.invoice_payment_term_id.compute(o.amount_total, o.amount_total_in_currency_signed, o.invoice_date, o.currency_id)"/>
+                        <t t-if="o.invoice_payment_term_id.display_on_invoice" t-foreach="o.invoice_payment_term_id._get_amount_by_date(terms, o.currency_id).items()" t-as="pay_term_line">
+                            <div>
+                                <span t-esc="pay_term_line[1]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/> are due on <span t-esc="pay_term_line[0]"/>
+                            </div>
+                        </t>
                     </div>
                     <div t-if="not is_html_empty(o.narration)" name="comment">
                         <span t-field="o.narration"/>

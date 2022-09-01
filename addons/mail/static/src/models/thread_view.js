@@ -75,11 +75,11 @@ registerModel({
          * Starts editing the last message of this thread from the current user.
          */
         startEditingLastMessageFromCurrentUser() {
-            const messageListViewMessageViewItems = this.messageListView.messageListViewMessageViewItems;
-            messageListViewMessageViewItems.reverse();
-            const messageListViewMessageViewItem = messageListViewMessageViewItems.find(messageListViewMessageViewItem => messageListViewMessageViewItem.message.isCurrentUserOrGuestAuthor && messageListViewMessageViewItem.message.canBeDeleted);
-            if (messageListViewMessageViewItem) {
-                messageListViewMessageViewItem.messageView.startEditing();
+            const messageListViewItems = this.messageListView.messageListViewItems;
+            messageListViewItems.reverse();
+            const messageListViewItem = messageListViewItems.find(messageListViewItem => messageListViewItem.message.isCurrentUserOrGuestAuthor && messageListViewItem.message.canBeDeleted);
+            if (messageListViewItem) {
+                messageListViewItem.messageView.startEditing();
             }
         },
         _computeCallSettingsMenu() {
@@ -154,8 +154,8 @@ registerModel({
             if (!this.messageListView) {
                 return clear();
             }
-            const { length, [length - 1]: messageListViewMessageViewItem } = this.messageListView.messageListViewMessageViewItems;
-            return messageListViewMessageViewItem ? messageListViewMessageViewItem.messageView : clear();
+            const { length, [length - 1]: messageListViewItem } = this.messageListView.messageListViewItems;
+            return messageListViewItem && messageListViewItem.messageView ? messageListViewItem.messageView : clear();
         },
         /**
          * @private

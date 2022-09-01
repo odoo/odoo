@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { bp } from "./py_parser";
-import { PyDate, PyDateTime } from './py_date';
+import { PyDate, PyDateTime } from "./py_date";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -40,7 +40,7 @@ export function toPyValue(value) {
                 return { type: 1, value };
             } else {
                 const content = {};
-                for (let key in value) {
+                for (const key in value) {
                     content[key] = toPyValue(value[key]);
                 }
                 return { type: 11 /* Dictionary */, value: content };
@@ -79,7 +79,7 @@ export function formatAST(ast, lbp = 0) {
         }
         case 11 /* Dictionary */: {
             const pairs = [];
-            for (let k in ast.value) {
+            for (const k in ast.value) {
                 pairs.push(`"${k}": ${formatAST(ast.value[k])}`);
             }
             return `{` + pairs.join(", ") + `}`;
@@ -105,7 +105,7 @@ export function formatAST(ast, lbp = 0) {
         case 8 /* FunctionCall */: {
             const args = ast.args.map(formatAST);
             const kwargs = [];
-            for (let kwarg in ast.kwargs) {
+            for (const kwarg in ast.kwargs) {
                 kwargs.push(`${kwarg} = ${formatAST(ast.kwargs[kwarg])}`);
             }
             const argStr = args.concat(kwargs).join(", ");

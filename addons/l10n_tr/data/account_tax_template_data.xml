@@ -12,29 +12,20 @@
         <field name="chart_template_id" ref="chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_kdv_18"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('tr391'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('tr191'),
             }),
         ]"/>
     </record>
-
     <record id="tr_kdv_satis_purchase_18" model="account.tax.template">
         <field name="sequence">11</field>
         <field name="description">KDV %18(purchase)</field>
@@ -46,23 +37,15 @@
         <field name="chart_template_id" ref="chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_kdv_18"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('tr391'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('tr191'),
             }),

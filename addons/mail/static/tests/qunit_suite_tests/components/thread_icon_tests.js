@@ -25,7 +25,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         ],
         channel_type: 'chat',
     });
-    const { openDiscuss } = await start();
+    const { messaging, openDiscuss } = await start();
     await openDiscuss();
 
     assert.containsOnce(
@@ -39,16 +39,17 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         "should have thread icon with persona IM status icon 'online'"
     );
 
-    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': true,
-            'partner_id': resPartnerId1,
-            'partner_name': "Demo",
-        });
-    });
+        },
+    }));
     assert.containsOnce(
         document.body,
         '.o_ThreadIcon_typing',
@@ -61,14 +62,16 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     );
 
     // simulate receive typing notification from demo "no longer is typing"
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
+    await afterNextRender(() => messaging.rpc({
+        route: '/mail/channel/notify_typing',
+        params: {
             'channel_id': mailChannelId1,
+            'context': {
+                'mockedPartnerId': resPartnerId1,
+            },
             'is_typing': false,
-            'partner_id': resPartnerId1,
-            'partner_name': "Demo",
-        });
-    });
+        },
+    }));
     assert.containsOnce(
         document.body,
         '.o_ThreadIcon_online',

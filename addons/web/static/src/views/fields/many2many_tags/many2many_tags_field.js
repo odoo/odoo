@@ -40,7 +40,8 @@ export class Many2ManyTagsField extends Component {
         this.activeActions = useActiveActions({
             fieldType: "many2many",
             crudOptions: {
-                create: this.props.canQuickCreate && this.props.createDomain,
+                create: this.props.canCreate && this.props.createDomain,
+                createEdit: this.props.canCreateEdit,
                 onDelete: removeRecord,
             },
             getEvalParams: (props) => {
@@ -286,7 +287,9 @@ Many2ManyTagsField.components = {
 Many2ManyTagsField.props = {
     ...standardFieldProps,
     canEditColor: { type: Boolean, optional: true },
+    canCreate: { type: Boolean, optional: true },
     canQuickCreate: { type: Boolean, optional: true },
+    canCreateEdit: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
     createDomain: { type: [Array, Boolean], optional: true },
     placeholder: { type: String, optional: true },
@@ -294,8 +297,10 @@ Many2ManyTagsField.props = {
     nameCreateField: { type: String, optional: true },
 };
 Many2ManyTagsField.defaultProps = {
+    canCreate: true,
     canEditColor: true,
     canQuickCreate: true,
+    canCreateEdit: true,
     nameCreateField: "name",
 };
 
@@ -304,14 +309,21 @@ Many2ManyTagsField.supportedTypes = ["many2many"];
 Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
+Many2ManyTagsField.isSet = (value) => value.count > 0;
 
 Many2ManyTagsField.extractProps = ({ attrs, field }) => {
+    const noCreate = Boolean(attrs.options.no_create);
+    const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
+    const noQuickCreate = Boolean(attrs.options.no_quick_create);
+    const noCreateEdit = Boolean(attrs.options.no_create_edit);
+
     return {
         colorField: attrs.options.color_field,
         nameCreateField: attrs.options.create_name_field,
         canEditColor: !attrs.options.no_edit_color,
         relation: field.relation,
-        canQuickCreate: !attrs.options.no_quick_create,
+        canQuickCreate: canCreate && !noQuickCreate,
+        canCreateEdit: canCreate && !noCreateEdit,
         createDomain: attrs.options.create,
         placeholder: attrs.placeholder,
     };

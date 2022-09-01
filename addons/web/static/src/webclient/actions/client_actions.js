@@ -14,7 +14,7 @@ export function displayNotificationAction(env, action) {
         title: params.title,
         type: params.type || "info",
     };
-    let links = (params.links || []).map((link) => {
+    const links = (params.links || []).map((link) => {
         return `<a href="${escape(link.url)}" target="_blank">${escape(link.label)}</a>`;
     });
     const message = owl.markup(sprintf(escape(params.message), ...links));

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="resource.SectionListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" owl="1">
+        <xpath expr="//t[@t-if='activeActions']" position="attributes">
+            <attribute name="t-if">activeActions and !isSection(record)</attribute>
+        </xpath>
+    </t>
+
+</templates>

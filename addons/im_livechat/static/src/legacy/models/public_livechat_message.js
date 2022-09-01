@@ -20,7 +20,7 @@ const PublicLivechatMessage = Class.extend({
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
      * @param {Messaging} messaging
      * @param {Object} data
-     * @param {Array} [data.author_id]
+     * @param {Object|Array} [data.author]
      * @param {string} [data.body = ""]
      * @param {string} [data.date] the server-format date time of the message.
      *   If not provided, use current date time for this message.
@@ -37,13 +37,13 @@ const PublicLivechatMessage = Class.extend({
         this._id = data.id;
         this._isDiscussion = data.is_discussion;
         this._isNotification = data.is_notification;
-        this._serverAuthorID = data.author_id;
+        this._serverAuthor = data.author;
         this._type = data.message_type || undefined;
 
         this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
-        this._serverURL = this.messaging.publicLivechatGlobal.livechatButtonView.serverUrl;
+        this._serverURL = this.messaging.publicLivechatGlobal.serverUrl;
 
-        if (parent.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
+        if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
             this._chatbotStepId = data.chatbot_script_step_id;
             this._chatbotStepAnswers = data.chatbot_step_answers;
             this._chatbotStepAnswerId = data.chatbot_selected_answer_id;
@@ -64,15 +64,7 @@ const PublicLivechatMessage = Class.extend({
         if (!this.hasAuthor()) {
             return -1;
         }
-        return this._serverAuthorID[0];
-    },
-    /**
-     * Threads do not have an im status by default
-     *
-     * @return {undefined}
-     */
-    getAuthorImStatus() {
-        return undefined;
+        return this._serverAuthor.id;
     },
     /**
      * Get the relative url of the avatar to display next to the message
@@ -155,34 +147,6 @@ const PublicLivechatMessage = Class.extend({
         return this._id;
     },
     /**
-     * Gets the class to use as the notification icon.
-     *
-     * @returns {string}
-     */
-    getNotificationIcon() {
-        if (!this.hasNotificationsError()) {
-            return 'fa fa-envelope-o';
-        }
-        return 'fa fa-envelope';
-    },
-    /**
-     * Gets the list of notifications of this message, in no specific order.
-     * By default messages do not have notifications.
-     *
-     * @returns {Object[]}
-     */
-    getNotifications() {
-        return [];
-    },
-    /**
-     * Gets the text to display next to the notification icon.
-     *
-     * @returns {string}
-     */
-    getNotificationText() {
-        return '';
-    },
-    /**
      * Get the time elapsed between sent message and now
      *
      * @return {string}
@@ -205,44 +169,7 @@ const PublicLivechatMessage = Class.extend({
      * @return {boolean}
      */
     hasAuthor() {
-        return !!(this._serverAuthorID && this._serverAuthorID[0]);
-    },
-    /**
-     * State whether this message has an email of its sender.
-     * By default, messages do not have any email of its sender.
-     *
-     * @return {string}
-     */
-    hasEmailFrom() {
-        return false;
-    },
-    /**
-     * States whether this message has some notifications.
-     *
-     * @returns {boolean}
-     */
-    hasNotifications() {
-        return this.getNotifications().length > 0;
-    },
-    /**
-     * States whether this message has notifications that are in error.
-     *
-     * @returns {boolean}
-     */
-    hasNotificationsError() {
-        return this.getNotifications().some(notif =>
-            notif.notification_status === 'exception' ||
-            notif.notification_status === 'bounce'
-        );
-    },
-    /**
-     * State whether this message has a subject
-     * By default, messages do not have any subject.
-     *
-     * @return {boolean}
-     */
-    hasSubject() {
-        return false;
+        return Boolean(this._serverAuthor && this._serverAuthor.id);
     },
     /**
      * State whether this message is empty
@@ -250,25 +177,7 @@ const PublicLivechatMessage = Class.extend({
      * @return {boolean}
      */
     isEmpty() {
-        return !this.hasTrackingValues() &&
-        !this.getBody();
-    },
-    /**
-     * By default, messages do not have any subtype description
-     *
-     * @return {boolean}
-     */
-    hasSubtypeDescription() {
-        return false;
-    },
-    /**
-     * State whether this message contains some tracking values
-     * By default, messages do not have any tracking values.
-     *
-     * @return {boolean}
-     */
-    hasTrackingValues() {
-        return false;
+        return !this.getBody();
     },
     /**
      * State whether this message is a discussion
@@ -277,24 +186,6 @@ const PublicLivechatMessage = Class.extend({
      */
     isDiscussion() {
         return this._isDiscussion;
-    },
-    /**
-     * State whether this message is linked to a document thread
-     * By default, messages are not linked to a document thread.
-     *
-     * @return {boolean}
-     */
-    isLinkedToDocumentThread() {
-        return false;
-    },
-    /**
-     * State whether this message is needaction
-     * By default, messages are not needaction.
-     *
-     * @return {boolean}
-     */
-    isNeedaction() {
-        return false;
     },
     /**
      * State whether this message is a note (i.e. a message from "Log note")
@@ -319,33 +210,6 @@ const PublicLivechatMessage = Class.extend({
      */
     isNotification() {
         return this._isNotification;
-    },
-    /**
-     * State whether this message is starred
-     * By default, messages are not starred.
-     *
-     * @return {boolean}
-     */
-    isStarred() {
-        return false;
-    },
-    /**
-     * State whether this message is a system notification
-     * By default, messages are not system notifications
-     *
-     * @return {boolean}
-     */
-    isSystemNotification() {
-        return false;
-    },
-    /**
-     * States whether the current message needs moderation in general.
-     * By default, messages do not require any moderation.
-     *
-     * @returns {boolean}
-     */
-    needsModeration() {
-        return false;
     },
     setChatbotStepAnswerId(chatbotStepAnswerId) {
         this._chatbotStepAnswerId = chatbotStepAnswerId;
@@ -385,7 +249,7 @@ const PublicLivechatMessage = Class.extend({
         if (!this.hasAuthor()) {
             return "";
         }
-        return this._serverAuthorID[1];
+        return this._serverAuthor.name || this._serverAuthor.user_livechat_username;
     },
     /**
      * State whether the current user is the author of this message

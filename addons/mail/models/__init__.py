@@ -24,6 +24,7 @@ from . import mail_blacklist
 from . import mail_followers
 from . import mail_gateway_allowed
 from . import mail_message_reaction
+from . import mail_message_schedule
 from . import mail_message_subtype
 from . import mail_message
 from . import mail_mail
@@ -47,6 +48,7 @@ from . import ir_actions_server
 from . import ir_attachment
 from . import ir_config_parameter
 from . import ir_http
+from . import ir_mail_server
 from . import ir_model
 from . import ir_model_fields
 from . import ir_translation

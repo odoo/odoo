@@ -163,6 +163,11 @@ export class ListArchParser extends XMLParser {
                 treeAttr.noOpen = archParseBoolean(node.getAttribute("no_open") || "");
                 treeAttr.expand = archParseBoolean(xmlDoc.getAttribute("expand") || "");
                 treeAttr.decorations = getDecoration(xmlDoc);
+
+                // custom open action when clicking on record row
+                const action = xmlDoc.getAttribute("action");
+                const type = xmlDoc.getAttribute("type");
+                treeAttr.openAction = action && type ? { action, type } : null;
             }
         });
 
