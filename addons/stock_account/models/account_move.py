@@ -247,6 +247,8 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
+
     def _compute_account_id(self):
         super()._compute_account_id()
         input_lines = self.filtered(lambda line: (
