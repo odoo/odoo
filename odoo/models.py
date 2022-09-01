@@ -24,6 +24,7 @@
 import collections
 import contextlib
 import datetime
+import time
 import dateutil
 import fnmatch
 import functools
@@ -50,6 +51,7 @@ import psycopg2
 import psycopg2.extensions
 from psycopg2.extras import Json
 
+time_ns = time.time_ns.__call__
 import odoo
 from . import SUPERUSER_ID
 from . import api
@@ -5677,11 +5679,39 @@ class BaseModel(metaclass=MetaModel):
         new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
         if not ids:
             return self
+
+        # Special version without query
+        no_query_time = -time_ns()
+        no_query_success = False
+        field_to_check = next((f for f in self._fields.values() if f.prefetch is True), None)
+        if field_to_check:
+            field_cache = self.env.cache._get_field_cache(self, field_to_check)
+            if all(_id in field_cache for _id in ids):
+                no_query_success = True  # return instead
+        no_query_time += time_ns()
+
+        query_time = -time_ns()
         query = Query(self.env, self._table, self._table_sql)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         self.env.cr.execute(query.select())
+        # TODO: idea, put in cache the result in ID cache field of this record.
         valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
-        return self.browse(i for i in self._ids if i in valid_ids)
+
+        result = self.browse(i for i in self._ids if i in valid_ids)
+        query_time += time_ns()
+
+        if no_query_success:
+            old = query_time / 1_000_000
+            new = no_query_time / 1_000_000
+            print(f"exists() with speedup {new:.4f}ms vs {old:.4f}ms = {100 * new / old}% ({len(self)} : {self[:10]} records)")
+            if result != self:
+                print("OPTIMISATION IS NOT CORRECT")
+        else:
+            old = query_time / 1_000_000
+            new = (no_query_time + query_time) / 1_000_000
+            print(f"exists() without speedup {new:.4f}ms vs {old:.4f}ms = {100 * new / old}% ({len(self)} : {self[:10]} records)")
+
+        return result
 
     def _check_recursion(self, parent=None):
         """
