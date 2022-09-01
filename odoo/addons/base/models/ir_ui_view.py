@@ -95,19 +95,21 @@ def transfer_node_to_modifiers(node, modifiers, context=None):
     # Don't deal with groups, it is done by check_group().
     # Need the context to evaluate the invisible attribute on tree views.
     # For non-tree views, the context shouldn't be given.
-    if node.get('attrs'):
-        attrs = node.get('attrs').strip()
-        modifiers.update(ast.literal_eval(attrs))
+    attrs = node.attrib.pop('attrs', None)
+    if attrs:
+        modifiers.update(ast.literal_eval(attrs.strip()))
 
-    if node.get('states'):
+    states = node.attrib.pop('states', None)
+    if states:
+        states = states.split(',')
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
             # TODO combine with AND or OR, use implicit AND for now.
-            modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
+            modifiers['invisible'].append(('state', 'not in', states))
         else:
-            modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
+            modifiers['invisible'] = [('state', 'not in', states)]
 
     for attr in ('invisible', 'readonly', 'required'):
-        value_str = node.get(attr)
+        value_str = node.attrib.pop(attr, None)
         if value_str:
             value = bool(quick_eval(value_str, {'context': context or {}}))
             if (attr == 'invisible'
@@ -131,7 +133,8 @@ def simplify_modifiers(modifiers):
 def transfer_modifiers_to_node(modifiers, node):
     if modifiers:
         simplify_modifiers(modifiers)
-        node.set('modifiers', json.dumps(modifiers))
+        if modifiers:
+            node.set('modifiers', json.dumps(modifiers))
 
 
 @lazy
