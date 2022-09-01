@@ -8,6 +8,7 @@ from odoo.tests import common, HttpCase, tagged
 from odoo.tests.common import HOST
 from odoo.tools import config, mute_logger
 from odoo.addons.website.tools import MockRequest
+from odoo.fields import Command
 
 
 @tagged('-at_install', 'post_install')
@@ -204,6 +205,7 @@ class TestPage(common.TransactionCase):
         self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
         self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
+
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
     def setUp(self):
@@ -336,3 +338,19 @@ class WithContext(HttpCase):
             self.assertEqual(canonical_url, f'{self.base_url()}/fr/page_1')
             self.assertEqual(alternate_en_url, f'{self.base_url()}/page_1')
             self.assertEqual(alternate_fr_url, f'{self.base_url()}/fr/page_1')
+
+    def test_07_not_authorized(self):
+        # Create page that requires specific user role.
+        specific_page = self.page.copy({'website_id': self.env['website'].get_current_website().id})
+        specific_page.write({
+            'arch': self.page.arch.replace('I am a generic page', 'I am a specific page not available for visitors'),
+            'is_published': True,
+            'visibility': 'restricted_group',
+            'groups_id': [Command.link(self.ref('website.group_website_publisher'))],
+        })
+        # Access page as anonymous visitor.
+        self.authenticate(None, None)
+        r = self.url_open('/page_1')
+        # Check that is is rendered as a website page.
+        self.assertEqual(403, r.status_code, "Must fail with 403")
+        self.assertTrue('id="wrap"' in r.text, "Must be rendered as a website page")
