@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { addFields, addRecordMethods, patchRecordMethods } from '@mail/model/model_core';
+import { addFields, addRecordMethods, patchFields, patchRecordMethods } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 import '@mail/models/activity_menu_view'; // ensure the model definition is loaded before the patch
@@ -67,6 +67,17 @@ addRecordMethods('ActivityMenuView', {
     },
 });
 
+patchFields('ActivityMenuView', {
+    activityGroups: {
+        sort() {
+            return [
+                ['truthy-first', 'isNote'],
+                ...this._super(),
+            ];
+        },
+    },
+});
+
 patchRecordMethods('ActivityMenuView', {
     /**
      * @override
@@ -86,14 +97,6 @@ patchRecordMethods('ActivityMenuView', {
             return;
         }
         this._super(ev);
-    },
-    /**
-     * @override
-     */
-    _sortActivityGroups(ev) {
-        const res = this._super();
-        res.unshift(['truthy-first', 'isNote']);
-        return res;
     },
 });
 

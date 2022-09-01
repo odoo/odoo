@@ -483,11 +483,12 @@ export class ModelManager {
                 }
                 // 4. Computed field.
                 if (field.compute) {
-                    if (!(typeof field.compute === 'string')) {
-                        throw new Error(`Property "compute" of field(${fieldName}) on ${model} must be a string (instance method name).`);
-                    }
-                    if (!model.prototype[field.compute]) {
-                        throw new Error(`Property "compute" of field(${fieldName}) on ${model} does not refer to an instance method of this model.`);
+                    if (typeof field.compute === 'string') {
+                        if (!model.prototype[field.compute]) {
+                            throw new Error(`Property "compute" of field(${fieldName}) on ${model} does not refer to an instance method of this model.`);
+                        }
+                    } else if (typeof field.compute !== 'function') {
+                        throw new Error(`Property "compute" of field(${fieldName}) on ${model} must be a string (instance method name) or a function (the actual compute).`);
                     }
                     if ('readonly' in field) {
                         throw new Error(`Computed field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicit for computed fields).`);
@@ -794,7 +795,7 @@ export class ModelManager {
                         name: `compute ${field} of ${record}`,
                         onChange: (info) => {
                             this.startListening(listener);
-                            const res = record[field.compute]();
+                            const res = field.compute.call(record);
                             this.stopListening(listener);
                             this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
                         },

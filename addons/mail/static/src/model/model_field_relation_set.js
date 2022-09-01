@@ -56,7 +56,7 @@ export class RelationSet {
                 onChange: info => {
                     // access all useful values of current record (and relations) to mark them as dependencies
                     this.record.modelManager.startListening(listener);
-                    const compareDefinition = this.record[this.field.sort]();
+                    const compareDefinition = this.field.sort.call(this.record);
                     const relatedPathSet = new Set(compareDefinition.map(operation => operation[1])); // only keep unique paths to avoid unnecessary listeners
                     for (const relatedPath of relatedPathSet) {
                         followRelations(value, relatedPath);

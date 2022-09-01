@@ -151,10 +151,26 @@ export class ModelField {
             }
         }
         /**
-         * Automatically make computes and relateds readonly.
+         * Automatically make relateds readonly.
          */
-        if (this.compute || this.related) {
+        if (this.related) {
             this.readonly = true;
+        }
+        if (this.compute) {
+            // Automatically make computes readonly.
+            this.readonly = true;
+            // If the compute function is not inlined, retrieve it from model
+            // methods.
+            if (typeof this.compute === 'string') {
+                this.compute = this.model.prototype[this.compute];
+            }
+        }
+        if (this.sort) {
+            // If the sort function is not inlined, retrieve it from model
+            // methods.
+            if (typeof this.sort === 'string') {
+                this.sort = this.model.prototype[this.sort];
+            }
         }
     }
 

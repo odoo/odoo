@@ -112,21 +112,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {DiscussSidebarCategory|FieldCommand}
-         */
-        _computeDiscussSidebarCategory() {
-            switch (this.channel_type) {
-                case 'channel':
-                    return this.messaging.discuss.categoryChannel;
-                case 'chat':
-                case 'group':
-                    return this.messaging.discuss.categoryChat;
-                default:
-                    return clear();
-            }
-        },
-        /**
-         * @private
          * @returns {Object|FieldCommand}
          */
         _computeDiscussSidebarCategoryItem() {
@@ -196,16 +181,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            return {
-                id: this.id,
-                model: 'mail.channel',
-            };
-        },
-        /**
-         * @private
          * @returns {integer}
          */
         _computeUnknownMemberCount() {
@@ -262,7 +237,17 @@ registerModel({
          * Useful to compute `discussSidebarCategoryItem`.
          */
         discussSidebarCategory: one('DiscussSidebarCategory', {
-            compute: '_computeDiscussSidebarCategory',
+            compute() {
+                switch (this.channel_type) {
+                    case 'channel':
+                        return this.messaging.discuss.categoryChannel;
+                    case 'chat':
+                    case 'group':
+                        return this.messaging.discuss.categoryChat;
+                    default:
+                        return clear();
+                }
+            },
         }),
         /**
          * Determines the discuss sidebar category item that displays this
@@ -321,7 +306,12 @@ registerModel({
             default: false,
         }),
         thread: one('Thread', {
-            compute: '_computeThread',
+            compute() {
+                return {
+                    id: this.id,
+                    model: 'mail.channel',
+                };
+            },
             inverse: 'channel',
             isCausal: true,
             required: true,

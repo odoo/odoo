@@ -273,6 +273,67 @@ function assertNameIsAvailableOnRecords(name, modelDefinition) {
 }
 
 /**
+ * Overrides the fields of the model specified by the `modelName`.
+ *
+ * @param {string} modelName The name of the model to which to apply the patch.
+ * @param {Object} fields Fields to be overriden. key = name, value = field attributes.
+ */
+export function patchFields(modelName, fields) {
+    if (!registry.has(modelName)) {
+        throw new Error(`Cannot patch fields on model "${modelName}": model must be registered before being patched.`);
+    }
+    const definition = registry.get(modelName);
+    for (const [fieldName, attributes] of Object.entries(fields)) {
+        const fieldDefinition = definition.get('fields').get(fieldName);
+        if (!fieldDefinition) {
+            throw new Error(`Cannot patch field "${fieldName}" on "${modelName}": the field does not exist.`);
+        }
+        for (const [attributeName, attributeData] of Object.entries(attributes)) {
+            switch (attributeName) {
+                case 'compute':
+                    addContextToErrors(() => {
+                        if (!fieldDefinition.compute) {
+                            throw new Error(`not a computed field.`);
+                        }
+                        if (typeof fieldDefinition.compute !== 'function') {
+                            throw new Error(`the compute function must be inlined in the original definition.`);
+                        }
+                        if (typeof attributeData !== 'function') {
+                            throw new Error(`the compute must be a function.`);
+                        }
+                    }, `Cannot patch compute of field "${fieldName}" on "${modelName}": `);
+                    const computeBeforePatch = fieldDefinition.compute;
+                    fieldDefinition.compute = function () {
+                        this._super = computeBeforePatch;
+                        return attributeData.call(this);
+                    };
+                    break;
+                case 'sort':
+                    addContextToErrors(() => {
+                        if (!fieldDefinition.sort) {
+                            throw new Error(`not a sorted field.`);
+                        }
+                        if (typeof fieldDefinition.sort !== 'function') {
+                            throw new Error(`the sort function must be inlined in the original definition.`);
+                        }
+                        if (typeof attributeData !== 'function') {
+                            throw new Error(`the sort must be a function.`);
+                        }
+                    }, `Cannot patch sort function of field "${fieldName}" on "${modelName}": `);
+                    const sortBeforePatch = fieldDefinition.sort;
+                    fieldDefinition.sort = function () {
+                        this._super = sortBeforePatch;
+                        return attributeData.call(this);
+                    };
+                    break;
+                default:
+                    throw new Error(`Cannot patch field "${fieldName}" on "${modelName}": unsupported field attribute "${attributeName}".`);
+            }
+        }
+    }
+};
+
+/**
  * Overrides the lifecycle hooks of the model specified by the `modelName`.
  *
  * @param {string} modelName The name of the model to which to apply the patch.
