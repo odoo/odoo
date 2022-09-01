@@ -723,6 +723,83 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_save");
     });
 
+    QUnit.test("domain field: edit through selector (dynamic content)", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+
+        let rawDomain = `[("date", ">=", context_today())]`;
+        serverData.models.partner.records[0].foo = rawDomain;
+        serverData.models.partner.fields.bar.type = "char";
+        serverData.models.partner.records[0].bar = "partner";
+
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                </form>`,
+            "partner,false,search": `<search />`,
+        };
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "test",
+                res_id: 1,
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+        };
+
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC(route, { method }) {
+                assert.step(method || route);
+            },
+        });
+        assert.verifySteps(["/web/webclient/load_menus"]);
+
+        await doAction(webClient, 1);
+        assert.verifySteps(["/web/action/load", "get_views", "read", "search_count", "fields_get"]);
+
+        await click(target, ".o_form_button_edit");
+        assert.verifySteps(["search_count"]);
+        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+        assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
+
+        // Open and close the datepicker
+        await click(target, ".o_datepicker_input");
+        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+        await triggerEvent(window, null, "scroll");
+        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+        assert.verifySteps([]);
+
+        // Save
+        await click(target, ".o_form_button_save");
+        assert.verifySteps(["search_count"]);
+
+        // Edit again
+        await click(target, ".o_form_button_edit");
+        assert.verifySteps(["search_count"]);
+        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+
+        // Manually input a date
+        rawDomain = `[("date", ">=", "2020-09-09")]`;
+        await editInput(target, ".o_datepicker_input", "09/09/2020");
+        assert.verifySteps(["search_count"]);
+        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+
+        // Save
+        await click(target, ".o_form_button_save");
+        assert.verifySteps(["write", "read", "search_count"]);
+
+        // Edit again
+        await click(target, ".o_form_button_edit");
+        assert.verifySteps(["search_count"]);
+        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+    });
+
     QUnit.test("domain field without model", async function (assert) {
         serverData.models.partner.fields.model_name = { string: "Model name", type: "char" };
 
