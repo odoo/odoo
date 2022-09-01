@@ -24,7 +24,6 @@ registerModel({
             a.download = `RtcLogs_Channel${channel.id}_Session${channel.rtc.currentRtcSession.id}_${window.moment().format('YYYY-MM-DD_HH-mm')}.json`;
             a.click();
             window.URL.revokeObjectURL(url);
-            this.component.trigger('o-popover-close');
         },
     },
     fields: {
@@ -33,12 +32,15 @@ registerModel({
          */
         component: attr(),
         callActionListView: one('CallActionListView', {
-            identifying: true,
-            inverse: 'callOptionMenu',
+            related: 'popoverViewOwner.callActionListViewOwnerAsMoreMenu',
         }),
         callView: one('CallView', {
             related: 'callActionListView.callView',
             required: true,
+        }),
+        popoverViewOwner: one('PopoverView', {
+            identifying: true,
+            inverse: 'callOptionMenuView',
         }),
     },
 });

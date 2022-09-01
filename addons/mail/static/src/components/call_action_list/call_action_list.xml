@@ -87,20 +87,17 @@
                             </button>
                         </t>
                         <t t-if="messaging.modelManager.isDebug">
-                            <Popover position="'top'" popoverClass="'o_CallActionList_popover'">
                             <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
                                     aria-label="More"
                                     title="More"
                                     t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
+                                    t-on-click="callActionListView.onClickMore"
+                                    t-ref="moreButton"
                             >
                                 <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">
                                     <i class="fa fa-ellipsis-h fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall }"/>
                                 </div>
                             </button>
-                            <t t-set-slot="opened">
-                                <CallOptionMenu record="callActionListView.callOptionMenu"/>
-                            </t>
-                        </Popover>
                         </t>
                     </t>
                     <t t-if="!callActionListView.thread">

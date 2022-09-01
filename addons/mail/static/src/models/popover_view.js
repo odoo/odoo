@@ -44,6 +44,9 @@ registerModel({
             if (this.activityViewOwnerAsMarkDone) {
                 return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
             }
+            if (this.callActionListViewOwnerAsMoreMenu) {
+                return this.callActionListViewOwnerAsMoreMenu.moreButtonRef;
+            }
             if (this.callParticipantCardOwner) {
                 return this.callParticipantCardOwner.volumeMenuAnchorRef;
             }
@@ -58,6 +61,12 @@ registerModel({
             }
             if (this.messageViewOwnerAsNotificationContent) {
                 return this.messageViewOwnerAsNotificationContent.notificationIconRef;
+            }
+            return clear();
+        },
+        _computeCallOptionMenuView() {
+            if (this.callActionListViewOwnerAsMoreMenu) {
+                return {};
             }
             return clear();
         },
@@ -84,6 +93,9 @@ registerModel({
         _computeContent() {
             if (this.activityMarkDonePopoverContentView) {
                 return this.activityMarkDonePopoverContentView;
+            }
+            if (this.callOptionMenuView) {
+                return this.callOptionMenuView;
             }
             if (this.callParticipantCardPopoverContentView) {
                 return this.callParticipantCardPopoverContentView;
@@ -119,6 +131,9 @@ registerModel({
         _computeContentComponentName() {
             if (this.activityMarkDonePopoverContentView) {
                 return 'ActivityMarkDonePopoverContent';
+            }
+            if (this.callOptionMenuView) {
+                return 'CallOptionMenu';
             }
             if (this.callParticipantCardPopoverContentView) {
                 return 'CallParticipantCardPopoverContentView';
@@ -175,6 +190,9 @@ registerModel({
             if (this.activityViewOwnerAsMarkDone) {
                 return 'right';
             }
+            if (this.callActionListViewOwnerAsMoreMenu) {
+                return 'top';
+            }
             if (this.callParticipantCardOwner) {
                 return 'bottom';
             }
@@ -224,6 +242,15 @@ registerModel({
         anchorRef: attr({
             compute: '_computeAnchorRef',
             required: true,
+        }),
+        callActionListViewOwnerAsMoreMenu: one('CallActionListView', {
+            identifying: true,
+            inverse: 'moreMenuPopoverView',
+        }),
+        callOptionMenuView: one('CallOptionMenu', {
+            compute: '_computeCallOptionMenuView',
+            inverse: 'popoverViewOwner',
+            isCausal: true,
         }),
         callParticipantCardOwner: one('CallParticipantCard', {
             identifying: true,
