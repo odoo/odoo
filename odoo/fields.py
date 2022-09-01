@@ -4165,11 +4165,18 @@ class One2many(_RelationalMulti):
         comodel = records.env[self.comodel_name].with_context(**context)
         inverse = self.inverse_name
         inverse_field = comodel._fields[inverse]
-        get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
         domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
         lines = comodel.search(domain)
 
+        if len(records) == 1:
+            # optimization: all lines have the same value for 'inverse_field',
+            # so we don't need to fetch it from database
+            records.env.cache.insert_missing(records, self, [lines._ids])
+            records.env.cache.insert_missing(lines, inverse_field, itertools.repeat(records.id))
+            return
+
         # group lines by inverse field (without prefetching other fields)
+        get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
         group = defaultdict(list)
         for line in lines.with_context(prefetch_fields=False):
             # line[inverse] may be a record or an integer
