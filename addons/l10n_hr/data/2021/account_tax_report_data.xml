@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.hr"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_I" model="account.report.line">
+                <field name="name">I. TRANSAKCIJE KOJE NE PODLIJEŽU OPOREZIVANJU I OSLOBOĐENE - UKUPNO (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.)</field>
+                <field name="code">I</field>
+                <field name="aggregation_formula">I_1 + I_2 + I_3 + I_3 + I_5 + I_6 + I_7 + I_8 + I_9 + I_10</field>
+                <field name="sequence">2</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_I_1" model="account.report.line">
+                        <field name="name">1. ISPORUKE U RH ZA KOJE PDV OBRAČUNAVA PRIMATELJ (tuzemni prijenos porezne obveze)</field>
+                        <field name="code">I_1</field>
+                        <field name="sequence">3</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.1. Tuzemni PPO</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_2" model="account.report.line">
+                        <field name="name">2. ISPORUKE DOBARA OBAVLJENE U DRUGIM DRŽAVAMA ČLANICAMA</field>
+                        <field name="code">I_2</field>
+                        <field name="sequence">4</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.2. Isporuke u drugim čl.</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_3" model="account.report.line">
+                        <field name="name">3. ISPORUKE DOBARA UNUTAR EU</field>
+                        <field name="code">I_3</field>
+                        <field name="sequence">5</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_3_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.3. Dobra EU</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_4" model="account.report.line">
+                        <field name="name">4. OBAVLJENE USLUGE UNUTAR EU</field>
+                        <field name="code">I_4</field>
+                        <field name="sequence">6</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_4_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.4. Usluge EU</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_5" model="account.report.line">
+                        <field name="name">5. OBAVLJENE ISPORUKE OSOBAMA BEZ SJEDIŠTA U RH</field>
+                        <field name="code">I_5</field>
+                        <field name="sequence">7</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.5. Bez sjedišta</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_6" model="account.report.line">
+                        <field name="name">6. SASTAVLJANJE I POSTAVLJANJE DOBARA U DRUGOJ DRŽAVI ČLANICI EU</field>
+                        <field name="code">I_6</field>
+                        <field name="sequence">8</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_6_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.6. SiP EU</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_7" model="account.report.line">
+                        <field name="name">7. ISPORUKE NOVIH PRIJEVOZNIH SREDSTAVA U EU</field>
+                        <field name="code">I_7</field>
+                        <field name="sequence">9</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_7_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.7. Vozila EU</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_8" model="account.report.line">
+                        <field name="name">8. TUZEMNE ISPORUKE</field>
+                        <field name="code">I_8</field>
+                        <field name="sequence">10</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_8_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.8. Tuzemne</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_9" model="account.report.line">
+                        <field name="name">9. IZVOZNE ISPORUKE</field>
+                        <field name="code">I_9</field>
+                        <field name="sequence">11</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_9_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.9. Izvoz</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_I_10" model="account.report.line">
+                        <field name="name">10. OSTALA OSLOBOĐENJA</field>
+                        <field name="code">I_10</field>
+                        <field name="sequence">12</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_I_10_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.10. Ost.osl.</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_II_o" model="account.report.line">
+                <field name="name">II. OPOREZIVE TRANSAKCIJE – UKUPNO OSNOVICE</field>
+                <field name="code">II_o</field>
+                <field name="aggregation_formula">II_1_o + II_2_o + II_3_o + II_4_o + II_5_o + II_6_o + II_7_o  + II_8_o + II_9_o + II_10_o + II_11_o + II_12_o + II_13_o + II_14_o + II_15_o</field>
+                <field name="sequence">13</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_II_1_o" model="account.report.line">
+                        <field name="name">II.1 ISPORUKE DOBARA I USLUGA U RH po stopi 5%</field>
+                        <field name="code">II_1_o</field>
+                        <field name="sequence">14</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_1_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.1.PDV-5% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_2_o" model="account.report.line">
+                        <field name="name">II.2 ISPORUKE DOBARA I USLUGA U RH po stopi 13%</field>
+                        <field name="code">II_2_o</field>
+                        <field name="sequence">15</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_2_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.2.PDV-13% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_3_o" model="account.report.line">
+                        <field name="name">II.3 ISPORUKE DOBARA I USLUGA U RH po stopi 25%</field>
+                        <field name="code">II_3_o</field>
+                        <field name="sequence">16</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_3_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.3.PDV-25% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_4_o" model="account.report.line">
+                        <field name="name">4. PRIMLJENE ISPORUKE U RH ZA KOJE PDV OBRAČUNAVA PRIMATELJ (tuzemni prijenos porezne obveze)</field>
+                        <field name="code">II_4_o</field>
+                        <field name="sequence">17</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_4_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.4.PPO-PDV OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_5_o" model="account.report.line">
+                        <field name="name">5. STJECANJE DOBARA UNUTAR EU po stopi 5%</field>
+                        <field name="code">II_5_o</field>
+                        <field name="sequence">18</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_5_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.5.EU-PDV-D-5% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_6_o" model="account.report.line">
+                        <field name="name">6. STJECANJE DOBARA UNUTAR EU po stopi 13%</field>
+                        <field name="code">II_6_o</field>
+                        <field name="sequence">19</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_6_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.6.EU-PDV-D-13% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_7_o" model="account.report.line">
+                        <field name="name">7. STJECANJE DOBARA UNUTAR EU po stopi 25%</field>
+                        <field name="code">II_7_o</field>
+                        <field name="sequence">20</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_7_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.7.EU-PDV-D-25% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_8_o" model="account.report.line">
+                        <field name="name">8. PRIMLJENE USLUGE UNUTAR EU po stopi 5%</field>
+                        <field name="code">II_8_o</field>
+                        <field name="sequence">21</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_8_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.8.EU-PDV-U-5% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_9_o" model="account.report.line">
+                        <field name="name">9. PRIMLJENE USLUGE UNUTAR EU po stopi 13%</field>
+                        <field name="code">II_9_o</field>
+                        <field name="sequence">22</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_9_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.9.EU-PDV-U-13% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_10_o" model="account.report.line">
+                        <field name="name">10. PRIMLJENE USLUGE UNUTAR EU po stopi 25%</field>
+                        <field name="code">II_10_o</field>
+                        <field name="sequence">23</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_10_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.10.EU-PDV-U-25%-OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_11_o" model="account.report.line">
+                        <field name="name">11. PRIMLJENE ISPORUKE DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 5%</field>
+                        <field name="code">II_11_o</field>
+                        <field name="sequence">24</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_11_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.11.BS-PDV-5% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_12_o" model="account.report.line">
+                        <field name="name">12. PRIMLJENE ISPORUKE DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 13%</field>
+                        <field name="code">II_12_o</field>
+                        <field name="sequence">25</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_12_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.12.BS-PDV-13% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_13_o" model="account.report.line">
+                        <field name="name">13. PRIMLJENE ISPORUKE DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 25%</field>
+                        <field name="code">II_13_o</field>
+                        <field name="sequence">26</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_13_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.13.BS-PDV-25% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_14_o" model="account.report.line">
+                        <field name="name">14. NAKNADNO OSLOBOĐENJE IZVOZA U OKVIRU OSOBNOG PUTNIČKOG PROMETA</field>
+                        <field name="code">II_14_o</field>
+                        <field name="sequence">27</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_14_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.14. PUTNICI-OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_15_o" model="account.report.line">
+                        <field name="name">15. OBRAČUNANI PDV PRI UVOZU</field>
+                        <field name="code">II_15_o</field>
+                        <field name="sequence">28</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_15_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.15. UVOZ-OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_II_p" model="account.report.line">
+                <field name="name">II. OPOREZIVE TRANSAKCIJE – UKUPNO POREZI</field>
+                <field name="code">II_p</field>
+                <field name="aggregation_formula">II_1_p + II_2_p + II_3_p + II_4_p + II_5_p + II_6_p + II_7_p  + II_8_p + II_9_p + II_10_p + II_11_p + II_12_p + II_13_p + II_14_p + II_15_pII_1_p + II_2_p + II_3_p + II_4_p + II_5_p + II_6_p + II_7_p  + II_8_p + II_9_p + II_10_p + II_11_p + II_12_p + II_13_p + II_14_p + II_15_o</field>
+                <field name="sequence">13</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_II_1_p" model="account.report.line">
+                        <field name="name">II.1 ISPORUKE DOBARA I USLUGA U RH po stopi 5%</field>
+                        <field name="code">II_1_p</field>
+                        <field name="sequence">14</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_1_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.1.PDV-5% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_2_p" model="account.report.line">
+                        <field name="name">II.2 ISPORUKE DOBARA I USLUGA U RH po stopi 13%</field>
+                        <field name="code">II_2_p</field>
+                        <field name="sequence">15</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_2_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.2.PDV-13% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_3_p" model="account.report.line">
+                        <field name="name">II.3 ISPORUKE DOBARA I USLUGA U RH po stopi 25%</field>
+                        <field name="code">II_3_p</field>
+                        <field name="sequence">16</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_3_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.3.PDV-25% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_4_p" model="account.report.line">
+                        <field name="name">4. PRIMLJENE ISPORUKE U RH ZA KOJE PDV OBRAČUNAVA PRIMATELJ (tuzemni prijenos porezne obveze)</field>
+                        <field name="code">II_4_p</field>
+                        <field name="sequence">17</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_4_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.4.PPO-PDV POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_5_p" model="account.report.line">
+                        <field name="name">5. STJECANJE DOBARA UNUTAR EU po stopi 5%</field>
+                        <field name="code">II_5_p</field>
+                        <field name="sequence">18</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_5_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.5.EU-PDV-D-5% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_6_p" model="account.report.line">
+                        <field name="name">6. STJECANJE DOBARA UNUTAR EU po stopi 13%</field>
+                        <field name="code">II_6_p</field>
+                        <field name="sequence">19</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_6_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.6.EU-PDV-D-13% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_7_p" model="account.report.line">
+                        <field name="name">7. STJECANJE DOBARA UNUTAR EU po stopi 25%</field>
+                        <field name="code">II_7_p</field>
+                        <field name="sequence">20</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_7_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.7.EU-PDV-D-25% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_8_p" model="account.report.line">
+                        <field name="name">8. PRIMLJENE USLUGE UNUTAR EU po stopi 5%</field>
+                        <field name="code">II_8_p</field>
+                        <field name="sequence">21</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_8_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.8.EU-PDV-U-5% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_9_p" model="account.report.line">
+                        <field name="name">9. PRIMLJENE USLUGE UNUTAR EU po stopi 13%</field>
+                        <field name="code">II_9_p</field>
+                        <field name="sequence">22</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_9_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.9.EU-PDV-D-13% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_10_p" model="account.report.line">
+                        <field name="name">10. PRIMLJENE USLUGE UNUTAR EU po stopi 25%</field>
+                        <field name="code">II_10_p</field>
+                        <field name="sequence">23</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_10_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.10.EU-PDV-D-25% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_11_p" model="account.report.line">
+                        <field name="name">11. PRIMLJENE ISPORUKE DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 5%</field>
+                        <field name="code">II_11_p</field>
+                        <field name="sequence">24</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_11_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.11.BS-PDV-5% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_12_p" model="account.report.line">
+                        <field name="name">12. PRIMLJENE ISPORUKE DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 13%</field>
+                        <field name="code">II_12_p</field>
+                        <field name="sequence">25</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_12_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.12.BS-PDV-13% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_13_p" model="account.report.line">
+                        <field name="name">13. PRIMLJENE ISPORUKE DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 25%</field>
+                        <field name="code">II_13_p</field>
+                        <field name="sequence">26</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_13_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.13.BS-PDV-25% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_14_p" model="account.report.line">
+                        <field name="name">14. NAKNADNO OSLOBOĐENJE IZVOZA U OKVIRU OSOBNOG PUTNIČKOG PROMETA</field>
+                        <field name="code">II_14_p</field>
+                        <field name="sequence">27</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_14_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.14. PUTNICI-POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_II_15_p" model="account.report.line">
+                        <field name="name">15. OBRAČUNANI PDV PRI UVOZU</field>
+                        <field name="code">II_15_p</field>
+                        <field name="sequence">28</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_II_15_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.15. UVOZ-POR</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="account_tax_report_line_III_o" model="account.report.line">
+                <field name="name">III. OBRAČUNANI PRETPOREZ – UKUPNO OSNOVICE</field>
+                <field name="code">III_o</field>
+                <field name="aggregation_formula">III_1_o + III_2_o + III_3_o + III_4_o + III_5_o + III_6_o + III_7_o  + III_8_o + III_9_o + III_10_o + III_11_o + III_12_o + III_13_o + III_14_o</field>
+                <field name="sequence">29</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_III_1_o" model="account.report.line">
+                        <field name="name">1. PRETPOREZ OD PRIMLJENIH ISPORUKA U TUZEMSTVU po stopi 5%</field>
+                        <field name="code">III_1_o</field>
+                        <field name="sequence">30</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_1_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.1. PP 5%-OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_2_o" model="account.report.line">
+                        <field name="name">2. PRETPOREZ OD PRIMLJENIH ISPORUKA U TUZEMSTVU po stopi 13%</field>
+                        <field name="code">III_2_o</field>
+                        <field name="sequence">31</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_2_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.2. PP 13%-OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_3_o" model="account.report.line">
+                        <field name="name">3. PRETPOREZ OD PRIMLJENIH ISPORUKA U TUZEMSTVU po stopi 25%</field>
+                        <field name="code">III_3_o</field>
+                        <field name="sequence">32</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_3_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.3. PP 25%-OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_4_o" model="account.report.line">
+                        <field name="name">4. PRETPOREZ OD PRIMLJENIH ISPORUKA U RH ZA KOJE PDV OBRAČUNAVA PRIMATELJ (tuzemni prijenos porezne obveze)</field>
+                        <field name="code">III_4_o</field>
+                        <field name="sequence">33</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_4_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.4.TPPO-PP OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_5_o" model="account.report.line">
+                        <field name="name">5. PRETPOREZ OD STJECANJA DOBARA UNUTAR EU po stopi 5%</field>
+                        <field name="code">III_5_o</field>
+                        <field name="sequence">34</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_5_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.5.EU-PP-D-5% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_6_o" model="account.report.line">
+                        <field name="name">6. PRETPOREZ OD STJECANJA DOBARA UNUTAR EU po stopi 13%</field>
+                        <field name="code">III_6_o</field>
+                        <field name="sequence">35</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_6_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.6.EU-PP-D-13% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_7_o" model="account.report.line">
+                        <field name="name">7. PRETPOREZ OD STJECANJA DOBARA UNUTAR EU po stopi 25%</field>
+                        <field name="code">III_7_o</field>
+                        <field name="sequence">36</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_7_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.7.EU-PP-D-25% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_8_o" model="account.report.line">
+                        <field name="name">8. PRETPOREZ OD PRIMLJENIH USLUGA IZ EU po stopi 5%</field>
+                        <field name="code">III_8_o</field>
+                        <field name="sequence">37</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_8_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.8.EU-PP-U-5% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_9_o" model="account.report.line">
+                        <field name="name">9. PRETPOREZ OD PRIMLJENIH USLUGA IZ EU po stopi 13%</field>
+                        <field name="code">III_9_o</field>
+                        <field name="sequence">38</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_9_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.9.EU-PP-U-13% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_10_o" model="account.report.line">
+                        <field name="name">10. PRETPOREZ OD PRIMLJENIH USLUGA IZ EU po stopi 25%</field>
+                        <field name="code">III_10_o</field>
+                        <field name="sequence">39</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_10_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.10.EU-PP-U-25% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_11_o" model="account.report.line">
+                        <field name="name">11. PRETPOREZ OD PRIMLJENIH ISPORUKA DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 5%</field>
+                        <field name="code">III_11_o</field>
+                        <field name="sequence">40</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_11_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.11.BS-PP-5% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_12_o" model="account.report.line">
+                        <field name="name">12. PRETPOREZ OD PRIMLJENIH ISPORUKA DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 13%</field>
+                        <field name="code">III_12_o</field>
+                        <field name="sequence">41</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_12_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.12.BS-PP-13% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_13_o" model="account.report.line">
+                        <field name="name">13. PRETPOREZ OD PRIMLJENIH ISPORUKA DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 25%</field>
+                        <field name="code">III_13_o</field>
+                        <field name="sequence">42</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_13_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.13.BS-PP-25% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_14_o" model="account.report.line">
+                        <field name="name">14. PRETPOREZ PRI UVOZU</field>
+                        <field name="code">III_14_o</field>
+                        <field name="sequence">43</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_14_o_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.14.UVOZ-PP OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_III_p" model="account.report.line">
+                <field name="name">III. OBRAČUNANI PRETPOREZ – UKUPNO POREZ</field>
+                <field name="code">III_p</field>
+                <field name="aggregation_formula">III_1_p + III_2_p + III_3_p + III_4_p + III_5_p + III_6_p + III_7_p  + III_8_p + III_9_p + III_10_p + III_11_p + III_12_p + III_13_p + III_14_p + III_15_p</field>
+                <field name="sequence">29</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_III_1_p" model="account.report.line">
+                        <field name="name">1. PRETPOREZ OD PRIMLJENIH ISPORUKA U TUZEMSTVU po stopi 5%</field>
+                        <field name="code">III_1_p</field>
+                        <field name="sequence">30</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_1_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.1. PP 5%-POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_2_p" model="account.report.line">
+                        <field name="name">2. PRETPOREZ OD PRIMLJENIH ISPORUKA U TUZEMSTVU po stopi 13%</field>
+                        <field name="code">III_2_p</field>
+                        <field name="sequence">31</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_2_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.2. PP 13%-POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_3_p" model="account.report.line">
+                        <field name="name">3. PRETPOREZ OD PRIMLJENIH ISPORUKA U TUZEMSTVU po stopi 25%</field>
+                        <field name="code">III_3_p</field>
+                        <field name="sequence">32</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_3_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.3. PP 25%-POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_4_p" model="account.report.line">
+                        <field name="name">4. PRETPOREZ OD PRIMLJENIH ISPORUKA U RH ZA KOJE PDV OBRAČUNAVA PRIMATELJ (tuzemni prijenos porezne obveze)</field>
+                        <field name="code">III_4_p</field>
+                        <field name="sequence">33</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_4_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.4.TPPO-PP POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_5_p" model="account.report.line">
+                        <field name="name">5. PRETPOREZ OD STJECANJA DOBARA UNUTAR EU po stopi 5%</field>
+                        <field name="code">III_5_p</field>
+                        <field name="sequence">34</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_5_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.5.EU-PP-D-5% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_6_p" model="account.report.line">
+                        <field name="name">6. PRETPOREZ OD STJECANJA DOBARA UNUTAR EU po stopi 13%</field>
+                        <field name="code">III_6_p</field>
+                        <field name="sequence">35</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_6_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.6.EU-PP-D-13% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_7_p" model="account.report.line">
+                        <field name="name">7. PRETPOREZ OD STJECANJA DOBARA UNUTAR EU po stopi 25%</field>
+                        <field name="code">III_7_p</field>
+                        <field name="sequence">36</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_7_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.7.EU-PP-D-25% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_8_p" model="account.report.line">
+                        <field name="name">8. PRETPOREZ OD PRIMLJENIH USLUGA IZ EU po stopi 5%</field>
+                        <field name="code">III_8_p</field>
+                        <field name="sequence">37</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_8_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.8.EU-PP-U-5% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_9_p" model="account.report.line">
+                        <field name="name">9. PRETPOREZ OD PRIMLJENIH USLUGA IZ EU po stopi 13%</field>
+                        <field name="code">III_9_p</field>
+                        <field name="sequence">38</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_9_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.9.EU-PP-U-13% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_10_p" model="account.report.line">
+                        <field name="name">10. PRETPOREZ OD PRIMLJENIH USLUGA IZ EU po stopi 25%</field>
+                        <field name="code">III_10_p</field>
+                        <field name="sequence">39</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_10_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.10.EU-PP-U-25% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_11_p" model="account.report.line">
+                        <field name="name">11. PRETPOREZ OD PRIMLJENIH ISPORUKA DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 5%</field>
+                        <field name="code">III_11_p</field>
+                        <field name="sequence">40</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_11_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.11.BS-PP-5% POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_13_p" model="account.report.line">
+                        <field name="name">13. PRETPOREZ OD PRIMLJENIH ISPORUKA DOBARA I USLUGA OD POREZNIH OBVEZNIKA BEZ SJEDIŠTA U RH po stopi 25%</field>
+                        <field name="code">III_13_p</field>
+                        <field name="sequence">42</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_13_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.13.BS-PP-25% OSN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_14_p" model="account.report.line">
+                        <field name="name">14. PRETPOREZ PRI UVOZU</field>
+                        <field name="code">III_14_p</field>
+                        <field name="sequence">43</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_14_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.14.UVOZ-PP POR</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_III_15_p" model="account.report.line">
+                        <field name="name">15. ISPRAVCI PRETPOREZA</field>
+                        <field name="code">III_15_p</field>
+                        <field name="sequence">44</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_III_15_p_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.15. PP ISPRAVCI</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+
+            <record id="account_tax_report_line_IV" model="account.report.line">
+                <field name="name">OBVEZA PDV-a U OBRAČUNSKOM RAZDOBLJU: ZA UPLATU (II. - III.) ILI ZA POVRAT (III. - II.)</field>
+                <field name="code">IV</field>
+                <field name="aggregation_formula">II_p - III_p</field>
+                <field name="sequence">29</field>
+            </record>
+            <record id="account_tax_report_line_V" model="account.report.line">
+                <field name="name">PO PRETHODNOM OBRAČUNU: NEUPLAĆENI PDV DO DANA PODNOŠENJA OVE PRIJAVE – VIŠE UPLAĆENO – POREZNI KREDIT</field>
+                <field name="code">V</field>
+                <field name="sequence">29</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_V_p_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
+
+            </record>
+        </field>
+    </record>
+</odoo>
