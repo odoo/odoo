@@ -65,11 +65,8 @@ registerModel({
          * composer of this thread to all other members.
          */
         handleCurrentPartnerIsTyping() {
-            if (!this.composer.thread) {
+            if (!this.composer.thread || !this.composer.thread.channel) {
                 return; // not supported for non-thread composer (eg. messaging editing)
-            }
-            if (this.messaging.isCurrentUserGuest) {
-                return; // not supported for guests
             }
             if (
                 this.suggestionModelName === 'ChannelCommand' ||
@@ -77,7 +74,7 @@ registerModel({
             ) {
                 return;
             }
-            if (this.composer.thread.typingMembers.includes(this.messaging.currentPartner)) {
+            if (this.composer.thread.typingMembers.includes(this.composer.thread.channel.memberOfCurrentUser)) {
                 this.composer.thread.refreshCurrentPartnerIsTyping();
             } else {
                 this.composer.thread.registerCurrentPartnerIsTyping();
@@ -561,7 +558,7 @@ registerModel({
                     return;
                 }
             }
-            if (this.messaging.currentPartner) { // not supported for guest
+            if (composer.thread.channel) {
                 composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
             const postData = this._getMessageData();

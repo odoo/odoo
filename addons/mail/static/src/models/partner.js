@@ -2,70 +2,12 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, link } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
     name: 'Partner',
     modelMethods: {
-        /**
-         * @param {Object} data
-         * @return {Object}
-         */
-        convertData(data) {
-            const data2 = {};
-            if ('active' in data) {
-                data2.active = data.active;
-            }
-            if ('country' in data) {
-                if (!data.country) {
-                    data2.country = clear();
-                } else {
-                    data2.country = insert({
-                        id: data.country[0],
-                        name: data.country[1],
-                    });
-                }
-            }
-            if ('display_name' in data) {
-                data2.display_name = data.display_name;
-            }
-            if ('email' in data) {
-                data2.email = data.email;
-            }
-            if ('id' in data) {
-                data2.id = data.id;
-            }
-            if ('im_status' in data) {
-                data2.im_status = data.im_status;
-            }
-            if ('name' in data) {
-                data2.name = data.name;
-            }
-
-            // relation
-            if ('user_id' in data) {
-                if (!data.user_id) {
-                    data2.user = clear();
-                } else {
-                    let user = {};
-                    if (Array.isArray(data.user_id)) {
-                        user = {
-                            id: data.user_id[0],
-                            display_name: data.user_id[1],
-                        };
-                    } else {
-                        user = {
-                            id: data.user_id,
-                        };
-                    }
-                    user.isInternalUser = data.is_internal_user;
-                    data2.user = insert(user);
-                }
-            }
-
-            return data2;
-        },
         /**
          * Fetches partners matching the given search term to extend the
          * JS knowledge and to update the suggestion list accordingly.
@@ -89,12 +31,7 @@ registerModel({
                 },
                 { shadow: true },
             );
-            const partners = this.messaging.models['Partner'].insert(suggestedPartners.map(data =>
-                this.messaging.models['Partner'].convertData(data)
-            ));
-            if (isNonPublicChannel) {
-                thread.update({ members: link(partners) });
-            }
+            this.messaging.models['Partner'].insert(suggestedPartners);
         },
         /**
          * Returns a sort function to determine the order of display of partners
@@ -117,9 +54,9 @@ registerModel({
                 if (!isAInternalUser && isBInternalUser) {
                     return 1;
                 }
-                if (thread && thread.model === 'mail.channel') {
-                    const isAMember = thread.members.includes(a);
-                    const isBMember = thread.members.includes(b);
+                if (thread && thread.channel) {
+                    const isAMember = a.persona.channelMembers.includes(thread.channel);
+                    const isBMember = b.persona.channelMembers.includes(thread.channel);
                     if (isAMember && !isBMember) {
                         return -1;
                     }
@@ -200,9 +137,7 @@ registerModel({
                     },
                     { shadow: true }
                 );
-                const newPartners = this.insert(partnersData.map(
-                    partnerData => this.convertData(partnerData)
-                ));
+                const newPartners = this.insert(partnersData);
                 partners.push(...newPartners);
             }
             callback(partners);
@@ -218,14 +153,14 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             let partners;
-            const isNonPublicChannel = thread && thread.model === 'mail.channel' && thread.public !== 'public';
+            const isNonPublicChannel = thread && thread.channel && thread.public !== 'public';
             if (isNonPublicChannel) {
                 // Only return the channel members when in the context of a
                 // non-public channel. Indeed, the message with the mention
                 // would be notified to the mentioned partner, so this prevents
                 // from inadvertently leaking the private message to the
                 // mentioned partner.
-                partners = thread.members;
+                partners = thread.channel.channelMembers.filter(member => member.persona && member.persona.partner).map(member => member.persona.partner);
             } else {
                 partners = this.messaging.models['Partner'].all();
             }
@@ -235,11 +170,9 @@ registerModel({
             for (const partner of partners) {
                 if (
                     (!partner.active && partner !== this.messaging.partnerRoot) ||
-                    partner.id <= 0 ||
-                    this.messaging.publicPartners.includes(partner)
+                    partner.is_public
                 ) {
-                    // ignore archived partners (except OdooBot), temporary
-                    // partners (livechat guests), public partners (technical)
+                    // ignore archived partners (except OdooBot), public partners (technical)
                     continue;
                 }
                 if (!partner.name) {
@@ -428,16 +361,13 @@ registerModel({
         isOnline: attr({
             compute: '_computeIsOnline',
         }),
+        is_public: attr(),
         model: attr({
             default: 'res.partner',
         }),
         name: attr(),
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
-        }),
-        otherMemberLongTypingInThreadTimers: many('OtherMemberLongTypingInThreadTimer', {
-            inverse: 'partner',
-            isCausal: true,
         }),
         persona: one('Persona', {
             default: {},

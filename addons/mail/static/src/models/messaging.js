@@ -210,7 +210,7 @@ registerModel({
             });
             const partnerIds = [];
             for (const partner of this.models['Partner'].all()) {
-                if (partner.im_status !== 'im_partner' && partner.id > 0) {
+                if (partner.im_status !== 'im_partner' && !partner.is_public) {
                     partnerIds.push(partner.id);
                 }
             }
@@ -471,11 +471,6 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        /**
-         * Determines which partners should be considered the public partners,
-         * which are special partners notably used in livechat.
-         */
-        publicPartners: many('Partner'),
         /**
          * Threads for which the current partner has a pending invitation.
          * It is computed from the inverse relation for performance reasons.

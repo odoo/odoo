@@ -58,58 +58,16 @@ class MailChannel(models.Model):
         channel_infos = super().channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
-            # add the last message date
-            if channel.channel_type == 'livechat':
-                # add the operator id
-                if channel.livechat_operator_id:
-                    display_name = channel.livechat_operator_id.user_livechat_username or channel.livechat_operator_id.display_name
-                    channel_infos_dict[channel.id]['operator_pid'] = (channel.livechat_operator_id.id, display_name.replace(',', ''))
-                # add the anonymous or partner name
-                channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
+            channel_infos_dict[channel.id]['channel']['anonymous_name'] = channel.anonymous_name
+            channel_infos_dict[channel.id]['channel']['anonymous_country'] = {
+                'code': channel.country_id.code,
+                'id': channel.country_id.id,
+                'name': channel.country_id.name,
+            } if channel.country_id else [('clear',)]
+            if channel.livechat_operator_id:
+                display_name = channel.livechat_operator_id.user_livechat_username or channel.livechat_operator_id.display_name
+                channel_infos_dict[channel.id]['operator_pid'] = (channel.livechat_operator_id.id, display_name.replace(',', ''))
         return list(channel_infos_dict.values())
-
-    def _channel_info_format_member(self, partner, partner_info):
-        """Override to remove sensitive information in livechat."""
-        if self.channel_type == 'livechat':
-            return {
-                'active': partner.active,
-                'id': partner.id,
-                'name': partner.user_livechat_username or partner.name,  # for API compatibility in stable
-                'email': False,  # for API compatibility in stable
-                'im_status': False,  # for API compatibility in stable
-                'livechat_username': partner.user_livechat_username,
-            }
-        return super()._channel_info_format_member(partner=partner, partner_info=partner_info)
-
-    def _notify_typing_partner_data(self):
-        """Override to remove name and return livechat username if applicable."""
-        data = super()._notify_typing_partner_data()
-        if self.channel_type == 'livechat' and self.env.user.partner_id.user_livechat_username:
-            data['partner_name'] = self.env.user.partner_id.user_livechat_username  # for API compatibility in stable
-            data['livechat_username'] = self.env.user.partner_id.user_livechat_username
-        return data
-
-    def _channel_get_livechat_visitor_info(self):
-        self.ensure_one()
-        # remove active test to ensure public partner is taken into account
-        channel_partner_ids = self.with_context(active_test=False).channel_partner_ids
-        partners = channel_partner_ids - self.livechat_operator_id
-        if not partners:
-            # operator probably testing the livechat with their own user
-            partners = channel_partner_ids
-        first_partner = partners and partners[0]
-        if first_partner and not first_partner.is_public:
-            # legit non-public partner
-            return {
-                'country': first_partner.country_id.name_get()[0] if first_partner.country_id else False,
-                'id': first_partner.id,
-                'name': first_partner.name,
-            }
-        return {
-            'country': self.country_id.name_get()[0] if self.country_id else False,
-            'id': False,
-            'name': self.anonymous_name or _("Visitor"),
-        }
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):

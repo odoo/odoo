@@ -167,7 +167,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string|FieldCommand} 
+         * @returns {string|FieldCommand}
          */
         _computeText() {
             if (this.hasEveryoneSeen) {
@@ -176,7 +176,7 @@ registerModel({
             if (this.hasSomeoneSeen) {
                 const partnersThatHaveSeen = this.partnersThatHaveSeen.map(partner => {
                     if (this.message.originThread) {
-                        return this.message.originThread.getMemberName(partner);
+                        return this.message.originThread.getMemberName(partner.persona);
                     }
                     return partner.nameOrDisplayName;
                 });
@@ -205,7 +205,7 @@ registerModel({
             if (this.hasSomeoneFetched) {
                 const partnersThatHaveFetched = this.partnersThatHaveFetched.map(partner => {
                     if (this.message.originThread) {
-                        return this.message.originThread.getMemberName(partner);
+                        return this.message.originThread.getMemberName(partner.persona);
                     }
                     return partner.nameOrDisplayName;
                 });

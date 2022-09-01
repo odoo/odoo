@@ -20,7 +20,7 @@ const PublicLivechatMessage = Class.extend({
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
      * @param {Messaging} messaging
      * @param {Object} data
-     * @param {Array} [data.author_id]
+     * @param {Object|Array} [data.author]
      * @param {string} [data.body = ""]
      * @param {string} [data.date] the server-format date time of the message.
      *   If not provided, use current date time for this message.
@@ -37,7 +37,7 @@ const PublicLivechatMessage = Class.extend({
         this._id = data.id;
         this._isDiscussion = data.is_discussion;
         this._isNotification = data.is_notification;
-        this._serverAuthorID = data.author_id;
+        this._serverAuthor = data.author;
         this._type = data.message_type || undefined;
 
         this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
@@ -64,7 +64,7 @@ const PublicLivechatMessage = Class.extend({
         if (!this.hasAuthor()) {
             return -1;
         }
-        return this._serverAuthorID[0];
+        return this._serverAuthor.id;
     },
     /**
      * Get the relative url of the avatar to display next to the message
@@ -169,7 +169,7 @@ const PublicLivechatMessage = Class.extend({
      * @return {boolean}
      */
     hasAuthor() {
-        return !!(this._serverAuthorID && this._serverAuthorID[0]);
+        return Boolean(this._serverAuthor && this._serverAuthor.id);
     },
     /**
      * State whether this message is empty
@@ -249,7 +249,7 @@ const PublicLivechatMessage = Class.extend({
         if (!this.hasAuthor()) {
             return "";
         }
-        return this._serverAuthorID[1];
+        return this._serverAuthor.name || this._serverAuthor.user_livechat_username;
     },
     /**
      * State whether the current user is the author of this message

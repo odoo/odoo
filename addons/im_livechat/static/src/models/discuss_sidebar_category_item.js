@@ -11,7 +11,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      */
     _computeAvatarUrl() {
         if (this.channel.channel_type === 'livechat') {
-            if (this.channel.correspondent && this.channel.correspondent.id > 0) {
+            if (this.channel.correspondent && !this.channel.correspondent.is_public) {
                 return this.channel.correspondent.avatarUrl;
             }
         }

@@ -584,8 +584,8 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
             },
         },
         async mockRPC(route, args) {
-            if (args.method === 'notify_typing') {
-                assert.step(`notify_typing:${args.kwargs.is_typing}`);
+            if (route === '/mail/channel/notify_typing') {
+                assert.step(`notify_typing:${args.is_typing}`);
             }
         },
     });
@@ -607,8 +607,8 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
             },
         },
         async mockRPC(route, args) {
-            if (args.method === 'notify_typing') {
-                assert.step(`notify_typing:${args.kwargs.is_typing}`);
+            if (route === '/mail/channel/notify_typing') {
+                assert.step(`notify_typing:${args.is_typing}`);
             }
         },
     });
@@ -732,9 +732,15 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
     const pyEnv = await startServer();
 
     const resPartnerId1 = pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
-    pyEnv['res.partner'].create({ email: "testpartner2@odoo.com", name: "TestPartner2" });
+    const resPartnerId2 = pyEnv['res.partner'].create({ email: "testpartner2@odoo.com", name: "TestPartner2" });
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: resPartnerId2 }],
+        ],
+    });
     const { insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
@@ -764,8 +770,13 @@ QUnit.test('mention a partner', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId = pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId }],
+        ],
+    });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
@@ -801,8 +812,13 @@ QUnit.test('mention a partner after some text', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId = pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId }],
+        ],
+    });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
@@ -844,8 +860,13 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId = pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId }],
+        ],
+    });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
@@ -1089,8 +1110,8 @@ QUnit.test('current partner notify is typing to other thread members', async fun
             },
         },
         async mockRPC(route, args) {
-            if (args.method === 'notify_typing') {
-                assert.step(`notify_typing:${args.kwargs.is_typing}`);
+            if (route === '/mail/channel/notify_typing') {
+                assert.step(`notify_typing:${args.is_typing}`);
             }
         },
     });
@@ -1118,8 +1139,8 @@ QUnit.test('current partner is typing should not translate on textual typing sta
         },
         hasTimeControl: true,
         async mockRPC(route, args) {
-            if (args.method === 'notify_typing') {
-                assert.step(`notify_typing:${args.kwargs.is_typing}`);
+            if (route === '/mail/channel/notify_typing') {
+                assert.step(`notify_typing:${args.is_typing}`);
             }
         },
     });
@@ -1155,8 +1176,8 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
         },
         hasTimeControl: true,
         async mockRPC(route, args) {
-            if (args.method === 'notify_typing') {
-                assert.step(`notify_typing:${args.kwargs.is_typing}`);
+            if (route === '/mail/channel/notify_typing') {
+                assert.step(`notify_typing:${args.is_typing}`);
             }
         },
     });
@@ -1191,8 +1212,8 @@ QUnit.test('current partner notify is typing again to other members every 50s of
         },
         hasTimeControl: true,
         async mockRPC(route, args) {
-            if (args.method === 'notify_typing') {
-                assert.step(`notify_typing:${args.kwargs.is_typing}`);
+            if (route === '/mail/channel/notify_typing') {
+                assert.step(`notify_typing:${args.is_typing}`);
             }
         },
     });

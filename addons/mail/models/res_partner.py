@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models, tools
-from odoo.addons.bus.models.bus_presence import AWAY_TIMER
-from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
 from odoo.osv import expression
 
 
@@ -108,23 +106,32 @@ class Partner(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
-    def mail_partner_format(self):
+    def mail_partner_format(self, fields=None):
         partners_format = dict()
+        if not fields:
+            fields = {'id': True, 'name': True, 'email': True, 'active': True, 'im_status': True, 'user': {}}
         for partner in self:
-            internal_users = partner.user_ids - partner.user_ids.filtered('share')
-            main_user = internal_users[0] if len(internal_users) > 0 else partner.user_ids[0] if len(partner.user_ids) > 0 else self.env['res.users']
-            partners_format[partner] = {
-                "id": partner.id,
-                "display_name": partner.display_name,
-                "name": partner.name,
-                "email": partner.email,
-                "active": partner.active,
-                "im_status": partner.im_status,
-                "user_id": main_user.id,
-                "is_internal_user": not partner.partner_share,
-            }
+            data = {}
+            if 'id' in fields:
+                data['id'] = partner.id
+            if 'name' in fields:
+                data['name'] = partner.name
+            if 'email' in fields:
+                data['email'] = partner.email
+            if 'active' in fields:
+                data['active'] = partner.active
+            if 'im_status' in fields:
+                data['im_status'] = partner.im_status
+            if 'user' in fields:
+                internal_users = partner.user_ids - partner.user_ids.filtered('share')
+                main_user = internal_users[0] if len(internal_users) > 0 else partner.user_ids[0] if len(partner.user_ids) > 0 else self.env['res.users']
+                data['user'] = {
+                    "id": main_user.id,
+                    "isInternalUser": not main_user.share,
+                } if main_user else [('clear',)]
             if 'guest' in self.env.context:
-                partners_format[partner].pop('email')
+                data.pop('email')
+            partners_format[partner] = data
         return partners_format
 
     def _message_fetch_failed(self):
@@ -212,7 +219,14 @@ class Partner(models.Model):
             if remaining_limit <= 0:
                 break
             partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
-        return list(partners.mail_partner_format().values())
+        partners_format = partners.mail_partner_format()
+        if channel_id:
+            member_by_partner = {member.partner_id: member for member in self.env['mail.channel.member'].search([('channel_id', '=', channel_id), ('partner_id', 'in', partners.ids)])}
+            for partner in partners:
+                partners_format.get(partner)['persona'] = {
+                    'channelMembers': [('insert', member_by_partner.get(partner)._mail_channel_member_format(fields={'id': True, 'channel': {'id'}, 'persona': {'partner': {'id'}}}).get(member_by_partner.get(partner)))],
+                }
+        return list(partners_format.values())
 
     @api.model
     def im_search(self, name, limit=20):
@@ -224,30 +238,10 @@ class Partner(models.Model):
         # This method is supposed to be used only in the context of channel creation or
         # extension via an invite. As both of these actions require the 'create' access
         # right, we check this specific ACL.
-        if self.env['mail.channel'].check_access_rights('create', raise_exception=False):
-            name = '%' + name + '%'
-            excluded_partner_ids = [self.env.user.partner_id.id]
-            self.env.cr.execute("""
-                SELECT
-                    U.id as user_id,
-                    P.id as id,
-                    P.name as name,
-                    P.email as email,
-                    CASE WHEN B.last_poll IS NULL THEN 'offline'
-                         WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
-                         WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
-                         ELSE 'online'
-                    END as im_status
-                FROM res_users U
-                    JOIN res_partner P ON P.id = U.partner_id
-                    LEFT JOIN bus_presence B ON B.user_id = U.id
-                WHERE P.name ILIKE %s
-                    AND P.id NOT IN %s
-                    AND U.active = 't'
-                    AND U.share IS NOT TRUE
-                ORDER BY P.name ASC, P.id ASC
-                LIMIT %s
-            """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
-            return self.env.cr.dictfetchall()
-        else:
-            return {}
+        users = self.env['res.users'].search([
+            ('id', '!=', self.env.user.id),
+            ('name', 'ilike', name),
+            ('active', '=', True),
+            ('share', '=', False),
+        ], order='name, id', limit=limit)
+        return list(users.partner_id.mail_partner_format().values())
