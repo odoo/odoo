@@ -1,0 +1,33 @@
+<odoo>
+
+    <record id="hr_holidays_sl_analytical_line_1" model="account.analytic.line">
+        <field name="name">Doctor Appointment</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="date" eval="(datetime.now() + relativedelta(day=20, weekday=0)).strftime('%Y-%m-%d 08:00:00')"/>
+        <field name="unit_amount">8.00</field>
+        <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_project_id.id"/>
+        <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_task_id.id"/>
+        <field name="holiday_id" ref="hr_holidays.hr_holidays_sl"/>
+    </record>
+
+    <record id="hr_holidays_sl_analytical_line_2" model="account.analytic.line">
+        <field name="name">Doctor Appointment</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="date" eval="(datetime.now() + relativedelta(day=20, weekday=0) + relativedelta(weekday=1)).strftime('%Y-%m-%d 17:00:00')"/>
+        <field name="unit_amount">8.00</field>
+        <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_project_id.id"/>
+        <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_task_id.id"/>
+        <field name="holiday_id" ref="hr_holidays.hr_holidays_sl"/>
+    </record>
+
+    <record id="hr_holidays_sl_analytical_line_3" model="account.analytic.line">
+        <field name="name">Doctor Appointment</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="date" eval="(datetime.now() + relativedelta(day=20, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')"/>
+        <field name="unit_amount">8.00</field>
+        <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_project_id.id"/>
+        <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_task_id.id"/>
+        <field name="holiday_id" ref="hr_holidays.hr_holidays_sl"/>
+    </record>
+
+</odoo>

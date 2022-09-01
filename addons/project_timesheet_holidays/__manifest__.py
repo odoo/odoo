@@ -20,7 +20,9 @@ on leaves. Project and task can be configured company-wide.
         'security/ir.model.access.csv',
 
     ],
-    'demo': [],
+    'demo': [
+        'data/project_timesheet_holidays_demo.xml',
+    ],
     'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',
