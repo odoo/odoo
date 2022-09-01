@@ -1,158 +1,109 @@
 /** @odoo-module **/
 
-import ListController from 'web.ListController';
-import viewRegistry from 'web.view_registry';
-import ListView from 'web.ListView';
-import {ComponentWrapper} from 'web.OwlCompatibility';
-import {PagePropertiesDialogManager} from '@website/components/dialog/page_properties';
-import {qweb} from 'web.core';
+import {AddPageDialog} from "../dialog/dialog";
+import {registry} from '@web/core/registry';
+import {listView} from '@web/views/list/list_view';
+import {useService} from "@web/core/utils/hooks";
+import { csrf_token } from 'web.core';
 
-const WebsitePageListController = ListController.extend({
+const {onWillStart, useState} = owl;
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
 
+export class PageListController extends listView.Controller {
     /**
      * @override
      */
-    willStart() {
-        return Promise.all([this._super(...arguments), this._getRenderContext()]);
-    },
-    /**
-     * @override
-     */
-    renderButtons($node) {
-        this.$buttons = $(qweb.render('PageListView.WebsiteSelect', {
-            websites: this.websites,
-            active: this._getWebsite(0),
-        }));
-        this.$buttons.find('.dropdown-item').click(this._onButtonClick.bind(this));
-        if ($node) {
-            this.$buttons.appendTo($node);
-        }
-    },
+    setup() {
+        super.setup();
+        this.website = useService('website');
+        this.http = useService('http');
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+        this.websiteSelection = [{id: 0, name: this.env._t("All Websites")}];
 
-    /**
-     * @override
-     */
-    async _callButtonAction(attrs, record) {
-        switch (attrs.name) {
-            case 'action_optimize_seo':
-                this._goToPage(record.data.url, record.data.website_id.res_id, {
-                    enable_seo: true,
-                });
-                break;
-            case 'action_manage_page':
-                await this._addDialog(record);
-                break;
-            case 'action_clone_page':
-                await this._addDialog(record, 'clone');
-                break;
-            case 'action_delete_page':
-                await this._addDialog(record, 'delete');
-                break;
-            case 'action_edit_page':
-                this.do_action({
-                    type: 'ir.actions.act_window',
-                    res_model: 'ir.ui.view',
-                    res_id: record.data.view_id.res_id,
-                    views: [[false, 'form']],
-                });
-                break;
-            default:
-                return this._super(...arguments);
-        }
-    },
-    /**
-     * @private
-     */
-    _goToPage(path, website, options = {}) {
-        this.do_action('website.website_preview', {
-            additional_context: {
-                params: {
-                    path: path,
-                    website_id: website || '',
-                    ...options,
-                }
-            },
+        this.state = useState({
+            activeWebsite: this.websiteSelection[0],
         });
-    },
-    /**
-     * @private
-     */
-    async _addDialog(record, mode = '') {
-        this._pagePropertiesDialog = new ComponentWrapper(this, PagePropertiesDialogManager, {
-            resId: record.data.id,
-            onClose: this._onCloseDialog.bind(this),
-            onRecordSaved: this.reload.bind(this),
-            mode: mode,
-        });
-        await this._pagePropertiesDialog.mount(this.el);
-    },
-    /**
-     * Removes page properties wrapper when dialog is closed.
-     *
-     * @private
-     */
-    _onCloseDialog() {
-        if (this._pagePropertiesDialog) {
-            this._pagePropertiesDialog.destroy();
-        }
-        this._pagePropertiesDialog = undefined;
-    },
-    /**
-     * @private
-     */
-    _getRenderContext() {
-        return this._rpc({
-            model: 'website',
-            method: 'search_read',
-            fields: ['id', 'name'],
-        }).then((result) => {
-            this.websites = [{id: 0, name: 'All Websites'}, ...result];
-        });
-    },
-    /**
-     * @private
-     */
-    _getWebsite(id) {
-        return this.websites.find(website => website.id === id);
-    },
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _onOpenRecord(event) {
-        const record = this.model.get(event.data.id, {raw: true});
-        this._goToPage(record.data.url, record.data.website_id);
-    },
-    _onButtonClick: async function (event) {
-        const activeWebsite = this._getWebsite(parseInt(event.target.dataset.websiteId));
-        this.$buttons[0].querySelector('.o_website_active').textContent = activeWebsite.name;
-        this.reload({
-            domain: activeWebsite.id ? [['website_id', '=', activeWebsite.id]] : [],
+        onWillStart(async () => {
+            await this.website.fetchWebsites();
+            this.websiteSelection.push(...this.website.websites);
         });
     }
-});
 
-const WebsitePageListView = ListView.extend({
-    config: _.extend({}, ListView.prototype.config, {
-        Controller: WebsitePageListController,
-    }),
-});
+    /**
+     * @override
+     */
+    onClickCreate() {
+        if (this.props.resModel === 'website.page') {
+            return this.dialogService.add(AddPageDialog, {
+                addPage: async (name, addMenu) => {
+                    // TODO this is duplicated code from new_content.js, this
+                    // should be shared somehow.
+                    // FIXME this always create on website 1 whatever we do.
+                    const url = `/website/add/${encodeURIComponent(name)}`;
+                    const data = await this.http.post(url, { 'add_menu': addMenu || '', csrf_token });
+                    if (data.view_id) {
+                        this.actionService.doAction({
+                            'res_model': 'ir.ui.view',
+                            'res_id': data.view_id,
+                            'views': [[false, 'form']],
+                            'type': 'ir.actions.act_window',
+                            'view_mode': 'form',
+                        });
+                    } else {
+                        this.website.goToWebsite({ path: data.url, edition: true });
+                    }
+                },
+            });
+        }
+        const action = this.props.context.create_action;
+        if (action) {
+            if (/^\//.test(action)) {
+                window.location.replace(action);
+                return;
+            }
+            this.actionService.doAction(action, {
+                onClose: (data) => {
+                    if (data) {
+                        this.website.goToWebsite({path: data.path});
+                    }
+                },
+            });
+        }
+    }
 
-viewRegistry.add('website_page_list', WebsitePageListView);
+    onSelectWebsite(website) {
+        this.state.activeWebsite = website;
+    }
+}
+PageListController.template = `website.PageListView`;
 
-export default {
-    WebsitePageListController: WebsitePageListController,
-    WebsitePageListView: WebsitePageListView,
+export class PageListRenderer extends listView.Renderer {
+    /**
+     * The goal here is to tweak the renderer to display pages following some
+     * rules:
+     * - All websites (props.activeWebsite.id === 0):
+     *     -> Show all generic/specific pages.
+     * - A website is selected:
+     *     -> Display website-specific pages & generic ones (only those without
+     *        specific clones).
+     */
+    pageFilter(record, records) {
+        return !this.props.activeWebsite.id
+            || this.props.activeWebsite.id === record.data.website_id[0]
+            || !record.data.website_id[0] && records.filter(rec => rec.data.url === record.data.url).length === 1;
+    }
+}
+PageListRenderer.props = [
+    ...listView.Renderer.props,
+    "activeWebsite",
+];
+PageListRenderer.recordRowTemplate = "website.PageListRenderer.RecordRow";
+
+export const PageListView = {
+    ...listView,
+    Renderer: PageListRenderer,
+    Controller: PageListController,
 };
+
+registry.category("views").add("website_pages_list", PageListView);

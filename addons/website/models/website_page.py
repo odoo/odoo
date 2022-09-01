@@ -83,6 +83,13 @@ class Page(models.Model):
                 # If the page is no longer in menu, we should remove its website_menu
                 page.menu_ids.unlink()
 
+    # This update was added to make sure the mixin calculations are correct
+    # (page.website_url > page.url).
+    @api.depends('url')
+    def _compute_website_url(self):
+        for page in self:
+            page.website_url = page.url
+
     def _get_most_specific_pages(self):
         ''' Returns the most specific pages in self. '''
         ids = []
@@ -276,6 +283,15 @@ class Page(models.Model):
     def get_valid_page_url(self, page_url, website_id=False):
         url = '/' + slugify(page_url, max_length=1024, path=True)
         return self.env['website'].with_context(website_id=website_id).get_unique_path(url)
+
+    def action_page_debug_view(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.ui.view',
+            'res_id': self.view_id.id,
+            'view_mode': 'form',
+            'view_id': self.env.ref('website.view_view_form_extend').id,
+        }
 
 
 # this is just a dummy function to be used as ormcache key
