@@ -20,6 +20,9 @@ import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
 import { registry } from "@web/core/registry";
 
+import legacyFieldRegistry from "web.field_registry";
+import { FieldMany2ManyTags } from "web.relational_fields";
+
 let target;
 let serverData;
 
@@ -2052,4 +2055,40 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("many2many legacy field in list add a record", async (assert) => {
+        const myM2M = FieldMany2ManyTags.extend({});
+        legacyFieldRegistry.add("many2many_tags_legacy", myM2M);
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="timmy" widget="many2many_tags_legacy"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.step(`write: ${JSON.stringify(args.args[1])}`);
+                }
+            },
+        });
+
+        assert.containsNone(target, ".o_badge_text");
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        await click(target, ".o_legacy_field_widget input");
+        await click(document.querySelectorAll(".ui-autocomplete .dropdown-item")[0]);
+
+        assert.strictEqual(target.querySelector(".o_badge_text").textContent, "gold");
+        await click(target);
+        assert.verifySteps([`write: {"timmy":[[6,false,[12]]]}`]);
+
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        await click(target.querySelector(".badge .o_delete"));
+        await click(target);
+        assert.containsNone(target, ".o_badge_text");
+        assert.verifySteps([`write: {"timmy":[[6,false,[]]]}`]);
+        delete legacyFieldRegistry.map["many2many_tags_legacy"];
+    });
 });

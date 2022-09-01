@@ -336,6 +336,19 @@ function registerField(name, LegacyFieldWidget) {
 
         update(fieldName, value) {
             if (fieldName === this.props.name) {
+                const record = this.props.record;
+                const fieldType = record.fields[fieldName].type;
+                if (["one2many", "many2many"].includes(fieldType) && !record.model.__bm__) {
+                    const staticList = this.props.value;
+                    switch (value.operation) {
+                        case "REPLACE_WITH": {
+                            return staticList.replaceWith(value.resIds);
+                        }
+                        case "FORGET": {
+                            return staticList.delete(value.ids);
+                        }
+                    }
+                }
                 return this.props.update(value);
             } else {
                 return this.props.record.update({ [fieldName]: value });

@@ -2719,13 +2719,25 @@ export class StaticList extends DataPoint {
     /**
      * @param {RecordId} recordId
      */
-    async delete(recordId) {
-        const record = this._cache[recordId];
-        if (record.isVirtual) {
-            delete this._cache[recordId];
+    async delete(recordIds) {
+        if (!Array.isArray(recordIds)) {
+            recordIds = [recordIds];
         }
-        const id = record.resId || record.virtualId;
-        this.applyCommand(x2ManyCommands.delete(id));
+        const ids = [];
+        for (const recordId of recordIds) {
+            const record = this._cache[recordId];
+            if (record.isVirtual) {
+                delete this._cache[recordId];
+            }
+            const id = record.resId || record.virtualId;
+            ids.push(id);
+        }
+        if (this.field.type === "many2many") {
+            const nextIds = this.records.filter((rec) => !ids.includes(rec.resId || rec.virtualId));
+            return this.replaceWith(nextIds);
+        }
+        const commands = ids.map((id) => x2ManyCommands.delete(id));
+        this.applyCommands(commands);
         await this._loadRecords();
         this.records = this._getRecords();
         this.onChanges();
