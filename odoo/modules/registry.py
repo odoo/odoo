@@ -456,7 +456,7 @@ class Registry(Mapping):
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
         expected = [
-            (f"{Model._table}_{field.name}_index", Model._table, field.name, field.index, getattr(field, 'unaccent', False))
+            (f"{Model._table}_{field.name}_index", Model._table, field, getattr(field, 'unaccent', False))
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -470,18 +470,16 @@ class Registry(Mapping):
                    [tuple(row[0] for row in expected)])
         existing = {row[0] for row in cr.fetchall()}
 
-        for indexname, tablename, column_name, index, unaccent in expected:
+        for indexname, tablename, field, unaccent in expected:
+            column_expression = f'"{field.name}"'
+            index = field.index
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
-            if index and indexname not in existing:
-                column_expression = f'"{column_name}"'
-                method = 'btree'
-                operator = ''
-                where = ''
-                if index == 'btree_not_null':
-                    where = f'{column_expression} IS NOT NULL'
-                elif index == 'trigram' and self.has_trigram:
-                    method = 'gin'
-                    operator = 'gin_trgm_ops'
+            if index and indexname not in existing and \
+                    ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
+
+                if index == 'trigram':
+                    if field.translate:
+                        column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''
                     # add `unaccent` to the trigram index only because the
                     # trigram indexes are mainly used for (i/=)like search and
                     # unaccent is added only in these cases when searching
@@ -493,9 +491,15 @@ class Registry(Mapping):
                                 "PostgreSQL function 'unaccent' is present but not immutable, "
                                 "therefore trigram indexes may not be effective.",
                             )
+                    expression = f'{column_expression} gin_trgm_ops'
+                    method = 'gin'
+                    where = ''
+                else:  # index in ['btree', 'btree_not_null'， True]
+                    expression = f'{column_expression}'
+                    method = 'btree'
+                    where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
                 try:
                     with cr.savepoint(flush=False):
-                        expression = f'{column_expression} {operator}'
                         sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)

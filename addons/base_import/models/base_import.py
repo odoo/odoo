@@ -727,8 +727,15 @@ class Import(models.TransientModel):
 
         if '/' not in header:
             # Then, try exact match
-            IrTranslation = self.env['ir.translation']
-            translated_header = IrTranslation._get_source('ir.model.fields,field_description', 'model', self.env.lang, header).lower()
+            if header:
+                field_rec = (
+                    self.env['ir.model.fields'].sudo().with_context(lang='en_US')
+                    .search([('field_description', '=', header)], limit=1)
+                    .with_env(self.env)
+                )
+                translated_header = (field_rec.sudo().field_description or header).lower()
+            else:
+                translated_header = ""
             for field in fields_tree:
                 # exact match found based on the field technical name
                 if header.casefold() == field['name'].casefold():

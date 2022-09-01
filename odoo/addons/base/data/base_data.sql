@@ -27,7 +27,7 @@ CREATE TABLE res_users (
 
 CREATE TABLE res_groups (
     id serial NOT NULL,
-    name varchar NOT NULL,
+    name jsonb NOT NULL,
     primary key(id)
 );
 
@@ -38,7 +38,7 @@ CREATE TABLE ir_module_category (
     write_date timestamp without time zone,
     write_uid integer, -- references res_users on delete set null,
     parent_id integer REFERENCES ir_module_category ON DELETE SET NULL,
-    name character varying NOT NULL,
+    name jsonb NOT NULL,
     primary key(id)
 );
 
@@ -49,15 +49,15 @@ CREATE TABLE ir_module_module (
     write_date timestamp without time zone,
     write_uid integer, -- references res_users on delete set null,
     website character varying,
-    summary character varying,
+    summary jsonb,
     name character varying NOT NULL,
     author character varying,
     icon varchar,
     state character varying(16),
     latest_version character varying,
-    shortdesc character varying,
+    shortdesc jsonb,
     category_id integer REFERENCES ir_module_category ON DELETE SET NULL,
-    description text,
+    description jsonb,
     application boolean default False,
     demo boolean default False,
     web boolean DEFAULT FALSE,
@@ -135,6 +135,6 @@ insert into res_users (id, login, password, active, partner_id, company_id, crea
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('user_root', 'base', 'res.users', true, 1);
 select setval('res_users_id_seq', 1);
 
-insert into res_groups (id, name) VALUES (1, 'Employee');
+insert into res_groups (id, name) VALUES (1, '{"en_US": "Employee"}');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('group_user', 'base', 'res.groups', true, 1);
 select setval('res_groups_id_seq', 1);

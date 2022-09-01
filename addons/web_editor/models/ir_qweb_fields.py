@@ -155,10 +155,13 @@ class Field(models.AbstractModel):
             attrs['placeholder'] = placeholder
 
         if options['translate'] and field.type in ('char', 'text'):
-            name = "%s,%s" % (record._name, field_name)
-            domain = [('name', '=', name), ('res_id', '=', record.id), ('type', '=', 'model'), ('lang', '=', options.get('lang'))]
-            translation = record.env['ir.translation'].search(domain, limit=1)
-            attrs['data-oe-translation-state'] = translation and translation.state or 'to_translate'
+            lang = record.env.lang or 'en_US'
+            if lang == 'en_US':
+                attrs['data-oe-translation-state'] = 'translated'
+            else:
+                value_en = record.with_context(lang='en_US')[field_name]
+                value_lang = record.with_context(lang=lang)[field_name]
+                attrs['data-oe-translation-state'] = 'translated' if value_en != value_lang else 'to_translate'
 
         return attrs
 

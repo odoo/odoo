@@ -18,7 +18,7 @@ class IrHttp(models.AbstractModel):
             user_context = {'lang': guest.lang}
             mods = odoo.conf.server_wide_modules or []
             lang = user_context.get("lang")
-            translation_hash = request.env['ir.translation'].sudo().get_web_translations_hash(mods, lang)
+            translation_hash = request.env['ir.http'].sudo().get_web_translations_hash(mods, lang)
             result['cache_hashes']['translations'] = translation_hash
             result.update({
                 'name': guest.name,

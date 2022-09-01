@@ -91,7 +91,7 @@ class CustomerPortal(portal.CustomerPortal):
         user_context = dict(request.env.context) if request.session.uid else {}
         mods = conf.server_wide_modules or []
         lang = user_context.get("lang")
-        translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
+        translation_hash = request.env['ir.http'].get_web_translations_hash(mods, lang)
         cache_hashes = {
             "translations": translation_hash,
         }

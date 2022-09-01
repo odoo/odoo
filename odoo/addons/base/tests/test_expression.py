@@ -1171,14 +1171,8 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner_title".id
             FROM "res_partner_title"
-            LEFT JOIN "ir_translation" AS "res_partner_title__name" ON
-                ("res_partner_title"."id" = "res_partner_title__name"."res_id"
-                 AND "res_partner_title__name"."type" = 'model'
-                 AND "res_partner_title__name"."name" = %s
-                 AND "res_partner_title__name"."lang" = %s
-                 AND "res_partner_title__name"."value" != %s)
-            WHERE COALESCE("res_partner_title__name"."value", "res_partner_title"."name") LIKE %s
-            ORDER BY COALESCE("res_partner_title__name"."value", "res_partner_title"."name")
+            WHERE jsonb_path_query_array("res_partner_title"."name", '$.*')::text like %s
+            ORDER BY COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US')   
         ''']):
             Model.search([('name', 'like', 'foo')])
 
@@ -1226,7 +1220,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "ir_model".id
             FROM "ir_model"
-            WHERE ("ir_model"."name" ILIKE %s OR ("ir_model"."model"::text ILIKE %s))
+            WHERE (jsonb_path_query_array("ir_model"."name",'$.*')::text ILIKE %s OR ("ir_model"."model"::text ILIKE %s))
             ORDER BY "ir_model"."model"
             LIMIT 100
         ''']):
@@ -1237,7 +1231,7 @@ class TestQueries(TransactionCase):
             SELECT "ir_model".id
             FROM "ir_model"
             WHERE (
-                "ir_model"."name" NOT ILIKE %s
+                jsonb_path_query_array("ir_model"."name",'$.*')::text NOT ILIKE %s
                 AND (("ir_model"."model"::text NOT ILIKE %s) OR "ir_model"."model" IS NULL)
             )
             ORDER BY "ir_model"."model"

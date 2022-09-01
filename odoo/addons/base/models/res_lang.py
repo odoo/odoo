@@ -305,8 +305,6 @@ class Lang(models.Model):
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
 
     def unlink(self):
-        for language in self:
-            self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()
         self.clear_caches()
         return super(Lang, self).unlink()
 

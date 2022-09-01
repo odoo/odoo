@@ -139,7 +139,7 @@ class ProjectCustomerPortal(CustomerPortal):
             # Update Cache
             user_context['lang'] = lang
         lang = user_context.get("lang")
-        translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
+        translation_hash = request.env['ir.http'].get_web_translations_hash(mods, lang)
         cache_hashes = {
             "translations": translation_hash,
         }

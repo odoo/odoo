@@ -38,26 +38,9 @@ class AccountChartTemplate(models.Model):
 
         :return: True
         """
-        xlat_obj = self.env['ir.translation']
-        #find the source from Account Template
         for lang in langs:
-            #find the value from Translation
-            value = xlat_obj._get_ids(in_ids._name + ',' + in_field, 'model', lang, in_ids.ids)
-            counter = 0
-            for element in in_ids.with_context(lang=None):
-                if value[element.id]:
-                    #copy Translation from Source to Destination object
-                    xlat_obj._set_ids(
-                        out_ids._name + ',' + in_field,
-                        'model',
-                        lang,
-                        out_ids[counter].ids,
-                        value[element.id],
-                        element[in_field]
-                    )
-                else:
-                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' % (lang, element[in_field]))
-                counter += 1
+            for in_id, out_id in zip(in_ids.with_context(lang=lang), out_ids.with_context(lang=lang)):
+                out_id[in_field] = in_id[in_field]
         return True
 
     def process_coa_translations(self):
