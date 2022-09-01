@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.tools import float_utils, format_amount, formatLang
+from odoo.tools import float_utils, formatLang
 from odoo.tools.misc import format_duration
 
 
@@ -13,8 +13,8 @@ class ProjectUpdate(models.Model):
     def _get_template_values(self, project):
         template_values = super(ProjectUpdate, self)._get_template_values(project)
         services = self._get_services_values(project)
-        profitability = self._get_profitability_values(project)
-        show_profitability = bool(profitability and profitability.get('analytic_account_id') and (profitability.get('costs') or profitability.get('revenues')))
+        profitability_values = self._get_profitability_values(project)
+        show_profitability = bool(profitability_values and profitability_values.get('analytic_account_id') and (profitability_values.get('costs') or profitability_values.get('revenues')))
         show_sold = template_values['project'].allow_billable and len(services.get('data', [])) > 0
         return {
             **template_values,
@@ -22,7 +22,7 @@ class ProjectUpdate(models.Model):
             'show_profitability': show_profitability,
             'show_activities': template_values['show_activities'] or show_profitability or show_sold,
             'services': services,
-            'profitability': profitability,
+            'profitability': profitability_values,
             'format_value': lambda value, is_hour: str(round(value, 2)) if not is_hour else format_duration(value),
         }
 
@@ -77,13 +77,15 @@ class ProjectUpdate(models.Model):
         margin = revenues + costs
         return {
             'analytic_account_id': project.analytic_account_id,
-            'costs': costs,
-            'costs_formatted': format_amount(self.env, -costs, project.currency_id),
-            'revenues': revenues,
-            'revenues_formatted': format_amount(self.env, revenues, project.currency_id),
-            'margin': margin,
-            'margin_formatted': format_amount(self.env, margin, project.currency_id),
-            'margin_percentage': formatLang(self.env,
-                                            not float_utils.float_is_zero(costs, precision_digits=2) and (margin / -costs) * 100 or 0.0,
-                                            digits=0),
+            'costs': profitability_items['costs'],
+            'revenues': profitability_items['revenues'],
+            'total': {
+                'costs': costs,
+                'revenues': revenues,
+                'margin': margin,
+                'margin_percentage': formatLang(self.env,
+                                                not float_utils.float_is_zero(costs, precision_digits=2) and (margin / -costs) * 100 or 0.0,
+                                                digits=0),
+            },
+            'labels': project._get_profitability_labels(),
         }

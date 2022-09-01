@@ -7,7 +7,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import formatLang
+from odoo.tools import format_amount, formatLang
 
 STATUS_COLOR = {
     'on_track': 20,  # green / success
@@ -119,6 +119,7 @@ class ProjectUpdate(models.Model):
             'show_activities': milestones['show_section'],
             'milestones': milestones,
             'format_lang': lambda value, digits: formatLang(self.env, value, digits=digits),
+            'format_monetary': lambda value: format_amount(self.env, value, project.currency_id),
         }
 
     @api.model
