@@ -6,12 +6,20 @@
         <field name="model">payment.acquirer</field>
         <field name="inherit_id" ref="payment.payment_acquirer_form"/>
         <field name="arch" type="xml">
-            <xpath expr='//group[@name="acquirer"]' position='inside'>
+            <xpath expr="//div[@id='provider_creation_warning']" position="after">
+                <div class="alert alert-danger"
+                     role="alert"
+                     attrs="{'invisible': [('provider', '!=', 'payumoney')]}">
+                    This provider is deprecated.
+                    Consider disabling it and moving to <strong>Razorpay</strong>.
+                </div>
+            </xpath>
+            <group name="acquirer" position="inside">
                 <group attrs="{'invisible': [('provider', '!=', 'payumoney')]}">
                     <field name="payumoney_merchant_key" attrs="{'required':[ ('provider', '=', 'payumoney'), ('state', '!=', 'disabled')]}"/>
                     <field name="payumoney_merchant_salt" attrs="{'required':[ ('provider', '=', 'payumoney'), ('state', '!=', 'disabled')]}" password="True"/>
                 </group>
-            </xpath>
+            </group>
         </field>
     </record>
 

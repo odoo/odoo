@@ -5,15 +5,15 @@
     'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 370,
-    'summary': 'Payment Acquirer: Ogone Implementation',
-    'description': """Ogone Payment Acquirer""",
+    'summary': "This module is deprecated.",
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',
         'views/payment_ogone_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
-    'application': True,
+    'application': False,
+    'pre_init_hook': 'pre_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }

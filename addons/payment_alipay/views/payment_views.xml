@@ -6,7 +6,15 @@
         <field name="model">payment.acquirer</field>
         <field name="inherit_id" ref="payment.payment_acquirer_form"/>
         <field name="arch" type="xml">
-            <xpath expr='//group[@name="acquirer"]' position='inside'>
+            <xpath expr="//div[@id='provider_creation_warning']" position="after">
+                <div class="alert alert-danger"
+                     role="alert"
+                     attrs="{'invisible': [('provider', '!=', 'alipay')]}">
+                    This provider is deprecated.
+                    Consider disabling it and moving to <strong>Asiapay</strong>.
+                </div>
+            </xpath>
+            <group name="acquirer" position="inside">
                 <group attrs="{'invisible': [('provider', '!=', 'alipay')]}">
                     <field name="alipay_payment_method" widget="radio"/>
                     <field name="alipay_seller_email"
@@ -14,7 +22,7 @@
                     <field name="alipay_merchant_partner_id"/>
                     <field name="alipay_md5_signature_key" password="True"/>
                 </group>
-            </xpath>
+            </group>
         </field>
     </record>
 

@@ -6,7 +6,15 @@
         <field name="model">payment.acquirer</field>
         <field name="inherit_id" ref="payment.payment_acquirer_form"/>
         <field name="arch" type="xml">
-            <xpath expr='//group[@name="acquirer"]' position='inside'>
+            <xpath expr="//div[@id='provider_creation_warning']" position="after">
+                <div class="alert alert-danger"
+                     role="alert"
+                     attrs="{'invisible': [('provider', '!=', 'payulatam')]}">
+                    This provider is deprecated.
+                    Consider disabling it and moving to <strong>Mercado Pago</strong>.
+                </div>
+            </xpath>
+            <group name="acquirer" position="inside">
                 <group attrs="{'invisible': [('provider', '!=', 'payulatam')]}">
                     <field name="payulatam_merchant_id"
                            attrs="{'required':[('provider', '=', 'payulatam'), ('state', '!=', 'disabled')]}"/>
@@ -16,7 +24,7 @@
                            attrs="{'required':[('provider', '=', 'payulatam'), ('state', '!=', 'disabled')]}"
                            password="True"/>
                 </group>
-            </xpath>
+            </group>
         </field>
     </record>
 
