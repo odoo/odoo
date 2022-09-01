@@ -63,7 +63,7 @@ class EventType(models.Model):
         readonly=False, store=True,
         help="It will select this default maximum value when you choose this event")
     auto_confirm = fields.Boolean(
-        'Automatically Confirm Registrations', default=True,
+        'Automatically Confirm Registrations', default=False,
         help="Events and registrations will automatically be confirmed "
              "upon creation, easing the flow for simple events.")
     default_timezone = fields.Selection(
