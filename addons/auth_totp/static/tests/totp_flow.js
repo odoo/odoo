@@ -150,7 +150,7 @@ tour.register('totp_login_enabled', {
         //       procedurally clicking the button after we've set the input.
         const token = await ajax.jsonRpc('/totphook', 'call', {});
         helpers.text(token);
-        helpers.click('button:contains("Login")');
+        helpers.click('button:contains("Log in")');
     }
 }, {
     content: "check we're logged in",
@@ -187,7 +187,7 @@ tour.register('totp_login_device', {
     async run(helpers) {
         const token = await ajax.jsonRpc('/totphook', 'call', {})
         helpers.text(token);
-        helpers.click('button:contains("Login")');
+        helpers.click('button:contains("Log in")');
     }
 }, {
     content: "check we're logged in",
