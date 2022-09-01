@@ -1660,6 +1660,11 @@ class BaseModel(metaclass=MetaModel):
                         if view_type in result['views']:
                             result['views'][view_type]['toolbar'].setdefault(key, []).append(action)
 
+        if options.get('load_filters') and 'search' in result['views']:
+            result['views']['search']['filters'] = self.env['ir.filters'].get_filters(
+                self._name, options.get('action_id')
+            )
+
         return result
 
     @api.model
@@ -1671,7 +1676,6 @@ class BaseModel(metaclass=MetaModel):
         :param int view_id: id of the view or None
         :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
         :param dict options: bool options to return additional features:
-            - bool load_filters: returns the model's filters (for search views)
             - bool mobile: true if the web client is currently using the responsive mobile view
               (to use kanban views instead of list views for x2many fields)
         :return: architecture of the view as an etree node, and the browse record of the view used
@@ -1784,10 +1788,8 @@ class BaseModel(metaclass=MetaModel):
         :param int view_id: id of the view or None
         :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
         :param dict options: boolean options to return additional features:
-
-            - load_filters: returns the model's filters (for search views)
-            - mobile: true if the web client is currently using the responsive mobile view
-              (to use kanban views instead of list views for x2many fields)
+            - bool mobile: true if the web client is currently using the responsive mobile view
+            (to use kanban views instead of list views for x2many fields)
         :return: composition of the requested view (including inherited views and extensions)
         :rtype: dict
         :raise AttributeError:
@@ -1804,9 +1806,6 @@ class BaseModel(metaclass=MetaModel):
         node = etree.fromstring(result['arch'])
         node, result['models'] = self.env['ir.ui.view']._postprocess_access_rights(node, result['models'])
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
-
-        if options.get('load_filters') and view_type == 'search':
-            result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
 
         return result
 
