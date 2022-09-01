@@ -193,7 +193,7 @@ tour.register('sale_timesheet_tour', {
     trigger: '.oe_kanban_global_click :contains("Project for Freeman") button.o_dropdown_kanban',
     content: 'Open the project dropdown',
 }, {
-    trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Edit")',
+    trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Settings")',
     content: 'Start editing the project',
     // timer: 300,
 }, {

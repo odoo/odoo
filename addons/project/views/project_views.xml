@@ -457,45 +457,6 @@
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                        <field name="currency_id" invisible="1"/>
-                        <field name="allow_milestones" invisible="1"/>
-                        <button class="oe_stat_button" type="object" name="action_view_analytic_account_entries" icon="fa-usd" attrs="{'invisible': [('analytic_account_id', '=', False)]}" groups="analytic.group_analytic_accounting">
-                            <div class="o_form_field o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="analytic_account_balance" widget='monetary'/>
-                                </span>
-                                <span class="o_stat_text">Gross Margin</span>
-                            </div>
-                        </button>
-                        <button class="oe_stat_button" type="action"
-                            name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
-                            <field string="Tasks In Progress" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
-                        </button>
-                        <button class="oe_stat_button" name="action_get_list_view" type="object" icon="fa-check-square-o" attrs="{'invisible': [('allow_milestones', '=', False)]}">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="milestone_count" nolabel="1"/>
-                                </span>
-                                <span class="o_stat_text">
-                                    Milestones
-                                </span>
-                            </div>
-                        </button>
-                        <field name="rating_avg" invisible="1"/>
-                        <field name="rating_count" invisible="1"/>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_count', '=', 0)]}" class="oe_stat_button" groups="project.group_project_rating">
-                            <i class="fa fa-fw o_button_icon fa-smile-o text-success" attrs="{'invisible': [('rating_avg', '&lt;', 3.66)]}" title="Satisfied"/>
-                            <i class="fa fa-fw o_button_icon fa-meh-o text-warning" attrs="{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}" title="Okay"/>
-                            <i class="fa fa-fw o_button_icon fa-frown-o text-danger" attrs="{'invisible': [('rating_avg', '&gt;=', 2.33)]}" title="Dissatisfied"/>
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="rating_avg_percentage" nolabel="1" widget="percentage"/>
-                                </span>
-                                <span class="o_stat_text">
-                                    Satisfaction
-                                </span>
-                            </div>
-                        </button>
                         <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_manager">
                             <div class="ps-4">
                                 <field name="last_update_color" invisible="1"/>
@@ -507,11 +468,6 @@
                                 <field name="last_update_color" invisible="1"/>
                                 <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
                             </div>
-                        </button>
-                        <button name="%(action_project_task_burndown_chart_report)d" type="action" class="oe_stat_button" icon="fa-area-chart" groups="project.group_project_user">
-                            <span class="o_stat_text">
-                                Burndown Chart
-                            </span>
                         </button>
                         <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager" attrs="{'invisible':[('privacy_visibility', '!=', 'portal')]}">
                             <div class="o_field_widget o_stat_info">
@@ -908,7 +864,7 @@
                                             </div>
                                             <div role="menuitem" class="col-6" groups="project.group_project_manager">
                                                 <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action">Share</a>
-                                                <a class="dropdown-item" role="menuitem" type="edit">Edit</a>
+                                                <a class="dropdown-item" role="menuitem" type="edit">Settings</a>
                                             </div>
                                             <div class="o_kanban_card_manage_section o_kanban_manage_view col-12 row ps-0" groups="!project.group_project_manager">
                                                 <div role="menuitem" class="w-100">
@@ -1214,7 +1170,11 @@
                             <field name="description" type="html" options="{'collaborative': true, 'resizable': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
-                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}" widget="subtasks_one2many">
+                            <field name="child_ids"
+                                   context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
+                                    'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id }"
+                                   widget="many2many"
+                                   domain="['!', ('id', 'parent_of', id)]">
                                 <tree editable="bottom">
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
@@ -1290,8 +1250,10 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="recurrence" string="Recurrence" attrs="{'invisible': [('recurring_task', '=', False)]}" groups="project.group_project_recurring_tasks">
-                            <group>
+                        <page name="recurrence" string="Recurrent"  groups="project.group_project_recurring_tasks">
+                            <span class="o_form_label"> Recurrent </span>
+                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
+                            <group attrs="{'invisible': [('recurring_task', '=', False)]}">
                                 <group>
                                     <label for="repeat_interval" />
                                     <div class="o_col">

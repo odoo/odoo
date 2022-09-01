@@ -44,14 +44,6 @@ class Project(models.Model):
             action["res_id"] = expense_ids[0]
         return action
 
-    def action_open_project_expenses(self):
-        if not self.analytic_account_id:
-            return {'type': 'ir.actions.act_window_close'}
-        expense_ids = self.env['hr.expense']._search([
-            ('analytic_account_id', 'in', self.analytic_account_id.ids)
-        ])
-        return self._get_expense_action(expense_ids=expense_ids)
-
     def action_profitability_items(self, section_name, domain=None, res_id=False):
         if section_name == 'expenses':
             return self._get_expense_action(domain, [res_id] if res_id else [])
