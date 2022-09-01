@@ -335,7 +335,7 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        if (!this.isShown() || !this.$target.length || !this.$target[0].ownerDocument.defaultView) {
+        if (!this.isShown() || !this.$target.length) {
             return;
         }
 

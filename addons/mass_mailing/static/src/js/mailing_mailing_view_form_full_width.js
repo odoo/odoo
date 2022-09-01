@@ -36,10 +36,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
             onIframeUpdated: () => this._updateIframe(),
             mailingFilterTemplates: true,
         });
-        this._resizeObserver =  new ResizeObserver(throttleByAnimationFrame(entries => {
-            if (!Array.isArray(entries) || !entries.length) {
-                return;
-            }
+        this._resizeObserver =  new ResizeObserver(throttleByAnimationFrame(() => {
             this._resizeMailingEditorIframe();
             this._repositionMailingEditorSidebar();
         }));
@@ -178,10 +175,6 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         }
     }
 }
-
-MassMailingFullWidthViewController.components = {
-    ...formView.Controller.components,
-};
 
 export const massMailingFormView = {
     ...formView,

@@ -157,7 +157,7 @@ Wysiwyg.include({
         this.$el.append(this.$iframe);
 
         return def.then(() => {
-            this.options.onIframeUpdated && this.options.onIframeUpdated();
+            this.options.onIframeUpdated();
         });
     },
 

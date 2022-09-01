@@ -45,6 +45,9 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     }
 
     updateWidget(newProps) {
+        // When updating the value from the editable, there is no need to reset
+        // the editor as the content is the same. Changing it would cause
+        // unnecessary mutations and remove the selection.
         if (this.widget.softUpdate) {
             this.widget.softUpdate = false;
             return;
@@ -65,21 +68,17 @@ export class HtmlField extends Component {
 
         this.rpc = useService("rpc");
 
+        this.onIframeUpdated = this.env.onIframeUpdated || (() => {});
+
         this.state = useState({
             showCodeView: false,
             iframeVisible: false,
         });
 
-        useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this._commitChangesFromBus({urgent: true}));
-        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({detail}) => this._commitChangesFromBus({proms: detail.proms}));
+        useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
+        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", () => this.commitChanges());
 
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
-
-        // The wysiwyg.getValue() could return sligthly different value each
-        // call. The commitChanges would in such cases continuously be called as
-        // the `prop.update` will trigger the bus event
-        // `RELATIONAL_MODEL:WILL_SAVE`.
-        this._lastUpdateFromBus = false;
 
         onWillStart(async () => {
             this.Wysiwyg = await this._getWysiwygClass();
@@ -93,9 +92,6 @@ export class HtmlField extends Component {
         onWillUpdateProps((newProps) => {
             if (!newProps.readonly && this.state.iframeVisible) {
                 this.state.iframeVisible = false;
-            }
-            if (newProps.value !== this.props.value) {
-                this._resetIframeValue = true;
             }
         });
         useEffect(() => {
@@ -256,28 +252,10 @@ export class HtmlField extends Component {
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
     }
-    async _commitChangesFromBus({proms, urgent = false} = {}) {
-        if (this._skipNextBusChange) {
-            this._skipNextBusChange = false;
-            return;
-        }
-        const prom = new Promise(async (resolve) => {
-            if (!this._lastUpdateFromBus) {
-                this._lastUpdateFromBus = true;
-                await this.commitChanges({ urgent });
-            }
-            this._lastUpdateFromBus = false;
-            resolve();
-        });
-        if (proms) {
-            proms.push(prom);
-        }
-    }
     async _setupReadonlyIframe() {
         const iframeTarget = this.iframeRef.el.contentDocument.querySelector('#iframe_target');
         if (this.iframePromise && iframeTarget) {
-            if (this._resetIframeValue) {
-                this._resetIframeValue = false;
+            if (iframeTarget.innerHTML !== this.props.value) {
                 iframeTarget.innerHTML = this.props.value;
             }
             return this.iframePromise;
@@ -299,7 +277,7 @@ export class HtmlField extends Component {
                 }
                 resolve();
                 this.state.iframeVisible = true;
-                this.env.onIframeUpdated && this.env.onIframeUpdated();
+                this.onIframeUpdated();
             };
 
             this.iframeRef.el.addEventListener('load', async () => {
@@ -442,7 +420,6 @@ export class HtmlField extends Component {
             checked: !checked,
         });
         if (value) {
-            this._skipNextBusChange = true;
             this.props.update(value);
         }
     }
@@ -471,7 +448,6 @@ export class HtmlField extends Component {
             rating,
         });
         if (value) {
-            this._skipNextBusChange = true;
             this.props.update(value);
         }
     }

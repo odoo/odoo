@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import legacyEnv from 'web.commonEnv';
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -14,9 +13,7 @@ import { HtmlField } from "@web_editor/js/backend/html_field";
 import { getWysiwygClass } from 'web_editor.loader';
 import { device } from 'web.config';
 
-
 const {
-    useChildSubEnv,
     useEffect,
     onWillUpdateProps,
 } = owl;
@@ -24,8 +21,6 @@ const {
 export class MassMailingHtmlField extends HtmlField {
     setup() {
         super.setup();
-
-        useChildSubEnv(legacyEnv);
 
         this.action = useService('action');
         this.rpc = useService('rpc');
@@ -142,7 +137,7 @@ export class MassMailingHtmlField extends HtmlField {
             this._lastClickInIframe = true;
         }, true);
 
-        this.env.onIframeUpdated && this.env.onIframeUpdated();
+        this.onIframeUpdated();
     }
 
     async _onSnippetsLoaded() {
@@ -206,16 +201,14 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.odooEditor.observerUnactive();
             $codeview.toggleClass('d-none');
             this.wysiwyg.getEditable().toggleClass('d-none');
+            this.wysiwyg.odooEditor.observerActive();
 
             if ($codeview.hasClass('d-none')) {
-                this.wysiwyg.odooEditor.observerActive();
                 this.wysiwyg.setValue($codeview.val());
-                this.env.onIframeUpdated && this.env.onIframeUpdated();
             } else {
                 $codeview.val(this.wysiwyg.getValue());
-                this.env.onIframeUpdated && this.env.onIframeUpdated();
-                this.wysiwyg.odooEditor.observerActive();
             }
+            this.onIframeUpdated();
         });
 
         if ($themes.length === 0) {
@@ -223,12 +216,12 @@ export class MassMailingHtmlField extends HtmlField {
         }
 
         // Initialize theme parameters.
-        let themeClassNames = "";
+        this._themeClassNames = "";
         const themesParams = _.map($themes, (theme) => {
             const $theme = $(theme);
             const name = $theme.data("name");
             const classname = "o_" + name + "_theme";
-            themeClassNames += " " + classname;
+            this._themeClassNames += " " + classname;
             const imagesInfo = _.defaults($theme.data("imagesInfo") || {}, {
                 all: {}
             });
@@ -294,62 +287,7 @@ export class MassMailingHtmlField extends HtmlField {
 
             const themeParams = [...themesParams, ...templatesParams].find(theme => theme.name === themeName);
 
-            const switchThemes = () => {
-                if (!themeParams || this.switchThemeLast === themeParams) {
-                    return;
-                }
-                this.switchThemeLast = themeParams;
-
-                this.wysiwyg.$iframeBody.closest('body').removeClass(themeClassNames).addClass(themeParams.className);
-
-                const old_layout = this.wysiwyg.$editable.find('.o_layout')[0];
-
-                let $newWrapper;
-                let $newWrapperContent;
-                if (themeParams.nowrap) {
-                    $newWrapper = $('<div/>', {
-                        class: 'oe_structure'
-                    });
-                    $newWrapperContent = $newWrapper;
-                } else {
-                    // This wrapper structure is the only way to have a responsive
-                    // and centered fixed-width content column on all mail clients
-                    $newWrapper = $('<div/>', {
-                        class: 'container o_mail_wrapper o_mail_regular oe_unremovable',
-                    });
-                    $newWrapperContent = $('<div/>', {
-                        class: 'col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable'
-                    });
-                    $newWrapper.append($('<div class="row"/>').append($newWrapperContent));
-                }
-                const $newLayout = $('<div/>', {
-                    class: 'o_layout oe_unremovable oe_unmovable bg-200 ' + themeParams.className,
-                    style: themeParams.layoutStyles,
-                    'data-name': 'Mailing',
-                }).append($newWrapper);
-
-                const $contents = themeParams.template;
-                $newWrapperContent.append($contents);
-                this._switchImages(themeParams, $newWrapperContent);
-                old_layout && old_layout.remove();
-                this.wysiwyg.$editable.empty().append($newLayout);
-
-                $newWrapperContent.find('*').addBack()
-                    .contents()
-                    .filter(function () {
-                        return this.nodeType === 3 && this.textContent.match(/\S/);
-                    }).parent().addClass('o_default_snippet_text');
-
-                if (themeParams.name === 'basic') {
-                    this.wysiwyg.$editable[0].focus();
-                }
-                initializeDesignTabCss(this.wysiwyg.$editable);
-                this.wysiwyg.trigger('reload_snippet_dropzones');
-                this.env.onIframeUpdated && this.env.onIframeUpdated();
-                this.wysiwyg.odooEditor.historyStep(true);
-                return this.commitChanges();
-            }
-            await switchThemes();
+            await this._switchThemes(themeParams);
             this.wysiwyg.$iframeBody.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
@@ -367,6 +305,7 @@ export class MassMailingHtmlField extends HtmlField {
             setTimeout(() => {
                 this.wysiwyg.historyReset();
 
+                // The selection has been lost when switching theme.
                 const document = this.wysiwyg.odooEditor.document;
                 const selection = document.getSelection();
                 const p = this.wysiwyg.odooEditor.editable.querySelector('p');
@@ -400,9 +339,7 @@ export class MassMailingHtmlField extends HtmlField {
             $target.parents('.o_mail_template_preview').remove();
         });
 
-        let selectedTheme = $layout.length !== 0 && themesParams.find((themeParams) => {
-            return $layout.hasClass(themeParams.className);
-        });
+        let selectedTheme = this._getSelectedTheme(themesParams);
         if (selectedTheme) {
             this.wysiwyg.$iframeBody.closest('body').addClass(selectedTheme.className);
             this._switchImages(selectedTheme, $snippets);
@@ -466,8 +403,8 @@ export class MassMailingHtmlField extends HtmlField {
         }
     }
     _getSelectedTheme(themesParams) {
-        var $layout = this.$content.find(".o_layout");
-        var selectedTheme = false;
+        const $layout = this.wysiwyg.$iframeBody.find(".o_layout");
+        let selectedTheme = false;
         if ($layout.length !== 0) {
             _.each(themesParams, function (themeParams) {
                 if ($layout.hasClass(themeParams.className)) {
@@ -477,6 +414,14 @@ export class MassMailingHtmlField extends HtmlField {
         }
         return selectedTheme;
     }
+    /**
+     * Swap the previous theme's default images with the new ones.
+     * (Redefine the `src` attribute of all images in a $container, depending on the theme parameters.)
+     *
+     * @private
+     * @param {Object} themeParams
+     * @param {JQuery} $container
+     */
     _switchImages(themeParams, $container) {
         if (!themeParams) {
             return;
@@ -504,6 +449,70 @@ export class MassMailingHtmlField extends HtmlField {
                 $img.attr('src', src);
             }
         }
+    }
+    /**
+     * Switch themes or import first theme.
+     *
+     * @private
+     * @param {Object} themeParams
+     */
+    _switchThemes(themeParams) {
+        if (!themeParams || this.switchThemeLast === themeParams) {
+            return;
+        }
+        this.switchThemeLast = themeParams;
+
+        this.wysiwyg.$iframeBody.closest('body').removeClass(this._themeClassNames).addClass(themeParams.className);
+
+        const old_layout = this.wysiwyg.$editable.find('.o_layout')[0];
+
+        let $newWrapper;
+        let $newWrapperContent;
+        if (themeParams.nowrap) {
+            $newWrapper = $('<div/>', {
+                class: 'oe_structure'
+            });
+            $newWrapperContent = $newWrapper;
+        } else {
+            // This wrapper structure is the only way to have a responsive
+            // and centered fixed-width content column on all mail clients
+            $newWrapper = $('<div/>', {
+                class: 'container o_mail_wrapper o_mail_regular oe_unremovable',
+            });
+            $newWrapperContent = $('<div/>', {
+                class: 'col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable'
+            });
+            $newWrapper.append($('<div class="row"/>').append($newWrapperContent));
+        }
+        const $newLayout = $('<div/>', {
+            class: 'o_layout oe_unremovable oe_unmovable bg-200 ' + themeParams.className,
+            style: themeParams.layoutStyles,
+            'data-name': 'Mailing',
+        }).append($newWrapper);
+
+        const $contents = themeParams.template;
+        $newWrapperContent.append($contents);
+        this._switchImages(themeParams, $newWrapperContent);
+        old_layout && old_layout.remove();
+        this.wysiwyg.$editable.empty().append($newLayout);
+
+        $newWrapperContent.find('*').addBack()
+            .contents()
+            .filter(function () {
+                return this.nodeType === 3 && this.textContent.match(/\S/);
+            }).parent().addClass('o_default_snippet_text');
+
+        if (themeParams.name === 'basic') {
+            this.wysiwyg.$editable[0].focus();
+        }
+        initializeDesignTabCss(this.wysiwyg.$editable);
+        this.wysiwyg.trigger('reload_snippet_dropzones');
+        this.onIframeUpdated();
+        this.wysiwyg.odooEditor.historyStep(true);
+        // The value of the field gets updated upon editor blur. If for any
+        // reason, the selection was not in the editable before modifying
+        // another field, ensure that the value is properly set.
+        return this.commitChanges();
     }
     /**
      * Prevent usage of the dynamic placeholder command inside widgets
