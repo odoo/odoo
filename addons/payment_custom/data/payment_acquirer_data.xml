@@ -6,6 +6,7 @@
         <field name="redirect_form_view_id" ref="redirect_form"/>
         <!-- Clear the default value before recomputing the pending_msg -->
         <field name="pending_msg" eval="False"/>
+        <field name="custom_mode">wire_transfer</field>
     </record>
 
     <function model="payment.acquirer"
