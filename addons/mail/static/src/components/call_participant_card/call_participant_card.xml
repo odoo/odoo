@@ -20,7 +20,7 @@
                     <CallParticipantVideo record="callParticipantCard.callParticipantVideoView"/>
                 </t>
                 <t t-else="">
-                    <div class="o_CallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-secondary': !callParticipantCard.isMinimized}" draggable="false">
+                    <div class="o_CallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-700': !callParticipantCard.isMinimized}" draggable="false">
                         <img alt="Avatar"
                              t-att-class="{
                                 'o-isTalking': callParticipantCard.isTalking,
@@ -37,7 +37,7 @@
                     <!-- overlay -->
                     <span class="o_CallParticipantCard_overlay o_CallParticipantCard_overlayBottom position-absolute bottom-0 start-0 d-flex overflow-hidden">
                         <t t-if="!callParticipantCard.isMinimized">
-                            <span class="o_CallParticipantCard_name p-1 rounded-1 bg-black-75 text-white text-truncate" t-esc="callParticipantCard.channelMember.persona.name"/>
+                            <span class="o_CallParticipantCard_name p-1 rounded-1 text-white text-truncate" t-esc="callParticipantCard.channelMember.persona.name"/>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
                             <small class="o_CallParticipantCard_liveIndicator o-isMinimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
