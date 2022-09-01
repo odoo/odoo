@@ -79,7 +79,7 @@
             <field name="model">res.partner.bank</field>
             <field name="priority">15</field>
             <field name="arch" type="xml">
-                <form string="Bank account">
+                <form string="Bank account" name="bank_account_form">
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
@@ -89,11 +89,12 @@
                             <field name="acc_number"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="partner_id"/>
+                            <field name="acc_holder_name"/>
                         </group>
                         <group>
                             <field name="bank_id"/>
                             <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
-                            <field name="acc_holder_name"/>
+                            <field name="allow_out_payment" widget="boolean_toggle"/>
                             <field name="active" invisible="1"/>
                         </group>
                     </group>
@@ -113,6 +114,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id"/>
                     <field name="acc_holder_name" invisible="1"/>
+                    <field name="allow_out_payment" widget="boolean_toggle"/>
                 </tree>
             </field>
         </record>
