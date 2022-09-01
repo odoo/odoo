@@ -252,7 +252,6 @@ async function start(param0 = {}) {
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
     const webClient = await getWebClientReady({ ...param0, messagingBus, testSetupDoneDeferred });
 
-    webClient.env.services.messaging.modelManager;
     registerCleanup(async () => {
         await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
         webClient.env.services.messaging.modelManager.destroy();
