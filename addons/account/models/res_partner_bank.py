@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
+from collections import defaultdict
 
 import werkzeug
 import werkzeug.exceptions
@@ -9,11 +10,21 @@ from odoo.tools.image import image_data_uri
 
 
 class ResPartnerBank(models.Model):
-    _inherit = 'res.partner.bank'
+    _name = 'res.partner.bank'
+    _inherit = ['res.partner.bank', 'mail.thread', 'mail.activity.mixin']
 
     journal_id = fields.One2many(
         'account.journal', 'bank_account_id', domain=[('type', '=', 'bank')], string='Account Journal', readonly=True,
         help="The accounting journal corresponding to this bank account.")
+
+    # Add tracking to the base fields
+    bank_id = fields.Many2one(tracking=True)
+    active = fields.Boolean(tracking=True)
+    acc_number = fields.Char(tracking=True)
+    acc_holder_name = fields.Char(tracking=True)
+    partner_id = fields.Many2one(tracking=True)
+    allow_out_payment = fields.Boolean(tracking=True)
+    currency_id = fields.Many2one(tracking=True)
 
     @api.constrains('journal_id')
     def _check_journal_id(self):
@@ -158,3 +169,48 @@ class ResPartnerBank(models.Model):
         so that it can be reported to the user.
         """
         return None
+
+    def create(self, vals_list):
+        # EXTENDS base res.partner.bank
+        res = super().create(vals_list)
+        for account in res:
+            msg = _("Bank Account %s created", account._get_html_link(title=f"#{account.id}"))
+            account.partner_id._message_log(body=msg)
+        return res
+
+    def write(self, vals):
+        # EXTENDS base res.partner.bank
+        # Track and log changes to partner_id, heavily inspired from account_move
+        account_initial_values = defaultdict(dict)
+        # Get all tracked fields (without related fields because these fields must be managed on their own model)
+        tracking_fields = []
+        for field_name in vals:
+            field = self._fields[field_name]
+            if not (hasattr(field, 'related') and field.related) and hasattr(field, 'tracking') and field.tracking:
+                tracking_fields.append(field_name)
+        fields_definition = self.env['res.partner.bank'].fields_get(tracking_fields)
+
+        # Get initial values for each account
+        for account in self:
+            for field in tracking_fields:
+                # Group initial values by partner_id
+                account_initial_values[account][field] = account[field]
+
+        res = super().write(vals)
+
+        # Log changes to move lines on each move
+        for account, initial_values in account_initial_values.items():
+            tracking_value_ids = account._mail_track(fields_definition, initial_values)[1]
+            if tracking_value_ids:
+                msg = _("Bank Account %s updated", account._get_html_link(title=f"#{account.id}"))
+                account.partner_id._message_log(body=msg, tracking_value_ids=tracking_value_ids)
+                if 'partner_id' in initial_values:  # notify previous partner as well
+                    initial_values['partner_id']._message_log(body=msg, tracking_value_ids=tracking_value_ids)
+        return res
+
+    def unlink(self):
+        # EXTENDS base res.partner.bank
+        for account in self:
+            msg = _("Bank Account %s with number %s deleted", account._get_html_link(title=f"#{account.id}"), account.acc_number)
+            account.partner_id._message_log(body=msg)
+        return super().unlink()
