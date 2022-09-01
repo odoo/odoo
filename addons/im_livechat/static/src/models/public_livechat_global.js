@@ -26,7 +26,9 @@ registerModel({
                 }
                 set_cookie(this.LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60 * 60 * 24); // 1 day cookie
             }
-            this.willStart();
+            if (this.isAvailable) {
+                this.willStart();
+            }
         },
     },
     recordMethods: {
