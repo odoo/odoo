@@ -26,7 +26,22 @@
 
     <!-- Dummy layout to "view" a template content (html) -->
     <template id="view" name="Browser View">
+&lt;!DOCTYPE html&gt;
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+        <style type="text/css">
+            <!-- Hide the link view online as it is displayed online -->
+            .o_snippet_view_in_browser {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
         <!-- Raw body inserted here because it is a rendered mailing, therefore internal content -->
         <t t-out="body"/>
+    </body>
+</html>
     </template>
 </odoo>
