@@ -390,22 +390,22 @@
             <tr>
                 <td width="130px;" style="min-width: 130px;">
                     <div style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
-                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) "></t>
+                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) ">Tuesday</t>
                     </div>
                     <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)"></t>
+                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
                     </div>
                     <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
-                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)"></t>
+                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
                     </div>
                     <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;">
                         <t t-if="not object.allday">
                             <div>
-                                <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)"></t>
+                                <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)">11:00 AM</t>
                             </div>
                             <t t-if="mail_tz">
                                 <div style="font-size: 10px; font-weight: normal">
-                                    (<t t-out="mail_tz"></t>)
+                                    (<t t-out="mail_tz"> Europe/Brussels</t>)
                                 </div>
                             </t>
                         </t>
@@ -430,17 +430,17 @@
                             </li>
                         </t>
                         <t t-if="object.location">
-                            <li>Location: <t t-out="object.location or ''"></t>
+                            <li>Location: <t t-out="object.location or ''">Bruxelles</t>
                                 (<a target="_blank"
                                     t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.location}}">View Map</a>)
                             </li>
                         </t>
                         <t t-if="recurrent">
-                            <li>When: <t t-out="object.recurrence_id.name or ''"></t></li>
+                            <li>When: <t t-out="object.recurrence_id.name or ''">Every 1 Weeks, for 3 events</t></li>
                         </t>
                         <t t-if="not object.allday and object.duration">
                             <li>Duration:
-                                <t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))"></t>
+                                <t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))">0H30</t>
                             </li>
                         </t>
                     </ul>
@@ -453,6 +453,10 @@
         <p placeholder="Enter your message here"><br/></p>
 
     </div>
+    <t t-if="object.event_id.user_id.signature">
+        <br />
+        <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
+    </t>
 </div>
             </field>
         </record>
