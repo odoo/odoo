@@ -3,7 +3,6 @@ About
 Do you want to get brand-wise products? Currently, in odoo, you can't manage products by brands. This module allows for managing product brands. It also helps to search, filter and group by-products by brand, it also shows how many products in a particular brand.
 
 
-
 Installation
 ============
 1) Copy module files to addon folder.
