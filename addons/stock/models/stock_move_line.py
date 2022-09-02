@@ -666,9 +666,9 @@ class StockMoveLine(models.Model):
             data['result_package_name'] = self.env['stock.quant.package'].browse(vals.get('result_package_id')).name
         if 'owner_id' in vals and vals['owner_id'] != move.owner_id.id:
             data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
-        record.message_post_with_view(
+        record.message_post_with_source(
             template,
-            values={'move': move, 'vals': dict(vals, **data)},
+            render_values={'move': move, 'vals': dict(vals, **data)},
             subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         )
 

@@ -207,12 +207,10 @@ class ServerActions(models.Model):
                 subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             else:
                 subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-            for record in records:
-                record.message_post_with_template(
-                    self.template_id.id,
-                    composition_mode='comment',
-                    subtype_id=subtype_id,
-                )
+            records.message_post_with_source(
+                self.template_id,
+                subtype_id=subtype_id,
+            )
         else:
             template = self.template_id.with_context(cleaned_ctx)
             for res_id in res_ids:

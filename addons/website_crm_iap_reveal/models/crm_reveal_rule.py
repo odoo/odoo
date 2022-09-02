@@ -389,9 +389,9 @@ class CRMRevealRule(models.Model):
             'flavor_text': _("Opportunity created by Odoo Lead Generation"),
             'people_data': result.get('people_data'),
         })
-        lead.message_post_with_view(
+        lead.message_post_with_source(
             'iap_mail.enrich_company',
-            values=template_values,
+            render_values=template_values,
             subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
         )
 

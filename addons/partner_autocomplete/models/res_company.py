@@ -81,9 +81,9 @@ class ResCompany(models.Model):
         if additional_data:
             template_values = json.loads(additional_data)
             template_values['flavor_text'] = _("Company auto-completed by Odoo Partner Autocomplete Service")
-            self.partner_id.message_post_with_view(
+            self.partner_id.message_post_with_source(
                 'iap_mail.enrich_company',
-                values=template_values,
+                render_values=template_values,
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
             )
         return True

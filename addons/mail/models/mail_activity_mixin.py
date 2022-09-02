@@ -339,15 +339,10 @@ class MailActivityMixin(models.AbstractModel):
     def activity_send_mail(self, template_id):
         """ Automatically send an email based on the given mail.template, given
         its ID. """
-        template = self.env['mail.template'].browse(template_id).exists()
-        if not template:
-            return False
-        for record in self:
-            record.message_post_with_template(
-                template_id,
-                composition_mode='comment',
-                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
-            )
+        self.message_post_with_source(
+            self.env['mail.template'].browse(template_id).exists(),
+            subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+        )
         return True
 
     def activity_search(self, act_type_xmlids='', user_id=None, additional_domain=None):

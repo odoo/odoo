@@ -750,9 +750,9 @@ class Meeting(models.Model):
             raise UserError(_("There are no attendees on these events"))
         template_id = self.env['ir.model.data']._xmlid_to_res_id('calendar.calendar_template_meeting_update', raise_if_not_found=False)
         # The mail is sent with datetime corresponding to the sending user TZ
-        composition_mode = self.env.context.get('composition_mode', 'comment')
+        default_composition_mode = self.env.context.get('default_composition_mode', self.env.context.get('composition_mode', 'comment'))
         compose_ctx = dict(
-            default_composition_mode=composition_mode,
+            default_composition_mode=default_composition_mode,
             default_model='calendar.event',
             default_res_ids=self.ids,
             default_use_template=bool(template_id),

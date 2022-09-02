@@ -646,13 +646,16 @@ class MailThread(models.AbstractModel):
         # doesn't exist
         self = self.with_context(clean_context(self._context))
         templates = self._track_template(changes)
+        default_composition_mode = 'mass_mail' if len(self) != 1 else 'comment'
         for _field_name, (template, post_kwargs) in templates.items():
             if not template:
                 continue
-            if isinstance(template, str):
-                self._fallback_lang().message_post_with_view(template, **post_kwargs)
+
+            composition_mode = post_kwargs.pop('composition_mode', default_composition_mode)
+            if composition_mode == 'mass_mail':
+                self._fallback_lang().message_mail_with_source(template, **post_kwargs)
             else:
-                self._fallback_lang().message_post_with_template(template.id, **post_kwargs)
+                self._fallback_lang().message_post_with_source(template, **post_kwargs)
         return True
 
     def _track_template(self, changes):
@@ -1887,9 +1890,9 @@ class MailThread(models.AbstractModel):
             'res_id': self.id,
             # content
             'body': body,
-            'subject': subject or False,
             'message_type': message_type,
             'parent_id': self._message_compute_parent_id(parent_id),
+            'subject': subject or False,
             'subtype_id': subtype_id,
             # recipients
             'partner_ids': partner_ids,
@@ -2072,86 +2075,196 @@ class MailThread(models.AbstractModel):
     # MESSAGE POST API / WRAPPERS
     # ------------------------------------------------------------
 
-    def _message_compose_with_view(self, views_or_xmlid, message_log=False, **kwargs):
-        """ Helper method to send a mail / post a message / log a note using
-        a view_id to render using the ir.qweb engine. This method is stand
-        alone, because there is nothing in template and composer that allows
-        to handle views in batch. This method should probably disappear when
-        templates handle ir ui views. """
-        values = kwargs.pop('values', None) or dict()
-        try:
-            from odoo.addons.http_routing.models.ir_http import slug
-            values['slug'] = slug
-        except ImportError:
-            values['slug'] = lambda self: self.id
-        view_ref = views_or_xmlid.id if isinstance(views_or_xmlid, models.BaseModel) else views_or_xmlid
+    def message_mail_with_source(self, source_ref, render_values=None,
+                                 message_type='notification',
+                                 auto_commit=False,
+                                 **kwargs):
+        """ Send a mass mail on self, using an external source to render part
+        of the content. It can be either a 'mail.template', either a view used
+        to render the body using QWeb.
 
-        messages_as_sudo = self.env['mail.message']
-        for record in self:
-            values['object'] = record
-            rendered_template = self.env['ir.qweb']._render(view_ref, values, minimal_qcontext=True, raise_if_not_found=False)
-            if not rendered_template:
-                continue
-            if message_log:
-                messages_as_sudo += record._message_log(body=rendered_template, **kwargs)
-            else:
-                kwargs['body'] = rendered_template
-                # a bit complicated to handle, to be improved soon in master
-                _mails_as_sudo, _messages_as_sudo = record.message_post_with_template(False, **kwargs)
-                if _messages_as_sudo:
-                    messages_as_sudo += _messages_as_sudo
+        SPOILER: this method currently calls a composer in a loop when using
+        a view even if it is suboptimal. This is due to current composer
+        implementation.. This will be cleaned soon to  optimize mass mailing
+        through mail.thread and lessen usage of composer itself.s
 
-        return messages_as_sudo
+        Default values
+          * subtype_id: will be False, forced by composer in mass mode;
 
-    def message_post_with_view(self, views_or_xmlid, **kwargs):
-        """ Helper method to send a mail / post a message using a view_id """
-        return self._message_compose_with_view(views_or_xmlid, **kwargs)
+        :param record/str source_ref: reference to a source for rendering.
+          It can be one of
+            * a MailTemplate record. It will be used to render the various
+              message values (body, subject, recipients, ...). It should behave
+              like using the mail composer with a template;
+            * an IrUIView record. It will be used to render the content
+              (body). Other fields are left to the caller and/or default values
+              computation;
+            * an XmlID of a MailTemplate or of an IrUiView: see above;
+        :param dict render_values: additional rendering values for qweb context;
 
-    def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
-        """ Helper method to send a mail with a template
-            :param template_id : the id of the template to render to create the body of the message
-            :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
+        :param str message_type: one of 'notification' or 'comment';
+        :param bool auto_commit: auto commit after each batch of emails sent
+          (see ``MailComposer._action_send_mail()``);
+        :param dict kwargs: additional values given to the 'mail.compose.message'
+          creation;
+
+        :return: created mail.mail records, as sudo
         """
+        template, view = self._get_source_from_ref(source_ref)
+
         # preliminary value safety check
-        self._raise_for_invalid_fields([kwargs.keys()], {'model', 'res_id'})
+        self._raise_for_invalid_fields([kwargs], {'body', 'composition_mode', 'model', 'res_id', 'values'})
 
-        # Get composition mode, or force it according to the number of record in self
-        if not kwargs.get('composition_mode'):
-            kwargs['composition_mode'] = 'comment' if len(self.ids) == 1 else 'mass_mail'
-        if not kwargs.get('message_type'):
-            kwargs['message_type'] = 'notification'
-        res_id = self.ids[0] if self.ids else 0
-        res_ids = self.ids
+        # with a view, render bodies in batch (template is managed by composer)
+        bodies = self.env['mail.render.mixin']._render_template_qweb_view(
+            view,
+            self._name,
+            self.ids,
+            add_context=render_values,
+        ) if view else {}
 
-        # Create the composer
-        composer = self.env['mail.compose.message'].with_context(
-            active_id=res_id,
-            active_ids=res_ids,
-            active_model=self._name,
-            default_composition_mode=kwargs['composition_mode'],
-            default_email_layout_xmlid=email_layout_xmlid,
-            default_model=self._name,
-            default_res_id=res_id,
-            default_template_id=template_id,
-        ).create(kwargs)
-        # Simulate the onchange (like trigger in form the view) only
-        # when having a template in single-email mode
-        if template_id:
-            update_values = composer._onchange_template_id(
-                template_id,
-                kwargs['composition_mode'],
-                self._name,
-                res_id
-            )['value']
-            composer.write(update_values)
-        return composer._action_send_mail(auto_commit=auto_commit)
+        # Prepare composer values for creation
+        composer_values = {
+            'composition_mode': 'mass_mail',
+            'message_type': message_type,
+            # subtype is not really used in mass mail mode as it is used mainly
+            # when posting, but keep it in case it is used in post send
+            'subtype_id': kwargs.pop('subtype_id', False) or self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            **kwargs,
+        }
+        composer_ctx = {
+            'default_composition_mode': 'mass_mail',
+            'default_model': self._name,
+            'default_template_id': template.id if template else False,
+        }
+
+        mails_su = self.env['mail.mail'].sudo()
+        for subset in [self] if template else self:
+            composer_ctx['active_ids'] = subset.ids  # still required for mass mail mode
+            if template:
+                composer_ctx['default_res_id'] = subset.ids[0] if subset.ids else 0
+            else:
+                composer_values['body'] = bodies[subset.id]
+                composer_ctx['default_res_id'] = subset.id
+
+            composer = self.env['mail.compose.message'].with_context(
+                **composer_ctx
+            ).create(composer_values)
+            # Simulate the onchange (like trigger in form the view) only
+            # when having a template in single-email mode
+            if template:
+                update_values = composer._onchange_template_id(
+                    template.id,
+                    composer_values['composition_mode'],
+                    self._name,
+                    subset.ids[0] if subset.ids else 0
+                )['value']
+                composer.write(update_values)
+
+            mails_as_sudo, _messages_as_sudo = composer._action_send_mail(auto_commit=auto_commit)
+            mails_su += mails_as_sudo
+        return mails_su
+
+    def message_post_with_source(self, source_ref, render_values=None,
+                                 message_type='notification', subtype_id=False,
+                                 **kwargs):
+        """ Post a message on each record of self, using a view to render the
+        body using QWeb.
+
+        Default values
+          * subtype_id: if not given, fallback on ``note`` to be consistent
+            with what message_post does;
+
+        :param record/str source_ref: reference to a source for rendering.
+          It can be one of
+            * a MailTemplate record. It will be used to render the various
+              message values (body, subject, recipients, ...). It should behave
+              like using the mail composer with a template;
+            * an IrUIView record. It will be used to render the content
+              (body). Other fields are left to the caller and/or default values
+              computation;
+            * an XmlID of a MailTemplate or of an IrUiView: see above
+        :param dict render_values: additional rendering values for qweb context;
+
+        :param str message_type: one of 'notification' or 'comment';
+        :param int subtype_id: subtype_id of the message, used mainly for followers
+            notification mechanism;
+        :param dict kwargs: additional values given to the 'mail.compose.message'
+          creation;
+
+        :return: posted mail.message records
+        """
+        template, view = self._get_source_from_ref(source_ref)
+
+        # preliminary value safety check
+        self._raise_for_invalid_fields(
+            [kwargs.keys()],
+            {'body', 'composition_mode', 'model', 'res_id', 'values'}
+        )
+
+        # with a view, render bodies in batch (template is managed by composer)
+        bodies = self.env['mail.render.mixin']._render_template_qweb_view(
+            view,
+            self._name,
+            self.ids,
+            add_context=render_values,
+        ) if view else {}
+
+        # Prepare composer values for creation
+        if not subtype_id:
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        composer_values = {
+            'composition_mode': 'comment',
+            'message_type': message_type,
+            'subtype_id': subtype_id,
+            **kwargs,
+        }
+
+        messages = self.env['mail.message']
+        for record in self:
+            if template:
+                composer = self.env['mail.compose.message'].with_context(
+                    active_ids=record.ids,  # still required for mass mail mode
+                    default_composition_mode='comment',
+                    default_model=self._name,
+                    default_res_id=record.id,
+                    default_template_id=template.id,
+                ).create(composer_values)
+
+                # Simulate the onchange (like trigger in form the view) only
+                # when having a template in single-email mode
+                if template:
+                    update_values = composer._onchange_template_id(
+                        template.id,
+                        composer_values['composition_mode'],
+                        self._name,
+                        record.id,
+                    )['value']
+                    composer.write(update_values)
+                _mails_as_sudo, messages_as_sudo = composer._action_send_mail()
+                messages += messages_as_sudo
+            else:
+                messages += record.message_post(
+                    body=bodies[record.id],
+                    message_type=message_type,
+                    subtype_id=subtype_id,
+                    **kwargs
+                )
+        return messages
 
     def message_notify(self, *,
                        partner_ids=False, parent_id=False, model=False, res_id=False,
                        author_id=None, email_from=None, body='', subject=False, **kwargs):
-        """ Shortcut allowing to notify partners of messages that shouldn't be
-        displayed on a document. It pushes notifications on inbox or by email depending
-        on the user configuration, like other notifications. """
+        """ Shortcut allowing to notify partners of messages that should not be
+        displayed on a document. It pushes notifications on inbox or by email
+        depending on the user configuration, like other notifications.
+
+        Default values
+          * subtype_id: if not given, fallback on ``note`` to be consistent
+            with what message_post does;
+
+        :return: posted mail.message records
+        """
         if self:
             self.ensure_one()
         if not partner_ids:
@@ -2203,47 +2316,47 @@ class MailThread(models.AbstractModel):
         self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
-    def _message_log_with_view(self, views_or_xmlid, **kwargs):
-        """ Helper method to log a note using a view_id without notifying followers. """
-        return self._message_compose_with_view(views_or_xmlid, message_log=True, **kwargs)
+    def _message_log_with_view(self, views_or_xmlid, render_values=None,
+                               message_type='notification', **kwargs):
+        """ Log a message on each record of self, using a view to render the
+        body using QWeb.
+
+        :param views_or_xmlid: either an xmlid of a view (template), either directly
+          an ir.ui.view record. Used to render body;
+        :param dict render_values: additional rendering values for qweb context;
+        :param str message_type: one of 'notification' or 'comment';
+        :param kwargs: additional values propagated to ``_message_log``;
+
+        :return: posted mail.message records (as sudo)
+        """
+        self._raise_for_invalid_fields([kwargs.keys()], {'body', 'bodies'})
+
+        # with a view, render bodies in batch (template is managed by composer)
+        bodies = self.env['mail.render.mixin']._render_template_qweb_view(
+            views_or_xmlid,
+            self._name,
+            self.ids,
+            add_context=render_values,
+        )
+
+        return self._message_log_batch(
+            bodies=bodies,
+            message_type=message_type,
+            **kwargs
+        )
 
     def _message_log(self, *, body='', author_id=None, email_from=None, subject=False,
                      message_type='notification',
                      attachment_ids=False, tracking_value_ids=False):
-        """ Shortcut allowing to post note on a document. It does not perform
-        any notification and pre-computes some values to have a short code
-        as optimized as possible. This method is private as it does not check
-        access rights and perform the message creation as sudo to speedup
-        the log process. This method should be called within methods where
-        access rights are already granted to avoid privilege escalation.
-
-        :return: created message (as sudo)"""
+        """ Shortcut allowing to post note on a document. See ``_message_log_batch``
+        for more details. """
         self.ensure_one()
-        author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
 
-        msg_values = {
-            # author
-            'author_id': author_id,
-            'email_from': email_from,
-            # document
-            'model': self._name,
-            'record_name': False,
-            'res_id': self.id,
-            # content
-            'attachment_ids': attachment_ids,
-            'body': body,
-            'is_internal': True,
-            'message_type': message_type,
-            'subject': subject,
-            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            'tracking_value_ids': tracking_value_ids,
-            # recipients
-            'email_add_signature': False,  # False as no notification -> no need to compute signature
-            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
-            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
-        }
-
-        return self.sudo()._message_create([msg_values])
+        return self._message_log_batch(
+            {self.id: body}, author_id=author_id, email_from=email_from,
+            subject=subject, message_type=message_type,
+            attachment_ids=attachment_ids, tracking_value_ids=tracking_value_ids
+        )
 
     def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False,
                            message_type='notification',
@@ -2268,6 +2381,7 @@ class MailThread(models.AbstractModel):
         base_message_values = {
             # author
             'author_id': author_id,
+            'email_add_signature': False,  # False as no notification -> no need to compute signature
             'email_from': email_from,
             # document
             'model': self._name,
@@ -2284,6 +2398,7 @@ class MailThread(models.AbstractModel):
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
         }
+
         values_list = [dict(base_message_values,
                             res_id=record.id,
                             body=bodies.get(record.id, ''))
@@ -2351,6 +2466,8 @@ class MailThread(models.AbstractModel):
         return parent_id
 
     def _message_create(self, values_list):
+        """ Low-level helper to create mail.message records. It is mainly used
+        to hide the cleanup of given values, for mail gateway or helpers."""
         create_values_list = []
 
         # preliminary value safety check
@@ -2384,6 +2501,61 @@ class MailThread(models.AbstractModel):
             'reaction_ids',
             'starred_partner_ids',
         }
+
+    def _get_source_from_ref(self, source_ref):
+        """ From a source_reference, return either a mail template, either
+        an ir ui view.
+
+        :return tuple(template, view): one is a recordset (may be void if
+          source_ref is a void recordset, or a singleton), the other one is
+          False. Always only one is set, as source is either a template,
+          either a view.
+        """
+        template, view = False, False
+        if isinstance(source_ref, models.BaseModel):
+            if source_ref._name == 'mail.template':
+                template = source_ref
+            elif source_ref._name == 'ir.ui.view':
+                view = source_ref
+            else:
+                raise ValueError(
+                    _('Invalid template or view source record %(svalue)s, is %(model)s instead',
+                       svalue=source_ref,
+                       model=source_ref._name,
+                    ))
+            if not template and not view:
+                raise ValueError(
+                    _('Mailing or posting with a source should not be called with an empty %(source_type)s',
+                      source_type=_('template') if template is not False else _('view'))
+                )
+        elif isinstance(source_ref, str):
+            try:
+                res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(
+                    source_ref,
+                    raise_if_not_found=True
+                )
+            except ValueError as e:
+                raise ValueError(
+                    _('Invalid template or view source Xml ID %(source_ref)s does not exist anymore',
+                      source_ref=source_ref)
+                ) from e
+            if res_model == 'mail.template':
+                template = self.env['mail.tempalte'].browse(res_id)
+            elif res_model == 'ir.ui.view':
+                view = self.env['ir.ui.view'].browse(res_id)
+            else:
+                raise ValueError(
+                    _('Invalid template or view source reference %(svalue)s, is %(model)s instead',
+                       svalue=source_ref,
+                       model=res_model,
+                    ))
+        else:
+            raise ValueError(
+                _('Invalid template or view source %(svalue)s (type %(stype)s), should be a record or an XMLID',
+                  svalue=source_ref,
+                  stype=type(source_ref),
+                ))
+        return template, view
 
     def _raise_for_invalid_fields(self, field_names_list, invalid_field_names):
         """ Helper to warn about invalid fields.
