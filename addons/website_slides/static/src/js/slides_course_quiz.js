@@ -58,6 +58,7 @@
         */
         init: function (parent, slide_data, channel_data, quiz_data) {
             this._super.apply(this, arguments);
+            this.parent = parent;
             this.slide = _.defaults(slide_data, {
                 id: 0,
                 name: '',
@@ -488,6 +489,7 @@
             this._renderValidationInfo();
             this._applySessionAnswers();
             this._submitQuiz();
+            this.parent.slides.forEach((slide) => slide.isMember = true);
        },
 
         /**
