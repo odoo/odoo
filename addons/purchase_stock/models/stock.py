@@ -34,10 +34,10 @@ class StockMove(models.Model):
         keys_sorted += [move.purchase_line_id.id, move.created_purchase_line_id.id]
         return keys_sorted
 
-    def _get_price_unit(self):
+    def _get_price_unit(self, return_price=False):
         """ Returns the unit price for the move"""
         self.ensure_one()
-        if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
+        if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id and not self.origin_returned_move_id:
             price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
             line = self.purchase_line_id
             order = line.order_id
@@ -56,7 +56,7 @@ class StockMove(models.Model):
                 price_unit = order.currency_id._convert(
                     price_unit, order.company_id.currency_id, order.company_id, fields.Date.context_today(self), round=False)
             return price_unit
-        return super(StockMove, self)._get_price_unit()
+        return super(StockMove, self)._get_price_unit(return_price)
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po

@@ -84,6 +84,6 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
         return_picking.move_lines[0].quantity_done = return_picking.move_lines[0].product_uom_qty
         return_picking._action_done()
 
-        #  After the return only 10 of the second purchase order should still be in stock as it applies fifo on the return too
+        #  The return will return the product from the second purchase order as a return always use the value of the move that he is returning
         self.assertEqual(product_fiforet_icecream.qty_available, 10.0, 'Qty available should be 10.0')
-        self.assertEqual(product_fiforet_icecream.value_svl, 800.0, 'Stock value should be 800')
+        self.assertEqual(product_fiforet_icecream.value_svl, 500.0, 'Stock value should be 800')

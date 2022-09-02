@@ -425,8 +425,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         return_pick.move_lines[0].move_line_ids[0].qty_done = 10
         return_pick.button_validate()
 
-        # valuation of product1 should be 200 as the first items will be sent out
-        self.assertEqual(self.product1.value_svl, 200)
+        # valuation of product1 should be 100 as a return will always use the value of the move he is returning
+        self.assertEqual(self.product1.value_svl, 100)
 
         # create a credit note for po2
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
@@ -440,7 +440,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         # check the anglo saxon entries
         price_diff_entry = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
-        self.assertEqual(price_diff_entry.credit, 100)
+        self.assertEqual(price_diff_entry.credit, 0)
 
     def test_anglosaxon_valuation(self):
         self.env.company.anglo_saxon_accounting = True

@@ -700,7 +700,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         move4 = self._make_return(move3, 1)
         move5 = self._make_return(move4, 1)
 
-        self.assertEqual(self.product1.value_svl, 10)
+        self.assertEqual(self.product1.value_svl, 20)
         self.assertEqual(self.product1.quantity_svl, 1)
 
     def test_dropship_1(self):
@@ -1038,3 +1038,28 @@ class TestAngloSaxonAccounting(TestStockValuationCommon):
         self.assertEqual(len(anglo_lines), 2)
         self.assertEqual(abs(anglo_lines[0].balance), 10)
         self.assertEqual(abs(anglo_lines[1].balance), 10)
+
+    def test_avco_and_return(self):
+        """
+        When reversing an invoice that contains some anglo-saxo AML, the new anglo-saxo AML should have the same value
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        self._make_in_move(self.product1, 2, unit_cost=10)
+        move_to_return = self._make_in_move(self.product1, 2, unit_cost=20)
+
+        return_move = self._make_return(move_to_return, 2)
+        self.assertEqual(return_move.stock_valuation_layer_ids.unit_cost, 20)
+        self.assertEqual(return_move.stock_valuation_layer_ids.value, -40)
+
+    def test_fifo_and_return(self):
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        self._make_in_move(self.product1, 2, unit_cost=10)
+        move_to_return = self._make_in_move(self.product1, 2, unit_cost=20)
+
+        return_move = self._make_return(move_to_return, 2)
+        self.assertEqual(return_move.stock_valuation_layer_ids.unit_cost, 20)
+        self.assertEqual(return_move.stock_valuation_layer_ids.value, -40)

@@ -32,7 +32,7 @@ class StockMove(models.Model):
         self.ensure_one()
         return False
 
-    def _get_price_unit(self):
+    def _get_price_unit(self, return_price=False):
         """ Returns the unit price to value this stock move """
         self.ensure_one()
         price_unit = self.price_unit
@@ -42,7 +42,7 @@ class StockMove(models.Model):
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
             return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
-        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
+        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else return_price or self.product_id.standard_price
 
     @api.model
     def _get_valued_types(self):
@@ -186,6 +186,10 @@ class StockMove(models.Model):
             if float_is_zero(forced_quantity or valued_quantity, precision_rounding=move.product_id.uom_id.rounding):
                 continue
             svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity, move.company_id)
+            if move.product_id.cost_method != 'standard' and self.origin_returned_move_id.sudo().stock_valuation_layer_ids.remaining_qty > 0:
+                unit_cost = abs(move._get_price_unit(svl_vals['unit_cost']))
+                svl_vals['unit_cost'] = unit_cost
+                svl_vals['value'] = unit_cost * (forced_quantity or valued_quantity) * -1
             svl_vals.update(move._prepare_common_svl_vals())
             if forced_quantity:
                 svl_vals['description'] = 'Correction of %s (modification of past move)' % move.picking_id.name or move.name
