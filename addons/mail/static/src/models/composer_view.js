@@ -548,19 +548,6 @@ registerModel({
          */
         async postMessage() {
             const composer = this.composer;
-            if (composer.thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(composer.textInputContent);
-                if (command) {
-                    await command.execute({ channel: composer.thread, body: composer.textInputContent });
-                    if (composer.exists()) {
-                        composer._reset();
-                    }
-                    return;
-                }
-            }
-            if (composer.thread.channel) {
-                composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            }
             const postData = this._getMessageData();
             const params = {
                 'post_data': postData,
@@ -656,7 +643,7 @@ registerModel({
          * Sending of the message could be aborted if it cannot be posted like if there are attachments
          * currently uploading or if there is no text content and no attachments.
          */
-        sendMessage() {
+        async sendMessage() {
             if (!this.composer.canPostMessage) {
                 if (this.composer.hasUploadingAttachment) {
                     this.messaging.notify({
@@ -669,6 +656,17 @@ registerModel({
             if (this.messageViewInEditing) {
                 this.updateMessage();
                 return;
+            }
+            if (this.composer.thread.channel) {
+                const command = this._getCommandFromText(this.composer.textInputContent);
+                if (command) {
+                    await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
+                    if (this.composer.exists()) {
+                        this.composer._reset();
+                    }
+                    return;
+                }
+                this.composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
             this.postMessage();
         },
