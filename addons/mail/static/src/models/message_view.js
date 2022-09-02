@@ -126,9 +126,15 @@ registerModel({
             });
         },
         onMouseenter() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: true });
         },
         onMouseleave() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({
                 isHovered: false,
                 messagingAsClickedMessageView: clear(),
