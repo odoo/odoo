@@ -406,9 +406,9 @@ class Track(models.Model):
 
         post_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
         for track in tracks:
-            track.event_id.message_post_with_view(
+            track.event_id.message_post_with_source(
                 'website_event_track.event_track_template_new',
-                values={
+                render_values={
                     'track': track,
                     'is_html_empty': is_html_empty,
                 },

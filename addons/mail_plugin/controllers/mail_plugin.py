@@ -117,9 +117,9 @@ class MailPluginController(http.Controller):
 
         partner.write(partner_values)
 
-        partner.message_post_with_view(
+        partner.message_post_with_source(
             'iap_mail.enrich_company',
-            values=iap_data,
+            render_values=iap_data,
             subtype_xmlid='mail.mt_note',
         )
 
@@ -357,9 +357,9 @@ class MailPluginController(http.Controller):
 
         new_company = request.env['res.partner'].create(new_company_info)
 
-        new_company.message_post_with_view(
+        new_company.message_post_with_source(
             'iap_mail.enrich_company',
-            values=iap_data,
+            render_values=iap_data,
             subtype_xmlid='mail.mt_note',
         )
 

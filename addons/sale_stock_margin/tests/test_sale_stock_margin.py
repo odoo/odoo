@@ -310,7 +310,10 @@ class TestSaleStockMargin(TestStockValuationCommon):
         so = so_form.save()
         email_act = so.action_quotation_send()
         email_ctx = email_act.get('context', {})
-        so.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
+        so.with_context(**email_ctx).message_post_with_source(
+            self.env['mail.template'].browse(email_ctx.get('default_template_id')),
+            subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+        )
 
         self.assertEqual(so.state, 'sent')
         self.assertEqual(so.order_line[0].purchase_price, 15)

@@ -68,7 +68,7 @@ class Lead(models.Model):
 
                         normalized_email = tools.email_normalize(lead.email_from)
                         if not normalized_email:
-                            lead.message_post_with_view(
+                            lead.message_post_with_source(
                                 'crm_iap_enrich.mail_message_lead_enrich_no_email',
                                 subtype_xmlid='mail.mt_note',
                             )
@@ -78,7 +78,7 @@ class Lead(models.Model):
                         # Discard domains of generic email providers as it won't return relevant information
                         if email_domain in iap_tools._MAIL_DOMAIN_BLACKLIST:
                             lead.write({'iap_enrich_done': True})
-                            lead.message_post_with_view(
+                            lead.message_post_with_source(
                                 'crm_iap_enrich.mail_message_lead_enrich_notfound',
                                 subtype_xmlid='mail.mt_note',
                             )
@@ -128,7 +128,7 @@ class Lead(models.Model):
             iap_data = iap_response.get(str(lead.id))
             if not iap_data:
                 lead.write({'iap_enrich_done': True})
-                lead.message_post_with_view(
+                lead.message_post_with_source(
                     'crm_iap_enrich.mail_message_lead_enrich_notfound',
                     subtype_xmlid='mail.mt_note',
                 )
@@ -161,9 +161,9 @@ class Lead(models.Model):
 
             template_values = iap_data
             template_values['flavor_text'] = _("Lead enriched based on email address")
-            lead.message_post_with_view(
+            lead.message_post_with_source(
                 'iap_mail.enrich_company',
-                values=template_values,
+                render_values=template_values,
                 subtype_xmlid='mail.mt_note',
             )
 

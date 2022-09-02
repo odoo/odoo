@@ -314,7 +314,7 @@ class MailGroup(models.Model):
             values
         ))
 
-        mail_message = Mailthread._message_create(values)
+        mail_message = Mailthread._message_create([values])
 
         # Find the <mail.group.message> parent
         group_message_parent_id = False

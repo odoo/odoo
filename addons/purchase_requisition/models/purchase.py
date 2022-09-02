@@ -144,9 +144,9 @@ class PurchaseOrder(models.Model):
                 self.env['purchase.order.group'].create({'order_ids': [Command.set(origin_po_id.ids + orders.ids)]})
         for order in orders:
             if order.requisition_id:
-                order.message_post_with_view(
+                order.message_post_with_source(
                     'mail.message_origin_link',
-                    values={'self': order, 'origin': order.requisition_id},
+                    render_values={'self': order, 'origin': order.requisition_id},
                     subtype_xmlid='mail.mt_note',
                 )
         return orders
@@ -158,9 +158,9 @@ class PurchaseOrder(models.Model):
         result = super(PurchaseOrder, self).write(vals)
         if vals.get('requisition_id'):
             for order in self:
-                order.message_post_with_view(
+                order.message_post_with_source(
                     'mail.message_origin_link',
-                    values={'self': order, 'origin': order.requisition_id, 'edit': True},
+                    render_values={'self': order, 'origin': order.requisition_id, 'edit': True},
                     subtype_xmlid='mail.mt_note',
                 )
         if vals.get('alternative_po_ids', False):

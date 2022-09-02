@@ -181,12 +181,11 @@ class RatingMixin(models.AbstractModel):
         """
         if lang:
             template = template.with_context(lang=lang)
-        for record in self.with_context(mail_notify_force_send=force_send):
-            record.message_post_with_template(
-                template.id,
-                email_layout_xmlid='mail.mail_notification_light',
-                subtype_xmlid='mail.mt_note',
-            )
+        self.with_context(mail_notify_force_send=force_send).message_post_with_source(
+            template,
+            email_layout_xmlid='mail.mail_notification_light',
+            subtype_xmlid='mail.mt_note',
+        )
 
     def rating_apply(self, rate, token=None, rating=None, feedback=None,
                      subtype_xmlid=None, notify_delay_send=False):

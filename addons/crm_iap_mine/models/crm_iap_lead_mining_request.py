@@ -278,9 +278,9 @@ class CRMLeadMiningRequest(models.Model):
         leads = self.env['crm.lead'].create(lead_vals_list)
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
-                lead.message_post_with_view(
+                lead.message_post_with_source(
                     'iap_mail.enrich_company',
-                    values=messages_to_post[lead.reveal_id],
+                    render_values=messages_to_post[lead.reveal_id],
                     subtype_xmlid='mail.mt_note',
                 )
 

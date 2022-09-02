@@ -134,9 +134,9 @@ class HrContract(models.Model):
             ).create(all_new_leave_vals)
             new_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
             for index, new_leave in enumerate(new_leaves):
-                new_leave.message_post_with_view(
+                new_leave.message_post_with_source(
                     'mail.message_origin_link',
-                    values={'self': new_leave, 'origin': all_new_leave_origin[index]},
+                    render_values={'self': new_leave, 'origin': all_new_leave_origin[index]},
                     subtype_xmlid='mail.mt_note',
                 )
         return super(HrContract, self - specific_contracts).write(vals)

@@ -842,8 +842,8 @@ class SaleOrder(models.Model):
             mail_template = sale_order._get_confirmation_template()
             if not mail_template:
                 continue
-            sale_order.with_context(force_send=True).message_post_with_template(
-                mail_template.id,
+            sale_order.with_context(force_send=True).message_post_with_source(
+                mail_template,
                 email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
                 subtype_xmlid='mail.mt_comment',
             )
@@ -1181,9 +1181,9 @@ class SaleOrder(models.Model):
         if final:
             moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
         for move in moves:
-            move.message_post_with_view(
+            move.message_post_with_source(
                 'mail.message_origin_link',
-                values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
+                render_values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
                 subtype_xmlid='mail.mt_note',
             )
         return moves
