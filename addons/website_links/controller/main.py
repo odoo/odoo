@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
+
+from odoo.addons.link_tracker.controller.main import LinkTracker
 
 
 class WebsiteUrl(http.Controller):
@@ -37,3 +40,19 @@ class WebsiteUrl(http.Controller):
             return request.render("website_links.graphs", code.link_id.read()[0])
         else:
             return request.redirect('/', code=301)
+
+class WebsiteLinkTracker(LinkTracker):
+    @http.route()
+    def full_url_redirect(self, code, **post):
+        try:
+            return super().full_url_redirect(code, **post)
+        except NotFound:
+            # /r is a valid alias for /ru that is the russian lang code,
+            # maybe the path was targeting a website page instead of a
+            # link-tracker. Replace /r by /ru in the URL and try again,
+            # in case there is no website page it would still return a
+            # 404 Not Found page.
+            if any(lang.url_code.startswith('ru') for lang in request.website.language_ids):
+                return request.redirect('/ru' + request.httprequest.path[2:], code=302)
+            else:
+                raise
