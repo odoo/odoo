@@ -328,7 +328,7 @@ function registerField(name, LegacyFieldWidget) {
                     mode: fieldInfo.viewMode,
                 },
                 viewType: legacyRecord.viewType,
-                mode: hasReadonlyModifier ? "readonly" : record.mode,
+                mode: this.props.readonly || hasReadonlyModifier ? "readonly" : record.mode,
                 hasReadonlyModifier,
             };
             return { name, record: legacyRecord, options };
