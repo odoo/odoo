@@ -2269,6 +2269,7 @@ class Order extends PosModel {
     }
     save_to_db(){
         if (!this.temporary && !this.locked && !this.finalized) {
+            this.assert_editable();
             this.pos.db.save_unpaid_order(this);
         }
     }
