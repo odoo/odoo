@@ -59,7 +59,7 @@ export class FormCompiler extends ViewCompiler {
             { selector: "form", fn: this.compileForm },
             { selector: "group", fn: this.compileGroup },
             { selector: "header", fn: this.compileHeader },
-            { selector: "label", fn: this.compileLabel },
+            { selector: "label", fn: this.compileLabel, doNotCopyAttributes: true },
             { selector: "notebook", fn: this.compileNotebook },
             { selector: "separator", fn: this.compileSeparator },
             { selector: "sheet", fn: this.compileSheet }
@@ -442,6 +442,7 @@ export class FormCompiler extends ViewCompiler {
         // Otherwise, the targetted element is somewhere else among its nextChildren
         if (forAttr) {
             let label = createElement("label");
+            copyAttributes(el, label);
             const string = el.getAttribute("string");
             if (string) {
                 append(label, createTextNode(string));
@@ -455,7 +456,9 @@ export class FormCompiler extends ViewCompiler {
             }
             return label;
         }
-        return this.compileGenericNode(el, params);
+        const res = this.compileGenericNode(el, params);
+        copyAttributes(el, res);
+        return res;
     }
 
     /**

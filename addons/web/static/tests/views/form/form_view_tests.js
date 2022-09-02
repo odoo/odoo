@@ -861,6 +861,24 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_field_widget[name=p]");
     });
 
+    QUnit.test("correctly copy attributes to compiled labels", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <label string="Apply after" for="bar" class="a"/>
+                    <field name="bar" class="b"/>
+                    <label string="hours" for="bar" class="c"/>
+                </form>`,
+        });
+
+        assert.hasClass(target.querySelectorAll(".o_form_label")[0], "a");
+        assert.hasClass(target.querySelector(".o_field_widget.o_field_boolean"), "b");
+        assert.hasClass(target.querySelectorAll(".o_form_label")[1], "c");
+    });
+
     QUnit.test("invisible elements are properly hidden", async function (assert) {
         await makeView({
             type: "form",
