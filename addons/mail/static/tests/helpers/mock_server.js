@@ -989,7 +989,6 @@ patch(MockServer.prototype, 'mail', {
             }]),
             channel_type: 'chat',
             name: partners.map(partner => partner.name).join(", "),
-            public: 'private',
         });
         return this._mockMailChannelChannelInfo([id])[0];
     },
@@ -1174,7 +1173,6 @@ patch(MockServer.prototype, 'mail', {
             channel_type: 'group',
             channel_member_ids: partners.map(partner => [0, 0, { partner_id: partner.id }]),
             name: '',
-            public: 'private',
         });
         this._mockMailChannel_broadcast(id, partners.map(partner => partner.id));
         return this._mockMailChannelChannelInfo([id])[0];
@@ -1251,13 +1249,13 @@ patch(MockServer.prototype, 'mail', {
                 }).map(channel => {
                     // expected format
                     return {
+                        authorizedGroupFullName: channel.group_public_id ? channel.group_public_id.name : false,
                         channel: {
                             channel_type: channel.channel_type,
                             id: channel.id,
                         },
                         id: channel.id,
                         name: channel.name,
-                        public: channel.public,
                     };
                 });
             // reduce results to max limit

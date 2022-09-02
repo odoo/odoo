@@ -20,7 +20,6 @@ QUnit.test('there should be a button to show member list in the thread view topb
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'group',
-        public: 'private',
     });
     const { openDiscuss } = await start({
         discuss: {
@@ -48,7 +47,6 @@ QUnit.test('should show member list when clicking on show member list button in 
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'group',
-        public: 'private',
     });
     const { click, openDiscuss } = await start({
         discuss: {
@@ -77,7 +75,6 @@ QUnit.test('should have correct members in member list', async function (assert)
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'group',
-        public: 'private',
     });
     const { click, openDiscuss } = await start({
         discuss: {
@@ -117,7 +114,6 @@ QUnit.test('there should be a button to hide member list in the thread view topb
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'group',
-        public: 'private',
      });
     const { click, openDiscuss } = await start({
         discuss: {

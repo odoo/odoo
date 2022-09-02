@@ -96,9 +96,6 @@ registerModel({
             if ('name' in data) {
                 data2.name = data.name;
             }
-            if ('public' in data) {
-                data2.public = data.public;
-            }
             if ('seen_message_id' in data) {
                 data2.rawLastSeenByCurrentPartnerMessageId = data.seen_message_id;
             }
@@ -206,12 +203,12 @@ registerModel({
         getSuggestionSortFunction(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return (a, b) => {
-                const isAPublic = a.model === 'mail.channel' && a.public === 'public';
-                const isBPublic = b.model === 'mail.channel' && b.public === 'public';
-                if (isAPublic && !isBPublic) {
+                const isAPublicChannel = a.model === 'mail.channel' && a.channel.channel_type === 'channel' && (!a.authorizedGroupFullName);
+                const isBPublicChannel = b.model === 'mail.channel' && b.channel.channel_type === 'channel' && (!b.authorizedGroupFullName);
+                if (isAPublicChannel && !isBPublicChannel) {
                     return -1;
                 }
-                if (!isAPublic && isBPublic) {
+                if (!isAPublicChannel && isBPublicChannel) {
                     return 1;
                 }
                 const isMemberOfA = a.channel && a.channel.memberOfCurrentUser;
@@ -336,14 +333,14 @@ registerModel({
          *
          * @param {Object} param0
          * @param {string} param0.name
-         * @param {string} [param0.privacy]
+         * @param {integer} param0.group_id
          * @returns {Thread} the created channel
          */
-        async performRpcCreateChannel({ name, group_id, privacy }) {
+        async performRpcCreateChannel({ name, group_id }) {
             const data = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_create',
-                args: [name, group_id, privacy],
+                args: [name, group_id],
             });
             return this.messaging.models['Thread'].insert(
                 this.messaging.models['Thread'].convertData(data)
@@ -396,9 +393,9 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             let threads;
-            if (thread && thread.model === 'mail.channel' && thread.public !== 'public') {
+            if (thread && thread.model === 'mail.channel' && (thread.channel.channel_type !== 'channel' || (thread.channel.channel_type === 'channel' && thread.authorizedGroupFullName))) {
                 // Only return the current channel when in the context of a
-                // non-public channel. Indeed, the message with the mention
+                // group restricted channel or group or chat. Indeed, the message with the mention
                 // would appear in the target channel, so this prevents from
                 // inadvertently leaking the private message into the mentioned
                 // channel.
@@ -976,6 +973,19 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeAccessRestrictedToGroupText() {
+            if (!this.authorizedGroupFullName) {
+                return clear();
+            }
+            return sprintf(
+                this.env._t('Access restricted to group "%(groupFullName)s"'),
+                { 'groupFullName': this.authorizedGroupFullName }
+            );
+        },
+        /**
+         * @private
          * @returns {Attachment[]}
          */
         _computeAllAttachments() {
@@ -1547,6 +1557,10 @@ registerModel({
         },
     },
     fields: {
+        accessRestrictedToGroupText: attr({
+            compute: '_computeAccessRestrictedToGroupText',
+            default: '',
+        }),
         /**
          * Determines the `mail.activity` that belong to `this`, assuming `this`
          * has activities (@see hasActivities).
@@ -1993,7 +2007,6 @@ registerModel({
          * server.
          */
         pendingSeenMessageId: attr(),
-        public: attr(),
         rawLastSeenByCurrentPartnerMessageId: attr({
             default: 0,
         }),

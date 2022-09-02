@@ -43,7 +43,6 @@ class TestLinkPreview(MailCommon):
 
         cls.public_channel = cls.env['mail.channel'].create({
             'name': 'Public channel of user 1',
-            'public': 'public',
             'channel_type': 'channel',
         })
         cls.public_channel.channel_member_ids.unlink()

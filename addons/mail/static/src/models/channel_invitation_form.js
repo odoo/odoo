@@ -166,10 +166,7 @@ registerModel({
             if (!this.thread) {
                 return clear();
             }
-            if (
-                !this.thread.authorizedGroupFullName ||
-                this.thread.public !== 'groups'
-            ) {
+            if (!this.thread.authorizedGroupFullName) {
                 return clear();
             }
             return sprintf(

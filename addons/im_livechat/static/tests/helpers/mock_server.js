@@ -136,7 +136,6 @@ patch(MockServer.prototype, 'im_livechat', {
             'country_id': country_id,
             'channel_type': 'livechat',
             'name': membersName.join(' '),
-            'public': 'private',
         };
     },
     /**

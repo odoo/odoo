@@ -18,8 +18,8 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
+        group_public_id: false,
         name: "General",
-        public: 'public',
     });
     const { openDiscuss } = await start({
         discuss: {
@@ -42,8 +42,8 @@ QUnit.test('message list asc order', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
+        group_public_id: false,
         name: "General",
-        public: 'public',
     });
     for (let i = 0; i <= 60; i++) {
         pyEnv['mail.message'].create({
@@ -258,8 +258,8 @@ QUnit.test('show message subject when subject is not the same as the thread name
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
+        group_public_id: false,
         name: "General",
-        public: 'public',
     });
     pyEnv['mail.message'].create({
         body: "not empty",
@@ -296,8 +296,8 @@ QUnit.test('do not show message subject when subject is the same as the thread n
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'channel',
+        group_public_id: false,
         name: "Salutations, voyageur",
-        public: 'public',
     });
     pyEnv['mail.message'].create({
         body: "not empty",
@@ -1089,10 +1089,12 @@ QUnit.test('mention 2 different channels that have the same name', async functio
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
         {
+            channel_type: 'channel',
+            group_public_id: false,
             name: "my channel",
-            public: 'public', // mentioning another channel is possible only from a public channel
         },
         {
+            channel_type: 'channel',
             name: "my channel",
         },
     ]);

@@ -314,7 +314,7 @@ registerModel({
                 type: 'ir.actions.act_window',
                 res_model: 'mail.channel',
                 views: [[false, 'kanban'], [false, 'form']],
-                domain: [['public', '!=', 'private']],
+                domain: [['channel_type', '=', 'channel']],
             });
         },
         /**

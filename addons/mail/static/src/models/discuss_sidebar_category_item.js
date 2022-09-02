@@ -109,7 +109,7 @@ registerModel({
             }
             switch (this.channel.channel_type) {
                 case 'channel':
-                    return ['private', 'public'].includes(this.thread.public);
+                    return !Boolean(this.thread.authorizedGroupFullName);
                 case 'chat':
                     return true;
                 case 'group':

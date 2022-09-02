@@ -403,7 +403,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
+    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", channel_type: 'channel' });
     const { insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChanelId1 },
@@ -428,7 +428,7 @@ QUnit.test('mention a channel', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
+    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", channel_type: 'channel' });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChanelId1 },
@@ -464,7 +464,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
+    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", channel_type: 'channel' });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChanelId1 },
@@ -506,7 +506,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
+    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", channel_type: 'channel' });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChanelId1 },

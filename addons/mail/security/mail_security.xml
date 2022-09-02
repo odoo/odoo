@@ -6,10 +6,17 @@
             <field name="name">Mail.channel: access only public and joined groups</field>
             <field name="model_id" ref="model_mail_channel"/>
             <field name="groups" eval="[Command.link(ref('base.group_user')), Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
-            <field name="domain_force">['|', '|',
-('public', '=', 'public'),
-'&amp;', ('public', '=', 'private'), ('is_member', '=', True),
-'&amp;', ('public', '=', 'groups'), ('group_public_id', 'in', [g.id for g in user.groups_id])]</field>
+            <field name="domain_force">[
+                '|',
+                    '&amp;',
+                        ('channel_type', '!=', 'channel'),
+                        ('is_member', '=', True),
+                    '&amp;',
+                        ('channel_type', '=', 'channel'),
+                        '|',
+                            ('group_public_id', '=', False),
+                            ('group_public_id', 'in', [g.id for g in user.groups_id])]
+            </field>
             <field name="perm_create" eval="False"/>
         </record>
 
@@ -24,10 +31,17 @@
             <field name="name">mail.channel.member: write its own entries</field>
             <field name="model_id" ref="model_mail_channel_member"/>
             <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
-            <field name="domain_force">['|', '|',
-('channel_id.public', '=', 'public'),
-'&amp;', ('channel_id.public', '=', 'private'), ('channel_id.is_member', '=', True),
-'&amp;', ('channel_id.public', '=', 'groups'), ('channel_id.group_public_id', 'in', [g.id for g in user.groups_id])]</field>
+            <field name="domain_force">[
+                '|',
+                    '&amp;',
+                        ('channel_id.channel_type', '!=', 'channel'),
+                        ('channel_id.is_member', '=', True),
+                    '&amp;',
+                        ('channel_id.channel_type', '=', 'channel'),
+                        '|',
+                            ('channel_id.group_public_id', '=', False),
+                            ('channel_id.group_public_id', 'in', [g.id for g in user.groups_id])]
+            </field>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="False"/>
