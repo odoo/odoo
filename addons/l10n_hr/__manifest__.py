@@ -30,7 +30,9 @@ Description
 - Stavke poreznog izvještaja prema PDV obrascu
     - source: https://www.porezna-uprava.hr/HR_obrasci/Documents/POREZ%20NA%20DODANU%20VRIJEDNOST/PDV.pdf
     - Potencijalno moguće dodati : PDV-S i ZP... 
-- Porezi prema pozicijama PDV obrasca:
+
+Porezi prema pozicijama PDV obrasca:
+
 - PDV-I - neoporezivi ili 0%
     - 0% Tuzemni PPO
     - 0% ISP.U DR.DRŽ.ČLANICAMA
@@ -70,13 +72,12 @@ Description
   
 - Grupa država: EU - Croatia     
 - Osnovne fiskalne pozicije
-  
-  - R1 partneri
-  - EU Partneri
-  - INO partneri
-  - AVANS
-  - Prijenos PO
-  - Bez sjedista
+    - R1 partneri
+    - EU Partneri
+    - INO partneri
+    - AVANS
+    - Prijenos PO
+    - Bez sjedista
 
 - TO DO: 
   

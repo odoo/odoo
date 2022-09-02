@@ -2,12 +2,17 @@
 <odoo>
 	<record id="account_fiscal_position_template_rrif_r1" model="account.fiscal.position.template">
 		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">1</field>
 		<field name="name">R1 partneri</field>
+		<field name="auto_apply" eval="True"/>
+		<field name="vat_required" eval="True"/>
+		<field name="country_id" ref="base.hr"/>
 		<field name="note"></field>
 	</record>
 
 	<record id="account_fiscal_position_template_rrif_eu" model="account.fiscal.position.template">
 		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">2</field>
 		<field name="name">EU Partneri</field>
 		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl.17. st.1 i čl.26.st.3. Zakona o PDV-u</field>
 		<field name="vat_required" eval="True"/>
@@ -85,10 +90,11 @@
 
 	<record id="account_fiscal_position_template_rrif_ino" model="account.fiscal.position.template">
 		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">3</field>
 		<field name="name">INO (nonEU) Partneri</field>
-		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl.17. st.1 i čl.26.st.3. Zakona o PDV-u</field>
+		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl.17. st.1 i st.5. Zakona o PDV-u</field>
 		<field name="vat_required" eval="True"/>
-<!--		<field name="auto_apply" eval="True"/>-->
+		<field name="auto_apply" eval="True"/>
 <!--		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>-->
 		<field name="tax_ids">
 			<!-- sales -->
@@ -161,10 +167,12 @@
 
 	<record id="account_fiscal_position_template_rrif_avans" model="account.fiscal.position.template">
 		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">10</field>
 		<field name="name">AVANS</field>
 		<field name="note">AVANS / PREDUJAM</field>
 		<field name="vat_required" eval="True"/>
 <!--		<field name="auto_apply" eval="True"/>-->
+		<field name="country_id" ref="base.hr"/>
 <!--		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>-->
 		<field name="tax_ids">
 			<!-- sale only -->
@@ -190,10 +198,11 @@
 
 	<record id="account_fiscal_position_template_rrif_ppo" model="account.fiscal.position.template">
 		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">10</field>
 		<field name="name">Tuzemni PPO</field>
 		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl.75. st.2. st.3. Zakona o PDV-u</field>
 		<field name="vat_required" eval="True"/>
-<!--		<field name="auto_apply" eval="True"/>-->
+		<field name="country_id" ref="base.hr"/>
 <!--		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>-->
 		<field name="tax_ids">
 			<!-- sales -->
@@ -228,11 +237,12 @@
 
 	<record id="account_fiscal_position_template_rrif_bs" model="account.fiscal.position.template">
 		<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+		<field name="sequence">5</field>
 		<field name="name">Bez sjedišta</field>
-		<field name="note"></field>
+		<field name="note">- REVERSE CHARGE - Oslobođeno PDV-a temeljem čl 17. stavka 1</field>
 		<field name="vat_required" eval="True"/>
-<!--		<field name="auto_apply" eval="True"/>-->
-<!--		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>-->
+		<field name="auto_apply" eval="False"/>
+		<field name="country_group_id" ref="country_group_rrif_europe-hr"/>
 		<field name="tax_ids">
 			<!-- sales -->
 			<record id="fp_BS_tax_PDV25D_->_BS" model="account.fiscal.position.tax.template">
