@@ -186,9 +186,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 self._prepare_invoice_values(order, down_payment_so_line)
             ).with_user(self.env.uid)  # Unsudo the invoice after creation
 
-            invoice.message_post_with_view(
+            invoice.message_post_with_source(
                 'mail.message_origin_link',
-                values={'self': invoice, 'origin': order},
+                render_values={'self': invoice, 'origin': order},
                 subtype_xmlid='mail.mt_note',
             )
 

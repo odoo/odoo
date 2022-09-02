@@ -621,7 +621,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         with self.assertQueryCount(__system__=11, employee=11):
             records._message_log_with_view(
                 'test_mail.mail_template_simple_test',
-                values={'partner': self.customer.with_env(self.env)}
+                render_values={'partner': self.customer.with_env(self.env)}
             )
 
     @users('__system__', 'employee')
@@ -862,14 +862,13 @@ class TestMailComplexPerformance(BaseMailPerformance):
     def test_complex_message_post_template(self):
         self.container.message_subscribe(self.user_portal.partner_id.ids)
         record = self.container.with_user(self.env.user)
-        template_id = self.env.ref('test_mail.mail_test_container_tpl').id
+        template = self.env.ref('test_mail.mail_test_container_tpl')
 
         # about 20 (19 ?) queries per additional customer group
         with self.assertQueryCount(__system__=42, employee=43):
-            record.message_post_with_template(
-                template_id,
+            record.message_post_with_source(
+                template,
                 message_type='comment',
-                composition_mode='comment',
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             )
 
@@ -892,9 +891,9 @@ class TestMailComplexPerformance(BaseMailPerformance):
             composer._onchange_template_id_wrapper()
 
         with self.assertQueryCount(__system__=121, employee=141):
-            messages_as_sudo = test_records.message_post_with_view(
+            messages_as_sudo = test_records.message_post_with_source(
                 'test_mail.mail_template_simple_test',
-                values={'partner': self.user_test.partner_id},
+                render_values={'partner': self.user_test.partner_id},
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             )
 

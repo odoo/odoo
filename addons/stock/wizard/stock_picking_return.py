@@ -133,9 +133,9 @@ class ReturnPicking(models.TransientModel):
         # create new picking for returned products
         new_picking = self.picking_id.copy(self._prepare_picking_default_values())
         picking_type_id = new_picking.picking_type_id.id
-        new_picking.message_post_with_view(
+        new_picking.message_post_with_source(
             'mail.message_origin_link',
-            values={'self': new_picking, 'origin': self.picking_id},
+            render_values={'self': new_picking, 'origin': self.picking_id},
             subtype_xmlid='mail.mt_note',
         )
         returned_lines = 0

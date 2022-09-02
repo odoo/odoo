@@ -87,8 +87,8 @@ class TestSaleSignature(HttpCaseWithUserPortal):
         # must be sent to the user so he can see it
         email_act = sales_order.action_quotation_send()
         email_ctx = email_act.get('context', {})
-        sales_order.with_context(**email_ctx).message_post_with_template(
-            email_ctx.get('default_template_id'),
+        sales_order.with_context(**email_ctx).message_post_with_source(
+            self.env['mail.template'].browse(email_ctx.get('default_template_id')),
             subtype_xmlid='mail.mt_comment',
         )
 

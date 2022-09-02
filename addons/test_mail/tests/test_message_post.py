@@ -404,6 +404,7 @@ class TestMessageNotify(TestMessagePostCommon):
             )
 
     @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_notify_parameters(self):
         """ Test usage of parameters in notify, both for unwanted side effects
         and magic parameters. """
@@ -536,7 +537,7 @@ class TestMessageLog(TestMessagePostCommon):
 
         new_notes = test_records._message_log_with_view(
             'test_mail.mail_template_simple_test',
-            values={'partner': self.user_employee.partner_id}
+            render_values={'partner': self.user_employee.partner_id}
         )
         for test_record, new_note in zip(test_records, new_notes):
             self.assertMessageFields(
@@ -1033,14 +1034,37 @@ class TestMessagePostHelpers(TestMessagePostCommon):
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_message_helpers_source_ref(self):
+        """ Test various sources (record or xml id) to ensure source_ref right
+        computation. """
+        test_records = self.test_records.with_env(self.env)
+        template = self.test_template.with_env(self.env)
+        view = self.env.ref('test_mail.mail_template_simple_test')
+
+        for source_ref in ('test_mail.mail_test_ticket_tracking_tpl', template,
+                           'test_mail.mail_template_simple_test', view):
+            with self.subTest(source_ref=source_ref), self.mock_mail_gateway():
+                _new_mails = test_records.with_user(self.user_employee).message_mail_with_source(
+                    source_ref,
+                    render_values={'partner': self.user_employee.partner_id},
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                )
+
+                _new_messages = test_records.with_user(self.user_employee).message_post_with_source(
+                    source_ref,
+                    render_values={'partner': self.user_employee.partner_id},
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                )
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_mail_with_template(self):
         """ Test sending mass mail on documents based on a template """
         test_records = self.test_records.with_env(self.env)
         template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
-            _new_mails, _new_messages = test_records.with_user(self.user_employee).message_post_with_template(
-                template.id,
-                composition_mode='mass_mail',
+            _new_mails = test_records.with_user(self.user_employee).message_mail_with_source(
+                template,
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             )
 
@@ -1086,14 +1110,13 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             test_record.message_subscribe(test_record.customer_id.ids)
 
         with self.mock_mail_gateway():
-            new_messages = test_records.message_post_with_view(
+            new_mails = test_records.message_mail_with_source(
                 'test_mail.mail_template_simple_test',
-                values={'partner': self.user_employee.partner_id},
-                composition_mode='mass_mail',
+                render_values={'partner': self.user_employee.partner_id},
                 subject='About mass mailing',
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             )
-        self.assertEqual(len(new_messages), 0)
+        self.assertEqual(len(new_mails), 10)
         self.assertEqual(len(self._new_mails), 10)
 
         # sent emails (mass mail mode)
@@ -1122,15 +1145,27 @@ class TestMessagePostHelpers(TestMessagePostCommon):
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_message_post_with_source_subtype(self):
+        """ Test subtype tweaks when posting with a source """
+        test_record = self.test_records.with_env(self.env)[0]
+        test_template = self.test_template.with_env(self.env)
+        with self.mock_mail_gateway():
+            new_message = test_record.with_user(self.user_employee).message_post_with_source(
+                test_template,
+                subtype_xmlid='mail.mt_activities',
+            )
+        self.assertEqual(new_message.subtype_id, self.env.ref("mail.mt_activities"))
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_post_with_template(self):
         """ Test posting on a document based on a template content """
         test_record = self.test_records.with_env(self.env)[0]
         test_record.message_subscribe(test_record.customer_id.ids)
         test_template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
-            _new_mail, new_message = test_record.with_user(self.user_employee).message_post_with_template(
-                test_template.id,
-                composition_mode='comment',
+            new_message = test_record.with_user(self.user_employee).message_post_with_source(
+                test_template,
                 message_type='comment',
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             )
@@ -1165,15 +1200,15 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         )
 
     @users('employee')
-    @mute_logger('odoo.addons.mail.models.mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_post_with_template_defaults(self):
         """ Test default values, notably subtype being a comment """
         test_record = self.test_records.with_env(self.env)[0]
         test_record.message_subscribe(test_record.customer_id.ids)
         test_template = self.test_template.with_env(self.env)
         with self.mock_mail_gateway():
-            _new_mail, new_message = test_record.with_user(self.user_employee).message_post_with_template(
-                test_template.id,
+            new_message = test_record.with_user(self.user_employee).message_post_with_source(
+                test_template,
             )
 
         # created partners from inline email addresses
@@ -1192,7 +1227,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 {'partner': new_partners[1], 'type': 'email'},
                 {'partner': test_record.customer_id, 'type': 'email'},
             ],
-            'subtype': 'mail.mt_comment',
+            'subtype': 'mail.mt_note',
         }])
         self.assertMessageFields(
             new_message,
@@ -1213,10 +1248,10 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         test_record.message_subscribe(test_record.customer_id.ids)
 
         with self.mock_mail_gateway():
-            new_message = test_record.message_post_with_view(
+            new_message = test_record.message_post_with_source(
                 'test_mail.mail_template_simple_test',
                 message_type='comment',
-                values={'partner': self.user_employee.partner_id},
+                render_values={'partner': self.user_employee.partner_id},
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             )
 
@@ -1250,9 +1285,9 @@ class TestMessagePostHelpers(TestMessagePostCommon):
 
         # defaults is a note, take into account specified recipients
         with self.mock_mail_gateway():
-            new_message = test_record.message_post_with_view(
+            new_message = test_record.message_post_with_source(
                 'test_mail.mail_template_simple_test',
-                values={'partner': self.user_employee.partner_id},
+                render_values={'partner': self.user_employee.partner_id},
                 partner_ids=test_record.customer_id.ids,
             )
 
@@ -1263,7 +1298,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             'notif': [
                 {'partner': test_record.customer_id, 'type': 'email'},
             ],
-            'subtype': 'mail.mt_comment',
+            'subtype': 'mail.mt_note',
         }])
         self.assertMessageFields(
             new_message,
@@ -1340,9 +1375,8 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
         test_template = self.test_template.with_user(self.env.user)
 
         with self.mock_mail_gateway():
-            test_record.message_post_with_template(
-                test_template.id,
-                composition_mode='comment',
+            test_record.message_post_with_source(
+                test_template,
                 email_layout_xmlid='mail.test_layout',
                 message_type='comment',
                 subtype_id=self.env.ref('mail.mt_comment').id,
@@ -1382,9 +1416,8 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
         test_template = self.test_template.with_user(self.env.user)
 
         with self.mock_mail_gateway():
-            test_records.message_post_with_template(
-                test_template.id,
-                composition_mode='mass_mail',
+            test_records.message_mail_with_source(
+                test_template,
                 email_layout_xmlid='mail.test_layout',
                 message_type='comment',
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
@@ -1448,13 +1481,12 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
         test_template = self.test_template.with_user(self.env.user)
 
         with self.mock_mail_gateway():
-            for test_record in test_records:
-                test_record.message_post_with_template(
-                    test_template.id,
-                    email_layout_xmlid='mail.test_layout',
-                    message_type='comment',
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
-                )
+            test_records.message_post_with_source(
+                test_template,
+                email_layout_xmlid='mail.test_layout',
+                message_type='comment',
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+            )
 
         record0_customer = self.env['res.partner'].search([('email_normalized', '=', 'test.record.1@test.customer.com')], limit=1)
         self.assertTrue(record0_customer, 'Template usage should have created a contact based on record email')

@@ -18,9 +18,8 @@ class AccountMove(models.Model):
             comment_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             for line in invoice.invoice_line_ids:
                 if line.product_id.email_template_id:
-                    invoice.message_post_with_template(
-                        line.product_id.email_template_id.id,
-                        composition_mode="comment",
+                    invoice.message_post_with_source(
+                        line.product_id.email_template_id,
                         email_layout_xmlid="mail.mail_notification_light",
                         subtype_id=comment_subtype_id,
                     )

@@ -64,14 +64,14 @@ class PortalShare(models.TransientModel):
             share_link = self.resource_ref.get_base_url() + self.resource_ref._get_share_url(redirect=True, pid=partner.id)
             saved_lang = self.env.lang
             self = self.with_context(lang=partner.lang)
-            template = self.env.ref('portal.portal_share_template', False)
-            self.resource_ref.message_post_with_view(template,
-                values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
+            self.resource_ref.message_post_with_source(
+                'portal.portal_share_template',
+                render_values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
                         'share_link': share_link},
                 subject=_("You are invited to access %s", self.resource_ref.display_name),
                 subtype_xmlid='mail.mt_note',
                 email_layout_xmlid='mail.mail_notification_light',
-                partner_ids=[(6, 0, partner.ids)])
+                partner_ids=partner.ids)
             self = self.with_context(lang=saved_lang)
 
     def _send_signup_link(self, partners=None):
@@ -83,14 +83,14 @@ class PortalShare(models.TransientModel):
             share_link = partner._get_signup_url_for_action(action='/mail/view', res_id=self.res_id, model=self.res_model)[partner.id]
             saved_lang = self.env.lang
             self = self.with_context(lang=partner.lang)
-            template = self.env.ref('portal.portal_share_template', False)
-            self.resource_ref.message_post_with_view(template,
-                values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
+            self.resource_ref.message_post_with_source(
+                'portal.portal_share_template',
+                render_values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
                         'share_link': share_link},
                 subject=_("You are invited to access %s", self.resource_ref.display_name),
                 subtype_xmlid='mail.mt_note',
                 email_layout_xmlid='mail.mail_notification_light',
-                partner_ids=[(6, 0, partner.ids)])
+                partner_ids=partner.ids)
             self = self.with_context(lang=saved_lang)
 
     def action_send_mail(self):
