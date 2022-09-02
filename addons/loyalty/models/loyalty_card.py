@@ -100,7 +100,7 @@ class LoyaltyCard(models.Model):
         """
         Sends the 'At Creation' communication plan if it exist for the given coupons.
         """
-        if self.env.context.get('loyalty_no_mail', False):
+        if self.env.context.get('loyalty_no_mail', False) or self.env.context.get('action_no_send_mail', False):
             return
         # Ideally one per program, but multiple is supported
         create_comm_per_program = dict()
