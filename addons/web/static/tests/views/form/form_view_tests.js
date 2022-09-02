@@ -2523,6 +2523,41 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_dialog .o_form_view .o_control_panel");
     });
 
+    QUnit.test("form views in dialogs do not have class o_xxl_form_view", async function (assert) {
+        const bus = new EventBus();
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: false,
+                });
+                return {
+                    activateElement() {},
+                    deactivateElement() {},
+                    bus,
+                    size: SIZES.XXL,
+                    isSmall: false,
+                };
+            },
+        });
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo"/></form>`,
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                target: "new",
+            },
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.doesNotHaveClass(target.querySelector(".o_dialog .o_form_view"), "o_xxl_form_view");
+    });
+
     QUnit.test("buttons in form view", async function (assert) {
         assert.expect(11);
 

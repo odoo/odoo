@@ -397,17 +397,17 @@ export class FormController extends Component {
     }
 
     get className() {
+        const result = {};
         const { size } = this.ui;
-        let sizeClass = "";
         if (size <= SIZES.XS) {
-            sizeClass = "o_xxs_form_view";
-        } else if (size === SIZES.XXL) {
-            sizeClass = "o_xxl_form_view h-100";
+            result.o_xxs_form_view = true;
+        } else if (!this.env.inDialog && size === SIZES.XXL) {
+            result["o_xxl_form_view h-100"] = true;
         }
-        return {
-            [this.props.className]: true,
-            [sizeClass]: true,
-        };
+        if (this.props.className) {
+            result[this.props.className] = true;
+        }
+        return result;
     }
 }
 
