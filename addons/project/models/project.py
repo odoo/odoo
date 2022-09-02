@@ -483,29 +483,20 @@ class Project(models.Model):
         """ copy and map tasks from old to new project """
         self.ensure_one()
         project = self.browse(new_project_id)
-        tasks = self.env['project.task']
+        old_to_new_tasks = self.env['project.task']
+        sub_tasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
-        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)], order='parent_id').ids
-        old_to_new_tasks = {}
+        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)]).ids
         all_tasks = self.env['project.task'].browse(task_ids)
         for task in all_tasks:
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task, project)
-            if task.parent_id:
-                # set the parent to the duplicated task
-                parent_id = old_to_new_tasks.get(task.parent_id.id, False)
-                defaults['parent_id'] = parent_id
-                if not parent_id:
-                    defaults['project_id'] = project.id if task.display_project_id == self else False
-                    defaults['display_project_id'] = project.id if task.display_project_id == self else False
-            elif task.display_project_id == self:
-                defaults['project_id'] = project.id
-                defaults['display_project_id'] = project.id
             new_task = task.copy(defaults)
-            # If child are created before parent (ex sub_sub_tasks)
-            new_child_ids = [old_to_new_tasks[child.id] for child in task.child_ids if child.id in old_to_new_tasks]
-            tasks.browse(new_child_ids).write({'parent_id': new_task.id})
-            old_to_new_tasks[task.id] = new_task.id
+            old_to_new_tasks += new_task
+            all_subtasks = new_task._get_all_subtasks()
+            if all_subtasks:
+                sub_tasks += new_task.child_ids.filtered(lambda child: child.display_project_id == self)
+            sub_tasks.write({'display_project_id': project.id})
             if task.allow_task_dependencies:
                 depend_on_ids = [t.id if t not in all_tasks else old_to_new_tasks.get(t.id, None) for t in
                                  task.depend_on_ids]
@@ -513,9 +504,9 @@ class Project(models.Model):
                 dependent_ids = [t.id if t not in all_tasks else old_to_new_tasks.get(t.id, None) for t in
                                  task.dependent_ids]
                 new_task.write({'dependent_ids': [Command.link(tid) for tid in dependent_ids if tid]})
-            tasks += new_task
+            old_to_new_tasks += new_task
 
-        return project.write({'tasks': [(6, 0, tasks.ids)]})
+        return project.write({'tasks': [(6, 0, old_to_new_tasks.ids)]})
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -1499,10 +1490,13 @@ class Task(models.Model):
     def copy(self, default=None):
         if default is None:
             default = {}
-        if not default.get('name'):
+        has_default_name = bool(default.get('name', ''))
+        if not has_default_name:
             default['name'] = _("%s (copy)", self.name)
         if self.recurrence_id:
             default['recurrence_id'] = self.recurrence_id.copy().id
+        if self.allow_subtasks:
+            default['child_ids'] = [child.copy({'name': child.name} if has_default_name else None).id for child in self.child_ids]
         return super(Task, self).copy(default)
 
     @api.model
