@@ -6,7 +6,7 @@
             <t t-esc="formattedValue" />
         </t>
         <t t-else="">
-            <input t-ref="root" type="text" t-att-value="formattedValue" t-att-placeholder="props.placeholder" t-on-change="onChangeInput" />
+            <input class="o_input" style="width:100% !important"  t-ref="root" type="text" t-att-value="formattedValue" t-att-placeholder="props.placeholder" t-on-change="onChangeInput" />
         </t>
     </t>
 
