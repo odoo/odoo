@@ -3526,8 +3526,24 @@ var SnippetsMenu = Widget.extend({
     /**
      * Preview on mobile.
      */
-    _onMobilePreviewClick: function () {
+    _onMobilePreviewClick() {
         this.trigger_up('request_mobile_preview');
+
+        // TODO refactor things to make this more understandable -> on mobile
+        // edition, update the UI. But to do it properly and inside the mutex
+        // this simulates what happens when a snippet option is used.
+        this._execWithLoadingEffect(async () => {
+            // TODO needed so that mobile edition is considered before updating
+            // the UI but this is clearly random. The trigger_up above should
+            // properly await for the rerender somehow.
+            await new Promise(resolve => setTimeout(resolve));
+
+            return new Promise(resolve => {
+                this.trigger_up('snippet_option_update', {
+                    onSuccess: () => resolve(),
+                });
+            });
+        }, false);
     },
     /**
      * Undo..
