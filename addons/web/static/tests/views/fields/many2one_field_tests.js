@@ -670,6 +670,54 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
+        "many2ones in list views: create in dialog keeps the input",
+        async function (assert) {
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <field name="name" />
+                </form>`,
+            };
+
+            await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <tree editable="top">
+                    <field name="trululu" />
+                </tree>`,
+                mockRPC(route, args) {
+                    if (args.method === "create" || args.method === "write") {
+                        assert.step(`${args.method}: ${JSON.stringify(args.args)}`);
+                    }
+                },
+            });
+
+            await click(target.querySelectorAll(".o_data_cell")[0]);
+            const input = target.querySelector(".o_field_widget[name=trululu] input");
+            input.value = "yy";
+            await triggerEvent(input, null, "input");
+            await click(target, ".o_field_widget[name=trululu] input");
+            await selectDropdownItem(target, "trululu", "Create and edit...");
+
+            await clickSave(target.querySelector(".modal"));
+            assert.verifySteps([`create: [{"name":"yy"}]`]);
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=trululu] input").value,
+                "yy"
+            );
+
+            await click(target);
+            assert.verifySteps([`write: [[1],{"trululu":5}]`]);
+            assert.strictEqual(
+                target.querySelector(".o_data_cell[name=trululu]").textContent,
+                "yy"
+            );
+        }
+    );
+
+    QUnit.test(
         "onchanges on many2ones trigger when editing record in form view",
         async function (assert) {
             assert.expect(11);
