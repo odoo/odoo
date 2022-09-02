@@ -62,7 +62,7 @@
         <field name="model">mrp.workorder</field>
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
-            <tree editable="bottom">
+            <tree editable="bottom" multi_edit="1">
                 <field name="consumption" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="is_produced" invisible="1"/>
@@ -341,9 +341,9 @@
                         <div class="row g-0">
                             <div class="col">
                                 <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong> <t t-esc="userTimezoneStartDate.format('L LTS')"/></li>
-                                    <li><strong>Stop Date: </strong> <t t-esc="userTimezoneStopDate.format('L LTS')"/></li>
-                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                    <li><strong>Start Date: </strong> <t t-out="userTimezoneStartDate.format('L LTS')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-out="userTimezoneStopDate.format('L LTS')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-out="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
                         </div>
@@ -378,9 +378,9 @@
                         <div class="row g-0">
                             <div class="col">
                                 <ul class="ps-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong> <t t-esc="userTimezoneStartDate.format('L LTS')"/></li>
-                                    <li><strong>Stop Date: </strong> <t t-esc="userTimezoneStopDate.format('L LTS')"/></li>
-                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                    <li><strong>Start Date: </strong> <t t-out="userTimezoneStartDate.format('L LTS')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-out="userTimezoneStopDate.format('L LTS')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-out="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
                         </div>
@@ -404,7 +404,7 @@
                 <field name="working_state"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
-                <field name="qty_production"/>
+                <field name="qty_remaining"/>
                 <field name="product_uom_id" force_save="1"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -412,20 +412,20 @@
                             <div class="o_kanban_card_header o_kanban_record_top">
                                 <div class="o_kanban_record_headings o_kanban_card_header_title">
                                     <strong class="o_primary">
-                                        <span><t t-esc="record.production_id.value"/></span> - <span><t t-esc="record.name.value"/></span>
+                                        <span t-out="record.production_id.value"/> - <span t-out="record.name.value"/>
                                     </strong>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
                                     <h2 class="ml8">
                                         <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
-                                            <t t-esc="record.state.value"/>
+                                            <t t-out="record.state.value"/>
                                         </span>
                                     </h2>
                                 </div>
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <h5 class="oe_kanban_bottom_left">
-                                    <span><t t-esc="record.product_id.value"/>, </span> <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
+                                    <span t-out="record.product_id.value"/>, <span t-out="record.qty_remaining.value"/> <span t-out="record.product_uom_id.value"/>
                                 </h5>
                                 <div class="oe_kanban_bottom_right" t-if="record.state.raw_value == 'progress'">
                                     <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play" role="img" aria-label="Run" title="Run"/></span>
