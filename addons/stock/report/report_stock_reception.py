@@ -12,6 +12,16 @@ class ReceptionReport(models.AbstractModel):
     _description = "Stock Reception Report"
 
     @api.model
+    def get_report_data(self, docids, data):
+        report_values = self._get_report_values(docids, data)
+        report_values['docs'] = self._format_html_docs(report_values.get('docs', False))
+        report_values['sources_info'] = self._format_html_sources_info(report_values.get('sources_to_lines', {}))
+        report_values['sources_to_lines'] = self._format_html_sources_to_lines(report_values.get('sources_to_lines', {}))
+        report_values['sources_to_formatted_scheduled_date'] = self._format_html_sources_to_date(report_values.get('sources_to_formatted_scheduled_date', {}))
+        report_values['show_uom'] = self.env.user.has_group('uom.group_uom')
+        return report_values
+
+    @api.model
     def _get_report_values(self, docids, data=None):
         ''' This report is flexibly designed to work with both individual and batch pickings.
         '''
@@ -325,3 +335,42 @@ class ReceptionReport(models.AbstractModel):
     def _action_unassign(self, in_move, out_move):
         """ For extension purposes only """
         return
+
+    def _format_html_docs(self, docs):
+        """ Format docs to be sent in an html request. """
+        return [{
+            'id': doc.id,
+            'name': doc.display_name,
+            'state': doc.state,
+            'display_state': dict(doc._fields['state']._description_selection(self.env)).get(doc.state),
+        } for doc in docs] if docs else docs
+
+    def _format_html_sources_to_date(self, sources_to_dates):
+        """ Format sources_to_formatted_scheduled_date to be sent in an html request. """
+        return {str(source): date for (source, date) in sources_to_dates.items()}
+
+    def _format_html_sources_to_lines(self, sources_to_lines):
+        """ Format sources_to_lines to be sent in an html request, while adding an index for OWL's t-foreach. """
+        return {
+            str(source): [{**line, 'index': i, 'move_out_id': line['move_out'].id} for i, line in enumerate(lines)]
+            for source, lines in sources_to_lines.items()
+        }
+
+    def _format_html_sources_info(self, sources_to_lines):
+        """ Format used info from sources of sources_to_lines to be sent in an html request. """
+        return {str(source): [self._format_html_source(s, index == 0) for index, s in enumerate(source)] for source in sources_to_lines.keys()}
+
+    def _format_html_source(self, source, is_picking=False):
+        """ Format used info from a single source to be sent in an html request. """
+        formatted = {
+            'id': source.id,
+            'model': source._name,
+            'name': source.display_name,
+        }
+        if is_picking:
+            formatted.update({
+                'priority': source.priority,
+                'partner_id': source.partner_id.id if source.partner_id else False,
+                'partner_name': source.partner_id.name if source.partner_id else False,
+            })
+        return formatted
