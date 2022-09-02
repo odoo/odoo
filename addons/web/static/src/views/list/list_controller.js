@@ -301,6 +301,20 @@ export class ListController extends Component {
         return list.isGrouped ? list.nbTotalRecords : list.count;
     }
 
+    get display() {
+        if (!this.env.isSmall) {
+            return this.props.display;
+        }
+        const { controlPanel } = this.props.display;
+        return {
+            ...this.props.display,
+            controlPanel: {
+                ...controlPanel,
+                "bottom-right": !this.nbSelected,
+            },
+        };
+    }
+
     async downloadExport(fields, import_compat, format) {
         const resIds = await this.getSelectedResIds();
         const exportedFields = fields.map((field) => ({
