@@ -240,20 +240,7 @@ registerModel({
          */
         onClickSaveLink(ev) {
             ev.preventDefault();
-            if (!this.composer.canPostMessage) {
-                if (this.composer.hasUploadingAttachment) {
-                    this.messaging.notify({
-                        message: this.env._t("Please wait while the file is uploading."),
-                        type: 'warning',
-                    });
-                }
-                return;
-            }
-            if (this.messageViewInEditing) {
-                this.updateMessage();
-                return;
-            }
-            this.postMessage();
+            this.sendMessage();
         },
         /**
          * Called when clicking on "send" button.
