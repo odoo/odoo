@@ -38,11 +38,10 @@ registerModel({
             ev.preventDefault();
             const name = this.addingChannelValue;
             this.clearIsAddingItem();
-            if (ui.item.special) {
+            if (ui.item.create) {
                 const channel = await this.messaging.models['Thread'].performRpcCreateChannel({
                     name,
-                    group_id: ui.item.special === 'private' ? false : this.messaging.internalUserGroupId,
-                    privacy: ui.item.special === 'private' ? 'private' : 'groups',
+                    group_id: this.messaging.internalUserGroupId,
                 });
                 channel.open();
             } else {
@@ -77,19 +76,12 @@ registerModel({
             // XDU FIXME could use a component but be careful with owl's
             // renderToString https://github.com/odoo/owl/issues/708
             items.push({
+                create: true,
+                escapedValue,
                 label: sprintf(
                     `<strong>${this.env._t('Create %s')}</strong>`,
                     `<em><span class="fa fa-hashtag"/>${escapedValue}</em>`,
                 ),
-                escapedValue,
-                special: 'public'
-            }, {
-                label: sprintf(
-                    `<strong>${this.env._t('Create %s')}</strong>`,
-                    `<em><span class="fa fa-lock"/>${escapedValue}</em>`,
-                ),
-                escapedValue,
-                special: 'private'
             });
             res(items);
         },

@@ -331,8 +331,8 @@ class TestMessageAccess(TestMailCommon):
         cls.user_public = mail_new_test_user(cls.env, login='bert', groups='base.group_public', name='Bert Tartignole')
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
-        cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=cls.env.ref('base.group_user').id)['id'])
-        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', privacy='public', group_id=None)['id'])
+        cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', group_id=cls.env.ref('base.group_user').id)['id'])
+        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', group_id=None)['id'])
         cls.private_group = cls.env['mail.channel'].browse(cls.env['mail.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")['id'])
         cls.message = cls.env['mail.message'].create({
             'body': 'My Body',
@@ -388,8 +388,8 @@ class TestMessageAccess(TestMailCommon):
         messages = self.env['mail.message'].with_user(self.user_portal).search([('subject', 'like', '_ZTest')])
         self.assertFalse(messages)
 
-        # Test: Portal: 2 messages (public group with a subtype)
-        self.group_restricted_channel.write({'public': 'public'})
+        # Test: Portal: 2 messages (public channel)
+        self.group_restricted_channel.write({'group_public_id': False})
         messages = self.env['mail.message'].with_user(self.user_portal).search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg4 | msg5)
 

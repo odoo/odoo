@@ -54,9 +54,9 @@ class DiscussController(http.Controller):
         if not channel_sudo:
             try:
                 channel_sudo = channel_sudo.create({
+                    'channel_type': 'channel',
                     'default_display_mode': default_display_mode,
                     'name': channel_name or create_token,
-                    'public': 'public',
                     'uuid': create_token,
                 })
             except IntegrityError as e:
@@ -93,7 +93,7 @@ class DiscussController(http.Controller):
                     except UserError:
                         raise NotFound()
                 else:
-                    if channel_sudo.public == 'groups':
+                    if channel_sudo.group_public_id:
                         raise NotFound()
                     guest = channel_sudo.env['mail.guest'].create({
                         'country_id': channel_sudo.env['res.country'].search([('code', '=', request.geoip.get('country_code'))], limit=1).id,

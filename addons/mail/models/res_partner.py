@@ -186,7 +186,7 @@ class Partner(models.Model):
         if channel_id:
             channel = self.env['mail.channel'].search([('id', '=', int(channel_id))])
             domain = expression.AND([domain, [('channel_ids', 'not in', channel.id)]])
-            if channel.public == 'groups':
+            if channel.group_public_id:
                 domain = expression.AND([domain, [('user_ids.groups_id', 'in', channel.group_public_id.id)]])
         query = self.env['res.partner']._search(domain, order='name, id')
         query.order = 'LOWER("res_partner"."name"), "res_partner"."id"'  # bypass lack of support for case insensitive order in search()

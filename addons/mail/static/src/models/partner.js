@@ -19,7 +19,7 @@ registerModel({
          */
         async fetchSuggestions(searchTerm, { thread } = {}) {
             const kwargs = { search: searchTerm };
-            const isNonPublicChannel = thread && thread.model === 'mail.channel' && thread.public !== 'public';
+            const isNonPublicChannel = thread && thread.model === 'mail.channel' && (thread.authorizedGroupFullName || thread.channel.channel_type !== 'channel');
             if (isNonPublicChannel) {
                 kwargs.channel_id = thread.id;
             }
@@ -153,10 +153,10 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             let partners;
-            const isNonPublicChannel = thread && thread.channel && thread.public !== 'public';
+            const isNonPublicChannel = thread && thread.channel && (thread.authorizedGroupFullName || thread.channel.channel_type !== 'channel');
             if (isNonPublicChannel) {
                 // Only return the channel members when in the context of a
-                // non-public channel. Indeed, the message with the mention
+                // group restricted channel. Indeed, the message with the mention
                 // would be notified to the mentioned partner, so this prevents
                 // from inadvertently leaking the private message to the
                 // mentioned partner.

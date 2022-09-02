@@ -18,8 +18,8 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
     pyEnv['mail.channel'].create({
         channel_member_ids: [],
         channel_type: 'channel',
+        group_public_id: false,
         name: 'test',
-        public: 'public',
     });
     const searchReadDef = makeDeferred();
     const { click, openDiscuss } = await start({
@@ -47,11 +47,10 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
     );
     assert.strictEqual(
         results.length,
-        // When searching for a single existing channel, the results list will have at least 3 lines:
+        // When searching for a single existing channel, the results list will have at least 2 lines:
         // One for the existing channel itself
-        // One for creating a public channel with the search term
-        // One for creating a private channel with the search term
-        3
+        // One for creating a channel with the search term
+        2
     );
     assert.strictEqual(
         results[0].textContent,
@@ -69,8 +68,8 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
         ],
         channel_type: 'channel',
+        group_public_id: false,
         name: 'test',
-        public: 'public',
     });
     const searchReadDef = makeDeferred();
     const { click, openDiscuss } = await start({
@@ -98,11 +97,10 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
     );
     assert.strictEqual(
         results.length,
-        // When searching for a single existing channel, the results list will have at least 3 lines:
+        // When searching for a single existing channel, the results list will have at least 2 lines:
         // One for the existing channel itself
-        // One for creating a public channel with the search term
-        // One for creating a private channel with the search term
-        3
+        // One for creating a channel with the search term
+        2
     );
     assert.strictEqual(
         results[0].textContent,

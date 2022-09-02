@@ -82,7 +82,6 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     const { openDiscuss } = await start();
     await openDiscuss();
@@ -114,7 +113,6 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
                 partner_id: pyEnv.currentPartnerId,
             }]],
             channel_type: 'chat',
-            public: 'private',
         },
         {
             channel_member_ids: [[0, 0, {
@@ -122,7 +120,6 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
                 partner_id: pyEnv.currentPartnerId,
             }]],
             channel_type: 'chat',
-            public: 'private',
         },
     ]);
     const { click, openDiscuss } = await start();
