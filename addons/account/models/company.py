@@ -217,7 +217,7 @@ class ResCompany(models.Model):
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
-        return self.get_and_update_onbarding_state(
+        return self._get_and_update_onboarding_state(
             'account_invoice_onboarding_state',
             self.get_account_invoice_onboarding_steps_states_names()
         )
@@ -234,7 +234,7 @@ class ResCompany(models.Model):
     def get_and_update_account_dashboard_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
-        return self.get_and_update_onbarding_state(
+        return self._get_and_update_onboarding_state(
             'account_dashboard_onboarding_state',
             self.get_account_dashboard_onboarding_steps_states_names()
         )
