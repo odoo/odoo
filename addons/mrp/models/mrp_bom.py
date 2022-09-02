@@ -409,9 +409,9 @@ class MrpBomLine(models.Model):
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
 
-    @api.depends('product_id', 'tracking')
+    @api.depends('product_id', 'tracking', 'operation_id')
     def _compute_manual_consumption(self):
-        self.filtered(lambda m: m.tracking != 'none').manual_consumption = True
+        self.filtered(lambda m: m.tracking != 'none' or m.operation_id).manual_consumption = True
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
