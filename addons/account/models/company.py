@@ -65,6 +65,13 @@ class ResCompany(models.Model):
     account_journal_suspense_account_id = fields.Many2one('account.account', string='Journal Suspense Account')
     account_journal_payment_debit_account_id = fields.Many2one('account.account', string='Journal Outstanding Receipts Account')
     account_journal_payment_credit_account_id = fields.Many2one('account.account', string='Journal Outstanding Payments Account')
+    account_journal_early_pay_discount_gain_account_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Gain Account')
+    account_journal_early_pay_discount_loss_account_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Loss Account')
+    early_pay_discount_computation = fields.Selection([
+        ('included', 'On early payment'),
+        ('excluded', 'Never'),
+        ('mixed', 'Always (upon invoice)')
+    ], string='Cash Discount Tax Reduction', default='included', readonly=False)
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")

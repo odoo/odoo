@@ -110,6 +110,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 3600,
             'amount_untaxed': 3000,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -144,6 +145,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 3600,
             'amount_untaxed': 3000,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -177,6 +179,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 1000,
             'amount_untaxed': 1000,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -222,6 +225,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 3620,
             'amount_untaxed': 3000,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -256,6 +260,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 3620,
             'amount_untaxed': 3000,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -307,6 +312,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 2750,
             'amount_untaxed': 2000,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -341,6 +347,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 2750,
             'amount_untaxed': 2000,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -392,6 +399,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 2846,
             'amount_untaxed': 2300,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -477,6 +485,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 1867,
             'amount_untaxed': 1500,
+            'display_tax_base': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {

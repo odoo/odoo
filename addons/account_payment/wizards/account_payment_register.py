@@ -86,8 +86,8 @@ class AccountPaymentRegister(models.TransientModel):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
-    def _create_payment_vals_from_wizard(self):
+    def _create_payment_vals_from_wizard(self, batch_result):
         # OVERRIDE
-        payment_vals = super()._create_payment_vals_from_wizard()
+        payment_vals = super()._create_payment_vals_from_wizard(batch_result)
         payment_vals['payment_token_id'] = self.payment_token_id.id
         return payment_vals
