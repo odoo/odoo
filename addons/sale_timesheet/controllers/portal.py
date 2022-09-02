@@ -82,7 +82,7 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
         if search_in in ('so', 'all'):
             search_domain = expression.OR([search_domain, [('so_line.order_id.name', 'ilike', search)]])
         if search_in in ('invoice', 'all'):
-            invoices = request.env['account.move'].sudo().search([('name', 'ilike', search)])
+            invoices = request.env['account.move'].sudo().search(['|', ('name', 'ilike', search), ('id', 'ilike', search)])
             domain = request.env['account.analytic.line']._timesheet_get_sale_domain(invoices.mapped('invoice_line_ids.sale_line_ids'), invoices)
             search_domain = expression.OR([search_domain, domain])
         return search_domain
