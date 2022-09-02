@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-30 06:18+0000\n"
-"PO-Revision-Date: 2022-05-30 06:18+0000\n"
+"POT-Creation-Date: 2022-09-02 08:24+0000\n"
+"PO-Revision-Date: 2022-09-02 08:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -470,6 +470,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_gcc_invoice_stock_account
+msgid ""
+"\n"
+"        Arabic/English for GCC + lot/SN numbers\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_planning_calendar
 msgid ""
 "\n"
@@ -478,10 +486,26 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_bg_reports
+msgid ""
+"\n"
+"        Base module for Bulgarian reports\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
 msgid ""
 "\n"
 "        Bill timesheets logged on helpdesk tickets.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_xml_polizas_edi
+msgid ""
+"\n"
+"        Bridge XML Polizas with EDI\n"
 "    "
 msgstr ""
 
@@ -575,6 +599,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Bridge module to make the website e-commerce stock management compatible with the product configurator\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_bg
+msgid ""
+"\n"
+"        Chart accounting and taxes for Bulgaria\n"
 "    "
 msgstr ""
 
@@ -1154,6 +1186,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended_40
+msgid ""
+"\n"
+"    Bridge module to extend the delivery guide (Complemento XML Carta de Porte) for CFDI v4.0\n"
+"    - exported goods (COMEX)\n"
+"    - extended address fields\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
 msgid ""
 "\n"
@@ -1310,6 +1352,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_pe_edi_stock
+msgid ""
+"\n"
+"    The delivery guide (Guía de Remisión) is needed as a proof\n"
+"    that you are sending goods between A and B.\n"
+"\n"
+"    It is only when a delivery order is validated that you can create the delivery\n"
+"    guide.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_stock
 msgid ""
 "\n"
@@ -1334,6 +1388,25 @@ msgid ""
 "\n"
 "    - a Chart of Accounts customised to Ireland\n"
 "    - VAT Rates and Structure"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_account_edi_ubl_cii_tests
+msgid ""
+"\n"
+"    This module tests the module 'account_edi_ubl_cii', it is separated since dependencies to some \n"
+"    localizations were required. Its name begins with 'l10n' to not overload runbot.\n"
+"    \n"
+"    The test files are separated by sources, they were taken from:\n"
+"    \n"
+"    * the factur-x doc (form the FNFE)\n"
+"    * the peppol-bis-invoice-3 doc (the github repository: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples contains examples)\n"
+"    * odoo, these files pass all validation tests (using ecosio or the FNFE validator)\n"
+"    \n"
+"    We test that the external examples are correctly imported (currency, total amount and total tax match).\n"
+"    We also test that generating xml from odoo with given parameters gives exactly the same xml as the expected, \n"
+"    valid ones.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -1850,6 +1923,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
+msgid ""
+"\n"
+"Add supports to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_documents_project
 msgid ""
 "\n"
@@ -2208,6 +2288,48 @@ msgid ""
 "The annual report must be provided to the Commissioner no later than 28 August after the end of the financial year. Reports can be sent more frequently for those that wish to do so.\n"
 "\n"
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_dimona
+msgid ""
+"\n"
+"Automatic DIMONA declarations\n"
+"=============================\n"
+"\n"
+"Prerequisites:\n"
+"--------------\n"
+"\n"
+"- You need a Belgian Government Compliant Digital Certificate, delivered by Global\n"
+"  Sign. See: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Generate certificate files from your SSL certificate (.pfx file) that are needed to create\n"
+"  a technical user (.cer file) and to authenticate remotely to the ONSS (.pem) file. On a UNIX\n"
+"  system, you may use the following commands:\n"
+"\n"
+"  - PFX -> CRT : openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER : openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Before you can use the social security REST web service, you must create an account\n"
+"  for yourself or for your client and configure the security. (The whole procedure is\n"
+"  available at https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - User account management: Follow the Procedure https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Create a technical user: Your client must now create a technical user in the Access management\n"
+"    online service. The follow this procedure: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Activate a web service channel: Once the technical user has been created, your client must\n"
+"    activate the web service channel in Access Management. The following manual explains the\n"
+"    steps to follow to activate the channel: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - At the end of the procedure, you should receive a \"ONSS Expeditor Number\", you may\n"
+"    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
+"\n"
 "    "
 msgstr ""
 
@@ -2882,6 +3004,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_40
+msgid ""
+"\n"
+"EDI CFDI 4.0\n"
+"============\n"
+"Convert CFDI XML documents to version 4.0 (from 3.3).\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi
 msgid ""
 "\n"
@@ -3025,6 +3157,30 @@ msgid ""
 "This is the base module for import and export of invoices in various EDI formats, and the\n"
 "the transmission of said documents to various parties involved in the exchange (other company,\n"
 "governements, etc.)\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_edi_ubl_cii
+msgid ""
+"\n"
+"Electronic invoicing module\n"
+"===========================\n"
+"\n"
+"Allows to export and import formats: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"When generating the PDF on the invoice, the PDF will be embedded inside the xml for all UBL formats. This allows the\n"
+"receiver to retrieve the PDF with only the xml file. Note that **EHF3 is fully implemented by UBL Bis 3** (`reference \n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
+"\n"
+"The formats can be chosen from the journal (Journal > Advanced Settings) linked to the invoice. \n"
+"\n"
+"Note that E-FFF, NLCIUS and XRechnung (UBL) are only available for Belgian, Dutch and German companies, \n"
+"respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list \n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"Note also that you need to activate PDF A in order to be able to submit a Factur-X pdf on Chorus Pro: \n"
+"go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true. \n"
+"With this setting, Chorus Pro will automatically detect the \"PDF/A-3 (Factur-X)\" format.\n"
 "    "
 msgstr ""
 
@@ -5983,6 +6139,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_amazon_spapi
+msgid ""
+"\n"
+"This module migrates the Amazon Connector from the MWS API to the Selling Partner API.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
 msgid ""
 "\n"
@@ -6419,6 +6582,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu_reports
 msgid " Base module for Hungary reports "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_40
+msgid " Electronic Delivery Guide for Mexico CFDI 4.0"
 msgstr ""
 
 #. module: base
@@ -7616,6 +7784,11 @@ msgid "Access to unauthorized or invalid companies."
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr ""
@@ -8276,6 +8449,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_extended_40
+msgid "Adds the CommercioExterior Complement to CFDI v4.0"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_administration
 #: model:ir.module.category,name:base.module_category_administration_administration
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
@@ -8559,6 +8737,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
 msgid "Amazon Connector"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_amazon_spapi
+msgid "Amazon/Selling Partner API Patch"
 msgstr ""
 
 #. module: base
@@ -9648,6 +9831,11 @@ msgid "Belgium - Payroll"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_dimona
+msgid "Belgium - Payroll - Dimona"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fleet
 msgid "Belgium - Payroll - Fleet"
 msgstr ""
@@ -9982,6 +10170,16 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bg
 msgid "Bulgaria"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bg
+msgid "Bulgaria - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bg_reports
+msgid "Bulgaria - Accounting Reports"
 msgstr ""
 
 #. module: base
@@ -11153,6 +11351,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_mail_plugin
 msgid "Convert emails to Helpdesk Tickets."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_40
+msgid "Converts the Mexican EDI CFDI documents to version 4.0"
 msgstr ""
 
 #. module: base
@@ -12893,6 +13096,16 @@ msgid "EDI for Peru"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_40
+msgid "EDI v4.0 for Mexico"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_extended_40
+msgid "EDI v4.0 for Mexico (COMEX)"
+msgstr ""
+
+#. module: base
 #: model:res.country,vat_label:base.us
 msgid "EIN"
 msgstr ""
@@ -13038,6 +13251,11 @@ msgid ""
 "\n"
 "* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
 "* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_pe_edi_stock
+msgid "Electronic Delivery Note for Peru (OSE method) and UBL 2.1"
 msgstr ""
 
 #. module: base
@@ -14388,6 +14606,11 @@ msgid "France - FEC Import"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_facturx_chorus_pro
+msgid "France - Factur-X integration with Chorus Pro"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
 msgid ""
 "France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
@@ -14966,6 +15189,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_pos
 msgid "Gulf Cooperation Council - Point of Sale"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_gcc_invoice_stock_account
+msgid "Gulf Cooperation Council WMS Accounting"
 msgstr ""
 
 #. module: base
@@ -15934,6 +16162,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
+msgid "Import/Export electronic invoices with UBL/CII"
 msgstr ""
 
 #. module: base
@@ -18342,6 +18575,11 @@ msgid "Mexico - Electronic Delivery Guide Comex"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended_40
+msgid "Mexico - Electronic Delivery Guide Comex 4.0"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.fm
 msgid "Micronesia"
 msgstr ""
@@ -19952,6 +20190,11 @@ msgid "Odoo Mexican XML Polizas Export"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_xml_polizas_edi
+msgid "Odoo Mexican XML Polizas Export Edi bridge"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
 msgstr ""
@@ -21413,6 +21656,11 @@ msgid "Password Policy support for Signup"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_amazon_spapi
+msgid "Patch module to migrate to the Selling Partner API"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__path
 msgid "Path"
 msgstr ""
@@ -21573,6 +21821,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe
 msgid "Peru - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_stock
+msgid "Peruvian - Electronic Delivery Note"
 msgstr ""
 
 #. module: base
@@ -24944,6 +25197,11 @@ msgid "Supplementary arguments"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_stock_40
+msgid "Support CFDI version 4.0"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
 msgid "Support live tracks: streaming, participation, youtube"
 msgstr ""
@@ -25386,6 +25644,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
 msgid "Testing of access restrictions"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_account_edi_ubl_cii_tests
+msgid "Testing the Import/Export invoices with UBL/CII"
 msgstr ""
 
 #. module: base
@@ -25863,6 +26126,10 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
+msgid "The rate of the currency to the currency of rate 1"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The rate of the currency to the currency of rate 1 "
 msgstr ""
@@ -28633,7 +28900,6 @@ msgid "_Import"
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr ""
