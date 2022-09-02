@@ -266,7 +266,7 @@ class AccountPayment(models.Model):
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         ''' Prepare the dictionary to create the default account.move.lines for the current payment.
-        :param write_off_line_vals: Optional dictionary to create a write-off account.move.line easily containing:
+        :param write_off_line_vals: Optional list of dictionaries to create a write-off account.move.line easily containing:
             * amount:       The amount to be added to the counterpart amount.
             * name:         The label to set on the line.
             * account_id:   The account on which create the write-off.
@@ -281,7 +281,9 @@ class AccountPayment(models.Model):
                 self.payment_method_line_id.name, self.journal_id.display_name))
 
         # Compute amounts.
-        write_off_amount_currency = write_off_line_vals.get('amount', 0.0)
+        write_off_line_vals_list = write_off_line_vals or []
+        write_off_amount_currency = sum(x['amount_currency'] for x in write_off_line_vals_list)
+        write_off_balance = sum(x['balance'] for x in write_off_line_vals_list)
 
         if self.payment_type == 'inbound':
             # Receive money.
@@ -289,16 +291,9 @@ class AccountPayment(models.Model):
         elif self.payment_type == 'outbound':
             # Send money.
             liquidity_amount_currency = -self.amount
-            write_off_amount_currency *= -1
         else:
-            liquidity_amount_currency = write_off_amount_currency = 0.0
+            liquidity_amount_currency = 0.0
 
-        write_off_balance = self.currency_id._convert(
-            write_off_amount_currency,
-            self.company_id.currency_id,
-            self.company_id,
-            self.date,
-        )
         liquidity_balance = self.currency_id._convert(
             liquidity_amount_currency,
             self.company_id.currency_id,
@@ -337,19 +332,7 @@ class AccountPayment(models.Model):
                 'account_id': self.destination_account_id.id,
             },
         ]
-        if not self.currency_id.is_zero(write_off_amount_currency):
-            # Write-off line.
-            default_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
-            line_vals_list.append({
-                'name': write_off_line_vals.get('name') or default_line_name,
-                'amount_currency': write_off_amount_currency,
-                'currency_id': currency_id,
-                'debit': write_off_balance if write_off_balance > 0.0 else 0.0,
-                'credit': -write_off_balance if write_off_balance < 0.0 else 0.0,
-                'partner_id': self.partner_id.id,
-                'account_id': write_off_line_vals.get('account_id'),
-            })
-        return line_vals_list
+        return line_vals_list + write_off_line_vals_list
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -797,13 +780,6 @@ class AccountPayment(models.Model):
                         move.display_name,
                     ))
 
-                if writeoff_lines and len(writeoff_lines.account_id) != 1:
-                    raise UserError(_(
-                        "Journal Entry %s is not valid. In order to proceed, "
-                        "all optional journal items must share the same account.",
-                        move.display_name,
-                    ))
-
                 if any(line.currency_id != all_lines[0].currency_id for line in all_lines):
                     raise UserError(_(
                         "Journal Entry %s is not valid. In order to proceed, the journal items must "
@@ -863,26 +839,16 @@ class AccountPayment(models.Model):
             # Make sure to preserve the write-off amount.
             # This allows to create a new payment with custom 'line_ids'.
 
+            write_off_line_vals = []
             if writeoff_lines:
-                counterpart_amount = sum(counterpart_lines.mapped('amount_currency'))
-                writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
-
-                # To be consistent with the payment_difference made in account.payment.register,
-                # 'writeoff_amount' needs to be signed regarding the 'amount' field before the write.
-                # Since the write is already done at this point, we need to base the computation on accounting values.
-                if (counterpart_amount > 0.0) == (writeoff_amount > 0.0):
-                    sign = -1
-                else:
-                    sign = 1
-                writeoff_amount = abs(writeoff_amount) * sign
-
-                write_off_line_vals = {
+                write_off_line_vals.append({
                     'name': writeoff_lines[0].name,
-                    'amount': writeoff_amount,
                     'account_id': writeoff_lines[0].account_id.id,
-                }
-            else:
-                write_off_line_vals = {}
+                    'partner_id': writeoff_lines[0].partner_id.id,
+                    'currency_id': writeoff_lines[0].currency_id.id,
+                    'amount_currency': sum(writeoff_lines.mapped('amount_currency')),
+                    'balance': sum(writeoff_lines.mapped('balance')),
+                })
 
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 

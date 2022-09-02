@@ -38,13 +38,16 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="display_on_invoice"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
                         </group>
-                        <field name="note" placeholder="Payment term explanation for the customer..."/>
+                        <group>
+                            <field name="note" placeholder="Payment term explanation for the customer..."/>
+                        </group>
+                        <label for="display_on_invoice"/>
+                        <field name="display_on_invoice"/>
                         <separator string="Terms"/>
                         <p class="text-muted">
                             The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
@@ -57,6 +60,8 @@
                                 <field name="days"/>
                                 <field name="end_month" widget="boolean_toggle"/>
                                 <field name="days_after" attrs="{'invisible': [('end_month','=', False)]}"/>
+                                <field name="discount_percentage"/>
+                                <field name="discount_days"/>
                             </tree>
                         </field>
 

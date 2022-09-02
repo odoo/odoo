@@ -11,6 +11,7 @@
                     <field name="line_ids" invisible="1"/>
                     <field name="can_edit_wizard" invisible="1" force_save="1"/>
                     <field name="can_group_payments" invisible="1" force_save="1"/>
+                    <field name="early_payment_discount_mode" invisible="1" force_save="1"/>
                     <field name="payment_type" invisible="1" force_save="1"/>
                     <field name="partner_type" invisible="1" force_save="1"/>
                     <field name="source_amount" invisible="1" force_save="1"/>
@@ -26,7 +27,11 @@
                     <field name="available_payment_method_line_ids" invisible="1"/>
                     <field name="available_partner_bank_ids" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
+                    <field name="hide_writeoff_section" invisible="1"/>
 
+                    <div role="alert" class="alert alert-info" attrs="{'invisible': [('hide_writeoff_section', '=', False)]}">
+                        <p><b>Early Payment Discount applied.</b></p>
+                    </div>
                     <group>
                         <group name="group1">
                             <field name="journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
@@ -60,12 +65,12 @@
                             <div>
                                 <field name="payment_difference"/>
                                 <field name="payment_difference_handling" widget="radio" nolabel="1"/>
-                                <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
+                                <div attrs="{'invisible': ['|', ('hide_writeoff_section', '=', True), ('payment_difference_handling','=','open')]}">
                                     <label for="writeoff_account_id" string="Post Difference In" class="oe_edit_only"/>
                                     <field name="writeoff_account_id"
                                            string="Post Difference In"
                                            options="{'no_create': True}"
-                                           attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                           attrs="{'required': [('payment_difference_handling', '=', 'reconcile'), ('early_payment_discount_mode', '=', False)]}"/>
                                     <label for="writeoff_label" class="oe_edit_only" string="Label"/>
                                     <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                                 </div>

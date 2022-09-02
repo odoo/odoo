@@ -62,7 +62,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             'amount': 5.0,
         })
 
-        invoice = self.env['account.move'].create({
+        invoice_create_values = {
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_date': '2019-01-01',
@@ -92,7 +92,9 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                     'tax_ids': [Command.set((tax_20_affect + tax_10).ids)],
                 }),
             ]
-        })
+        }
+
+        invoice = self.env['account.move'].create(invoice_create_values)
         base_lines, tax_lines = self._dispatch_move_lines(invoice)
 
         tax_details = self._get_tax_details()
@@ -168,15 +170,12 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             'children_tax_ids': [Command.set((tax_20_affect + tax_10 + tax_5).ids)],
         })
 
-        invoice.write({
-            'invoice_line_ids': [Command.update(base_lines[0].id, {
-                'tax_ids': [Command.set(tax_group.ids)],
-            })],
-        })
+        invoice_create_values['invoice_line_ids'][0][2]['tax_ids'] = [Command.set(tax_group.ids)]
+        invoice = self.env['account.move'].create(invoice_create_values)
 
         base_lines, tax_lines = self._dispatch_move_lines(invoice)
 
-        tax_details = self._get_tax_details()
+        tax_details = self._get_tax_details(extra_domain=[('move_id', '=', invoice.id)])
         self.assertTaxDetailsValues(tax_details, [
             {
                 'base_line_id': base_lines[0].id,

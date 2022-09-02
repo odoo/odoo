@@ -181,6 +181,8 @@
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
                     <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" width="0.5" optional="hide"/>
+                    <field name="discount_date" string="Discount Date"/>
+                    <field name="discount_amount_currency" string="Discount Amount"/>
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
@@ -1096,6 +1098,14 @@
                                                sum="Total Credit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))], 'readonly': [('parent.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')), ('display_type', 'in', ('line_section', 'line_note', 'product'))]}"/>
                                         <field name="balance" invisible="1"/>
+                                        <field name="discount_date"
+                                               string="Discount Date"
+                                               optional="hide"
+                                        />
+                                        <field name="discount_amount_currency"
+                                               string="Discount Amount"
+                                               optional="hide"
+                                        />
 
                                         <field name="tax_tag_ids"
                                                widget="many2many_tags"

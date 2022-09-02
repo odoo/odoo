@@ -3,7 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-from odoo import fields
+from odoo import fields, Command
 from odoo.tests.common import Form
 
 
@@ -209,3 +209,70 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                     }),
                 ],
             })
+
+    def test_payment_term_compute_method(self):
+        def assert_payment_term_values(expected_values_list):
+            res = pay_term._compute_terms(
+                fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
+                150, 150, 1000, 1000, 1,
+            )
+            self.assertEqual(len(res), len(expected_values_list))
+            for values, (company_amount, discount_balance) in zip(res, expected_values_list):
+                self.assertDictEqual(
+                    {
+                        'company_amount': values['company_amount'],
+                        'discount_balance': values['discount_balance'],
+                    },
+                    {
+
+                        'company_amount': company_amount,
+                        'discount_balance': discount_balance,
+                    },
+                )
+
+        pay_term = self.env['account.payment.term'].create({
+            'name': "turlututu",
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 10,
+                    'days': 2,
+                    'discount_percentage': 10,
+                    'discount_days': 1,
+                }),
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 20,
+                    'days': 4,
+                    'discount_percentage': 20,
+                    'discount_days': 3,
+                }),
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 20,
+                    'days': 6,
+                }),
+                Command.create({
+                    'value': 'balance',
+                    'days': 8,
+                    'discount_percentage': 20,
+                    'discount_days': 7,
+                }),
+            ],
+        })
+
+        self.env.company.early_pay_discount_computation = 'included'
+        assert_payment_term_values([
+            (115.0, 103.5),
+            (230.0, 184.0),
+            (230.0, 0.0),
+            (575.0, 460.0),
+        ])
+
+        self.env.company.early_pay_discount_computation = 'excluded'
+        assert_payment_term_values([
+            (115.0, 105.0),
+            (230.0, 190.0),
+            (230.0, 0.0),
+            (575.0, 475.0),
+        ])
