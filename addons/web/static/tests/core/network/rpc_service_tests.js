@@ -252,3 +252,24 @@ QUnit.test("check connection aborted", async (assert) => {
     connection.abort();
     assert.rejects(connection, ConnectionAbortedError);
 });
+
+QUnit.test(
+    "Response with status 404 and invalid JSON response result in a rerror with a readable message",
+    async (assert) => {
+        const env = await makeTestEnv({ serviceRegistry });
+
+        const MockXHR = makeMockXHR({}, () => {});
+        const request = new MockXHR();
+        request.response = "<h...";
+        request.status = "404";
+
+        try {
+            await env.services.rpc("/test/", null, { xhr: request });
+        } catch (_e) {
+            assert.strictEqual(
+                _e.message,
+                "server responded with invalid JSON response (HTTP404): <h..."
+            );
+        }
+    }
+);
