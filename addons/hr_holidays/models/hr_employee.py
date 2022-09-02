@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_round
+from odoo.addons.resource.models.resource import HOURS_PER_DAY
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -97,21 +98,20 @@ class HrEmployeeBase(models.AbstractModel):
             employee.allocations_count = result['employee_id_count'] if result else 0.0
 
     def _compute_allocation_remaining_display(self):
-        current_date = datetime.date.today()
-        data_leave = self.env['hr.leave'].read_group([
-            ('employee_id', 'in', self.ids),
-            ('holiday_status_id.active', '=', True),
-            ('holiday_status_id.requires_allocation', '=', 'yes'),
-            ('state', 'not in', ('cancel', 'refuse')),
-            '|',
-            ('holiday_allocation_id.date_to', '=', False),
-            ('holiday_allocation_id.date_to', '>=', current_date),
-        ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
-        results_leave = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data_leave)
+        allocations = self.env['hr.leave.allocation'].search([('employee_id', 'in', self.ids)])
+        leaves_taken = allocations.holiday_status_id._get_employees_days_per_allocation(self.ids)
         for employee in self:
-            result = results_leave.get(employee.id)
-            leaves_taken = float_round(result['number_of_days'], precision_digits=2) if result else 0.0
-            employee.allocation_remaining_display = "%g" % float_round(employee.allocation_count - leaves_taken, precision_digits=2)
+            employee_remaining_leaves = 0
+            for leave_type in leaves_taken[employee.id]:
+                if leave_type.requires_allocation == 'no':
+                    continue
+                for allocation in leaves_taken[employee.id][leave_type]:
+                    if allocation:
+                        virtual_remaining_leaves = leaves_taken[employee.id][leave_type][allocation]['virtual_remaining_leaves']
+                        employee_remaining_leaves += virtual_remaining_leaves\
+                            if leave_type.request_unit in ['day', 'half_day']\
+                            else virtual_remaining_leaves / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+            employee.allocation_remaining_display = "%g" % float_round(employee_remaining_leaves, precision_digits=2)
 
     def _compute_presence_state(self):
         super()._compute_presence_state()
