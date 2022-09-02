@@ -40,9 +40,9 @@
                         <field name="name"/>
                         <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'invisible': [('resource_type','=','material')]}"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <field name="resource_type" />
                     </group>
                     <group name="resource_details">
-                        <field name="resource_type" />
                         <field name="calendar_id"/>
                         <field name="tz"/>
                         <field name="time_efficiency"/>
