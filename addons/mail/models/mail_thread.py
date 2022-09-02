@@ -85,6 +85,7 @@ class MailThread(models.AbstractModel):
     message_partner_ids = fields.Many2many(
         comodel_name='res.partner', string='Followers (Partners)',
         compute='_compute_message_partner_ids',
+        inverse='_inverse_message_partner_ids',
         search='_search_message_partner_ids',
         groups='base.group_user')
     message_ids = fields.One2many(
@@ -112,6 +113,17 @@ class MailThread(models.AbstractModel):
     def _compute_message_partner_ids(self):
         for thread in self:
             thread.message_partner_ids = thread.message_follower_ids.mapped('partner_id')
+
+    def _inverse_message_partner_ids(self):
+        for thread in self:
+            new_partners_ids = thread.message_partner_ids
+            previous_partners_ids = thread.message_follower_ids.partner_id
+            removed_partners_ids = previous_partners_ids - new_partners_ids
+            added_patners_ids = new_partners_ids - previous_partners_ids
+            if added_patners_ids:
+                thread.message_subscribe(added_patners_ids.ids)
+            if removed_partners_ids:
+                thread.message_unsubscribe(removed_partners_ids.ids)
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
