@@ -15,11 +15,13 @@ class AccountPaymentRegister(models.TransientModel):
         default=fields.Date.context_today)
     amount = fields.Monetary(currency_field='currency_id', store=True, readonly=False,
         compute='_compute_amount')
+    hide_writeoff_section = fields.Boolean(compute="_compute_hide_writeoff_section")
     communication = fields.Char(string="Memo", store=True, readonly=False,
         compute='_compute_communication')
     group_payment = fields.Boolean(string="Group Payments", store=True, readonly=False,
         compute='_compute_group_payment',
         help="Only one payment will be created by partner (bank), instead of one per billy.")
+    early_payment_discount_mode = fields.Boolean(compute='_compute_early_payment_discount_mode')
     currency_id = fields.Many2one(
         comodel_name='res.currency',
         string='Currency',
@@ -98,12 +100,22 @@ class AccountPaymentRegister(models.TransientModel):
     # == Payment difference fields ==
     payment_difference = fields.Monetary(
         compute='_compute_payment_difference')
-    payment_difference_handling = fields.Selection([
-        ('open', 'Keep open'),
-        ('reconcile', 'Mark as fully paid'),
-    ], default='open', string="Payment Difference Handling")
-    writeoff_account_id = fields.Many2one('account.account', string="Difference Account", copy=False,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
+    payment_difference_handling = fields.Selection(
+        string="Payment Difference Handling",
+        selection=[('open', 'Keep open'), ('reconcile', 'Mark as fully paid')],
+        compute='_compute_payment_difference_handling',
+        store=True,
+        readonly=False,
+    )
+    writeoff_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Difference Account",
+        copy=False,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        compute='_compute_writeoff_account_id',
+        store=True,
+        readonly=False,
+    )
     writeoff_label = fields.Char(string='Journal Item Label', default='Write-Off',
         help='Change label of the counterpart that will hold the payment difference')
 
@@ -445,7 +457,19 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.show_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
             wizard.require_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
 
-    def _get_total_amount_in_wizard_currency_to_full_reconcile(self, batch_result):
+    def _get_total_amount_using_same_currency(self, batch_result, early_payment_discount=True):
+        self.ensure_one()
+        amount = 0.0
+        mode = False
+        for aml in batch_result['lines']:
+            if early_payment_discount and aml._is_eligible_for_early_payment_discount(aml.currency_id, self.payment_date):
+                amount += aml.discount_amount_currency
+                mode = 'early_payment'
+            else:
+                amount += aml.amount_residual_currency
+        return abs(amount), mode
+
+    def _get_total_amount_in_wizard_currency_to_full_reconcile(self, batch_result, early_payment_discount=True):
         """ Compute the total amount needed in the currency of the wizard to fully reconcile the batch of journal
         items passed as parameter.
 
@@ -455,8 +479,8 @@ class AccountPaymentRegister(models.TransientModel):
         self.ensure_one()
         comp_curr = self.company_id.currency_id
         if self.source_currency_id == self.currency_id:
-            # Same currency.
-            return self.source_amount_currency
+            # Same currency (manage the early payment discount).
+            return self._get_total_amount_using_same_currency(batch_result, early_payment_discount=early_payment_discount)
         elif self.source_currency_id != comp_curr and self.currency_id == comp_curr:
             # Foreign currency on source line but the company currency one on the opposite line.
             return self.source_currency_id._convert(
@@ -464,7 +488,7 @@ class AccountPaymentRegister(models.TransientModel):
                 comp_curr,
                 self.company_id,
                 self.payment_date,
-            )
+            ), False
         elif self.source_currency_id == comp_curr and self.currency_id != comp_curr:
             # Company currency on source line but a foreign currency one on the opposite line.
             return abs(sum(
@@ -475,7 +499,7 @@ class AccountPaymentRegister(models.TransientModel):
                     aml.date,
                 )
                 for aml in batch_result['lines']
-            ))
+            )), False
         else:
             # Foreign currency on payment different than the one set on the journal entries.
             return comp_curr._convert(
@@ -483,27 +507,53 @@ class AccountPaymentRegister(models.TransientModel):
                 self.currency_id,
                 self.company_id,
                 self.payment_date,
-            )
+            ), False
 
     @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date')
     def _compute_amount(self):
         for wizard in self:
             if wizard.source_currency_id and wizard.can_edit_wizard:
                 batch_result = wizard._get_batches()[0]
-                wizard.amount = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)
+                wizard.amount = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)[0]
             else:
                 # The wizard is not editable so no partial payment allowed and then, 'amount' is not used.
                 wizard.amount = None
+
+    @api.depends('can_edit_wizard', 'payment_date', 'currency_id', 'amount')
+    def _compute_early_payment_discount_mode(self):
+        for wizard in self:
+            if wizard.can_edit_wizard:
+                batch_result = wizard._get_batches()[0]
+                total_amount_residual_in_wizard_currency, mode = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)
+                wizard.early_payment_discount_mode = \
+                    wizard.currency_id.compare_amounts(wizard.amount, total_amount_residual_in_wizard_currency) == 0 \
+                    and mode == 'early_payment'
+            else:
+                wizard.early_payment_discount_mode = False
 
     @api.depends('can_edit_wizard', 'amount')
     def _compute_payment_difference(self):
         for wizard in self:
             if wizard.can_edit_wizard:
                 batch_result = wizard._get_batches()[0]
-                total_amount_residual_in_wizard_currency = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)
+                total_amount_residual_in_wizard_currency = wizard\
+                    ._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result, early_payment_discount=False)[0]
                 wizard.payment_difference = total_amount_residual_in_wizard_currency - wizard.amount
             else:
                 wizard.payment_difference = 0.0
+
+    @api.depends('early_payment_discount_mode')
+    def _compute_payment_difference_handling(self):
+        for wizard in self:
+            if wizard.can_edit_wizard:
+                wizard.payment_difference_handling = 'reconcile' if wizard.early_payment_discount_mode else 'open'
+            else:
+                wizard.payment_difference_handling = False
+
+    @api.depends('early_payment_discount_mode')
+    def _compute_hide_writeoff_section(self):
+        for wizard in self:
+            wizard.hide_writeoff_section = wizard.early_payment_discount_mode
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -564,7 +614,7 @@ class AccountPaymentRegister(models.TransientModel):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
-    def _create_payment_vals_from_wizard(self):
+    def _create_payment_vals_from_wizard(self, batch_result):
         payment_vals = {
             'date': self.payment_date,
             'amount': self.amount,
@@ -576,15 +626,52 @@ class AccountPaymentRegister(models.TransientModel):
             'partner_id': self.partner_id.id,
             'partner_bank_id': self.partner_bank_id.id,
             'payment_method_line_id': self.payment_method_line_id.id,
-            'destination_account_id': self.line_ids[0].account_id.id
+            'destination_account_id': self.line_ids[0].account_id.id,
+            'write_off_line_vals': [],
         }
 
-        if not self.currency_id.is_zero(self.payment_difference) and self.payment_difference_handling == 'reconcile':
-            payment_vals['write_off_line_vals'] = {
-                'name': self.writeoff_label,
-                'amount': self.payment_difference,
-                'account_id': self.writeoff_account_id.id,
-            }
+        conversion_rate = self.env['res.currency']._get_conversion_rate(
+            self.currency_id,
+            self.company_id.currency_id,
+            self.company_id,
+            self.payment_date,
+        )
+
+        if self.payment_difference_handling == 'reconcile':
+
+            if self.early_payment_discount_mode:
+                epd_aml_values_list = []
+                for aml in batch_result['lines']:
+                    if aml._is_eligible_for_early_payment_discount(self.currency_id, self.payment_date):
+                        epd_aml_values_list.append({
+                            'aml': aml,
+                            'amount_currency': -aml.amount_residual_currency,
+                            'balance': aml.company_currency_id.round(-aml.amount_residual_currency * conversion_rate),
+                        })
+
+                open_amount_currency = self.payment_difference * (-1 if self.payment_type == 'outbound' else 1)
+                open_balance = self.company_id.currency_id.round(open_amount_currency * conversion_rate)
+                early_payment_values = self.env['account.move']._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
+                for aml_values_list in early_payment_values.values():
+                    payment_vals['write_off_line_vals'] += aml_values_list
+
+            elif not self.currency_id.is_zero(self.payment_difference):
+                if self.payment_type == 'inbound':
+                    # Receive money.
+                    write_off_amount_currency = self.payment_difference
+                else: # if self.payment_type == 'outbound':
+                    # Send money.
+                    write_off_amount_currency = -self.payment_difference
+
+                write_off_balance = self.company_id.currency_id.round(write_off_amount_currency * conversion_rate)
+                payment_vals['write_off_line_vals'].append({
+                    'name': self.writeoff_label,
+                    'account_id': self.writeoff_account_id.id,
+                    'partner_id': self.partner_id.id,
+                    'currency_id': self.currency_id.id,
+                    'amount_currency': write_off_amount_currency,
+                    'balance': write_off_balance,
+                })
         return payment_vals
 
     def _create_payment_vals_from_batch(self, batch_result):
@@ -600,7 +687,7 @@ class AccountPaymentRegister(models.TransientModel):
         if batch_values['payment_type'] != payment_method_line.payment_type:
             payment_method_line = self.journal_id._get_available_payment_method_lines(batch_values['payment_type'])[:1]
 
-        return {
+        payment_vals = {
             'date': self.payment_date,
             'amount': batch_values['source_amount_currency'],
             'payment_type': batch_values['payment_type'],
@@ -611,8 +698,39 @@ class AccountPaymentRegister(models.TransientModel):
             'partner_id': batch_values['partner_id'],
             'partner_bank_id': partner_bank_id,
             'payment_method_line_id': payment_method_line.id,
-            'destination_account_id': batch_result['lines'][0].account_id.id
+            'destination_account_id': batch_result['lines'][0].account_id.id,
+            'write_off_line_vals': [],
         }
+
+        total_amount, mode = self._get_total_amount_using_same_currency(batch_result)
+        currency = self.env['res.currency'].browse(batch_values['source_currency_id'])
+        if mode == 'early_payment':
+            payment_vals['amount'] = total_amount
+
+            conversion_rate = self.env['res.currency']._get_conversion_rate(
+                currency,
+                self.company_id.currency_id,
+                self.company_id,
+                self.payment_date,
+            )
+
+            epd_aml_values_list = []
+            for aml in batch_result['lines']:
+                if aml._is_eligible_for_early_payment_discount(currency, self.payment_date):
+                    epd_aml_values_list.append({
+                        'aml': aml,
+                        'amount_currency': -aml.amount_residual_currency,
+                        'balance': aml.company_currency_id.round(-aml.amount_residual_currency * conversion_rate),
+                    })
+
+            open_amount_currency = (batch_values['source_amount_currency'] - total_amount) * (-1 if batch_values['payment_type'] == 'outbound' else 1)
+            open_balance = self.company_id.currency_id.round(open_amount_currency * conversion_rate)
+            early_payment_values = self.env['account.move']\
+                ._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
+            for aml_values_list in early_payment_values.values():
+                payment_vals['write_off_line_vals'] += aml_values_list
+
+        return payment_vals
 
     def _init_payments(self, to_process, edit_mode=False):
         """ Create the payments.
@@ -715,15 +833,16 @@ class AccountPaymentRegister(models.TransientModel):
     def _create_payments(self):
         self.ensure_one()
         batches = self._get_batches()
-        edit_mode = self.can_edit_wizard and (len(batches[0]['lines']) == 1 or self.group_payment)
+        first_batch_result = batches[0]
+        edit_mode = self.can_edit_wizard and (len(first_batch_result['lines']) == 1 or self.group_payment)
         to_process = []
 
         if edit_mode:
-            payment_vals = self._create_payment_vals_from_wizard()
+            payment_vals = self._create_payment_vals_from_wizard(first_batch_result)
             to_process.append({
                 'create_vals': payment_vals,
-                'to_reconcile': batches[0]['lines'],
-                'batch': batches[0],
+                'to_reconcile': first_batch_result['lines'],
+                'batch': first_batch_result,
             })
         else:
             # Don't group payments: Create one batch per move.
