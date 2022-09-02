@@ -33,13 +33,13 @@
 
     .o_kanban_record > div,
     .o_kanban_quick_create {
-        padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
         border: 1px solid $border-color;
         background-color: $o-view-background-color;
     }
 
     .o_kanban_quick_create {
         margin-bottom: calc(var(--KanbanRecord-margin-h) * 2);
+        padding: 8px;
 
         .o_form_view .o_group.o_inner_group {
             margin: 0;
@@ -52,6 +52,7 @@
         margin: 0 0 -1px;
 
         > div {
+            padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
             width: 100%;
             height: 100%;
         }
