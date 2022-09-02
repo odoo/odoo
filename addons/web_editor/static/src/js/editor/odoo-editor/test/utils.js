@@ -264,8 +264,11 @@ export function renderTextualSelection() {
  */
 export function customErrorMessage(assertLocation, value, expected) {
     const zws = '//zws//';
-    value = value.replace('\u200B', zws);
-    expected = expected.replace('\u200B', zws);
+    value = value.replaceAll('\u200B', zws);
+    expected = expected.replaceAll('\u200B', zws);
+    const tab = '//TAB//';
+    value = value.replaceAll('\u0009', tab);
+    expected = expected.replaceAll('\u0009', tab);
 
     return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
