@@ -59,9 +59,9 @@
                     </t>
                 </h3>
             </div>
-            <div><table t-if="sources_to_lines" class="o_report_reception_table table table-sm">
+            <table t-if="sources_to_lines" class="o_report_reception_table table table-sm">
                 <t t-foreach="sources_to_lines" t-as="source">
-                    <thead t-if="report_type == 'html' or any(line['is_assigned'] for line in sources_to_lines[source])">
+                    <thead t-if="any(line['is_assigned'] for line in sources_to_lines[source])">
                         <tr class="bg-light">
                             <th>
                                 <i t-if="source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
@@ -78,71 +78,19 @@
                                 </span>
                             </th>
                             <th>Expected Delivery: <t t-esc="sources_to_formatted_scheduled_date[source]"/></th>
-                            <th t-if="report_type == 'html' and any(s['move_ins'] for s in sources_to_lines[source])">
-                                <button t-if="any(not s['is_assigned'] and s['is_qty_assignable'] for s in sources_to_lines[source])"
-                                        class="btn btn-sm btn-primary o_report_reception_assign o_assign_all"
-                                        name="assign_source_link">
-                                        Assign All
-                                </button>
-                            </th>
-                            <th t-if="report_type == 'html'">
-                                <button t-if="any(s['move_ins'] for s in sources_to_lines[source])"
-                                        class="btn btn-sm btn-primary o_print_label o_print_label_all"
-                                        t-att-disabled="not any(s['is_assigned'] for s in sources_to_lines[source])"
-                                        name="print_labels">
-                                        <span class="d-none d-sm-block o_print_label_text">Print Labels</span>
-                                        <span class="d-block d-sm-none fa fa-print"/>
-                                </button>
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <t t-set="possible_moves" t-value="sources_to_lines[source]"/>
                         <t t-foreach="possible_moves" t-as="line">
                             <!-- don't print non-assigned lines when printing pdf -->
-                            <tr t-if="report_type == 'html' or line['is_assigned']">
+                            <tr t-if="line['is_assigned']">
                                 <td>
                                     <t t-esc="line['product']['display_name']"/>
                                 </td>
                                 <td>
                                     <t t-esc="line['quantity']"/>
                                     <t groups="uom.group_uom" t-esc="line['uom']"/>
-                                    <button t-if="report_type == 'html'"
-                                        class="o_report_reception_forecasted btn btn-link fa fa-area-chart"
-                                        t-att-move-id="line['move_out'].id"
-                                        name="forecasted_report_link">
-                                    </button>
-                                </td>
-                                <td t-if="report_type == 'html' and line['is_qty_assignable']">
-                                    <button t-if="not line['is_assigned']"
-                                        class="btn btn-sm btn-primary o_report_reception_assign"
-                                        t-attf-model="stock.move"
-                                        t-att-move-id="line['move_out'].id"
-                                        t-att-move-ins-ids="line['move_ins']"
-                                        t-att-qty="line['quantity']"
-                                        name="assign_link">
-                                        Assign
-                                    </button>
-                                    <button t-if="line['is_assigned']"
-                                        class="btn btn-sm btn-primary o_report_reception_unassign"
-                                        t-attf-model="stock.move"
-                                        t-att-move-id="line['move_out'].id"
-                                        t-att-move-ins-ids="line['move_ins']"
-                                        t-att-qty="line['quantity']"
-                                        name="unassign_link">
-                                        Unassign
-                                    </button>
-                                </td>
-                                <td t-if="report_type == 'html'">
-                                    <button t-if="line['is_qty_assignable'] and line['source']"
-                                        t-att-move-id="line['move_out'].id"
-                                        t-att-qty="line['quantity']"
-                                        t-attf-class="btn btn-sm btn-primary o_print_label"
-                                        t-att-disabled="not line['is_assigned']"
-                                        name="print_label">
-                                        <span class="d-none d-sm-block o_print_label_text">Print Label</span>
-                                        <span class="d-block d-sm-none fa fa-print"/>
-                                    </button>
                                 </td>
                             </tr>
                         </t>
@@ -151,16 +99,13 @@
             </table>
             <p t-else="">
                 No allocation need found.
-            </p></div>
+            </p>
         </div>
     </template>
 
     <template id="report_reception">
         <t t-call="web.html_container">
-            <t t-if="report_type == 'pdf'" t-call="web.internal_layout">
-                <t t-call="stock.report_reception_body"/>
-            </t>
-            <t t-else="">
+            <t t-call="web.internal_layout">
                 <t t-call="stock.report_reception_body"/>
             </t>
         </t>
