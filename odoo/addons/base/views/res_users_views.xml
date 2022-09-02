@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="change_password_own_form" model="ir.ui.view">
+            <field name="name">Change Own Password</field>
+            <field name="model">change.password.own</field>
+            <field name="arch" type="xml">
+                <form string="Change Password">
+                    <group>
+                        <field name="new_password" password="True" required="1"/>
+                        <field name="confirm_password" password="True" required="1"/>
+                    </group>
+                    <footer>
+                        <button string="Change Password" name="change_password" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    </footer>
+                </form>
+            </field>
+        </record>
 
         <!-- change password wizard -->
         <record id="change_password_wizard_view" model="ir.ui.view">

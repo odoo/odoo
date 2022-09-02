@@ -180,7 +180,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/tools/tools.js',
             'web/static/src/legacy/js/views/**/*',
-            'web/static/src/legacy/js/widgets/change_password.js',
             'web/static/src/legacy/js/widgets/data_export.js',
             'web/static/src/legacy/js/widgets/date_picker.js',
             'web/static/src/legacy/js/widgets/domain_selector_dialog.js',
