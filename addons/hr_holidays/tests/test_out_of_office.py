@@ -46,7 +46,6 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'mail_create_nosubscribe': True,
         }).create({
             'channel_partner_ids': [(4, partner.id), (4, partner2.id)],
-            'public': 'private',
             'channel_type': 'chat',
             'name': 'test'
         })

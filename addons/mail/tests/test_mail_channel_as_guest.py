@@ -12,10 +12,7 @@ class TestMailPublicPage(HttpCase):
 
     def setUp(self):
         super().setUp()
-        self.channel = self.env['mail.channel'].create({
-            'name': 'Test channel',
-            'public': 'public',
-        })
+        self.channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(group_id=None, name='Test channel')['id'])
         self.tour = "mail/static/tests/tours/discuss_public_tour.js"
 
     def _open_channel_page_as_user(self, login):

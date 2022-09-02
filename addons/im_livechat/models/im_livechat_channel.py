@@ -159,7 +159,6 @@ class ImLivechatChannel(models.Model):
             'country_id': country_id,
             'channel_type': 'livechat',
             'name': name,
-            'public': 'private',
         }
 
     def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None):

@@ -335,7 +335,6 @@ QUnit.test('new message chat window should close on selecting the user if chat w
         ],
         channel_type: "chat",
         name: "Partner 131",
-        public: 'private',
     });
     const { afterEvent, click } = await start();
 

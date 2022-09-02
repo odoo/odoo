@@ -120,11 +120,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.channel/unpin', {
-            'channel_type': 'channel',
             'id': mailChannelId1,
-            'name': "General",
-            'public': 'public',
-            'state': 'open',
         });
     });
     assert.containsOnce(
