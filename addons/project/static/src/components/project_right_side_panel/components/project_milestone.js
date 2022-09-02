@@ -27,7 +27,7 @@ export class ProjectMilestone extends Component {
     }
 
     _getColorClass() {
-        return this.milestone.is_deadline_exceeded && !this.milestone.can_be_marked_as_done ? "o_milestone_danger" : this.milestone.can_be_marked_as_done ? "o_color_green" : "";
+        return this.milestone.is_deadline_exceeded && !this.milestone.can_be_marked_as_done ? "text-danger" : this.milestone.can_be_marked_as_done ? "text-success" : "";
     }
 
     _getCheckBoxIcon() {
