@@ -750,8 +750,8 @@ class PurchaseOrder(models.Model):
                     if send_single:
                         return order._send_reminder_open_composer(template.id)
                     else:
-                        order.with_context(is_reminder=True).message_post_with_template(
-                            template.id,
+                        order.with_context(is_reminder=True).message_post_with_source(
+                            template,
                             email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
                             subtype_xmlid='mail.mt_comment',
                         )
@@ -1104,9 +1104,9 @@ class PurchaseOrderLine(models.Model):
         if 'product_qty' in values:
             for line in self:
                 if line.order_id.state == 'purchase':
-                    line.order_id.message_post_with_view(
+                    line.order_id.message_post_with_source(
                         'purchase.track_po_line_template',
-                        values={'line': line, 'product_qty': values['product_qty']},
+                        render_values={'line': line, 'product_qty': values['product_qty']},
                         subtype_xmlid='mail.mt_note',
                     )
         if 'qty_received' in values:
@@ -1425,9 +1425,9 @@ class PurchaseOrderLine(models.Model):
     def _track_qty_received(self, new_qty):
         self.ensure_one()
         if new_qty != self.qty_received and self.order_id.state == 'purchase':
-            self.order_id.message_post_with_view(
+            self.order_id.message_post_with_source(
                 'purchase.track_po_line_qty_received_template',
-                values={'line': self, 'qty_received': new_qty},
+                render_values={'line': self, 'qty_received': new_qty},
                 subtype_xmlid='mail.mt_note',
             )
 

@@ -574,16 +574,16 @@ class MailActivity(models.Model):
                     next_activities_values.append(vals)
 
                 # post message on activity, before deleting it
-                activity_message = record.message_post_with_view(
+                activity_message = record.message_post_with_source(
                     'mail.message_activity_done',
-                    values={
+                    attachment_ids=attachment_ids,
+                    render_values={
                         'activity': activity,
                         'feedback': feedback,
                         'display_assignee': activity.user_id != self.env.user
                     },
-                    subtype_xmlid='mail.mt_activities',
                     mail_activity_type_id=activity.activity_type_id.id,
-                    attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
+                    subtype_xmlid='mail.mt_activities',
                 )
 
                 # Moving the attachments in the message

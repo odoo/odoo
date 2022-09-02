@@ -342,12 +342,10 @@ class MailActivityMixin(models.AbstractModel):
         template = self.env['mail.template'].browse(template_id).exists()
         if not template:
             return False
-        for record in self:
-            record.message_post_with_template(
-                template_id,
-                composition_mode='comment',
-                subtype_xmlid='mail.mt_comment',
-            )
+        self.message_post_with_source(
+            template,
+            subtype_xmlid='mail.mt_comment',
+        )
         return True
 
     def activity_search(self, act_type_xmlids='', user_id=None, additional_domain=None):

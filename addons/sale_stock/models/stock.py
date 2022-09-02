@@ -42,9 +42,9 @@ class StockMove(models.Model):
             picking_id = self.mapped('picking_id')
             sale_order_ids = self.mapped('sale_line_id.order_id')
             for sale_order_id in sale_order_ids:
-                picking_id.message_post_with_view(
+                picking_id.message_post_with_source(
                     'mail.message_origin_link',
-                    values={'self': picking_id, 'origin': sale_order_id},
+                    render_values={'self': picking_id, 'origin': sale_order_id},
                     subtype_xmlid='mail.mt_note',
                 )
 

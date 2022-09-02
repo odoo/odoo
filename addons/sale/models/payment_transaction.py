@@ -131,6 +131,9 @@ class PaymentTransaction(models.Model):
         ))
         if not template_id:
             return
+        template = self.env['mail.template'].browse(template_id).exists()
+        if not template:
+            return
 
         for tx in self:
             tx = tx.with_company(tx.company_id).with_context(
@@ -140,12 +143,11 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            for invoice in invoice_to_send.with_user(SUPERUSER_ID):
-                invoice.message_post_with_template(
-                    template_id,
-                    email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
-                    subtype_xmlid='mail.mt_comment',
-                )
+            invoice_to_send.with_user(SUPERUSER_ID).message_post_with_source(
+                template,
+                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                subtype_xmlid='mail.mt_comment',
+            )
 
     def _cron_send_invoice(self):
         """

@@ -65,15 +65,15 @@ class StockRule(models.Model):
                         subtype_id=note_subtype_id
                     )
                 elif orderpoint:
-                    production.message_post_with_view(
+                    production.message_post_with_source(
                         'mail.message_origin_link',
-                        values={'self': production, 'origin': orderpoint},
+                        render_values={'self': production, 'origin': orderpoint},
                         subtype_id=note_subtype_id,
                     )
                 elif origin_production:
-                    production.message_post_with_view(
+                    production.message_post_with_source(
                         'mail.message_origin_link',
-                        values={'self': production, 'origin': origin_production},
+                        render_values={'self': production, 'origin': origin_production},
                         subtype_id=note_subtype_id,
                     )
         return True

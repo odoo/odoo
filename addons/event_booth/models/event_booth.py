@@ -100,9 +100,9 @@ class EventBooth(models.Model):
 
     def _post_confirmation_message(self):
         for booth in self:
-            booth.event_id.message_post_with_view(
+            booth.event_id.message_post_with_source(
                 'event_booth.event_booth_booked_template',
-                values={
+                render_values={
                     'booth': booth,
                 },
                 subtype_xmlid='event_booth.mt_event_booth_booked',
