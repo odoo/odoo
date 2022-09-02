@@ -6,8 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-06-09 14:05+0000\n"
 "PO-Revision-Date: 2022-06-09 14:05+0000\n"
+||||||| parent of 1efe37d82e63... temp
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+=======
+"POT-Creation-Date: 2022-09-02 08:11+0000\n"
+"PO-Revision-Date: 2022-09-02 08:11+0000\n"
+>>>>>>> 1efe37d82e63... temp
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1255,6 +1263,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
+#: model:ir.model.fields,field_description:mail.field_mail_template__can_write
 msgid "Can Write"
 msgstr ""
 
@@ -4964,6 +4973,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/ir_translation.py:0
+#, python-format
+msgid ""
+"Only users belonging to the \"%(group)s\" group can modify translation "
+"related to dynamic templates.%(xtra)s"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6718,6 +6735,11 @@ msgid "The channel type cannot be empty"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_template__can_write
+msgid "The current user can edit the template."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid ""
@@ -7072,6 +7094,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
+msgstr ""
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_translation
+msgid "Translation"
 msgstr ""
 
 #. module: mail
