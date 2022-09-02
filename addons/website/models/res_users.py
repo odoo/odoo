@@ -81,7 +81,8 @@ class ResUsers(models.Model):
                 if visitor_current_user_sudo:
                     # A visitor exists for the logged in user, link public
                     # visitor records to it.
-                    visitor_pre_authenticate_sudo._merge_visitor(visitor_current_user_sudo)
+                    if visitor_pre_authenticate_sudo != visitor_current_user_sudo:
+                        visitor_pre_authenticate_sudo._merge_visitor(visitor_current_user_sudo)
                     visitor_current_user_sudo._update_visitor_last_visit()
                 else:
                     visitor_pre_authenticate_sudo.access_token = user_partner.id
