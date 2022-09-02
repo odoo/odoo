@@ -17,6 +17,16 @@
         <field name="responsible_id" ref="base.user_admin"/>
     </record>
 
+    <record id="holiday_status_training" model="hr.leave.type">
+        <field name="name">Training Time Off</field>
+        <field name="requires_allocation">yes</field>
+        <field name="employee_requests">no</field>
+        <field name="color_name">lightyellow</field>
+        <field name="leave_validation_type">both</field>
+        <field name="allocation_validation_type">officer</field>
+        <field name="responsible_id" ref="base.user_admin"/>
+    </record>
+
     <!-- Accrual Plan -->
     <record id="hr_accrual_plan_1" model="hr.leave.accrual.plan">
         <field name="name">Seniority Plan</field>
@@ -72,8 +82,8 @@
     </function>
 
     <record id="hr_holidays_vc" model="hr.leave.allocation">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
+        <field name="name">Functional Training</field>
+        <field name="holiday_status_id" ref="holiday_status_training"/>
         <field name="number_of_days">7</field>
         <field name="state">confirm</field>
         <field name="employee_id" ref="hr.employee_admin"/>
@@ -162,8 +172,8 @@
     </record>
 
     <record id="hr_holidays_vc_al" model="hr.leave.allocation">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
+        <field name="name">Soft Skills Training</field>
+        <field name="holiday_status_id" ref="holiday_status_training"/>
         <field name="number_of_days">12</field>
         <field name="employee_id" ref="hr.employee_al"/>
         <field name="employee_ids" eval="[(4, ref('hr.employee_al'))]"/>
@@ -216,8 +226,8 @@
     </record>
 
     <record id="hr_holidays_vc_mit" model="hr.leave.allocation">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
+        <field name="name">Compliance Training</field>
+        <field name="holiday_status_id" ref="holiday_status_training"/>
         <field name="number_of_days">7</field>
         <field name="state">confirm</field>
         <field name="employee_id" ref="hr.employee_mit"/>
@@ -266,8 +276,8 @@
     </record>
 
     <record id="hr_holidays_vc_qdp" model="hr.leave.allocation">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
+        <field name="name">Time Management Training</field>
+        <field name="holiday_status_id" ref="holiday_status_training"/>
         <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="employee_ids" eval="[(4, ref('hr.employee_qdp'))]"/>
@@ -324,8 +334,8 @@
     </record>
 
     <record id="hr_holidays_vc_fpi" model="hr.leave.allocation">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
+        <field name="name">Consulting Training</field>
+        <field name="holiday_status_id" ref="holiday_status_training"/>
         <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_fpi"/>
         <field name="employee_ids" eval="[(4, ref('hr.employee_fpi'))]"/>
@@ -348,8 +358,8 @@
     </record>
 
     <record id="hr_holidays_vc_vad" model="hr.leave.allocation">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
+        <field name="name">Software Development Training</field>
+        <field name="holiday_status_id" ref="holiday_status_training"/>
         <field name="number_of_days">5</field>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="employee_ids" eval="[(4, ref('hr.employee_niv'))]"/>
@@ -403,8 +413,8 @@
     </record>
 
     <record id="hr_holidays_vc_kim" model="hr.leave.allocation">
-        <field name="name">Summer Vacation</field>
-        <field name="holiday_status_id" ref="holiday_status_unpaid"/>
+        <field name="name">Onboarding Training</field>
+        <field name="holiday_status_id" ref="holiday_status_training"/>
         <field name="number_of_days">5</field>
         <field name="state">confirm</field>
         <field name="employee_id" ref="hr.employee_jve"/>
