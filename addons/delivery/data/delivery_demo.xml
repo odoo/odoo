@@ -75,7 +75,6 @@
         <!--Sample sale orders with carrier defined-->
         <record id="outgoing_shipment_with_carrier_confirmed_1" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="carrier_id" ref="delivery_carrier"/>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -95,7 +94,6 @@
         
         <record id="outgoing_shipment_with_carrier_assigned_1" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="carrier_id" ref="delivery_carrier"/>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -115,7 +113,6 @@
         
         <record id="outgoing_shipment_with_carrier_done_1" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="carrier_id" ref="delivery_carrier"/>
             <field name="partner_id" ref="base.res_partner_1"/>
