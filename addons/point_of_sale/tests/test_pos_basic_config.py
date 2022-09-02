@@ -305,7 +305,7 @@ class TestPoSBasicConfig(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': True},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': False},
                         ]
                     },
                     'payments': [
@@ -315,6 +315,61 @@ class TestPoSBasicConfig(TestPoSCommon):
             },
             'journal_entries_after_closing': {
                 'session_journal_entry': False,
+                'cash_statement': [],
+                'bank_payments': [],
+            },
+        })
+
+    def test_return_order_invoiced(self):
+
+        def _before_closing_cb():
+            order = self.pos_session.order_ids.filtered(lambda order: '666-666-666' in order.pos_reference)
+
+            # refund
+            order.refund()
+            refund_order = self.pos_session.order_ids.filtered(lambda order: order.state == 'draft')
+
+            # pay the refund
+            context_make_payment = {"active_ids": [refund_order.id], "active_id": refund_order.id}
+            make_payment = self.env['pos.make.payment'].with_context(context_make_payment).create({
+                'payment_method_id': self.cash_pm1.id,
+                'amount': -100,
+            })
+            make_payment.check()
+
+            # invoice refund
+            refund_order.action_pos_order_invoice()
+
+        self._run_test({
+            'payment_methods': self.cash_pm1 | self.bank_pm1,
+            'orders': [
+                {'pos_order_lines_ui_args': [(self.product1, 10)], 'payments': [(self.cash_pm1, 100)], 'customer': self.customer, 'is_invoiced': True, 'uid': '666-666-666'},
+            ],
+            'before_closing_cb': _before_closing_cb,
+            'journal_entries_before_closing': {
+                '666-666-666': {
+                    'invoice': {
+                        'line_ids': [
+                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
+                        ]
+                    },
+                    'payments': [
+                        ((self.cash_pm1, 100), {
+                            'line_ids': [
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': True},
+                                {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 100, 'credit': 0, 'reconciled': False},
+                            ]
+                        }),
+                    ],
+                }
+            },
+            'journal_entries_after_closing': {
+                'session_journal_entry': {
+                    'line_ids': [
+                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 0, 'reconciled': True},
+                    ],
+                },
                 'cash_statement': [],
                 'bank_payments': [],
             },
