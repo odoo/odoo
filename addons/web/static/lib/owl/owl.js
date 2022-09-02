@@ -2130,12 +2130,18 @@
         };
     }
     function validateTarget(target) {
-        if (!(target instanceof HTMLElement)) {
-            throw new OwlError("Cannot mount component: the target is not a valid DOM element");
+        // Get the document and HTMLElement corresponding to the target to allow mounting in iframes
+        const document = target && target.ownerDocument;
+        if (document) {
+            const HTMLElement = document.defaultView.HTMLElement;
+            if (target instanceof HTMLElement) {
+                if (!document.body.contains(target)) {
+                    throw new OwlError("Cannot mount a component on a detached dom node");
+                }
+                return;
+            }
         }
-        if (!document.body.contains(target)) {
-            throw new OwlError("Cannot mount a component on a detached dom node");
-        }
+        throw new OwlError("Cannot mount component: the target is not a valid DOM element");
     }
     class EventBus extends EventTarget {
         trigger(name, payload) {
@@ -3591,6 +3597,7 @@
             this.target = new CodeTarget("template");
             this.translatableAttributes = TRANSLATABLE_ATTRS;
             this.staticDefs = [];
+            this.slotNames = new Set();
             this.helpers = new Set();
             this.translateFn = options.translateFn || ((s) => s);
             if (options.translatableAttributes) {
@@ -3918,8 +3925,13 @@
                     expr = compileExpr(ast.attrs[key]);
                     if (attrName && isProp(ast.tag, attrName)) {
                         // we force a new string or new boolean to bypass the equality check in blockdom when patching same value
-                        const C = attrName === "value" ? "String" : "Boolean";
-                        expr = `new ${C}(${expr})`;
+                        if (attrName === "value") {
+                            // When the expression is falsy, fall back to an empty string
+                            expr = `new String((${expr}) || "")`;
+                        }
+                        else {
+                            expr = `new Boolean(${expr})`;
+                        }
                     }
                     const idx = block.insertData(expr, "attr");
                     if (key === "t-att") {
@@ -4531,31 +4543,39 @@
             let blockString;
             let slotName;
             let dynamic = false;
+            let isMultiple = false;
             if (ast.name.match(INTERP_REGEXP)) {
                 dynamic = true;
+                isMultiple = true;
                 slotName = interpolate(ast.name);
             }
             else {
                 slotName = "'" + ast.name + "'";
+                isMultiple = isMultiple || this.slotNames.has(ast.name);
+                this.slotNames.add(ast.name);
             }
             const dynProps = ast.attrs ? ast.attrs["t-props"] : null;
             if (ast.attrs) {
                 delete ast.attrs["t-props"];
             }
+            let key = this.target.loopLevel ? `key${this.target.loopLevel}` : "key";
+            if (isMultiple) {
+                key = `${key} + \`${this.generateComponentKey()}\``;
+            }
             const props = ast.attrs ? this.formatPropObject(ast.attrs) : [];
             const scope = this.getPropString(props, dynProps);
             if (ast.defaultContent) {
                 const name = this.compileInNewTarget("defaultContent", ast.defaultContent, ctx);
-                blockString = `callSlot(ctx, node, key, ${slotName}, ${dynamic}, ${scope}, ${name})`;
+                blockString = `callSlot(ctx, node, ${key}, ${slotName}, ${dynamic}, ${scope}, ${name})`;
             }
             else {
                 if (dynamic) {
                     let name = generateId("slot");
                     this.define(name, slotName);
-                    blockString = `toggler(${name}, callSlot(ctx, node, key, ${name}, ${dynamic}, ${scope}))`;
+                    blockString = `toggler(${name}, callSlot(ctx, node, ${key}, ${name}, ${dynamic}, ${scope}))`;
                 }
                 else {
-                    blockString = `callSlot(ctx, node, key, ${slotName}, ${dynamic}, ${scope})`;
+                    blockString = `callSlot(ctx, node, ${key}, ${slotName}, ${dynamic}, ${scope})`;
                 }
             }
             // event handling
@@ -5767,9 +5787,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-16';
-    __info__.date = '2022-07-22T07:45:33.825Z';
-    __info__.hash = 'b90aa0e';
+    __info__.version = '2.0.0-beta-18';
+    __info__.date = '2022-09-02T12:59:24.614Z';
+    __info__.hash = 'c1afaeb';
     __info__.url = 'https://github.com/odoo/owl';
 
 
