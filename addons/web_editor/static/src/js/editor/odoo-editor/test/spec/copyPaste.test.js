@@ -1285,6 +1285,15 @@ describe('Copy and paste', () => {
                     contentAfter: '<p>a<a href="https://boom.com">boom[].com</a>d</p>',
                 });
             });
+            it('should paste and transform URL over the existing url', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[<a href="http://www.xyz.com">http://www.xyz.com</a>]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://www.xyz.xdc ');
+                    },
+                    contentAfter: '<p>ab<a href="https://www.xyz.xdc">https://www.xyz.xdc</a> []cd</p>',
+                });
+            });
         });
         describe('range not collapsed', async () => {
             it('should paste and transform an URL in a p', async () => {
