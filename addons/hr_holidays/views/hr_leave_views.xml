@@ -230,7 +230,7 @@
             <header>
                 <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('active', '=', False)]}"/>
                 <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', ('active', '=', False), ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
-                <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+                <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', '|', ('active', '=', False), ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
                 <button string="Cancel" name="action_cancel" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('can_cancel', '=', False)]}" />
                 <button string="Mark as Draft" name="action_draft" type="object"
@@ -531,11 +531,11 @@
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
                     states="validate1"
-                    groups="hr_holidays.group_hr_holidays_manager"/>
+                    groups="hr_holidays.group_hr_holidays_user"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
                     states="confirm,validate1"
-                    groups="hr_holidays.group_hr_holidays_manager"/>
+                    groups="hr_holidays.group_hr_holidays_user"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
