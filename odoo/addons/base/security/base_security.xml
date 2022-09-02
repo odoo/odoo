@@ -186,6 +186,12 @@
             <field name="domain_force">['|', ('share', '=', False), ('company_ids', 'in', company_ids)]</field>
         </record>
 
+        <record id="change_password_own_rule" model="ir.rule">
+            <field name="name">change own password</field>
+            <field name="model_id" ref="model_change_password_own"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
         <!-- rules for API token -->
         <record id="api_key_public" model="ir.rule">
             <field name="name">Public users can't interact with keys at all</field>
