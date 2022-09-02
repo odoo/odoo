@@ -258,7 +258,17 @@ async function start(param0 = {}) {
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
-    const webClient = await getWebClientReady({ ...param0, messagingBus, testSetupDoneDeferred });
+    let webClient;
+    await afterNextRender(async () => {
+        webClient = await getWebClientReady({ ...param0, messagingBus, testSetupDoneDeferred });
+        if (waitUntilMessagingCondition === 'created') {
+            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+        }
+        if (waitUntilMessagingCondition === 'initialized') {
+            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+            await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
+        }
+    });
 
     registerCleanup(async () => {
         await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
@@ -268,13 +278,6 @@ async function start(param0 = {}) {
         delete owl.Component.env[wowlServicesSymbol].messaging;
         delete owl.Component.env;
     });
-    if (waitUntilMessagingCondition === 'created') {
-        await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
-    }
-    if (waitUntilMessagingCondition === 'initialized') {
-        await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
-        await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
-    }
     const openView = async (action, options) => {
         action['type'] = action['type'] || 'ir.actions.act_window';
         await afterNextRender(() => doAction(webClient, action, { props: options }));
