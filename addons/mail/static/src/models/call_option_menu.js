@@ -12,7 +12,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickDownloadLogs(ev) {
-            const channel = this.callActionListView.channel;
+            const channel = this.callActionListView.thread;
             if (!channel.rtc) {
                 return;
             }
