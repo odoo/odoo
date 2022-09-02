@@ -60,6 +60,9 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
             record = record.sudo()
         else:
             raise Forbidden()
+    else:  # early check on access to avoid useless computation
+        record.check_access_rights('read')
+        record.check_access_rule('read')
 
     # deduce author of message
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False
