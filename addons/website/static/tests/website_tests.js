@@ -6,6 +6,7 @@ var testUtils = require("web.test_utils");
 
 var createView = testUtils.createView;
 
+// TODO: remove me when legacy redirect button is removed
 QUnit.module('website', {
     before: function () {
         this.data = {

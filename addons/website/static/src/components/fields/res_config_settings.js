@@ -1,41 +1,41 @@
-odoo.define('website.settings', function (require) {
+/** @odoo-module **/
 
-const core = require('web.core');
-const Dialog = require('web.Dialog');
-const FieldBoolean = require('web.basic_fields').FieldBoolean;
-const fieldRegistry = require('web.field_registry');
+import { BooleanField } from '@web/views/fields/boolean/boolean_field';
+import { Dialog } from '@web/core/dialog/dialog';
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
-const QWeb = core.qweb;
-const _t = core._t;
+const { Component } = owl;
 
-const WebsiteCookiesbarField = FieldBoolean.extend({
-    xmlDependencies: ['/website/static/src/xml/website.res_config_settings.xml'],
+class CookieBarDialog extends Component {
+    accept() {
+        this.props.accept();
+        this.props.close();
+    }
+}
+CookieBarDialog.components = { Dialog };
+CookieBarDialog.template = 'website.res_config_settings.CookieDialog';
 
-    _onChange: function () {
-        const checked = this.$input[0].checked;
-        if (!checked) {
-            return this._setValue(checked);
+class WebsiteCookiebarField extends BooleanField {
+    setup() {
+        this.dialog = useService('dialog');
+    }
+
+    onChange(newValue) {
+        if (!newValue) {
+            return this.props.update(newValue);
         }
-
-        const cancelCallback = () => this.$input[0].checked = !checked;
-        Dialog.confirm(this, null, {
-            title: _t("Please confirm"),
-            $content: QWeb.render('website.res_config_settings.cookies_modal_main'),
-            buttons: [{
-                text: _t('Do not activate'),
-                classes: 'btn-primary',
-                close: true,
-                click: cancelCallback,
+        let value = false;
+        this.dialog.add(CookieBarDialog, {
+            title: "Website Cookie Bar",
+            accept: () => {
+                value = true;
             },
-            {
-                text: _t('Activate anyway'),
-                close: true,
-                click: () => this._setValue(checked),
-            }],
-            cancel_callback: cancelCallback,
+        }, {
+            onClose: () => {
+                this.props.update(value);
+            }
         });
-    },
-});
-
-fieldRegistry.add('website_cookiesbar_field', WebsiteCookiesbarField);
-});
+    }
+}
+registry.category("fields").add("website_cookiesbar_field", WebsiteCookiebarField);
