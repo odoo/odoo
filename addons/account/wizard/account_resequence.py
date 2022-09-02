@@ -55,7 +55,7 @@ class ReSequenceWizard(models.TransientModel):
         self.first_name = ""
         for record in self:
             if record.move_ids:
-                record.first_name = min(record.move_ids._origin.mapped('name'))
+                record.first_name = min(record.move_ids._origin.mapped(lambda move: move.name or ""))
 
     @api.depends('new_values', 'ordering')
     def _compute_preview_moves(self):
@@ -128,7 +128,7 @@ class ReSequenceWizard(models.TransientModel):
                 for move, new_name in zip(period_recs.sorted(lambda m: (m.sequence_prefix, m.sequence_number)), new_name_list):
                     new_values[move.id]['new_by_name'] = new_name
                 # For all the moves of this period, assign the name by increasing date
-                for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name, m.id)), new_name_list):
+                for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name or "", m.id)), new_name_list):
                     new_values[move.id]['new_by_date'] = new_name
 
             record.new_values = json.dumps(new_values)
