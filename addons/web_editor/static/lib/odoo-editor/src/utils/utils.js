@@ -1047,7 +1047,7 @@ export function containsUnremovable(node) {
 
 export function getInSelection(document, selector) {
     const selection = document.getSelection();
-    const range = !!selection.rangeCount && selection.getRangeAt(0);
+    const range = selection && !!selection.rangeCount && selection.getRangeAt(0);
     return (
         range &&
         (closestElement(range.startContainer, selector) ||
