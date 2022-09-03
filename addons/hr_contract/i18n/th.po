@@ -3,18 +3,18 @@
 # 	* hr_contract
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
 # Wichanon Jamwutthipreecha, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-09-02 15:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,6 +211,7 @@ msgid "Company country"
 msgstr "ประเทศของบริษัท"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
@@ -267,10 +268,8 @@ msgstr "วันที่เริ่มสัญญา"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
-#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 msgid "Contract Type"
 msgstr "ประเภทสัญญา"
 
@@ -452,11 +451,6 @@ msgid "Employee"
 msgstr "พนักงาน"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-msgid "Employee Contract"
-msgstr "สัญญาของพนักงาน"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 msgid "Employee Contracts"
 msgstr "สัญญาของพนักงาน"
@@ -602,6 +596,7 @@ msgstr "ถ้าเลือก ข้อความใหม่จะต้�
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
 
@@ -690,11 +685,6 @@ msgstr "ชื่อ"
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__draft
 msgid "New"
 msgstr "ใหม่"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
@@ -806,13 +796,20 @@ msgid "Running Contracts"
 msgstr "สัญญาที่ดำเนินการ"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "ข้อผิดพลาดในการส่ง SMS"
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
 msgstr "ข้อมูลเงินเดือน"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Salary Structure Type"
@@ -949,6 +946,16 @@ msgstr "หมายเลขวีซ่า"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
 msgid "Wage"
 msgstr "ค่าแรง"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความเว็บไซต์"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารของเว็บไซต์"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no

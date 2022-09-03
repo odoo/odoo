@@ -3,15 +3,15 @@
 # 	* hr_contract
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-09-02 15:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
 "Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -210,6 +210,7 @@ msgid "Company country"
 msgstr "País de la empresa"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
@@ -266,10 +267,8 @@ msgstr "Fecha de inicio del contrato"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
-#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 msgid "Contract Type"
 msgstr "Tipo de contrato"
 
@@ -453,11 +452,6 @@ msgid "Employee"
 msgstr "Empleado"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-msgid "Employee Contract"
-msgstr "Contrato de empleado"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 msgid "Employee Contracts"
 msgstr "Contratos de empleado"
@@ -606,6 +600,7 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
@@ -694,11 +689,6 @@ msgstr "Nombre"
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__draft
 msgid "New"
 msgstr "Nuevo"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de actividades."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
@@ -810,13 +800,20 @@ msgid "Running Contracts"
 msgstr "Contratos en ejecución"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error en entrega de SMS"
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
 msgstr "Información del salario"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Salary Structure Type"
@@ -955,6 +952,16 @@ msgstr "Número de visa"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
 msgid "Wage"
 msgstr "Salario"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
+msgid "Website Messages"
+msgstr "Mensajes del sitio web"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicaciones del sitio web"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no

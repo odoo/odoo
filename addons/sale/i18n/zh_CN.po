@@ -731,7 +731,7 @@ msgstr "<strong>到期：</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>财务状况备注：</strong>"
+msgstr "<strong>财政状况备注：</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -801,7 +801,7 @@ msgid ""
 "A standard invoice is issued with all the order lines ready for invoicing,"
 "         according to their invoicing policy (based on ordered or delivered "
 "quantity)."
-msgstr "标准结算单是根据所有订单行的结算单政策（基于订购或交付数量）随所有订单行一起开具的。"
+msgstr "标准开票单是根据所有订单行的开票单政策（基于订购或交付数量）随所有订单行一起开具的。"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -858,7 +858,7 @@ msgstr "用于押金的科目"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr "应计收入条目"
+msgstr "应计收入分录"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -953,8 +953,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
-"订单是在交货数量超过最初数量时追加销售\n"
-"                订购数量，并且发票策略基于订购数量。"
+"订单是在交货数量超过最初数量时加售销售\n"
+"                订购数量，并且开票策略基于订购数量。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -1137,7 +1137,7 @@ msgstr "点击此处为您的报价添加一些产品或服务。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Click to define an invoicing target"
-msgstr "单击此处可定义发票目标"
+msgstr "单击此处可定义开票目标"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1212,7 +1212,7 @@ msgstr "配置设置"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -1820,7 +1820,7 @@ msgstr "FedEx 连接器"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "税科目调整"
+msgstr "财政状况"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
@@ -2168,13 +2168,13 @@ msgstr "开票策略"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr "发票目标"
+msgstr "开票目标"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
-msgstr "发票与送货地址:"
+msgstr "开票与送货地址:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -2519,7 +2519,7 @@ msgstr "没有要开票的订单"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr "没有找到超卖订单。"
+msgstr "没有找到加售订单。"
 
 #. module: sale
 #. openerp-web
@@ -2719,7 +2719,7 @@ msgstr "订单状态"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr "超卖订单"
+msgstr "加售订单"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2770,7 +2770,7 @@ msgstr "订单到结算单"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "超卖订单"
+msgstr "加售订单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3925,7 +3925,7 @@ msgstr "UX用途的技术领域。"
 msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
-msgstr "根据财政国家和财务状况过滤可用税金的技术字段."
+msgstr "根据财政国家和财政状况过滤可用税金的技术字段."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4134,11 +4134,11 @@ msgid ""
 "- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
-"没有结算单！\n"
+"没有开票单！\n"
 "\n"
 "产生的原因可能是：\n"
-"- 您应该在开具结算单之前交付您的产品：点击“卡车”图标（屏幕右上角）并按照说明进行操作。\n"
-"- 您应该修改产品的结算单政策：打开产品，进入“销售”选项卡，将结算单政策从“交货数量”修改为“订购数量”。对于服务，您应该将服务结算单政策修改为“预付”。"
+"- 您应该在开具开票单之前交付您的产品：点击“卡车”图标（屏幕右上角）并按照说明进行操作。\n"
+"- 您应该修改产品的开票单政策：打开产品，进入“销售”选项卡，将开票单政策从“交货数量”修改为“订购数量”。对于服务，您应该将服务开票单政策修改为“预付”。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4242,7 +4242,7 @@ msgstr "结算单数量"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr "超卖"
+msgstr "加售"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4429,13 +4429,13 @@ msgstr "更新价格"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr "为客户 %(customer)s 追加销售 %(order)s"
+msgstr "为客户 %(customer)s 加售销售 %(order)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__upselling
 msgid "Upselling Opportunity"
-msgstr "超卖商机"
+msgstr "加售商机"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations

@@ -207,12 +207,12 @@ msgstr ""
 "                        你好<br/><br/>\n"
 "                       <t t-out=\"user.name or ''\">Mitchell Admin</t>与您分享了<t t-out=\"object.slide_type or ''\">文件</t> <strong t-out=\"object.name or ''\">树木</strong>!\n"
 "                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            <a t-att-href=\"(object.网络site_url + '?fullscreen=1') if ctx.get('fullscreen') else object.网络site_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/网络/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">查看<strong t-out=\"object.name or ''\">树形</strong></a>\n"
+"                            <a t-att-href=\"(object.网络site_url + '?fullscreen=1') if ctx.get('fullscreen') else object.网络site_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">查看<strong t-out=\"object.name or ''\">树形</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br/>\n"
@@ -1802,7 +1802,7 @@ msgstr "配置设置"
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_configuration
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_completed
@@ -2160,7 +2160,7 @@ msgstr "创建时间"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
 msgid "Custom HTML content for slides of type 'Web Page'."
-msgstr "“网页”类型幻灯片的自定义HTML内容。"
+msgstr "“网络”类型幻灯片的自定义HTML内容。"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_6_furn3
@@ -3924,14 +3924,14 @@ msgstr "请"
 #: code:addons/website_slides/static/src/js/slides_course_join.js:0
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to join this course"
-msgstr "请 <a href=\"/web/login?redirect=%s\">登录</a> 参加此课程"
+msgstr "请 <a href=\"/网络/login?redirect=%s\">登录</a> 参加此课程"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to vote this lesson"
-msgstr "请 <a href=\"/web/login?redirect=%s\">登录</a> 投票这一课"
+msgstr "请 <a href=\"/网络/login?redirect=%s\">登录</a> 投票这一课"
 
 #. module: website_slides
 #. openerp-web
@@ -4710,7 +4710,7 @@ msgstr "幻灯片频道"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 #, python-format
 msgid "Slide image"
-msgstr "幻灯片图片"
+msgstr "幻灯片图像"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -5393,7 +5393,7 @@ msgstr "我们和Harry Potted聊了一会儿，他肯定有有趣的事情要讲
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__webpage
 #, python-format
 msgid "Web Page"
-msgstr "Web页"
+msgstr "网络页面"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_webpage

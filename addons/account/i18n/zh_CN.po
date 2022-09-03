@@ -5,7 +5,6 @@
 # Translators:
 # Martin Trigaux, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
-# 黎伟杰 <674416404@qq.com>, 2021
 # 稀饭~~ <wangwhai@qq.com>, 2021
 # xu aaron, 2021
 # wei zhou, 2021
@@ -77,7 +76,7 @@ msgstr "# 已调节应收凭单"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
 msgid "# Reconciled Statements"
-msgstr "# 已调节调节单"
+msgstr "# 已调节对账单"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -149,13 +148,13 @@ msgstr "%s - %s; %s 已结算， %s 运货在每个 %s"
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Excl. Taxes"
-msgstr "%s 不包含税收"
+msgstr "%s 不包含税"
 
 #. module: account
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
-msgstr "%s 包括税收"
+msgstr "%s 包括税"
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -771,7 +770,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                                        税收\n"
+"                                        税\n"
 "                                    </span>"
 
 #. module: account
@@ -989,7 +988,7 @@ msgstr "<span>报告</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>Tax 0%</span>"
-msgstr "<span>税收0%</span>"
+msgstr "<span>税0%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1161,7 +1160,7 @@ msgid ""
 "                goes out of the cash box."
 msgstr ""
 "现金收银机使您可以管理您现金日记账中的现金账目\n"
-"               此特性可以帮您实现每日轻松跟进现收现付制情况\n"
+"               此特性可以帮您实现每日轻松跟进收付实现制情况\n"
 "                您可以键入在您现金盒子中的硬币数量\n"
 "                然后在现金从现金盒子中收入或者支出时候，\n"
 "                生成账目进行记录."
@@ -1262,7 +1261,7 @@ msgstr "第二笔付款将在目的日记账中自动创建。"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr "一种税只能定义一个替换规则"
+msgstr "一种税只能定义一个财政状况"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -1270,7 +1269,7 @@ msgstr "一种税只能定义一个替换规则"
 msgid ""
 "A tax should only use tags from its country. You should use another tax and "
 "a fiscal position if you wish to uses the tags from foreign tax reports."
-msgstr "税收应该只使用来自其国家的标签。如果您希望使用外国税务报告中的标签，则应使用其他税务和财务状况。"
+msgstr "税收应该只使用来自其国家的标签。如果您希望使用外国税务报告中的标签，则应使用其他税务和财政状况。"
 
 #. module: account
 #: code:addons/account/models/res_users.py:0
@@ -1620,7 +1619,7 @@ msgstr "科目标签"
 msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
-msgstr "在现收现付制日记账分录中的分录设置的科目，用于跟踪税基金额。"
+msgstr "在收付实现制日记账分录中的分录设置的科目，用于跟踪税基金额。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1660,7 +1659,7 @@ msgid ""
 "contain the tax amount as long as the original invoice has not been "
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
-msgstr "用于转换现收现付制税的税额的科目. 只要原始应收凭单未经调节，它将包含税额; 在调节时，此金额已在此科目中取消并存入常规税务科目."
+msgstr "用于转换收付实现制税的税额的科目. 只要原始应收凭单未经调节，它将包含税额; 在调节时，此金额已在此科目中取消并存入常规税务科目."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -1745,7 +1744,7 @@ msgstr "科目映射"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr "税科目调整映射会计模板"
+msgstr "财政状况映射会计模板"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
@@ -1761,7 +1760,7 @@ msgstr "应计科目"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrual Moves"
-msgstr "应计变动"
+msgstr "应计凭证"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -1771,8 +1770,8 @@ msgid ""
 "id=%d>%s</a>.                    And its <a href=# data-oe-"
 "model=account.move data-oe-id=%d>reverse entry</a>."
 msgstr ""
-"应计分录创建于 %s: <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>. 并且它的 "
-"<a href=# data-oe-model=account.move data-oe-id=%d>转回分录</a>."
+"应计分录创建于 %s: <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>. 以及它的 "
+"<a href=# data-oe-model=account.move data-oe-id=%d>撤销分录</a>."
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -2204,7 +2203,7 @@ msgstr "允许现金取整管理"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "允许使用现收现付制配置税"
+msgstr "允许使用收付实现制配置税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
@@ -2579,7 +2578,7 @@ msgstr "适用货物和服务交付到的欧盟国家的增值税。"
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__auto_apply
 msgid "Apply automatically this fiscal position."
-msgstr "自动应用该税科目调整."
+msgstr "自动应用该财政状况."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
@@ -2999,7 +2998,7 @@ msgstr "基础"
 #: model:ir.model.fields,field_description:account.field_account_tax__is_base_affected
 #: model:ir.model.fields,field_description:account.field_account_tax_template__is_base_affected
 msgid "Base Affected by Previous Taxes"
-msgstr "受以前税收影响的基数"
+msgstr "受以前税影响的基数"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_base_amount
@@ -3205,7 +3204,7 @@ msgstr "按 销售员"
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "如不勾选该项，可以隐藏而不删除此税科目调整。"
+msgstr "如不勾选该项，可以隐藏而不删除此财政状况。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
@@ -3391,7 +3390,7 @@ msgstr "现金账户"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
 msgid "Cash Basis"
-msgstr "现收现付制"
+msgstr "收付实现制"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3401,31 +3400,31 @@ msgstr "现收现付制"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Cash Basis Entries"
-msgstr "现收现付制制分录"
+msgstr "收付实现制制分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr "现收现付制日记账"
+msgstr "收付实现制日记账"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_origin_move_id
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_origin_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_origin_move_id
 msgid "Cash Basis Origin"
-msgstr "现收现付制制来源"
+msgstr "收付实现制制来源"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Basis Taxes"
-msgstr "现收现付制税"
+msgstr "收付实现制税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr "现收现付制转移账户"
+msgstr "收付实现制转移账户"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
@@ -3495,7 +3494,7 @@ msgstr "现金对账单"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash basis transition account"
-msgstr "现收现付制制转账科目"
+msgstr "收付实现制制转账科目"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -3956,7 +3955,7 @@ msgstr "配置设置"
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -3966,7 +3965,7 @@ msgstr "检查配置"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Configure"
-msgstr "设置"
+msgstr "配置"
 
 #. module: account
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
@@ -4218,7 +4217,7 @@ msgstr "在你的地址簿中创建一个联系人"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 msgid "Create a new fiscal position"
-msgstr "创建新的财务政策"
+msgstr "创建新的财政状况"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -4594,7 +4593,7 @@ msgstr "货币汇率差异"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Currency exchange rate difference (cash basis)"
-msgstr "货币汇率差额（现金基础）"
+msgstr "货币汇率差额（收付实现制）"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -5778,7 +5777,7 @@ msgstr "产品模板的费用科目"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_accrual_account_id
 msgid "Expense Accrual Account"
-msgstr "费用应计账户"
+msgstr "费用应计科目"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
@@ -5955,20 +5954,20 @@ msgstr "会计期间"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "税科目调整"
+msgstr "财政状况"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__name
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 msgid "Fiscal Position Template"
-msgstr "税科目调整模版"
+msgstr "财政状况模版"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "税科目调整"
+msgstr "财政状况"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -5993,7 +5992,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr "财务状况用于调整特定客户的税和账户或销售订单/结算单。 默认值来自客户。"
+msgstr "财政状况用于调整特定客户的税和账户或销售订单/结算单。 默认值来自客户。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -6257,7 +6256,7 @@ msgstr "获取哈希完整结果导出为PDF。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr "在给特定的客户开结算单时的警告"
+msgstr "在给特定的客户开开票单时的警告"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__sequence
@@ -6386,7 +6385,7 @@ msgstr "隐藏付款方式行"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
 msgid "Hide Use Cash Basis Option"
-msgstr "隐藏现收现付制选项"
+msgstr "隐藏收付实现制选项"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -7329,7 +7328,7 @@ msgstr "结算单/账单完美匹配"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "开票中"
+msgstr "开票"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
@@ -8273,7 +8272,7 @@ msgstr "公司的主要货币"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Make Accrual Entries"
-msgstr "记入应计项目"
+msgstr "创建应计分录"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__reply_to_force_new
@@ -10086,7 +10085,7 @@ msgstr "请设置至少一个匹配文本以创建业务伙伴映射。"
 #: code:addons/account/models/ir_module_module.py:0
 #, python-format
 msgid "Please update the Invoicing module before continuing."
-msgstr "处理前请更新发票模块."
+msgstr "处理前请更新开票模块."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -10583,12 +10582,12 @@ msgstr "重新计算税额"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line_template
 msgid "Reconcile Model Line Template"
-msgstr "调节模组明细模板"
+msgstr "调节模型明细模板"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
 msgid "Reconcile Model Template"
-msgstr "调节模组模板"
+msgstr "调节模型模板"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -10956,7 +10955,7 @@ msgstr "收入"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__revenue_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__revenue_accrual_account_id
 msgid "Revenue Accrual Account"
-msgstr "收入应计账户"
+msgstr "收入应计科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
@@ -11280,7 +11279,7 @@ msgstr "搜索科目表模板"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "搜索税科目调整"
+msgstr "搜索财政状况"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
@@ -11451,7 +11450,7 @@ msgstr ""
 msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
-msgstr "如果税务应使用现收现付制，选择此项，这将在对账期间在给定账户中创建此税项的分录。"
+msgstr "如果税务应使用收付实现制，选择此项，这将在对账期间在给定账户中创建此税项的分录。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -11521,7 +11520,7 @@ msgstr "邮寄结算单及付款跟进"
 #, python-format
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
-msgstr "使用<b>结算单应用</b>程序立即向您的客户发送结算单"
+msgstr "使用<b>开票单应用</b>程序立即向您的客户发送开票单"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -12258,12 +12257,12 @@ msgstr "税计算的舍入方法"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_rec_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr "税现收现付制分录"
+msgstr "税付实现制分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "税现收现付制日记账"
+msgstr "税付实现制日记账"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
@@ -12309,7 +12308,7 @@ msgstr "不含税"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 msgid "Tax Exigibility"
-msgstr "税收优惠"
+msgstr "税优惠"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids
@@ -12364,7 +12363,7 @@ msgstr "税映射"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr "税科目调整模板"
+msgstr "财政状况模板"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -12427,7 +12426,7 @@ msgstr "税源"
 #: model:ir.model.fields,field_description:account.field_product_product__tax_string
 #: model:ir.model.fields,field_description:account.field_product_template__tax_string
 msgid "Tax String"
-msgstr "税收字符串"
+msgstr "税字符串"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -12459,7 +12458,7 @@ msgstr "税计算的舍入方法"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_carryover_line
 msgid "Tax carryover line"
-msgstr "税收结转行"
+msgstr "税结转行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
@@ -12521,7 +12520,7 @@ msgstr "产品上的税"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_carryover_line__tax_report_line_id
 msgid "Tax report line"
-msgstr "税收报告行"
+msgstr "税报告行"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__plus_report_line_ids
@@ -12602,7 +12601,7 @@ msgstr "如果付款和结算单上的免税项共享某些标签，则不能在
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Taxes set."
-msgstr "税收集合。"
+msgstr "税集合。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
@@ -12708,7 +12707,7 @@ msgstr "在期初余额与上一期末余额不同时显示警告信息的技术
 msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
-msgstr "根据会计国家和财务状况过滤可用税收的技术字段。"
+msgstr "根据会计国家和财政状况过滤可用税收的技术字段。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -12725,7 +12724,7 @@ msgid ""
 "Technical field used by cash basis taxes, telling the lines of the move are "
 "always exigible. This happens if the move contains no payable or receivable "
 "line."
-msgstr "现收现付制制税所使用的技术领域，告诉人们转移的路线总是可行的。如果移动不包含应付或应收行，则会发生这种情况。"
+msgstr "收付实现制制税所使用的技术领域，告诉人们转移的路线总是可行的。如果移动不包含应付或应收行，则会发生这种情况。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -12764,7 +12763,7 @@ msgid ""
 "Technical field used to display a banner on top of foreign vat fiscal "
 "positions, in order to ease the instantiation of foreign taxes when "
 "possible."
-msgstr "用于在外国增值税财政位置上方显示横幅的技术字段，以便在可能的情况下简化外国税收的实例化。"
+msgstr "用于在外国增值税财政状况上方显示横幅的技术字段，以便在可能的情况下简化外国税收的实例化。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_lock_date_message
@@ -12854,7 +12853,7 @@ msgid ""
 "Technical field used to keep track of the tax cash basis reconciliation. "
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
-msgstr "技术字段用于追踪税现收现付制对账。当取消源单据时需要它：它会发布反向日记账分录来取消那部分。"
+msgstr "技术字段用于追踪税收付实现制对账。当取消源单据时需要它：它会发布反向日记账分录来取消那部分。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__recompute_tax_line
@@ -12944,7 +12943,7 @@ msgstr "帐户组模板"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "税科目调整模板"
+msgstr "财政状况模板"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -12981,7 +12980,7 @@ msgstr "条款及条件"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms_html
 msgid "Terms & Conditions as a Web page"
-msgstr "作为网页的条款和条件"
+msgstr "条款和条件作为网页"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__terms_type
@@ -13181,7 +13180,7 @@ msgstr "银行对账单行用来银行对账"
 msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
-msgstr "在对帐其行时，根据该分录的税费创建的现金基础分录。"
+msgstr "在对帐其行时，根据该分录的税费创建的收付实现制分录。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
@@ -13386,7 +13385,7 @@ msgstr "必须填写“供应商”栏位，请填妥此栏位，以便核对供
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr "税科目调整将决定该联系人的税和科目。"
+msgstr "财政状况将决定该联系人的税和科目。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13501,7 +13500,7 @@ msgstr "此日记账分录包含公司所有科目的期初余额。"
 msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
-msgstr "创建此税项现金基础日记帐分录的日记帐分录。"
+msgstr "创建此税项收付实现制日记帐分录的日记帐分录。"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13936,7 +13935,7 @@ msgstr "链接到税务报表行的标记应始终与其标记名称匹配。"
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr "此财务状况映射的区域内贵公司的税务ID。"
+msgstr "此财政状况映射的区域内贵公司的税务ID。"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -14010,7 +14009,7 @@ msgstr "在您要锁定的期间内仍有未对帐的银行对帐单明细. 您�
 msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
-msgstr "所选订单似乎没有任何结算单。但是，可以使用“金额”字段强制输入应计项目。"
+msgstr "所选订单似乎没有任何结算单。但是，可以使用“金额”字段强制创建应计分录。"
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -14019,7 +14018,7 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
-"没有为'%s'公司定义纳税现金基础日记帐。\n"
+"没有为'%s'公司定义纳税收付实现制日记帐。\n"
 "在会计/配置/设置中配置"
 
 #. module: account
@@ -14144,7 +14143,7 @@ msgstr "此条目包含一个或多个与您的财政国家/地区不兼容的�
 msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
-msgstr "此分录包含一些来自不允许的国家的税收。请检查其财务状况和您的税务配置。"
+msgstr "此分录包含一些来自不允许的国家的税收。请检查其财政状况和您的税务配置。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14161,7 +14160,7 @@ msgstr ""
 msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
-msgstr "此条目包含与您的财务状况不兼容的税款。检查在财政状况和税收配置中设置的国家/地区。"
+msgstr "此条目包含与您的财政状况不兼容的税款。检查在财政状况和税收配置中设置的国家/地区。"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14756,7 +14755,7 @@ msgstr "使用盎格鲁撒克逊 Anglo-Saxon 会计"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
 msgid "Use Cash Basis"
-msgstr "使用现收现付制"
+msgstr "使用收付实现制"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
@@ -15271,7 +15270,7 @@ msgstr "您只能在已打开的银行对帐单中创建对帐单行。"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr "您只能核对已过帐的分录."
+msgstr "您只能调节已过帐的分录."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15646,7 +15645,7 @@ msgstr "您不能删除/停用在客户或供应商上设置的帐户 %s。"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "你不能将税务现金基础凭证日记账分录重置为草稿"
+msgstr "你不能将税务收付实现制凭证日记账分录重置为草稿"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

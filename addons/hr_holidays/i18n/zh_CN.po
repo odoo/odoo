@@ -9,6 +9,7 @@
 # Felix Yuen <fyu@odoo.com>, 2021
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -609,7 +610,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Accruals</span>"
-msgstr "<span class=\"o_stat_text\">应计项目</span>"
+msgstr "<span class=\"o_stat_text\">应计</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -752,25 +753,25 @@ msgstr "应计等级"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual_plan_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Accrual Plan"
-msgstr "应计计划"
+msgstr "应计方案"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr "应计计划等级"
+msgstr "应计方案等级"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 #, python-format
 msgid "Accrual Plan's Employees"
-msgstr "应计计划的员工"
+msgstr "应计方案的员工"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_accrual_plans
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_accrual_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_tree
 msgid "Accrual Plans"
-msgstr "应计计划"
+msgstr "应计方案"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
@@ -782,12 +783,12 @@ msgstr "应计休假: 更新休假次数"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
 msgid "Accruals"
-msgstr "应计项目"
+msgstr "应计"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual_count
 msgid "Accruals count"
-msgstr "应计项目数量"
+msgstr "应计数量"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -1153,12 +1154,12 @@ msgstr "归档的休假时间"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
 msgid "At the end of the calendar year, unused accruals will be"
-msgstr "在日历年度结束时，未使用的应计费用将被"
+msgstr "在日历年度结束时，未使用的应计将被"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "At the end of the year, unused accruals will be"
-msgstr "在年末，未使用的应计费用将被"
+msgstr "在年末，未使用的应计将被"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__supported_attachment_ids
@@ -1321,7 +1322,7 @@ msgstr "员工类别"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
 msgid "Choose a cap for this accrual. 0 means no cap."
-msgstr "为这个应计项目选择一个上限。0意味着没有上限。"
+msgstr "为这个应计选择一个上限。0意味着没有上限。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
@@ -1377,7 +1378,7 @@ msgstr "调休"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_configuration
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1975,14 +1976,14 @@ msgstr "表示异常活动的图标。"
 msgid ""
 "If Accrual Allocation: Number of days allocated in addition to the ones you "
 "will get via the accrual' system."
-msgstr "如果应计制分配。除了你将通过应计制获得的天数外，还分配了多少天。"
+msgstr "如果应计分配。除了你将通过应计获得的天数外，还分配了多少天。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
 msgid ""
 "If Accrual Allocation: Number of hours allocated in addition to the ones you"
 " will get via the accrual' system."
-msgstr "如果应计制分配。除了你将通过应计制获得的小时数之外，还分配了多少小时。"
+msgstr "如果应计分配。除了你将通过应计获得的小时数之外，还分配了多少小时。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2038,7 +2039,7 @@ msgid ""
 "                After this accrual's period: When the accrual is complete (a week, a month), and granted, you switch to next level if allocation date corresponds"
 msgstr ""
 "立即生效。当日期与新级别相对应时，你的应计额会被自动计算、授予，并且你会转到新级别。\n"
-"                在这个应计期之后。当应计项目完成后（一个星期，一个月），并获得批准，如果分配日期对应，你将切换到下一个级别"
+"                在这个应计期之后。当应计完成后（一个星期，一个月），并获得批准，如果分配日期对应，你将切换到下一个级别"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2890,7 +2891,7 @@ msgstr "剩余的休假"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_departure_wizard__archive_allocation
 msgid "Remove employee from existing accrual plans."
-msgstr "将雇员从现有的应计计划中删除。"
+msgstr "将雇员从现有的应计方案中删除。"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report
@@ -3076,8 +3077,8 @@ msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
 "                Leave empty if this accrual plan can be used with any Time Off Type."
 msgstr ""
-"指明该应计计划是否只能用于该时间段的工作。\n"
-"                如果此应计计划可用于任何时间休假类型，则留空。"
+"指明该应计方案是否只能用于该时间段的工作。\n"
+"                如果此应计方案可用于任何时间休假类型，则留空。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -3212,7 +3213,7 @@ msgid ""
 "The accrual starts after a defined period from the employee start date. This"
 " field defines the number of days, months or years after which accrual is "
 "used."
-msgstr "应计制是在雇员开始工作日期起的一个定义的时期后开始。这个字段定义了应计制的天数、月数或年数，在这之后使用。"
+msgstr "应计是在雇员开始工作日期起的一个定义的时期后开始。这个字段定义了应计的天数、月数或年数，在这之后使用。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3345,7 +3346,7 @@ msgstr "此颜色将用于休假摘要报告>部门休假。"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
 msgid "This field defines the unit of time after which the accrual starts."
-msgstr "这个字段定义了应计项目开始后的时间单位。"
+msgstr "这个字段定义了应计开始后的时间单位。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__has_valid_allocation
@@ -3933,7 +3934,7 @@ msgstr "你不能为同一个员工设置两个在同一天重合的休息时间
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
 msgid "You can not start an accrual in the past."
-msgstr "你不能在过去开始计入。"
+msgstr "你不能在过去开始应计。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4010,7 +4011,7 @@ msgstr "您必须 %s's 的经理或休假经理才能批准此休假"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
 msgid "You must give a rate greater than 0 in accrual plan levels."
-msgstr "你必须在应计计划层面给出一个大于0的比率。"
+msgstr "你必须在应计方案层面给出一个大于0的比率。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

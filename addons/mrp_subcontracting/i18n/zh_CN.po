@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgstr "可以外包"
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
-msgstr "如果要转包产品，请选择类型为转包商的供应商"
+msgstr "如果要外包产品，请选择类型为外包商的供应商"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -113,7 +114,7 @@ msgstr "按订单产生"
 msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
-msgstr "确保你验证或调整相关的补给拣选给你的分包商，以避免你的库存出现不一致。"
+msgstr "确保你验证或调整相关的补给拣选给你的外包商，以避免你的库存出现不一致。"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -184,24 +185,24 @@ msgstr "已预留"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
-msgstr "供应外包商"
+msgstr "补给外包商"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.location.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr "在订单供应外包商"
+msgstr "按订单补给外包商"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr "供应外包商"
+msgstr "补给外包商"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply subcontractors with components"
-msgstr "以零件供应外包商"
+msgstr "以零件补给外包商"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
@@ -212,7 +213,7 @@ msgstr "退回拣货"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence Resupply Subcontractor"
-msgstr "外协分包商序号"
+msgstr "补给外包商序号"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -268,7 +269,7 @@ msgstr "外包位置"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
-msgstr "外协位置"
+msgstr "外包位置"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -288,36 +289,36 @@ msgstr "外包作业类型"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
-msgstr "外协再供应业务类型"
+msgstr "外包补给作业类型"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom_line_inherit_mrp_subcontracting
 msgid "Subcontracting:"
-msgstr "分包。"
+msgstr "外包。"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
 #, python-format
 msgid "Subcontracting: "
-msgstr "外协:"
+msgstr "外包:"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 msgid "Subcontractor"
-msgstr "分包商"
+msgstr "外包商"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
-msgstr "外包位置"
+msgstr "外包商位置"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
 msgid "Subcontractors"
-msgstr "分包"
+msgstr "外包商"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
@@ -377,7 +378,7 @@ msgstr "如果在警告/严格状态下使用向导，并且MO使用了更多组
 msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
-msgstr "你不能把带有操作或副产品线的物料清单设置为外协。"
+msgstr "你不能把带有操作或副产品线的物料清单设置为外包。"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
