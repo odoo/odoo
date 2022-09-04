@@ -95,6 +95,7 @@
         'views/snippets/s_website_form.xml',
         'views/snippets/s_searchbar.xml',
         'views/website_views.xml',
+        'views/website_pages_views.xml',
         'views/website_visitor_views.xml',
         'views/res_config_settings_views.xml',
         'views/website_rewrite.xml',
