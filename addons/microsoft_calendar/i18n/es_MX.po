@@ -3,16 +3,16 @@
 # 	* microsoft_calendar
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-09-02 08:12+0000\n"
 "PO-Revision-Date: 2020-12-11 11:03+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,10 +84,10 @@ msgid ""
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
-"Ocurrió un error al generar el token. Su código de autorización puede ser "
-"inválido o ya caducó [%s]. Debe comprobar su ID de cliente y su secreto en "
-"el portal de Microsoft o intentar detener y reiniciar la sincronización del "
-"calendario."
+"Ocurrió un error al generar el token. Puede que su código de autorización no"
+" sea válido o ya haya caducado [%s]. Debe comprobar su ID de cliente y su "
+"secreto en el portal de Microsoft o intentar detener y reiniciar la "
+"sincronización del calendario."
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -196,14 +196,14 @@ msgid ""
 "Either update the events/attendees or archive these events %s:\n"
 "%s"
 msgstr ""
-"Para que la sincronización entre Odoo y Outlook sea correcta, todos los asistentes deben tener un correo electrónico. Sin embargo, algunos eventos no respetan esta condición. Los calendarios no se sincronizarán si los eventos están incorrectos.\n"
+"Para que la sincronización entre Odoo y Outlook sea correcta, todos los asistentes deben tener un correo electrónico. Sin embargo, algunos eventos no respetan esta condición. Los calendarios no se sincronizarán si los eventos son incorrectos.\n"
 "Deberá actualizar los eventos o asistentes o archivar estos eventos %s:\n"
 "%s"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_calendar_event__active
@@ -276,14 +276,6 @@ msgid "Microsoft Recurrence Master Id"
 msgstr "Master ID de recurrencia de Microsoft"
 
 #. module: microsoft_calendar
-#: code:addons/microsoft_calendar/models/calendar.py:0
-#, python-format
-msgid "Modified occurrence is crossing or overlapping adjacent occurrence."
-msgstr ""
-"La ocurrencia modificada está cruzando o se está superponiendo a una "
-"ocurrencia adyacente. "
-
-#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__need_sync_m
@@ -307,6 +299,13 @@ msgid "Notification"
 msgstr "Notificación"
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__ms_organizer_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_organizer_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_organizer_event_id
+msgid "Organizer event Id"
+msgstr ""
+
+#. module: microsoft_calendar
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
 #, python-format
@@ -322,6 +321,15 @@ msgstr "Calendario de Outlook"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
 msgstr "Se detuvo la sincronización con Outlook"
+
+#. module: microsoft_calendar
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Outlook limitation: in a recurrence, an event cannot be moved to or before "
+"the day of the previous event, and cannot be moved to or after the day of "
+"the following event."
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -409,6 +417,13 @@ msgid "Token Validity"
 msgstr "Validez del token"
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__ms_universal_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_universal_event_id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_universal_event_id
+msgid "Universal event Id"
+msgstr ""
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id
 msgid "User"
 msgstr "Usuario"
@@ -436,8 +451,8 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Outlook. Are"
 " you sure you want to continue?"
 msgstr ""
-"Está a punto de detener la sincronización de su calendario con Outlook. "
-"¿Está seguro de que desea continuar?"
+"Está a punto de detener la sincronización de su calendario con Outlook, "
+"¿está seguro de que desea continuar?"
 
 #. module: microsoft_calendar
 #. openerp-web

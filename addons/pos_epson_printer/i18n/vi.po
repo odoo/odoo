@@ -3,29 +3,25 @@
 # 	* pos_epson_printer
 # 
 # Translators:
-# Duy BQ <duybq86@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2020
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
+# Vo Thanh Thuy, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
+"POT-Creation-Date: 2022-09-02 08:11+0000\n"
+"PO-Revision-Date: 2019-12-16 11:07+0000\n"
+"Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: pos_epson_printer
-#. openerp-web
-#: code:addons/pos_epson_printer/static/src/js/printers.js:0
-#, python-format
-msgid "An error happened while sending data to the printer. Error code: "
-msgstr ""
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
@@ -35,47 +31,50 @@ msgstr "Két tiền"
 #. module: pos_epson_printer
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
-#: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to the printer failed"
-msgstr ""
+msgstr "Kết nối đến máy in thất bại"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_config__epson_printer_ip
 msgid "Epson Printer IP"
-msgstr ""
+msgstr "Epson Printer IP"
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
 msgid "Epson Receipt Printer IP Address"
-msgstr ""
-
-#. module: pos_epson_printer
-#. openerp-web
-#: code:addons/pos_epson_printer/static/src/js/printers.js:0
-#, python-format
-msgid "Epson ePOS Error"
-msgstr ""
-
-#. module: pos_epson_printer
-#: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
-msgid "Local IP address of an Epson receipt printer."
-msgstr ""
+msgstr "Epson Receipt Printer IP Address"
 
 #. module: pos_epson_printer
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid ""
-"Please check if the printer is still connected, if the configured IP address"
-" is correct and if your printer supports the ePOS protocol."
+"If you are on a secure server (HTTPS) please make sure you manually accepted"
+" the certificate by accessing %s"
 msgstr ""
+"Nếu bạn ở máy chủ bảo mật (HTTPS), vui lòng bảo đảm bạn đã chấp nhận chứng "
+"chỉ theo cách thủ công bằng cách truy cập %s"
+
+#. module: pos_epson_printer
+#: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
+msgid "Local IP address of an Epson receipt printer."
+msgstr "Local IP address of an Epson receipt printer."
 
 #. module: pos_epson_printer
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
-msgid "Please check if the printer is still connected. Error code: "
+msgid "Please check if the printer has enough paper and is ready to print."
+msgstr "Vui lòng kiểm tra nếu máy in có đủ giấy và sẵn sàng để in. "
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 msgstr ""
 
 #. module: pos_epson_printer
@@ -84,8 +83,17 @@ msgid "Point of Sale Configuration"
 msgstr "Cấu hình điểm bán lẻ"
 
 #. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "Printing failed"
+msgstr "In thất bại"
+
+#. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
 msgid ""
 "The Epson receipt printer will be used instead of the receipt printer "
 "connected to the IoT Box."
 msgstr ""
+"The Epson receipt printer will be used instead of the receipt printer "
+"connected to the IoT Box."

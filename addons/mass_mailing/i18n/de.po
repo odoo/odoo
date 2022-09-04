@@ -179,7 +179,7 @@ msgstr "800px"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_call_to_action
 msgid "<b>50,000+ companies</b> run Odoo."
-msgstr ""
+msgstr "<b>Mehr als 50.000 Unternehmen</b> arbeiten mit Odoo."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert
@@ -501,7 +501,7 @@ msgstr "<span name=\"sent\">E-Mails wurden gesendet.</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
 msgid "<span style=\"color: #8f8f8f;\">Turn off Mailing Reports</span>"
-msgstr ""
+msgstr "<span style=\"color: #8f8f8f;\">Mailing-Berichte abschalten</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -859,6 +859,11 @@ msgid ""
 "                                 The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Erlauben Sie dem Empfänger, seinen Status in der Sperrliste über die "
+"Abmeldeseite selbst zu verwalten. Wenn die Option aktiviert ist, wird die "
+"Schaltfläche \"Sperrliste\" auf der Abmeldeseite ausgeblendet. Die "
+"Schaltfläche \"Zurückkommen\" wird immer sichtbar sein, damit sich Leads und"
+" Partner erneut anmelden können."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1028,7 +1033,7 @@ msgstr "Sperrliste (%s)"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Blacklist Me"
-msgstr "Mich auf die Sperrliste setzen"
+msgstr "Sperrliste"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -1100,6 +1105,9 @@ msgid ""
 "Bounce happens when a mailing cannot be delivered (fake address, server "
 "issues, ...). Check each record to see what went wrong."
 msgstr ""
+"Ein Bounce tritt auf, wenn ein Mailing nicht zugestellt werden kann (falsche"
+" Adresse, Serverprobleme, ...). Überprüfen Sie jeden Datensatz, um "
+"festzustellen, was schief gelaufen ist."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced
@@ -1357,7 +1365,7 @@ msgstr "Spalten"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Come Back"
-msgstr "Komm zurück"
+msgstr "Zurückkehren"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
@@ -1365,6 +1373,8 @@ msgstr "Komm zurück"
 msgid ""
 "Come back once your mailing has been sent to track who opened your mailing."
 msgstr ""
+"Kommen Sie nach dem Versand Ihres Mailings zurück, um zu verfolgen, wer Ihr "
+"Mailing geöffnet hat."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_company
@@ -2008,7 +2018,7 @@ msgstr "Filterbezeichnung"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "Filters saved by me"
-msgstr ""
+msgstr "Meine gespeicherten Filter"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__copyvalue
@@ -2243,6 +2253,8 @@ msgid ""
 "If set, a mass mailing will be created so that you can track its results in "
 "the Email Marketing app."
 msgstr ""
+"Wenn diese Option aktiviert ist, wird ein Massen-Mailing erstellt, dessen "
+"Ergebnisse Sie in der E-Mail-Marketing-App verfolgen können."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__is_blacklisted
@@ -2353,7 +2365,7 @@ msgstr "Ist ein Abonnent"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__is_mailing_campaign_activated
 msgid "Is Mailing Campaign Activated"
-msgstr ""
+msgstr "Wenn Mailing-Kampagne aktiviert"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -2481,6 +2493,8 @@ msgid ""
 "Link Trackers will measure how many times each link is clicked as well as "
 "the proportion of %s who clicked at least once in your mailing."
 msgstr ""
+"Link-Tracker messen, wie oft jeder Link angeklickt wird und wie hoch der "
+"Anteil an %s ist, die mindestens einmal auf Ihr Mailing geklickt haben."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
@@ -2611,12 +2625,12 @@ msgstr "Mailing aktiviert"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_filter
 msgid "Mailing Favorite Filters"
-msgstr ""
+msgstr "Mailing-Favoriten-Filter"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "Mailing Filters"
-msgstr ""
+msgstr "Mailing Filter"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
@@ -2727,7 +2741,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_tree
 msgid "Mailing filters"
-msgstr ""
+msgstr "Mailing Filter"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
@@ -2763,7 +2777,7 @@ msgstr "Massenmailkampagne verwalten"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
-msgstr ""
+msgstr "Massenmail-Kampagnen verwalten"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__manual
@@ -3657,7 +3671,7 @@ msgstr "Beispiel Mailassistent"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_tree
 msgid "Saved by"
-msgstr ""
+msgstr "Gespeichert von"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_type
@@ -3803,7 +3817,7 @@ msgstr "Senden von"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_compose_form_mass_mailing
 msgid "Send Mass Mailing"
-msgstr ""
+msgstr "Massenmailing versenden"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
@@ -4735,6 +4749,9 @@ msgid ""
 "                To save the same criteria for future use, you can add it to the favorite list\n"
 "                by clicking on <i class=\"fa fa-star-o text-warning\"></i> icon next to \"Recipients\"."
 msgstr ""
+"Während des Entwurfs des Mailings können Sie die Regeln zum Filtern der Empfänger festlegen.\n"
+"Um dieselben Kriterien für die zukünftige Verwendung zu speichern, können Sie sie zur Favoritenliste hinzufügen\n"
+"indem Sie auf das <i class=\"fa fa-star-o text-warning\"></i>Icon neben \"Empfänger\" klicken."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -4816,6 +4833,8 @@ msgid ""
 "You cannot delete these UTM Mediums as they are linked to the following mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 msgstr ""
+"Sie können diese UTM-Medien nicht löschen, da sie mit den folgenden Mailings im Massenversand verknüpft sind:\n"
+"%(mailing_names)s"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/utm_source.py:0
@@ -4824,6 +4843,8 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 msgstr ""
+"Sie können diese UTM-Quellen nicht löschen, da sie mit den folgenden Mailings im Massenversand verknüpft sind:\n"
+"%(mailing_names)s"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign

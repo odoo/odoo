@@ -4,21 +4,21 @@
 # 
 # Translators:
 # Sergey Vilizhanin, 2019
-# Ivan Kropotkin <yelizariev@itpp.dev>, 2021
 # Vasiliy Korobatov <korobatov@gmail.com>, 2022
 # ILMIR <karamov@it-projects.info>, 2022
 # Иван Дроздов <hiraetari@gmail.com>, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"POT-Creation-Date: 2022-09-02 08:12+0000\n"
 "PO-Revision-Date: 2019-06-12 12:35+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Ivan Kropotkin <yelizariev@itpp.dev>, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,6 +209,11 @@ msgid "Manufacturing Reference"
 msgstr "Производственная ссылка"
 
 #. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_nosuggest_ids
+msgid "Move Line Nosuggest"
+msgstr "Непереминний строку перемещения"
+
+#. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
 #, python-format
 msgid "Name"
@@ -236,6 +241,11 @@ msgstr "Операция не поддерживается"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Operations"
 msgstr "Операции"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_ids_without_package
+msgid "Operations without package"
+msgstr "Операции без упаковки"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions

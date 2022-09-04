@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-30 06:06+0000\n"
+"POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -654,11 +654,6 @@ msgstr ""
 "opnieuw."
 
 #. module: project
-#: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
-msgid "A tag with the same name already exists."
-msgstr "Er bestaat al een label met dezelfde naam."
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
@@ -667,6 +662,11 @@ msgid ""
 msgstr ""
 "Een persoonlijke fase kan niet gekoppeld worden aan een project omdat het "
 "enkel zichtbaar is voor de corresponderende gebruiker."
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
+msgid "A tag with the same name already exists."
+msgstr "Er bestaat al een label met dezelfde naam."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -1708,40 +1708,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
-msgid ""
-"People to whom this project and its tasks will be visible.\n"
-"\n"
-"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
-"\n"
-"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"\n"
-"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-"\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
-"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
-"\n"
-"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
-msgstr ""
-"Mensen voor wie dit project en zijn taken zichtbaar zullen zijn.\n"
-"\n"
-"- Uitgenodigde interne gebruikers: bij het volgen van een project krijgen interne gebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen.\n"
-"Een gebruiker met het project > beheerders toegangsrechtniveau heeft nog steeds toegang tot dit project en zijn taken, zelfs als ze niet expliciet deel uitmaken van de volgers.\n"
-"\n"
-"- Alle interne gebruikers: alle interne gebruikers hebben zonder onderscheid toegang tot het project en alle taken.\n"
-"\n"
-"- Uitgenodigde portaalgebruikers en alle interne gebruikers: alle interne gebruikers hebben zonder beperking toegang tot het project en al zijn taken.\n"
-"Bij het volgen van een project krijgen portaalgebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen.\n"
-"\n"
-"Wanneer een project in alleen-lezen wordt gedeeld, wordt de portalgebruiker doorgestuurd naar zijn portal. Ze kunnen de taken bekijken, maar niet bewerken.\n"
-"Wanneer een project in bewerken wordt gedeeld, wordt de portalgebruiker omgeleid naar de kanban- en lijstweergaven van de taken. Ze kunnen een geselecteerd aantal velden op de taken wijzigen.\n"
-"\n"
-"In ieder geval kan een interne gebruiker zonder projecttoegangsrechten nog steeds toegang krijgen tot een taak, op voorwaarde dat ze de bijbehorende URL krijgen (en dat ze deel uitmaken van de volgers als het project privé is)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -3460,6 +3426,40 @@ msgid ""
 msgstr ""
 "Bovenliggend model welke de alias bezit. Het model dat de alias referentie bezit\n"
 "is niet noodzakelijk het model wat wordt gegeven door alias_model_id (bijvoorbeeld: project (parent_model) en taak (model))"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
+msgid ""
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
+msgstr ""
+"Mensen voor wie dit project en zijn taken zichtbaar zullen zijn.\n"
+"\n"
+"- Uitgenodigde interne gebruikers: bij het volgen van een project krijgen interne gebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen.\n"
+"Een gebruiker met het project > beheerders toegangsrechtniveau heeft nog steeds toegang tot dit project en zijn taken, zelfs als ze niet expliciet deel uitmaken van de volgers.\n"
+"\n"
+"- Alle interne gebruikers: alle interne gebruikers hebben zonder onderscheid toegang tot het project en alle taken.\n"
+"\n"
+"- Uitgenodigde portaalgebruikers en alle interne gebruikers: alle interne gebruikers hebben zonder beperking toegang tot het project en al zijn taken.\n"
+"Bij het volgen van een project krijgen portaalgebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen.\n"
+"\n"
+"Wanneer een project in alleen-lezen wordt gedeeld, wordt de portalgebruiker doorgestuurd naar zijn portal. Ze kunnen de taken bekijken, maar niet bewerken.\n"
+"Wanneer een project in bewerken wordt gedeeld, wordt de portalgebruiker omgeleid naar de kanban- en lijstweergaven van de taken. Ze kunnen een geselecteerd aantal velden op de taken wijzigen.\n"
+"\n"
+"In ieder geval kan een interne gebruiker zonder projecttoegangsrechten nog steeds toegang krijgen tot een taak, op voorwaarde dat ze de bijbehorende URL krijgen (en dat ze deel uitmaken van de volgers als het project privé is)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction

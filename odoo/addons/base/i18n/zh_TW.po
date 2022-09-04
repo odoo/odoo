@@ -12,8 +12,8 @@
 # dott.dev <dottdot.dev@gmail.com>, 2021
 # sejun huang <sejun.huang@gmail.com>, 2021
 # Shigurefox <tom.liang@omniwaresoft.com.tw>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2022
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -17660,7 +17660,7 @@ msgstr "欄位標籤必須定義一個\"name\"屬性"
 #: code:addons/model.py:0
 #, python-format
 msgid "Field:"
-msgstr "欄位:"
+msgstr "字段："
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -30678,7 +30678,6 @@ msgstr "幣別代碼必須唯一!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "匯率 1 的貨幣到貨幣的匯率."
 
@@ -30956,8 +30955,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "幣別到其他幣別的比率為 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
