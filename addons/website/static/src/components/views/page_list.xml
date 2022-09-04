@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="PageListView.WebsiteSelect">
+    <div class="btn-group" role="toolbar" aria-label="Main actions">
+        <button class="btn btn-primary dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="o_website_active" t-esc="active.name"/> <i class="fa fa-caret-down ms-1"/>
+        </button>
+        <div class="dropdown-menu">
+            <t t-foreach="websites" t-as="website">
+                <a role="menuitem" href="#" class="dropdown-item" t-att-data-website-id="website.id"><t t-esc="website.name"/></a>
+                <div t-if="!website.id" class="dropdown-divider"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>
