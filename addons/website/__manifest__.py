@@ -174,9 +174,9 @@
             'website/static/src/components/fullscreen_indication/fullscreen_indication.scss',
             'website/static/src/components/website_loader/website_loader.js',
             'website/static/src/components/website_loader/website_loader.scss',
+            'website/static/src/components/views/*.js',
             'website/static/src/services/website_service.js',
             'website/static/src/js/utils.js',
-            'website/static/src/js/website_page_list.js',
         ],
         'web.assets_common': [
             'website/static/src/js/tours/tour_utils.js',
@@ -263,6 +263,7 @@
             'website/static/src/components/fields/fields.xml',
             'website/static/src/components/translator/*.xml',
             'website/static/src/components/website_loader/*.xml',
+            'website/static/src/components/views/*.xml',
             'website/static/src/systray_items/*.xml',
             'website/static/src/xml/website.backend.xml',
             'website/static/src/xml/website_widget.xml',
