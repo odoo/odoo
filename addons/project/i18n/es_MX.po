@@ -1715,6 +1715,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Personas que podrán ver este proyecto y sus tareas.\n"
+"\n"
+"- Usuarios internos invitados: al seguir un proyecto, los usuarios internos tendrán acceso a todas las tareas. De lo contrario, solo tendrán acceso a las tareas específicas que están siguiendo.\n"
+"Un usuario con el nivel de derecho de acceso de administrador del proyecto puede seguir teniendo acceso a este proyecto y a sus tareas, aunque no forme parte de los seguidores.\n"
+"\n"
+"- Todos los usuarios internos: todos los usuarios internos tienen acceso al proyecto y a todas sus tareas.\n"
+"\n"
+"- Usuarios del portal invitados y todos los usuarios internos: todos los usuarios internos tienen acceso al proyecto y a todas sus tareas.\n"
+"Al seguir un proyecto, los usuarios del portal tendrán acceso a todas sus tareas. De lo contrario, solo tendrán acceso a las tareas específicas que están siguiendo.\n"
+"\n"
+"Cuando se comparte un proyecto en modo de solo lectura, se dirigirá al usuario del portal a su portal. De esta manera, puede ver las tareas, pero no editarlas..\n"
+"Cuando se comparte un proyecto en modo de edición, se dirigirá al usuario del portal a las vistas de kanban y lista de las tareas. El usuario podrá modificar un número determinado de campos en las tareas.\n"
+"\n"
+"En cualquier caso, un usuario interno sin derechos de acceso al proyecto puede acceder a una tarea, siempre y cuando cuente con la URL correspondiente (y que forme parte de los seguidores si el proyecto es privado)."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -2162,12 +2176,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_report_wizard_form
 msgid "Go to Burndown Chart"
-msgstr ""
+msgstr "Ir al diagrama de quemado"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_report_wizard_form
 msgid "Go to Project Updates"
-msgstr ""
+msgstr "Ir a las actualizaciones del proyecto"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
@@ -2494,7 +2508,7 @@ msgstr "Es un seguidor"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
 msgid "Is Milestone Exceeded"
-msgstr ""
+msgstr "¿Ha alcanzado su objetivo?"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
@@ -2526,6 +2540,8 @@ msgid ""
 "It seems that some tasks are part of a recurrence. At least one of them must"
 " be kept as a model to create the next occurences."
 msgstr ""
+"Parece que algunas tareas forman parte de una secuencia. Al menos una de "
+"ellas debe permanecer como modelo para poder crear las siguientes tareas."
 
 #. module: project
 #. openerp-web
@@ -2544,6 +2560,8 @@ msgid ""
 "It seems that this task is part of a recurrence. You must keep it as a model"
 " to create the next occurences."
 msgstr ""
+"Parece que esta tarea forma parte de una secuencia. Debe permanecer como "
+"modelo para poder crear las siguientes tareas."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2702,7 +2720,7 @@ msgstr "Actividades atrasadas"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "Objetivos atrasados"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -3150,7 +3168,7 @@ msgstr "Normal"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Not Starred"
-msgstr ""
+msgstr "No destacado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
@@ -3447,6 +3465,8 @@ msgid ""
 "Plan resource allocation across projects and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
+"Planifique la asignación de recursos entre proyectos y tareas y calcule las "
+"fechas límites con mayor precisión"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -3643,7 +3663,7 @@ msgstr "Nombre del proyecto"
 #. module: project
 #: model:ir.model,name:project.model_project_report_wizard
 msgid "Project Report Wizard"
-msgstr ""
+msgstr "Asistente de reportes de proyectos"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
@@ -4132,7 +4152,7 @@ msgstr "Sáb"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Satisfaction"
-msgstr ""
+msgstr "Satisfacción"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4265,7 +4285,7 @@ msgstr "Establecer imagen de portada"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "Establecer estado"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4452,7 +4472,7 @@ msgstr "Estado"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Status Update - "
-msgstr ""
+msgstr "Actualizar estado - "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4501,7 +4521,7 @@ msgstr "Horas planeadas para subtareas"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "Enviado el"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -4671,7 +4691,7 @@ msgstr "Tarea bloqueada"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
 msgid "Task in Progress"
-msgstr ""
+msgstr "Tarea en progreso"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4789,7 +4809,7 @@ msgstr "La etapa de la tarea personal del usuario actual."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_deadline
 msgid "The deadline for the task, which appears in the calendar view."
-msgstr ""
+msgstr "La fecha límite de la tarea, incluida en la vista de calendario."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4886,7 +4906,7 @@ msgstr "No hay tareas."
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "There is nothing to report."
-msgstr ""
+msgstr "No hay nada que informar."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -5183,7 +5203,7 @@ msgstr "Actualizar"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "Actualización realizada"
 
 #. module: project
 #. openerp-web
@@ -5506,12 +5526,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignee"
-msgstr ""
+msgstr "persona asignada"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr ""
+msgstr "personas asignadas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

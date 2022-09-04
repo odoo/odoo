@@ -3,37 +3,15 @@
 # 	* hr_contract
 # 
 # Translators:
-# liulixia <liu.lixia@elico-corp.com>, 2018
-# e2f <projects@e2f.com>, 2018
-# Gary Wei <Gary.wei@elico-corp.com>, 2018
-# bf2549c5415a9287249cba2b8a5823c7, 2018
-# JZH-Odoo <jzh@odoo.com>, 2018
-# 老窦 北京 <2662059195@qq.com>, 2019
-# bower Guo <124358678@qq.com>, 2019
-# roye w <159820@qq.com>, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
-# keecome <7017511@qq.com>, 2020
-# Felix Yuen <fyu@odoo.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# GritLuo <dooms21day@163.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
-# liAnGjiA <liangjia@qq.com>, 2021
-# 稀饭~~ <wangwhai@qq.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2021
-# xu aaron, 2021
-# Martin Trigaux, 2021
-# Summer Xia <sxi@odoo.com>, 2021
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"POT-Creation-Date: 2022-09-02 18:26+0000\n"
+"PO-Revision-Date: 2022-06-17 09:50+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -229,6 +207,7 @@ msgid "Company country"
 msgstr "公司所属的国家"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
@@ -283,10 +262,8 @@ msgstr "合同开始日期"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
-#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 msgid "Contract Type"
 msgstr "合同类型"
 
@@ -468,11 +445,6 @@ msgid "Employee"
 msgstr "员工"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-msgid "Employee Contract"
-msgstr "员工合同"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 msgid "Employee Contracts"
 msgstr "员工合同"
@@ -618,6 +590,7 @@ msgstr "如果勾选此项，有新消息会提醒你。"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些信息将会产生传递错误。"
 
@@ -832,13 +805,20 @@ msgid "Running Contracts"
 msgstr "运行合同"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "短信发送错误"
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
 msgstr "工资信息"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Salary Structure Type"
@@ -975,6 +955,16 @@ msgstr "签证号"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
 msgid "Wage"
 msgstr "工资"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no

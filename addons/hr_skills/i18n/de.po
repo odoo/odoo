@@ -3,10 +3,6 @@
 # 	* hr_skills
 # 
 # Translators:
-# Wolfgang Taferner, 2019
-# Matt <matt.fasola@braintec-group.com>, 2019
-# Jérôme JEK <jek@odoo.com>, 2020
-# Kevin Harrings <kha@odoo.com>, 2020
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
@@ -15,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2019-03-20 14:57+0000\n"
+"PO-Revision-Date: 2022-06-17 09:51+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -88,7 +84,7 @@ msgstr "Startdatum"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
 msgid "Default Level"
-msgstr ""
+msgstr "Standard-Level"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__department_id
@@ -139,17 +135,17 @@ msgstr "Mitarbeiterkompetenzen"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill_report
 msgid "Employee Skills Report"
-msgstr ""
+msgstr "Berichte über Mitarbeiterkompetenzen"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees with Skills"
-msgstr ""
+msgstr "Beschäftigte mit Qualifikationen"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees without Skills"
-msgstr ""
+msgstr "Mitarbeiter ohne Kompetenzen"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
@@ -168,6 +164,8 @@ msgid ""
 "If checked, this level will be the default one selected when choosing this "
 "skill."
 msgstr ""
+"Wenn diese Option aktiviert ist, wird diese Stufe bei der Auswahl dieser "
+"Qualifikation standardmäßig ausgewählt."
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
@@ -202,7 +200,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
 msgid "Level Progress"
-msgstr ""
+msgstr "Level-Fortschritt"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_level_ids
@@ -213,7 +211,7 @@ msgstr "Niveau"
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
 msgid "Line Types"
-msgstr ""
+msgstr "Linienarten"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -228,7 +226,7 @@ msgstr "Name"
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
 msgid "Only one default level is allowed per skill type."
-msgstr ""
+msgstr "Pro Kompetenztyp ist nur eine Standardstufe erlaubt."
 
 #. module: hr_skills
 #. openerp-web
