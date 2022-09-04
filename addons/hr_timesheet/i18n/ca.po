@@ -1015,6 +1015,12 @@ msgid "Timesheets for sub-task:"
 msgstr "Fulls de treball per a sub-tasca:"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr "Els fulls de temps s'han de crear amb un empleat actiu."
+
+#. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid ""
@@ -1137,6 +1143,12 @@ msgstr ""
 "No podeu enregistrar fulls d'hores en aquest projectes ja que està enllaçat "
 "a un compte analític inactiu. Si us plau, canvieu aquest compte o reactiveu "
 "l'actual per a poder enregistrar hores. "
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr "No podeu establir un empleat arxivat als fulls de temps existents."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet

@@ -24,7 +24,7 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
 # Bettina Pfeifer <bettina@dygytally.de>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,6 +180,8 @@ msgid ""
 "All revenues that are not from timesheets and that are linked to the "
 "analytic account of the project."
 msgstr ""
+"Alle Einnahmen, die nicht aus Stundenzetteln stammen und mit dem "
+"analytischen Konto des Projekts verknüpft sind."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -387,7 +389,7 @@ msgstr "Rechnung aus Projekt erstellen"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
 msgid "Create SO Line from project"
-msgstr ""
+msgstr "Auftragszeile aus Projekt erstellen"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
@@ -425,7 +427,7 @@ msgstr "Kundenauftrag aus Projekt erstellen"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_create_sale_order_view_form
 #, python-format
 msgid "Create a Sales Order"
-msgstr ""
+msgstr "Einen Kundenauftrag erstellen"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_create_sale_order__link_selection__create
@@ -471,7 +473,7 @@ msgstr "Kunde"
 #: model:product.product,name:sale_timesheet.product_service_order_timesheet
 #: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Customer Care (Prepaid Hours)"
-msgstr ""
+msgstr "Kundenbetreuung (Prepaid-Stunden)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
@@ -516,7 +518,7 @@ msgstr "Standard-Auftragsposition"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Service"
-msgstr ""
+msgstr "Standard-Service"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
@@ -576,7 +578,7 @@ msgstr "Mitarbeiter"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr ""
+msgstr "Stundesatz Mitarbeiter"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -699,7 +701,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__info_invoice
 msgid "Info Invoice"
-msgstr ""
+msgstr "Info Rechnung"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -751,7 +753,7 @@ msgstr "Abrechnung"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
 msgid "Invoicing Timesheet Enabled"
-msgstr ""
+msgstr "Abrechnung von Stundenzetteln aktiviert"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
@@ -778,7 +780,7 @@ msgstr "Junior Architekt (Abrechnung anhand von Stundenzetteln)"
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Kitchen Assembly (Milestones)"
-msgstr ""
+msgstr "Küchenmontage (Milestones)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line____last_update
@@ -901,7 +903,7 @@ msgstr "Erfordert Anwendersupport oder technische Hilfe"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "No Sales Order"
-msgstr ""
+msgstr "Kein Kundenauftrag"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -966,6 +968,10 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
+"Es werden nur die noch nicht fakturierten (und ggf. validierten) "
+"Stundenzettel aus diesem Zeitraum in Rechnung gestellt. Wenn der Zeitraum "
+"nicht angegeben ist, werden alle noch nicht fakturierten (und ggf. "
+"validierten) Stundenzettel ohne Unterschied fakturiert."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
@@ -981,7 +987,7 @@ msgstr "Andere Kosten"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__other_revenues
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Other Revenues"
-msgstr ""
+msgstr "Sonstige Einnahmen"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1091,7 +1097,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
 msgid "Project Profitability Report"
-msgstr ""
+msgstr "Projektrentabilitätsbericht"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
@@ -1175,7 +1181,7 @@ msgstr "Verkaufsauftrag"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__sale_line_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
 msgid "Sale Order Item"
-msgstr ""
+msgstr "Auftragsposition"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
@@ -1206,7 +1212,7 @@ msgstr "Verkaufsauftrag"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
 msgid "Sales Order Confirmation Date"
-msgstr ""
+msgstr "Datum der Auftragsbestätigung"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__sale_line_id
@@ -1366,6 +1372,8 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
+"Der Kundenauftrag kann nicht erstellt werden, weil Sie einige Mitarbeiter, die Stundenzettel für dieses Projekt erstellt haben, nicht angegeben haben. Bitte geben Sie alle relevanten Mitarbeiter an, bevor Sie den Kundenauftrag erstellen.\n"
+"Fehlende(r) Mitarbeiter: %s"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__analytic_account_id
@@ -1604,6 +1612,8 @@ msgid ""
 "Total recorded duration, expressed in the encoding UoM, and rounded to the "
 "unit"
 msgstr ""
+"Gesamte aufgezeichnete Dauer, ausgedrückt in der Kodierungsmaßeinheit und "
+"gerundet auf die Einheit"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
