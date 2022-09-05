@@ -18,12 +18,6 @@ registerModel({
         /**
          * @private
          */
-        _computeAccessToken() {
-            return this.attachmentOwner.accessToken;
-        },
-        /**
-         * @private
-         */
         _computeDefaultSource() {
             return this.attachmentOwner.defaultSource;
         },
@@ -96,9 +90,6 @@ registerModel({
         attachmentOwner: one("Attachment", {
             identifying: true,
             inverse: 'attachmentViewerViewable',
-        }),
-        accessToken: attr({
-            compute: "_computeAccessToken",
         }),
         defaultSource: attr({
             compute: "_computeDefaultSource",

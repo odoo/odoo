@@ -62,10 +62,11 @@ function setupMessagingServiceRegistries({
     const serviceRegistry = registry.category('services');
 
     patchWithCleanup(messagingService, {
-        async _startModelManager() {
+        async _startModelManager(modelManager, messagingValues) {
+            modelManager.isDebug = true;
             const _super = this._super.bind(this);
             await messagingBeforeCreationDeferred;
-            return _super(...arguments);
+            return _super(modelManager, messagingValues);
         },
     });
 
