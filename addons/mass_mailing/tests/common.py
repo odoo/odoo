@@ -97,21 +97,25 @@ class MassMailCase(MailCase, MockLinkTracker):
                 email = partner.email_normalized
 
             recipient_trace = traces.filtered(
-                lambda t: t.email == email and t.state == state and (t.res_id == record.id if record else True)
+                lambda t: (t.email == email or (not email and not t.email)) and \
+                          t.state == state and \
+                          (t.res_id == record.id if record else True)
             )
             self.assertTrue(
                 len(recipient_trace) == 1,
                 'MailTrace: email %s (recipient %s, state: %s, record: %s): found %s records (1 expected)' % (email, partner, state, record, len(recipient_trace))
             )
             self.assertTrue(bool(recipient_trace.mail_mail_id_int))
+            if 'failure_type' in recipient_info or state in ('ignored', 'exception', 'canceled', 'bounced'):
+                self.assertEqual(recipient_trace.failure_type, recipient_info['failure_type'])
 
             if check_mail:
                 if author is None:
                     author = self.env.user.partner_id
 
                 fields_values = {'mailing_id': mailing}
-                if 'failure_type' in recipient_info:
-                    fields_values['failure_type'] = recipient_info['failure_type']
+                if 'failure_reason' in recipient_info:
+                    fields_values['failure_reason'] = recipient_info['failure_reason']
 
                 # specific for partner: email_formatted is used
                 if partner:
@@ -121,7 +125,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                         self.assertMailMail(partner, state_mapping[state], author=author, content=content, fields_values=fields_values)
                 # specific if email is False -> could have troubles finding it if several falsy traces
                 elif not email and state in ('ignored', 'canceled', 'bounced'):
-                    self.assertMailMailWId(recipient_trace.mail_mail_id_int, state_mapping[state], content=content, fields_values=fields_values)
+                    self.assertMailMailWId(recipient_trace.mail_mail_id_int, state_mapping[state], author=author, content=content, fields_values=fields_values)
                 else:
                     self.assertMailMailWEmails([email], state_mapping[state], author=author, content=content, fields_values=fields_values)
 
