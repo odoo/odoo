@@ -571,7 +571,7 @@ class MailActivity(models.Model):
                     next_activities_values.append(vals)
 
                 # post message on activity, before deleting it
-                _, activity_message = record.message_post_with_view(
+                activity_message = record.message_post_with_view(
                     'mail.message_activity_done',
                     values={
                         'activity': activity,
