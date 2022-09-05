@@ -777,21 +777,10 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per record')
         self.assertEqual(len(self._mails), 10, 'Should have sent 5 emails per record')
 
-        # hack to use assertEmails: filtering on from/to only is not sufficient to distinguish emails
-        _mails_records = [
-            [mail for mail in self._mails if '%s-%s' % (record.id, record._name) in mail['message_id']]
-            for record in self.test_records
-        ]
-
-        for record, _mails in zip(self.test_records, _mails_records):
-            # message copy is kept
-            message = record.message_ids[0]
-
+        for record in self.test_records:
             # template is sent only to partners (email_to are transformed)
-            self._mails = _mails
             self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
                                 'sent',
-                                mail_message=message,
                                 author=self.partner_employee,
                                 email_values={
                                     'attachments_info': [
@@ -814,6 +803,7 @@ class TestComposerResultsMass(TestMailComposer):
                                         f'{self.alias_catchall}@{self.alias_domain}'
                                     )),
                                 },
+                                mail_message=record.message_ids[0],  # message copy is kept
                                )
 
         # test without catchall filling reply-to
@@ -827,15 +817,8 @@ class TestComposerResultsMass(TestMailComposer):
             self.env['ir.config_parameter'].sudo().set_param("mail.catchall.domain", None)
             composer.action_send_mail()
 
-        # hack to use assertEmails: filtering on from/to only is not sufficient to distinguish emails
-        _mails_records = [
-            [mail for mail in self._mails if '%s-%s' % (record.id, record._name) in mail['message_id']]
-            for record in self.test_records
-        ]
-
-        for record, _mails in zip(self.test_records, _mails_records):
+        for record in self.test_records:
             # template is sent only to partners (email_to are transformed)
-            self._mails = _mails
             self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
                                 'sent',
                                 mail_message=record.message_ids[0],
