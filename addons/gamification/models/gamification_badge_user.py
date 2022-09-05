@@ -29,20 +29,16 @@ class BadgeUser(models.Model):
         The stats counters are incremented
         :param ids: list(int) of badge users that will receive the badge
         """
-        template = self.env.ref('gamification.email_template_badge_received')
+        template = self.env.ref(
+            'gamification.email_template_badge_received',
+            raise_if_not_found=False
+        )
+        if not template:
+            return
 
         for badge_user in self:
-            self.env['mail.thread'].message_post_with_template(
-                template.id,
-                model=badge_user._name,
-                res_id=badge_user.id,
-                composition_mode='mass_mail',
-                # `website_forum` triggers `_cron_update` which triggers this method for template `Received Badge`
-                # for which `badge_user.user_id.partner_id.ids` equals `[8]`, which is then passed to  `self.env['mail.compose.message'].create(...)`
-                # which expects a command list and not a list of ids. In master, this wasn't doing anything, at the end composer.partner_ids was [] and not [8]
-                # I believe this line is useless, it will take the partners to which the template must be send from the template itself (`partner_to`)
-                # The below line was therefore pointless.
-                # partner_ids=badge_user.user_id.partner_id.ids,
+            template.send_mail(
+                badge_user.id,
             )
 
         return True
