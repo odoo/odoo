@@ -169,7 +169,7 @@ class PropertiesCase(TransactionCase):
             'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."attributes" AS "attributes" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
             'SELECT "test_new_api_message"."id" AS "id", "test_new_api_message"."discussion" AS "discussion", "test_new_api_message"."body" AS "body", "test_new_api_message"."author" AS "author", "test_new_api_message"."name" AS "name", "test_new_api_message"."important" AS "important", "test_new_api_message"."label"->>\'en_US\' AS "label", "test_new_api_message"."priority" AS "priority", "test_new_api_message"."create_uid" AS "create_uid", "test_new_api_message"."create_date" AS "create_date", "test_new_api_message"."write_uid" AS "write_uid", "test_new_api_message"."write_date" AS "write_date" FROM "test_new_api_message" WHERE "test_new_api_message".id IN %s',
             # read the definition on the definition record
-            'SELECT "test_new_api_discussion"."id" AS "id", "test_new_api_discussion"."attributes_definition" AS "attributes_definition" FROM "test_new_api_discussion" WHERE "test_new_api_discussion".id IN %s',
+            'SELECT "test_new_api_discussion"."id" AS "id", "test_new_api_discussion"."name" AS "name", "test_new_api_discussion"."moderator" AS "moderator", "test_new_api_discussion"."message_concat" AS "message_concat", "test_new_api_discussion"."attributes_definition" AS "attributes_definition", "test_new_api_discussion"."create_uid" AS "create_uid", "test_new_api_discussion"."create_date" AS "create_date", "test_new_api_discussion"."write_uid" AS "write_uid", "test_new_api_discussion"."write_date" AS "write_date" FROM "test_new_api_discussion" WHERE "test_new_api_discussion".id IN %s',
             # check the many2one existence
             'SELECT "test_new_api_partner".id FROM "test_new_api_partner" WHERE "test_new_api_partner".id IN %s',
             'SELECT "test_new_api_partner"."id" AS "id", "test_new_api_partner"."name" AS "name", "test_new_api_partner"."create_uid" AS "create_uid", "test_new_api_partner"."create_date" AS "create_date", "test_new_api_partner"."write_uid" AS "write_uid", "test_new_api_partner"."write_date" AS "write_date" FROM "test_new_api_partner" WHERE "test_new_api_partner".id IN %s',
@@ -230,7 +230,7 @@ class PropertiesCase(TransactionCase):
             }])
             self.env.invalidate_all()
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(7):
             messages = self.env['test_new_api.message'].create([{
                 'name': 'Test Message',
                 'discussion': self.discussion_1.id,
@@ -807,7 +807,7 @@ class PropertiesCase(TransactionCase):
             'comodel': 'test_new_api.partner',
         }]
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             self.message_1.attributes = [
                 {
                     "name": "moderator_partner_ids",
@@ -985,7 +985,7 @@ class PropertiesCase(TransactionCase):
         """If we change the definition record, the onchange of the properties field must be triggered."""
         message_form = Form(self.env['test_new_api.message'])
 
-        with self.assertQueryCount(11):
+        with self.assertQueryCount(8):
             message_form.discussion = self.discussion_1
             message_form.author = self.user
 
@@ -1019,7 +1019,7 @@ class PropertiesCase(TransactionCase):
                 msg='Should take the values of the new definition record',
             )
 
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             message = message_form.save()
 
         self.assertEqual(
@@ -1034,7 +1034,7 @@ class PropertiesCase(TransactionCase):
 
         # change the definition record, change the definition and add default values
         self.assertEqual(message.discussion, self.discussion_2)
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(4):
             message.discussion = self.discussion_1
         self.assertEqual(
             self.discussion_1.attributes_definition,
