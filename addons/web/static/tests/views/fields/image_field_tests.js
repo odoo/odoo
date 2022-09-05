@@ -289,6 +289,37 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("ImageField: set 0 width/height in the size option", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="document" widget="image" options="{'size': [0, 0]}" />
+                    <field name="document" widget="image" options="{'size': [0, 50]}" />
+                    <field name="document" widget="image" options="{'size': [50, 0]}" />
+                </form>`,
+        });
+        const imgs = target.querySelectorAll(".o_field_widget img");
+        assert.deepEqual(
+            [imgs[0].attributes.width, imgs[0].attributes.height],
+            [undefined, undefined],
+            "if both size are set to 0, both attributes are undefined"
+        );
+        assert.deepEqual(
+            [imgs[1].attributes.width, imgs[1].attributes.height.value],
+            [undefined, "50"],
+            "if only the width is set to 0, the width attribute is not set on the img"
+        );
+        assert.deepEqual(
+            [imgs[2].attributes.width.value, imgs[2].attributes.height],
+            ["50", undefined],
+            "if only the height is set to 0, the height attribute is not set on the img"
+        );
+    });
+
     QUnit.test("ImageField: zoom and zoom_delay options", async function (assert) {
         serverData.models.partner.records[0].document = MY_IMAGE;
 
