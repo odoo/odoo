@@ -103,17 +103,23 @@ export class FormController extends Component {
         const beforeLoadProm = new Promise((r) => {
             this.beforeLoadResolver = r;
         });
-        this.model = useModel(this.props.Model, {
-            resModel: this.props.resModel,
-            resId: this.props.resId || false,
-            resIds: this.props.resIds,
-            fields: this.props.fields,
-            activeFields,
-            viewMode: "form",
-            rootType: "record",
-            mode: this.props.mode,
-            beforeLoadProm,
-        });
+        this.model = useModel(
+            this.props.Model,
+            {
+                resModel: this.props.resModel,
+                resId: this.props.resId || false,
+                resIds: this.props.resIds,
+                fields: this.props.fields,
+                activeFields,
+                viewMode: "form",
+                rootType: "record",
+                mode: this.props.mode,
+                beforeLoadProm,
+            },
+            {
+                ignoreUseSampleModel: true,
+            }
+        );
         const { create, edit } = this.archInfo.activeActions;
 
         this.canCreate = create && !this.props.preventCreate;
