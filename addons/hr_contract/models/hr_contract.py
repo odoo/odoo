@@ -63,8 +63,12 @@ class Contract(models.Model):
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
+
+    def _get_hr_responsible_domain(self):
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('groups_id', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
+
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
-        help='Person responsible for validating the employee\'s contracts.', domain="[('company_id', '=', company_id)]")
+        help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain)
     calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch')
     first_contract_date = fields.Date(related='employee_id.first_contract_date')
 
