@@ -8,12 +8,13 @@ const { WEBSOCKET_CLOSE_CODES } = require("@bus/workers/websocket_worker");
 const { startServer } = require('@bus/../tests/helpers/mock_python_environment');
 const { patchWebsocketWorkerWithCleanup } = require("@bus/../tests/helpers/mock_websocket");
 
-var testUtils = require('web.test_utils');
 const { browser } = require("@web/core/browser/browser");
 const { registry } = require("@web/core/registry");
 const { makeDeferred, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
 const { createWebClient } = require("@web/../tests/webclient/helpers");
+
+const { afterNextRender } = owl.App;
 
 QUnit.module('Bus', {
     beforeEach: function () {
@@ -41,10 +42,10 @@ QUnit.module('Bus', {
         });
         env.services['bus_service'].addChannel('lambda');
         pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
-        await testUtils.nextTick();
+        await nextTick();
 
         pyEnv['bus.bus']._sendone('lambda', 'notifType', 'epsilon');
-        await testUtils.nextTick();
+        await nextTick();
 
         assert.verifySteps([
             'notification - beta',
@@ -136,7 +137,7 @@ QUnit.module('Bus', {
         slaveEnv.services['bus_service'].addChannel('lambda');
 
         pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
-        await testUtils.nextTick();
+        await nextTick();
 
         assert.verifySteps([
             'main - notification - beta',
@@ -171,14 +172,14 @@ QUnit.module('Bus', {
         });
         secondEnv.services['bus_service'].addChannel('lambda');
         pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
-        await testUtils.nextTick();
+        await nextTick();
 
         // simulate unloading main
         window.dispatchEvent(new Event('unload'));
         await nextTick();
 
         pyEnv['bus.bus']._sendone('lambda', 'notifType', 'gamma');
-        await testUtils.nextTick();
+        await nextTick();
 
         assert.verifySteps([
             'main - notification - beta',
@@ -321,8 +322,7 @@ QUnit.module('Bus', {
         // prevent websocket to connect and notification to disappear
         // before the assertion.
         startPromise = makeDeferred();
-        pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-        await nextTick();
+        await afterNextRender(() => pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE));
 
         assert.containsOnce(document.body, '.o_notification');
         assert.strictEqual(
@@ -331,9 +331,7 @@ QUnit.module('Bus', {
         );
         // Wait for the worker to reconnect, post a message and the
         // bus_service to receive it and remove the notification.
-        const { afterNextRender } = owl.App;
-        startPromise.resolve();
-        await afterNextRender(() => {});
+        await afterNextRender(() => startPromise.resolve());
         assert.containsNone(document.body, '.o_notification');
     });
 
