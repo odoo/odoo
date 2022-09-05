@@ -134,7 +134,7 @@
                                     <label for="planned_hours" string="Allocated Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                                     <field name="planned_hours" class="oe_inline ms-2" widget="timesheet_uom_no_toggle"/>
                                     <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
-                                        (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle"/> on
+                                        (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                                         <span class="fw-bold text-dark"> Sub-tasks</span>)
                                     </span>
                                 </div>
