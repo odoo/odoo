@@ -3751,7 +3751,8 @@ const SnippetOptionWidget = Widget.extend({
         const moveDownOrRight = widgetName === 'move_down_opt' || widgetName === 'move_right_opt';
 
         if (moveUpOrLeft || moveDownOrRight) {
-            // The arrows are not displayed if the target is in a grid and if not in mobile view.
+            // The arrows are not displayed if the target is in a grid and if
+            // not in mobile view.
             const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < 768;
             if (this.$target[0].classList.contains('o_grid_item') && !isMobileView) {
                 return false;
@@ -4262,8 +4263,8 @@ registry.sizing = SnippetOptionWidget.extend({
                 return;
             }
 
-            // If we are in grid mode, add a background grid and place the element
-            // we are resizing in front of it.
+            // If we are in grid mode, add a background grid and place the
+            // element we are resizing in front of it.
             const rowEl = self.$target[0].parentNode;
             let backgroundGridEl;
             if (rowEl.classList.contains('o_grid_mode')) {
@@ -4274,8 +4275,9 @@ registry.sizing = SnippetOptionWidget.extend({
                 gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
             }
 
-            // For loop to handle the cases where it is ne, nw, se or sw. Since there are two
-            // directions, we compute for both directions and we store the values in an array.
+            // For loop to handle the cases where it is ne, nw, se or sw. Since
+            // there are two directions, we compute for both directions and we
+            // store the values in an array.
             const directions = [];
             for (const [i, resize] of resizeVal.entries()) {
                 const props = {};
@@ -4311,16 +4313,17 @@ registry.sizing = SnippetOptionWidget.extend({
 
                 let changeTotal = false;
                 for (const dir of directions) {
-                    // dd is the number of pixels by which the mouse moved, compared to the
-                    // initial position of the handle.
+                    // dd is the number of pixels by which the mouse moved,
+                    // compared to the initial position of the handle.
                     const dd = ev['page' + dir.XY] - dir.xy + dir.resize[1][dir.begin];
                     const next = dir.current + (dir.current + 1 === dir.resize[1].length ? 0 : 1);
                     const prev = dir.current ? (dir.current - 1) : 0;
 
                     let change = false;
-                    // If the mouse moved to the right/down by at least 2/3 of the space between the
-                    // previous and the next steps, the handle is snapped to the next step and the
-                    // class is replaced by the one matching this step.
+                    // If the mouse moved to the right/down by at least 2/3 of
+                    // the space between the previous and the next steps, the
+                    // handle is snapped to the next step and the class is
+                    // replaced by the one matching this step.
                     if (dd > (2 * dir.resize[1][next] + dir.resize[1][dir.current]) / 3) {
                         self.$target.attr('class', (self.$target.attr('class') || '').replace(dir.regClass, ''));
                         self.$target.addClass(dir.resize[0][next]);
@@ -4354,8 +4357,8 @@ registry.sizing = SnippetOptionWidget.extend({
                 $handle.removeClass('o_active');
 
                 // If we are in grid mode, removes the background grid.
-                // Also sync the col-* class with the g-col-* class so the toggle to normal mode
-                // and the mobile view are well done.
+                // Also sync the col-* class with the g-col-* class so the
+                // toggle to normal mode and the mobile view are well done.
                 if (rowEl.classList.contains('o_grid_mode')) {
                     self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
                     backgroundGridEl.remove();
@@ -4428,34 +4431,35 @@ registry.sizing = SnippetOptionWidget.extend({
         const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < 768;
         const isGrid = this.$target[0].classList.contains('o_grid_item');
         if (this.$target[0].parentNode.classList.contains('row')) {
-            // Hiding/showing the correct resize handles if we are in grid mode or not.
-            for (const handle of this.$handles) {
-                const isGridHandle = handle.classList.contains('o_grid_handle');
-                handle.classList.toggle('d-none', isGrid ^ isGridHandle);
+            // Hiding/showing the correct resize handles if we are in grid mode
+            // or not.
+            for (const handleEl of this.$handles) {
+                const isGridHandle = handleEl.classList.contains('o_grid_handle');
+                handleEl.classList.toggle('d-none', isGrid ^ isGridHandle);
                 // Disabling the resize if we are in mobile view.
-                handle.classList.toggle('readonly', isMobileView && isGridHandle);
+                handleEl.classList.toggle('readonly', isMobileView && isGridHandle);
             }
 
-            // Hiding the move handle for some snippets so we can't drag them and
-            // so we can't toggle grid mode.
-            const moveHandle = this.$overlay[0].querySelector('.o_move_handle');
+            // Hiding the move handle for some snippets so we can't drag them
+            // and so we can't toggle the grid mode.
+            const moveHandleEl = this.$overlay[0].querySelector('.o_move_handle');
             const untoggleableColumns = '.s_masonry_block, .s_showcase, .s_features_grid, .s_website_form, .s_color_blocks_2';
             const disableToggle = this.$target[0].closest(untoggleableColumns);
-            moveHandle.classList.toggle('d-none', disableToggle || isMobileView);
+            moveHandleEl.classList.toggle('d-none', disableToggle || isMobileView);
 
             // Hiding/showing the arrows.
             if (isGrid) {
-                const moveLeftArrow = this.$overlay[0].querySelector('.fa-angle-left');
-                const moveRightArrow = this.$overlay[0].querySelector('.fa-angle-right');
+                const moveLeftArrowEl = this.$overlay[0].querySelector('.fa-angle-left');
+                const moveRightArrowEl = this.$overlay[0].querySelector('.fa-angle-right');
                 const showLeft = await this._computeWidgetVisibility('move_left_opt');
                 const showRight = await this._computeWidgetVisibility('move_right_opt');
-                moveLeftArrow.classList.toggle('d-none', !showLeft);
-                moveRightArrow.classList.toggle('d-none', !showRight);
+                moveLeftArrowEl.classList.toggle('d-none', !showLeft);
+                moveRightArrowEl.classList.toggle('d-none', !showRight);
             }
 
             // Show/hide the buttons to send back/front a grid item.
-            const bringFrontBack = this.$overlay[0].querySelectorAll('.o_front_back');
-            bringFrontBack.forEach(button => button.classList.toggle('d-none', !isGrid || isMobileView));
+            const bringFrontBackEls = this.$overlay[0].querySelectorAll('.o_front_back');
+            bringFrontBackEls.forEach(button => button.classList.toggle('d-none', !isGrid || isMobileView));
         }
     },
 
@@ -4921,7 +4925,8 @@ registry.layout_column = SnippetOptionWidget.extend({
                 this.trigger_up('activate_snippet', {$snippet: this.$target});
             }
         } else {
-            // Toggle normal mode only if grid mode was activated (as it's in normal mode by default).
+            // Toggle normal mode only if grid mode was activated (as it's in
+            // normal mode by default).
             const rowEl = this.$target[0].querySelector('.row');
             if (rowEl && rowEl.classList.contains('o_grid_mode')) {
                 this._toggleNormalMode(rowEl);
@@ -4942,8 +4947,9 @@ registry.layout_column = SnippetOptionWidget.extend({
         const rowEl = this.$target[0].querySelector('.row');
         const elementType = widgetValue;
 
-        // If it has been less than 15 seconds that we have added an element, shift the new element
-        // right and down by one cell. Otherwise, put it on the top left corner.
+        // If it has been less than 15 seconds that we have added an element,
+        // shift the new element right and down by one cell. Otherwise, put it
+        // on the top left corner.
         const currentTime = new Date().getTime();
         if (this.lastAddTime && (currentTime - this.lastAddTime) / 1000 < 15) {
             this.lastStartPosition = [this.lastStartPosition[0] + 1, this.lastStartPosition[1] + 1];
@@ -4953,49 +4959,47 @@ registry.layout_column = SnippetOptionWidget.extend({
         this.lastAddTime = currentTime;
 
         // Create the new column.
-        const newColumn = document.createElement('div');
-        newColumn.classList.add('o_grid_item');
+        const newColumnEl = document.createElement('div');
+        newColumnEl.classList.add('o_grid_item');
         let numberColumns, numberRows;
 
         if (elementType === 'image') {
             // Set the columns properties.
-            newColumn.classList.add('col-lg-6', 'g-col-lg-6', 'g-height-6');
+            newColumnEl.classList.add('col-lg-6', 'g-col-lg-6', 'g-height-6');
             numberColumns = 6;
             numberRows = 6;
 
             // Create a default image and add it to the new column.
-            const img = document.createElement('img');
-            img.classList.add('img', 'img-fluid', 'mx-auto');
-            img.src = '/web/image/website.s_text_image_default_image';
-            img.alt = '';
-            img.loading = 'lazy';
+            const imgEl = document.createElement('img');
+            imgEl.classList.add('img', 'img-fluid', 'mx-auto');
+            imgEl.src = '/web/image/website.s_text_image_default_image';
+            imgEl.alt = '';
+            imgEl.loading = 'lazy';
 
-            newColumn.appendChild(img);
-
+            newColumnEl.appendChild(imgEl);
         } else if (elementType === 'text') {
-            newColumn.classList.add('col-lg-4', 'g-col-lg-4', 'g-height-2');
+            newColumnEl.classList.add('col-lg-4', 'g-col-lg-4', 'g-height-2');
             numberColumns = 4;
             numberRows = 2;
 
             // Create default text content.
-            const p = document.createElement('p');
-            p.classList.add('o_default_snippet_text');
-            p.textContent = _t("Write something...");
+            const pEl = document.createElement('p');
+            pEl.classList.add('o_default_snippet_text');
+            pEl.textContent = _t("Write something...");
 
-            newColumn.appendChild(p);
-
+            newColumnEl.appendChild(pEl);
         } else if (elementType === 'button') {
-            newColumn.classList.add('col-lg-2', 'g-col-lg-2', 'g-height-1');
+            newColumnEl.classList.add('col-lg-2', 'g-col-lg-2', 'g-height-1');
             numberColumns = 2;
             numberRows = 1;
 
             // Create default button.
-            const a = document.createElement('a');
-            a.href = '#';
-            a.classList.add('mb-2', 'btn', 'btn-primary');
-            a.textContent = "Button";
+            const aEl = document.createElement('a');
+            aEl.href = '#';
+            aEl.classList.add('mb-2', 'btn', 'btn-primary');
+            aEl.textContent = "Button";
 
-            newColumn.appendChild(a);
+            newColumnEl.appendChild(aEl);
         }
         // Place the column in the grid.
         const rowStart = this.lastStartPosition[0];
@@ -5004,15 +5008,15 @@ registry.layout_column = SnippetOptionWidget.extend({
             columnStart = 1;
             this.lastStartPosition[1] = columnStart;
         }
-        newColumn.style.gridArea = `${rowStart} / ${columnStart} / ${rowStart + numberRows} / ${columnStart + numberColumns}`;
+        newColumnEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowStart + numberRows} / ${columnStart + numberColumns}`;
 
         // Setting the z-index to the maximum of the grid.
-        gridUtils._setElementToMaxZindex(newColumn, rowEl);
+        gridUtils._setElementToMaxZindex(newColumnEl, rowEl);
 
         // Add the new column and update the grid height.
-        rowEl.appendChild(newColumn);
+        rowEl.appendChild(newColumnEl);
         gridUtils._resizeGrid(rowEl);
-        this.trigger_up('activate_snippet', {$snippet: $(newColumn)});
+        this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
     },
 
     //--------------------------------------------------------------------------
@@ -5025,7 +5029,6 @@ registry.layout_column = SnippetOptionWidget.extend({
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'selectCount') {
             return this.$('> .row').children().length;
-
         } else if (methodName === 'selectLayout') {
             const rowEl = this.$target[0].querySelector('.row');
             if (rowEl && rowEl.classList.contains('o_grid_mode')) {
@@ -5097,18 +5100,16 @@ registry.layout_column = SnippetOptionWidget.extend({
     _toggleNormalMode(rowEl) {
         // Removing the grid class
         rowEl.classList.remove('o_grid_mode');
-
-        const columns = rowEl.children;
-        for (const column of columns) {
-            // Reload the images.
-            gridUtils._reloadLazyImages(column);
+        const columnEls = rowEl.children;
+        for (const columnEl of columnEls) {
+            // Reloading the images.
+            gridUtils._reloadLazyImages(columnEl);
 
             // Removing the grid properties.
-            column.classList.remove('o_grid_item');
-            column.style.removeProperty('grid-area');
-            column.style.removeProperty('z-index');
+            columnEl.classList.remove('o_grid_item');
+            columnEl.style.removeProperty('grid-area');
+            columnEl.style.removeProperty('z-index');
         }
-
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;
 
