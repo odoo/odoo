@@ -50,6 +50,16 @@ class MailTestGatewayGroups(models.Model):
             values['alias_parent_thread_id'] = self.id
         return values
 
+    def _message_get_default_recipients(self):
+        return dict(
+            (record.id, {
+                'email_cc': False,
+                'email_to': record.email_from if not record.customer_id.ids else False,
+                'partner_ids': record.customer_id.ids,
+            })
+            for record in self
+        )
+
 
 class MailTestStandard(models.Model):
     """ This model can be used in tests when automatic subscription and simple
@@ -104,6 +114,16 @@ class MailTestTicket(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     container_id = fields.Many2one('mail.test.container', tracking=True)
+
+    def _message_get_default_recipients(self):
+        return dict(
+            (record.id, {
+                'email_cc': False,
+                'email_to': record.email_from if not record.customer_id.ids else False,
+                'partner_ids': record.customer_id.ids,
+            })
+            for record in self
+        )
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ Activate more groups to test query counters notably (and be backward
@@ -162,6 +182,16 @@ class MailTestContainer(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias',
         delegate=True)
+
+    def _message_get_default_recipients(self):
+        return dict(
+            (record.id, {
+                'email_cc': False,
+                'email_to': False,
+                'partner_ids': record.customer_id.ids,
+            })
+            for record in self
+        )
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ Activate more groups to test query counters notably (and be backward
