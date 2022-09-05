@@ -349,7 +349,6 @@ class TestTraceability(TestMrpCommon):
 
         unbuild_form = Form(self.env['mrp.unbuild'])
         unbuild_form.mo_id = mo
-        unbuild_form.lot_id = lot
         unbuild_form.save().action_unbuild()
 
         mo_form = Form(self.env['mrp.production'])
