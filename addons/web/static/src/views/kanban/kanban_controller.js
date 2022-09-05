@@ -89,7 +89,14 @@ export class KanbanController extends Component {
         if (onCreate === "quick_create" && root.canQuickCreate()) {
             await root.quickCreate(group);
         } else if (onCreate && onCreate !== "quick_create") {
-            await this.actionService.doAction(onCreate, { additionalContext: root.context });
+            const options = {
+                additionalContext: root.context,
+                onClose: async () => {
+                    await this.model.root.load();
+                    this.render(true); // FIXME WOWL reactivity
+                },
+            };
+            await this.actionService.doAction(onCreate, options);
         } else {
             await this.props.createRecord();
         }

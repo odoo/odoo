@@ -1150,6 +1150,50 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("kanban with an action id as on_create attrs", async (assert) => {
+        const actionService = {
+            start() {
+                return {
+                    doAction: (action, options) => {
+                        // simplified flow in this test: simulate a target new action which
+                        // creates a record and closes itself
+                        assert.step(`doAction ${action}`);
+                        serverData.models.partner.records.push({ id: 299, foo: "new" });
+                        options.onClose();
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="some.action">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
+        await createRecord();
+        assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 5);
+        assert.verifySteps([
+            "get_views",
+            "web_search_read",
+            "doAction some.action",
+            "web_search_read",
+        ]);
+    });
+
     QUnit.test("create in grouped on m2o", async (assert) => {
         await makeView({
             type: "kanban",
