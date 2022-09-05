@@ -147,13 +147,13 @@ class TestRatingPerformance(TestRatingCommon):
             } for idx in range(RECORD_COUNT)])
             self.flush_tracking()
 
-        with self.assertQueryCount(employee=2604):  # tmf 2204 / com 2404
+        with self.assertQueryCount(employee=2004):  # tmf 2004
             for record in record_ratings:
                 access_token = record._rating_get_access_token()
                 record.rating_apply(1, token=access_token)
             self.flush_tracking()
 
-        with self.assertQueryCount(employee=2603):  # tmf 2203 / com 2403
+        with self.assertQueryCount(employee=2003):  # tmf 2003
             for record in record_ratings:
                 access_token = record._rating_get_access_token()
                 record.rating_apply(5, token=access_token)
