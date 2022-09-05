@@ -1178,6 +1178,8 @@
                             <field name="legend_done" invisible="1"/>
                         </group>
                     </group>
+                    <field attrs="{'invisible': [('project_id', '=', False)]}"
+                        name="task_properties" nolabel="1" columns="2"/>
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" type="html" options="{'collaborative': true, 'resizable': false}"/>
