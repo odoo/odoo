@@ -26,7 +26,7 @@ const ROUTES_TO_IGNORE = [
 const WEBCLIENT_PARAMETER_NAMES = new Set(['legacyParams', 'mockRPC', 'serverData', 'target', 'webClientClass']);
 const SERVICES_PARAMETER_NAMES = new Set([
     'legacyServices', 'loadingBaseDelayDuration', 'messagingBeforeCreationDeferred',
-    'messagingBus', 'services', 'testSetupDoneDeferred',
+    'messagingBus', 'services',
 ]);
 
 /**
@@ -50,8 +50,6 @@ const SERVICES_PARAMETER_NAMES = new Set([
  *   Deferred that let tests block messaging creation and simulate resolution.
  *   Useful for testing components behavior when messaging is not yet created.
  * @param {EventBus} [param0.messagingBus]
- * @param {Promise} [param0.testSetupDoneDeferred] The Promise to whose revolution has to be
- * waited before starting the messaging service.
  * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
  * to the webClient as a legacy parameter.
  */
@@ -60,14 +58,12 @@ function setupMessagingServiceRegistries({
     messagingBeforeCreationDeferred = Promise.resolve(),
     messagingBus,
     services,
-    testSetupDoneDeferred,
  }) {
     const serviceRegistry = registry.category('services');
 
     patchWithCleanup(messagingService, {
         async _startModelManager() {
             const _super = this._super.bind(this);
-            await testSetupDoneDeferred;
             await messagingBeforeCreationDeferred;
             return _super(...arguments);
         },
@@ -115,8 +111,6 @@ function setupMessagingServiceRegistries({
  * @param {Object} [param0.services]
  * @param {Object} [param0.loadingBaseDelayDuration]
  * @param {Object} [param0.messagingBeforeCreationDeferred]
- * @param {Promise} [param0.testSetupDoneDeferred] The Promise to whose revolution has to be
- * waited before starting the messaging service.
  * @param {EventBus} [param0.messagingBus] The event bus to be used by messaging.
  * @returns {WebClient}
  */

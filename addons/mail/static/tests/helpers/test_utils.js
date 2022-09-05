@@ -204,11 +204,6 @@ function getOpenFormView(afterEvent, openView) {
  * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
  *   Deferred that let tests block messaging creation and simulate resolution.
  *   Useful for testing working components when messaging is not yet created.
- * @param {Object} [param0.waitUntilEvent]
- * @param {String} [param0.waitUntilEvent.eventName]
- * @param {String} [param0.waitUntilEvent.message]
- * @param {function} [param0.waitUntilEvent.predicate]
- * @param {integer} [param0.waitUntilEvent.timeoutDelay]
  * @param {string} [param0.waitUntilMessagingCondition='initialized'] Determines
  *   the condition of messaging when this function is resolved.
  *   Supported values: ['none', 'created', 'initialized'].
@@ -234,7 +229,6 @@ async function start(param0 = {}) {
     const {
         discuss = {},
         hasTimeControl,
-        waitUntilEvent,
         waitUntilMessagingCondition = 'initialized',
     } = param0;
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
@@ -244,15 +238,7 @@ async function start(param0 = {}) {
         throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
     }
     const messagingBus = new EventBus();
-    const testSetupDoneDeferred = makeDeferred();
     const afterEvent = getAfterEvent({ messagingBus });
-    let waitUntilEventPromise;
-    if (waitUntilEvent) {
-        waitUntilEventPromise = afterEvent({ func: () => testSetupDoneDeferred.resolve(), ...waitUntilEvent, });
-    } else {
-        testSetupDoneDeferred.resolve();
-        waitUntilEventPromise = Promise.resolve();
-    }
 
     const pyEnv = await getPyEnv();
     param0.serverData = param0.serverData || getActionManagerServerData();
@@ -260,7 +246,7 @@ async function start(param0 = {}) {
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
     let webClient;
     await afterNextRender(async () => {
-        webClient = await getWebClientReady({ ...param0, messagingBus, testSetupDoneDeferred });
+        webClient = await getWebClientReady({ ...param0, messagingBus });
         if (waitUntilMessagingCondition === 'created') {
             await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
         }
@@ -282,7 +268,6 @@ async function start(param0 = {}) {
         action['type'] = action['type'] || 'ir.actions.act_window';
         await afterNextRender(() => doAction(webClient, action, { props: options }));
     };
-    await waitUntilEventPromise;
     return {
         advanceTime,
         afterEvent,
