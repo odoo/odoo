@@ -506,12 +506,19 @@ class AccountAccount(models.Model):
         return super(AccountAccount, contextual_self).default_get(default_fields)
 
     @api.model
-    def _order_by_frequency_per_partner(self, company_id, partner_id, move_type=None, limit=None):
+    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None):
         """
-        Returns the accounts ordered from most used to least used for a given partner
-        and filtered according to the move type.
+        Returns the accounts ordered from most frequent to least frequent for a given partner
+        and filtered according to the move type
+        :param company_id: the company id
+        :param partner_id: the partner id for which we want to retrieve the most frequent accounts
+        :param move_type: the type of the move to know which type of accounts to retrieve
+        :param filter_never_user_accounts: True if we should filter out accounts never used for the partner
+        :param limit: the maximum number of accounts to retrieve
+        :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
-        limit = "LIMIT 1" if limit is not None else ""
+        join = "INNER JOIN" if filter_never_user_accounts else "LEFT JOIN"
+        limit = f"LIMIT {limit:d}" if limit else ""
         where_internal_group = ""
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
             where_internal_group = "AND account.internal_group = 'income'"
@@ -520,7 +527,7 @@ class AccountAccount(models.Model):
         self._cr.execute(f"""
             SELECT account.id
               FROM account_account account
-              LEFT JOIN account_move_line aml
+            {join} account_move_line aml
                 ON aml.account_id  = account.id
                 AND aml.partner_id = %s
                 AND account.deprecated = FALSE
@@ -535,9 +542,18 @@ class AccountAccount(models.Model):
         return [r[0] for r in self._cr.fetchall()]
 
     @api.model
+    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None):
+        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1)
+        return most_frequent_account[0] if most_frequent_account else False
+
+    @api.model
+    def _order_accounts_by_frequency_for_partner(self, company_id, partner_id, move_type=None):
+        return self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type)
+
+    @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if not name and self._context.get('partner_id') and self._context.get('move_type'):
-            return self._order_by_frequency_per_partner(
+            return self._order_accounts_by_frequency_for_partner(
                             self.env.company.id, self._context.get('partner_id'), self._context.get('move_type'))
         args = args or []
         domain = []
