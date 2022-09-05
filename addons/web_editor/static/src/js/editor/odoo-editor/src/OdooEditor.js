@@ -591,8 +591,6 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
-        this.addDomListener(this.document, 'mousedown', this._onDocumentMousedown);
-        this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
         this.addDomListener(this.document, 'click', this._onDocumentClick);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
@@ -3470,6 +3468,11 @@ export class OdooEditor extends EventTarget {
         this._fixFontAwesomeSelection();
 
         this._fixSelectionOnContenteditableFalse();
+
+        this.historyUnpauseSteps('handleSelectionInTable');
+        if (this.toolbar) {
+            this.toolbar.style.pointerEvents = 'auto';
+        }
     }
 
     _onMouseDown(ev) {
@@ -3539,6 +3542,49 @@ export class OdooEditor extends EventTarget {
                 };
             }
         }
+
+        // Handle table selection.
+        if (this.toolbar && !ancestors(ev.target, this.editable).includes(this.toolbar)) {
+            this.toolbar.style.pointerEvents = 'none';
+            if (this.deselectTable() && hasValidSelection(this.editable)) {
+                this.document.getSelection().collapseToStart();
+            }
+        }
+        // Handle table resizing.
+        const isHoveringTdBorder = this._isHoveringTdBorder(ev);
+        if (isHoveringTdBorder) {
+            ev.preventDefault();
+            const direction = { top: 'row', right: 'col', bottom: 'row', left: 'col' }[isHoveringTdBorder] || false;
+            let target1, target2;
+            const column = closestElement(ev.target, 'tr');
+            if (isHoveringTdBorder === 'top' && column) {
+                target1 = getAdjacentPreviousSiblings(column).find(node => node.nodeName === 'TR');
+                target2 = closestElement(ev.target, 'tr');
+            } else if (isHoveringTdBorder === 'right') {
+                target1 = ev.target;
+                target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD');
+            } else if (isHoveringTdBorder === 'bottom' && column) {
+                target1 = closestElement(ev.target, 'tr');
+                target2 = getAdjacentNextSiblings(column).find(node => node.nodeName === 'TR');
+            } else if (isHoveringTdBorder === 'left') {
+                target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD');
+                target2 = ev.target;
+            }
+            this._isResizingTable = true;
+            this._toggleTableResizeCursor(direction);
+            const resizeTable = ev => this._resizeTable(ev, direction, target1, target2);
+            const stopResizing = ev => {
+                ev.preventDefault();
+                this._isResizingTable = false;
+                this._toggleTableResizeCursor(false);
+                this.document.removeEventListener('mousemove', resizeTable);
+                this.document.removeEventListener('mouseup', stopResizing);
+                this.document.removeEventListener('mouseleave', stopResizing);
+            };
+            this.document.addEventListener('mousemove', resizeTable);
+            this.document.addEventListener('mouseup', stopResizing);
+            this.document.addEventListener('mouseleave', stopResizing);
+        }
     }
 
     _onDocumentKeydown(ev) {
@@ -3578,65 +3624,6 @@ export class OdooEditor extends EventTarget {
             this._onKeyupResetContenteditableNodes = [];
         }
         this._fixSelectionOnContenteditableFalse();
-    }
-
-    _onDocumentMousedown(event) {
-        if (this.toolbar && !ancestors(event.target, this.editable).includes(this.toolbar)) {
-            this.toolbar.style.pointerEvents = 'none';
-            if (this.deselectTable() && hasValidSelection(this.editable)) {
-                this.document.getSelection().collapseToStart();
-            }
-        }
-        // Handle table resizing.
-        const isHoveringTdBorder = this._isHoveringTdBorder(event);
-        if (isHoveringTdBorder) {
-            event.preventDefault();
-            const direction = {top: 'row', right: 'col', bottom: 'row', left: 'col'}[isHoveringTdBorder] || false;
-            let target1, target2;
-            switch (isHoveringTdBorder) {
-                case 'top': {
-                    target1 = getAdjacentPreviousSiblings(closestElement(event.target, 'tr')).find(node => node.nodeName === 'TR');
-                    target2 = closestElement(event.target, 'tr');
-                    break;
-                }
-                case 'right': {
-                    target1 = event.target;
-                    target2 = getAdjacentNextSiblings(event.target).find(node => node.nodeName === 'TD');
-                    break;
-                }
-                case 'bottom': {
-                    target1 = closestElement(event.target, 'tr');
-                    target2 = getAdjacentNextSiblings(closestElement(event.target, 'tr')).find(node => node.nodeName === 'TR');
-                    break;
-                }
-                case 'left': {
-                    target1 = getAdjacentPreviousSiblings(event.target).find(node => node.nodeName === 'TD');
-                    target2 = event.target;
-                    break;
-                }
-            }
-            this._isResizingTable = true;
-            this._toggleTableResizeCursor(direction);
-            const resizeTable = ev => this._resizeTable(ev, direction, target1, target2);
-            const stopResizing = ev => {
-                ev.preventDefault();
-                this._isResizingTable = false;
-                this._toggleTableResizeCursor(false);
-                this.document.removeEventListener('mousemove', resizeTable);
-                this.document.removeEventListener('mouseup', stopResizing);
-                this.document.removeEventListener('mouseleave', stopResizing);
-            };
-            this.document.addEventListener('mousemove', resizeTable);
-            this.document.addEventListener('mouseup', stopResizing);
-            this.document.addEventListener('mouseleave', stopResizing);
-        }
-    }
-
-    _onDocumentMouseup() {
-        this.historyUnpauseSteps('handleSelectionInTable');
-        if (this.toolbar) {
-            this.toolbar.style.pointerEvents = 'auto';
-        }
     }
 
     _onMousemove(ev) {
