@@ -169,33 +169,23 @@ class RatingMixin(models.AbstractModel):
             rating = ratings[0]
         return rating.access_token
 
-    def rating_send_request(self, template, lang=False, subtype_id=False, force_send=True, composition_mode='comment',
-                            email_layout_xmlid=None):
+    def rating_send_request(self, template, lang=False, force_send=True):
         """ This method send rating request by email, using a template given
         in parameter.
 
          :param record template: a mail.template record used to compute the message body;
          :param str lang: optional lang; it can also be specified directly on the template
            itself in the lang field;
-         :param int subtype_id: optional subtype to use when creating the message; is
-           a note by default to avoid spamming followers;
          :param bool force_send: whether to send the request directly or use the mail
            queue cron (preferred option);
-         :param str composition_mode: comment (message_post) or mass_mail (template.send_mail);
-         :param str email_layout_xmlid: layout used to encapsulate the content when sending email;
         """
         if lang:
             template = template.with_context(lang=lang)
-        if subtype_id is False:
-            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        if force_send:
-            self = self.with_context(mail_notify_force_send=True)  # default value is True, should be set to false if not?
-        for record in self:
+        for record in self.with_context(mail_notify_force_send=force_send):
             record.message_post_with_template(
                 template.id,
-                composition_mode=composition_mode,
-                email_layout_xmlid=email_layout_xmlid if email_layout_xmlid is not None else 'mail.mail_notification_light',
-                subtype_id=subtype_id
+                email_layout_xmlid='mail.mail_notification_light',
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             )
 
     def rating_apply(self, rate, token=None, rating=None, feedback=None,
