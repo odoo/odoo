@@ -118,18 +118,29 @@ class MassMailCase(MailCase, MockLinkTracker):
 
                 # mail.mail specific values to check
                 fields_values = {'mailing_id': mailing}
+                if 'failure_reason' in recipient_info:
+                    fields_values['failure_reason'] = recipient_info['failure_reason']
 
                 # specific for partner: email_formatted is used
                 if partner:
                     if status == 'sent' and sent_unlink:
                         self.assertSentEmail(author, [partner])
                     else:
-                        self.assertMailMail(partner, state_mapping[status], author=author, content=content, fields_values=fields_values)
+                        self.assertMailMail(
+                            partner, state_mapping[status],
+                            author=author, content=content, fields_values=fields_values
+                        )
                 # specific if email is False -> could have troubles finding it if several falsy traces
                 elif not email and status in ('cancel', 'bounce'):
-                    self.assertMailMailWId(recipient_trace.mail_mail_id_int, state_mapping[status], author=author, content=content, fields_values=fields_values)
+                    self.assertMailMailWId(
+                        recipient_trace.mail_mail_id_int, state_mapping[status],
+                        author=author, content=content, fields_values=fields_values
+                    )
                 else:
-                    self.assertMailMailWEmails([email], state_mapping[status], author=author, content=content, fields_values=fields_values)
+                    self.assertMailMailWEmails(
+                        [email], state_mapping[status],
+                        author=author, content=content, fields_values=fields_values
+                    )
 
             if link_info:
                 trace_mail = self._find_mail_mail_wrecord(record)
