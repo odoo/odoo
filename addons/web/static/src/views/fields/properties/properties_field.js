@@ -223,24 +223,7 @@ export class PropertiesField extends Component {
             (property) => property.name === propertyDefinition.name
         );
 
-        // if the type / model are the same, restore the original name to not reset the children
-        // otherwise, generate a new value so all value of the record are reset
-        const initialValues = this.initialValues[propertyDefinition.name];
-        if (
-            initialValues &&
-            propertyDefinition.type === initialValues.type &&
-            propertyDefinition.comodel === initialValues.comodel
-        ) {
-            // restore the original name
-            propertyDefinition.name = initialValues.name;
-        } else if (initialValues && initialValues.name === propertyDefinition.name) {
-            // generate a new new to reset all values on other records
-            // store the new generated name to be able to restore it
-            // if needed
-            const newName = uuid();
-            this.initialValues[newName] = initialValues;
-            propertyDefinition.name = newName;
-        }
+        this._setPropertyName(propertyDefinition);
 
         propertiesValues[propertyIndex] = propertyDefinition;
         this.props.update(propertiesValues);
@@ -375,7 +358,7 @@ export class PropertiesField extends Component {
         this.state.canChangeDefinition = await this.orm.call(
             definitionRecordModel,
             "check_access_rights",
-            ["write", false]
+            ["write", false],
         );
     }
 
@@ -398,6 +381,33 @@ export class PropertiesField extends Component {
                 type: propertiesValues.type,
                 comodel: propertiesValues.comodel,
             };
+        }
+    }
+
+    /**
+     * Regenerate a new name if needed or restore the original one.
+     * (see @_saveInitialPropertiesValues).
+     *
+     * @param {object} propertyDefinition
+     */
+    _setPropertyName(propertyDefinition) {
+        // if the type / model are the same, restore the original name to not reset the children
+        // otherwise, generate a new value so all value of the record are reset
+        const initialValues = this.initialValues[propertyDefinition.name];
+        if (
+            initialValues &&
+            propertyDefinition.type === initialValues.type &&
+            propertyDefinition.comodel === initialValues.comodel
+        ) {
+            // restore the original name
+            propertyDefinition.name = initialValues.name;
+        } else if (initialValues && initialValues.name === propertyDefinition.name) {
+            // generate a new new to reset all values on other records
+            // store the new generated name to be able to restore it
+            // if needed
+            const newName = uuid();
+            this.initialValues[newName] = initialValues;
+            propertyDefinition.name = newName;
         }
     }
 }
