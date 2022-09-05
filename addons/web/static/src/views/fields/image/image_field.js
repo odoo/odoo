@@ -139,8 +139,8 @@ ImageField.extractProps = ({ attrs }) => {
         zoomDelay: attrs.options.zoom_delay,
         previewImage: attrs.options.preview_image,
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
-        width: attrs.options.size ? attrs.options.size[0] : attrs.width,
-        height: attrs.options.size ? attrs.options.size[1] : attrs.height,
+        width: attrs.options.size && Boolean(attrs.options.size[0]) ? attrs.options.size[0] : attrs.width,
+        height: attrs.options.size && Boolean(attrs.options.size[1]) ? attrs.options.size[1] : attrs.height,
     };
 };
 
