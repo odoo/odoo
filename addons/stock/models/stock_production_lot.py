@@ -23,9 +23,12 @@ class ProductionLot(models.Model):
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
     product_qty = fields.Float('Quantity', compute='_product_qty')
 
-    _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
-    ]
+    # Comentado pela Multidados, pois adicionamos o campo COMPANY_ID e o _sql_constraints
+    # tem que considerar.
+    # Obs: Adicionado no modulo da OCA/stock_production_lot_multi_company
+    # _sql_constraints = [
+    #     ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
+    # ]
 
     @api.model_create_multi
     def create(self, vals_list):
