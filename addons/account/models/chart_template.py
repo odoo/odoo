@@ -805,32 +805,32 @@ class AccountChartTemplate(models.Model):
             self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
 
         # Create default rules for the reconciliation widget matching invoices automatically.
+        if not self.parent_id:
+            self.env['account.reconcile.model'].sudo().create({
+                "name": _('Invoices/Bills Perfect Match'),
+                "sequence": '1',
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": True,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": True,
+                "payment_tolerance_type": 'percentage',
+                "payment_tolerance_param": 0,
+                "match_partner": True,
+                "company_id": company.id,
+            })
 
-        self.env['account.reconcile.model'].sudo().create({
-            "name": _('Invoices/Bills Perfect Match'),
-            "sequence": '1',
-            "rule_type": 'invoice_matching',
-            "auto_reconcile": True,
-            "match_nature": 'both',
-            "match_same_currency": True,
-            "allow_payment_tolerance": True,
-            "payment_tolerance_type": 'percentage',
-            "payment_tolerance_param": 0,
-            "match_partner": True,
-            "company_id": company.id,
-        })
-
-        self.env['account.reconcile.model'].sudo().create({
-            "name": _('Invoices/Bills Partial Match if Underpaid'),
-            "sequence": '2',
-            "rule_type": 'invoice_matching',
-            "auto_reconcile": False,
-            "match_nature": 'both',
-            "match_same_currency": True,
-            "allow_payment_tolerance": False,
-            "match_partner": True,
-            "company_id": company.id,
-        })
+            self.env['account.reconcile.model'].sudo().create({
+                "name": _('Invoices/Bills Partial Match if Underpaid'),
+                "sequence": '2',
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": False,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": False,
+                "match_partner": True,
+                "company_id": company.id,
+            })
 
         return True
 
