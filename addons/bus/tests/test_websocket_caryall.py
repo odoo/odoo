@@ -7,6 +7,10 @@ from datetime import timedelta
 from freezegun import freeze_time
 from threading import Event
 from unittest.mock import patch
+try:
+    from websocket._exceptions import WebSocketBadStatusException
+except ImportError:
+    pass
 
 from odoo.api import Environment
 from odoo.tests import common, new_test_user
@@ -233,3 +237,14 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(1, len(notifications))
             self.assertEqual(notifications[0]['message']['type'], 'notif_type')
             self.assertEqual(notifications[0]['message']['payload'], 'another_message')
+
+    def test_opening_websocket_connection_during_tests(self):
+        # During tests, browsers can't open websocket connections.
+        headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36']
+        with self.assertRaises(WebSocketBadStatusException) as error_catcher:
+            self.websocket_connect(header=headers)
+        self.assertEqual(error_catcher.exception.status_code, 503)
+
+        # But ChromeHeadless still can.
+        headers = ['User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/102.0.0.0 Safari/537.36']
+        self.websocket_connect()
