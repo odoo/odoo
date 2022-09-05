@@ -18,7 +18,7 @@ const PublicLivechatWindow = Widget.extend({
     template: 'im_livechat.legacy.PublicLivechatWindow',
     events: {
         'click .o_thread_window_close': '_onClickClose',
-        'click .o_thread_window_title': '_onClickFold',
+        'click .o_thread_window_header': '_onClickFold',
         'click .o_composer_text_field': '_onComposerClick',
         'click .o_mail_thread': '_onThreadWindowClicked',
         'keydown .o_composer_text_field': '_onKeydown',
