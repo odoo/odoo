@@ -20,6 +20,7 @@
         'views/website_blog_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_blog_posts.xml',
+        'views/website_pages_views.xml',
         'views/blog_post_add.xml',
         'security/ir.model.access.csv',
         'security/website_blog_security.xml',
