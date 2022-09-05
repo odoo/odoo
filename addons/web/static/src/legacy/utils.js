@@ -126,6 +126,15 @@ export function makeLegacyDropdownService(legacyEnv) {
     };
 }
 
+export function makeLegacyWowlDialogService(legacyEnv) {
+    return {
+        dependencies: ["dialog"],
+        start(_, { dialog }) {
+            legacyEnv.services.wowlDialog = dialog;
+        },
+    };
+}
+
 export function makeLegacySessionService(legacyEnv, session) {
     return {
         dependencies: ["user"],

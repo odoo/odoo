@@ -9,6 +9,7 @@ import {
     makeLegacyCrashManagerService,
     makeLegacyCommandService,
     makeLegacyDropdownService,
+    makeLegacyWowlDialogService,
 } from "./utils";
 import { makeLegacyActionManagerService } from "./backend_utils";
 import * as AbstractService from "web.AbstractService";
@@ -46,6 +47,7 @@ export const legacySetupProm = new Promise((resolve) => {
     const legacyCommandService = makeLegacyCommandService(legacyEnv);
     serviceRegistry.add("legacy_command", legacyCommandService);
     serviceRegistry.add("legacy_dropdown", makeLegacyDropdownService(legacyEnv));
+    serviceRegistry.add("legacy_wowlDialog", makeLegacyWowlDialogService(legacyEnv));
     const wowlToLegacyServiceMappers = registry.category("wowlToLegacyServiceMappers").getEntries();
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
