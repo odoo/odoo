@@ -4,9 +4,11 @@
 from ast import literal_eval
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests.common import users, Form
+from odoo.tests.common import users, Form, tagged
 from odoo.tools import formataddr, mute_logger
 
+
+@tagged('mass_mailing')
 class TestMassMailValues(MassMailCommon):
 
     @classmethod
@@ -122,6 +124,7 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
 
 
+@tagged('mass_mailing')
 class TestMassMailFeatures(MassMailCommon):
 
     @classmethod
@@ -274,7 +277,7 @@ class TestMassMailFeatures(MassMailCommon):
 
         self.assertMailTraces(
             [{'partner': partner_a},
-             {'partner': partner_b, 'state': 'ignored'}],
+             {'partner': partner_b, 'state': 'ignored', 'failure_type': False}],
             mailing, partner_a + partner_b, check_mail=True
         )
 
