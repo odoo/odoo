@@ -485,23 +485,21 @@
         <field name="priority">200</field>
         <field name="arch" type="xml">
             <form string="Create a Job Position" class="o_hr_job_simple_form" >
-                <sheet>
-                    <group>
-                        <field name="name" class="o_job_name oe_inline" placeholder="e.g. Sales Manager"/>
-                        <label for="alias_name" string="Application email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
-                        <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
-                            <div class="oe_edit_only" name="edit_alias">
-                                <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            </div>
-                            <div class="text-muted" attrs="{'invisible': [('alias_domain', '=', False)]}">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
+                <group>
+                    <field name="name" class="o_job_name oe_inline" placeholder="e.g. Sales Manager"/>
+                    <label for="alias_name" string="Application email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                    <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
+                        <div class="oe_edit_only" name="edit_alias">
+                            <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                         </div>
-                    </group>
-                    <footer>
-                        <button string="Create" name="close_dialog" type="object" class="btn-primary o_create_job" data-hotkey="q"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
-                    </footer>
-                </sheet>
+                        <div class="text-muted" attrs="{'invisible': [('alias_domain', '=', False)]}">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
+                    </div>
+                </group>
+                <footer>
+                    <button string="Create" type="object" name="close_dialog" class="btn-primary o_create_job" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
             </form>
         </field>
     </record>
