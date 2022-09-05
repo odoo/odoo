@@ -2267,10 +2267,12 @@ class MailThread(models.AbstractModel):
                 create_values.pop(x, None)
             create_values['partner_ids'] = [Command.link(pid) for pid in create_values.get('partner_ids', [])]
             create_values_list.append(create_values)
-        if 'default_child_ids' in self._context:
-            ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
-            self = self.with_context(ctx)
-        return self.env['mail.message'].create(create_values_list)
+
+        # remove context, notably for default keys, as this thread method is not
+        # meant to propagate default values for messages, only for master records
+        return self.env['mail.message'].with_context(
+            clean_context(self.env.context)
+        ).create(create_values_list)
 
     # ------------------------------------------------------
     # NOTIFICATION API
