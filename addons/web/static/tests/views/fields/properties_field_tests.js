@@ -110,6 +110,26 @@ QUnit.module("Fields", (hooks) => {
                         },
                     ],
                 },
+                'res.users': {
+                    fields: {
+                        name: {
+                            string: "Name",
+                            type: "char",
+                        },
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            display_name: "Alice",
+                        }, {
+                            id: 2,
+                            display_name: "Bob",
+                        }, {
+                            id: 3,
+                            display_name: "Eve",
+                        },
+                    ],
+                },
             },
         };
 
@@ -763,9 +783,8 @@ QUnit.module("Fields", (hooks) => {
 
     /**
      * Test the properties many2many
-     * FIXME: broken by mighty TDE
      */
-    QUnit.skip("properties: many2many", async function (assert) {
+    QUnit.test("properties: many2many", async function (assert) {
         async function mockRPC(route, { method, model, args, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -774,6 +793,8 @@ QUnit.module("Fields", (hooks) => {
                     { model: "res.partner", display_name: "Partner" },
                     { model: "res.users", display_name: "User" },
                 ];
+            } else if (method === "display_name_for" && model === "ir.model" && args[0][0] === "res.users") {
+                return [{"display_name": "User", "model": "res.users"}]
             } else if (method === "name_create" && model === "res.users") {
                 // Add a prefix to check that "name_create"
                 // has been called with the right parameters
