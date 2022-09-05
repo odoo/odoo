@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useService, useBus } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, onMounted } = owl;
+const { Component, onWillStart, onMounted, useState } = owl;
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -11,6 +11,7 @@ export class EditInBackendSystray extends Component {
     setup() {
         this.websiteService = useService('website');
         this.actionService = useService('action');
+        this.state = useState({mainObjectName: ''});
 
         onWillStart(this._updateMainObjectName);
         useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', this._updateMainObjectName);
@@ -33,7 +34,7 @@ export class EditInBackendSystray extends Component {
     }
 
     async _updateMainObjectName() {
-        this.mainObjectName = await this.websiteService.getUserModelName();
+        this.state.mainObjectName = await this.websiteService.getUserModelName();
     }
 }
 EditInBackendSystray.template = "website.EditInBackendSystray";
