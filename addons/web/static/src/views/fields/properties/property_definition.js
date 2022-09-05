@@ -141,8 +141,12 @@ export class PropertyDefinition extends Component {
             value: false,
         };
 
+        delete propertyDefinition.comodel;
+
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
+        this.state.resModel = '';
+        this.state.resModelDescription = '';
         this.state.typeLabel = this._typeLabel(newType);
     }
 

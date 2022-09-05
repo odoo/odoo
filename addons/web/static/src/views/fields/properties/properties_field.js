@@ -13,7 +13,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const { Component, useRef, useState, useEffect, onWillStart, onWillUpdateProps } = owl;
+const { Component, useRef, useState, useEffect, onWillStart } = owl;
 
 export class PropertiesField extends Component {
     setup() {
@@ -35,13 +35,6 @@ export class PropertiesField extends Component {
 
         onWillStart(async () => {
             await this._checkDefinitionAccess();
-        });
-
-        onWillUpdateProps(async () => {
-            // reset the initials properties values if we saved the record
-            if (this.props.record.mode === "readonly") {
-                this._saveInitialPropertiesValues();
-            }
         });
 
         useEffect(() => {
@@ -223,24 +216,7 @@ export class PropertiesField extends Component {
             (property) => property.name === propertyDefinition.name
         );
 
-        // if the type / model are the same, restore the original name to not reset the children
-        // otherwise, generate a new value so all value of the record are reset
-        const initialValues = this.initialValues[propertyDefinition.name];
-        if (
-            initialValues &&
-            propertyDefinition.type === initialValues.type &&
-            propertyDefinition.comodel === initialValues.comodel
-        ) {
-            // restore the original name
-            propertyDefinition.name = initialValues.name;
-        } else if (initialValues && initialValues.name === propertyDefinition.name) {
-            // generate a new new to reset all values on other records
-            // store the new generated name to be able to restore it
-            // if needed
-            const newName = uuid();
-            this.initialValues[newName] = initialValues;
-            propertyDefinition.name = newName;
-        }
+        this._regeneratePropertyName(propertyDefinition);
 
         propertiesValues[propertyIndex] = propertyDefinition;
         this.props.update(propertiesValues);
@@ -375,8 +351,39 @@ export class PropertiesField extends Component {
         this.state.canChangeDefinition = await this.orm.call(
             definitionRecordModel,
             "check_access_rights",
-            ["write", false]
+            ["write", false],
         );
+    }
+
+    /**
+     * Regenerate a new name if needed or restore the original one.
+     * (see @_saveInitialPropertiesValues).
+     *
+     * If the type / model are the same, restore the original name to not reset the
+     * children otherwise, generate a new value so all value of the record are reset.
+     *
+     * @param {object} propertyDefinition
+     */
+    _regeneratePropertyName(propertyDefinition) {
+        const initialValues = this.initialValues[propertyDefinition.name];
+        if (
+            initialValues &&
+            propertyDefinition.type === initialValues.type &&
+            propertyDefinition.comodel === initialValues.comodel
+        ) {
+            // restore the original name
+            propertyDefinition.name = initialValues.name;
+        } else if (initialValues && initialValues.name === propertyDefinition.name) {
+            // Generate a new name to reset all values on other records.
+            // because the name has been changed on the definition,
+            // the old name on others record won't match the name on the definition
+            // and the python field will just ignore the old value.
+            // Store the new generated name to be able to restore it
+            // if needed.
+            const newName = uuid();
+            this.initialValues[newName] = initialValues;
+            propertyDefinition.name = newName;
+        }
     }
 
     /**
