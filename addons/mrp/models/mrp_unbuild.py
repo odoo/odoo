@@ -101,9 +101,9 @@ class MrpUnbuild(models.Model):
             self.product_id = self.mo_id.product_id.id
             self.bom_id = self.mo_id.bom_id
             self.product_uom_id = self.mo_id.product_uom_id
+            self.lot_id = self.mo_id.lot_producing_id
             if self.has_tracking == 'serial':
                 self.product_qty = 1
-                self.lot_id = self.mo_id.lot_producing_id
             else:
                 self.product_qty = self.mo_id.product_qty
 

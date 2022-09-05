@@ -230,7 +230,9 @@ class TestUnbuild(TestMrpCommon):
         x.bom_id = bom
         x.mo_id = mo
         x.product_qty = 5
-        x.save().action_unbuild()
+        res_dict = x.save().action_unbuild()
+        greater_then_produced = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        greater_then_produced.action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, allow_negative=True), -5, 'You should have negative quantity for final product in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, lot_id=lot), 120, 'You should have 80 products in stock')
