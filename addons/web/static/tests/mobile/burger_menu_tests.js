@@ -69,11 +69,11 @@ QUnit.test("Burger Menu on an App", async (assert) => {
     assert.containsOnce(document.body, ".o_burger_menu");
     assert.containsOnce(
         document.body,
-        ".o_burger_menu .o_burger_menu_app .o_menu_sections .dropdown-item"
+        ".o_burger_menu nav.o_burger_menu_content li"
     );
     assert.strictEqual(
         document.body.querySelector(
-            ".o_burger_menu .o_burger_menu_app .o_menu_sections .dropdown-item"
+            ".o_burger_menu nav.o_burger_menu_content li"
         ).textContent,
         "SubMenu"
     );
@@ -90,7 +90,7 @@ QUnit.test("Burger Menu on an App", async (assert) => {
 });
 
 QUnit.test("Burger Menu on an App without SubMenu", async (assert) => {
-    assert.expect(6);
+    assert.expect(4);
 
     await createWebClient({ serverData });
     await click(document.body, ".o_navbar_apps_menu .dropdown-toggle");
@@ -103,8 +103,6 @@ QUnit.test("Burger Menu on an App without SubMenu", async (assert) => {
     await click(document.body, ".o_mobile_menu_toggle");
     assert.containsOnce(document.body, ".o_burger_menu");
     assert.containsOnce(document.body, ".o_user_menu_mobile");
-    assert.containsOnce(document.body, ".o_burger_menu_user");
-    assert.containsNone(document.body, ".o_burger_menu_app");
     await click(document.body, ".o_burger_menu_close");
     assert.containsNone(document.body, ".o_burger_menu");
 });
@@ -148,11 +146,11 @@ QUnit.test("Burger menu closes when click on menu item", async (assert) => {
     assert.containsOnce(document.body, ".o_burger_menu");
     assert.strictEqual(
         document.body.querySelector(
-            ".o_burger_menu .o_burger_menu_app .o_menu_sections .dropdown-item"
+            ".o_burger_menu nav.o_burger_menu_content li"
         ).textContent,
         "SubMenu"
     );
-    await click(document.body, ".o_burger_menu .o_burger_menu_app .o_menu_sections .dropdown-item");
+    await click(document.body, ".o_burger_menu nav.o_burger_menu_content li");
     await legacyExtraNextTick();
     await legacyExtraNextTick();
     assert.containsNone(document.body, ".o_burger_menu");

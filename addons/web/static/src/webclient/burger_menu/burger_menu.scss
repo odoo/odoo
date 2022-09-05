@@ -3,181 +3,79 @@
 //------------------------------------------------------------------------------
 
 .o_burger_menu {
-  top: 0;
-  bottom: 0;
-  left: 100%;
-  width: 90%;
-  z-index: $zindex-tooltip + 10;
-  transition: transform .2s ease;
+    width: 90%;
+    z-index: $zindex-tooltip + 10;
+    transition: transform .2s ease;
 
-  // Menu Toggle-Animations
-  transform: translateX(-100%);
+    // Menu Toggle-Animations
+    transform: translateX(-100%);
 
-  &.burgerslide-enter, &.burgerslide-leave {
-    transform: translateX(0);
-  }
-
-  // Scoped pseudo classes
-  %-main-entries-size {
-    padding-top: 0;
-    padding-bottom: 0;
-    min-height: $o-navbar-height-xs;
-    font-size: $font-size-lg;
-    line-height: $o-navbar-height-xs;
-  }
-
-  // Scoped variables
-  $-base-bg: $o-brand-odoo; // change to get variations on the fly (eg. 'dark mode')
-  $-base-color: color-contrast($-base-bg);
-
-  // ====== Top-Bar
-  .o_burger_menu_topbar {
-    flex: 0 0 $o-navbar-height-xs;
-    background: $-base-bg;
-    color: $-base-color;
-    @extend %-main-entries-size;
-
-    .dropdown-toggle, .o_burger_menu_close {
-      padding: 0 $o-horizontal-padding;
+    &.burgerslide-enter, &.burgerslide-leave {
+        transform: translateX(0);
     }
 
-    .o_burger_menu_close {
-      font-size: $h2-font-size;
-    }
+    // Scoped variables
+    $-base-bg: $o-brand-odoo; // change to get variations on the fly (eg. 'dark mode')
+    $-base-color: color-contrast($-base-bg);
 
-    .dropdown-toggle.active {
-      background: $o-view-background-color;
-      color: $o-main-headings-color;
-    }
-  }
-
-  // ====== Menu content container (both App's and User's entries)
-  .o_burger_menu_content {
-    background: $o-view-background-color;
-
-    &.o_burger_menu_dark {
-      background-color: darken($-base-bg, 5%);
-    }
-
-    // Menu entries size and layout
-    .dropdown-item, .dropdown-toggle {
-      &, > span {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-      }
-
-      > span {
+    // ====== Top-Bar
+    .o_burger_menu_topbar {
         min-height: $o-navbar-height-xs;
-        padding-left: $o-horizontal-padding;
+        line-height: $o-navbar-height-xs;
 
-        .fa {
-          padding: $o-horizontal-padding;
-          font-size: $font-size-sm;
+        .dropdown-toggle, .o_burger_menu_close {
+            padding: 0 $o-horizontal-padding;
         }
-      }
     }
 
-    // Handle menu text-indentation
-    .dropdown-menu {
-      margin-top: 0;
-      text-indent: 1em;
-      width: 100%;
-      max-height: none;
-
-      .dropdown-toggle {
-        text-indent: 1em;
-      }
-
-      .dropdown-menu {
-        text-indent: 2em;
-      }
-
-      .dropdown-item:last-child {
-        padding-bottom: 1em;
-      }
-    }
-
-    // First menu level entries are always bigger
-    .o_user_menu_mobile > .dropdown-item,
-    .o_menu_sections > .dropdown-item > span,
-    .o_menu_sections > .o_burger_menu_section > .dropdown-toggle > span {
-      @extend %-main-entries-size;
-    }
-
-    // ====== 'App menu' spefic design rules
-    .o_burger_menu_app {
-
-      // Reset inner components
-      .dropdown-menu, .dropdown-item, .dropdown-toggle {
-        padding: 0;
-        border: 0;
-        position: relative;
-        background-color: initial;
-
-        &:after {
-          display: none; // Remove inner dropdown caret
+    // ====== Menu content container (both App's and User's entries)
+    .o_burger_menu_content {
+        &.o_burger_menu_dark {
+            background-color: darken($-base-bg, 5%);
         }
-      }
 
-      .dropdown-item span, .dropdown-toggle {
-        @include o-hover-text-color(rgba($-base-color, .8), $-base-color);
-      }
+        // Menu entries size and layout
+        ul {
+            background-color: rgba(invert($-base-color), .1);
+            box-shadow: inset 0 -1px 0 rgba($-base-color, .1);
 
-      .o_dropdown_active > span {
-        box-shadow: inset 0 1px 0 rgba(invert($-base-color), .1);
-      }
+            li > div, li {
+                padding-left: $o-horizontal-padding;
+            }
 
-      .o_dropdown_active, .dropdown-menu {
-        background-color: rgba(invert($-base-color), .1);
-      }
+            // Handle menu text-indentation
+            li {
+                ul > li {
+                    &, > div {
+                        text-indent: 2em;
+                    }
+                    ul > li {
+                        &, > div {
+                            text-indent: 3em;
+                        }
+                    }
+                }
+            }
+        }
 
-      .dropdown-menu {
-        box-shadow: inset 0 -1px 0 rgba($-base-color, .1);
-      }
+        li, button {
+            @include o-hover-text-color(rgba($-base-color, .8), $-base-color);
+        }
+
+        // ====== 'User Menu' spefic design rules
+        .o_user_menu_mobile .dropdown-divider {
+            margin-left: $dropdown-item-padding-x;
+            margin-right: $dropdown-item-padding-x;
+        }
     }
-
-    // ====== 'User Menu' spefic design rules
-    .o_user_menu_mobile .dropdown-divider {
-      margin-left: $dropdown-item-padding-x;
-      margin-right: $dropdown-item-padding-x;
-    }
-  }
 }
-
-// Burger background
-.o_burger_menu_backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: $zindex-modal-backdrop;
-  width: 100vw;
-  height: 100vh;
-  background-color: $modal-backdrop-bg;
-  opacity: $modal-backdrop-opacity;
-}
-
 
 //------------------------------------------------------------------------------
 // Design rules not scoped within the main component
 //------------------------------------------------------------------------------
 
-.o_web_client .o_main_navbar {
-  .o_mobile_menu_toggle {
-    @extend %-main-navbar-entry-base;
-    @extend %-main-navbar-entry-spacing;
-  }
-}
-
-// Apps Switcher adjustments
-body.o_home_menu_background .o_burger_menu_topbar .dropdown-toggle {
-  background: $o-view-background-color;
-  color: $o-main-headings-color;
-}
-
 @include media-breakpoint-down(md) {
-  .o_debug_dropdown {
-    z-index: $zindex-tooltip + 10;
-  }
+    .o_debug_dropdown {
+        z-index: $zindex-tooltip + 10;
+    }
 }
