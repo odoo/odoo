@@ -334,9 +334,9 @@ registerModel({
          */
         _onChangeRingingThreads() {
             if (this.ringingThreads && this.ringingThreads.length > 0) {
-                this.soundEffects.incomingCall.play({ loop: true });
+                this.audioRegistry.incomingCall.play({ loop: true });
             } else {
-                this.soundEffects.incomingCall.stop();
+                this.audioRegistry.incomingCall.stop();
             }
         },
     },
@@ -357,6 +357,11 @@ registerModel({
          */
         allCurrentClientThreads: many('Thread', {
             inverse: 'messagingAsAllCurrentClientThreads',
+        }),
+        audioRegistry: one('AudioRegistry', {
+            default: {},
+            isCausal: true,
+            readonly: true,
         }),
         browser: attr({
             compute: '_computeBrowser',
@@ -504,11 +509,6 @@ registerModel({
         callInviteRequestPopups: many('CallInviteRequestPopup', {
             compute: '_computeCallInviteRequestPopups',
             isCausal: true,
-        }),
-        soundEffects: one('SoundEffects', {
-            default: {},
-            isCausal: true,
-            readonly: true,
         }),
         starred: one('Mailbox', {
             default: {},

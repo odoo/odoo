@@ -11,7 +11,9 @@ registerModel({
             if (window.Audio === undefined) {
                 return;
             }
-            this.update({ audio: new window.Audio() });
+            try {
+                this.update({ audio: new window.Audio() });
+            } catch (_err) {}
         },
         _willDelete() {
             if (this.audio) {
