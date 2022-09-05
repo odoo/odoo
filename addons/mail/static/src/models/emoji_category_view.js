@@ -10,9 +10,16 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick() {
-            this.update({ emojiCategoryBarViewOwnerAsActiveByUser: this.emojiCategoryBarViewOwner });
             this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBarView.reset();
-            this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.calculateDimensions();
+            let categoryRowScrollPosition = this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.rowHeight * this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiCategoryRowIndexes.get(this.emojiCategory)[0]; //Index of the beginning of the category
+            categoryRowScrollPosition -= this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.topBufferAmount * this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.rowHeight; //Cancels the amount of buffer rows
+            if (categoryRowScrollPosition < 0) {
+                categoryRowScrollPosition = 0;
+            }
+            this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.containerRef.el.scrollTo(0, categoryRowScrollPosition);
+        },
+        setAsActiveCategory() {
+            this.update({ emojiCategoryBarViewOwnerAsActiveByUser: this.emojiCategoryBarViewOwner });
         },
         /**
          * @param {MouseEvent} ev

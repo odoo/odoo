@@ -11,17 +11,22 @@ registerModel({
         computeNonSearchRows() {
             const value = [];
             let index = 0;
+            let indexBeginCategory = 0;
+            let indexEndCategory = 0;
             for (let category of this.messaging.emojiRegistry.allCategories) {
+                indexBeginCategory = index;
                 value.push({ category, index });
                 index++;
                 let currentItems = [];
                 for (let emojiInCategory of category.allEmojiInCategoryOfCurrent) {
                     currentItems.push({ emojiOrEmojiInCategory: { emojiInCategory } });
                     if (currentItems.length === this.emojiGridViewOwner.amountOfItemsPerRow) {
-                        index++;
                         value.push({ items: currentItems, index });
                         currentItems = [];
+                        index++;
                     }
+                indexEndCategory = index;
+                this.emojiGridViewOwner.emojiPickerViewOwner.emojiCategoryRowIndexes.set(category, [indexBeginCategory, indexEndCategory - 1]); //Sets the beginning index and the ending index of a category
                 }
             }
             return value;

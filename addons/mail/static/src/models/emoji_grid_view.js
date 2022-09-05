@@ -174,6 +174,21 @@ registerModel({
             inverse: 'emojiGridViewOwnerAsSearch',
             isCausal: true,
         }),
+        setActiveCategoryView: attr({
+            compute() {
+                this.scrollRecomputeCount; // observe scroll changes
+                for (const category of this.emojiPickerViewOwner.emojiCategoryRowIndexes.keys()) {
+                    const row = this.firstRenderedRowIndex + this.topBufferAmount;
+                    if (row >= this.emojiPickerViewOwner.emojiCategoryRowIndexes.get(category)[0] && row <= this.emojiPickerViewOwner.emojiCategoryRowIndexes.get(category)[1]) {
+                        category.emojiCategoryViews.forEach((emojiCategoryView) => {
+                            emojiCategoryView.setAsActiveCategory();
+                        });
+                        break;
+                    }
+                }
+            },
+            default: null,
+        }),
         topBufferAmount: attr({
             default: 2,
         }),

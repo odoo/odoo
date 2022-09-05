@@ -6,6 +6,7 @@ import { attr, one } from '@mail/model/model_field';
 registerModel({
     name: 'EmojiPickerView',
     fields: {
+        component: attr(),
         emojiCategoryBarView: one('EmojiCategoryBarView', {
             default: {},
             inverse: 'emojiPickerViewOwner',
@@ -20,6 +21,9 @@ registerModel({
             required: true,
             isCausal: true,
         }),
+        emojiCategoryRowIndexes: attr({
+            default: new Map(),
+        }),
         emojiSearchBarView: one('EmojiSearchBarView', {
             default: {},
             inverse: 'emojiPickerView',
@@ -30,6 +34,5 @@ registerModel({
             identifying: true,
             inverse: 'emojiPickerView',
         }),
-        component: attr(),
     },
 });
