@@ -274,15 +274,19 @@ class AccountMove(models.Model):
         for rec in self.filtered(
                 lambda x: x.name and x.name != '/' and x.is_purchase_document() and x.l10n_latam_use_documents
                             and x.commercial_partner_id):
-            domain = [
-                ('move_type', '=', rec.move_type),
-                # by validating name we validate l10n_latam_document_type_id
-                ('name', '=', rec.name),
-                ('company_id', '=', rec.company_id.id),
-                ('id', '!=', rec.id),
-                ('commercial_partner_id', '=', rec.commercial_partner_id.id),
-                # allow to have to equal if they are cancelled
-                ('state', '!=', 'cancel'),
-            ]
+            domain = rec._get_domain_unique_vendor_number()
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
+
+    def _get_domain_unique_vendor_number(self):
+        self.ensure_one()
+        return [
+            ('move_type', '=', self.move_type),
+            # by validating name we validate l10n_latam_document_type_id
+            ('name', '=', self.name),
+            ('company_id', '=', self.company_id.id),
+            ('id', '!=', self.id),
+            ('commercial_partner_id', '=', self.commercial_partner_id.id),
+            # allow to have to equal if they are cancelled
+            ('state', '!=', 'cancel'),
+        ]
