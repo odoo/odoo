@@ -6,6 +6,7 @@
         margin-left: 0 !important;
     }
     .o_rating_label {
+        opacity: 0.5;
         &:hover {
             transform: scale(1.1);
         }
@@ -18,9 +19,8 @@
     }
 
     .btn-check:checked + .o_rating_label {
-        filter: drop-shadow(0 0 10px rgba(0,0,0,0.25));
-        -webkit-filter: drop-shadow(0 0 10px rgba(0,0,0,0.25));
-        transform: scale(1.1);
+        transform: scale(1.2);
+        opacity: 1;
         img {
             &.bg-white:hover,
             &.bg-white:focus {
