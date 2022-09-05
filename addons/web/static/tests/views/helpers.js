@@ -20,6 +20,9 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { createDebugContext } from "@web/core/debug/debug_context";
 
+import { mapLegacyEnvToWowlEnv } from "@web/legacy/utils";
+import makeTestEnvironment from "web.test_env";
+
 const serviceRegistry = registry.category("services");
 
 /**
@@ -107,4 +110,23 @@ export function setupViewRegistries() {
     serviceRegistry.add("dialog", dialogService), { force: true };
     serviceRegistry.add("popover", popoverService), { force: true };
     serviceRegistry.add("company", fakeCompanyService);
+}
+
+/**
+ * This helper sets the legacy env and mounts a MainComponentsContainer
+ * to allow legacy code to use wowl FormViewDialogs.
+ *
+ * TODO: remove this when there's no legacy code using the wowl FormViewDialog.
+ *
+ * @param {Object} serverData
+ * @param {Function} [mockRPC]
+ * @returns {Promise}
+ */
+export async function prepareWowlFormViewDialogs(serverData, mockRPC) {
+    setupViewRegistries();
+    const wowlEnv = await makeTestEnv({ serverData, mockRPC });
+    const legacyEnv = makeTestEnvironment();
+    mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
+    owl.Component.env = legacyEnv;
+    await mount(MainComponentsContainer, getFixture(), { env: wowlEnv });
 }
