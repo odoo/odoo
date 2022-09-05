@@ -359,10 +359,12 @@ var BasicActivity = AbstractField.extend({
                     if ($(el).data('bs.collapse')) {
                         $(el).empty().collapse('dispose').removeClass('show');
                     }
+                    $(el).data('bs.collapse', false);
                 });
 
                 // Scroll  to selected activity
                 $markDoneBtn.parents('.o_activity_log_container').scrollTo($actLi.position().top, 100);
+                $panel.data('bs.collapse', true);
             }
 
             // Empty and reset panel on close
@@ -372,6 +374,7 @@ var BasicActivity = AbstractField.extend({
                     $panel.collapse('dispose');
                     $panel.empty();
                 }
+                $panel.data('bs.collapse', false);
             });
 
             this.$('.o_activity_selected').removeClass('o_activity_selected');
