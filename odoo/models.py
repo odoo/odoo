@@ -1792,7 +1792,9 @@ class BaseModel(metaclass=MetaModel):
             # you just called `get_views` for that model, so obviously the web client already knows the model.
             'model': self._name,
             # sudo is important to get all fields, including fields restricted to groups, in the cache.
-            'models': {model: frozendict(self.env[model].sudo().fields_get()) for model in models},
+            'models': {model: frozendict(self.env[model].sudo().fields_get(
+                attributes=self._get_view_field_attributes(),
+            )) for model in models},
         }
 
         return frozendict(result)
@@ -1826,6 +1828,22 @@ class BaseModel(metaclass=MetaModel):
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result
+
+    @api.model
+    def _get_view_field_attributes(self):
+        """ Returns the field attributes required by the web client to load the views.
+
+        The method is meant to be overridden by modules extending web client features and requiring additional
+        field attributes.
+
+        :return: string list of field attribute names
+        :rtype: list
+        """
+        return [
+            'context', 'currency_field', 'definition_record', 'digits', 'domain', 'group_operator', 'groups', 'help',
+            'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
+            'sortable', 'store', 'string', 'translate', 'trim', 'type',
+        ]
 
     @api.model
     def load_views(self, views, options=None):
