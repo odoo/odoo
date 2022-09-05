@@ -306,12 +306,12 @@ class Channel(models.Model):
         channel_info = self.channel_info()[0]  # must be computed before leaving the channel (access rights)
         member = self.env['mail.channel.member'].search([('channel_id', '=', self.id), ('partner_id', '=', partner.id)])
         member_id = member.id
+        notification = _('<div class="o_mail_notification">%(member)s left the channel</div>', member=member.partner_id.name or member.guest_id.name)
         member.unlink()
         # side effect of unsubscribe that wasn't taken into account because
         # channel_info is called before actually unpinning the channel
         channel_info['is_pinned'] = False
         self.env['bus.bus']._sendone(partner, 'mail.channel/leave', channel_info)
-        notification = _('<div class="o_mail_notification">left the channel</div>')
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         self.env['bus.bus']._sendone(self, 'mail.channel/insert', {
@@ -381,15 +381,26 @@ class Channel(models.Model):
                 if post_joined_message:
                     # notify existing members with a new message in the channel
                     if member.partner_id == self.env.user.partner_id:
-                        notification = _('<div class="o_mail_notification">joined the channel</div>')
+                        notification = _(
+                            '<div class="o_mail_notification">%(member)s joined the channel</div>',
+                            member=current_partner.name or current_guest.name,
+                        )
                     else:
                         notification = _(
-                            '<div class="o_mail_notification">invited %s to the channel</div>',
-                            member.partner_id._get_html_link(),
+                            '<div class="o_mail_notification">%(current_member)s invited %(other_members)s to the channel</div>',
+                            current_member=current_partner.name or current_guest.name,
+                            other_members=member.partner_id._get_html_link(),
                         )
                     member.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
             for member in new_members.filtered(lambda member: member.guest_id):
-                member.channel_id.message_post(body=_('<div class="o_mail_notification">joined the channel</div>'), message_type="notification", subtype_xmlid="mail.mt_comment")
+                member.channel_id.message_post(
+                    body=_(
+                        '<div class="o_mail_notification">%(member)s joined the channel</div>',
+                        member=member.partner_id.name or member.guest_id.name,
+                    ),
+                    message_type="notification",
+                    subtype_xmlid="mail.mt_comment"
+                )
                 guest = member.guest_id
                 if guest:
                     notifications.append((guest, 'mail.channel/joined', {
@@ -1051,7 +1062,12 @@ class Channel(models.Model):
         new_channel = self.create(vals)
         group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
         new_channel.group_public_id = group.id if group else None
-        notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', new_channel.id, new_channel.name)
+        notification = _(
+            '<div class="o_mail_notification">%(member)s created <a href="#" class="o_channel_redirect" data-oe-id="%(channel_id)s">#%(channel_name)s</a></div>',
+            member=self.env.user.partner_id.name,
+            channel_id=new_channel.id,
+            channel_name=new_channel.name,
+        )
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         channel_info = new_channel.channel_info()[0]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.channel/legacy_insert', channel_info)
