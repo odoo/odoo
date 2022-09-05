@@ -1255,5 +1255,6 @@ def load_language(cr, lang):
         l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     """
     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-    installer = env['base.language.install'].create({'lang_ids': [(6, 0, [env['res.lang'].search([('code', '=', lang)]).id])]})
+    lang_ids = env['res.lang'].with_context(active_test=False).search([('code', '=', lang)]).ids
+    installer = env['base.language.install'].create({'lang_ids': [(6, 0, lang_ids)]})
     installer.lang_install()
