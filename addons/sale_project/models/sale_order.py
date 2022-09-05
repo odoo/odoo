@@ -25,6 +25,9 @@ class SaleOrder(models.Model):
         for order in self:
             order.tasks_ids = self.env['project.task'].search(['&', ('display_project_id', '!=', 'False'), '|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
             order.tasks_count = len(order.tasks_ids)
+            order_line_project_ids = order.order_line.mapped('project_id')
+            if not order.project_id and order_line_project_ids and len(order_line_project_ids) == 1:
+                order.project_id = order_line_project_ids[0]
 
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
