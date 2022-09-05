@@ -3890,8 +3890,8 @@ var SnippetsMenu = Widget.extend({
 
         // Reload images inside grid items so that no image disappears when
         // activating mobile preview.
-        const gridItemEls = this.getEditableArea().find('div.o_grid_item');
-        for (const gridItemEl of gridItemEls) {
+        const $gridItemEls = this.getEditableArea().find('div.o_grid_item');
+        for (const gridItemEl of $gridItemEls) {
             gridUtils._reloadLazyImages(gridItemEl);
         }
         for (const invisibleOverrideEl of this.getEditableArea().find('.o_snippet_mobile_invisible, .o_snippet_desktop_invisible')) {
