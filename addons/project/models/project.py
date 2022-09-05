@@ -361,6 +361,7 @@ class Project(models.Model):
     allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
+    task_properties = fields.PropertiesDefinition('Task Properties')
 
     # Project Sharing fields
     collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False)
@@ -1122,7 +1123,7 @@ class Task(models.Model):
         help="Date on which the stage of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another.")
     project_id = fields.Many2one('project.project', string='Project', recursive=True,
-        compute='_compute_project_id', store=True, readonly=False,
+        compute='_compute_project_id', store=True, readonly=False, precompute=True,
         index=True, tracking=True, check_company=True, change_default=True)
     # Defines in which project the task will be displayed / taken into account in statistics.
     # Example: 1 task A with 1 subtask B in project P
@@ -1319,6 +1320,9 @@ class Task(models.Model):
             "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary.")
     is_analytic_account_id_changed = fields.Boolean('Is Analytic Account Manually Changed', compute='_compute_is_analytic_account_id_changed', store=True)
     project_analytic_account_id = fields.Many2one('account.analytic.account', string='Project Analytic Account', related='project_id.analytic_account_id')
+
+    # Properties
+    properties = fields.Properties('Properties', definition='project_id.task_properties', copy=True)
 
     @property
     def SELF_READABLE_FIELDS(self):
