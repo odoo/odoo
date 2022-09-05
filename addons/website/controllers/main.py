@@ -689,8 +689,9 @@ class Website(Home):
         if not request.website.google_search_console:
             logger.warning('Google Search Console not enable')
             raise werkzeug.exceptions.NotFound()
+        gsc = request.website.google_search_console
+        trusted = gsc[gsc.startswith('google') and len('google'):gsc.endswith('.html') and -len('.html') or None]
 
-        trusted = request.website.google_search_console.lstrip('google').rstrip('.html')
         if key != trusted:
             if key.startswith(trusted):
                 request.website.sudo().google_search_console = "google%s.html" % key
