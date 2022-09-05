@@ -2032,16 +2032,23 @@ class MailThread(models.AbstractModel):
         except ImportError:
             values['slug'] = lambda self: self.id
         view_ref = views_or_xmlid.id if isinstance(views_or_xmlid, models.BaseModel) else views_or_xmlid
+
+        messages_as_sudo = self.env['mail.message']
         for record in self:
             values['object'] = record
             rendered_template = self.env['ir.qweb']._render(view_ref, values, minimal_qcontext=True, raise_if_not_found=False)
             if not rendered_template:
                 continue
             if message_log:
-                return record._message_log(body=rendered_template, **kwargs)
+                messages_as_sudo += record._message_log(body=rendered_template, **kwargs)
             else:
                 kwargs['body'] = rendered_template
-                return record.message_post_with_template(False, **kwargs)
+                # a bit complicated to handle, to be improved soon in master
+                _mails_as_sudo, _messages_as_sudo = record.message_post_with_template(False, **kwargs)
+                if _messages_as_sudo:
+                    messages_as_sudo += _messages_as_sudo
+
+        return messages_as_sudo
 
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id """
