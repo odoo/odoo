@@ -1921,14 +1921,19 @@ class MailThread(models.AbstractModel):
             views = views_or_xmlid
         if not views:
             return
+
+        messages_as_sudo = self.env['mail.message']
         for record in self:
             values['object'] = record
             rendered_template = views._render(values, engine='ir.qweb', minimal_qcontext=True)
             if message_log:
-                return record._message_log(body=rendered_template, **kwargs)
+                messages_as_sudo += record._message_log(body=rendered_template, **kwargs)
             else:
                 kwargs['body'] = rendered_template
-                return record.message_post_with_template(False, **kwargs)
+                # ``Composer._action_send_mail`` returns None in 15.0, no message to return here
+                record.message_post_with_template(False, **kwargs)
+
+        return messages_as_sudo
 
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id """
