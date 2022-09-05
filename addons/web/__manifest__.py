@@ -234,7 +234,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/fields_extra.scss',
             'web/static/src/legacy/scss/form_view_extra.scss',
             'web/static/src/legacy/scss/list_view_extra.scss',
-            'web/static/src/legacy/scss/profiling_qweb_view.scss',
             'web/static/src/legacy/scss/color_picker.scss',
             'base/static/src/scss/res_partner.scss',
 
@@ -267,7 +266,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/py_utils.js',
             'web/static/src/legacy/js/core/context.js',
             'web/static/src/legacy/js/core/misc.js',
-            'web/static/src/legacy/js/core/profiling_qweb_view.js',
             'web/static/src/legacy/js/fields/*',
             'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/session.js',
