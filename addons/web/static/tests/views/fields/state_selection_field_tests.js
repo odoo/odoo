@@ -87,6 +87,11 @@ QUnit.module("Fields", (hooks) => {
             "should not have one green status since selection is the second, blocked state"
         );
         assert.containsNone(target, ".dropdown-menu", "there should not be a dropdown");
+        assert.strictEqual(
+            target.querySelector(".o_field_state_selection .dropdown-toggle").dataset.tooltip,
+            "Blocked",
+            "tooltip attribute has the right text"
+        );
 
         // Click on the status button to make the dropdown appear
         await click(target, ".o_field_widget.o_field_state_selection .o_status");
