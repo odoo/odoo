@@ -324,7 +324,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     def _find_sent_email(self, email_from, emails_to, subject=None):
         """ Find an outgoing email based on from / to and optional subject when
-        having conflicts.
+        having a conflict.
 
         :return sent_email: an outgoing email generated during the mock;
         """
