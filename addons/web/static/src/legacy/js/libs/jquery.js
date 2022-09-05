@@ -140,31 +140,6 @@ $.fn.extend({
         return $el;
     },
     /**
-     * Adapt the given css property by adding the size of a scrollbar if any.
-     * Limitation: only works if the given css property is not already used as
-     * inline style for another reason.
-     *
-     * @param {boolean} [add=true]
-     * @param {boolean} [isScrollElement=true]
-     * @param {string} [cssProperty='padding-right']
-     */
-    compensateScrollbar(add = true, isScrollElement = true, cssProperty = 'padding-right') {
-        for (const el of this) {
-            // Compensate scrollbar
-            el.style.removeProperty(cssProperty);
-            if (!add) {
-                return;
-            }
-            const scrollableEl = isScrollElement ? el : $(el).parent().closestScrollable()[0];
-            const style = window.getComputedStyle(el);
-            const borderLeftWidth = parseInt(style.borderLeftWidth.replace('px', ''));
-            const borderRightWidth = parseInt(style.borderRightWidth.replace('px', ''));
-            const bordersWidth = borderLeftWidth + borderRightWidth;
-            const newValue = parseInt(style[cssProperty]) + scrollableEl.offsetWidth - scrollableEl.clientWidth - bordersWidth;
-            el.style.setProperty(cssProperty, `${newValue}px`, 'important');
-        }
-    },
-    /**
      * @returns {jQuery}
      */
     getScrollingElement(document = window.document) {
