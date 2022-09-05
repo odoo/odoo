@@ -119,18 +119,21 @@ export function useModel(ModelClass, params, options = {}) {
     async function load(props) {
         const searchParams = getSearchParams(props);
         await model.load(searchParams);
-        if (useSampleModel && !model.hasData()) {
-            sampleORM =
-                sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
-            sampleORM.setGroups(model.getGroups());
-            // Load data with sampleORM then restore real ORM.
-            model.orm = sampleORM;
-            await model.load(searchParams);
-            model.orm = orm;
-        } else {
-            useSampleModel = false;
+        if (!options.ignoreUseSampleModel) {
+            if (useSampleModel && !model.hasData()) {
+                sampleORM =
+                    sampleORM ||
+                    buildSampleORM(component.props.resModel, component.props.fields, user);
+                sampleORM.setGroups(model.getGroups());
+                // Load data with sampleORM then restore real ORM.
+                model.orm = sampleORM;
+                await model.load(searchParams);
+                model.orm = orm;
+            } else {
+                useSampleModel = false;
+                model.useSampleModel = useSampleModel;
+            }
         }
-        model.useSampleModel = useSampleModel;
         if (started) {
             model.notify();
         }
