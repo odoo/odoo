@@ -42,6 +42,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         border-bottom: 1px solid map-get($grays, '300');
         background-color: $o-brand-odoo;
         padding: 8px;
+        cursor: pointer;
 
         @include media-breakpoint-down(md) {
             align-items: center;
@@ -81,9 +82,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         }
 
         .o_thread_window_title {
-            cursor: pointer;
             flex: 1 1 auto;
-            height: 100%;
             @include o-text-overflow;
 
             .o_mail_thread_typing_icon {

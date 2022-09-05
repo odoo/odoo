@@ -59,9 +59,10 @@ registerModel({
                 $(this).on('click', self.messaging.publicLivechatGlobal.livechatButtonView.widget._onChatbotOptionClicked.bind(self.messaging.publicLivechatGlobal.livechatButtonView.widget));
             });
 
-            this.widget.$('.o_livechat_chatbot_main_restart').on('click',
-                this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript
-            );
+            this.widget.$('.o_livechat_chatbot_main_restart').on('click', (ev) => {
+                ev.stopPropagation(); // prevent fold behaviour
+                this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript(ev);
+            });
 
             if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
                 const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
