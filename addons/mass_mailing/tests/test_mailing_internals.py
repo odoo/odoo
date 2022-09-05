@@ -12,12 +12,13 @@ from psycopg2 import IntegrityError
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.exceptions import ValidationError
-from odoo.tests.common import users, Form
+from odoo.tests.common import users, Form, tagged
 from odoo.tools import mute_logger
-
 
 BASE_64_STRING = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
 
+
+@tagged('mass_mailing')
 class TestMassMailValues(MassMailCommon):
 
     @classmethod
@@ -281,6 +282,7 @@ class TestMassMailValues(MassMailCommon):
             activity.flush()
 
 
+@tagged('mass_mailing')
 class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 
     @classmethod
