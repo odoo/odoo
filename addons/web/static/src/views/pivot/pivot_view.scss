@@ -8,19 +8,10 @@
         @include o-hover-text-color($body-color, $o-main-link-color);
     }
 
-    // This can be removed after the migration to BS5.
-    th,
-    td {
-        border-width: $border-width;
-    }
-
     .o_pivot_measure_row,
     .o_pivot_origin_row,
     .o_pivot_header_cell_closed,
     .o_pivot_header_cell_opened {
-        // "user-select-none" class doesn't exist in BS 4.3.1, the user-select property
-        // could be replaced by a class after the migration to BS5
-        user-select: none;
         @include o-hover-text-color($body-color, $headings-color);
 
         &:hover {

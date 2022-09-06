@@ -54,7 +54,7 @@
 
     <t t-name="web.PivotHeader" owl="1">
         <th
-            class="text-nowrap cursor-pointer fw-normal bg-100"
+            class="text-nowrap cursor-pointer fw-normal bg-100 user-select-none"
             t-att-colspan="isXAxis ? cell.width : undefined"
             t-att-rowspan="isXAxis ? cell.height : undefined"
             t-att-class="{
@@ -91,8 +91,8 @@
 
     <t t-name="web.PivotMeasure" owl="1">
         <th class="text-muted text-center text-nowrap fw-normal bg-100" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
-                'o_pivot_origin_row cursor-pointer': cell.originIndexes,
-                'o_pivot_measure_row cursor-pointer': !cell.originIndexes,
+                'o_pivot_origin_row cursor-pointer user-select-none': cell.originIndexes,
+                'o_pivot_measure_row cursor-pointer user-select-none': !cell.originIndexes,
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
             }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
