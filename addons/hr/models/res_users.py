@@ -140,8 +140,8 @@ class User(models.Model):
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
 
-    create_employee = fields.Boolean(store=False, default=True, string="Technical field, whether to create an employee")
-    create_employee_id = fields.Many2one('hr.employee', store=False, string="Technical field, bind user to this employee on create")
+    create_employee = fields.Boolean(store=False, default=True, copy=False, string="Technical field, whether to create an employee")
+    create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")
 
     can_edit = fields.Boolean(compute='_compute_can_edit')
     is_system = fields.Boolean(compute="_compute_is_system")

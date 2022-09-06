@@ -119,3 +119,43 @@ class TestHrEmployee(TestHrCommon):
         self.assertTrue(emp_sub_sub.member_of_department)
         self.assertFalse(emp_other.member_of_department)
         self.assertFalse(emp_parent.member_of_department)
+
+    def test_employee_create_from_user(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Test User 3 - employee'
+        })
+        user_1, user_2, user_3 = self.env['res.users'].create([
+            {
+                'name': 'Test User',
+                'login': 'test_user',
+                'email': 'test_user@odoo.com',
+            },
+            {
+                'name': 'Test User 2',
+                'login': 'test_user_2',
+                'email': 'test_user_2@odoo.com',
+                'create_employee': True,
+            },
+            {
+                'name': 'Test User 3',
+                'login': 'test_user_3',
+                'email': 'test_user_3@odoo.com',
+                'create_employee_id': employee.id,
+            },
+        ])
+        # Test that creating an user does not create an employee by default
+        self.assertFalse(user_1.employee_id)
+        # Test that setting create_employee does create the associated employee
+        self.assertTrue(user_2.employee_id)
+        # Test that creating an user with a given employee associates the employee correctly
+        self.assertEqual(user_3.employee_id, employee)
+
+    def test_employee_create_from_signup(self):
+        # Test that an employee is not created when signin up on the website
+        self.env['res.users'].signup({
+            'name': 'Test User',
+            'login': 'test_user',
+            'email': 'test_user@odoo.com',
+            'password': 'test_user_password',
+        })
+        self.assertFalse(self.env['res.users'].search([('login', '=', 'test_user')]).employee_id)
