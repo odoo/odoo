@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='action_draft']" position="after">
                 <field name="amount_available_for_refund" invisible="1"/>
-                <button type="object"
-                    name="action_refund_wizard"
+                <button name="action_refund_wizard"
+                    type="object"
                     string="Refund"
                     groups="account.group_account_invoice"
                     attrs="{'invisible': [('amount_available_for_refund', '&lt;=', 0)]}"

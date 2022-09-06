@@ -14,11 +14,6 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_invoices" type="object"
-                                class="oe_stat_button" icon="fa-money"
-                                attrs="{'invisible': [('invoices_count', '=', 0)]}">
-                            <field name="invoices_count" widget="statinfo" string="Invoice(s)"/>
-                        </button>
                         <button name="action_view_refunds"
                                 type="object"
                                 class="oe_stat_button"
@@ -30,7 +25,6 @@
                     <group>
                         <group name="transaction_details">
                             <field name="reference"/>
-                            <field name="payment_id"/>
                             <field name="source_transaction_id"
                                    attrs="{'invisible': [('source_transaction_id', '=', False)]}"/>
                             <field name="amount"/>
@@ -154,11 +148,5 @@
         <field name="domain">[('token_id','=', active_id)]</field>
         <field name="context">{'create': False}</field>
     </record>
-
-    <menuitem action="action_payment_transaction"
-              id="payment_transaction_menu"
-              parent="account.root_payment_menu"
-              groups="base.group_no_one"
-              sequence="20"/>
 
 </odoo>

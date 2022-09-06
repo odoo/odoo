@@ -36,9 +36,3 @@ class PaymentAcquirer(models.Model):
     def _check_acquirer_state(self):
         if self.filtered(lambda a: a.provider == 'demo' and a.state not in ('test', 'disabled')):
             raise UserError(_("Demo acquirers should never be enabled."))
-
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'demo':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_demo.payment_method_demo').id

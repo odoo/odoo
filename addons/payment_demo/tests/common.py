@@ -6,8 +6,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class PaymentDemoCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.acquirer = cls._prepare_acquirer(provider='demo')
 

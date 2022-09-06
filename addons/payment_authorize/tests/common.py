@@ -6,8 +6,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class AuthorizeCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.authorize = cls._prepare_acquirer('authorize', update_values={
             'authorize_login': 'dummy',

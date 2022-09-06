@@ -69,12 +69,6 @@ class PaymentAcquirer(models.Model):
             ])
         return md5(data_string.encode('utf-8')).hexdigest()
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'payulatam':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_payulatam.payment_method_payulatam').id
-
     def _neutralize(self):
         super()._neutralize()
         self._neutralize_fields('payulatam', [
