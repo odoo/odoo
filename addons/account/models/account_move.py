@@ -1438,6 +1438,7 @@ class AccountMove(models.Model):
                 self.invoice_line_ids += self.env['account.move.line'].new(copied_vals)
 
             self.currency_id = self.invoice_vendor_bill_id.currency_id
+            self._onchange_currency()
             self.fiscal_position_id = self.invoice_vendor_bill_id.fiscal_position_id
 
             # Reset
