@@ -64,8 +64,11 @@
             </t>
             <div
                 t-elif="props.type === 'many2one'"
-                class="d-flex flex-row">
+                t-attf-class="d-flex flex-row align-items-center o_field_property_many2one_value {{showAvatar ? 'avatar' : ''}}">
                 <t t-if="props.comodel">
+                    <img t-if="showAvatar &amp;&amp; propertyValue[0]"
+                        t-attf-src="/web/image/{{props.comodel}}/{{propertyValue[0]}}/avatar_128"
+                        class="rounded-circle me-1"/>
                     <a
                         t-if="props.readonly"
                         class="o_form_uri"
@@ -99,7 +102,9 @@
                 </t>
             </div>
             <t t-elif="props.type === 'many2many'">
-                <div t-if="props.comodel" class="o_field_property_many2many_value">
+                <div t-if="props.comodel" class="o_field_property_many2many_value py-1 d-flex flex-row pt-2 w-100"
+                    t-attf-class="o_field_widget o_field_many2manytags o_input {{showAvatar ? 'avatar' : ''}}">
+                    <!-- Copy many2many tags style without duplicating all CSS -->
                     <TagsList tags="propertyValue"/>
                     <Many2XAutocomplete
                         t-if="!props.readonly"
