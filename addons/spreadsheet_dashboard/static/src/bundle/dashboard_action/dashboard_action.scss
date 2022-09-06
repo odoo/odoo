@@ -1,0 +1,40 @@
+.o_spreadsheet_dashboard_search_panel ul {
+    padding-inline-start: 0px
+}
+.o_spreadsheet_dashboard_search_panel li {
+    padding: 4px 8px 4px 16px;
+    list-style-type: none;
+    &:hover:not(.active) {
+        background-color: $o-gray-100;
+    }
+}
+.o_spreadsheet_dashboard_action {
+    .o_renderer {
+        height: 100%;
+        margin: auto;
+        .o-spreadsheet {
+            height: 100%;
+        }
+    }
+
+    .o_side_panel_filter_icon {
+        padding: 0;
+    }
+
+    .dashboard-loading-status {
+        margin: auto;
+    }
+
+    .o_cp_top_right {
+        display: flex;
+        justify-content: flex-end;
+
+        .o_field_many2manytags, .date_filter_values {
+            margin-left: 3px;
+            margin-right: 3px;
+            display: flex;
+            gap: 3px;
+            align-items: baseline;
+        }
+    }
+}

@@ -111,6 +111,7 @@ export function getBasicListArchs() {
     return {
         "partner,false,list": getBasicListArch(),
         "partner,false,search": /* xml */ `<search/>`,
+        "partner,false,form": /* xml */ `<form/>`,
     };
 }
 

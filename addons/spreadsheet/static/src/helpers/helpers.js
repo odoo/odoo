@@ -4,6 +4,7 @@ import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
 import { DataSources } from "../data_sources/data_sources";
 import { serializeDate } from "@web/core/l10n/dates";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
+import { loadJS } from "@web/core/assets";
 
 const { DateTime } = luxon;
 
@@ -175,4 +176,14 @@ export function isEmpty(item) {
         }
     }
     return false;
+}
+
+/**
+ * Load external libraries required for o-spreadsheet
+ * @returns {Promise<void>}
+ */
+export async function loadSpreadsheetDependencies() {
+    await loadJS("/web/static/lib/Chart/Chart.js");
+    // chartjs-gauge should only be loaded when Chart.js is fully loaded !
+    await loadJS("/spreadsheet/static/lib/chartjs-gauge/chartjs-gauge.js");
 }
