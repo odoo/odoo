@@ -22,6 +22,7 @@
             <t t-else="">
                 <HtmlFieldWysiwygAdapterComponent Component="this.Wysiwyg"
                     startWysiwyg.bind="this.startWysiwyg"
+                    editingValue="this.currentEditingValue"
                     widgetArgs="[this.wysiwygOptions]" />
             </t>
             <t t-if="props.isTranslatable">

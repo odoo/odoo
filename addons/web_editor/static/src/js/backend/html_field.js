@@ -45,16 +45,16 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     }
 
     updateWidget(newProps) {
-        // When updating the value from the editable, there is no need to reset
-        // the editor as the content is the same. Changing it would cause
-        // unnecessary mutations and remove the selection.
-        if (this.widget.softUpdate) {
-            this.widget.softUpdate = false;
-            return;
+        const newValue = String(newProps.widgetArgs[0].value || '');
+        const newCollaborationChannel = newProps.widgetArgs[0].collaborationChannel;
+
+        if ((newValue !== newProps.editingValue && this._lastValue !== newValue) || this._lastCollaborationChannel !== newCollaborationChannel) {
+            this.widget.resetEditor(newValue, {
+                collaborationChannel: newCollaborationChannel,
+            });
+            this._lastValue = newValue;
+            this._lastCollaborationChannel = newCollaborationChannel;
         }
-        this.widget.resetEditor(newProps.widgetArgs[0].value, {
-            collaborationChannel: newProps.widgetArgs[0].collaborationChannel
-        });
     }
     renderWidget() {}
 }
@@ -76,7 +76,7 @@ export class HtmlField extends Component {
         });
 
         useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
-        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", () => this.commitChanges());
+        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({detail}) => detail.proms.push(this.commitChanges()));
 
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
 
@@ -190,10 +190,8 @@ export class HtmlField extends Component {
             if (this.props.setDirty) {
                 this.props.setDirty(true);
             }
-            if (this.wysiwyg) {
-                this.wysiwyg.softUpdate = true;
-            }
-            return this.props.update(value);
+            this.currentEditingValue = value;
+            this.props.update(value);
         }
     }
     async startWysiwyg(wysiwyg) {
