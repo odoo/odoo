@@ -12,6 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { reposition } from '@web/core/position_hook';
 
 const { Component, useRef, useState, useEffect, onWillStart, onWillUpdateProps } = owl;
 
@@ -55,7 +56,7 @@ export class PropertiesField extends Component {
                     `.o_property_field[property-name="${lastPropertyName}"] .o_field_property_open_popover`
                 );
                 const lastLabel = labels[labels.length - 1];
-                lastLabel.click();
+                this._openPropertyDefinition(lastLabel, lastPropertyName, true);
             }
         });
     }
@@ -140,7 +141,7 @@ export class PropertiesField extends Component {
                 direction === "down"
                     ? _lt("This field is already last")
                     : _lt("This field is already first"),
-                { type: "warning" }
+                { type: "warning" },
             );
             return;
         }
@@ -169,12 +170,14 @@ export class PropertiesField extends Component {
     }
 
     /**
-     * Open the popover with the property definition.
+     * Check if the definition is not already opened
+     * and if it's not the case, open the popover with the property definition.
      *
      * @param {event} event
      * @param {string} propertyName
+     * @param {boolean} isNewlyCreated
      */
-    onPropertyEdit(event, propertyName) {
+    onPropertyEdit(event, propertyName, isNewlyCreated) {
         if (event.target.classList.contains("disabled")) {
             event.stopPropagation();
             event.preventDefault();
@@ -184,31 +187,7 @@ export class PropertiesField extends Component {
         }
 
         event.target.classList.add("disabled");
-
-        this.popoverCloseFn = this.popover.add(
-            event.currentTarget,
-            PropertyDefinition,
-            {
-                readonly: this.props.readonly || !this.state.canChangeDefinition,
-                canChangeDefinition: this.state.canChangeDefinition,
-                propertyDefinition: this.propertiesList.find(
-                    (property) => property.name === propertyName
-                ),
-                context: this.context,
-                onChange: this.onPropertyDefinitionChange.bind(this),
-                onDelete: () => this.onPropertyDelete(propertyName),
-                onPropertyMove: (direction) => this.onPropertyMove(propertyName, direction),
-            },
-            {
-                preventClose: this.checkPopoverClose,
-                popoverClass: "o_property_field_popover",
-                position: "top",
-                onClose: () => {
-                    this.state.movedPropertyName = null;
-                    event.target.classList.remove("disabled");
-                },
-            }
-        );
+        this._openPropertyDefinition(event.target, propertyName, isNewlyCreated = false);
     }
 
     /**
@@ -244,6 +223,7 @@ export class PropertiesField extends Component {
                 this.parentName,
                 this.parentString
             ),
+            confirmLabel: _lt("Delete"),
             confirm: () => {
                 if (this.popoverCloseFn) {
                     this.popoverCloseFn();
@@ -330,14 +310,14 @@ export class PropertiesField extends Component {
             .querySelector(".o_field_property_definition")
             .closest(".o_popover");
         const targetElement = document.querySelector(
-            `.o_property_field[property-name="${propertyName}"]`
+            `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
         );
-        const targetPosition = targetElement.getBoundingClientRect();
-        const popoverPosition = popover.getBoundingClientRect();
 
-        popover.style.top = targetPosition.top - popoverPosition.height - 10 + "px";
-        popover.style.left = targetPosition.left + "px";
-        popover.style.position = "absolute";
+        reposition(
+            targetElement,
+            popover,
+            { position: "top", margin: 10 },
+        );
     }
 
     /**
@@ -409,6 +389,63 @@ export class PropertiesField extends Component {
             this.initialValues[newName] = initialValues;
             propertyDefinition.name = newName;
         }
+    }
+
+    /**
+     * Open the popover with the property definition.
+     *
+     * @param {DomElement} target
+     * @param {string} propertyName
+     * @param {boolean} isNewlyCreated
+     */
+    _openPropertyDefinition(target, propertyName, isNewlyCreated = false) {
+        const propertiesList = this.propertiesList;
+        const propertyIndex = propertiesList.findIndex(
+            (property) => property.name === propertyName
+        );
+
+        // maybe the property has been renamed because the type / model
+        // changed, retrieve the new one
+        const currentName = (propertyName) => {
+            const propertiesList = this.propertiesList;
+            for (const [newName, initialValue] of Object.entries(this.initialValues)) {
+                if (initialValue.name === propertyName) {
+                    const prop = propertiesList.find((prop) => prop.name === newName);
+                    if (prop) {
+                        return newName;
+                    }
+                }
+            }
+            return propertyName;
+        };
+
+        this.popoverCloseFn = this.popover.add(
+            target,
+            PropertyDefinition,
+            {
+                readonly: this.props.readonly || !this.state.canChangeDefinition,
+                canChangeDefinition: this.state.canChangeDefinition,
+                propertyDefinition: this.propertiesList.find(
+                    (property) => property.name === currentName(propertyName)
+                ),
+                context: this.context,
+                onChange: this.onPropertyDefinitionChange.bind(this),
+                onDelete: () => this.onPropertyDelete(currentName(propertyName)),
+                onPropertyMove: (direction) => this.onPropertyMove(currentName(propertyName), direction),
+                isNewlyCreated: isNewlyCreated,
+                propertyIndex: propertyIndex,
+                propertiesSize: propertiesList.length,
+            },
+            {
+                preventClose: this.checkPopoverClose,
+                popoverClass: "o_property_field_popover",
+                position: "top",
+                onClose: () => {
+                    this.state.movedPropertyName = null;
+                    target.classList.remove("disabled");
+                },
+            },
+        );
     }
 }
 
