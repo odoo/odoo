@@ -15,6 +15,16 @@ class TestUnbuild(TestMrpCommon):
             'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]
         })
 
+    def confirm_unbuild(self, unbuild_order, done_if_greater_then_produced=False):
+        """"This methid confrim unbuild
+        If MO is linked and unbuild qty is more then produced so it's handel confirmation wizard.
+        if done_if_greater_then_produced value is true then it's process unbuild with qty more then produced
+        """
+        res_dict = unbuild_order.action_unbuild()
+        if isinstance(res_dict, dict) and done_if_greater_then_produced:
+            greater_then_produced = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+            greater_then_produced.action_done()
+
     def test_unbuild_standart(self):
         """ This test creates a MO and then creates 3 unbuild
         orders for the final product. None of the products for this
@@ -230,9 +240,7 @@ class TestUnbuild(TestMrpCommon):
         x.bom_id = bom
         x.mo_id = mo
         x.product_qty = 5
-        res_dict = x.save().action_unbuild()
-        greater_then_produced = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        greater_then_produced.action_done()
+        self.confirm_unbuild(x.save(), True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, allow_negative=True), -5, 'You should have negative quantity for final product in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, lot_id=lot), 120, 'You should have 80 products in stock')
@@ -336,7 +344,7 @@ class TestUnbuild(TestMrpCommon):
         x.bom_id = bom
         x.mo_id = mo
         x.product_qty = 5
-        x.save().action_unbuild()
+        self.confirm_unbuild(x.save(), True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final, allow_negative=True), -5, 'You should have negative quantity for final product in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, lot_id=lot_1), 120, 'You should have 80 products in stock')
