@@ -9509,32 +9509,11 @@ QUnit.module("Views", (hooks) => {
         widgetRegistry.remove("test_widget");
     });
 
-    QUnit.test("attach document widget calls action with attachment ids", async function (assert) {
-        assert.expect(1);
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            mockRPC(route, args) {
-                if (args.method === "my_action") {
-                    assert.deepEqual(args.kwargs.attachment_ids, [5, 2]);
-                    return true;
-                }
-            },
-            arch: `<form><widget name="attach_document" action="my_action"/></form>`,
+    QUnit.test("support header button as widgets on form statusbar", async function (assert) {
+        serviceRegistry.add("http", {
+            start: () => ({}),
         });
 
-        var onFileLoadedEventName = target.querySelector(".o_form_binary_form").target;
-        // trigger _onFileLoaded function
-        // TODO wowl remove line below when implem don't require jquery
-        $(window).trigger(onFileLoadedEventName, [{ id: 5 }, { id: 2 }]);
-        // await triggerEvent(window, null, onFileLoadedEventName, {
-        //     attachment_ids: [{ id: 5 }, { id: 2 }],
-        // });
-    });
-
-    QUnit.test("support header button as widgets on form statusbar", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
