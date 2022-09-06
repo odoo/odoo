@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from base64 import b64encode
+from hashlib import sha512
 import pytz
 import uuid
 
@@ -46,6 +48,9 @@ class MailGuest(models.Model):
         for guest in self:
             guest.im_status = res.get(guest.id, 'offline')
 
+    def _get_avatar_cache_key(self):
+        return sha512(self.avatar_128).hexdigest()
+
     def _get_guest_from_context(self):
         """Returns the current guest record from the context, if applicable."""
         guest = self.env.context.get('guest')
@@ -72,6 +77,16 @@ class MailGuest(models.Model):
     def _get_timezone_from_request(self, request):
         timezone = request.httprequest.cookies.get('tz')
         return timezone if timezone in pytz.all_timezones else False
+
+    def _update_avatar(self, avatar):
+        self.ensure_one()
+        self.image_128 = b64encode(avatar.read())
+        guest_data = {
+            'id': self.id,
+            'avatarCacheKey': self._get_avatar_cache_key(),
+        }
+        bus_notifs = [(channel, 'mail.guest/insert', guest_data) for channel in self.channel_ids]
+        self.env['bus.bus']._sendmany(bus_notifs)
 
     def _update_name(self, name):
         self.ensure_one()
@@ -109,6 +124,7 @@ class MailGuest(models.Model):
             'currentGuest': {
                 'id': self.id,
                 'name': self.name,
+                'avatarCacheKey': self._get_avatar_cache_key(),
             },
             'current_partner': False,
             'current_user_id': False,
@@ -126,7 +142,7 @@ class MailGuest(models.Model):
 
     def _guest_format(self, fields=None):
         if not fields:
-            fields = {'id': True, 'name': True, 'im_status': True}
+            fields = {'id': True, 'name': True, 'im_status': True, 'avatarCacheKey': True}
         guests_formatted_data = {}
         for guest in self:
             data = {}
@@ -136,5 +152,7 @@ class MailGuest(models.Model):
                 data['name'] = guest.name
             if 'im_status' in fields:
                 data['im_status'] = guest.im_status
+            if 'avatarCacheKey' in fields:
+                data['avatarCacheKey'] = guest._get_avatar_cache_key()
             guests_formatted_data[guest] = data
         return guests_formatted_data

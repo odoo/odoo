@@ -187,6 +187,7 @@ class TestChannelInternals(MailCommon):
         channel_member._rtc_join_call()
         last_rtc_session_id = channel_member.rtc_session_ids.id
         channel_member._rtc_leave_call()
+        avatarCacheKey = channel_member_test_guest.guest_id._get_avatar_cache_key()
 
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
@@ -273,6 +274,7 @@ class TestChannelInternals(MailCommon):
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
                                         'im_status': channel_member_test_guest.guest_id.im_status,
+                                        "avatarCacheKey": avatarCacheKey,
                                     },
                                 },
                             },
@@ -303,6 +305,7 @@ class TestChannelInternals(MailCommon):
                         'id': channel_member_test_guest.guest_id.id,
                         'name': channel_member_test_guest.guest_id.name,
                         'im_status': channel_member_test_guest.guest_id.im_status,
+                        "avatarCacheKey": avatarCacheKey,
                     },
                 },
             },
@@ -384,6 +387,7 @@ class TestChannelInternals(MailCommon):
             channel_member_test_user._rtc_join_call()
 
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.guest_id == test_guest)
+        avatarCacheKey = channel_member_test_guest.guest_id._get_avatar_cache_key()
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus(
             [
@@ -413,6 +417,7 @@ class TestChannelInternals(MailCommon):
                                     'id': channel_member_test_guest.guest_id.id,
                                     'name': channel_member_test_guest.guest_id.name,
                                     'im_status': channel_member_test_guest.guest_id.im_status,
+                                    "avatarCacheKey": avatarCacheKey,
                                 },
                             },
                         }])],
@@ -433,6 +438,7 @@ class TestChannelInternals(MailCommon):
                                             "id": channel_member_test_guest.guest_id.id,
                                             "name": channel_member_test_guest.guest_id.name,
                                             'im_status': channel_member_test_guest.guest_id.im_status,
+                                            "avatarCacheKey": avatarCacheKey,
                                         },
                                     },
                                 },
@@ -525,6 +531,7 @@ class TestChannelInternals(MailCommon):
                                     'id': channel_member_test_guest.guest_id.id,
                                     'name': channel_member_test_guest.guest_id.name,
                                     'im_status': channel_member_test_guest.guest_id.im_status,
+                                    "avatarCacheKey": channel_member_test_guest.guest_id._get_avatar_cache_key(),
                                 },
                             },
                         }])],
@@ -603,6 +610,7 @@ class TestChannelInternals(MailCommon):
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
                                         'im_status': channel_member_test_guest.guest_id.im_status,
+                                        "avatarCacheKey": channel_member_test_guest.guest_id._get_avatar_cache_key(),
                                     },
                                 },
                             },
@@ -726,6 +734,7 @@ class TestChannelInternals(MailCommon):
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
                                         'im_status': channel_member_test_guest.guest_id.im_status,
+                                        "avatarCacheKey": channel_member_test_guest.guest_id._get_avatar_cache_key(),
                                     },
                                 },
                             },

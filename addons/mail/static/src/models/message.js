@@ -298,7 +298,7 @@ registerModel({
                 } else if (this.guestAuthor && (!this.originThread || this.originThread.model !== 'mail.channel')) {
                     return this.guestAuthor.avatarUrl;
                 } else if (this.guestAuthor && this.originThread && this.originThread.model === 'mail.channel') {
-                    return `/mail/channel/${this.originThread.id}/guest/${this.guestAuthor.id}/avatar_128?unique=${this.guestAuthor.name}`;
+                    return `/mail/channel/${this.originThread.id}/guest/${this.guestAuthor.id}/avatar_128?unique=${this.guestAuthor.avatarCacheKey}`;
                 } else if (this.message_type === 'email') {
                     return '/mail/static/src/img/email_icon.png';
                 }

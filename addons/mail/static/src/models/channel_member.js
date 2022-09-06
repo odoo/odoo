@@ -13,7 +13,7 @@ registerModel({
                     return `/mail/channel/${this.channel.id}/partner/${this.persona.partner.id}/avatar_128`;
                 }
                 if (this.persona.guest) {
-                    return `/mail/channel/${this.channel.id}/guest/${this.persona.guest.id}/avatar_128?unique=${this.persona.guest.name}`;
+                    return `/mail/channel/${this.channel.id}/guest/${this.persona.guest.id}/avatar_128?unique=${this.persona.guest.avatarCacheKey}`;
                 }
                 return clear();
             },

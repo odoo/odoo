@@ -1356,12 +1356,13 @@ patch(MockServer.prototype, 'mail', {
             if (member.guest_id) {
                 const [guest] = this.pyEnv['mail.guest'].searchRead(
                     [['id', '=', member.guest_id[0]]],
-                    { fields: ['id', 'name'] }
+                    { fields: ['id', 'name', 'avatarCacheKey'] }
                 );
                 persona = {
                     'guest': {
                         'id': guest.id,
                         'name': guest.name,
+                        'avatarCacheKey': guest.avatarCacheKey,
                     },
                 };
             }

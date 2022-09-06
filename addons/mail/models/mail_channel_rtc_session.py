@@ -98,7 +98,7 @@ class MailRtcSession(models.Model):
     def _mail_rtc_session_format(self, fields=None):
         self.ensure_one()
         if not fields:
-            fields = {'id': True, 'channelMember': {'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}, 'isCameraOn': True, 'isDeaf': True, 'isSelfMuted': True, 'isScreenSharingOn': True}
+            fields = {'id': True, 'channelMember': {'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status', 'avatarCacheKey'}}}, 'isCameraOn': True, 'isDeaf': True, 'isSelfMuted': True, 'isScreenSharingOn': True}
         vals = {}
         if 'id' in fields:
             vals['id'] = self.id

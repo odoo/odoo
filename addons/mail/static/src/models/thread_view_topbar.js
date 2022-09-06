@@ -4,6 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
+import core from 'web.core';
+
 registerModel({
     name: 'ThreadViewTopbar',
     lifecycleHooks: {
@@ -15,6 +17,34 @@ registerModel({
         },
     },
     recordMethods: {
+        async changeAvatar(file) {
+            const formData = new window.FormData();
+            formData.append('csrf_token', core.csrf_token);
+            formData.append('ufile', file, file.name);
+            formData.append('guest_id', this.messaging.currentGuest.id);
+            try {
+                const response = await this.messaging.browser.fetch('/mail/guest/update_avatar', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to update profile image...');
+                }
+            } catch (e) {
+                this.messaging.notify({
+                    type: 'danger',
+                    message: e.message,
+                });
+            }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickAvatar(ev) {
+            if (this.messaging.isCurrentUserGuest) {
+                this.fileUploader.openBrowserFileUploader();
+            }
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -463,7 +493,7 @@ registerModel({
                     if (!this.thread) {
                         return '';
                     }
-                    return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
+                    return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.avatarCacheKey}`;
                 }
                 if (this.messaging.currentPartner) {
                     return this.messaging.currentPartner.avatarUrl;
@@ -556,6 +586,12 @@ registerModel({
          * `doSetSelectionEndOnThreadDescriptionInput` to have an effect.
          */
         doSetSelectionStartOnThreadDescriptionInput: attr(),
+        fileUploader: one('FileUploader', {
+            default: {},
+            inverse: 'threadViewTopbar',
+            readonly: true,
+            required: true,
+        }),
         /**
          * States the OWL ref of the "guest name" input of this top bar.
          * Useful to focus it, or to know when a click is done outside of it.

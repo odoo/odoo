@@ -46,6 +46,9 @@ registerModel({
             if (this.chatterOwner && !this.chatterOwner.attachmentBoxView) {
                 this.chatterOwner.openAttachmentBoxView();
             }
+            if (this.threadViewTopbar && files[0]) {
+                this.threadViewTopbar.changeAvatar(files[0]);
+            }
             this.messaging.messagingBus.trigger('o-file-uploader-upload', { files });
         },
         /**
@@ -94,6 +97,9 @@ registerModel({
          * @returns {Promise}
          */
         async _performUpload({ files }) {
+            if (this.threadViewTopbar) {
+                return;
+            }
             const webRecord = this.activityListViewItemOwner && this.activityListViewItemOwner.webRecord;
             const composer = this.composerView && this.composerView.composer; // save before async
             const thread = this.thread; // save before async
@@ -190,7 +196,7 @@ registerModel({
             compute() {
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
-                fileInput.multiple = true;
+                fileInput.multiple = !this.threadViewTopbar;
                 fileInput.onchange = this.onChangeAttachment;
                 return fileInput;
             },
@@ -212,9 +218,16 @@ registerModel({
                 if (this.composerView) {
                     return this.composerView.composer.activeThread;
                 }
+                if (this.threadViewTopbar) {
+                    return this.threadViewTopbar.thread;
+                }
                 return clear();
             },
             required: true,
+        }),
+        threadViewTopbar: one('ThreadViewTopbar', {
+            identifying: true,
+            inverse: 'fileUploader',
         })
     },
 });

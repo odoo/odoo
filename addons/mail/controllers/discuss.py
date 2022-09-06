@@ -568,6 +568,17 @@ class DiscussController(http.Controller):
     # Guest API
     # --------------------------------------------------------------------------
 
+    @http.route('/mail/guest/update_avatar', methods=['POST'], type="http", auth="public")
+    def mail_guest_update_avatar(self, ufile, guest_id):
+        """ Updates the avatar of guest"""
+        guest = request.env['mail.guest']._get_guest_from_request(request)
+        guest_sudo = guest.env['mail.guest'].browse(int(guest_id)).sudo().exists()
+        if not guest_sudo:
+            raise NotFound()
+        if guest_sudo != guest and not request.env.user._is_admin():
+            raise NotFound()
+        guest_sudo._update_avatar(ufile)
+
     @http.route('/mail/guest/update_name', methods=['POST'], type='json', auth='public')
     def mail_guest_update_name(self, guest_id, name):
         guest = request.env['mail.guest']._get_guest_from_request(request)

@@ -25,6 +25,7 @@ registerModel({
         authoredMessages: many('Message', {
             inverse: 'guestAuthor',
         }),
+        avatarCacheKey: attr(),
         avatarUrl: attr({
             compute() {
                 return `/web/image/mail.guest/${this.id}/avatar_128?unique=${this.name}`;

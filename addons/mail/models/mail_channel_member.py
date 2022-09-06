@@ -180,7 +180,7 @@ class ChannelMember(models.Model):
             self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
             invited_members = self._rtc_invite_members()
             if invited_members:
-                res['invitedMembers'] = [('insert', list(invited_members._mail_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
+                res['invitedMembers'] = [('insert', list(invited_members._mail_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status', 'avatarCacheKey'}}}).values()))]
         return res
 
     def _rtc_leave_call(self):
@@ -234,6 +234,6 @@ class ChannelMember(models.Model):
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
             channel_data = {'id': self.channel_id.id, 'model': 'mail.channel'}
-            channel_data['invitedMembers'] = [('insert', list(members._mail_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
+            channel_data['invitedMembers'] = [('insert', list(members._mail_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status', 'avatarCacheKey'}}}).values()))]
             self.env['bus.bus']._sendone(self.channel_id, 'mail.thread/insert', channel_data)
         return members

@@ -47,6 +47,7 @@ patch(MockServer.prototype, 'mail/models/mail_channel_member', {
                         'id': guest.id,
                         'im_status': guest.im_status,
                         'name': guest.name,
+                        'avatarCacheKey': guest.avatarCacheKey,
                     },
                 };
             }
