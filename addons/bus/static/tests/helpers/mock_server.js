@@ -15,6 +15,7 @@ patch(MockServer.prototype, 'bus', {
         this.websocketWorker = patchWebsocketWorkerWithCleanup();
         this.pendingLongpollingPromise = null;
         this.notificationsToBeResolved = [];
+        this.lastBusNotificationId = 0;
     },
 
     //--------------------------------------------------------------------------
@@ -56,10 +57,13 @@ patch(MockServer.prototype, 'bus', {
      * @param {Array} notifications
      */
     _mockBusBus__sendmany(notifications) {
+        if (!notifications.length) {
+            return;
+        }
         const values = [];
         for (const notification of notifications) {
             const [type, payload] = notification.slice(1, notification.length);
-            values.push({ payload, type });
+            values.push({ id: this.lastBusNotificationId++, message: { payload, type }});
             if (this.debug) {
                 console.log("%c[bus]", "color: #c6e; font-weight: bold;", type, payload);
             }
