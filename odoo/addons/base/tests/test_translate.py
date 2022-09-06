@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
+import logging
+import time
 
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import mute_logger
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
-from odoo.tests.common import TransactionCase, BaseCase, new_test_user
+from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
+
+_stats_logger = logging.getLogger('odoo.tests.stats')
 
 
 class TranslationToolsTestCase(BaseCase):
@@ -945,3 +949,16 @@ class TestXMLTranslation(TransactionCase):
         view.write({"arch_db": "<form><i>content</i></form>"})
         self.assertIn("<i>", view.arch_db)
         self.assertIn("<i>", view_fr.arch_db)
+
+
+@tagged('post_install', '-at_install')
+class TestLanguageInstallPerformance(TransactionCase):
+    def test_language_install(self):
+        """ Install a language on a complete database. """
+        fr_BE = self.env.ref('base.lang_fr_BE')
+        self.assertFalse(fr_BE.active)
+
+        t0 = time.time()
+        fr_BE.toggle_active()
+        t1 = time.time()
+        _stats_logger.info("installed language fr_BE in %.3fs", t1 - t0)
