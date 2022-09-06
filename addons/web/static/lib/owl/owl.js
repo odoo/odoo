@@ -322,7 +322,7 @@
         }
         function listener(ev) {
             const currentTarget = ev.currentTarget;
-            if (!currentTarget || !document.contains(currentTarget))
+            if (!currentTarget || !currentTarget.ownerDocument.contains(currentTarget))
                 return;
             const data = currentTarget[eventKey];
             if (!data)
@@ -5787,9 +5787,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-18';
-    __info__.date = '2022-09-02T12:59:24.614Z';
-    __info__.hash = 'c1afaeb';
+    __info__.version = '2.0.0-beta-19';
+    __info__.date = '2022-09-06T10:14:11.747Z';
+    __info__.hash = 'd0d7482';
     __info__.url = 'https://github.com/odoo/owl';
 
 
