@@ -216,6 +216,7 @@
         }
     }
 
+    const CANVAS_SHIFT = 0.5;
     // Colors
     const BACKGROUND_GRAY_COLOR = "#f5f5f5";
     const BACKGROUND_HEADER_COLOR = "#F8F9FA";
@@ -912,7 +913,7 @@
         let memo;
         const lazyValue = () => {
             if (!isMemoized) {
-                memo = fn();
+                memo = fn instanceof Function ? fn() : fn;
                 isMemoized = true;
             }
             return memo;
@@ -5761,502 +5762,6 @@
         return { ...zone };
     }
 
-    // HELPERS
-    function assert(condition, message) {
-        if (!condition()) {
-            throw new Error(message);
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // FORMAT FUNCTIONS
-    // -----------------------------------------------------------------------------
-    const expectNumberValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, and cannot be coerced to a number.", value);
-    function toNumber(value) {
-        switch (typeof value) {
-            case "number":
-                return value;
-            case "boolean":
-                return value ? 1 : 0;
-            case "string":
-                if (isNumber(value) || value === "") {
-                    return parseNumber(value);
-                }
-                const internalDate = parseDateTime(value);
-                if (internalDate) {
-                    return internalDate.value;
-                }
-                throw new Error(expectNumberValueError(value));
-            default:
-                return 0;
-        }
-    }
-    function strictToNumber(value) {
-        if (value === "") {
-            throw new Error(expectNumberValueError(value));
-        }
-        return toNumber(value);
-    }
-    function toString(value) {
-        switch (typeof value) {
-            case "string":
-                return value;
-            case "number":
-                return value.toString();
-            case "boolean":
-                return value ? "TRUE" : "FALSE";
-            default:
-                return "";
-        }
-    }
-    const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
-    function toBoolean(value) {
-        switch (typeof value) {
-            case "boolean":
-                return value;
-            case "string":
-                if (value) {
-                    let uppercaseVal = value.toUpperCase();
-                    if (uppercaseVal === "TRUE") {
-                        return true;
-                    }
-                    if (uppercaseVal === "FALSE") {
-                        return false;
-                    }
-                    throw new Error(expectBooleanValueError(value));
-                }
-                else {
-                    return false;
-                }
-            case "number":
-                return value ? true : false;
-            default:
-                return false;
-        }
-    }
-    function strictToBoolean(value) {
-        if (value === "") {
-            throw new Error(expectBooleanValueError(value));
-        }
-        return toBoolean(value);
-    }
-    function toJsDate(value) {
-        return numberToJsDate(toNumber(value));
-    }
-    // -----------------------------------------------------------------------------
-    // VISIT FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function visitArgs(args, cellCb, dataCb) {
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        cellCb(arg[x][y]);
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                dataCb(arg);
-            }
-        }
-    }
-    function visitAny(args, cb) {
-        visitArgs(args, cb, cb);
-    }
-    function visitNumbers(args, cb) {
-        visitArgs(args, (cellValue) => {
-            if (typeof cellValue === "number") {
-                cb(cellValue);
-            }
-        }, (argValue) => {
-            cb(strictToNumber(argValue));
-        });
-    }
-    // -----------------------------------------------------------------------------
-    // REDUCE FUNCTIONS
-    // -----------------------------------------------------------------------------
-    function reduceArgs(args, cellCb, dataCb, initialValue) {
-        let val = initialValue;
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        val = cellCb(val, arg[x][y]);
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                val = dataCb(val, arg);
-            }
-        }
-        return val;
-    }
-    function reduceAny(args, cb, initialValue) {
-        return reduceArgs(args, cb, cb, initialValue);
-    }
-    function reduceNumbers(args, cb, initialValue) {
-        return reduceArgs(args, (acc, ArgValue) => {
-            if (typeof ArgValue === "number") {
-                return cb(acc, ArgValue);
-            }
-            return acc;
-        }, (acc, argValue) => {
-            return cb(acc, strictToNumber(argValue));
-        }, initialValue);
-    }
-    function reduceNumbersTextAs0(args, cb, initialValue) {
-        return reduceArgs(args, (acc, ArgValue) => {
-            if (ArgValue !== undefined && ArgValue !== null) {
-                if (typeof ArgValue === "number") {
-                    return cb(acc, ArgValue);
-                }
-                else if (typeof ArgValue === "boolean") {
-                    return cb(acc, toNumber(ArgValue));
-                }
-                else {
-                    return cb(acc, 0);
-                }
-            }
-            return acc;
-        }, (acc, argValue) => {
-            return cb(acc, toNumber(argValue));
-        }, initialValue);
-    }
-    // -----------------------------------------------------------------------------
-    // CONDITIONAL EXPLORE FUNCTIONS
-    // -----------------------------------------------------------------------------
-    /**
-     * This function allows to visit arguments and stop the visit if necessary.
-     * It is mainly used to bypass argument evaluation for functions like OR or AND.
-     */
-    function conditionalVisitArgs(args, cellCb, dataCb) {
-        for (let arg of args) {
-            if (Array.isArray(arg)) {
-                // arg is ref to a Cell/Range
-                const lenRow = arg.length;
-                const lenCol = arg[0].length;
-                for (let y = 0; y < lenCol; y++) {
-                    for (let x = 0; x < lenRow; x++) {
-                        if (!cellCb(arg[x][y]))
-                            return;
-                    }
-                }
-            }
-            else {
-                // arg is set directly in the formula function
-                if (!dataCb(arg))
-                    return;
-            }
-        }
-    }
-    function conditionalVisitBoolean(args, cb) {
-        return conditionalVisitArgs(args, (ArgValue) => {
-            if (typeof ArgValue === "boolean") {
-                return cb(ArgValue);
-            }
-            if (typeof ArgValue === "number") {
-                return cb(ArgValue ? true : false);
-            }
-            return true;
-        }, (argValue) => {
-            if (argValue !== undefined && argValue !== null) {
-                return cb(strictToBoolean(argValue));
-            }
-            return true;
-        });
-    }
-    function getPredicate(descr, isQuery) {
-        let operator;
-        let operand;
-        let subString = descr.substring(0, 2);
-        if (subString === "<=" || subString === ">=" || subString === "<>") {
-            operator = subString;
-            operand = descr.substring(2);
-        }
-        else {
-            subString = descr.substring(0, 1);
-            if (subString === "<" || subString === ">" || subString === "=") {
-                operator = subString;
-                operand = descr.substring(1);
-            }
-            else {
-                operator = "=";
-                operand = descr;
-            }
-        }
-        if (isNumber(operand)) {
-            operand = toNumber(operand);
-        }
-        else if (operand === "TRUE" || operand === "FALSE") {
-            operand = toBoolean(operand);
-        }
-        const result = { operator, operand };
-        if (typeof operand === "string") {
-            if (isQuery) {
-                operand += "*";
-            }
-            result.regexp = operandToRegExp(operand);
-        }
-        return result;
-    }
-    function operandToRegExp(operand) {
-        let exp = "";
-        let predecessor = "";
-        for (let char of operand) {
-            if (char === "?" && predecessor !== "~") {
-                exp += ".";
-            }
-            else if (char === "*" && predecessor !== "~") {
-                exp += ".*";
-            }
-            else {
-                if (char === "*" || char === "?") {
-                    //remove "~"
-                    exp = exp.slice(0, -1);
-                }
-                if (["^", ".", "[", "]", "$", "(", ")", "*", "+", "?", "|", "{", "}", "\\"].includes(char)) {
-                    exp += "\\";
-                }
-                exp += char;
-            }
-            predecessor = char;
-        }
-        return new RegExp("^" + exp + "$", "i");
-    }
-    function evaluatePredicate(value, criterion) {
-        const { operator, operand } = criterion;
-        if (value === undefined || operand === undefined) {
-            return false;
-        }
-        if (typeof operand === "number" && operator === "=") {
-            return toString(value) === toString(operand);
-        }
-        if (operator === "<>" || operator === "=") {
-            let result;
-            if (typeof value === typeof operand) {
-                if (typeof value === "string" && criterion.regexp) {
-                    result = criterion.regexp.test(value);
-                }
-                else {
-                    result = value === operand;
-                }
-            }
-            else {
-                result = false;
-            }
-            return operator === "=" ? result : !result;
-        }
-        if (typeof value === typeof operand) {
-            switch (operator) {
-                case "<":
-                    return value < operand;
-                case ">":
-                    return value > operand;
-                case "<=":
-                    return value <= operand;
-                case ">=":
-                    return value >= operand;
-            }
-        }
-        return false;
-    }
-    /**
-     * Functions used especially for predicate evaluation on ranges.
-     *
-     * Take ranges with same dimensions and take predicates, one for each range.
-     * For (i, j) coordinates, if all elements with coordinates (i, j) of each
-     * range correspond to the associated predicate, then the function uses a callback
-     * function with the parameters "i" and "j".
-     *
-     * Syntax:
-     * visitMatchingRanges([range1, predicate1, range2, predicate2, ...], cb(i,j), likeSelection)
-     *
-     * - range1 (range): The range to check against predicate1.
-     * - predicate1 (string): The pattern or test to apply to range1.
-     * - range2: (range, repeatable) ranges to check.
-     * - predicate2 (string, repeatable): Additional pattern or test to apply to range2.
-     *
-     * - cb(i: number, j: number) => void: the callback function.
-     *
-     * - isQuery (boolean) indicates if the comparison with a string should be done as a SQL-like query.
-     * (Ex1 isQuery = true, predicate = "abc", element = "abcde": predicate match the element),
-     * (Ex2 isQuery = false, predicate = "abc", element = "abcde": predicate not match the element).
-     * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
-     * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
-     */
-    function visitMatchingRanges(args, cb, isQuery = false) {
-        const countArg = args.length;
-        if (countArg % 2 === 1) {
-            throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
-        }
-        const dimRow = args[0].length;
-        const dimCol = args[0][0].length;
-        let predicates = [];
-        for (let i = 0; i < countArg - 1; i += 2) {
-            const criteriaRange = args[i];
-            if (!Array.isArray(criteriaRange) ||
-                criteriaRange.length !== dimRow ||
-                criteriaRange[0].length !== dimCol) {
-                throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
-            }
-            const description = toString(args[i + 1]);
-            predicates.push(getPredicate(description, isQuery));
-        }
-        for (let i = 0; i < dimRow; i++) {
-            for (let j = 0; j < dimCol; j++) {
-                let validatedPredicates = true;
-                for (let k = 0; k < countArg - 1; k += 2) {
-                    const criteriaValue = args[k][i][j];
-                    const criterion = predicates[k / 2];
-                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
-                    if (!validatedPredicates) {
-                        break;
-                    }
-                }
-                if (validatedPredicates) {
-                    cb(i, j);
-                }
-            }
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // COMMON FUNCTIONS
-    // -----------------------------------------------------------------------------
-    /**
-     * Perform a dichotomic search and return the index of the nearest match less than
-     * or equal to the target. If all values in the range are greater than the target,
-     * -1 is returned.
-     * If the range is not in sorted order, an incorrect value might be returned.
-     *
-     * Example:
-     * - [3, 6, 10], 3 => 0
-     * - [3, 6, 10], 6 => 1
-     * - [3, 6, 10], 9 => 1
-     * - [3, 6, 10], 42 => 2
-     * - [3, 6, 10], 2 => -1
-     * - [3, undefined, 6, undefined, 10], 9 => 2
-     * - [3, 6, undefined, undefined, undefined, 10], 2 => -1
-     */
-    function dichotomicPredecessorSearch(range, target) {
-        if (target === null) {
-            return -1;
-        }
-        const targetType = typeof target;
-        let valMin = undefined;
-        let valMinIndex = undefined;
-        let indexLeft = 0;
-        let indexRight = range.length - 1;
-        if (typeof range[indexLeft] === targetType && target < range[indexLeft]) {
-            return -1;
-        }
-        if (typeof range[indexRight] === targetType && range[indexRight] <= target) {
-            return indexRight;
-        }
-        let indexMedian;
-        let currentIndex;
-        let currentVal;
-        let currentType;
-        while (indexRight - indexLeft >= 0) {
-            indexMedian = Math.ceil((indexLeft + indexRight) / 2);
-            currentIndex = indexMedian;
-            currentVal = range[currentIndex];
-            currentType = typeof currentVal;
-            // 1 - linear search to find value with the same type
-            while (indexLeft <= currentIndex && targetType !== currentType) {
-                currentIndex--;
-                currentVal = range[currentIndex];
-                currentType = typeof currentVal;
-            }
-            // 2 - check if value match
-            if (currentType === targetType && currentVal <= target) {
-                if (valMin === undefined ||
-                    valMin < currentVal ||
-                    (valMin === currentVal && valMinIndex < currentIndex)) {
-                    valMin = currentVal;
-                    valMinIndex = currentIndex;
-                }
-            }
-            // 3 - give new indexs for the Binary search
-            if (currentType === targetType && currentVal > target) {
-                indexRight = currentIndex - 1;
-            }
-            else {
-                indexLeft = indexMedian + 1;
-            }
-        }
-        // note that valMinIndex could be 0
-        return valMinIndex !== undefined ? valMinIndex : -1;
-    }
-    /**
-     * Perform a dichotomic search and return the index of the nearest match more than
-     * or equal to the target. If all values in the range are smaller than the target,
-     * -1 is returned.
-     * If the range is not in sorted order, an incorrect value might be returned.
-     *
-     * Example:
-     * - [10, 6, 3], 3 => 2
-     * - [10, 6, 3], 6 => 1
-     * - [10, 6, 3], 9 => 0
-     * - [10, 6, 3], 42 => -1
-     * - [10, 6, 3], 2 => 2
-     * - [10, undefined, 6, undefined, 3], 9 => 0
-     * - [10, 6, undefined, undefined, undefined, 3], 2 => 5
-     */
-    function dichotomicSuccessorSearch(range, target) {
-        const targetType = typeof target;
-        let valMax;
-        let valMaxIndex = undefined;
-        let indexLeft = 0;
-        let indexRight = range.length - 1;
-        if (typeof range[indexLeft] === targetType && target > range[indexLeft]) {
-            return -1;
-        }
-        if (typeof range[indexRight] === targetType && range[indexRight] > target) {
-            return indexRight;
-        }
-        let indexMedian;
-        let currentIndex;
-        let currentVal;
-        let currentType;
-        while (indexRight - indexLeft >= 0) {
-            indexMedian = Math.ceil((indexLeft + indexRight) / 2);
-            currentIndex = indexMedian;
-            currentVal = range[currentIndex];
-            currentType = typeof currentVal;
-            // 1 - linear search to find value with the same type
-            while (indexLeft <= currentIndex && targetType !== currentType) {
-                currentIndex--;
-                currentVal = range[currentIndex];
-                currentType = typeof currentVal;
-            }
-            // 2 - check if value match
-            if (currentType === targetType && currentVal >= target) {
-                if (valMax === undefined ||
-                    valMax > currentVal ||
-                    (valMax === currentVal && valMaxIndex > currentIndex)) {
-                    valMax = currentVal;
-                    valMaxIndex = currentIndex;
-                }
-            }
-            // 3 - give new indexs for the Binary search
-            if (currentType === targetType && currentVal <= target) {
-                indexRight = currentIndex - 1;
-            }
-            else {
-                indexLeft = indexMedian + 1;
-            }
-        }
-        // note that valMaxIndex could be 0
-        return valMaxIndex !== undefined ? valMaxIndex : -1;
-    }
-
     /**
      * This file contains helpers that are common to different charts (mainly
      * line, bar and pie charts)
@@ -6527,33 +6032,37 @@
     // Scorecard
     // ---------------------------------------------------------------------------
     function getBaselineText(baseline, keyValue, baselineMode) {
-        if (!baseline) {
+        const baselineEvaluated = baseline === null || baseline === void 0 ? void 0 : baseline.evaluated;
+        if (!baseline || baselineEvaluated === undefined) {
             return "";
         }
-        else if (baselineMode === "text" || !isNumber(keyValue) || !isNumber(baseline.content)) {
+        else if (baselineMode === "text" ||
+            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number ||
+            baselineEvaluated.type !== CellValueType.number) {
             return baseline.formattedValue;
         }
         else {
-            let diff = toNumber(keyValue) - toNumber(baseline.content);
+            let diff = (keyValue === null || keyValue === void 0 ? void 0 : keyValue.value) - baselineEvaluated.value;
             if (baselineMode === "percentage") {
-                diff = (diff / toNumber(baseline.content)) * 100;
+                diff = (diff / baselineEvaluated.value) * 100;
             }
-            const baselineValue = Math.abs(parseFloat(diff.toFixed(2)));
-            let baselineStr = baselineValue.toLocaleString();
+            let baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
             if (baselineMode === "percentage") {
                 baselineStr += "%";
             }
             else if (baseline.format) {
-                baselineStr = formatValue(baselineValue, baseline.format);
+                baselineStr = formatValue(diff, baseline.format);
             }
             return baselineStr;
         }
     }
     function getBaselineColor(baseline, baselineMode, keyValue, colorUp, colorDown) {
-        if (baselineMode === "text" || !isNumber(baseline) || !isNumber(keyValue)) {
+        if (baselineMode === "text" ||
+            (baseline === null || baseline === void 0 ? void 0 : baseline.type) !== CellValueType.number ||
+            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number) {
             return undefined;
         }
-        const diff = toNumber(keyValue) - toNumber(baseline);
+        const diff = keyValue.value - baseline.value;
         if (diff > 0) {
             return colorUp;
         }
@@ -6563,10 +6072,12 @@
         return undefined;
     }
     function getBaselineArrowDirection(baseline, keyValue, baselineMode) {
-        if (baselineMode === "text" || !isNumber(baseline) || !isNumber(keyValue)) {
+        if (baselineMode === "text" ||
+            (baseline === null || baseline === void 0 ? void 0 : baseline.type) !== CellValueType.number ||
+            (keyValue === null || keyValue === void 0 ? void 0 : keyValue.type) !== CellValueType.number) {
             return "neutral";
         }
-        const diff = toNumber(keyValue) - toNumber(baseline);
+        const diff = keyValue.value - baseline.value;
         if (diff > 0) {
             return "up";
         }
@@ -6812,22 +6323,6 @@
                 dataSets,
                 stackedBar: this.stackedBar,
             };
-        }
-        getSheetIdsUsedInChartRanges() {
-            const sheetIds = new Set();
-            const ranges = [];
-            this.dataSets.map((ds) => ds.dataRange).map((range) => ranges.push(range));
-            this.dataSets
-                .map((ds) => ds.labelCell)
-                .filter(isDefined$1)
-                .map((range) => ranges.push(range));
-            if (this.labelRange) {
-                ranges.push(this.labelRange);
-            }
-            for (const range of ranges) {
-                sheetIds.add(range.sheetId);
-            }
-            return Array.from(sheetIds);
         }
         updateRanges(applyChange) {
             const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
@@ -7098,9 +6593,6 @@
         copyInSheetId(sheetId) {
             const definition = this.getDefinitionWithSpecificRanges(this.dataRange, sheetId);
             return new GaugeChart(definition, sheetId, this.getters);
-        }
-        getSheetIdsUsedInChartRanges() {
-            return this.dataRange ? [this.dataRange.sheetId] : [];
         }
         getDefinition() {
             return this.getDefinitionWithSpecificRanges(this.dataRange);
@@ -7464,22 +6956,6 @@
             const definition = this.getDefinitionWithSpecificDataSets(this.dataSets, this.labelRange, sheetId);
             return new LineChart(definition, sheetId, this.getters);
         }
-        getSheetIdsUsedInChartRanges() {
-            const sheetIds = new Set();
-            const ranges = [];
-            this.dataSets.map((ds) => ds.dataRange).map((range) => ranges.push(range));
-            this.dataSets
-                .map((ds) => ds.labelCell)
-                .filter(isDefined$1)
-                .map((range) => ranges.push(range));
-            if (this.labelRange) {
-                ranges.push(this.labelRange);
-            }
-            for (const range of ranges) {
-                sheetIds.add(range.sheetId);
-            }
-            return Array.from(sheetIds);
-        }
     }
     function fixEmptyLabelsForDateCharts(labels, dataSetsValues) {
         if (labels.length === 0 || labels.every((label) => !label)) {
@@ -7701,22 +7177,6 @@
                 dataSets,
             };
         }
-        getSheetIdsUsedInChartRanges() {
-            const sheetIds = new Set();
-            const ranges = [];
-            this.dataSets.map((ds) => ds.dataRange).map((range) => ranges.push(range));
-            this.dataSets
-                .map((ds) => ds.labelCell)
-                .filter(isDefined$1)
-                .map((range) => ranges.push(range));
-            if (this.labelRange) {
-                ranges.push(this.labelRange);
-            }
-            for (const range of ranges) {
-                sheetIds.add(range.sheetId);
-            }
-            return Array.from(sheetIds);
-        }
         updateRanges(applyChange) {
             const { dataSets, labelRange, isStale } = updateChartRangesWithDataSets(this.getters, applyChange, this.dataSets, this.labelRange);
             if (!isStale) {
@@ -7864,16 +7324,6 @@
                     : undefined,
             };
         }
-        getSheetIdsUsedInChartRanges() {
-            const sheetIds = new Set();
-            if (this.baseline) {
-                sheetIds.add(this.baseline.sheetId);
-            }
-            if (this.keyValue) {
-                sheetIds.add(this.keyValue.sheetId);
-            }
-            return Array.from(sheetIds);
-        }
         getDefinitionWithSpecificRanges(baseline, keyValue, targetSheetId) {
             return {
                 baselineColorDown: this.baselineColorDown,
@@ -7920,14 +7370,13 @@
             const baselineZone = chart.baseline.zone;
             baselineCell = getters.getCell(chart.baseline.sheetId, baselineZone.left, baselineZone.top);
         }
-        const baselineValue = (baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.content) || "";
         const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
         return {
             title: chart.title,
             keyValue: formattedKeyValue || keyValue,
-            baselineDisplay: getBaselineText(baselineCell, keyValue, chart.baselineMode),
-            baselineArrow: getBaselineArrowDirection(baselineValue, keyValue, chart.baselineMode),
-            baselineColor: getBaselineColor(baselineValue, chart.baselineMode, keyValue, chart.baselineColorUp, chart.baselineColorDown),
+            baselineDisplay: getBaselineText(baselineCell, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
+            baselineArrow: getBaselineArrowDirection(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
+            baselineColor: getBaselineColor(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, chart.baselineMode, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineColorUp, chart.baselineColorDown),
             baselineDescr: chart.baselineDescr,
             fontColor: chartFontColor(background),
             background,
@@ -9941,15 +9390,6 @@
                     this.props.onFigureDeleted();
                 },
             });
-            registry.add("refresh", {
-                name: _lt("Refresh"),
-                sequence: 11,
-                action: () => {
-                    this.env.model.dispatch("REFRESH_CHART", {
-                        id: this.props.figure.id,
-                    });
-                },
-            });
             return registry;
         }
         get chartType() {
@@ -10371,6 +9811,502 @@
             previousArgOptional = current.optional;
             previousArgDefault = current.default;
         }
+    }
+
+    // HELPERS
+    function assert(condition, message) {
+        if (!condition()) {
+            throw new Error(message);
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // FORMAT FUNCTIONS
+    // -----------------------------------------------------------------------------
+    const expectNumberValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, and cannot be coerced to a number.", value);
+    function toNumber(value) {
+        switch (typeof value) {
+            case "number":
+                return value;
+            case "boolean":
+                return value ? 1 : 0;
+            case "string":
+                if (isNumber(value) || value === "") {
+                    return parseNumber(value);
+                }
+                const internalDate = parseDateTime(value);
+                if (internalDate) {
+                    return internalDate.value;
+                }
+                throw new Error(expectNumberValueError(value));
+            default:
+                return 0;
+        }
+    }
+    function strictToNumber(value) {
+        if (value === "") {
+            throw new Error(expectNumberValueError(value));
+        }
+        return toNumber(value);
+    }
+    function toString(value) {
+        switch (typeof value) {
+            case "string":
+                return value;
+            case "number":
+                return value.toString();
+            case "boolean":
+                return value ? "TRUE" : "FALSE";
+            default:
+                return "";
+        }
+    }
+    const expectBooleanValueError = (value) => _lt("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
+    function toBoolean(value) {
+        switch (typeof value) {
+            case "boolean":
+                return value;
+            case "string":
+                if (value) {
+                    let uppercaseVal = value.toUpperCase();
+                    if (uppercaseVal === "TRUE") {
+                        return true;
+                    }
+                    if (uppercaseVal === "FALSE") {
+                        return false;
+                    }
+                    throw new Error(expectBooleanValueError(value));
+                }
+                else {
+                    return false;
+                }
+            case "number":
+                return value ? true : false;
+            default:
+                return false;
+        }
+    }
+    function strictToBoolean(value) {
+        if (value === "") {
+            throw new Error(expectBooleanValueError(value));
+        }
+        return toBoolean(value);
+    }
+    function toJsDate(value) {
+        return numberToJsDate(toNumber(value));
+    }
+    // -----------------------------------------------------------------------------
+    // VISIT FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function visitArgs(args, cellCb, dataCb) {
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        cellCb(arg[x][y]);
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                dataCb(arg);
+            }
+        }
+    }
+    function visitAny(args, cb) {
+        visitArgs(args, cb, cb);
+    }
+    function visitNumbers(args, cb) {
+        visitArgs(args, (cellValue) => {
+            if (typeof cellValue === "number") {
+                cb(cellValue);
+            }
+        }, (argValue) => {
+            cb(strictToNumber(argValue));
+        });
+    }
+    // -----------------------------------------------------------------------------
+    // REDUCE FUNCTIONS
+    // -----------------------------------------------------------------------------
+    function reduceArgs(args, cellCb, dataCb, initialValue) {
+        let val = initialValue;
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        val = cellCb(val, arg[x][y]);
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                val = dataCb(val, arg);
+            }
+        }
+        return val;
+    }
+    function reduceAny(args, cb, initialValue) {
+        return reduceArgs(args, cb, cb, initialValue);
+    }
+    function reduceNumbers(args, cb, initialValue) {
+        return reduceArgs(args, (acc, ArgValue) => {
+            if (typeof ArgValue === "number") {
+                return cb(acc, ArgValue);
+            }
+            return acc;
+        }, (acc, argValue) => {
+            return cb(acc, strictToNumber(argValue));
+        }, initialValue);
+    }
+    function reduceNumbersTextAs0(args, cb, initialValue) {
+        return reduceArgs(args, (acc, ArgValue) => {
+            if (ArgValue !== undefined && ArgValue !== null) {
+                if (typeof ArgValue === "number") {
+                    return cb(acc, ArgValue);
+                }
+                else if (typeof ArgValue === "boolean") {
+                    return cb(acc, toNumber(ArgValue));
+                }
+                else {
+                    return cb(acc, 0);
+                }
+            }
+            return acc;
+        }, (acc, argValue) => {
+            return cb(acc, toNumber(argValue));
+        }, initialValue);
+    }
+    // -----------------------------------------------------------------------------
+    // CONDITIONAL EXPLORE FUNCTIONS
+    // -----------------------------------------------------------------------------
+    /**
+     * This function allows to visit arguments and stop the visit if necessary.
+     * It is mainly used to bypass argument evaluation for functions like OR or AND.
+     */
+    function conditionalVisitArgs(args, cellCb, dataCb) {
+        for (let arg of args) {
+            if (Array.isArray(arg)) {
+                // arg is ref to a Cell/Range
+                const lenRow = arg.length;
+                const lenCol = arg[0].length;
+                for (let y = 0; y < lenCol; y++) {
+                    for (let x = 0; x < lenRow; x++) {
+                        if (!cellCb(arg[x][y]))
+                            return;
+                    }
+                }
+            }
+            else {
+                // arg is set directly in the formula function
+                if (!dataCb(arg))
+                    return;
+            }
+        }
+    }
+    function conditionalVisitBoolean(args, cb) {
+        return conditionalVisitArgs(args, (ArgValue) => {
+            if (typeof ArgValue === "boolean") {
+                return cb(ArgValue);
+            }
+            if (typeof ArgValue === "number") {
+                return cb(ArgValue ? true : false);
+            }
+            return true;
+        }, (argValue) => {
+            if (argValue !== undefined && argValue !== null) {
+                return cb(strictToBoolean(argValue));
+            }
+            return true;
+        });
+    }
+    function getPredicate(descr, isQuery) {
+        let operator;
+        let operand;
+        let subString = descr.substring(0, 2);
+        if (subString === "<=" || subString === ">=" || subString === "<>") {
+            operator = subString;
+            operand = descr.substring(2);
+        }
+        else {
+            subString = descr.substring(0, 1);
+            if (subString === "<" || subString === ">" || subString === "=") {
+                operator = subString;
+                operand = descr.substring(1);
+            }
+            else {
+                operator = "=";
+                operand = descr;
+            }
+        }
+        if (isNumber(operand)) {
+            operand = toNumber(operand);
+        }
+        else if (operand === "TRUE" || operand === "FALSE") {
+            operand = toBoolean(operand);
+        }
+        const result = { operator, operand };
+        if (typeof operand === "string") {
+            if (isQuery) {
+                operand += "*";
+            }
+            result.regexp = operandToRegExp(operand);
+        }
+        return result;
+    }
+    function operandToRegExp(operand) {
+        let exp = "";
+        let predecessor = "";
+        for (let char of operand) {
+            if (char === "?" && predecessor !== "~") {
+                exp += ".";
+            }
+            else if (char === "*" && predecessor !== "~") {
+                exp += ".*";
+            }
+            else {
+                if (char === "*" || char === "?") {
+                    //remove "~"
+                    exp = exp.slice(0, -1);
+                }
+                if (["^", ".", "[", "]", "$", "(", ")", "*", "+", "?", "|", "{", "}", "\\"].includes(char)) {
+                    exp += "\\";
+                }
+                exp += char;
+            }
+            predecessor = char;
+        }
+        return new RegExp("^" + exp + "$", "i");
+    }
+    function evaluatePredicate(value, criterion) {
+        const { operator, operand } = criterion;
+        if (value === undefined || operand === undefined) {
+            return false;
+        }
+        if (typeof operand === "number" && operator === "=") {
+            return toString(value) === toString(operand);
+        }
+        if (operator === "<>" || operator === "=") {
+            let result;
+            if (typeof value === typeof operand) {
+                if (typeof value === "string" && criterion.regexp) {
+                    result = criterion.regexp.test(value);
+                }
+                else {
+                    result = value === operand;
+                }
+            }
+            else {
+                result = false;
+            }
+            return operator === "=" ? result : !result;
+        }
+        if (typeof value === typeof operand) {
+            switch (operator) {
+                case "<":
+                    return value < operand;
+                case ">":
+                    return value > operand;
+                case "<=":
+                    return value <= operand;
+                case ">=":
+                    return value >= operand;
+            }
+        }
+        return false;
+    }
+    /**
+     * Functions used especially for predicate evaluation on ranges.
+     *
+     * Take ranges with same dimensions and take predicates, one for each range.
+     * For (i, j) coordinates, if all elements with coordinates (i, j) of each
+     * range correspond to the associated predicate, then the function uses a callback
+     * function with the parameters "i" and "j".
+     *
+     * Syntax:
+     * visitMatchingRanges([range1, predicate1, range2, predicate2, ...], cb(i,j), likeSelection)
+     *
+     * - range1 (range): The range to check against predicate1.
+     * - predicate1 (string): The pattern or test to apply to range1.
+     * - range2: (range, repeatable) ranges to check.
+     * - predicate2 (string, repeatable): Additional pattern or test to apply to range2.
+     *
+     * - cb(i: number, j: number) => void: the callback function.
+     *
+     * - isQuery (boolean) indicates if the comparison with a string should be done as a SQL-like query.
+     * (Ex1 isQuery = true, predicate = "abc", element = "abcde": predicate match the element),
+     * (Ex2 isQuery = false, predicate = "abc", element = "abcde": predicate not match the element).
+     * (Ex3 isQuery = true, predicate = "abc", element = "abc": predicate match the element),
+     * (Ex4 isQuery = false, predicate = "abc", element = "abc": predicate match the element).
+     */
+    function visitMatchingRanges(args, cb, isQuery = false) {
+        const countArg = args.length;
+        if (countArg % 2 === 1) {
+            throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in pairs.`));
+        }
+        const dimRow = args[0].length;
+        const dimCol = args[0][0].length;
+        let predicates = [];
+        for (let i = 0; i < countArg - 1; i += 2) {
+            const criteriaRange = args[i];
+            if (!Array.isArray(criteriaRange) ||
+                criteriaRange.length !== dimRow ||
+                criteriaRange[0].length !== dimCol) {
+                throw new Error(_lt(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
+            }
+            const description = toString(args[i + 1]);
+            predicates.push(getPredicate(description, isQuery));
+        }
+        for (let i = 0; i < dimRow; i++) {
+            for (let j = 0; j < dimCol; j++) {
+                let validatedPredicates = true;
+                for (let k = 0; k < countArg - 1; k += 2) {
+                    const criteriaValue = args[k][i][j];
+                    const criterion = predicates[k / 2];
+                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
+                    if (!validatedPredicates) {
+                        break;
+                    }
+                }
+                if (validatedPredicates) {
+                    cb(i, j);
+                }
+            }
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // COMMON FUNCTIONS
+    // -----------------------------------------------------------------------------
+    /**
+     * Perform a dichotomic search and return the index of the nearest match less than
+     * or equal to the target. If all values in the range are greater than the target,
+     * -1 is returned.
+     * If the range is not in sorted order, an incorrect value might be returned.
+     *
+     * Example:
+     * - [3, 6, 10], 3 => 0
+     * - [3, 6, 10], 6 => 1
+     * - [3, 6, 10], 9 => 1
+     * - [3, 6, 10], 42 => 2
+     * - [3, 6, 10], 2 => -1
+     * - [3, undefined, 6, undefined, 10], 9 => 2
+     * - [3, 6, undefined, undefined, undefined, 10], 2 => -1
+     */
+    function dichotomicPredecessorSearch(range, target) {
+        if (target === null) {
+            return -1;
+        }
+        const targetType = typeof target;
+        let valMin = undefined;
+        let valMinIndex = undefined;
+        let indexLeft = 0;
+        let indexRight = range.length - 1;
+        if (typeof range[indexLeft] === targetType && target < range[indexLeft]) {
+            return -1;
+        }
+        if (typeof range[indexRight] === targetType && range[indexRight] <= target) {
+            return indexRight;
+        }
+        let indexMedian;
+        let currentIndex;
+        let currentVal;
+        let currentType;
+        while (indexRight - indexLeft >= 0) {
+            indexMedian = Math.ceil((indexLeft + indexRight) / 2);
+            currentIndex = indexMedian;
+            currentVal = range[currentIndex];
+            currentType = typeof currentVal;
+            // 1 - linear search to find value with the same type
+            while (indexLeft <= currentIndex && targetType !== currentType) {
+                currentIndex--;
+                currentVal = range[currentIndex];
+                currentType = typeof currentVal;
+            }
+            // 2 - check if value match
+            if (currentType === targetType && currentVal <= target) {
+                if (valMin === undefined ||
+                    valMin < currentVal ||
+                    (valMin === currentVal && valMinIndex < currentIndex)) {
+                    valMin = currentVal;
+                    valMinIndex = currentIndex;
+                }
+            }
+            // 3 - give new indexs for the Binary search
+            if (currentType === targetType && currentVal > target) {
+                indexRight = currentIndex - 1;
+            }
+            else {
+                indexLeft = indexMedian + 1;
+            }
+        }
+        // note that valMinIndex could be 0
+        return valMinIndex !== undefined ? valMinIndex : -1;
+    }
+    /**
+     * Perform a dichotomic search and return the index of the nearest match more than
+     * or equal to the target. If all values in the range are smaller than the target,
+     * -1 is returned.
+     * If the range is not in sorted order, an incorrect value might be returned.
+     *
+     * Example:
+     * - [10, 6, 3], 3 => 2
+     * - [10, 6, 3], 6 => 1
+     * - [10, 6, 3], 9 => 0
+     * - [10, 6, 3], 42 => -1
+     * - [10, 6, 3], 2 => 2
+     * - [10, undefined, 6, undefined, 3], 9 => 0
+     * - [10, 6, undefined, undefined, undefined, 3], 2 => 5
+     */
+    function dichotomicSuccessorSearch(range, target) {
+        const targetType = typeof target;
+        let valMax;
+        let valMaxIndex = undefined;
+        let indexLeft = 0;
+        let indexRight = range.length - 1;
+        if (typeof range[indexLeft] === targetType && target > range[indexLeft]) {
+            return -1;
+        }
+        if (typeof range[indexRight] === targetType && range[indexRight] > target) {
+            return indexRight;
+        }
+        let indexMedian;
+        let currentIndex;
+        let currentVal;
+        let currentType;
+        while (indexRight - indexLeft >= 0) {
+            indexMedian = Math.ceil((indexLeft + indexRight) / 2);
+            currentIndex = indexMedian;
+            currentVal = range[currentIndex];
+            currentType = typeof currentVal;
+            // 1 - linear search to find value with the same type
+            while (indexLeft <= currentIndex && targetType !== currentType) {
+                currentIndex--;
+                currentVal = range[currentIndex];
+                currentType = typeof currentVal;
+            }
+            // 2 - check if value match
+            if (currentType === targetType && currentVal >= target) {
+                if (valMax === undefined ||
+                    valMax > currentVal ||
+                    (valMax === currentVal && valMaxIndex > currentIndex)) {
+                    valMax = currentVal;
+                    valMaxIndex = currentIndex;
+                }
+            }
+            // 3 - give new indexs for the Binary search
+            if (currentType === targetType && currentVal <= target) {
+                indexRight = currentIndex - 1;
+            }
+            else {
+                indexLeft = indexMedian + 1;
+            }
+        }
+        // note that valMaxIndex could be 0
+        return valMaxIndex !== undefined ? valMaxIndex : -1;
     }
 
     // -----------------------------------------------------------------------------
@@ -19369,10 +19305,12 @@
         }
         get vScrollbarStyle() {
             return `
+      ${this.env.isDashboard() ? "width: 0px;" : ""}
       top: ${this.env.isDashboard() ? 0 : HEADER_HEIGHT}px;`;
         }
         get hScrollbarStyle() {
             return `
+      ${this.env.isDashboard() ? "width: 0px;" : ""}
       left: ${this.env.isDashboard() ? 0 : HEADER_WIDTH}px;`;
         }
         get cellPopover() {
@@ -19416,8 +19354,9 @@
             return this.gridEl.getBoundingClientRect();
         }
         resizeGrid() {
-            const currentHeight = this.gridEl.clientHeight - SCROLLBAR_WIDTH$1;
-            const currentWidth = this.gridEl.clientWidth - SCROLLBAR_WIDTH$1;
+            const scrollBarWidth = this.env.isDashboard() ? 0 : SCROLLBAR_WIDTH$1;
+            const currentHeight = this.gridEl.clientHeight - scrollBarWidth;
+            const currentWidth = this.gridEl.clientWidth - scrollBarWidth;
             const { height: viewportHeight, width: viewportWidth } = this.env.model.getters.getViewportDimensionWithHeaders();
             if (currentHeight != viewportHeight || currentWidth !== viewportWidth) {
                 this.env.model.dispatch("RESIZE_VIEWPORT", {
@@ -19490,7 +19429,13 @@
             canvas.width = width * dpr;
             canvas.height = height * dpr;
             canvas.setAttribute("style", `width:${width}px;height:${height}px;`);
-            ctx.translate(-0.5, -0.5);
+            // Imagine each pixel as a large square. The whole-number coordinates (0, 1, 2…)
+            // are the edges of the squares. If you draw a one-unit-wide line between whole-number
+            // coordinates, it will overlap opposite sides of the pixel square, and the resulting
+            // line will be drawn two pixels wide. To draw a line that is only one pixel wide,
+            // you need to shift the coordinates by 0.5 perpendicular to the line's direction.
+            // http://diveintohtml5.info/canvas.html#pixel-madness
+            ctx.translate(-CANVAS_SHIFT, -CANVAS_SHIFT);
             ctx.scale(dpr, dpr);
             this.env.model.drawGrid(renderingContext);
         }
@@ -19822,11 +19767,14 @@
      * whatever data they have (formula, string, ...).
      */
     class AbstractCell {
-        constructor(id, evaluated, properties) {
+        constructor(id, lazyEvaluated, properties) {
             this.id = id;
             this.style = properties.style;
             this.format = properties.format;
-            this.evaluated = { ...evaluated, format: evaluated.format || properties.format };
+            this.lazyEvaluated = lazyEvaluated.map((evaluated) => ({
+                ...evaluated,
+                format: properties.format || evaluated.format,
+            }));
         }
         isFormula() {
             return false;
@@ -19836,6 +19784,9 @@
         }
         isEmpty() {
             return false;
+        }
+        get evaluated() {
+            return this.lazyEvaluated();
         }
         get formattedValue() {
             return formatValue(this.evaluated.value, this.evaluated.format);
@@ -19874,7 +19825,7 @@
     }
     class EmptyCell extends AbstractCell {
         constructor(id, properties = {}) {
-            super(id, { value: "", type: CellValueType.empty }, properties);
+            super(id, lazy({ value: "", type: CellValueType.empty }), properties);
             this.content = "";
         }
         isEmpty() {
@@ -19883,7 +19834,7 @@
     }
     class NumberCell extends AbstractCell {
         constructor(id, value, properties = {}) {
-            super(id, { value: value, type: CellValueType.number }, properties);
+            super(id, lazy({ value, type: CellValueType.number }), properties);
             this.content = formatValue(this.evaluated.value);
         }
         get composerContent() {
@@ -19896,13 +19847,13 @@
     }
     class BooleanCell extends AbstractCell {
         constructor(id, value, properties = {}) {
-            super(id, { value: value, type: CellValueType.boolean }, properties);
+            super(id, lazy({ value, type: CellValueType.boolean }), properties);
             this.content = this.evaluated.value ? "TRUE" : "FALSE";
         }
     }
     class TextCell extends AbstractCell {
         constructor(id, value, properties = {}) {
-            super(id, { value: value, type: CellValueType.text }, properties);
+            super(id, lazy({ value, type: CellValueType.text }), properties);
             this.content = this.evaluated.value;
         }
     }
@@ -19930,7 +19881,7 @@
                     textColor: ((_a = properties.style) === null || _a === void 0 ? void 0 : _a.textColor) || LINK_COLOR,
                 },
             };
-            super(id, { value: link.label, type: CellValueType.text }, properties);
+            super(id, lazy({ value: link.label, type: CellValueType.text }), properties);
             this.link = link;
             this.content = content;
         }
@@ -19985,7 +19936,7 @@
     }
     class FormulaCell extends AbstractCell {
         constructor(buildFormulaString, id, compiledFormula, dependencies, properties) {
-            super(id, { value: LOADING, type: CellValueType.text }, properties);
+            super(id, lazy({ value: LOADING, type: CellValueType.text }), properties);
             this.buildFormulaString = buildFormulaString;
             this.compiledFormula = compiledFormula;
             this.dependencies = dependencies;
@@ -19996,44 +19947,50 @@
         isFormula() {
             return true;
         }
-        assignEvaluation(value, format) {
-            switch (typeof value) {
-                case "number":
-                    this.evaluated = {
-                        value,
-                        format,
-                        type: CellValueType.number,
+        assignEvaluation(lazyEvaluationResult) {
+            this.lazyEvaluated = lazyEvaluationResult.map((evaluationResult) => {
+                if (evaluationResult instanceof EvaluationError) {
+                    return {
+                        value: evaluationResult.errorType,
+                        type: CellValueType.error,
+                        error: evaluationResult,
                     };
-                    break;
-                case "boolean":
-                    this.evaluated = {
-                        value,
-                        format,
-                        type: CellValueType.boolean,
-                    };
-                    break;
-                case "string":
-                    this.evaluated = {
-                        value,
-                        format,
-                        type: CellValueType.text,
-                    };
-                    break;
-                case "object": // null
-                    this.evaluated = {
-                        value: 0,
-                        format,
-                        type: CellValueType.number,
-                    };
-                    break;
-            }
-        }
-        assignError(value, error) {
-            this.evaluated = {
-                value,
-                error,
-                type: CellValueType.error,
-            };
+                }
+                const { value, format } = evaluationResult;
+                switch (typeof value) {
+                    case "number":
+                        return {
+                            value,
+                            format,
+                            type: CellValueType.number,
+                        };
+                    case "boolean":
+                        return {
+                            value,
+                            format,
+                            type: CellValueType.boolean,
+                        };
+                    case "string":
+                        return {
+                            value,
+                            format,
+                            type: CellValueType.text,
+                        };
+                    case "object": // null
+                        return {
+                            value: 0,
+                            format,
+                            type: CellValueType.number,
+                        };
+                    default:
+                        // cannot happen with Typescript compiler watching
+                        // but possible in a vanilla javascript code base
+                        return {
+                            value: "",
+                            type: CellValueType.empty,
+                        };
+                }
+            });
         }
     }
     /**
@@ -20048,11 +20005,11 @@
          * @param properties
          */
         constructor(id, content, error, properties) {
-            super(id, {
+            super(id, lazy({
                 value: CellErrorType.BadExpression,
                 type: CellValueType.error,
                 error,
-            }, properties);
+            }), properties);
             this.content = content;
         }
     }
@@ -24608,10 +24565,7 @@
                 // TODO this plugin should not care about evaluation
                 // and evaluation should not depend on implementation details here.
                 // Task 2813749
-                cell.assignEvaluation(before.evaluated.value, before.evaluated.format);
-                if (before.evaluated.type === CellValueType.error) {
-                    cell.assignError(before.evaluated.value, before.evaluated.error);
-                }
+                cell.assignEvaluation(lazy(before.evaluated));
             }
             this.history.update("cells", sheetId, cell.id, cell);
             this.dispatch("UPDATE_CELL_POSITION", { cellId: cell.id, col, row, sheetId });
@@ -24729,10 +24683,6 @@
             }
             return definition;
         }
-        getSheetIdsUsedInChartRanges(figureId) {
-            var _a;
-            return (_a = this.charts[figureId]) === null || _a === void 0 ? void 0 : _a.getSheetIdsUsedInChartRanges();
-        }
         // ---------------------------------------------------------------------------
         // Import/Export
         // ---------------------------------------------------------------------------
@@ -24822,7 +24772,6 @@
         "getChartIds",
         "getChart",
         "getContextCreationChart",
-        "getSheetIdsUsedInChartRanges",
     ];
 
     // -----------------------------------------------------------------------------
@@ -25307,11 +25256,11 @@
                     const sizes = {
                         COL: computedSizes.COL.map((size) => ({
                             manualSize: undefined,
-                            computedSize: lazy(() => size),
+                            computedSize: lazy(size),
                         })),
                         ROW: computedSizes.ROW.map((size) => ({
                             manualSize: undefined,
-                            computedSize: lazy(() => size),
+                            computedSize: lazy(size),
                         })),
                     };
                     this.history.update("sizes", cmd.sheetId, sizes);
@@ -25369,13 +25318,13 @@
                             const size = height;
                             this.history.update("sizes", cmd.sheetId, cmd.dimension, el, {
                                 manualSize: cmd.size || undefined,
-                                computedSize: lazy(() => size),
+                                computedSize: lazy(size),
                             });
                         }
                         else {
                             this.history.update("sizes", cmd.sheetId, cmd.dimension, el, {
                                 manualSize: cmd.size || undefined,
-                                computedSize: lazy(() => cmd.size || DEFAULT_CELL_WIDTH),
+                                computedSize: lazy(cmd.size || DEFAULT_CELL_WIDTH),
                             });
                         }
                     }
@@ -25392,7 +25341,7 @@
                         for (let row of range(target.top, target.bottom + 1)) {
                             const rowHeight = this.getRowTallestCellSize(cmd.sheetId, row);
                             if (rowHeight !== this.getRowSize(cmd.sheetId, row)) {
-                                this.history.update("sizes", cmd.sheetId, "ROW", row, "computedSize", lazy(() => rowHeight));
+                                this.history.update("sizes", cmd.sheetId, "ROW", row, "computedSize", lazy(rowHeight));
                             }
                         }
                     }
@@ -25484,11 +25433,11 @@
                 this.sizes[sheet.id] = {
                     COL: computedSizes.COL.map((size, i) => ({
                         manualSize: manualSizes.COL[i],
-                        computedSize: lazy(() => size),
+                        computedSize: lazy(size),
                     })),
                     ROW: computedSizes.ROW.map((size, i) => ({
                         manualSize: manualSizes.ROW[i],
-                        computedSize: lazy(() => size),
+                        computedSize: lazy(size),
                     })),
                 };
             }
@@ -28580,7 +28529,7 @@
     class EvaluationPlugin extends UIPlugin {
         constructor(getters, state, dispatch, config, selection) {
             super(getters, state, dispatch, config, selection);
-            this.isUpToDate = new Set(); // Set<sheetIds>
+            this.isUpToDate = false;
             this.evalContext = config.evalContext;
         }
         // ---------------------------------------------------------------------------
@@ -28588,33 +28537,22 @@
         // ---------------------------------------------------------------------------
         handle(cmd) {
             if (invalidateEvaluationCommands.has(cmd.type)) {
-                this.isUpToDate.clear();
+                this.isUpToDate = false;
             }
             switch (cmd.type) {
                 case "UPDATE_CELL":
                     if ("content" in cmd || "format" in cmd) {
-                        this.isUpToDate.clear();
+                        this.isUpToDate = false;
                     }
                     break;
-                case "ACTIVATE_SHEET": {
-                    this.evaluate(cmd.sheetIdTo);
-                    this.isUpToDate.add(cmd.sheetIdTo);
-                    break;
-                }
                 case "EVALUATE_CELLS":
-                    this.evaluate(cmd.sheetId);
-                    this.isUpToDate.add(cmd.sheetId);
-                    break;
-                case "EVALUATE_ALL_SHEETS":
-                    this.evaluateAllSheets();
+                    this.evaluate();
                     break;
             }
         }
         finalize() {
-            const sheetId = this.getters.getActiveSheetId();
-            if (!this.isUpToDate.has(sheetId)) {
-                this.evaluate(sheetId);
-                this.isUpToDate.add(sheetId);
+            if (!this.isUpToDate) {
+                this.evaluate();
             }
         }
         // ---------------------------------------------------------------------------
@@ -28652,51 +28590,64 @@
         // ---------------------------------------------------------------------------
         // Evaluator
         // ---------------------------------------------------------------------------
-        evaluate(sheetId) {
-            const cells = this.getters.getCells(sheetId);
+        *getAllCells() {
+            // use a generator function to avoid re-building a new object
+            for (const sheetId of this.getters.getSheetIds()) {
+                const cells = this.getters.getCells(sheetId);
+                for (const cellId in cells) {
+                    yield cells[cellId];
+                }
+            }
+        }
+        evaluate() {
             const compilationParameters = this.getCompilationParameters(computeCell);
             const visited = {};
-            for (let cell of Object.values(cells)) {
+            for (const cell of this.getAllCells()) {
                 computeCell(cell);
             }
-            function handleError(e, cell) {
+            this.isUpToDate = true;
+            function handleError(e) {
                 if (!(e instanceof Error)) {
                     e = new Error(e);
                 }
                 const msg = (e === null || e === void 0 ? void 0 : e.errorType) || CellErrorType.GenericError;
                 // apply function name
                 const __lastFnCalled = compilationParameters[2].__lastFnCalled || "";
-                cell.assignError(msg, new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error));
+                return new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error);
             }
             function computeCell(cell) {
                 if (!cell.isFormula()) {
                     return;
                 }
                 const cellId = cell.id;
-                if (cellId in visited) {
-                    if (visited[cellId] === null) {
-                        cell.assignError(CellErrorType.CircularDependency, new CircularDependencyError());
-                    }
-                    return;
-                }
-                visited[cellId] = null;
-                try {
+                const computedCell = lazy(() => {
                     compilationParameters[2].__originCellXC = () => {
                         // compute the value lazily for performance reasons
                         const position = compilationParameters[2].getters.getCellPosition(cellId);
                         return toXC(position.col, position.row);
                     };
-                    const computedCell = cell.compiledFormula.execute(cell.dependencies, ...compilationParameters);
-                    cell.assignEvaluation(computedCell.value, cell.format || computedCell.format);
-                    if (Array.isArray(cell.evaluated.value)) {
-                        // if a value returns an array (like =A1:A3)
-                        throw new Error(_lt("This formula depends on invalid values"));
+                    if (cellId in visited) {
+                        if (visited[cellId] === null) {
+                            return new CircularDependencyError();
+                        }
+                        return cell.evaluated;
                     }
-                }
-                catch (e) {
-                    handleError(e, cell);
-                }
-                visited[cellId] = true;
+                    visited[cellId] = null;
+                    try {
+                        const computedCell = cell.compiledFormula.execute(cell.dependencies, ...compilationParameters);
+                        visited[cellId] = true;
+                        if (Array.isArray(computedCell.value)) {
+                            // if a value returns an array (like =A1:A3)
+                            throw new Error(_lt("This formula depends on invalid values"));
+                        }
+                        return { value: computedCell.value, format: cell.format || computedCell.format };
+                    }
+                    catch (error) {
+                        visited[cellId] = true;
+                        return handleError(error);
+                    }
+                });
+                cell.assignEvaluation(computedCell);
             }
         }
         /**
@@ -28725,7 +28676,6 @@
                 return getEvaluatedCell(cell);
             }
             function getEvaluatedCell(cell) {
-                computeCell(cell);
                 if (cell.evaluated.type === CellValueType.error) {
                     throw new EvaluationError(cell.evaluated.value, cell.evaluated.error.message, cell.evaluated.error.logLevel);
                 }
@@ -28793,15 +28743,6 @@
             }
             return [refFn, range, evalContext];
         }
-        /**
-         * Triggers an evaluation of all cells on all sheets.
-         */
-        evaluateAllSheets() {
-            for (const sheetId of this.getters.getSheetIds()) {
-                this.evaluate(sheetId);
-                this.isUpToDate.add(sheetId);
-            }
-        }
     }
     EvaluationPlugin.getters = ["evaluateFormula", "getRangeFormattedValues", "getRangeValues"];
 
@@ -28826,14 +28767,6 @@
                 case "DELETE_FIGURE":
                     this.charts[cmd.id] = undefined;
                     break;
-                case "REFRESH_CHART":
-                    this.charts[cmd.id] = undefined;
-                    this.evaluateUsedSheets([cmd.id]); //TODO Lazy evaluation for the win
-                    break;
-                case "ACTIVATE_SHEET":
-                    const chartsIds = this.getters.getChartIds(cmd.sheetIdTo);
-                    this.evaluateUsedSheets(chartsIds); //TODO Lazy evaluation for the win
-                    break;
                 case "DELETE_SHEET":
                     for (let chartId in this.charts) {
                         if (!this.getters.isChartDefined(chartId)) {
@@ -28852,20 +28785,6 @@
                 this.charts[figureId] = this.createRuntimeChart(chart);
             }
             return this.charts[figureId];
-        }
-        evaluateUsedSheets(chartsIds) {
-            const usedSheetsId = new Set();
-            for (let chartId of chartsIds) {
-                const sheetIds = this.getters.getSheetIdsUsedInChartRanges(chartId) || [];
-                sheetIds.forEach((sheetId) => {
-                    if (sheetId !== this.getters.getActiveSheetId()) {
-                        usedSheetsId.add(sheetId);
-                    }
-                });
-            }
-            for (let sheetId of usedSheetsId) {
-                this.dispatch("EVALUATE_CELLS", { sheetId });
-            }
         }
         /**
          * Get the background color of a chart based on the color of the first cell of the main range
@@ -29850,7 +29769,7 @@
             const sheetId = this.getters.getActiveSheetId();
             // white background
             ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, width, height);
+            ctx.fillRect(0, 0, width + CANVAS_SHIFT, height + CANVAS_SHIFT);
             // background grid
             const { right, left, top, bottom } = viewport;
             if (!this.getters.getGridLinesVisibility(sheetId) || this.getters.isDashboard()) {
@@ -37507,7 +37426,7 @@
          * (e.g. open a document with several sheet and click on download before visiting each sheet)
          */
         exportXLSX() {
-            this.dispatch("EVALUATE_ALL_SHEETS");
+            this.dispatch("EVALUATE_CELLS");
             let data = createEmptyExcelWorkbookData();
             for (let handler of this.handlers) {
                 if (handler instanceof BasePlugin) {
@@ -37637,8 +37556,8 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-09-06T12:31:27.223Z';
-    exports.__info__.hash = '5a48875';
+    exports.__info__.date = '2022-09-09T12:45:57.973Z';
+    exports.__info__.hash = 'a5236ad';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map

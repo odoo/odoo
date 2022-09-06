@@ -9,7 +9,10 @@ import {
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
-import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
+import {
+    createModelWithDataSource,
+    waitForDataSourcesLoaded,
+} from "@spreadsheet/../tests/utils/model";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
 
@@ -279,7 +282,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 uid: 4,
             };
             patchWithCleanup(session, testSession);
-            await createModelWithDataSource({
+            const model = await createModelWithDataSource({
                 spreadsheetData,
                 mockRPC: function (route, { model, method, kwargs }) {
                     if (model !== "partner") {
@@ -293,6 +296,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     }
                 },
             });
+            await waitForDataSourcesLoaded(model);
             assert.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
         }
     );
@@ -329,7 +333,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 },
             },
         };
-        await createModelWithDataSource({
+        const model = await createModelWithDataSource({
             spreadsheetData,
             mockRPC: function (route, { model, method, kwargs }) {
                 if (model === "partner" && method === "fields_get") {
@@ -339,6 +343,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 }
             },
         });
+        await waitForDataSourcesLoaded(model);
         assert.verifySteps(["partner/fields_get"]);
     });
 
@@ -481,7 +486,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             content: `=ODOO.PIVOT.HEADER("1", "product_id", "1111111")`,
             sheetId,
         });
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.equal(
             getCell(model, "E10").evaluated.error.message,
             "Unable to fetch the label of 1111111 of model product"
@@ -501,7 +506,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         });
         setCellContent(model, "F10", `=ODOO.PIVOT.HEADER("1", "product_id", A25)`);
         assert.equal(getCell(model, "A25"), null, "the cell should be empty");
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.equal(getCellValue(model, "F10"), "None");
     });
 
@@ -650,16 +655,16 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             domain: [["foo", "in", [55]]],
         });
         assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, [["foo", "in", [55]]]);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), "");
         model.dispatch("REQUEST_UNDO");
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, []);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), 11);
         model.dispatch("REQUEST_REDO");
         assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, [["foo", "in", [55]]]);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), "");
     });
 

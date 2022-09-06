@@ -50,6 +50,23 @@ export async function createModelWithDataSource(params = {}) {
  * @param {Model} model
  */
 export async function waitForDataSourcesLoaded(model) {
+    function readAllCellsValue() {
+        for (const sheetId of model.getters.getSheetIds()) {
+            const cells = model.getters.getCells(sheetId);
+            for (const cellId in cells) {
+                cells[cellId].evaluated.value;
+            }
+        }
+    }
+    // Read a first time in order to trigger the RPC
+    readAllCellsValue();
     //@ts-ignore
     await model.config.dataSources.waitForAllLoaded();
+    await nextTick();
+    // Read a second time to trigger the compute format (which could trigger a RPC for currency, in list)
+    readAllCellsValue();
+    await nextTick();
+    // Read a third time to trigger the RPC to get the correct currency
+    readAllCellsValue();
+    await nextTick();
 }

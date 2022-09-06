@@ -1,10 +1,12 @@
 /** @odoo-module */
 
-import { nextTick } from "@web/../tests/helpers/utils";
 import { selectCell, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { getAccountingData } from "../accounting_test_data";
-import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
+import {
+    createModelWithDataSource,
+    waitForDataSourcesLoaded,
+} from "@spreadsheet/../tests/utils/model";
 import { registry } from "@web/core/registry";
 
 const { cellMenuRegistry } = spreadsheet.registries;
@@ -64,7 +66,7 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
         env.model = model;
         setCellContent(model, "A1", `=ODOO.BALANCE("100", 2020)`);
         setCellContent(model, "A2", `=ODOO.BALANCE("100", 0)`);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         selectCell(model, "A1");
         const root = cellMenuRegistry.getAll().find((item) => item.id === "move_lines_see_records");
         assert.equal(root.isVisible(env), true);

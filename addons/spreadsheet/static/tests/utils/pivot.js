@@ -5,7 +5,7 @@ import { nextTick } from "@web/../tests/helpers/utils";
 
 import PivotDataSource from "@spreadsheet/pivot/pivot_data_source";
 import { getBasicServerData } from "./data";
-import { createModelWithDataSource } from "./model";
+import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
@@ -70,5 +70,6 @@ export async function createSpreadsheetWithPivot(params = {}) {
     await insertPivotInSpreadsheet(model, { arch });
     const env = model.config.evalContext.env;
     env.model = model;
+    await waitForDataSourcesLoaded(model);
     return { model, env };
 }

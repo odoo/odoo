@@ -1,10 +1,8 @@
 /** @odoo-module */
 
-import { nextTick } from "@web/../tests/helpers/utils";
-
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { generateListDefinition } from "./data";
-import { createModelWithDataSource } from "./model";
+import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
 
 const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
 
@@ -66,6 +64,6 @@ export async function createSpreadsheetWithList(params = {}) {
 
     const env = model.config.evalContext.env;
     env.model = model;
-    await nextTick();
+    await waitForDataSourcesLoaded(model);
     return { model, env };
 }
