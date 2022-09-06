@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from odoo import models, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty, html2plaintext, cleanup_xml_node
-from lxml import etree
+from odoo.exceptions import RedirectWarning
+from odoo.tools.pdf import OdooPdfFileReader
 
+import io
+from lxml import etree
+import base64
 from datetime import datetime
 
 import logging
@@ -12,13 +16,10 @@ _logger = logging.getLogger(__name__)
 DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 
 
-class AccountEdiXmlCII(models.AbstractModel):
-    _name = "account.edi.xml.cii"
+class AccountFacturx(models.AbstractModel):
+    _name = "account.facturx"
     _inherit = 'account.edi.common'
-    _description = "Factur-x/XRechnung CII 2.2.0"
-
-    def _export_invoice_filename(self, invoice):
-        return "factur-x.xml"
+    _description = "Factur-X/XRechnung"
 
     def _export_invoice_ecosio_schematrons(self):
         return {
@@ -196,12 +197,162 @@ class AccountEdiXmlCII(models.AbstractModel):
     def _export_invoice(self, invoice):
         vals = self._export_invoice_vals(invoice)
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
-        xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.account_invoice_facturx_export_22', vals)
+        xml_content = self.env['ir.qweb']._render('account_facturx.account_invoice_facturx_export', vals)
         return etree.tostring(cleanup_xml_node(xml_content)), set(errors)
 
-    # -------------------------------------------------------------------------
-    # IMPORT
-    # -------------------------------------------------------------------------
+    ####################################################
+    # Import Internal methods (not meant to be overridden)
+    ####################################################
+
+    def _decode_xml(self, filename, content):
+        """Decodes an xml into a list of one dictionary representing an attachment.
+
+        :param filename:    The name of the xml.
+        :param content:     The bytes representing the xml.
+        :returns:           A list with a dictionary.
+        * filename:         The name of the attachment.
+        * content:          The content of the attachment.
+        * type:             The type of the attachment.
+        * xml_tree:         The tree of the xml if type is xml.
+        """
+        to_process = []
+        try:
+            xml_tree = etree.fromstring(content)
+        except Exception as e:
+            _logger.exception("Error when converting the xml content to etree: %s" % e)
+            return to_process
+        if len(xml_tree):
+            to_process.append({
+                'filename': filename,
+                'content': content,
+                'type': 'xml',
+                'xml_tree': xml_tree,
+            })
+        return to_process
+
+    def _decode_pdf(self, filename, content):
+        """Decodes a pdf and unwrap sub-attachment into a list of dictionary each representing an attachment.
+
+        :param filename:    The name of the pdf.
+        :param content:     The bytes representing the pdf.
+        :returns:           A list of dictionary for each attachment.
+        * filename:         The name of the attachment.
+        * content:          The content of the attachment.
+        * type:             The type of the attachment.
+        * xml_tree:         The tree of the xml if type is xml.
+        * pdf_reader:       The pdf_reader if type is pdf.
+        """
+        to_process = []
+        try:
+            buffer = io.BytesIO(content)
+            pdf_reader = OdooPdfFileReader(buffer, strict=False)
+        except Exception as e:
+            # Malformed pdf
+            _logger.exception("Error when reading the pdf: %s" % e)
+            return to_process
+
+        # Process embedded files.
+        try:
+            for xml_name, content in pdf_reader.getAttachments():
+                to_process.extend(self._decode_xml(xml_name, content))
+        except NotImplementedError as e:
+            _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s." % (filename, e))
+
+        # Process the pdf itself.
+        to_process.append({
+            'filename': filename,
+            'content': content,
+            'type': 'pdf',
+            'pdf_reader': pdf_reader,
+        })
+
+        return to_process
+
+    def _decode_attachment(self, attachment):
+        """Decodes an ir.attachment and unwrap sub-attachment into a list of dictionary each representing an attachment.
+
+        :param attachment:  An ir.attachment record.
+        :returns:           A list of dictionary for each attachment.
+        * filename:         The name of the attachment.
+        * content:          The content of the attachment.
+        * type:             The type of the attachment.
+        * xml_tree:         The tree of the xml if type is xml.
+        * pdf_reader:       The pdf_reader if type is pdf.
+        """
+        content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        to_process = []
+
+        # XML attachments received by mail have a 'text/plain' mimetype.
+        # Therefore, if content start with '<?xml', it is considered as XML.
+        is_text_plain_xml = 'text/plain' in attachment.mimetype and content.startswith(b'<?xml')
+        if 'pdf' in attachment.mimetype:
+            to_process.extend(self._decode_pdf(attachment.name, content))
+        elif 'xml' in attachment.mimetype or is_text_plain_xml:
+            to_process.extend(self._decode_xml(attachment.name, content))
+
+        return to_process
+
+    def _facturx_create_document_from_attachment(self, attachment):
+        """Decodes an ir.attachment to create an invoice.
+
+        :param attachment:  An ir.attachment record.
+        :returns:           The invoice where to import data.
+        """
+        for file_data in self._decode_attachment(attachment):
+            res = False
+            try:
+                if file_data['type'] == 'xml':
+                    res = self.with_company(self.env.company)._create_invoice_from_xml_tree(
+                        file_data['filename'], file_data['xml_tree'])
+            except RedirectWarning as rw:
+                raise rw
+            except Exception as e:
+                _logger.exception(
+                    "Error importing attachment \"%s\" as invoice with format Factur-X: %s",
+                    file_data['filename'],
+                    str(e))
+            if res:
+                return res
+        return self.env['account.move']
+
+    def _facturx_update_invoice_from_attachment(self, attachment, invoice):
+        """Decodes an ir.attachment to update an invoice.
+
+        :param attachment:  An ir.attachment record.
+        :returns:           The invoice where to import data.
+        """
+        for file_data in self._decode_attachment(attachment):
+            res = False
+            try:
+                if file_data['type'] == 'xml':
+                    res = self.with_company(self.env.company)._update_invoice_from_xml_tree(
+                        file_data['filename'], file_data['xml_tree'], invoice)
+            except Exception as e:
+                _logger.exception(
+                    "Error importing attachment \"%s\" as invoice with format Factur-X: %s",
+                    file_data['filename'],
+                    str(e))
+            if res:
+                return res
+        return self.env['account.move']
+
+    ####################################################
+    # Import
+    ####################################################
+
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
+        if not journal:
+            journal = self.env['account.journal'].search([
+                ('company_id', '=', self.env.company.id), ('type', '=', 'purchase')
+            ], limit=1)
+        if tree.tag != '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
+            return
+        return self._import_invoice(journal, filename, tree)
+
+    def _update_invoice_from_xml_tree(self, filename, tree, invoice):
+        if tree.tag != '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
+            return
+        return self._import_invoice(invoice.journal_id, filename, tree, invoice)
 
     def _import_fill_invoice_form(self, journal, tree, invoice, qty_factor):
 
@@ -357,9 +508,9 @@ class AccountEdiXmlCII(models.AbstractModel):
         invoice_line.tax_ids = taxes
         return logs
 
-    # -------------------------------------------------------------------------
-    # IMPORT : helpers
-    # -------------------------------------------------------------------------
+    ####################################################
+    # Import: helpers
+    ####################################################
 
     def _get_import_document_amount_sign(self, filename, tree):
         """

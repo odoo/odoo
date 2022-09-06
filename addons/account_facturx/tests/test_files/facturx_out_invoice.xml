@@ -1,12 +1,12 @@
-<rsm:CrossIndustryInvoice xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+<rsm:CrossIndustryInvoice xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
   <rsm:ExchangedDocumentContext>
     <ram:GuidelineSpecifiedDocumentContextParameter>
       <ram:ID>urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended</ram:ID>
     </ram:GuidelineSpecifiedDocumentContextParameter>
   </rsm:ExchangedDocumentContext>
   <rsm:ExchangedDocument>
-    <ram:ID>RINV/2017/01/0001</ram:ID>
-    <ram:TypeCode>381</ram:TypeCode>
+    <ram:ID>INV/2017/01/0002</ram:ID>
+    <ram:TypeCode>380</ram:TypeCode>
     <ram:IssueDateTime>
       <udt:DateTimeString format="102">20170101</udt:DateTimeString>
     </ram:IssueDateTime>
@@ -153,7 +153,7 @@
         </ram:SpecifiedTaxRegistration>
       </ram:BuyerTradeParty>
       <ram:BuyerOrderReferencedDocument>
-        <ram:IssuerAssignedID>RINV/2017/01/0001</ram:IssuerAssignedID>
+        <ram:IssuerAssignedID>INV/2017/01/0002: INV/2017/01/0002</ram:IssuerAssignedID>
       </ram:BuyerOrderReferencedDocument>
     </ram:ApplicableHeaderTradeAgreement>
     <ram:ApplicableHeaderTradeDelivery>
@@ -176,11 +176,12 @@
       </ram:ActualDeliverySupplyChainEvent>
     </ram:ApplicableHeaderTradeDelivery>
     <ram:ApplicableHeaderTradeSettlement>
-      <ram:InvoiceCurrencyCode>USD</ram:InvoiceCurrencyCode>
+      <ram:PaymentReference>INV/2017/01/0002</ram:PaymentReference>
+      <ram:InvoiceCurrencyCode>EUR</ram:InvoiceCurrencyCode>
       <ram:SpecifiedTradeSettlementPaymentMeans>
         <ram:TypeCode>42</ram:TypeCode>
         <ram:PayeePartyCreditorFinancialAccount>
-          <ram:ProprietaryID>FR90735788866632</ram:ProprietaryID>
+          <ram:ProprietaryID>FR15001559627230</ram:ProprietaryID>
         </ram:PayeePartyCreditorFinancialAccount>
       </ram:SpecifiedTradeSettlementPaymentMeans>
       <ram:ApplicableTradeTax>
@@ -208,7 +209,7 @@
       <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
         <ram:LineTotalAmount>2682.00</ram:LineTotalAmount>
         <ram:TaxBasisTotalAmount>2682.00</ram:TaxBasisTotalAmount>
-        <ram:TaxTotalAmount currencyID="USD">482.22</ram:TaxTotalAmount>
+        <ram:TaxTotalAmount currencyID="EUR">482.22</ram:TaxTotalAmount>
         <ram:GrandTotalAmount>3164.22</ram:GrandTotalAmount>
         <ram:TotalPrepaidAmount>0.00</ram:TotalPrepaidAmount>
         <ram:DuePayableAmount>3164.22</ram:DuePayableAmount>

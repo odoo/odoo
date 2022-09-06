@@ -3,7 +3,7 @@
 
 from odoo import models, fields, _
 from odoo.tools import str2bool
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import COUNTRY_EAS
+from odoo.addons.account.models.account_edi_mixin import COUNTRY_EAS
 
 import logging
 
@@ -18,6 +18,7 @@ FORMAT_CODES = [
     'ubl_2_1',
 ]
 
+
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
@@ -29,8 +30,6 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         ubl_version = tree.find('{*}UBLVersionID')
         customization_id = tree.find('{*}CustomizationID')
-        if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
-            return self.env['account.edi.xml.cii']
         if customization_id is not None:
             if 'xrechnung' in customization_id.text:
                 return self.env['account.edi.xml.ubl_de']
@@ -48,8 +47,6 @@ class AccountEdiFormat(models.Model):
     def _get_xml_builder(self, company):
         # see https://communaute.chorus-pro.gouv.fr/wp-content/uploads/2017/08/20170630_Solution-portail_Dossier_Specifications_Fournisseurs_Chorus_Facture_V.1.pdf
         # page 45 -> ubl 2.1 for France seems also supported
-        if self.code == 'facturx_1_0_05':
-            return self.env['account.edi.xml.cii']
         # if the company's country is not in the EAS mapping, nothing is generated
         # 'NO' has to be present in COUNTRY_EAS
         if self.code == 'ubl_bis3' and company.country_id.code in COUNTRY_EAS:

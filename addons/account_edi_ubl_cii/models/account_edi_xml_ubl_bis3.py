@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import COUNTRY_EAS
+from odoo.addons.account.models.account_edi_mixin import COUNTRY_EAS
 
 from stdnum.no import mva
 
