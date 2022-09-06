@@ -586,17 +586,26 @@ export function setSelection(
     if (!sel) {
         return null;
     }
-    const range = new Range();
-    if (direction === DIRECTIONS.RIGHT) {
-        range.setStart(anchorNode, anchorOffset);
-        range.collapse(true);
-    } else {
-        range.setEnd(anchorNode, anchorOffset);
-        range.collapse(false);
+    try {
+        const range = new Range();
+        if (direction === DIRECTIONS.RIGHT) {
+            range.setStart(anchorNode, anchorOffset);
+            range.collapse(true);
+        } else {
+            range.setEnd(anchorNode, anchorOffset);
+            range.collapse(false);
+        }
+        sel.removeAllRanges();
+        sel.addRange(range);
+        sel.extend(focusNode, focusOffset);
+    } catch (e) {
+        // Firefox throws NS_ERROR_FAILURE when setting selection on element
+        // with contentEditable=false for no valid reason since non-editable
+        // content are selectable by the user anyway.
+        if (e.name !== 'NS_ERROR_FAILURE') {
+            throw e;
+        }
     }
-    sel.removeAllRanges();
-    sel.addRange(range);
-    sel.extend(focusNode, focusOffset);
 
     return [anchorNode, anchorOffset, focusNode, focusOffset];
 }
