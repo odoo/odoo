@@ -231,13 +231,13 @@ QUnit.test('chatter: drop attachments', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
-    const { openView } = await start();
+    const { afterEvent, openView } = await start();
     await openView({
         res_id: resPartnerId1,
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    const files = [
+    let files = [
         await createFile({
             content: 'hello, world',
             contentType: 'text/plain',
@@ -260,9 +260,12 @@ QUnit.test('chatter: drop attachments', async function (assert) {
         "should have no attachment before files are dropped"
     );
 
-    await afterNextRender(() =>
-        dropFiles(document.querySelector('.o_Chatter_dropZone'), files)
-    );
+    await afterNextRender(() => afterEvent({
+        eventName: 'o-file-uploader-upload',
+        func: () => dropFiles(document.querySelector('.o_Chatter_dropZone'), files),
+        message: "should wait until files are uploaded",
+        predicate: ({ files: uploadedFiles }) => uploadedFiles === files,
+    }));
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
         2,
@@ -270,18 +273,19 @@ QUnit.test('chatter: drop attachments', async function (assert) {
     );
 
     await afterNextRender(() => dragenterFiles(document.querySelector('.o_Chatter')));
-    await afterNextRender(async () =>
-        dropFiles(
-            document.querySelector('.o_Chatter_dropZone'),
-            [
-                await createFile({
-                    content: 'hello, world',
-                    contentType: 'text/plain',
-                    name: 'text3.txt',
-                })
-            ]
-        )
-    );
+    files = [
+        await createFile({
+            content: 'hello, world',
+            contentType: 'text/plain',
+            name: 'text3.txt',
+        })
+    ];
+    await afterNextRender(() => afterEvent({
+        eventName: 'o-file-uploader-upload',
+        func: () => dropFiles(document.querySelector('.o_Chatter_dropZone'), files),
+        message: "should wait until files are uploaded",
+        predicate: ({ files: uploadedFiles }) => uploadedFiles === files,
+    }));
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
         3,
