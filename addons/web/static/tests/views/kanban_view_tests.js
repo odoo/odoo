@@ -1194,6 +1194,33 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("grouped kanban with quick_create attrs set to false", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban quick_create="false" on_create="quick_create">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            createRecord: () => assert.step("create record"),
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsNone(target, ".o_kanban_quick_add");
+
+        await click(target.querySelector(".o-kanban-button-new"));
+
+        assert.containsNone(target, ".o_kanban_quick_create");
+        assert.verifySteps(["create record"]);
+    });
+
     QUnit.test("create in grouped on m2o", async (assert) => {
         await makeView({
             type: "kanban",
