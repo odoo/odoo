@@ -15,7 +15,7 @@
             <!-- Drag/Drop Area -->
             <div id="oe_structure_we_index_1" class="oe_structure oe_empty"/>
             <!-- Content -->
-            <div t-attf-class="o_wevent_events_list #{opt_events_list_cards and 'opt_event_list_cards_bg'}">
+            <div class="o_wevent_events_list">
                 <div class="container">
                     <div class="d-flex mx-n3">
                         <t t-call="website_event.searched_tags"/>
@@ -79,7 +79,7 @@
 <template id="searched_tags" name="Searched tags">
     <div class="d-flex align-items-center mt16">
         <t t-foreach="search_tags" t-as="tag">
-            <span class="align-items-baseline border d-inline-flex ps-2 rounded ml16 mb-2 bg-white">
+            <span t-attf-class="align-items-baseline border d-inline-flex ps-2 rounded ml16 mb-2 #{'o_tag_color_%s' % tag.color if tag.color else ''}">
                 <i class="fa fa-tag me-2 text-muted"/>
                 <t t-out="tag.display_name"/>
                 <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1">&#215;</a>
@@ -172,9 +172,9 @@
                                 <t t-set="_record" t-value="event"/>
 
                                 <!-- Short Date -->
-                                <div class="o_wevent_event_date position-absolute bg-white shadow-sm text-dark">
-                                    <span t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
-                                    <span t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
+                                <div class="o_wevent_event_date position-absolute shadow-sm o_not_editable">
+                                    <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
+                                    <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
                                 </div>
                                 <!-- Participating -->
                                 <small t-if="event.is_participating" class="o_wevent_participating text-bg-success">
@@ -197,15 +197,15 @@
                                 <span t-field="event.name" itemprop="name"/>
                             </h5>
                             <!-- Start Date & Time -->
-                            <time itemprop="startDate" t-att-datetime="event.date_begin">
-                                    <span t-field="event.date_begin"
-                                    t-options="{'tz_name': event.date_tz, 'date_only': 'true', 'format': 'long', 'tz_name': event.date_tz}"/> -
-                                <span t-field="event.date_begin" class="oe_hide_on_date_edit"
-                                    t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short', 'tz_name': event.date_tz}"/>
-                                (<span t-field="event.date_tz"/>)
+                            <time class="o_not_editable" itemprop="startDate" t-att-datetime="event.date_begin">
+                                <span t-out="event.date_begin"
+                                    t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'date_only': 'true', 'format': 'long', 'tz_name': event.date_tz}"/> -
+                                <span t-out="event.date_begin"
+                                    t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short', 'tz_name': event.date_tz}"/>
+                                (<span t-out="event.date_tz"/>)
                             </time>
                             <!-- Location -->
-                            <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                            <div class="o_not_editable" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
                             <div class="mt8">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.is_published)" t-as="tag">
                                     <span t-if="tag.color"
@@ -218,11 +218,11 @@
                     </div>
                     <!-- Footer -->
                     <footer t-if="not event.event_registrations_open or event.event_registrations_sold_out"
-                        t-att-class="'small align-self-end w-100 %s %s' % (
+                        t-att-class="'alert-secondary small align-self-end w-100 %s %s' % (
                             opt_events_list_cards and 'card-footer' or (not opt_events_list_columns and 'mx-4 mt-auto pt-2') or 'py-2',
                             opt_events_list_cards and 'border-top' or '',
                         )">
-                        <span t-if="not event.event_registrations_open" class="text-danger">
+                        <span t-if="not event.event_registrations_open">
                             <t t-if="not event.event_registrations_started">
                                 Registrations not yet open
                             </t>

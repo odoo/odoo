@@ -48,7 +48,7 @@
 
 <template id="event_track_content" name="Track: Main Description">
     <div name="o_wesession_track_main"
-         t-att-class="'col-12 o_wevent_online_page_main o_wesession_track_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+         t-att-class="'col-12 o_wevent_online_page_main o_wesession_track_main o_wevent_theme_bg_base p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
         <!-- LIVE INFORMATIONS -->
         <div t-if="not track.event_id.is_ongoing and track.event_id.start_remaining" class="pt-3">
             <div class="mx-3 alert alert-warning">
@@ -167,7 +167,7 @@
 
 <template id="event_track_aside" name="Track: Aside">
     <div t-att-class="'col-12 ps-0 pe-0 o_wevent_online_page_aside o_wesession_track_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
-        <div class="bg-white pt-0 pt-md-3 o_wevent_online_page_aside_content">
+        <div class="o_wevent_theme_bg_base pt-0 pt-md-3 o_wevent_online_page_aside_content">
             <div class="mx-2" t-if="track.date and track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>
                 <div t-if="cta_coundown" class="text-center mt-2 mt-md-0 w-100 btn btn-primary d-none">
