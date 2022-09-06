@@ -311,47 +311,35 @@ QUnit.module(
         });
 
         QUnit.test("parse smart date input", async (assert) => {
-            const format = "dd MM yyyy";
-            assert.strictEqual(
-                parseDate("+1d").toFormat(format),
-                DateTime.utc().plus({ days: 1 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("+2w").toFormat(format),
-                DateTime.utc().plus({ weeks: 2 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDate("+3m").toFormat(format),
-                DateTime.utc().plus({ months: 3 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("+4y").toFormat(format),
-                DateTime.utc().plus({ years: 4 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDate("+5").toFormat(format),
-                DateTime.utc().plus({ days: 5 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("-5").toFormat(format),
-                DateTime.utc().minus({ days: 5 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDate("-4y").toFormat(format),
-                DateTime.utc().minus({ years: 4 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("-3m").toFormat(format),
-                DateTime.utc().minus({ months: 3 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDate("-2w").toFormat(format),
-                DateTime.utc().minus({ weeks: 2 }).toFormat(format)
-            );
-            assert.strictEqual(
-                parseDateTime("-1d").toFormat(format),
-                DateTime.utc().minus({ days: 1 }).toFormat(format)
-            );
+            patchDate(2020, 0, 1, 0, 0, 0); // 2020-01-01 00:00:00
+
+            const format = "yyyy-MM-dd HH:mm";
+            // with parseDate
+            assert.strictEqual(parseDate("+0").toFormat(format), "2020-01-01 00:00");
+            assert.strictEqual(parseDate("-0").toFormat(format), "2020-01-01 00:00");
+            assert.strictEqual(parseDate("+1d").toFormat(format), "2020-01-02 00:00");
+            assert.strictEqual(parseDate("+2w").toFormat(format), "2020-01-15 00:00");
+            assert.strictEqual(parseDate("+3m").toFormat(format), "2020-04-01 00:00");
+            assert.strictEqual(parseDate("+4y").toFormat(format), "2024-01-01 00:00");
+            assert.strictEqual(parseDate("+5").toFormat(format), "2020-01-06 00:00");
+            assert.strictEqual(parseDate("-5").toFormat(format), "2019-12-27 00:00");
+            assert.strictEqual(parseDate("-4y").toFormat(format), "2016-01-01 00:00");
+            assert.strictEqual(parseDate("-3m").toFormat(format), "2019-10-01 00:00");
+            assert.strictEqual(parseDate("-2w").toFormat(format), "2019-12-18 00:00");
+            assert.strictEqual(parseDate("-1d").toFormat(format), "2019-12-31 00:00");
+            // with parseDateTime
+            assert.strictEqual(parseDateTime("+0").toFormat(format), "2020-01-01 00:00");
+            assert.strictEqual(parseDateTime("-0").toFormat(format), "2020-01-01 00:00");
+            assert.strictEqual(parseDateTime("+1d").toFormat(format), "2020-01-02 00:00");
+            assert.strictEqual(parseDateTime("+2w").toFormat(format), "2020-01-15 00:00");
+            assert.strictEqual(parseDateTime("+3m").toFormat(format), "2020-04-01 00:00");
+            assert.strictEqual(parseDateTime("+4y").toFormat(format), "2024-01-01 00:00");
+            assert.strictEqual(parseDateTime("+5").toFormat(format), "2020-01-06 00:00");
+            assert.strictEqual(parseDateTime("-5").toFormat(format), "2019-12-27 00:00");
+            assert.strictEqual(parseDateTime("-4y").toFormat(format), "2016-01-01 00:00");
+            assert.strictEqual(parseDateTime("-3m").toFormat(format), "2019-10-01 00:00");
+            assert.strictEqual(parseDateTime("-2w").toFormat(format), "2019-12-18 00:00");
+            assert.strictEqual(parseDateTime("-1d").toFormat(format), "2019-12-31 00:00");
         });
 
         QUnit.test("parseDateTime ISO8601 Format", async (assert) => {
