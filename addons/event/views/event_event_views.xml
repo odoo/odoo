@@ -35,7 +35,7 @@
                     <field name="kanban_state" widget="state_selection" class="ms-auto float-end"/>
                     <div class="oe_title">
                         <label for="name" string="Event Name"/>
-                        <h1><field class="text-break" name="name" placeholder="e.g. &quot;Conference for Architects&quot;"/></h1>
+                        <h1><field class="text-break" name="name" placeholder="e.g. Conference for Architects"/></h1>
                     </div>
                     <group>
                         <group>
@@ -148,7 +148,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="name" placeholder="e.g. &quot;Conference for Architects&quot;"/>
+                    <field name="name" placeholder="e.g. Conference for Architects"/>
                     <label for="date_begin" string="Date"/>
                     <div class="o_row">
                         <field name="date_begin" widget="daterange" options="{'related_end_date': 'date_end'}"/>
@@ -201,7 +201,10 @@
                                         <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                             <field name="name"/>
                                         </div>
-                                        <div t-if="record.address_id.value"><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
+                                        <div t-if="record.address_id.value" class="d-flex">
+                                            <i class="fa fa-map-marker mt-1 me-1" title="Location"/>
+                                            <span t-esc="record.address_id.value"/>
+                                        </div>
                                     </div>
                                     <h5 class="o_event_fontsize_11 p-0">
                                         <a name="%(event_registration_action_stats_from_event)d"

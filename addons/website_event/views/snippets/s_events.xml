@@ -47,13 +47,13 @@
                     <t t-set="_resize_height" t-value="256"/>
                     <t t-set="_resize_width" t-value="256"/>
 
-                    <div class="s_events_event_date position-absolute bg-white shadow-sm text-dark">
+                    <div class="s_events_event_date o_wevent_theme_bg_base position-absolute shadow-sm text-dark">
                         <span t-field="record.date_begin" t-options="{'format': 'LLL'}" class="s_events_event_month"/>
                         <span t-field="record.date_begin" t-options="{'format': 'dd'}" class="s_events_event_day"/>
                     </div>
                 </t>
             </a>
-            <div class="card-body p-3">
+            <div class="o_wevent_theme_bg_base card-body p-3">
                 <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                 <h5 class="mb-0 text-truncate" t-field="record.name"/>
                 <time itemprop="startDate" t-att-datetime="record.date_begin">
