@@ -22,12 +22,16 @@ class AccountJournal(models.Model):
 
         self._cr.execute('''
             SELECT acquirer.id
-            FROM payment_acquirer acquirer
-            JOIN account_payment_method apm ON apm.code = acquirer.provider
-            LEFT JOIN account_payment_method_line apml ON apm.id = apml.payment_method_id AND apml.journal_id IS NOT NULL
-            WHERE acquirer.state IN ('enabled', 'test') AND apm.payment_type = 'inbound'
-            AND apml.id IS NULL
-            AND acquirer.company_id IN %(company_ids)s
+              FROM payment_acquirer acquirer
+              JOIN account_payment_method apm
+                ON apm.code = acquirer.provider
+         LEFT JOIN account_payment_method_line apml
+                ON apm.id = apml.payment_method_id AND apml.journal_id IS NOT NULL
+             WHERE acquirer.state IN ('enabled', 'test')
+               AND acquirer.provider != 'custom'
+               AND apm.payment_type = 'inbound'
+               AND apml.id IS NULL
+               AND acquirer.company_id IN %(company_ids)s
         ''', {'company_ids': tuple(self.company_id.ids)})
         ids = [r[0] for r in self._cr.fetchall()]
         if ids:
