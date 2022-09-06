@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import SavepointCase, users
 
 
 class TestSaleProject(SavepointCase):
@@ -80,15 +80,15 @@ class TestSaleProject(SavepointCase):
             'service_tracking': 'project_only',
             'project_id': False,
         })
+        cls.partner = cls.env['res.partner'].create({'name': "Mur en béton"})
 
     def test_sale_order_with_project_task(self):
         SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
 
-        partner = self.env['res.partner'].create({'name': "Mur en béton"})
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': partner.id,
-            'partner_invoice_id': partner.id,
-            'partner_shipping_id': partner.id,
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
         })
         so_line_order_no_task = SaleOrderLine.create({
             'name': self.product_order_service1.name,
@@ -141,11 +141,10 @@ class TestSaleProject(SavepointCase):
         self.assertTrue(so_line_order_only_project.project_id, "Sales order line should be linked to newly created project")
 
     def test_sol_product_type_update(self):
-        partner = self.env['res.partner'].create({'name': "Mur en brique"})
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': partner.id,
-            'partner_invoice_id': partner.id,
-            'partner_shipping_id': partner.id,
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
         })
         self.product_order_service3.type = 'consu'
         sale_order_line = self.env['sale.order.line'].create({
@@ -160,3 +159,31 @@ class TestSaleProject(SavepointCase):
 
         self.product_order_service3.type = 'service'
         self.assertTrue(sale_order_line.is_service, "As the product is a service, the SOL should be a service")
+
+    @users('demo')
+    def test_cancel_so_linked_to_project(self):
+        """ Test that cancelling a SO linked to a project will not raise an error """
+        # Ensure user don't have edit right access to the project
+        group_sale_manager = self.env.ref('sales_team.group_sale_manager')
+        group_project_user = self.env.ref('project.group_project_user')
+        self.env.user.write({'groups_id': [(6, 0, [group_sale_manager.id, group_project_user.id])]})
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'project_id': self.project_global.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'name': self.product_order_service2.name,
+            'product_id': self.product_order_service2.id,
+            'order_id': sale_order.id,
+        })
+        self.assertFalse(self.project_global.tasks.sale_line_id, "The project tasks should not be linked to the SOL")
+
+        sale_order.action_confirm()
+        self.assertEqual(self.project_global.tasks.sale_line_id.id, sale_order_line.id, "The project tasks should be linked to the SOL from the SO")
+
+        self.project_global.sale_line_id = sale_order_line
+        sale_order.action_cancel()
+        self.assertFalse(self.project_global.sale_line_id, "The project should not be linked to the SOL anymore")

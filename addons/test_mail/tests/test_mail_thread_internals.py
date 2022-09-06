@@ -8,6 +8,7 @@ from odoo.tests.common import tagged, HttpCase, users
 from odoo.tools import mute_logger
 
 
+@tagged('mail_thread')
 class TestChatterTweaks(TestMailCommon, TestRecipients):
 
     @classmethod
@@ -37,6 +38,14 @@ class TestChatterTweaks(TestMailCommon, TestRecipients):
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
         self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_chatter_context_cleaning(self):
+        """ Test default keys are not propagated to message creation as it may
+        induce wrong values for some fields, like parent_id. """
+        parent = self.env['res.partner'].create({'name': 'Parent'})
+        partner = self.env['res.partner'].with_context(default_parent_id=parent.id).create({'name': 'Contact'})
+        self.assertFalse(partner.message_ids[-1].parent_id)
 
     def test_chatter_mail_create_nolog(self):
         """ Test disable of automatic chatter message at create """
