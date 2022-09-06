@@ -3,8 +3,9 @@
 import {Field} from '@web/views/fields/field';
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-const { Component, onWillStart, useState } = owl;
 import { usePopover } from "@web/core/popover/popover_hook";
+
+const { Component, onWillStart, onWillRender, useState } = owl;
 
 function useUniquePopover() {
     const popover = usePopover();
@@ -92,7 +93,7 @@ class HrOrgChartPopover extends Component {
         this.actionService.doAction(action);
     }
 }
-HrOrgChartPopover.template = 'hr_org_chart.hr_orgchart_emp_popover'
+HrOrgChartPopover.template = 'hr_org_chart.hr_orgchart_emp_popover';
 
 export class HrOrgChart extends Field {
     async setup() {
@@ -105,25 +106,34 @@ export class HrOrgChart extends Field {
 
         this.jsonStringify = JSON.stringify;
 
-        const recordData = this.props.record.data;
+        this.state = useState({'employee_id': null});
 
-        this.state = useState({'employee_id': null})
-
-        // the widget is either dispayed in the context of a hr.employee form or a res.users form
-        if (!this.state.employee_id) {
-            this.state.employee_id = recordData.employee_ids !== undefined ? recordData.employee_ids.resIds[0] : recordData.id;
-        }
-        this.employee = recordData;
-
-        onWillStart(async () => await this.fetchEmployeeData(this.state.employee_id));
+        onWillStart(this.handleComponentUpdate.bind(this));
+        onWillRender(this.handleComponentUpdate.bind(this));
     }
 
-    async fetchEmployeeData(employeeId) {
+    /**
+     * Called on start and on render
+     */
+    async handleComponentUpdate() {
+        this.employee = this.props.record.data;
+        // the widget is either dispayed in the context of a hr.employee form or a res.users form
+        this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.employee.id;
+        const forceReload = this.lastRecord !== this.props.record;
+        this.lastRecord = this.props.record;
+        await this.fetchEmployeeData(this.state.employee_id, forceReload);
+    }
+
+    async fetchEmployeeData(employeeId, force = false) {
         if (!employeeId) {
             this.managers = [];
             this.children = [];
+            if (this.view_employee_id) {
+                this.render(true);
+            }
             this.view_employee_id = null;
-        } else {
+        } else if (employeeId !== this.view_employee_id || force) {
+            this.view_employee_id = employeeId;
             var orgData = await this.rpc(
                 '/hr/get_org_chart',
                 {
@@ -141,7 +151,7 @@ export class HrOrgChart extends Field {
             this.children = orgData.children;
             this.managers_more = orgData.managers_more;
             this.self = orgData.self;
-            this.view_employee_id = employeeId;
+            this.render(true);
         }
     }
 
