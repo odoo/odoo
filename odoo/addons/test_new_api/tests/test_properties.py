@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import string
 
 from unittest.mock import patch
 
@@ -230,18 +231,20 @@ class PropertiesCase(TransactionCase):
             }])
             self.env.invalidate_all()
 
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(8):
             messages = self.env['test_new_api.message'].create([{
                 'name': 'Test Message',
                 'discussion': self.discussion_1.id,
                 'author': self.user.id,
                 'attributes': [{
-                    'name': 'discussion_color_code',
-                    'string': 'New Label',
+                    # no name, should be automatically generated
+                    'string': 'Discussion Color code',
                     'type': 'char',
                     'default': 'blue',
                     'value': 'purple',
+                    'definition_changed': True,
                 }, {
+                    # the name is already set and shouldn't be re-generated
                     'name': 'moderator_partner_id',
                     'string': 'Partner',
                     'type': 'many2one',
@@ -254,7 +257,6 @@ class PropertiesCase(TransactionCase):
                 'discussion': self.discussion_2.id,
                 'author': self.user.id,
                 'attributes': [{
-                    'name': 'state',
                     'type': 'selection',
                     'string': 'Status',
                     'selection': [
@@ -269,12 +271,21 @@ class PropertiesCase(TransactionCase):
             self.env.invalidate_all()
 
         sql_definition = self._get_sql_definition(self.discussion_1)
+        self.assertEqual(len(sql_definition), 2)
+
+        # check the generated name
+        property_color_name = sql_definition[0]['name']
+        self.assertEqual(len(property_color_name), 16, msg="Wrong property name")
+        self.assertFalse(
+            set(property_color_name) - set(string.hexdigits),
+            'The UUID must be composed of 16 hexadecimal characters')
+
         self.assertEqual(sql_definition, [
             {
-                'name': 'discussion_color_code',
-                'type': 'char', 'string':
-                'New Label', 'default':
-                'blue'
+                'name': property_color_name,
+                'default': 'blue',
+                'string': 'Discussion Color code',
+                'type': 'char',
             }, {
                 'name': 'moderator_partner_id',
                 'type': 'many2one',
@@ -284,7 +295,7 @@ class PropertiesCase(TransactionCase):
         ])
 
         self.assertEqual(
-            self.discussion_1.attributes_definition[0]['string'], 'New Label',
+            self.discussion_1.attributes_definition[0]['string'], 'Discussion Color code',
             msg='Should have updated the definition record')
 
         self.assertEqual(len(messages), 2)
@@ -293,11 +304,12 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(
             sql_properties_1,
             {'moderator_partner_id': self.partner.id,
-             'discussion_color_code': 'purple'})
+             property_color_name: 'purple'})
         sql_properties_2 = self._get_sql_properties(messages[1])
+        status_name = self.discussion_2.attributes_definition[0]['name']
         self.assertEqual(
             sql_properties_2,
-            {'state': 'draft'})
+            {status_name: 'draft'})
 
         properties_values_1 = messages[0].attributes
         properties_values_2 = messages[1].attributes
