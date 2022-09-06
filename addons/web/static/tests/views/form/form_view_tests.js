@@ -8140,6 +8140,36 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+     QUnit.test("form rendering innergroup: separator should take one line", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <separator string="sep"/>
+                                <td class="o_td_label">
+                                    <label for="display_name"/>
+                                </td>
+                                <field name="display_name" nolabel="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+         const rows = document.querySelectorAll('.o_inner_group tr');
+         assert.containsOnce(rows[0], '> td', 'Should only contain one cell');
+         assert.containsOnce(rows[0], '.o_horizontal_separator');
+         assert.containsN(rows[1], '> td', 2, 'Should contain 2 cells');
+         assert.containsOnce(rows[1], 'label[for=display_name]');
+         assert.containsOnce(rows[1], 'div[name=display_name]');
+    });
+
     QUnit.test("outer and inner groups string attribute", async function (assert) {
         await makeView({
             type: "form",
