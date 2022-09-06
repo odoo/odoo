@@ -74,6 +74,16 @@ $utilities: map-merge(
                 values: $utilities-opacity,
             ),
         ),
+        "background-color": map-merge(
+            map-get($utilities, "background-color"),
+            (
+                values: map-merge($utilities-bg-colors,
+                    (
+                      "view": $o-view-background-color,
+                    )
+                )
+            )
+        ),
         "rounded-top": (
             property: border-top-left-radius border-top-right-radius,
             class: rounded-top,
