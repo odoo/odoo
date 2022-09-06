@@ -37,9 +37,9 @@ export const imStatusService = {
         if (multi_tab.isOnMainTab()) {
             startUpdatingBusPresence();
         }
-        env.bus.addEventListener('become_main_tab', startUpdatingBusPresence);
+        multi_tab.bus.addEventListener('become_main_tab', startUpdatingBusPresence);
         bus_service.addEventListener('reconnect', startUpdatingBusPresence);
-        env.bus.addEventListener('no_longer_main_tab', stopUpdatingBusPresence);
+        multi_tab.bus.addEventListener('no_longer_main_tab', stopUpdatingBusPresence);
         bus_service.addEventListener('disconnect', stopUpdatingBusPresence);
     },
 };
