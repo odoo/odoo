@@ -175,7 +175,6 @@ QUnit.module('mail', {}, function () {
         const pyEnv = await startServer();
         const [resUsersId1, resUsersId2] = pyEnv['res.users'].create([{ name: "Mario" }, { name: "Luigi" }]);
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
-        patchWithCleanup(session, { user_id: [resUsersId2] });
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
@@ -183,7 +182,18 @@ QUnit.module('mail', {}, function () {
         const views = {
             'm2x.avatar.user,false,form': '<form><field name="user_id" widget="many2one_avatar_user"/></form>',
         };
-        const { openView } = await start({ serverData: { views } });
+        const { openView, env } = await start({ serverData: { views } });
+
+        const [user] = pyEnv['res.users'].searchRead([['id', '=', resUsersId2]]);
+        patchWithCleanup(
+            env.services.user,
+            {
+                id: user.id,
+                name: user.name,
+                userId: user.id,
+                userName: user.name,
+            }
+        );
         await openView({
             res_id: m2xAvatarUserId1,
             type: 'ir.actions.act_window',
