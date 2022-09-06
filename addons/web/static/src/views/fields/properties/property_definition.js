@@ -2,6 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { PropertyValue } from "./property_value";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -40,6 +41,7 @@ export class PropertyDefinition extends Component {
             resModel: "",
             resModelDescription: "",
             matchingRecordsCount: undefined,
+            propertyIndex: this.props.propertyIndex,
         });
 
         this._syncStateWithProps(propertyDefinition);
@@ -56,7 +58,11 @@ export class PropertyDefinition extends Component {
             this.labelFocused = true;
             const labelInput = this.propertyDefinitionRef.el.querySelectorAll("input")[0];
             if (labelInput) {
-                labelInput.focus();
+                if (this.props.isNewlyCreated) {
+                    labelInput.select();
+                } else {
+                    labelInput.focus();
+                }
             }
         });
     }
@@ -86,6 +92,20 @@ export class PropertyDefinition extends Component {
     }
 
     /**
+     * Return True if the current properties is the first one in the list.
+     */
+    get isFirst() {
+        return this.state.propertyIndex === 0;
+    }
+
+    /**
+     * Return True if the current properties is the last one in the list.
+     */
+    get isLast() {
+        return this.state.propertyIndex === this.props.propertiesSize - 1;
+    }
+
+    /**
      * Return the list of tag values, that will be selected by the PropertyTags
      * component (all existing tags because we are editing the definition).
      *
@@ -112,6 +132,18 @@ export class PropertyDefinition extends Component {
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
+    }
+
+    /**
+     * Pressed enter on the property label close the definition.
+     *
+     * @param {event} event
+     */
+    onPropertyLabelKeypress(event) {
+        if (event.key !== 'Enter') {
+            return;
+        }
+        this.props.close();
     }
 
     /**
@@ -204,6 +236,20 @@ export class PropertyDefinition extends Component {
             domain: new Domain(this.state.propertyDefinition.domain || "[]").toList(),
             context: this.props.context || {},
         });
+    }
+
+    /**
+     * Move the current property up or down.
+     *
+     * @param {string} direction, either 'up' or 'down'
+     */
+    onPropertyMove(direction) {
+        if (direction === 'up') {
+            this.state.propertyIndex--;
+        } else {
+            this.state.propertyIndex++;
+        }
+        this.props.onPropertyMove(direction);
     }
 
     /**
@@ -309,6 +355,7 @@ export class PropertyDefinition extends Component {
 
 PropertyDefinition.template = "web.PropertyDefinition";
 PropertyDefinition.components = {
+    CheckBox,
     DomainSelector,
     Dropdown,
     DropdownItem,
@@ -323,10 +370,14 @@ PropertyDefinition.props = {
     canChangeDefinition: { type: Boolean, optional: true },
     propertyDefinition: { optional: true },
     context: { type: Object },
+    isNewlyCreated: { type: Boolean, optional: true },
+    // index and number of properties, to hide the move arrows when needed
+    propertyIndex: { type: Number },
+    propertiesSize: { type: Number },
+    // events
     onChange: { type: Function, optional: true },
     onDelete: { type: Function, optional: true },
     onPropertyMove: { type: Function, optional: true },
-
     // prop needed by the popover service
     close: { type: Function, optional: true },
 };

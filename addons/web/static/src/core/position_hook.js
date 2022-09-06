@@ -193,7 +193,7 @@ function getBestPosition(reference, popper, { container, margin, position }) {
  * @param {HTMLElement} popper
  * @param {Options} options
  */
-function reposition(reference, popper, options) {
+export function reposition(reference, popper, options) {
     options = {
         container: document.documentElement,
         ...options,
