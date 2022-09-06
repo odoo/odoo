@@ -1,8 +1,3 @@
-.o_field_property_dropdown_add {
-    * {
-        color: $primary !important;
-    }
-}
 .o_field_property_tag_readonly {
     // deactivate all click interactions with tags
     // if we can't change their definition
@@ -10,16 +5,31 @@
 }
 
 .o_field_property_tag {
+    border: 1px solid var(--o-input-border-color);
+
     .o_tag {
         margin: 1px 2px 1px 0;
-        .o_delete {
-            padding-left: 4px;
-        }
     }
     .o_delete {
-        margin-top: 2px;
+        margin-left: 3px;
+        line-height: 1;
+        &::before {
+            line-height: 1.1;
+        }
     }
     .o_badge_text {
         line-height: 1.1;
+    }
+    .o_input_dropdown {
+        width: 100px !important;
+        min-width: 100px !important;
+        input {
+            border: 0px !important;
+        }
+    }
+    .o_field_property_dropdown_add {
+        * {
+            color: $primary !important;
+        }
     }
 }
