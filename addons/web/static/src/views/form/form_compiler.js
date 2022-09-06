@@ -306,6 +306,10 @@ export class FormCompiler extends ViewCompiler {
                 forceNewline = false;
             }
 
+            if (getTag(child, true) === "separator") {
+                forceNewline = true;
+            }
+
             let slotContent;
             if (getTag(child, true) === "field") {
                 const addLabel = child.hasAttribute("nolabel")
