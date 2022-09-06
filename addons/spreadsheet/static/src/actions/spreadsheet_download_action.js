@@ -32,7 +32,7 @@ async function downloadSpreadsheet(env, action) {
  * @returns {Promise}
  */
 async function waitForDataLoaded(model) {
-    model.dispatch("EVALUATE_ALL_SHEETS");
+    model.dispatch("EVALUATE_CELLS");
     return new Promise((resolve, reject) => {
         let interval = undefined;
         interval = browser.setInterval(() => {

@@ -51,7 +51,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList();
         setCellContent(model, "A1", `=ODOO.LIST(1,1,"active")`);
         assert.strictEqual(getCellValue(model, "A1"), "Loading...");
-        await nextTick(); // Await for batching collection of missing fields
+        await waitForDataSourcesLoaded(model); // Await for batching collection of missing fields
         assert.strictEqual(getCellValue(model, "A1"), true);
     });
 
@@ -291,7 +291,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             uid: 4,
         };
         patchWithCleanup(session, testSession);
-        await createModelWithDataSource({
+        const model = await createModelWithDataSource({
             spreadsheetData,
             mockRPC: function (route, { model, method, kwargs }) {
                 if (model !== "partner") {
@@ -309,6 +309,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
                 }
             },
         });
+        await waitForDataSourcesLoaded(model);
         assert.verifySteps(["search_read"]);
     });
 
@@ -377,16 +378,16 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             domain: [["foo", "in", [55]]],
         });
         assert.deepEqual(model.getters.getListDefinition(listId).domain, [["foo", "in", [55]]]);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCellValue(model, "B2"), "");
         model.dispatch("REQUEST_UNDO");
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.deepEqual(model.getters.getListDefinition(listId).domain, []);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCellValue(model, "B2"), "TRUE");
         model.dispatch("REQUEST_REDO");
         assert.deepEqual(model.getters.getListDefinition(listId).domain, [["foo", "in", [55]]]);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCellValue(model, "B2"), "");
     });
 

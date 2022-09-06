@@ -1,8 +1,10 @@
 /** @odoo-module */
 
-import { nextTick } from "@web/../tests/helpers/utils";
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
-import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
+import {
+    createModelWithDataSource,
+    waitForDataSourcesLoaded,
+} from "@spreadsheet/../tests/utils/model";
 import { parseAccountingDate } from "../../src/accounting_functions";
 import { getCellValue, getCell } from "@spreadsheet/../tests/utils/getters";
 import { getAccountingData } from "../accounting_test_data";
@@ -29,7 +31,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
         setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022")`);
         setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022")`);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.equal(getCellValue(model, "A1"), 16);
         assert.equal(getCellValue(model, "A2"), 42);
         assert.equal(getCellValue(model, "A3"), 26);
@@ -41,7 +43,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
         setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022")`);
         setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022")`);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCell(model, "A1").evaluated.format, "#,##0.00[$€]");
         assert.strictEqual(getCell(model, "A2").evaluated.format, "#,##0.00[$€]");
         assert.strictEqual(getCell(model, "A3").evaluated.format, "#,##0.00[$€]");
@@ -56,7 +58,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             },
         });
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", 0, 123456)`);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.strictEqual(
             getCell(model, "A1").evaluated.error.message,
             "Currency not available for this company."
@@ -72,12 +74,15 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A5", `=ODOO.BALANCE("100", 1900)`); // this should be ok
         setCellContent(model, "A6", `=ODOO.BALANCE("100", 1900, -1)`);
         setCellContent(model, "A7", `=ODOO.DEBIT("100", 1899)`);
-        await nextTick();
-        const errorMessage = `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
+        await waitForDataSourcesLoaded(model);
+        const errorMessage = `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`;
         assert.equal(getCell(model, "A1").evaluated.error.message, "0 is not a valid year.");
         assert.equal(getCell(model, "A2").evaluated.error.message, "0 is not a valid year.");
         assert.equal(getCell(model, "A3").evaluated.error.message, "-1 is not a valid year.");
-        assert.equal(getCell(model, "A4").evaluated.error.message, sprintf(errorMessage, "not a valid period"));
+        assert.equal(
+            getCell(model, "A4").evaluated.error.message,
+            sprintf(errorMessage, "not a valid period")
+        );
         assert.equal(getCell(model, "A5").evaluated.value, 0);
         assert.equal(getCell(model, "A6").evaluated.error.message, "1899 is not a valid year.");
         assert.equal(getCell(model, "A7").evaluated.error.message, "1899 is not a valid year.");
@@ -98,7 +103,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.CREDIT("100,200", "2022")`);
         setCellContent(model, "A2", `=ODOO.DEBIT("100,200", "2022")`);
         setCellContent(model, "A3", `=ODOO.BALANCE("100,200", "2022")`);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.equal(getCellValue(model, "A1"), 26);
         assert.equal(getCellValue(model, "A2"), 142);
         assert.equal(getCellValue(model, "A3"), 116);
@@ -114,7 +119,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             },
         });
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         const cell = getCell(model, "A1");
         assert.equal(cell.evaluated.value, "#ERROR");
         assert.equal(cell.evaluated.error.message, "a nasty error");
@@ -125,7 +130,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             mockRPC: async function (route, args) {
                 if (args.method === "spreadsheet_fetch_debit_credit") {
                     const blobs = args.args[0];
-                    for (let blob of blobs) {
+                    for (const blob of blobs) {
                         assert.step(JSON.stringify(blob));
                     }
                 }
@@ -141,7 +146,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A7", `=ODOO.DEBIT("5", "05/04/2021", 1)`);
         setCellContent(model, "A8", `=ODOO.BALANCE("5", "2022",,,FALSE)`);
         setCellContent(model, "A9", `=ODOO.BALANCE("100", "05/05/2022",,,TRUE)`);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
 
         assert.verifySteps([
             JSON.stringify(
@@ -217,7 +222,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                 if (args.method === "spreadsheet_fetch_debit_credit") {
                     assert.step("spreadsheet_fetch_debit_credit");
                     const blobs = args.args[0];
-                    for (let blob of blobs) {
+                    for (const blob of blobs) {
                         assert.step(JSON.stringify(blob));
                     }
                 }
@@ -226,7 +231,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.BALANCE("100,200", "2022")`);
         setCellContent(model, "A2", `=ODOO.CREDIT("100,200", "2022")`);
         setCellContent(model, "A3", `=ODOO.DEBIT("100,200","2022")`);
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
 
         assert.verifySteps([
             "spreadsheet_fetch_debit_credit",
@@ -256,7 +261,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                 if (args.method === "spreadsheet_fetch_debit_credit") {
                     assert.step("spreadsheet_fetch_debit_credit");
                     const blobs = args.args[0];
-                    for (let blob of blobs) {
+                    for (const blob of blobs) {
                         assert.step(JSON.stringify(blob));
                     }
                 }
@@ -266,7 +271,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A2", `=ODOO.BALANCE(A1, 2022)`);
         assert.equal(getCellValue(model, "A1"), "Loading...");
         assert.equal(getCellValue(model, "A2"), "Loading...");
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.equal(getCellValue(model, "A1"), "100104,200104");
         assert.equal(getCellValue(model, "A2"), 0);
         assert.verifySteps([
@@ -297,7 +302,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                 if (args.method === "spreadsheet_fetch_debit_credit") {
                     assert.step("spreadsheet_fetch_debit_credit");
                     const blobs = args.args[0];
-                    for (let blob of blobs) {
+                    for (const blob of blobs) {
                         assert.step(JSON.stringify(blob));
                     }
                 }
@@ -313,7 +318,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         // Because cells are evaluated given their order in the sheet,
         // A1's request is done first, meaning it's also resolved first, which add A2 to the next batch (synchronously)
         // Only then A3 is resolved. => A2 is batched while A3 is pending
-        await nextTick();
+        await waitForDataSourcesLoaded(model);
         assert.equal(getCellValue(model, "A1"), "100104,200104");
         assert.equal(getCellValue(model, "A2"), 0);
         assert.equal(getCellValue(model, "A3"), 0);

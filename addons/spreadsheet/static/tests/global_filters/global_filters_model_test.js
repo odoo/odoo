@@ -6,6 +6,7 @@ import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import {
     createModelWithDataSource,
     setupDataSourceEvaluation,
+    waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
 import { createSpreadsheetWithPivotAndList } from "@spreadsheet/../tests/utils/pivot_list";
 
@@ -891,6 +892,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     }
                 },
             });
+            await waitForDataSourcesLoaded(model);
             assert.verifySteps([
                 "partner/read_group",
                 "partner/read_group",
@@ -949,6 +951,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     }
                 },
             });
+            await waitForDataSourcesLoaded(model);
             assert.verifySteps(["partner/read_group"]);
             assert.equal(getCellValue(model, "A1"), "");
         }
@@ -984,12 +987,14 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 }
             },
         });
+        await waitForDataSourcesLoaded(model);
         assert.verifySteps([
             "partner/read_group",
             "partner/read_group",
             "partner/read_group",
             "partner/read_group",
         ]);
+        assert.strictEqual(getCellValue(model, "A1"), 131);
         model.dispatch("ADD_GLOBAL_FILTER", {
             filter: {
                 id: "42",
@@ -1002,6 +1007,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 defaultValue: {}, // no default value!
             },
         });
+        assert.strictEqual(getCellValue(model, "A1"), 131);
         assert.verifySteps([]);
     });
 
@@ -1165,7 +1171,9 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const { model } = await createSpreadsheetWithPivotAndList();
         await addGlobalFilter(model, THIS_YEAR_FILTER);
         const [filter] = model.getters.getGlobalFilters();
-        const filterPlugin = model["handlers"].find((handler) => handler instanceof FiltersEvaluationPlugin);
+        const filterPlugin = model["handlers"].find(
+            (handler) => handler instanceof FiltersEvaluationPlugin
+        );
         const exportData = { styles: [], sheets: [] };
         filterPlugin.exportForExcel(exportData);
         const filterSheet = exportData.sheets[0];
