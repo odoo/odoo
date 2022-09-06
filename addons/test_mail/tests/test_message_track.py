@@ -245,6 +245,9 @@ class TestTracking(TestMailCommon):
         })
         test_mail_record.with_context(default_parent_id=2147483647).write({'name': magic_code})
 
+        self.registry('mail.test.container')._revert_method('_track_subtype')
+        self.registry('mail.test.container')._revert_method('_track_template')
+
     def test_message_track_multiple(self):
         """ check that multiple updates generate a single tracking message """
         container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})

@@ -1034,7 +1034,7 @@ class MailThread(models.AbstractModel):
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         original_partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
-        for model, thread_id, custom_values, user_id, alias in routes or ():
+        for model, thread_id, custom_values, user_id, _alias in routes or ():
             subtype_id = False
             related_user = self.env['res.users'].browse(user_id)
             Model = self.env[model].with_context(mail_create_nosubscribe=True, mail_create_nolog=True)
@@ -1477,6 +1477,7 @@ class MailThread(models.AbstractModel):
         if parent_ids:
             msg_dict['parent_id'] = parent_ids.id
             msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
+            # msg_dict['is_internal'] = parent_ids.subtype_id.internal if parent_ids.subtype_id else True
 
         msg_dict.update(self._message_parse_extract_payload(message, save_original=save_original))
         msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))

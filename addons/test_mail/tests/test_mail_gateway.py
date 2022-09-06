@@ -98,6 +98,7 @@ class TestEmailParsing(TestMailCommon):
 class TestMailAlias(TestMailCommon):
 
     @users('employee')
+    @mute_logger('odoo.addons.base.models.ir_model')
     def test_alias_creation(self):
         record = self.env['mail.test.container'].create({
             'name': 'Test Record',
@@ -1430,6 +1431,135 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(record._name, 'mail.test.gateway')
 
 
+@tagged('mail_gateway', 'caca')
+class TestMailGatewayFlow(TestMailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailGatewayFlow, cls).setUpClass()
+        cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
+            'name': 'Valid Lelitre',
+            'email': 'valid.lelitre@agrolait.com',
+        })
+        cls._init_mail_gateway()
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_gateway_flow_with_tracking_templates(self):
+        """ Test subtype computation with incoming emails, notably replies
+        to comments or notes. """
+        alias_track = self.env['mail.alias'].create({
+            'alias_contact': 'everyone',
+            'alias_model_id': self.env['ir.model']._get('mail.test.gateway.track').id,
+            'alias_name': 'gateway.track',
+            'alias_user_id': False,
+        })
+
+         # customer creates a new record through mail gateway
+        with self.mock_mail_app(), self.mock_mail_gateway():
+            test_record = self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email,
+                f'{alias_track.alias_name}@{self.alias_domain}',
+                cc='',
+                subject='Initial Request',
+                target_model='mail.test.gateway.track'
+            )
+        self.assertEqual(test_record.email_from, self.partner_1.email)
+        self.assertEqual(test_record.message_partner_ids, self.partner_1)
+        self.assertEqual(test_record.name, 'Initial Request')
+        self.assertEqual(len(self._new_msgs), 2, 'Gateway: should post customer email and automatic email')
+
+        init_msg = self._new_msgs[0]
+        self.assertEqual(init_msg.author_id, self.env.user.partner_id,
+                         'TdeNote: not sure about author of tracking message')
+        self.assertEqual(init_msg.body, f'<p>Reply on {test_record.name}</p>')
+        self.assertFalse(init_msg.is_internal)
+        self.assertTrue(init_msg.message_id)
+        self.assertFalse(init_msg.notified_partner_ids)
+        self.assertEqual(init_msg.reply_to, formataddr((
+            f'{self.env.company.name} {test_record.name}',
+            f'{self.alias_catchall}@{self.alias_domain}'
+        )))
+        self.assertEqual(init_msg.subtype_id, self.env.ref('mail.mt_note'))
+
+        track_msg = self._new_msgs[1]
+        self.assertEqual(track_msg.author_id, self.partner_1)
+        self.assertIn('Please call me as soon as possible this afternoon!', track_msg.body)
+        self.assertFalse(track_msg.is_internal)
+        self.assertTrue(track_msg.message_id)
+        self.assertFalse(track_msg.notified_partner_ids)
+        self.assertEqual(track_msg.reply_to, formataddr((
+            f'{self.env.company.name} {test_record.name}',
+            f'{self.alias_catchall}@{self.alias_domain}'
+        )))
+        self.assertEqual(track_msg.subtype_id, self.env.ref('mail.mt_comment'))
+
+        # simulate some kind of auto assignment (outside scope of this test)
+        test_record.message_subscribe(partner_ids=self.partner_employee.ids)
+
+        # simulate customer reply to the template track
+        with self.mock_mail_app(), self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email,
+                init_msg.reply_to,
+                cc='',
+                extra=f'References: {init_msg.message_id}',
+                subject='Re: Replies to track template',
+            )
+        reply_msg = self._new_msgs
+        self.assertEqual(reply_msg.author_id, self.partner_1)
+        self.assertTrue(reply_msg.is_internal)
+        self.assertTrue(reply_msg.message_id)
+        self.assertFalse(reply_msg.notified_partner_ids)
+        self.assertEqual(reply_msg.parent_id, init_msg)
+        self.assertEqual(reply_msg.reply_to, formataddr((
+            f'{self.env.company.name} {test_record.name}',
+            f'{self.alias_catchall}@{self.alias_domain}'
+        )))
+        self.assertEqual(reply_msg.subtype_id, self.env.ref('mail.mt_note'))
+
+        # responsible sends a personal note to the customer
+        with self.mock_mail_app(), self.mock_mail_gateway():
+            test_record.with_user(self.user_employee).message_post(
+                body='<p>Sent to customer</p>',
+                message_type='comment',
+                subject='Contacting customer',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        post_msg = self._new_msgs
+        self.assertEqual(post_msg.author_id, self.partner_employee)
+        self.assertFalse(post_msg.is_internal)
+        self.assertTrue(post_msg.message_id)
+        self.assertEqual(post_msg.notified_partner_ids, self.partner_1)
+        self.assertEqual(post_msg.parent_id, init_msg)
+        self.assertEqual(post_msg.reply_to, formataddr((
+            f'{self.env.company.name} {test_record.name}',
+            f'{self.alias_catchall}@{self.alias_domain}'
+        )))
+        self.assertEqual(post_msg.subtype_id, self.env.ref('mail.mt_comment'))
+
+        # customer answers
+        with self.mock_mail_app(), self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email,
+                post_msg.reply_to,
+                cc='',
+                extra=f'References: {init_msg.message_id} {post_msg.message_id}',
+                subject='Re: Replies to responsible',
+            )
+        reply_msg = self._new_msgs
+        self.assertEqual(reply_msg.author_id, self.partner_1)
+        self.assertFalse(reply_msg.is_internal)
+        self.assertTrue(reply_msg.message_id)
+        self.assertEqual(reply_msg.notified_partner_ids, self.partner_employee)
+        self.assertEqual(reply_msg.parent_id, init_msg)
+        self.assertEqual(reply_msg.reply_to, formataddr((
+            f'{self.env.company.name} {test_record.name}',
+            f'{self.alias_catchall}@{self.alias_domain}'
+        )))
+        self.assertEqual(reply_msg.subtype_id, self.env.ref('mail.mt_comment'))
+
+
+@tagged('mail_gateway')
 class TestMailThreadCC(TestMailCommon):
 
     @classmethod

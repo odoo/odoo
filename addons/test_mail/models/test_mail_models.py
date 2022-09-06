@@ -51,6 +51,41 @@ class MailTestGatewayGroups(models.Model):
         return values
 
 
+class MailTestGatewayTrack(models.Model):
+    """ A very simple model only inheriting from mail.thread to test pure mass
+    mailing features and base performances. """
+    _description = 'Gateway model with tracking and templates (acknowledgments)'
+    _name = 'mail.test.gateway.track'
+    _inherit = ['mail.thread.blacklist']
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char(tracking=True)
+    custom_field = fields.Char()
+
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        if custom_values is None:
+            custom_values = {}
+        defaults = {
+            'email_from': msg_dict.get('from'),
+        }
+        defaults.update(custom_values)
+        return super(MailTestGatewayTrack, self).message_new(msg_dict, custom_values=defaults)
+
+    def _track_template(self, changes):
+        res = super(MailTestGatewayTrack, self)._track_template(changes)
+        test_record = self[0]
+        if 'email_from' in changes and test_record.email_from:
+            mail_template = self.env.ref('test_mail.mail_test_gateway_track_tpl')
+            res['email_from'] = (mail_template, {
+                'auto_delete_message': True,
+                'email_layout_xmlid': 'mail.mail_notification_light',
+                'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+            })
+        return res
+
+
 class MailTestStandard(models.Model):
     """ This model can be used in tests when automatic subscription and simple
     tracking is necessary. Most features are present in a simple way. """

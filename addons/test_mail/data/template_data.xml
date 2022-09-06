@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="mail_test_gateway_track_tpl" model="mail.template">
+        <field name="auto_delete" eval="True"/>
+        <field name="email_to">${object.email_to}</field>
+        <field name="body_html" type="xml"><p>Reply on ${object.name}</p></field>
+        <field name="model_id" ref="test_mail.model_mail_test_gateway_track"/>
+        <field name="name">Mail Test Gateway Template</field>
+        <field name="subject">Template on ${object.name}</field>
+    </record>
+
     <record id="mail_test_ticket_tracking_tpl" model="mail.template">
         <field name="name">Mail Test Full: Tracking Template</field>
         <field name="subject">Test Template</field>
