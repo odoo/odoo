@@ -38,12 +38,6 @@ class PaymentAcquirer(models.Model):
 
         return acquirers
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'mollie':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_mollie.payment_method_mollie').id
-
     def _mollie_make_request(self, endpoint, data=None, method='POST'):
         """ Make a request at mollie endpoint.
 

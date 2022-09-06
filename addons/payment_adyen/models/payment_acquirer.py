@@ -140,12 +140,6 @@ class PaymentAcquirer(models.Model):
         """
         return f'ODOO_PARTNER_{partner_id}'
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'adyen':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_adyen.payment_method_adyen').id
-
     def _neutralize(self):
         super()._neutralize()
         self._neutralize_fields('adyen', [

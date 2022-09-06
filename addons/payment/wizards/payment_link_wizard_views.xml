@@ -17,10 +17,9 @@
                         <field name="has_multiple_acquirers" invisible="1"/>
                         <field name="description"/>
                         <field name="amount"/>
+                        <field name="currency_id" invisible="1"/>
                         <field name="payment_acquirer_selection"
                             attrs="{'invisible':[('has_multiple_acquirers', '=', False)]}"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="access_token" invisible="1"/>
                     </group>
                 </group>
                 <group>
@@ -34,16 +33,6 @@
                 </footer>
             </form>
         </field>
-    </record>
-
-    <record id="action_invoice_order_generate_link" model="ir.actions.act_window">
-        <field name="name">Generate a Payment Link</field>
-        <field name="res_model">payment.link.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="payment_link_wizard_view_form"/>
-        <field name="target">new</field>
-        <field name="binding_model_id" ref="model_account_move"/>
-        <field name="binding_view_types">form</field>
     </record>
 
 </odoo>

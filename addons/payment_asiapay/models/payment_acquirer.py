@@ -86,12 +86,6 @@ class PaymentAcquirer(models.Model):
         shasign.update(signing_string.encode())
         return shasign.hexdigest()
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'asiapay':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_asiapay.payment_method_asiapay').id
-
     def _neutralize(self):
         super()._neutralize()
         self._neutralize_fields('asiapay', [

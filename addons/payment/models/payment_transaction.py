@@ -75,7 +75,6 @@ class PaymentTransaction(models.Model):
         readonly=True,
         index=True,
     )
-    payment_id = fields.Many2one(string="Payment", comodel_name='account.payment', readonly=True)
     source_transaction_id = fields.Many2one(
         string="Source Transaction",
         comodel_name='payment.transaction',
@@ -90,11 +89,6 @@ class PaymentTransaction(models.Model):
         readonly=True,
     )
     refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
-    invoice_ids = fields.Many2many(
-        string="Invoices", comodel_name='account.move', relation='account_invoice_transaction_rel',
-        column1='transaction_id', column2='invoice_id', readonly=True, copy=False,
-        domain=[('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])
-    invoices_count = fields.Integer(string="Invoices Count", compute='_compute_invoices_count')
 
     # Fields used for user redirection & payment post-processing
     is_post_processed = fields.Boolean(
@@ -134,21 +128,6 @@ class PaymentTransaction(models.Model):
     ]
 
     #=== COMPUTE METHODS ===#
-
-    @api.depends('invoice_ids')
-    def _compute_invoices_count(self):
-        self.env.cr.execute(
-            '''
-            SELECT transaction_id, count(invoice_id)
-            FROM account_invoice_transaction_rel
-            WHERE transaction_id IN %s
-            GROUP BY transaction_id
-            ''',
-            [tuple(self.ids)]
-        )
-        tx_data = dict(self.env.cr.fetchall())  # {id: count}
-        for tx in self:
-            tx.invoices_count = tx_data.get(tx.id, 0)
 
     def _compute_refunds_count(self):
         rg_data = self.env['payment.transaction']._read_group(
@@ -255,33 +234,6 @@ class PaymentTransaction(models.Model):
         return dict()
 
     #=== ACTION METHODS ===#
-
-    def action_view_invoices(self):
-        """ Return the action for the views of the invoices linked to the transaction.
-
-        Note: self.ensure_one()
-
-        :return: The action
-        :rtype: dict
-        """
-        self.ensure_one()
-
-        action = {
-            'name': _("Invoices"),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'target': 'current',
-        }
-        invoice_ids = self.invoice_ids.ids
-        if len(invoice_ids) == 1:
-            invoice = invoice_ids[0]
-            action['res_id'] = invoice
-            action['view_mode'] = 'form'
-            action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
-        else:
-            action['view_mode'] = 'tree,form'
-            action['domain'] = [('id', 'in', invoice_ids)]
-        return action
 
     def action_view_refunds(self):
         """ Return the action for the views of the refund transactions linked to the transaction.
@@ -423,26 +375,14 @@ class PaymentTransaction(models.Model):
     def _compute_reference_prefix(self, provider, separator, **values):
         """ Compute the reference prefix from the transaction values.
 
-        If the `values` parameter has an entry with 'invoice_ids' as key and a list of (4, id, O) or
-        (6, 0, ids) X2M command as value, the prefix is computed based on the invoice name(s).
-        Otherwise, an empty string is returned.
-
         Note: This method should be called in sudo mode to give access to documents (INV, SO, ...).
 
         :param str provider: The provider of the acquirer handling the transaction
         :param str separator: The custom separator used to separate data references
-        :param dict values: The transaction values used to compute the reference prefix. It should
-                            have the structure {'invoice_ids': [(X2M command), ...], ...}.
-        :return: The computed reference prefix if invoice ids are found, an empty string otherwise
+        :param dict values: The transaction values used to compute the reference prefix.
+        :return: an empty string
         :rtype: str
         """
-        command_list = values.get('invoice_ids')
-        if command_list:
-            # Extract invoice id(s) from the X2M commands
-            invoice_ids = self._fields['invoice_ids'].convert_to_cache(command_list, self)
-            invoices = self.env['account.move'].browse(invoice_ids).exists()
-            if len(invoices) == len(invoice_ids):  # All ids are valid
-                return separator.join(invoices.mapped('name'))
         return ''
 
     @api.model
@@ -689,57 +629,67 @@ class PaymentTransaction(models.Model):
         """ Update the transactions' state to 'pending'.
 
         :param str state_message: The reason for which the transaction is set in 'pending' state
-        :return: None
+        :return: updated transactions
+        :rtype: `payment.transaction` recordset
         """
         allowed_states = ('draft',)
         target_state = 'pending'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         txs_to_process._log_received_message()
+        return txs_to_process
 
     def _set_authorized(self, state_message=None):
         """ Update the transactions' state to 'authorized'.
 
         :param str state_message: The reason for which the transaction is set in 'authorized' state
-        :return: None
+        :return: updated transactions
+        :rtype: `payment.transaction` recordset
         """
         allowed_states = ('draft', 'pending')
         target_state = 'authorized'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         txs_to_process._log_received_message()
+        return txs_to_process
 
     def _set_done(self, state_message=None):
         """ Update the transactions' state to 'done'.
 
-        :return: None
+        :param str state_message: The reason for which the transaction is set in 'done' state
+        :return: updated transactions
+        :rtype: `payment.transaction` recordset
         """
         allowed_states = ('draft', 'pending', 'authorized', 'error')
         target_state = 'done'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         txs_to_process._log_received_message()
+        return txs_to_process
 
     def _set_canceled(self, state_message=None):
         """ Update the transactions' state to 'cancel'.
 
         :param str state_message: The reason for which the transaction is set in 'cancel' state
-        :return: None
+        :return: updated transactions
+        :rtype: `payment.transaction` recordset
         """
         allowed_states = ('draft', 'pending', 'authorized', 'done')  # 'done' for Authorize refunds.
         target_state = 'cancel'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         # Cancel the existing payments
-        txs_to_process.mapped('payment_id').action_cancel()
         txs_to_process._log_received_message()
+        return txs_to_process
 
     def _set_error(self, state_message):
         """ Update the transactions' state to 'error'.
 
         :param str state_message: The reason for which the transaction is set in 'error' state
-        :return: None
+        :return: updated transactions
+        :rtype: `payment.transaction` recordset
         """
         allowed_states = ('draft', 'pending', 'authorized', 'done')  # 'done' for Stripe refunds.
         target_state = 'error'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         txs_to_process._log_received_message()
+        return txs_to_process
 
     def _update_state(self, allowed_states, target_state, state_message):
         """ Update the transactions' state to the target state if the current state allows it.
@@ -938,57 +888,7 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        # Validate invoices automatically once the transaction is confirmed
-        self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
-
-        # Create and post missing payments for transactions requiring reconciliation
-        for tx in self.filtered(lambda t: t.operation != 'validation' and not t.payment_id):
-            tx._create_payment()
-
-    def _create_payment(self, **extra_create_values):
-        """Create an `account.payment` record for the current transaction.
-
-        If the transaction is linked to some invoices, their reconciliation is done automatically.
-
-        Note: self.ensure_one()
-
-        :param dict extra_create_values: Optional extra create values
-        :return: The created payment
-        :rtype: recordset of `account.payment`
-        """
-        self.ensure_one()
-
-        payment_method_line = self.acquirer_id.journal_id.inbound_payment_method_line_ids\
-            .filtered(lambda l: l.code == self.provider)
-        payment_values = {
-            'amount': abs(self.amount),  # A tx may have a negative amount, but a payment must >= 0
-            'payment_type': 'inbound' if self.amount > 0 else 'outbound',
-            'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.commercial_partner_id.id,
-            'partner_type': 'customer',
-            'journal_id': self.acquirer_id.journal_id.id,
-            'company_id': self.acquirer_id.company_id.id,
-            'payment_method_line_id': payment_method_line.id,
-            'payment_token_id': self.token_id.id,
-            'payment_transaction_id': self.id,
-            'ref': self.reference,
-            **extra_create_values,
-        }
-        payment = self.env['account.payment'].create(payment_values)
-        payment.action_post()
-
-        # Track the payment to make a one2one.
-        self.payment_id = payment
-
-        if self.invoice_ids:
-            self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
-
-            (payment.line_ids + self.invoice_ids.line_ids).filtered(
-                lambda line: line.account_id == payment.destination_account_id
-                and not line.reconciled
-            ).reconcile()
-
-        return payment
+        return
 
     #=== BUSINESS METHODS - LOGGING ===#
 
@@ -1014,7 +914,7 @@ class PaymentTransaction(models.Model):
             tx._log_message_on_linked_documents(message)
 
     def _log_message_on_linked_documents(self, message):
-        """ Log a message on the payment and the invoices linked to the transaction.
+        """ Log a message on the records linked to the transaction.
 
         For a module to implement payments and link documents to a transaction, it must override
         this method and call super, then log the message on documents linked to the transaction.
@@ -1025,12 +925,6 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        if self.source_transaction_id.payment_id:
-            self.source_transaction_id.payment_id.message_post(body=message)
-            for invoice in self.source_transaction_id.invoice_ids:
-                invoice.message_post(body=message)
-        for invoice in self.invoice_ids:
-            invoice.message_post(body=message)
 
     #=== BUSINESS METHODS - GETTERS ===#
 
@@ -1099,11 +993,6 @@ class PaymentTransaction(models.Model):
                 "(%(acq_name)s).", ref=self.reference, amount=formatted_amount,
                 acq_name=self.acquirer_id.name
             )
-            if self.payment_id:
-                message += "<br />" + _(
-                    "The related payment is posted: %s",
-                    self.payment_id._get_html_link(),
-                )
         elif self.state == 'error':
             message = _(
                 "The transaction with reference %(ref)s for %(amount)s encountered an error"

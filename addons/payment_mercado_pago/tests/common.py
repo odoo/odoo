@@ -8,8 +8,8 @@ class MercadoPagoCommon(PaymentCommon):
     MP_PAYMENT_ID = '1234567890'
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.acquirer = cls._prepare_acquirer('mercado_pago', update_values={
             'mercado_pago_access_token': 'TEST-4850554046279901-TEST-TEST',

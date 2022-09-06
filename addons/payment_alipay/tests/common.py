@@ -6,8 +6,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class AlipayCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.currency_yuan = cls._prepare_currency('CNY')
         cls.alipay = cls._prepare_acquirer('alipay', update_values={

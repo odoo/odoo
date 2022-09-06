@@ -16,6 +16,7 @@ It should never be used in production environment. Make sure to disable it befor
         'views/payment_transaction_views.xml',
         'data/payment_acquirer_data.xml',
     ],
+    'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [

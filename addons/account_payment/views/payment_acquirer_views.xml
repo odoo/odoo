@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="payment_acquirer_form" model="ir.ui.view">
+        <field name="name">payment.acquirer.form</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+        <field name="arch" type="xml">
+            <group name="payment_followup" position="attributes">
+                <attribute name="invisible">
+                    0
+                </attribute>
+            </group>
+            <group name="payment_followup" position="inside">
+                <field name="journal_id"
+                    context="{'default_type': 'bank'}"
+                    attrs="{'required': [('state', '!=', 'disabled'), ('provider', 'not in', ['none', 'transfer'])]}"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>

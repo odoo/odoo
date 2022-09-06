@@ -6,7 +6,7 @@
     'category': 'Hidden',
     'summary': 'Base Module for Payment Acquirers',
     'description': """Payment Acquirer Base Module""",
-    'depends': ['account'],
+    'depends': ['portal'],
     'data': [
         'data/payment_icon_data.xml',
         'data/payment_acquirer_data.xml',
@@ -15,9 +15,6 @@
         'views/payment_portal_templates.xml',
         'views/payment_templates.xml',
 
-        'views/account_invoice_views.xml',
-        'views/account_journal_views.xml',
-        'views/account_payment_views.xml',
         'views/payment_acquirer_views.xml',
         'views/payment_icon_views.xml',
         'views/payment_transaction_views.xml',
@@ -27,12 +24,12 @@
         'security/ir.model.access.csv',
         'security/payment_security.xml',
 
-        'wizards/account_payment_register_views.xml',
         'wizards/payment_link_wizard_views.xml',
         'wizards/payment_onboarding_views.xml',
-        'wizards/payment_refund_wizard_views.xml',
     ],
-    'auto_install': True,
+    'demo': [
+        'data/payment_demo.xml',
+    ],
     'assets': {
         'web.assets_frontend': [
             'payment/static/src/scss/portal_payment.scss',

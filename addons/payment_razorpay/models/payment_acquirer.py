@@ -122,12 +122,6 @@ class PaymentAcquirer(models.Model):
             secret = self.razorpay_webhook_secret
             return hmac.new(secret.encode(), msg=data, digestmod=hashlib.sha256).hexdigest()
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'razorpay':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_razorpay.payment_method_razorpay').id
-
     def _neutralize(self):
         super()._neutralize()
         self._neutralize_fields('razorpay', [

@@ -21,6 +21,7 @@ class PaymentWizard(models.TransientModel):
     paypal_seller_account = fields.Char("Merchant Account ID", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_seller_account'))
     paypal_pdt_token = fields.Char("PDT Identity Token", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_pdt_token'))
 
+    # Account-specific logic. It's kept here rather than moved in `account_payment` as it's not used by `account` module.
     manual_name = fields.Char("Method",  default=lambda self: self._get_default_payment_acquirer_onboarding_value('manual_name'))
     journal_name = fields.Char("Bank Name", default=lambda self: self._get_default_payment_acquirer_onboarding_value('journal_name'))
     acc_number = fields.Char("Account Number",  default=lambda self: self._get_default_payment_acquirer_onboarding_value('acc_number'))
@@ -133,5 +134,6 @@ class PaymentWizard(models.TransientModel):
 
     def _start_stripe_onboarding(self):
         """ Start Stripe Connect onboarding. """
-        menu_id = self.env.ref('payment.payment_acquirer_menu').id
+        menu = self.env.ref('account_payment.payment_acquirer_menu', False)
+        menu_id = menu and menu.id  # Only set if `account_payment` is installed.
         return self.env.company._run_payment_onboarding_step(menu_id)

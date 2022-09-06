@@ -6,8 +6,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class PayumoneyCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.payumoney = cls._prepare_acquirer('payumoney', update_values={
             'payumoney_merchant_key': 'dummy',

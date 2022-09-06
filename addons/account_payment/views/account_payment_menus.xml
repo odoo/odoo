@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem action="payment.action_payment_acquirer"
+        id="payment_acquirer_menu"
+        parent="account.root_payment_menu"
+        sequence="10"/>
+    <menuitem action="payment.action_payment_icon"
+        id="payment_icon_menu"
+        parent="account.root_payment_menu"
+        groups="base.group_no_one"
+        sequence="15"/>
+    <menuitem action="payment.action_payment_token"
+        id="payment_token_menu"
+        parent="account.root_payment_menu"
+        groups="base.group_no_one"
+        sequence="20"/>
+    <menuitem action="payment.action_payment_transaction"
+        id="payment_transaction_menu"
+        parent="account.root_payment_menu"
+        groups="base.group_no_one"
+        sequence="25"/>
+
+</odoo>

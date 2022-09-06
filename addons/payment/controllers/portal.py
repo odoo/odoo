@@ -39,7 +39,7 @@ class PaymentPortal(portal.CustomerPortal):
     )
     def payment_pay(
         self, reference=None, amount=None, currency_id=None, partner_id=None, company_id=None,
-        acquirer_id=None, access_token=None, invoice_id=None, **kwargs
+        acquirer_id=None, access_token=None, **kwargs
     ):
         """ Display the payment form with optional filtering of payment options.
 
@@ -60,15 +60,14 @@ class PaymentPortal(portal.CustomerPortal):
         :param str company_id: The related company, as a `res.company` id
         :param str acquirer_id: The desired acquirer, as a `payment.acquirer` id
         :param str access_token: The access token used to authenticate the partner
-        :param str invoice_id: The account move for which a payment id made, as a `account.move` id
         :param dict kwargs: Optional data passed to helper methods.
         :return: The rendered checkout form
         :rtype: str
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
-        currency_id, acquirer_id, partner_id, company_id, invoice_id = tuple(map(
-            self._cast_as_int, (currency_id, acquirer_id, partner_id, company_id, invoice_id)
+        currency_id, acquirer_id, partner_id, company_id = tuple(map(
+            self._cast_as_int, (currency_id, acquirer_id, partner_id, company_id)
         ))
         amount = self._cast_as_float(amount)
 
@@ -102,15 +101,6 @@ class PaymentPortal(portal.CustomerPortal):
         company_id = company_id or partner_sudo.company_id.id or user_sudo.company_id.id
         company = request.env['res.company'].sudo().browse(company_id)
         currency_id = currency_id or company.currency_id.id
-
-        if invoice_id:
-            invoice_sudo = request.env['account.move'].sudo().browse(invoice_id).exists()
-            if not invoice_sudo:
-                raise ValidationError(_("The provided parameters are invalid."))
-
-            # Interrupt the payment flow if the invoice has been canceled.
-            if invoice_sudo.state == 'cancel':
-                amount = 0.0
 
         # Make sure that the company passed as parameter matches the partner's company.
         PaymentPortal._ensure_matching_companies(partner_sudo, company)
@@ -155,7 +145,6 @@ class PaymentPortal(portal.CustomerPortal):
             'landing_route': '/payment/confirmation',
             'res_company': company,  # Display the correct logo in a multi-company environment
             'partner_is_different': partner_is_different,
-            'invoice_id': invoice_id,
             **self._get_custom_rendering_context_values(**kwargs),
         }
         return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)
@@ -257,7 +246,7 @@ class PaymentPortal(portal.CustomerPortal):
 
     def _create_transaction(
         self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
-        tokenization_requested, landing_route, is_validation=False, invoice_id=None,
+        tokenization_requested, landing_route, is_validation=False,
         custom_create_values=None, **kwargs
     ):
         """ Create a draft transaction based on the payment context and return it.
@@ -274,7 +263,6 @@ class PaymentPortal(portal.CustomerPortal):
         :param bool tokenization_requested: Whether the user requested that a token is created
         :param str landing_route: The route the user is redirected to after the transaction
         :param bool is_validation: Whether the operation is a validation
-        :param int invoice_id: The account move for which a payment id made, as an `account.move` id
         :param dict custom_create_values: Additional create values overwriting the default ones
         :param dict kwargs: Locally unused data passed to `_is_tokenization_required` and
                             `_compute_reference`
@@ -309,11 +297,6 @@ class PaymentPortal(portal.CustomerPortal):
             raise UserError(
                 _("The payment should either be direct, with redirection, or made by a token.")
             )
-
-        if invoice_id:
-            if custom_create_values is None:
-                custom_create_values = {}
-            custom_create_values['invoice_ids'] = [Command.set([int(invoice_id)])]
 
         reference = request.env['payment.transaction']._compute_reference(
             acquirer_sudo.provider,

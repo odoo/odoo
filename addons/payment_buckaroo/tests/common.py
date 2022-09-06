@@ -6,8 +6,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class BuckarooCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.buckaroo = cls._prepare_acquirer('buckaroo', update_values={
             'buckaroo_website_key': 'dummy',

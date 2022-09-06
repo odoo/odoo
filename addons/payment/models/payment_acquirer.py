@@ -81,11 +81,6 @@ class PaymentAcquirer(models.Model):
         help="The template rendering the express payment methods' form.",
         domain=[('type', '=', 'qweb')],
     )
-    journal_id = fields.Many2one(
-        string="Payment Journal", comodel_name='account.journal',
-        compute='_compute_journal_id', inverse='_inverse_journal_id',
-        help="The journal in which the successful transactions are posted",
-        domain="[('type', '=', 'bank'), ('company_id', '=', company_id)]")
 
     # Availability fields.
     available_country_ids = fields.Many2many(
@@ -219,40 +214,6 @@ class PaymentAcquirer(models.Model):
             'show_cancel_msg': True,
         })
 
-    def _compute_journal_id(self):
-        for acquirer in self:
-            payment_method = self.env['account.payment.method.line'].search([
-                ('journal_id.company_id', '=', acquirer.company_id.id),
-                ('code', '=', acquirer.provider)
-            ], limit=1)
-            if payment_method:
-                acquirer.journal_id = payment_method.journal_id
-            else:
-                acquirer.journal_id = False
-
-    def _inverse_journal_id(self):
-        for acquirer in self:
-            payment_method_line = self.env['account.payment.method.line'].search([
-                ('journal_id.company_id', '=', acquirer.company_id.id),
-                ('code', '=', acquirer.provider)
-            ], limit=1)
-            if acquirer.journal_id:
-                if not payment_method_line:
-                    default_payment_method_id = acquirer._get_default_payment_method_id()
-                    existing_payment_method_line = self.env['account.payment.method.line'].search([
-                        ('payment_method_id', '=', default_payment_method_id),
-                        ('journal_id', '=', acquirer.journal_id.id)
-                    ], limit=1)
-                    if not existing_payment_method_line:
-                        self.env['account.payment.method.line'].create({
-                            'payment_method_id': default_payment_method_id,
-                            'journal_id': acquirer.journal_id.id,
-                        })
-                else:
-                    payment_method_line.journal_id = acquirer.journal_id
-            elif payment_method_line:
-                payment_method_line.unlink()
-
     def _compute_feature_support_fields(self):
         """ Compute the feature support fields.
 
@@ -267,10 +228,6 @@ class PaymentAcquirer(models.Model):
             'support_refund',
             'support_tokenization',
         ), None))
-
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        return self.env.ref('account.account_payment_method_manual_in').id
 
     #=== ONCHANGE METHODS ===#
 
@@ -558,7 +515,7 @@ class PaymentAcquirer(models.Model):
         :rtype: recordset of `res.currency`
         """
         self.ensure_one()
-        return self.journal_id.currency_id or self.company_id.currency_id
+        return self.company_id.currency_id
 
     def _get_redirect_form_view(self, is_validation=False):
         """ Return the view of the template used to render the redirect form.
@@ -574,6 +531,30 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
         return self.redirect_form_view_id
+
+    @api.model
+    def _setup_provider(self, provider_code):
+        """ Prepare module-specific data for a given provider.
+
+        This method is called after a new provider module is installed and also for all existing
+        providers when `account_payment` is installed.
+
+        :param str provider_code: The code of the provider to setup.
+        :return: None
+        """
+
+    @api.model
+    def _remove_provider(self, provider_code):
+        """ Clean module-specific data for a given provider.
+
+        :param str provider_code: The code of the provider to setup.
+        :return: None
+        """
+        acquirers = self.search([('provider', '=', provider_code)])
+        acquirers.write({
+            'provider': 'none',
+            'state': 'disabled',
+        })
 
     def _neutralize(self):
         super()._neutralize()

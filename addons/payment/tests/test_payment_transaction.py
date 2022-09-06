@@ -11,7 +11,6 @@ class TestPaymentTransaction(PaymentCommon):
     def test_refunds_count(self):
         self.acquirer.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
-        tx._reconcile_after_done()  # Create the payment
         for reference_index, operation in enumerate(
             ('online_redirect', 'online_direct', 'online_token', 'validation', 'refund')
         ):
@@ -32,7 +31,6 @@ class TestPaymentTransaction(PaymentCommon):
     def test_refund_transaction_values(self):
         self.acquirer.support_refund = 'partial'
         tx = self._create_transaction('redirect', state='done')
-        tx._reconcile_after_done()  # Create the payment
 
         # Test the default values of a full refund transaction
         refund_tx = tx._create_refund_transaction()
@@ -82,11 +80,3 @@ class TestPaymentTransaction(PaymentCommon):
             msg="The amount of the refund transaction should be the negative value of the amount "
                 "to refund."
         )
-
-    def test_no_payment_for_validations(self):
-        tx = self._create_transaction(flow='dummy', operation='validation')  # Overwrite the flow
-        tx._reconcile_after_done()
-        payment_count = self.env['account.payment'].search_count(
-            [('payment_transaction_id', '=', tx.id)]
-        )
-        self.assertEqual(payment_count, 0, msg="validation transactions should not create payments")

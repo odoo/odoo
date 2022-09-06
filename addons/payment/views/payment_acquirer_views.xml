@@ -89,10 +89,7 @@
                                            placeholder="Select countries. Leave empty to make available everywhere."
                                            options="{'no_open': True, 'no_create': True}"/>
                                 </group>
-                                <group string="Payment Followup" name="payment_followup">
-                                    <field name="journal_id" context="{'default_type': 'bank'}"
-                                           attrs="{'required': [('state', '!=', 'disabled'), ('provider', 'not in', ['none', 'transfer'])]}"/>
-                                </group>
+                                <group string="Payment Followup" name="payment_followup" invisible="1"/>
                             </group>
                         </page>
                         <page string="Fees" name="fees" attrs="{'invisible': [('support_fees', '=', False)]}">
@@ -224,10 +221,5 @@
             </p>
         </field>
     </record>
-
-    <menuitem action="action_payment_acquirer"
-              id="payment_acquirer_menu"
-              parent="account.root_payment_menu"
-              sequence="10"/>
 
 </odoo>
