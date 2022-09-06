@@ -57,6 +57,7 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_absent', 'Absent'),
         ('presence_to_define', 'To define'),
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
+    show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
     employee_type = fields.Selection([
         ('employee', 'Employee'),
         ('student', 'Student'),
@@ -106,9 +107,9 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self:
             state = 'to_define'
             if check_login:
-                if employee.user_id.im_status == 'online':
+                if employee.user_id.im_status in ['online', 'leave_online']:
                     state = 'present'
-                elif employee.user_id.im_status == 'offline' and employee.id not in working_now_list:
+                elif employee.user_id.im_status in ['offline', 'leave_offline'] and employee.id not in working_now_list:
                     state = 'absent'
             employee.hr_presence_state = state
 
@@ -174,6 +175,7 @@ class HrEmployeeBase(models.AbstractModel):
         """
         working_now_list = self.filtered(lambda e: e.hr_presence_state == 'present')._get_employee_working_now()
         for employee in self:
+            show_icon = True
             if employee.hr_presence_state == 'present':
                 if employee.id in working_now_list:
                     icon = 'presence_present'
@@ -185,13 +187,13 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 # without attendance, default employee state is 'to_define' without confirmed presence/absence
                 # we need to check why they are not there
-                if employee.user_id:
-                    # Display an orange icon on internal users.
-                    icon = 'presence_to_define'
-                else:
+                # Display an orange icon on internal users.
+                icon = 'presence_to_define'
+                if not employee.user_id:
                     # We don't want non-user employee to have icon.
-                    icon = 'presence_undetermined'
+                    show_icon = False
             employee.hr_icon_display = icon
+            employee.show_hr_icon_display = show_icon
 
     @api.depends('address_id')
     def _compute_work_location_id(self):

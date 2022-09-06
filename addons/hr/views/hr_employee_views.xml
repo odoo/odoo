@@ -49,6 +49,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="user_partner_id" invisible="1"/>
                     <field name="hr_presence_state" invisible="1"/>
+                    <field name="hr_icon_display" invisible="1"/>
                     <field name="image_128" invisible="1" />
                     <field name="company_id" invisible="1"/>
                     <header>
@@ -66,9 +67,14 @@
                                 <field name="last_activity_time" invisible="1"/>
                                 <field name="last_activity" invisible="1"/>
                                 <div id="hr_presence_status" attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}" class="ms-1">
-                                    <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
-                                    <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
-                                    <small role="img" class="fa fa-fw fa-circle text-danger o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
+                                    <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                                    <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_present')]}" aria-label="Present" title="Present"/>
+                                    <!-- Employee is not present and it is normal according to his work schedule -->
+                                    <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_icon_display', '!=', 'present_absent')]}" aria-label="Absent" title="Absent" name="presence_absent"/>
+                                    <!-- Employee is connected but according to his work schedule, he should not work for now  -->
+                                    <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
+                                    <!-- Employee is not here but according to his work schedule, he should be connected -->
+                                    <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}" aria-label="To define" title="To define" name="presence_to_define"/>
                                 </div>
                                 <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments align-middle fs-6"/></a>
                             </h1>
@@ -231,7 +237,7 @@
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <tree string="Employees" multi_edit="1" sample="1" js_class="hr_employee_list">
+                <tree string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
                     <header>
                         <button name="%(plan_wizard_action)d" type="action" string="Launch Plan" context="{'action_plan': True}"/>
                     </header>
@@ -265,6 +271,7 @@
                    <field name="user_id"/>
                    <field name="user_partner_id"/>
                    <field name="hr_icon_display"/>
+                   <field name="show_hr_icon_display"/>
                    <field name="image_128" />
                    <templates>
                        <t t-name="kanban-box">
@@ -276,42 +283,44 @@
                                <div class="o_kanban_record_top">
                                    <div class="o_kanban_record_headings">
                                        <strong class="o_kanban_record_title">
-                                            <div class="float-end"
-                                                 t-if="record.hr_icon_display.raw_value == 'presence_present'"
-                                                 name="presence_present">
-                                                <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                                <span class="fa fa-circle text-success" role="img" aria-label="Present"
-                                                      title="Present" name="presence_present">
-                                                </span>
-                                            </div>
-                                            <div class="float-end"
-                                                 t-if="record.hr_icon_display.raw_value == 'presence_absent'"
-                                                 name="presence_absent">
-                                                <!-- Employee is not present and it is normal according to his work schedule -->
-                                                <span class="fa fa-circle-o text-muted" role="img" aria-label="Absent"
-                                                      title="Absent" name="presence_absent">
-                                                </span>
-                                            </div>
-                                            <div class="float-end"
-                                                 t-if="record.hr_icon_display.raw_value == 'presence_absent_active'"
-                                                    name="presence_absent_active">
-                                                <!-- Employee is connected but according to his work schedule,
-                                                     he should not work for now  -->
-                                                <span class="fa fa-circle-o text-success" role="img"
-                                                      aria-label="Present but not active"
-                                                      title="Present but not active"
-                                                      name="presence_absent_active">
-                                                </span>
-                                            </div>
-                                            <div class="float-end"
-                                                 t-if="record.hr_icon_display.raw_value == 'presence_to_define'"
-                                                    name="presence_to_define">
-                                                <!-- Employee is not here but according to his work schedule, he should be connected -->
-                                                <span class="fa fa-circle text-warning" role="img"
-                                                      aria-label="To define" title="To define"
-                                                      name="presence_to_define">
-                                                </span>
-                                            </div>
+                                           <t t-if="record.show_hr_icon_display.raw_value">
+                                                <div class="float-end"
+                                                     t-if="record.hr_icon_display.raw_value == 'presence_present'"
+                                                     name="presence_present">
+                                                    <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                                                    <span class="fa fa-circle text-success" role="img" aria-label="Present"
+                                                          title="Present" name="presence_present">
+                                                    </span>
+                                                </div>
+                                                <div class="float-end"
+                                                     t-if="record.hr_icon_display.raw_value == 'presence_absent'"
+                                                     name="presence_absent">
+                                                    <!-- Employee is not present and it is normal according to his work schedule -->
+                                                    <span class="fa fa-circle-o text-muted" role="img" aria-label="Absent"
+                                                          title="Absent" name="presence_absent">
+                                                    </span>
+                                                </div>
+                                                <div class="float-end"
+                                                     t-if="record.hr_icon_display.raw_value == 'presence_absent_active'"
+                                                        name="presence_absent_active">
+                                                    <!-- Employee is connected but according to his work schedule,
+                                                         he should not work for now  -->
+                                                    <span class="fa fa-circle-o text-success" role="img"
+                                                          aria-label="Present but not active"
+                                                          title="Present but not active"
+                                                          name="presence_absent_active">
+                                                    </span>
+                                                </div>
+                                                <div class="float-end"
+                                                     t-if="record.hr_icon_display.raw_value == 'presence_to_define'"
+                                                        name="presence_to_define">
+                                                    <!-- Employee is not here but according to his work schedule, he should be connected -->
+                                                    <span class="fa fa-circle text-warning" role="img"
+                                                          aria-label="To define" title="To define"
+                                                          name="presence_to_define">
+                                                    </span>
+                                                </div>
+                                            </t>
                                             <field name="name" placeholder="Employee's Name"/>
                                        </strong>
                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
@@ -431,11 +440,13 @@
         <record id="act_employee_from_department" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_mode">kanban,form,tree</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="context">{
-                "searchpanel_default_department_id": active_id,
-                "default_department_id": active_id}
+                "default_department_id": active_id,
+                "search_default_group_department": 1,
+                "search_default_department_id": active_id,
+                "expand": 1}
             </field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
