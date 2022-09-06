@@ -3,6 +3,102 @@
 import { loadJS } from "../assets";
 import { isBrowserChrome } from "../browser/feature_detection";
 
+/** @typedef {import("./error_service").UncaughtError} UncaughtError */
+
+/**
+ * @param {UncaughtError} uncaughtError
+ * @param {Error} originalError
+ * @returns {string}
+ */
+function combineErrorNames(uncaughtError, originalError) {
+    const originalErrorName = getErrorTechnicalName(originalError);
+    const uncaughtErrorName = getErrorTechnicalName(uncaughtError);
+    if (originalErrorName === Error.name) {
+        return uncaughtErrorName;
+    } else {
+        return `${uncaughtErrorName} > ${originalErrorName}`;
+    }
+}
+
+/**
+ * Returns the full traceback for an error chain based on error causes
+ *
+ * @param {Error} error
+ * @returns {string}
+ */
+export function fullTraceback(error) {
+    let traceback = formatTraceback(error);
+    let current = error.cause;
+    while (current) {
+        traceback += `\n\nCaused by: ${
+            current instanceof Error ? formatTraceback(current) : current
+        }`;
+        current = current.cause;
+    }
+    return traceback;
+}
+
+/**
+ * Returns the full annotated traceback for an error chain based on error causes
+ *
+ * @param {Error} error
+ * @returns {Promise<string>}
+ */
+export async function fullAnnotatedTraceback(error) {
+    if (error.annotatedTraceback) {
+        return error.annotatedTraceback;
+    }
+    // If we don't call preventDefault  synchronously while handling the error
+    // event, the error will be logged in the console with an unannotated
+    // traceback. This is a problem because annotating a traceback cannot be
+    // done synchronously. To work around this issue, we always call
+    // preventDefault, which means it is never logged but we rethrow the error
+    // after annotating its traceback, which will cause the error to be handled
+    // again after the traceback has been annotated, and this function will be
+    // called again and return synchronously (see above)
+    if (error.errorEvent) {
+        error.errorEvent.preventDefault();
+    }
+    let traceback;
+    try {
+        traceback = await annotateTraceback(error);
+        let current = error.cause;
+        while (current) {
+            traceback += `\n\nCaused by: ${
+                current instanceof Error ? await annotateTraceback(current) : current
+            }`;
+            current = current.cause;
+        }
+    } catch (e) {
+        console.warn("Failed to annotate traceback for error:", error, "failure reason:", e);
+        traceback = fullTraceback(error);
+    }
+    error.annotatedTraceback = traceback;
+    if (error.errorEvent) {
+        throw error;
+    }
+    return traceback;
+}
+
+/**
+ * @param {UncaughtError} uncaughtError
+ * @param {Error} originalError
+ * @param {boolean} annotated
+ * @returns {Promise<void>}
+ */
+export async function completeUncaughtError(uncaughtError, originalError, annotated = false) {
+    uncaughtError.name = combineErrorNames(uncaughtError, originalError);
+    if (annotated) {
+        uncaughtError.traceback = await fullAnnotatedTraceback(originalError);
+    } else {
+        uncaughtError.traceback = fullTraceback(originalError);
+    }
+    if (originalError.message) {
+        uncaughtError.message = `${uncaughtError.message} > ${originalError.message}`;
+    }
+    uncaughtError.cause = originalError;
+}
+
 /**
  * @param {Error} error
  * @returns {string}
@@ -23,12 +119,14 @@ export function formatTraceback(error) {
     let traceback = error.stack;
     const errorName = getErrorTechnicalName(error);
     if (!isBrowserChrome()) {
-        // transforms the stack into a chromium stack
-        // Chromium stack example:
+        // transforms the stack into a chromium stack by adding the error name
+        // to the stack and indenting the lines, eg:
         // Error: Mock: Can't write value
         //     _onOpenFormView@http://localhost:8069/web/content/425-baf33f1/web.assets.js:1064:30
         //     ...
-        traceback = `${errorName}: ${error.message}\n${error.stack}`.replace(/\n/g, "\n    ");
+        traceback = `${errorName}: ${error.message}\n${error.stack}`
+            .replace(/\n/g, "\n    ")
+            .trim();
     } else if (error.stack) {
         // Chromium stack starts with the error's name but the name is "Error" by default
         // so we replace it to have the error type name
@@ -76,16 +174,12 @@ export async function annotateTraceback(error) {
         lines.splice(-1);
     }
 
-    // Chrome stacks contains some lines with (index 0) which apparently
-    // corresponds to some native functions (at least Promise.all). We need to
-    // ignore them because they will not correspond to a stackframe.
-    const skips = lines.filter((l) => l.includes("(index 0")).length;
-    const offset = lines.length - frames.length - skips;
-    let lineIndex = offset;
+    let lineIndex = 0;
     let frameIndex = 0;
     while (frameIndex < frames.length) {
         const line = lines[lineIndex];
-        if (line.includes("(index 0)")) {
+        // skip lines that have no location information as they don't correspond to a frame
+        if (!line.match(/:\d+:\d+\)?$/)) {
             lineIndex++;
             continue;
         }
