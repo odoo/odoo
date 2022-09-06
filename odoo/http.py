@@ -845,6 +845,15 @@ class Session(collections.abc.MutableMapping):
 _request_stack = werkzeug.local.LocalStack()
 request = _request_stack()
 
+@contextlib.contextmanager
+def borrow_request():
+    """ Get the current request and unexpose it from the local stack. """
+    req = _request_stack.pop()
+    try:
+        yield req
+    finally:
+        _request_stack.push(req)
+
 
 class Response(werkzeug.wrappers.Response):
     """
