@@ -1,0 +1,16 @@
+<odoo>
+    <div t-name="spreadsheet.ChartFigure" t-inherit="o-spreadsheet-ChartFigure" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o-chart-menu-item')]" position="before">
+            <div
+                t-if="hasOdooMenu and !env.isDashboard()"
+                class="o-chart-menu-item o-chart-external-link"
+                t-on-click="navigateToOdooMenu">
+                <span class="fa fa-external-link" />
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o-chart-container')]" position="attributes">
+            <attribute name="t-on-click">() => this.onClick()</attribute>
+            <attribute name="t-att-role">env.isDashboard() and hasOdooMenu ? "button" : ""</attribute>
+        </xpath>
+    </div>
+</odoo>
