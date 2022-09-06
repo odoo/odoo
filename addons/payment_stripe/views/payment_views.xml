@@ -40,14 +40,14 @@
                 </div>
             </xpath>
             <field name="allow_express_checkout" position="replace">
-                <label for="allow_express_checkout"/>
-                <div class="o_row" col="2">
+                <label for="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
+                <div class="o_row" col="2" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}">
                     <field name="allow_express_checkout"/>
-                <button string="Enable Apple Pay"
-                        type="object"
-                        name="action_stripe_verify_apple_pay_domain"
-                        class="btn btn-primary"
-                        attrs="{'invisible': [('allow_express_checkout', '!=', True)]}"/>
+                    <button string="Enable Apple Pay"
+                            type="object"
+                            name="action_stripe_verify_apple_pay_domain"
+                            class="btn btn-primary"
+                            attrs="{'invisible': [('allow_express_checkout', '!=', True)]}"/>
                 </div>
             </field>
         </field>
