@@ -1,0 +1,42 @@
+.o-spreadsheet {
+    height: 100%;
+    .fa {
+        font-family: FontAwesome;
+    }
+    .o-selection input {
+        display: initial;
+    }
+
+    // Align spreadsheet menus and toolbar with the breadcrumb in Odoo
+    .o-spreadsheet-topbar {
+        .o_topbar_filter_icon {
+            padding: 2px 3px;
+            font-size: 20px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #ebebeb;
+            }
+        }
+    }
+}
+
+.o-sidePanel .o-sidePanelButtons .o-sidePanelButton {
+    color: #666;
+
+    &.o_global_filter_save {
+        color: #008784;
+        border-color: #008784;
+    }
+
+    &.o_delete_element {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+
+        &:hover:enabled {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+    }
+}

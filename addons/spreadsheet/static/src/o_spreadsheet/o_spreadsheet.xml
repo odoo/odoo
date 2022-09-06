@@ -1,0 +1,2951 @@
+<odoo>
+  <t t-name="o-spreadsheet-Autofill" owl="1">
+    <div
+      class="o-autofill"
+      t-on-mousedown="onMouseDown"
+      t-att-style="style"
+      t-on-dblclick="onDblClick">
+      <div class="o-autofill-handler" t-att-style="styleHandler"/>
+      <t t-set="tooltip" t-value="getTooltip()"/>
+      <div t-if="tooltip" class="o-autofill-nextvalue" t-att-style="styleNextvalue">
+        <t t-component="tooltip.component" t-props="tooltip.props"/>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-BottomBar" owl="1">
+    <div
+      class="o-spreadsheet-bottom-bar o-two-columns"
+      t-on-click="props.onClick"
+      t-ref="bottomBar">
+      <div
+        class="o-sheet-item o-add-sheet"
+        t-att-class="{'disabled': env.model.getters.isReadonly()}"
+        t-on-click="addSheet">
+        <t t-call="o-spreadsheet-Icon.PLUS"/>
+      </div>
+      <div class="o-sheet-item o-list-sheets" t-on-click="listSheets">
+        <t t-call="o-spreadsheet-Icon.LIST"/>
+      </div>
+      <div class="o-all-sheets">
+        <t t-foreach="getVisibleSheets()" t-as="sheet" t-key="sheet.id">
+          <div
+            class="o-sheet-item o-sheet"
+            t-on-click="(ev) => this.activateSheet(sheet.id, ev)"
+            t-on-contextmenu.prevent="(ev) => this.onContextMenu(sheet.id, ev)"
+            t-att-title="sheet.name"
+            t-att-data-id="sheet.id"
+            t-att-class="{active: sheet.id === env.model.getters.getActiveSheetId()}">
+            <span
+              class="o-sheet-name"
+              t-esc="sheet.name"
+              t-on-dblclick="(ev) => this.onDblClick(sheet.id, ev)"
+            />
+            <span class="o-sheet-icon" t-on-click.stop="(ev) => this.onIconClick(sheet.id, ev)">
+              <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+            </span>
+          </div>
+        </t>
+      </div>
+
+      <t t-set="selectedStatistic" t-value="getSelectedStatistic()"/>
+      <div
+        t-if="selectedStatistic !== undefined"
+        class="o-selection-statistic"
+        t-on-click="listSelectionStatistics">
+        <t t-esc="selectedStatistic"/>
+        <span>
+          <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+        </span>
+      </div>
+
+      <Menu
+        t-if="menuState.isOpen"
+        position="menuState.position"
+        menuItems="menuState.menuItems"
+        onClose="() => this.menuState.isOpen=false"
+      />
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ClientTag" owl="1">
+    <div>
+      <div class="o-client-tag" t-att-style="tagStyle" t-esc="props.name"/>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ColorPicker" owl="1">
+    <div class="o-color-picker" t-att-class="props.dropdownDirection || 'right'">
+      <div class="o-color-picker-section-name">Standard</div>
+      <div class="colors-grid">
+        <div
+          t-foreach="COLORS"
+          t-as="color"
+          t-key="color"
+          class="o-color-picker-line-item"
+          t-att-data-color="color"
+          t-on-click="() => this.onColorClick(color)"
+          t-attf-style="background-color:{{color}};">
+          <div
+            t-if="props.currentColor === color"
+            align="center"
+            t-attf-style="color:{{getCheckMarkColor()}}">
+            &#10004;
+          </div>
+        </div>
+      </div>
+      <div class="o-separator"/>
+      <div class="o-color-picker-section-name">
+        <span>Custom</span>
+      </div>
+      <div class="colors-grid">
+        <div
+          class="o-color-picker-toggler o-color-picker-line-item"
+          t-on-click.stop="toggleColorPicker">
+          <div align="center">+</div>
+        </div>
+        <div
+          t-foreach="env.model.getters.getCustomColors()"
+          t-as="color"
+          t-key="color"
+          class="o-color-picker-line-item"
+          t-att-data-color="color"
+          t-attf-style="background-color:{{color}};"
+          t-on-click="() => this.onColorClick(color)">
+          <div
+            t-if="props.currentColor === color"
+            align="center"
+            t-attf-style="color:{{getCheckMarkColor()}}">
+            &#10004;
+          </div>
+        </div>
+      </div>
+      <div t-if="state.showGradient" class="o-custom-selector">
+        <div class="o-magnifier-glass" t-att-style="magnifyingGlassStyle"/>
+        <div
+          class="o-gradient"
+          t-on-click.stop="computeCustomColor"
+          t-on-mouseout="hideMagnifier"
+          t-on-mousemove="moveMagnifier"
+          t-on-mouseover="showMagnifier"
+        />
+        <div class="o-custom-input-preview">
+          <input
+            type="text"
+            t-att-class="{'o-wrong-color': state.isCurrentColorInvalid }"
+            t-on-click.stop=""
+            t-model="state.currentColor"
+          />
+          <div class="o-color-preview" t-attf-style="background-color:{{state.currentColor}}"/>
+        </div>
+        <div class="o-custom-input-buttons">
+          <button class="o-add-button" t-on-click="setCustomColor">Add</button>
+        </div>
+      </div>
+      <div class="o-separator"/>
+      <div class="o-buttons">
+        <button t-on-click="resetColor" class="o-cancel">Reset</button>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-TextValueProvider" owl="1">
+    <div
+      t-att-class="{'o-autocomplete-dropdown':state.values.length}"
+      t-att-style="state.values.length > 0 ? props.borderStyle : null">
+      <t t-foreach="state.values" t-as="v" t-key="v.text">
+        <div
+          t-att-class="{'o-autocomplete-value-focus': state.selectedIndex === v_index}"
+          t-on-click.stop.prevent="() => this.fillValue(v_index)">
+          <div class="o-autocomplete-value" t-esc="v.text"/>
+          <div
+            class="o-autocomplete-description"
+            t-esc="v.description"
+            t-if="state.selectedIndex === v_index"
+          />
+        </div>
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-Composer" owl="1">
+    <div class="o-composer-container">
+      <div
+        t-att-class="{ 'o-composer': true, 'text-muted': env.model.getters.isReadonly(), 'unfocusable': env.model.getters.isReadonly() }"
+        t-att-style="props.inputStyle"
+        t-ref="o_composer"
+        tabindex="1"
+        t-att-contenteditable="env.model.getters.isReadonly() ? 'false' : 'true'"
+        spellcheck="false"
+        t-on-keydown="onKeydown"
+        t-on-mousedown="onMousedown"
+        t-on-input="onInput"
+        t-on-keyup="onKeyup"
+        t-on-click.stop="onClick"
+        t-on-blur="onBlur"
+      />
+
+      <div
+        t-if="props.focus !== 'inactive' and (autoCompleteState.showProvider or functionDescriptionState.showDescription)"
+        class="o-composer-assistant"
+        t-att-style="assistantStyle">
+        <TextValueProvider
+          t-if="autoCompleteState.showProvider"
+          exposeAPI="(api) => this.autocompleteAPI = api"
+          search="autoCompleteState.search"
+          provider="autoCompleteState.provider"
+          onCompleted="(text) => this.onCompleted(text)"
+          borderStyle="borderStyle"
+        />
+        <FunctionDescriptionProvider
+          t-if="functionDescriptionState.showDescription"
+          functionName="functionDescriptionState.functionName"
+          functionDescription="functionDescriptionState.functionDescription"
+          argToFocus="functionDescriptionState.argToFocus"
+          borderStyle="borderStyle"
+        />
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-FunctionDescriptionProvider" owl="1">
+    <div
+      class="o-formula-assistant-container"
+      t-att-style="props.borderStyle"
+      t-att-class="{
+          'o-formula-assistant-event-none': assistantState.allowCellSelectionBehind,
+          'o-formula-assistant-event-auto': !assistantState.allowCellSelectionBehind
+          }">
+      <t t-set="context" t-value="getContext()"/>
+      <div
+        class="o-formula-assistant"
+        t-if="context.functionName"
+        t-on-mousemove="onMouseMove"
+        t-att-class="{'o-formula-assistant-transparency': assistantState.allowCellSelectionBehind}">
+        <div class="o-formula-assistant-head">
+          <span t-esc="context.functionName"/>
+          (
+          <t t-foreach="context.functionDescription.args" t-as="arg" t-key="arg.name">
+            <span t-if="arg_index > '0'">,&#xA0;</span>
+            <span t-att-class="{ 'o-formula-assistant-focus': context.argToFocus === arg_index }">
+              <span>
+                <span t-if="arg.optional || arg.repeating || arg.default">[</span>
+                <span t-esc="arg.name"/>
+                <span t-if="arg.repeating">, ...</span>
+                <span t-if="arg.optional || arg.repeating || arg.default">]</span>
+              </span>
+            </span>
+          </t>
+          )
+        </div>
+
+        <div class="o-formula-assistant-core">
+          <div class="o-formula-assistant-gray">ABOUT</div>
+          <div t-esc="context.functionDescription.description"/>
+        </div>
+
+        <t t-foreach="context.functionDescription.args" t-as="arg" t-key="arg.name">
+          <div
+            class="o-formula-assistant-arg"
+            t-att-class="{
+                'o-formula-assistant-gray': context.argToFocus >= '0',
+                'o-formula-assistant-focus': context.argToFocus === arg_index,
+              }">
+            <div>
+              <span t-esc="arg.name"/>
+              <span
+                t-if="arg.optional || arg.repeating || arg.default ">&#xA0;- [optional]&#xA0;</span>
+              <span t-if="arg.default">
+                <t t-esc="arg.defaultValue"/>
+                <span>&#xA0;by default</span>
+              </span>
+              <span t-if="arg.repeating">repeatable</span>
+            </div>
+            <div class="o-formula-assistant-arg-description" t-esc="arg.description"/>
+          </div>
+        </t>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-GridComposer" owl="1">
+    <div class="o-grid-composer" t-att-style="containerStyle" t-ref="gridComposer">
+      <Composer
+        focus="props.focus"
+        inputStyle="composerStyle"
+        rect="composerState.rect"
+        delimitation="composerState.delimitation"
+        onComposerUnmounted="props.onComposerUnmounted"
+        onComposerContentFocused="props.onComposerContentFocused"
+      />
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ErrorToolTip" owl="1">
+    <div class="o-error-tooltip">
+      <t t-esc="props.text"/>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ChartJsComponent" owl="1">
+    <canvas class="o-figure-canvas" t-att-style="canvasStyle" t-ref="graphContainer"/>
+  </t>
+
+  <t t-name="o-spreadsheet-ScorecardChart" owl="1">
+    <div class="o-scorecard" t-att-style="chartStyle">
+      <t t-set="textStyles" t-value="getTextStyles()"/>
+      <div t-if="title" class="o-title-text" t-esc="title" t-att-style="textStyles.titleStyle"/>
+      <div class="o-scorecard-content" t-att-style="chartContentStyle">
+        <div class="o-key-text" t-if="keyValue" t-esc="keyValue" t-att-style="textStyles.keyStyle"/>
+        <t t-if="baseline || baselineDescr">
+          <div class="o-baseline-text" t-att-style="textStyles.baselineStyle">
+            <t t-if="baseline">
+              <t t-if="baselineArrowDirection === 'up'">
+                <t t-call="o-spreadsheet-Icon.ARROW_UP">
+                  <t t-set="color" t-value="'fill : ' + runtime.baselineColor"/>
+                </t>
+              </t>
+              <t t-if="baselineArrowDirection === 'down'">
+                <t t-call="o-spreadsheet-Icon.ARROW_DOWN">
+                  <t t-set="color" t-value="'fill : ' + runtime.baselineColor"/>
+                </t>
+              </t>
+              <span t-att-style="textStyles.baselineValueStyle" class="o-baseline-text-value">
+                <t t-esc="baseline"/>
+              </span>
+            </t>
+            <span t-att-style="textStyles.baselineDescrStyle" class="o-baseline-text-description">
+              <t t-esc="baselineDescr"/>
+            </span>
+          </div>
+        </t>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-FiguresContainer" owl="1">
+    <div>
+      <t t-foreach="getVisibleFigures()" t-as="info" t-key="info.id">
+        <div class="o-figure-container" t-att-style="getContainerStyle(info)">
+          <div
+            class="o-figure-wrapper"
+            t-on-mousedown.stop="(ev) => this.onMouseDown(info.figure, ev)">
+            <div
+              class="o-figure"
+              t-att-style="getFigureStyle(info)"
+              t-att-class="{active: info.isSelected, 'o-dragging': info.id === dnd.figureId}"
+              tabindex="0"
+              t-on-keydown.stop="(ev) => this.onKeyDown(info.figure, ev)"
+              t-on-keyup.stop="">
+              <t
+                t-component="figureRegistry.get(info.figure.tag).Component"
+                t-key="info.id"
+                sidePanelIsOpen="props.sidePanelIsOpen"
+                onFigureDeleted="props.onFigureDeleted"
+                figure="info.figure"
+              />
+            </div>
+          </div>
+          <t t-if="info.isSelected">
+            <div
+              class="o-anchor o-top"
+              t-att-style="this.getAnchorPosition('top', info)"
+              t-on-mousedown.stop="(ev) => this.resize(info.figure, 0,-1, ev)"
+            />
+            <div
+              class="o-anchor o-topRight"
+              t-att-style="this.getAnchorPosition('top right', info)"
+              t-on-mousedown.stop="(ev) => this.resize(info.figure, 1,-1, ev)"
+            />
+            <div
+              class="o-anchor o-right"
+              t-att-style="this.getAnchorPosition('right', info)"
+              t-on-mousedown.stop="(ev) => this.resize(info.figure, 1,0, ev)"
+            />
+            <div
+              class="o-anchor o-bottomRight"
+              t-att-style="this.getAnchorPosition('bottom right', info)"
+              t-on-mousedown.stop="(ev) => this.resize(info.figure, 1,1, ev)"
+            />
+            <div
+              class="o-anchor o-bottom"
+              t-att-style="this.getAnchorPosition('bottom', info)"
+              t-on-mousedown.stop="(ev) => this.resize(info.figure, 0,1, ev)"
+            />
+            <div
+              class="o-anchor o-bottomLeft"
+              t-att-style="this.getAnchorPosition('bottom left', info)"
+              t-on-mousedown.stop="(ev) => this.resize(info.figure, -1,1, ev)"
+            />
+            <div
+              class="o-anchor o-left"
+              t-att-style="this.getAnchorPosition('left', info)"
+              t-on-mousedown.stop="(ev) => this.resize(info.figure, -1,0, ev)"
+            />
+            <div
+              class="o-anchor o-topLeft"
+              t-att-style="this.getAnchorPosition('top left', info)"
+              t-on-mousedown.stop="(ev) => this.resize(info.figure, -1,-1, ev)"
+            />
+          </t>
+        </div>
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ChartFigure" owl="1">
+    <div
+      class="o-chart-container"
+      t-ref="chartContainer"
+      t-on-contextmenu.prevent.stop="(ev) => !env.isDashboard() and this.onContextMenu(ev)">
+      <div class="o-chart-menu" t-if="!env.isDashboard()">
+        <div
+          class="o-chart-menu-item"
+          t-on-click="showMenu"
+          t-ref="menuButton"
+          t-on-contextmenu.prevent.stop="showMenu">
+          <t t-call="o-spreadsheet-Icon.LIST"/>
+        </div>
+      </div>
+      <t
+        t-component="chartComponent"
+        figure="this.props.figure"
+        t-key="this.props.figure.id + '-' + chartType"
+      />
+
+      <Menu
+        t-if="menuState.isOpen"
+        position="menuState.position"
+        menuItems="menuState.menuItems"
+        onClose="() => this.menuState.isOpen=false"
+      />
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-Grid" owl="1">
+    <div
+      class="o-grid"
+      t-att-class="{'o-two-columns': !props.sidePanelIsOpen}"
+      t-on-click="focus"
+      t-on-keydown="onKeydown"
+      t-on-wheel="onMouseWheel"
+      t-ref="grid">
+      <!-- tabindex="-1" is necessary to keep the focus on composer while selecting a cell -->
+      <div
+        t-ref="gridOverlay"
+        tabindex="-1"
+        class="o-grid-overlay"
+        t-att-style="gridOverlayStyle"
+        t-on-mousedown="onMouseDown"
+        t-on-dblclick="onDoubleClick"
+        t-on-contextmenu="onCanvasContextMenu">
+        <FiguresContainer
+          model="props.model"
+          sidePanelIsOpen="props.sidePanelIsOpen"
+          onFigureDeleted="() => this.focus()"
+        />
+      </div>
+      <HeadersOverlay
+        t-if="!env.isDashboard()"
+        onOpenContextMenu="(type, x, y) => this.toggleContextMenu(type, x, y)"
+      />
+
+      <t t-if="env.model.getters.getEditionMode() !== 'inactive' and !env.isDashboard()">
+        <GridComposer
+          onComposerUnmounted="() => this.focus()"
+          onComposerContentFocused="props.onComposerContentFocused"
+          focus="props.focusComposer"
+        />
+      </t>
+      <canvas t-ref="canvas"/>
+      <t
+        t-if="!env.isDashboard()"
+        t-foreach="env.model.getters.getClientsToDisplay()"
+        t-as="client"
+        t-key="getClientPositionKey(client)">
+        <ClientTag
+          name="client.name"
+          color="client.color"
+          col="client.position.col"
+          row="client.position.row"
+          active="isCellHovered(client.position.col, client.position.row)"
+        />
+      </t>
+      <Popover
+        t-if="cellPopover.isOpen"
+        position="cellPopover.coordinates"
+        childWidth="cellPopover.Component.size.width"
+        childHeight="cellPopover.Component.size.height"
+        flipHorizontalOffset="cellPopover.cellWidth"
+        flipVerticalOffset="cellPopover.cellHeight"
+        onMouseWheel="onMouseWheel.bind(this)">
+        <t
+          t-component="cellPopover.Component"
+          t-props="{...cellPopover.props, onClosed : () => onClosePopover()}"
+        />
+      </Popover>
+      <t
+        t-if="env.model.getters.getEditionMode() === 'inactive' and isAutoFillActive() and !env.isDashboard()">
+        <Autofill
+          position="getAutofillPosition()"
+          getGridBoundingClientRect="() => this.getGridBoundingClientRect()"
+        />
+      </t>
+      <t t-if="env.model.getters.getEditionMode() !== 'inactive' and !env.isDashboard()">
+        <t t-foreach="env.model.getters.getHighlights()" t-as="highlight" t-key="highlight_index">
+          <t t-if="highlight.sheetId === env.model.getters.getActiveSheetId()">
+            <Highlight zone="highlight.zone" color="highlight.color"/>
+          </t>
+        </t>
+      </t>
+      <Menu
+        t-if="menuState.isOpen"
+        menuItems="menuState.menuItems"
+        position="menuState.position"
+        onClose="() => this.closeMenu()"
+      />
+      <t
+        t-set="gridSize"
+        t-value="env.model.getters.getMaxViewportSize(env.model.getters.getActiveSheet())"
+      />
+      <div
+        class="o-scrollbar vertical"
+        t-on-scroll="onScroll"
+        t-ref="vscrollbar"
+        t-att-style="vScrollbarStyle">
+        <div t-attf-style="width:1px;height:{{gridSize.height}}px"/>
+      </div>
+      <div
+        class="o-scrollbar horizontal"
+        t-on-scroll="onScroll"
+        t-ref="hscrollbar"
+        t-att-style="hScrollbarStyle">
+        <div t-attf-style="height:1px;width:{{gridSize.width}}px"/>
+      </div>
+      <div class="o-scrollbar corner"/>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-HeadersOverlay" owl="1">
+    <div class="o-overlay">
+      <ColResizer onOpenContextMenu="props.onOpenContextMenu"/>
+      <RowResizer onOpenContextMenu="props.onOpenContextMenu"/>
+      <div class="all" t-on-mousedown.self="selectAll"/>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-RowResizer" owl="1">
+    <div
+      class="o-row-resizer"
+      t-on-mousemove.self="onMouseMove"
+      t-on-mouseleave="onMouseLeave"
+      t-on-mousedown.self.prevent="select"
+      t-ref="rowResizer"
+      t-on-mouseup.self="onMouseUp"
+      t-on-contextmenu.self="onContextMenu"
+      t-att-class="{'o-grab': state.waitingForMove, 'o-dragging': state.isMoving}">
+      <div
+        t-if="state.isMoving"
+        class="dragging-row-line"
+        t-attf-style="top:{{state.draggerLinePosition}}px;"
+      />
+      <div
+        t-if="state.isMoving"
+        class="dragging-row-shadow"
+        t-attf-style="top:{{state.draggerShadowPosition}}px; height:{{state.draggerShadowThickness}}px;"
+      />
+      <t t-if="state.resizerIsActive">
+        <div
+          class="o-handle"
+          t-on-mousedown="onMouseDown"
+          t-on-dblclick="onDblClick"
+          t-on-contextmenu.prevent=""
+          t-attf-style="top:{{state.draggerLinePosition - 2}}px;">
+          <div class="dragging-resizer" t-if="state.isResizing"/>
+        </div>
+      </t>
+      <t
+        t-foreach="env.model.getters.getHiddenRowsGroups(env.model.getters.getActiveSheetId())"
+        t-as="hiddenItem"
+        t-key="hiddenItem_index">
+        <t t-if="!hiddenItem.includes(0)">
+          <div
+            class="o-unhide"
+            t-att-data-index="hiddenItem_index"
+            t-attf-style="top:{{unhideStyleValue(hiddenItem[0]) - 17}}px;"
+            t-on-click="() => this.unhide(hiddenItem)">
+            <t t-call="o-spreadsheet-Icon.TRIANGLE_UP"/>
+          </div>
+        </t>
+        <t
+          t-if="!hiddenItem.includes(env.model.getters.getNumberRows(env.model.getters.getActiveSheetId())-1)">
+          <div
+            class="o-unhide"
+            t-att-data-index="hiddenItem_index"
+            t-attf-style="top:{{unhideStyleValue(hiddenItem[0]) + 3}}px;"
+            t-on-click="() => this.unhide(hiddenItem)">
+            <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+          </div>
+        </t>
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ColResizer" owl="1">
+    <div
+      class="o-col-resizer"
+      t-on-mousemove.self="onMouseMove"
+      t-on-mouseleave="onMouseLeave"
+      t-on-mousedown.self.prevent="select"
+      t-ref="colResizer"
+      t-on-mouseup.self="onMouseUp"
+      t-on-contextmenu.self="onContextMenu"
+      t-att-class="{'o-grab': state.waitingForMove, 'o-dragging': state.isMoving, }">
+      <div
+        t-if="state.isMoving"
+        class="dragging-col-line"
+        t-attf-style="left:{{state.draggerLinePosition}}px;"
+      />
+      <div
+        t-if="state.isMoving"
+        class="dragging-col-shadow"
+        t-attf-style="left:{{state.draggerShadowPosition}}px; width:{{state.draggerShadowThickness}}px"
+      />
+      <t t-if="state.resizerIsActive">
+        <div
+          class="o-handle"
+          t-on-mousedown="onMouseDown"
+          t-on-dblclick="onDblClick"
+          t-on-contextmenu.prevent=""
+          t-attf-style="left:{{state.draggerLinePosition - 2}}px;">
+          <div class="dragging-resizer" t-if="state.isResizing"/>
+        </div>
+      </t>
+      <t
+        t-foreach="env.model.getters.getHiddenColsGroups(env.model.getters.getActiveSheetId())"
+        t-as="hiddenItem"
+        t-key="hiddenItem_index">
+        <t t-if="!hiddenItem.includes(0)">
+          <div
+            class="o-unhide"
+            t-att-data-index="hiddenItem_index"
+            t-attf-style="left:{{unhideStyleValue(hiddenItem[0]) - 17}}px; margin-right:6px;"
+            t-on-click="() => this.unhide(hiddenItem)">
+            <t t-call="o-spreadsheet-Icon.TRIANGLE_LEFT"/>
+          </div>
+        </t>
+        <t
+          t-if="!hiddenItem.includes(env.model.getters.getNumberCols(env.model.getters.getActiveSheetId())-1)">
+          <div
+            class="o-unhide"
+            t-att-data-index="hiddenItem_index"
+            t-attf-style="left:{{unhideStyleValue(hiddenItem[0]) + 3}}px;"
+            t-on-click="() => this.unhide(hiddenItem)">
+            <t t-call="o-spreadsheet-Icon.TRIANGLE_RIGHT"/>
+          </div>
+        </t>
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-Border" owl="1">
+    <div
+      class="o-border"
+      t-on-mousedown="onMouseDown"
+      t-att-style="style"
+      t-att-class="{
+          'o-moving': props.isMoving,
+          'o-border-n': props.orientation === 'n',
+          'o-border-s': props.orientation === 's',
+          'o-border-w': props.orientation === 'w',
+          'o-border-e': props.orientation === 'e',
+        }"
+    />
+  </t>
+
+  <t t-name="o-spreadsheet-Corner" owl="1">
+    <div
+      class="o-corner"
+      t-on-mousedown="onMouseDown"
+      t-att-style="style"
+      t-att-class="{
+          'o-resizing': props.isResizing,
+          'o-corner-nw': props.orientation === 'nw',
+          'o-corner-ne': props.orientation === 'ne',
+          'o-corner-sw': props.orientation === 'sw',
+          'o-corner-se': props.orientation === 'se',
+        }"
+    />
+  </t>
+
+  <t t-name="o-spreadsheet-Highlight" owl="1">
+    <div class="o-highlight" t-ref="highlight">
+      <t t-foreach="['nw', 'ne', 'sw', 'se']" t-as="orientation" t-key="orientation">
+        <Corner
+          onResizeHighlight="(isLeft, isTop) => this.onResizeHighlight(isLeft, isTop)"
+          isResizing='highlightState.shiftingMode === "isResizing"'
+          orientation="orientation"
+          zone="props.zone"
+          color="props.color"
+        />
+      </t>
+      <t t-foreach="['n', 's', 'w', 'e']" t-as="orientation" t-key="orientation">
+        <Border
+          onMoveHighlight="(x, y) => this.onMoveHighlight(x,y)"
+          isMoving='highlightState.shiftingMode === "isMoving"'
+          orientation="orientation"
+          zone="props.zone"
+        />
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-IconPicker" owl="1">
+    <div class="o-icon-picker">
+      <t t-foreach="iconSets" t-as="iconSet" t-key="iconSet">
+        <div class="o-cf-icon-line">
+          <div
+            class="o-icon-picker-item"
+            t-on-click="() => this.onIconClick(iconSets[iconSet].good)">
+            <t t-call="o-spreadsheet-Icon.{{icons[iconSets[iconSet].good].template}}"/>
+          </div>
+          <div
+            class="o-icon-picker-item"
+            t-on-click="() => this.onIconClick(iconSets[iconSet].neutral)">
+            <t t-call="o-spreadsheet-Icon.{{icons[iconSets[iconSet].neutral].template}}"/>
+          </div>
+          <div
+            class="o-icon-picker-item"
+            t-on-click="() => this.onIconClick(iconSets[iconSet].bad)">
+            <t t-call="o-spreadsheet-Icon.{{icons[iconSets[iconSet].bad].template}}"/>
+          </div>
+        </div>
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-Icon.UNDO" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M11.5656391,4.43436088 L9,7 L16,7 L16,0 L13.0418424,2.95815758 C11.5936787,1.73635959 9.72260775,1 7.67955083,1 C4.22126258,1 1.25575599,3.10984908 0,6 L2,7 C2.93658775,4.60974406 5.12943697,3.08011229 7.67955083,3 C9.14881247,3.0528747 10.4994783,3.57862053 11.5656391,4.43436088 Z"
+        transform="matrix(-1 0 0 1 17 5)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.REDO" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M11.5656391,4.43436088 L9,7 L16,7 L16,0 L13.0418424,2.95815758 C11.5936787,1.73635959 9.72260775,1 7.67955083,1 C4.22126258,1 1.25575599,3.10984908 0,6 L2,7 C2.93658775,4.60974406 5.12943697,3.08011229 7.67955083,3 C9.14881247,3.0528747 10.4994783,3.57862053 11.5656391,4.43436088 Z"
+        transform="translate(1 5)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.PAINT_FORMAT" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M9,0 L1,0 C0.45,0 0,0.45 0,1 L0,4 C0,4.55 0.45,5 1,5 L9,5 C9.55,5 10,4.55 10,4 L10,3 L11,3 L11,6 L4,6 L4,14 L6,14 L6,8 L13,8 L13,2 L10,2 L10,1 C10,0.45 9.55,0 9,0 Z"
+        transform="translate(3 2)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.CLEAR_FORMAT" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M0.27,1.55 L5.43,6.7 L3,12 L5.5,12 L7.14,8.42 L11.73,13 L13,11.73 L1.55,0.27 L0.27,1.55 L0.27,1.55 Z M3.82,0 L5.82,2 L7.58,2 L7.03,3.21 L8.74,4.92 L10.08,2 L14,2 L14,0 L3.82,0 L3.82,0 Z"
+        transform="translate(2 3)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.TRIANGLE_DOWN" owl="1">
+    <svg class="o-icon">
+      <polygon fill="#000000" points="0 0 4 4 8 0" transform="translate(5 7)"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.TRIANGLE_UP" owl="1">
+    <svg class="o-icon">
+      <polygon fill="#000000" points="4 0 0 4 8 4" transform="translate(5 7)"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.TRIANGLE_RIGHT" owl="1">
+    <svg class="o-icon">
+      <polygon fill="#000000" points="0 0 4 4 0 8" transform="translate(5 5)"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.TRIANGLE_LEFT" owl="1">
+    <svg class="o-icon">
+      <polygon fill="#000000" points="4 0 0 4 4 8" transform="translate(5 5)"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BOLD" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        fill-rule="evenodd"
+        d="M9,3.5 C9,1.57 7.43,0 5.5,0 L1.77635684e-15,0 L1.77635684e-15,12 L6.25,12 C8.04,12 9.5,10.54 9.5,8.75 C9.5,7.45 8.73,6.34 7.63,5.82 C8.46,5.24 9,4.38 9,3.5 Z M5,2 C5.82999992,2 6.5,2.67 6.5,3.5 C6.5,4.33 5.82999992,5 5,5 L3,5 L3,2 L5,2 Z M3,10 L3,7 L5.5,7 C6.32999992,7 7,7.67 7,8.5 C7,9.33 6.32999992,10 5.5,10 L3,10 Z"
+        transform="translate(4 3)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ITALIC" owl="1">
+    <svg class="o-icon">
+      <polygon
+        fill="#000000"
+        fill-rule="evenodd"
+        points="4 0 4 2 6.58 2 2.92 10 0 10 0 12 8 12 8 10 5.42 10 9.08 2 12 2 12 0"
+        transform="translate(3 3)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.UNDERLINE" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M6,12 C8.76,12 11,9.76 11,7 L11,0 L9,0 L9,7 C9,8.75029916 7.49912807,10 6,10 C4.50087193,10 3,8.75837486 3,7 L3,0 L1,0 L1,7 C1,9.76 3.24,12 6,12 Z M0,13 L0,15 L12,15 L12,13 L0,13 Z"
+        transform="translate(3 3)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.STRIKE" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#010101"
+        fill-rule="evenodd"
+        d="M2.8875,3.06 C2.8875,2.6025 2.985,2.18625 3.18375,1.8075 C3.3825,1.42875 3.66,1.10625 4.02,0.84 C4.38,0.57375 4.80375,0.3675 5.29875,0.22125 C5.79375,0.075 6.33375,0 6.92625,0 C7.53375,0 8.085,0.0825 8.58,0.25125 C9.075,0.42 9.49875,0.6525 9.85125,0.95625 C10.20375,1.25625 10.47375,1.6125 10.665,2.02875 C10.85625,2.44125 10.95,2.895 10.95,3.38625 L8.6925,3.38625 C8.6925,3.1575 8.655,2.94375 8.58375,2.74875 C8.5125,2.55 8.4,2.38125 8.25,2.2425 C8.1,2.10375 7.9125,1.99125 7.6875,1.91625 C7.4625,1.8375 7.19625,1.8 6.88875,1.8 C6.5925,1.8 6.3375,1.83375 6.11625,1.8975 C5.89875,1.96125 5.71875,2.05125 5.57625,2.1675 C5.43375,2.28375 5.325,2.41875 5.25375,2.5725 C5.1825,2.72625 5.145,2.895 5.145,3.0675 C5.145,3.4275 5.32875,3.73125 5.69625,3.975 C5.71780203,3.98908066 5.73942012,4.00311728 5.76118357,4.01733315 C6.02342923,4.18863185 6.5,4.5 7,5 L4,5 C4,5 3.21375,4.37625 3.17625,4.30875 C2.985,3.9525 2.8875,3.53625 2.8875,3.06 Z M14,6 L0,6 L0,8 L7.21875,8 C7.35375,8.0525 7.51875,8.105 7.63125,8.15375 C7.90875,8.2775 8.12625,8.40875 8.28375,8.53625 C8.44125,8.6675 8.54625,8.81 8.6025,8.96 C8.65875,9.11375 8.685,9.28625 8.685,9.47375 C8.685,9.65 8.65125,9.815 8.58375,9.965 C8.51625,10.11875 8.41125,10.25 8.2725,10.35875 C8.13375,10.4675 7.95375,10.55375 7.74,10.6175 C7.5225,10.68125 7.27125,10.71125 6.97875,10.71125 C6.6525,10.71125 6.35625,10.6775 6.09,10.61375 C5.82375,10.55 5.59875,10.445 5.41125,10.3025 C5.22375,10.16 5.0775,9.9725 4.9725,9.74375 C4.8675,9.515 4.78125,9.17 4.78125,9 L2.55,9 C2.55,9.2525 2.61,9.6875 2.72625,10.025 C2.8425,10.3625 3.0075,10.66625 3.21375,10.9325 C3.42,11.19875 3.6675,11.4275 3.94875,11.6225 C4.23,11.8175 4.53375,11.9825 4.86375,12.11 C5.19375,12.24125 5.535,12.33875 5.89875,12.39875 C6.25875,12.4625 6.6225,12.4925 6.9825,12.4925 C7.5825,12.4925 8.13,12.425 8.6175,12.28625 C9.105,12.1475 9.525,11.94875 9.87,11.69375 C10.215,11.435 10.48125,11.12 10.6725,10.74125 C10.86375,10.3625 10.95375,9.935 10.95375,9.455 C10.95375,9.005 10.875,8.6 10.72125,8.24375 C10.68375,8.1575 10.6425,8.075 10.59375,7.9925 L14,8 L14,6 Z"
+        transform="translate(2 3)"
+      />
+    </svg>
+  </t>
+
+  <t t-name="o-spreadsheet-Icon.TEXT_COLOR" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M7,0 L5,0 L0.5,12 L2.5,12 L3.62,9 L8.37,9 L9.49,12 L11.49,12 L7,0 L7,0 Z M4.38,7 L6,2.67 L7.62,7 L4.38,7 L4.38,7 Z"
+        transform="translate(3 1)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.FILL_COLOR" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M14.5,8.87 C14.5,8.87 13,10.49 13,11.49 C13,12.32 13.67,12.99 14.5,12.99 C15.33,12.99 16,12.32 16,11.49 C16,10.5 14.5,8.87 14.5,8.87 L14.5,8.87 Z M12.71,6.79 L5.91,0 L4.85,1.06 L6.44,2.65 L2.29,6.79 C1.9,7.18 1.9,7.81 2.29,8.2 L6.79,12.7 C6.99,12.9 7.24,13 7.5,13 C7.76,13 8.01,12.9 8.21,12.71 L12.71,8.21 C13.1,7.82 13.1,7.18 12.71,6.79 L12.71,6.79 Z M4.21,7 L7.5,3.71 L10.79,7 L4.21,7 L4.21,7 Z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.MERGE_CELL" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M3,6 L1,6 L1,2 L8,2 L8,4 L3,4 L3,6 Z M10,4 L10,2 L17,2 L17,6 L15,6 L15,4 L10,4 Z M10,14 L15,14 L15,12 L17,12 L17,16 L10,16 L10,14 Z M1,12 L3,12 L3,14 L8,14 L8,16 L1,16 L1,12 Z M1,8 L5,8 L5,6 L8,9 L5,12 L5,10 L1,10 L1,8 Z M10,9 L13,6 L13,8 L17,8 L17,10 L13,10 L13,12 L10,9 Z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ALIGN_LEFT" owl="1">
+    <svg class="o-icon align-left">
+      <path
+        fill="#000000"
+        d="M0,14 L10,14 L10,12 L0,12 L0,14 Z M10,4 L0,4 L0,6 L10,6 L10,4 Z M0,0 L0,2 L14,2 L14,0 L0,0 Z M0,10 L14,10 L14,8 L0,8 L0,10 Z"
+        transform="translate(2 2)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ALIGN_CENTER" owl="1">
+    <svg class="o-icon align-center">
+      <path
+        fill="#000000"
+        d="M2,12 L2,14 L12,14 L12,12 L2,12 Z M2,4 L2,6 L12,6 L12,4 L2,4 Z M0,10 L14,10 L14,8 L0,8 L0,10 Z M0,0 L0,2 L14,2 L14,0 L0,0 Z"
+        transform="translate(2 2)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ALIGN_RIGHT" owl="1">
+    <svg class="o-icon align-right">
+      <path
+        fill="#000000"
+        d="M4,14 L14,14 L14,12 L4,12 L4,14 Z M0,10 L14,10 L14,8 L0,8 L0,10 Z M0,0 L0,2 L14,2 L14,0 L0,0 Z M4,6 L14,6 L14,4 L4,4 L4,6 Z"
+        transform="translate(2 2)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ALIGN_MIDDLE" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M9.5,3 L7,3 L7,0 L5,0 L5,3 L2.5,3 L6,6.5 L9.5,3 L9.5,3 Z M0,8 L0,10 L12,10 L12,8 L0,8 L0,8 Z M2.5,15 L5,15 L5,18 L7,18 L7,15 L9.5,15 L6,11.5 L2.5,15 L2.5,15 Z"
+        transform="translate(3)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.TEXT_WRAPPING" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M14,0 L0,0 L0,2 L14,2 L14,0 Z M0,12 L4,12 L4,10 L0,10 L0,12 Z M11.5,5 L0,5 L0,7 L11.75,7 C12.58,7 13.25,7.67 13.25,8.5 C13.25,9.33 12.58,10 11.75,10 L9,10 L9,8 L6,11 L9,14 L9,12 L11.5,12 C13.43,12 15,10.43 15,8.5 C15,6.57 13.43,5 11.5,5 Z"
+        transform="translate(2 3)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDERS" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M0,0 L0,14 L14,14 L14,0 L0,0 L0,0 Z M6,12 L2,12 L2,8 L6,8 L6,12 L6,12 Z M6,6 L2,6 L2,2 L6,2 L6,6 L6,6 Z M12,12 L8,12 L8,8 L12,8 L12,12 L12,12 Z M12,6 L8,6 L8,2 L12,2 L12,6 L12,6 Z"
+        transform="translate(2 2)"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_HV" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <path
+          d="M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M2,3 L0,3 L0,5 L2,5 L2,3 L2,3 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M11,0 L9,0 L9,2 L11,2 L11,0 L11,0 Z M2,0 L0,0 L0,2 L2,2 L2,0 L2,0 Z M5,0 L3,0 L3,2 L5,2 L5,0 L5,0 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z"
+          opacity=".54"
+        />
+        <polygon points="8 0 6 0 6 6 0 6 0 8 6 8 6 14 8 14 8 8 14 8 14 6 8 6"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_H" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <path
+          d="M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M0,2 L2,2 L2,0 L0,0 L0,2 L0,2 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M6,2 L8,2 L8,0 L6,0 L6,2 L6,2 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z"
+          opacity=".54"
+        />
+        <polygon points="0 8 14 8 14 6 0 6"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_V" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <path
+          d="M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,2 L2,2 L2,0 L0,0 L0,2 L0,2 Z M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M0,8 L2,8 L2,6 L0,6 L0,8 L0,8 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z"
+          opacity=".54"
+        />
+        <polygon points="6 14 8 14 8 0 6 0"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_EXTERNAL" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <path
+          d="M8,3 L6,3 L6,5 L8,5 L8,3 L8,3 Z M11,6 L9,6 L9,8 L11,8 L11,6 L11,6 Z M8,6 L6,6 L6,8 L8,8 L8,6 L8,6 Z M8,9 L6,9 L6,11 L8,11 L8,9 L8,9 Z M5,6 L3,6 L3,8 L5,8 L5,6 L5,6 Z"
+          opacity=".54"
+        />
+        <path d="M0,0 L14,0 L14,14 L0,14 L0,0 Z M12,12 L12,2 L2,2 L2,12 L12,12 Z"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_LEFT" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <path
+          d="M6,8 L8,8 L8,6 L6,6 L6,8 L6,8 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M6,2 L8,2 L8,0 L6,0 L6,2 L6,2 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z"
+          opacity=".54"
+        />
+        <polygon points="0 14 2 14 2 0 0 0"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_TOP" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <path
+          d="M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M6,8 L8,8 L8,6 L6,6 L6,8 L6,8 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,8 L2,8 L2,6 L0,6 L0,8 L0,8 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z"
+          opacity=".54"
+        />
+        <polygon points="0 0 0 2 14 2 14 0"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_RIGHT" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <path
+          d="M0,2 L2,2 L2,0 L0,0 L0,2 L0,2 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,8 L2,8 L2,6 L0,6 L0,8 L0,8 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M6,2 L8,2 L8,0 L6,0 L6,2 L6,2 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M6,8 L8,8 L8,6 L6,6 L6,8 L6,8 Z"
+          opacity=".54"
+        />
+        <polygon points="12 0 12 14 14 14 14 0"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_BOTTOM" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <path
+          d="M5,0 L3,0 L3,2 L5,2 L5,0 L5,0 Z M8,6 L6,6 L6,8 L8,8 L8,6 L8,6 Z M8,9 L6,9 L6,11 L8,11 L8,9 L8,9 Z M11,6 L9,6 L9,8 L11,8 L11,6 L11,6 Z M5,6 L3,6 L3,8 L5,8 L5,6 L5,6 Z M11,0 L9,0 L9,2 L11,2 L11,0 L11,0 Z M8,3 L6,3 L6,5 L8,5 L8,3 L8,3 Z M8,0 L6,0 L6,2 L8,2 L8,0 L8,0 Z M2,9 L0,9 L0,11 L2,11 L2,9 L2,9 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M2,0 L0,0 L0,2 L2,2 L2,0 L2,0 Z M2,3 L0,3 L0,5 L2,5 L2,3 L2,3 Z M2,6 L0,6 L0,8 L2,8 L2,6 L2,6 Z"
+          opacity=".54"
+        />
+        <polygon points="0 14 14 14 14 12 0 12"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_CLEAR" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        fill-rule="evenodd"
+        d="M6,14 L8,14 L8,12 L6,12 L6,14 L6,14 Z M3,8 L5,8 L5,6 L3,6 L3,8 L3,8 Z M3,2 L5,2 L5,0 L3,0 L3,2 L3,2 Z M6,11 L8,11 L8,9 L6,9 L6,11 L6,11 Z M3,14 L5,14 L5,12 L3,12 L3,14 L3,14 Z M0,5 L2,5 L2,3 L0,3 L0,5 L0,5 Z M0,14 L2,14 L2,12 L0,12 L0,14 L0,14 Z M0,2 L2,2 L2,0 L0,0 L0,2 L0,2 Z M0,8 L2,8 L2,6 L0,6 L0,8 L0,8 Z M6,8 L8,8 L8,6 L6,6 L6,8 L6,8 Z M0,11 L2,11 L2,9 L0,9 L0,11 L0,11 Z M12,11 L14,11 L14,9 L12,9 L12,11 L12,11 Z M12,14 L14,14 L14,12 L12,12 L12,14 L12,14 Z M12,8 L14,8 L14,6 L12,6 L12,8 L12,8 Z M12,5 L14,5 L14,3 L12,3 L12,5 L12,5 Z M12,0 L12,2 L14,2 L14,0 L12,0 L12,0 Z M6,2 L8,2 L8,0 L6,0 L6,2 L6,2 Z M9,2 L11,2 L11,0 L9,0 L9,2 L9,2 Z M6,5 L8,5 L8,3 L6,3 L6,5 L6,5 Z M9,14 L11,14 L11,12 L9,12 L9,14 L9,14 Z M9,8 L11,8 L11,6 L9,6 L9,8 L9,8 Z"
+        transform="translate(2 2)"
+        opacity=".54"
+      />
+    </svg>
+  </t>
+
+  <t t-name="o-spreadsheet-Icon.PLUS" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="#000000"
+        d="M8,0 L10,0 L10,8 L18,8 L18,10 L10,10 L10,18 L8,18 L8,10 L0,10 L0,8 L8,8"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.LIST" owl="1">
+    <svg class="o-icon" viewBox="0 0 384 384">
+      <rect x="0" y="277.333" width="384" height="42.667"/>
+      <rect x="0" y="170.667" width="384" height="42.667"/>
+      <rect x="0" y="64" width="384" height="42.667"/>
+    </svg>
+  </t>
+
+  <t t-name="o-spreadsheet-Icon.EDIT" owl="1">
+    <svg class="o-icon" viewBox="0 0 576 512">
+      <path
+        fill="currentColor"
+        d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.UNLINK" owl="1">
+    <svg class="o-icon" viewBox="0 0 512 512">
+      <path
+        fill="currentColor"
+        d="M304.083 405.907c4.686 4.686 4.686 12.284 0 16.971l-44.674 44.674c-59.263 59.262-155.693 59.266-214.961 0-59.264-59.265-59.264-155.696 0-214.96l44.675-44.675c4.686-4.686 12.284-4.686 16.971 0l39.598 39.598c4.686 4.686 4.686 12.284 0 16.971l-44.675 44.674c-28.072 28.073-28.072 73.75 0 101.823 28.072 28.072 73.75 28.073 101.824 0l44.674-44.674c4.686-4.686 12.284-4.686 16.971 0l39.597 39.598zm-56.568-260.216c4.686 4.686 12.284 4.686 16.971 0l44.674-44.674c28.072-28.075 73.75-28.073 101.824 0 28.072 28.073 28.072 73.75 0 101.823l-44.675 44.674c-4.686 4.686-4.686 12.284 0 16.971l39.598 39.598c4.686 4.686 12.284 4.686 16.971 0l44.675-44.675c59.265-59.265 59.265-155.695 0-214.96-59.266-59.264-155.695-59.264-214.961 0l-44.674 44.674c-4.686 4.686-4.686 12.284 0 16.971l39.597 39.598zm234.828 359.28l22.627-22.627c9.373-9.373 9.373-24.569 0-33.941L63.598 7.029c-9.373-9.373-24.569-9.373-33.941 0L7.029 29.657c-9.373 9.373-9.373 24.569 0 33.941l441.373 441.373c9.373 9.372 24.569 9.372 33.941 0z"
+      />
+    </svg>
+  </t>
+  /** Font Awesome by Dave Gandy
+ *  http://fontawesome.io/
+ *  https://fontawesome.com/license
+ */
+  <t t-name="o-spreadsheet-Icon.CARET_UP" owl="1">
+    <svg class="caret-up" viewBox="0 0 320 512">
+      <path
+        fill="currentColor"
+        d="M288.662 352H31.338c-17.818 0-26.741-21.543-14.142-34.142l128.662-128.662c7.81-7.81 20.474-7.81 28.284 0l128.662 128.662c12.6 12.599 3.676 34.142-14.142 34.142z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.CARET_DOWN" owl="1">
+    <svg class="caret-down" viewBox="0 0 320 512">
+      <path
+        fill="currentColor"
+        d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
+      />
+    </svg>
+  </t>
+
+  <t t-name="o-spreadsheet-Icon.TRASH" owl="1">
+    <svg class="o-cf-icon trash" viewBox="0 0 448 512">
+      <path
+        fill="currentColor"
+        d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.REFRESH" owl="1">
+    <svg class="o-cf-icon refresh" viewBox="0 0 512 512">
+      <path
+        fill="currentColor"
+        d="M440.65 12.57l4 82.77A247.16 247.16 0 0 0 255.83 8C134.73 8 33.91 94.92 12.29 209.82A12 12 0 0 0 24.09 224h49.05a12 12 0 0 0 11.67-9.26 175.91 175.91 0 0 1 317-56.94l-101.46-4.86a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12H500a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12h-47.37a12 12 0 0 0-11.98 12.57zM255.83 432a175.61 175.61 0 0 1-146-77.8l101.8 4.87a12 12 0 0 0 12.57-12v-47.4a12 12 0 0 0-12-12H12a12 12 0 0 0-12 12V500a12 12 0 0 0 12 12h47.35a12 12 0 0 0 12-12.6l-4.15-82.57A247.17 247.17 0 0 0 255.83 504c121.11 0 221.93-86.92 243.55-201.82a12 12 0 0 0-11.8-14.18h-49.05a12 12 0 0 0-11.67 9.26A175.86 175.86 0 0 1 255.83 432z"
+      />
+    </svg>
+  </t>
+
+  <t t-name="o-spreadsheet-Icon.ARROW_DOWN" owl="1">
+    <svg
+      class="o-cf-icon arrow-down"
+      width="10"
+      height="10"
+      focusable="false"
+      viewBox="0 0 448 512">
+      <path
+        fill="#DC6965"
+        t-att-style="color"
+        d="M413.1 222.5l22.2 22.2c9.4 9.4 9.4 24.6 0 33.9L241 473c-9.4 9.4-24.6 9.4-33.9 0L12.7 278.6c-9.4-9.4-9.4-24.6 0-33.9l22.2-22.2c9.5-9.5 25-9.3 34.3.4L184 343.4V56c0-13.3 10.7-24 24-24h32c13.3 0 24 10.7 24 24v287.4l114.8-120.5c9.3-9.8 24.8-10 34.3-.4z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ARROW_UP" owl="1">
+    <svg class="o-cf-icon arrow-up" width="10" height="10" focusable="false" viewBox="0 0 448 512">
+      <path
+        fill="#00A04A"
+        t-att-style="color"
+        d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ARROW_RIGHT" owl="1">
+    <svg
+      class="o-cf-icon arrow-right"
+      width="10"
+      height="10"
+      focusable="false"
+      viewBox="0 0 448 512">
+      <path
+        fill="#F0AD4E"
+        d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"
+      />
+    </svg>
+  </t>
+
+  <t t-name="o-spreadsheet-Icon.SMILE" owl="1">
+    <svg class="o-cf-icon smile" width="10" height="10" focusable="false" viewBox="0 0 496 512">
+      <path
+        fill="#00A04A"
+        d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 448c-110.3 0-200-89.7-200-200S137.7 56 248 56s200 89.7 200 200-89.7 200-200 200zm-80-216c17.7 0 32-14.3 32-32s-14.3-32-32-32-32 14.3-32 32 14.3 32 32 32zm160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32-32 14.3-32 32 14.3 32 32 32zm4 72.6c-20.8 25-51.5 39.4-84 39.4s-63.2-14.3-84-39.4c-8.5-10.2-23.7-11.5-33.8-3.1-10.2 8.5-11.5 23.6-3.1 33.8 30 36 74.1 56.6 120.9 56.6s90.9-20.6 120.9-56.6c8.5-10.2 7.1-25.3-3.1-33.8-10.1-8.4-25.3-7.1-33.8 3.1z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.MEH" owl="1">
+    <svg class="o-cf-icon meh" width="10" height="10" focusable="false" viewBox="0 0 496 512">
+      <path
+        fill="#F0AD4E"
+        d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 448c-110.3 0-200-89.7-200-200S137.7 56 248 56s200 89.7 200 200-89.7 200-200 200zm-80-216c17.7 0 32-14.3 32-32s-14.3-32-32-32-32 14.3-32 32 14.3 32 32 32zm160-64c-17.7 0-32 14.3-32 32s14.3 32 32 32 32-14.3 32-32-14.3-32-32-32zm8 144H160c-13.2 0-24 10.8-24 24s10.8 24 24 24h176c13.2 0 24-10.8 24-24s-10.8-24-24-24z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.FROWN" owl="1">
+    <svg class="o-cf-icon frown" width="10" height="10" focusable="false" viewBox="0 0 496 512">
+      <path
+        fill="#DC6965"
+        d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 448c-110.3 0-200-89.7-200-200S137.7 56 248 56s200 89.7 200 200-89.7 200-200 200zm-80-216c17.7 0 32-14.3 32-32s-14.3-32-32-32-32 14.3-32 32 14.3 32 32 32zm160-64c-17.7 0-32 14.3-32 32s14.3 32 32 32 32-14.3 32-32-14.3-32-32-32zm-80 128c-40.2 0-78 17.7-103.8 48.6-8.5 10.2-7.1 25.3 3.1 33.8 10.2 8.4 25.3 7.1 33.8-3.1 16.6-19.9 41-31.4 66.9-31.4s50.3 11.4 66.9 31.4c8.1 9.7 23.1 11.9 33.8 3.1 10.2-8.5 11.5-23.6 3.1-33.8C326 321.7 288.2 304 248 304z"
+      />
+    </svg>
+  </t>
+
+  <t t-name="o-spreadsheet-Icon.GREEN_DOT" owl="1">
+    <svg class="o-cf-icon green-dot" width="10" height="10" focusable="false" viewBox="0 0 512 512">
+      <path
+        fill="#00A04A"
+        d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.YELLOW_DOT" owl="1">
+    <svg
+      class="o-cf-icon yellow-dot"
+      width="10"
+      height="10"
+      focusable="false"
+      viewBox="0 0 512 512">
+      <path
+        fill="#F0AD4E"
+        d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.RED_DOT" owl="1">
+    <svg class="o-cf-icon red-dot" width="10" height="10" focusable="false" viewBox="0 0 512 512">
+      <path
+        fill="#DC6965"
+        d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"
+      />
+    </svg>
+  </t>
+
+  <t t-name="o-spreadsheet-LinkDisplay" owl="1">
+    <div class="o-link-tool">
+      <t t-set="link" t-value="cell.link"/>
+      <!-- t-key to prevent owl from re-using the previous img element when the link changes.
+    The wrong/previous image would be displayed while the new one loads -->
+      <img
+        t-if="link.isExternal"
+        t-key="link.url"
+        t-attf-src="https://www.google.com/s2/favicons?sz=16&amp;domain={{link.url}}"
+      />
+      <a
+        t-if="link.isExternal"
+        class="o-link"
+        t-att-href="link.url"
+        target="_blank"
+        t-on-click.prevent="openLink"
+        t-att-title="link.url">
+        <t t-esc="cell.urlRepresentation"/>
+      </a>
+      <a
+        t-else=""
+        class="o-link"
+        t-on-click.prevent="openLink"
+        t-att-title="cell.urlRepresentation">
+        <t t-esc="cell.urlRepresentation"/>
+      </a>
+      <span class="o-link-icon o-unlink" t-on-click="unlink" title="Remove link">
+        <t t-call="o-spreadsheet-Icon.UNLINK"/>
+      </span>
+      <span class="o-link-icon o-edit-link" t-on-click="edit" title="Edit link">
+        <t t-call="o-spreadsheet-Icon.EDIT"/>
+      </span>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-LinkEditor" owl="1">
+    <div
+      class="o-link-editor"
+      t-on-click.stop="() => this.menu.isOpen=false"
+      t-on-keydown.stop="onKeyDown"
+      t-ref="linkEditor">
+      <div class="o-section">
+        <div class="o-section-title">Text</div>
+        <div class="d-flex">
+          <input type="text" class="o-input flex-grow-1" t-model="state.link.label"/>
+        </div>
+
+        <div class="o-section-title mt-3">Link</div>
+        <div class="o-link-url">
+          <t t-if="state.isUrlEditable">
+            <input type="text" t-ref="urlInput" t-model="state.link.url"/>
+          </t>
+          <t t-else="">
+            <input type="text" t-att-value="state.urlRepresentation" disabled="1"/>
+          </t>
+          <button t-if="state.link.url" t-on-click="removeLink" class="o-remove-url">✖</button>
+          <button t-if="!state.link.url" t-on-click.stop="openMenu" class="o-special-link">
+            <t t-call="o-spreadsheet-Icon.LIST"/>
+          </button>
+        </div>
+      </div>
+      <Menu
+        t-if="menu.isOpen"
+        position="menuPosition"
+        menuItems="menuItems"
+        onMenuClicked="(ev) => this.onSpecialLink(ev)"
+        onClose="() => this.menu.isOpen=false"
+      />
+      <div class="o-buttons">
+        <button t-on-click="cancel" class="o-button o-cancel">Cancel</button>
+        <button t-on-click="save" class="o-button o-save" t-att-disabled="!state.link.url">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-Menu" owl="1">
+    <Popover
+      t-if="props.menuItems.length"
+      position="props.position"
+      childWidth="MENU_WIDTH"
+      childHeight="menuHeight"
+      flipHorizontalOffset="popover.flipHorizontalOffset"
+      flipVerticalOffset="popover.flipVerticalOffset"
+      marginTop="popover.marginTop">
+      <div
+        t-ref="menu"
+        class="o-menu"
+        t-on-scroll="onScroll"
+        t-on-wheel.stop=""
+        t-on-click.stop=""
+        t-on-contextmenu.prevent="">
+        <t t-foreach="props.menuItems" t-as="menuItem" t-key="menuItem.id">
+          <t t-set="isMenuRoot" t-value="isRoot(menuItem)"/>
+          <t t-set="isMenuEnabled" t-value="isEnabled(menuItem)"/>
+          <div
+            t-att-title="getName(menuItem)"
+            t-att-data-name="menuItem.id"
+            t-on-click="() => this.onClickMenu(menuItem, menuItem_index)"
+            t-on-mouseover="() => this.onMouseOver(menuItem, menuItem_index)"
+            class="o-menu-item"
+            t-att-class="{ 'o-menu-root': isMenuRoot, 'disabled': !isMenuEnabled, 'o-menu-item-active': isParentMenu(subMenu, menuItem)}"
+            t-att-style="getColor(menuItem)">
+            <span class="o-menu-item-name" t-esc="getName(menuItem)"/>
+            <span
+              t-if="getDescription(menuItem)"
+              class="o-menu-item-description"
+              t-esc="getDescription(menuItem)"
+            />
+            <t t-if="isMenuRoot">
+              <span t-call="o-spreadsheet-Icon.TRIANGLE_RIGHT"/>
+            </t>
+            <t t-elif="menuItem.icon">
+              <i t-att-class="menuItem.icon" class="o-menu-item-icon"/>
+            </t>
+          </div>
+          <div t-if="menuItem.separator and !menuItem_last" class="o-separator"/>
+        </t>
+      </div>
+      <Menu
+        t-if="subMenu.isOpen"
+        position="subMenuPosition"
+        menuItems="subMenu.menuItems"
+        depth="props.depth + 1"
+        onMenuClicked="props.onMenuClicked"
+        onClose="() => this.close()"
+      />
+    </Popover>
+  </t>
+
+  <t t-name="o-spreadsheet-Popover" owl="1">
+    <t t-portal="'.o-spreadsheet'">
+      <div t-att-style="style" class="o-popover" t-on-wheel="props.onMouseWheel">
+        <t t-slot="default"/>
+      </div>
+    </t>
+  </t>
+
+  <t t-name="o-spreadsheet-SelectionInput" owl="1">
+    <div class="o-selection">
+      <div
+        t-foreach="ranges"
+        t-as="range"
+        t-key="range.id"
+        class="o-selection-input"
+        t-att-class="props.class">
+        <input
+          type="text"
+          spellcheck="false"
+          t-on-change="(ev) => this.onInputChanged(range.id, ev)"
+          t-on-focus="() => this.focus(range.id)"
+          t-att-value="range.xc"
+          t-att-style="getColor(range)"
+          t-att-class="{
+            'o-focused' : range.isFocused,
+            'o-required': props.required,
+            'o-optional': !props.required,
+            'o-invalid': isInvalid || !range.isValidRange,
+          }"
+        />
+        <button
+          class="o-btn o-remove-selection"
+          t-if="ranges.length > 1"
+          t-on-click="() => this.removeInput(range.id)">
+          ✖
+        </button>
+      </div>
+
+      <div class="o-selection-input">
+        <button class="o-btn-action o-add-selection" t-if="canAddRange" t-on-click="addEmptyInput">
+          Add range
+        </button>
+        <button class="o-btn-action o-selection-ok" t-if="hasFocus" t-on-click="disable">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-BarConfigPanel" owl="1">
+    <div>
+      <div class="o-section">
+        <div class="o_checkbox">
+          <input
+            type="checkbox"
+            name="stackedBar"
+            t-att-checked="props.definition.stackedBar"
+            t-on-change="onUpdateStacked"
+          />
+          Stacked barchart
+        </div>
+      </div>
+      <div class="o-section o-data-series">
+        <div class="o-section-title">Data Series</div>
+        <SelectionInput
+          ranges="dataSeriesRanges"
+          isInvalid="isDatasetInvalid"
+          required="true"
+          onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
+          onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
+        />
+        <input
+          type="checkbox"
+          t-att-checked="props.definition.dataSetsHaveTitle"
+          t-on-change="onUpdateDataSetsHaveTitle"
+        />
+        Data series include title
+      </div>
+      <div class="o-section o-data-labels">
+        <div class="o-section-title">Categories / Labels</div>
+        <SelectionInput
+          ranges="[props.definition.labelRange || '']"
+          isInvalid="isLabelInvalid"
+          hasSingleRange="true"
+          onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
+          onSelectionConfirmed="() => this.onLabelRangeConfirmed()"
+        />
+      </div>
+      <div class="o-section o-sidepanel-error" t-if="errorMessages">
+        <div t-foreach="errorMessages" t-as="error" t-key="error">
+          <t t-esc="error"/>
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-BarChartDesignPanel" owl="1">
+    <div>
+      <div class="o-section">
+        <div class="o-section-title">Background color</div>
+        <div class="o-with-color-picker">
+          Select a color...
+          <span
+            t-attf-style="border-color:{{props.definition.background}}"
+            t-on-click.stop="toggleColorPicker">
+            <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+          </span>
+          <ColorPicker
+            t-if="state.fillColorTool"
+            onColorPicked="(color) => this.updateBackgroundColor(color)"
+            currentColor="props.definition.background"
+            t-key="backgroundColor"
+          />
+        </div>
+      </div>
+      <div class="o-section o-chart-title">
+        <div class="o-section-title">Title</div>
+        <input
+          type="text"
+          t-att-value="props.definition.title"
+          t-on-change="updateTitle"
+          class="o-input o-optional"
+          placeholder="New Chart"
+        />
+      </div>
+      <div class="o-section">
+        <div class="o-section-title">Vertical axis position</div>
+        <select
+          t-att-value="props.definition.verticalAxisPosition"
+          class="o-input o-type-selector"
+          t-on-change="(ev) => this.updateSelect('verticalAxisPosition', ev)">
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+        </select>
+      </div>
+      <div class="o-section">
+        <div class="o-section-title">Legend position</div>
+        <select
+          t-att-value="props.definition.legendPosition"
+          class="o-input o-type-selector"
+          t-on-change="(ev) => this.updateSelect('legendPosition', ev)">
+          <option value="none">None</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+        </select>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-GaugeChartConfigPanel" owl="1">
+    <div>
+      <div class="o-section o-data-series">
+        <div class="o-section-title">Data range</div>
+        <SelectionInput
+          ranges="[props.definition.dataRange || '']"
+          isInvalid="isDataRangeInvalid"
+          hasSingleRange="true"
+          required="true"
+          onSelectionChanged="(ranges) => this.onDataRangeChanged(ranges)"
+          onSelectionConfirmed="() => this.updateDataRange()"
+        />
+      </div>
+      <div class="o-section o-sidepanel-error" t-if="configurationErrorMessages">
+        <div t-foreach="configurationErrorMessages" t-as="error" t-key="error">
+          <t t-esc="error"/>
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-GaugeChartDesignPanel" owl="1">
+    <div>
+      <div class="o-section">
+        <div class="o-section-title">Background color</div>
+        <div class="o-with-color-picker">
+          Select a color...
+          <span
+            title="Background Color"
+            t-attf-style="border-color:{{props.definition.background}}"
+            t-on-click.stop="() => this.toggleMenu('backgroundColor', ev)">
+            <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+          </span>
+          <ColorPicker
+            t-if="state.openedMenu === 'backgroundColor'"
+            onColorPicked="(color) => this.updateBackgroundColor(color)"
+            currentColor="props.definition.background"
+            t-key="backgroundColor"
+          />
+        </div>
+      </div>
+
+      <div class="o-section o-chart-title">
+        <div class="o-section-title">Title</div>
+        <input
+          type="text"
+          t-att-value="props.definition.title"
+          t-on-change="updateTitle"
+          class="o-input o-optional"
+          placeholder="New Chart"
+        />
+      </div>
+
+      <div class="o-section">
+        <div class="o-section-title">Range</div>
+        <div class="o-subsection-left">
+          <input
+            type="text"
+            t-att-value="props.definition.sectionRule.rangeMin"
+            t-on-change="updateRangeMin"
+            class="o-input o-data-range-min"
+            t-att-class="{ 'o-invalid': isRangeMinInvalid() }"
+          />
+        </div>
+        <div class="o-subsection-right">
+          <input
+            type="text"
+            t-att-value="props.definition.sectionRule.rangeMax"
+            t-on-change="updateRangeMax"
+            class="o-input o-data-range-max"
+            t-att-class="{ 'o-invalid': isRangeMaxInvalid() }"
+          />
+        </div>
+      </div>
+
+      <div class="o-section">
+        <div class="o-section-title">Thresholds</div>
+        <t t-call="o-spreadsheet-GaugeChartColorSectionTemplate">
+          <t t-set="sectionRule" t-value="props.definition.sectionRule"/>
+        </t>
+      </div>
+
+      <div class="o-section o-sidepanel-error" t-if="designErrorMessages.length">
+        <div t-foreach="designErrorMessages" t-as="error" t-key="error">
+          <t t-esc="error"/>
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-GaugeChartColorSectionTemplate" owl="1">
+    <div class="o-gauge-color-set">
+      <table>
+        <tr>
+          <th class="o-gauge-color-set-colorPicker"/>
+          <th class="o-gauge-color-set-text"/>
+          <th class="o-gauge-color-set-value">Value</th>
+          <th class="o-gauge-color-set-type">Type</th>
+        </tr>
+
+        <t t-call="o-spreadsheet-GaugeChartColorSectionTemplateRow">
+          <t t-set="sectionColor" t-value="sectionRule.colors.lowerColor"/>
+          <t t-set="sectionType" t-value="'lowerColor'"/>
+          <t t-set="inflectionPoint" t-value="sectionRule.lowerInflectionPoint"/>
+          <t t-set="isInvalid" t-value="isLowerInflectionPointInvalid"/>
+          <t t-set="inflectionPointName" t-value="'lowerInflectionPoint'"/>
+        </t>
+
+        <t t-call="o-spreadsheet-GaugeChartColorSectionTemplateRow">
+          <t t-set="sectionColor" t-value="sectionRule.colors.middleColor"/>
+          <t t-set="sectionType" t-value="'middleColor'"/>
+          <t t-set="inflectionPoint" t-value="sectionRule.upperInflectionPoint"/>
+          <t t-set="isInvalid" t-value="isUpperInflectionPointInvalid"/>
+          <t t-set="inflectionPointName" t-value="'upperInflectionPoint'"/>
+        </t>
+
+        <tr>
+          <td>
+            <div class="o-tools">
+              <div class="o-tool o-dropdown o-with-color">
+                <span
+                  title="Fill Color"
+                  t-attf-style="border-color:{{sectionRule.colors.upperColor}}"
+                  t-on-click.stop="(ev) => this.toggleMenu('sectionColor-upperColor', ev)">
+                  <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+                </span>
+                <ColorPicker
+                  t-if="state.openedMenu === 'sectionColor-upperColor'"
+                  onColorPicked="(color) => this.updateSectionColor('upperColor', color)"
+                  currentColor="sectionRule.colors.upperColor"
+                  dropdownDirection="'right'"
+                />
+              </div>
+            </div>
+          </td>
+          <td>Else</td>
+          <td/>
+          <td/>
+          <td/>
+        </tr>
+      </table>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-GaugeChartColorSectionTemplateRow" owl="1">
+    <tr>
+      <td>
+        <div class="o-tools">
+          <div class="o-tool o-dropdown o-with-color">
+            <span
+              title="Fill Color"
+              t-attf-style="border-color:{{sectionColor}}"
+              t-on-click.stop="(ev) => this.toggleMenu('sectionColor-'+sectionType, ev)">
+              <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+            </span>
+            <ColorPicker
+              t-if="state.openedMenu === 'sectionColor-'+sectionType"
+              onColorPicked="(color) => this.updateSectionColor(sectionType, color)"
+              currentColor="sectionColor"
+              dropdownDirection="'right'"
+            />
+          </div>
+        </div>
+      </td>
+      <td>When value is below</td>
+      <td>
+        <input
+          type="text"
+          class="o-input"
+          t-on-change="(ev) => this.updateInflectionPointValue(inflectionPointName, ev)"
+          t-attf-class="o-input-{{inflectionPointName}}"
+          t-att-class="{ 'o-invalid': isInvalid }"
+          t-model="inflectionPoint.value"
+        />
+      </td>
+      <td>
+        <select
+          class="o-input"
+          name="valueType"
+          t-model="inflectionPoint.type"
+          t-on-change="(ev) => this.updateInflectionPointType(inflectionPointName, ev)">
+          <option value="number">Number</option>
+          <option value="percentage">Percentage</option>
+        </select>
+      </td>
+    </tr>
+  </t>
+
+  <t t-name="o-spreadsheet-LineBarPieConfigPanel" owl="1">
+    <div>
+      <div class="o-section o-data-series">
+        <div class="o-section-title">Data Series</div>
+        <SelectionInput
+          ranges="dataSeriesRanges"
+          isInvalid="isDatasetInvalid"
+          required="true"
+          onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
+          onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
+        />
+        <input
+          type="checkbox"
+          t-att-checked="props.definition.dataSetsHaveTitle"
+          t-on-change="onUpdateDataSetsHaveTitle"
+        />
+        Data series include title
+      </div>
+      <div class="o-section o-data-labels">
+        <div class="o-section-title">Categories / Labels</div>
+        <SelectionInput
+          ranges="[props.definition.labelRange || '']"
+          isInvalid="isLabelInvalid"
+          hasSingleRange="true"
+          onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
+          onSelectionConfirmed="() => this.onLabelRangeConfirmed()"
+        />
+      </div>
+      <div class="o-section o-sidepanel-error" t-if="errorMessages">
+        <div t-foreach="errorMessages" t-as="error" t-key="error">
+          <t t-esc="error"/>
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-LineBarPieDesignPanel" owl="1">
+    <div>
+      <div class="o-section">
+        <div class="o-section-title">Background color</div>
+        <div class="o-with-color-picker">
+          Select a color...
+          <span
+            t-attf-style="border-color:{{props.definition.background}}"
+            t-on-click.stop="toggleColorPicker">
+            <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+          </span>
+          <ColorPicker
+            t-if="state.fillColorTool"
+            onColorPicked="(color) => this.updateBackgroundColor(color)"
+            currentColor="props.definition.background"
+            t-key="backgroundColor"
+          />
+        </div>
+      </div>
+      <div class="o-section o-chart-title">
+        <div class="o-section-title">Title</div>
+        <input
+          type="text"
+          t-att-value="props.definition.title"
+          t-on-change="updateTitle"
+          class="o-input o-optional"
+          placeholder="New Chart"
+        />
+      </div>
+      <div class="o-section">
+        <div class="o-section-title">Legend position</div>
+        <select
+          t-att-value="props.definition.legendPosition"
+          class="o-input o-type-selector"
+          t-on-change="(ev) => this.updateSelect('legendPosition', ev)">
+          <option value="none">None</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+        </select>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-LineConfigPanel" owl="1">
+    <div>
+      <div class="o-section o-data-series">
+        <div class="o-section-title">Data Series</div>
+        <SelectionInput
+          ranges="dataSeriesRanges"
+          isInvalid="isDatasetInvalid"
+          required="true"
+          onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
+          onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
+        />
+        <input
+          type="checkbox"
+          t-att-checked="props.definition.dataSetsHaveTitle"
+          t-on-change="onUpdateDataSetsHaveTitle"
+        />
+        Data series include title
+      </div>
+      <div class="o-section o-data-labels">
+        <div class="o-section-title">Categories / Labels</div>
+        <SelectionInput
+          ranges="[props.definition.labelRange || '']"
+          isInvalid="isLabelInvalid"
+          hasSingleRange="true"
+          onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
+          onSelectionConfirmed="() => this.onLabelRangeConfirmed()"
+        />
+        <div t-if="canTreatLabelsAsText">
+          <input
+            type="checkbox"
+            name="labelsAsText"
+            t-att-checked="props.definition.labelsAsText"
+            t-on-change="onUpdateLabelsAsText"
+          />
+          Treat labels as text
+        </div>
+      </div>
+      <div class="o-section o-sidepanel-error" t-if="errorMessages">
+        <div t-foreach="errorMessages" t-as="error" t-key="error">
+          <t t-esc="error"/>
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-LineChartDesignPanel" owl="1">
+    <div>
+      <div class="o-section">
+        <div class="o-section-title">Background color</div>
+        <div class="o-with-color-picker">
+          Select a color...
+          <span
+            t-attf-style="border-color:{{props.definition.background}}"
+            t-on-click.stop="toggleColorPicker">
+            <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+          </span>
+          <ColorPicker
+            t-if="state.fillColorTool"
+            onColorPicked="(color) => this.updateBackgroundColor(color)"
+            currentColor="props.definition.background"
+            t-key="backgroundColor"
+          />
+        </div>
+      </div>
+      <div class="o-section o-chart-title">
+        <div class="o-section-title">Title</div>
+        <input
+          type="text"
+          t-att-value="props.definition.title"
+          t-on-change="updateTitle"
+          class="o-input o-optional"
+          placeholder="New Chart"
+        />
+      </div>
+      <div class="o-section">
+        <div class="o-section-title">Vertical axis position</div>
+        <select
+          t-att-value="props.definition.verticalAxisPosition"
+          class="o-input o-type-selector"
+          t-on-change="(ev) => this.updateSelect('verticalAxisPosition', ev)">
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+        </select>
+      </div>
+      <div class="o-section">
+        <div class="o-section-title">Legend position</div>
+        <select
+          t-att-value="props.definition.legendPosition"
+          class="o-input o-type-selector"
+          t-on-change="(ev) => this.updateSelect('legendPosition', ev)">
+          <option value="none">None</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+        </select>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ChartPanel" owl="1">
+    <div class="o-chart">
+      <div class="o-panel">
+        <div
+          class="o-panel-element o-panel-configuration"
+          t-att-class="state.panel !== 'configuration' ? 'inactive' : ''"
+          t-on-click="() => this.activatePanel('configuration')">
+          <i class="fa fa-sliders"/>
+          Configuration
+        </div>
+        <div
+          class="o-panel-element o-panel-design"
+          t-att-class="state.panel !== 'design' ? 'inactive' : ''"
+          t-on-click="() => this.activatePanel('design')">
+          <i class="fa fa-paint-brush"/>
+          Design
+        </div>
+      </div>
+
+      <t t-set="definition" t-value="getChartDefinition()"/>
+      <t t-if="state.panel === 'configuration'">
+        <div class="o-section">
+          <div class="o-section-title">Chart type</div>
+          <t t-set="types" t-value="chartTypes"/>
+          <select
+            class="o-input o-type-selector"
+            t-on-change="(ev) => this.onTypeChange(ev.target.value)">
+            <option
+              t-foreach="chartTypes"
+              t-as="type"
+              t-key="type"
+              t-att-value="type"
+              t-esc="types[type]"
+              t-att-selected="definition.type === type"
+            />
+          </select>
+        </div>
+        <t
+          t-component="chartPanel.configuration"
+          definition="definition"
+          figureId="figureId"
+          updateChart.bind="updateChart"
+          t-key="figureId + definition.type"
+        />
+      </t>
+      <t t-else="">
+        <t
+          t-component="chartPanel.design"
+          definition="definition"
+          figureId="figureId"
+          updateChart.bind="updateChart"
+          t-key="figureId + definition.type"
+        />
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ScorecardChartConfigPanel" owl="1">
+    <div>
+      <div class="o-section o-data-series">
+        <div class="o-section-title">Key value</div>
+        <SelectionInput
+          ranges="[props.definition.keyValue || '']"
+          isInvalid="isKeyValueInvalid"
+          hasSingleRange="true"
+          required="true"
+          onSelectionChanged="(ranges) => this.onKeyValueRangeChanged(ranges)"
+          onSelectionConfirmed="() => this.updateKeyValueRange()"
+        />
+      </div>
+      <div class="o-section o-data-labels">
+        <div class="o-section-title">Baseline configuration</div>
+        <div class="o-section-subtitle">Baseline value</div>
+        <SelectionInput
+          ranges="[props.definition.baseline || '']"
+          isInvalid="isBaselineInvalid"
+          hasSingleRange="true"
+          onSelectionChanged="(ranges) => this.onBaselineRangeChanged(ranges)"
+          onSelectionConfirmed="() => this.updateBaselineRange()"
+        />
+        <div class="o-section-subtitle">Baseline format</div>
+        <select
+          t-att-value="props.definition.baselineMode"
+          class="o-input o-type-selector o-optional"
+          t-on-change="(ev) => this.updateBaselineMode(ev)">
+          <option value="text">Absolute value</option>
+          <option value="difference">Value change from key value</option>
+          <option value="percentage">Percentage change from key value</option>
+        </select>
+      </div>
+      <div class="o-section o-sidepanel-error" t-if="errorMessages">
+        <div t-foreach="errorMessages" t-as="error" t-key="error">
+          <t t-esc="error"/>
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ScorecardChartDesignPanel" owl="1">
+    <div>
+      <div class="o-section">
+        <div class="o-section-title">Background color</div>
+        <div class="o-with-color-picker">
+          Select a color...
+          <span
+            title="Background Color"
+            t-attf-style="border-color:{{props.definition.background}}"
+            t-on-click.stop="() => this.openColorPicker('backgroundColor')">
+            <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+          </span>
+          <ColorPicker
+            t-if="state.openedColorPicker === 'backgroundColor'"
+            onColorPicked="(color) => this.setColor(color, 'backgroundColor')"
+            currentColor="props.definition.brackground"
+            t-key="backgroundColor"
+          />
+        </div>
+      </div>
+
+      <div class="o-section o-chart-title">
+        <div class="o-section-title">Title</div>
+        <input
+          type="text"
+          t-att-value="props.definition.title"
+          t-on-change="updateTitle"
+          class="o-input o-optional"
+          placeholder="New Chart"
+        />
+      </div>
+      <div class="o-section">
+        <div class="o-section-title">Baseline description</div>
+        <input
+          type="text"
+          t-att-value="props.definition.baselineDescr"
+          t-on-change="updateBaselineDescr"
+          class="o-input o-optional"
+        />
+      </div>
+    </div>
+    <div class="o-section">
+      <div class="o-section-title">Baseline color</div>
+      <div class="o-with-color-picker">
+        Color on value increase
+        <span
+          title="Color Up"
+          t-attf-style="border-color:{{props.definition.baselineColorUp}}"
+          t-on-click.stop="() => this.openColorPicker('baselineColorUp')">
+          <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+        </span>
+        <ColorPicker
+          t-if="state.openedColorPicker === 'baselineColorUp'"
+          onColorPicked="(color) => this.setColor(color, 'baselineColorUp')"
+          currentColor="props.definition.baselineColorUp"
+          t-key="baselineColorUp"
+        />
+      </div>
+      <br/>
+      <div class="o-with-color-picker">
+        Color on value decrease
+        <span
+          title="Background Color"
+          t-attf-style="border-color:{{props.definition.baselineColorDown}}"
+          t-on-click.stop="() => this.openColorPicker('baselineColorDown')">
+          <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+        </span>
+        <ColorPicker
+          t-if="state.openedColorPicker === 'baselineColorDown'"
+          onColorPicked="(color) => this.setColor(color, 'baselineColorDown')"
+          currentColor="props.definition.baselineColorDown"
+          t-key="baselineColorDown"
+        />
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-CellIsRuleEditorPreview" owl="1">
+    <div
+      class="o-cf-preview-line"
+      t-attf-style="font-weight:{{currentStyle.bold ?'bold':'normal'}};
+                       text-decoration:{{getTextDecoration(currentStyle)}};
+                       font-style:{{currentStyle.italic?'italic':'normal'}};
+                       color:{{currentStyle.textColor}};
+                       border-radius: 4px;
+                       background-color:{{currentStyle.fillColor}};"
+    />
+    <t t-if="previewText" t-esc="previewText"/>
+    <t t-else="">Preview text</t>
+  </t>
+
+  <t t-name="o-spreadsheet-CellIsRuleEditor" owl="1">
+    <div class="o-cf-cell-is-rule">
+      <div class="o-section-subtitle">Format cells if...</div>
+      <select t-model="rule.operator" class="o-input o-cell-is-operator">
+        <t t-foreach="Object.keys(cellIsOperators)" t-as="op" t-key="op_index">
+          <option t-att-value="op" t-esc="cellIsOperators[op]"/>
+        </t>
+      </select>
+      <t t-if="rule.operator !== 'IsEmpty' and rule.operator !== 'IsNotEmpty'">
+        <input
+          type="text"
+          placeholder="Value"
+          t-model="rule.values[0]"
+          t-att-class="{ 'o-invalid': isValue1Invalid }"
+          class="o-input o-cell-is-value o-required"
+        />
+        <t t-if="rule.operator === 'Between' || rule.operator === 'NotBetween'">
+          <input
+            type="text"
+            placeholder="and value"
+            t-model="rule.values[1]"
+            t-att-class="{ 'o-invalid': isValue2Invalid }"
+            class="o-input o-cell-is-value o-required"
+          />
+        </t>
+      </t>
+      <div class="o-section-subtitle">Formatting style</div>
+
+      <t t-call="o-spreadsheet-CellIsRuleEditorPreview">
+        <t t-set="currentStyle" t-value="rule.style"/>
+      </t>
+      <div class="o-tools">
+        <div
+          class="o-tool"
+          title="Bold"
+          t-att-class="{active:rule.style.bold}"
+          t-on-click="() => this.toggleStyle('bold')">
+          <t t-call="o-spreadsheet-Icon.BOLD"/>
+        </div>
+        <div
+          class="o-tool"
+          title="Italic"
+          t-att-class="{active:rule.style.italic}"
+          t-on-click="() => this.toggleStyle('italic')">
+          <t t-call="o-spreadsheet-Icon.ITALIC"/>
+        </div>
+        <div
+          class="o-tool"
+          title="Underline"
+          t-att-class="{active:rule.style.underline}"
+          t-on-click="(ev) => this.toggleStyle('underline', ev)">
+          <t t-call="o-spreadsheet-Icon.UNDERLINE"/>
+        </div>
+        <div
+          class="o-tool"
+          title="Strikethrough"
+          t-att-class="{active:rule.style.strikethrough}"
+          t-on-click="(ev) => this.toggleStyle('strikethrough', ev)">
+          <t t-call="o-spreadsheet-Icon.STRIKE"/>
+        </div>
+        <div class="o-tool o-dropdown o-with-color">
+          <span
+            title="TextColor"
+            t-attf-style="border-color:{{rule.style.textColor}}"
+            t-on-click.stop="(ev) => this.toggleMenu('cellIsRule-textColor', ev)">
+            <t t-call="o-spreadsheet-Icon.TEXT_COLOR"/>
+          </span>
+          <ColorPicker
+            t-if="state.openedMenu === 'cellIsRule-textColor'"
+            dropdownDirection="'center'"
+            onColorPicked="(color) => this.setColor('textColor', color)"
+            currentColor="rule.style.textColor"
+            t-key="textColor"
+          />
+        </div>
+        <div class="o-divider"/>
+        <div class="o-tool o-dropdown o-with-color">
+          <span
+            title="FillColor"
+            t-attf-style="border-color:{{rule.style.fillColor}}"
+            t-on-click.stop="(ev) => this.toggleMenu('cellIsRule-fillColor', ev)">
+            <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+          </span>
+          <ColorPicker
+            t-if="state.openedMenu === 'cellIsRule-fillColor'"
+            dropdownDirection="'center'"
+            onColorPicked="(color) => this.setColor('fillColor', color)"
+            currentColor="rule.style.fillColor"
+            t-key="fillColor"
+          />
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ColorScaleRuleEditorPreview" owl="1">
+    <div class="o-cf-preview-gradient" t-attf-style="{{getPreviewGradient()}}">Preview text</div>
+  </t>
+
+  <t t-name="o-spreadsheet-ColorScaleRuleEditorThreshold" owl="1">
+    <div t-attf-class="o-threshold o-threshold-{{thresholdType}}">
+      <t t-if="thresholdType === 'midpoint'">
+        <t t-set="type" t-value="threshold and threshold.type"/>
+        <select
+          class="o-input"
+          name="valueType"
+          t-on-change="onMidpointChange"
+          t-on-click="closeMenus">
+          <option value="none" t-att-selected="threshold === undefined">None</option>
+          <option value="number" t-att-selected="type === 'number'">FixedNumber</option>
+          <option value="percentage" t-att-selected="type === 'percentage'">Percentage</option>
+          <option value="percentile" t-att-selected="type === 'percentile'">Percentile</option>
+          <option value="formula" t-att-selected="type === 'formula'">Formula</option>
+        </select>
+      </t>
+      <t t-else="">
+        <select class="o-input" name="valueType" t-model="threshold.type" t-on-click="closeMenus">
+          <option value="value">Cell values</option>
+          <option value="number">Number</option>
+          <option value="percentage">Percentage</option>
+          <option value="percentile">Percentile</option>
+          <option value="formula">Formula</option>
+        </select>
+      </t>
+      <input
+        type="text"
+        class="o-input o-threshold-value o-required"
+        t-model="rule[thresholdType].value"
+        t-att-class="{ 'o-invalid': isValueInvalid(thresholdType) }"
+        t-if="threshold !== undefined and threshold.type !== 'value'"
+      />
+      <input type="text" class="o-input o-threshold-value" t-else="" disabled="1"/>
+      <div class="o-tools">
+        <div class="o-tool o-dropdown o-with-color" t-att-disabled="threshold === undefined">
+          <span
+            title="Fill Color"
+            t-attf-style="border-color:{{getThresholdColor(threshold)}}"
+            t-on-click.stop="(ev) => this.toggleMenu('colorScale-'+thresholdType+'Color', ev)">
+            <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+          </span>
+          <ColorPicker
+            t-if="state.openedMenu === 'colorScale-'+thresholdType+'Color'"
+            dropdownDirection="'left'"
+            onColorPicked="(color) => this.setColorScaleColor(thresholdType, color)"
+            currentColor="getThresholdColor(threshold)"
+          />
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ColorScaleRuleEditor" owl="1">
+    <div class="o-cf-color-scale-editor">
+      <div class="o-section-subtitle">Preview</div>
+      <t t-call="o-spreadsheet-ColorScaleRuleEditorPreview"/>
+      <div class="o-section-subtitle">Minpoint</div>
+      <t t-call="o-spreadsheet-ColorScaleRuleEditorThreshold">
+        <t t-set="threshold" t-value="rule.minimum"/>
+        <t t-set="thresholdType" t-value="'minimum'"/>
+      </t>
+      <div class="o-section-subtitle">MidPoint</div>
+      <t t-call="o-spreadsheet-ColorScaleRuleEditorThreshold">
+        <t t-set="threshold" t-value="rule.midpoint"/>
+        <t t-set="thresholdType" t-value="'midpoint'"/>
+      </t>
+      <div class="o-section-subtitle">MaxPoint</div>
+      <t t-call="o-spreadsheet-ColorScaleRuleEditorThreshold">
+        <t t-set="threshold" t-value="rule.maximum"/>
+        <t t-set="thresholdType" t-value="'maximum'"/>
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ConditionalFormattingPanel" owl="1">
+    <div class="o-cf">
+      <t t-if="state.mode === 'list' || state.mode === 'reorder'">
+        <div class="o-cf-preview-list">
+          <div
+            t-on-click="(ev) => this.editConditionalFormat(cf, ev)"
+            t-foreach="conditionalFormats"
+            t-as="cf"
+            t-key="cf.id">
+            <t t-call="o-spreadsheet-ConditionalFormattingPanelPreview"/>
+          </div>
+        </div>
+        <t t-if="state.mode === 'list'">
+          <div
+            class="btn btn-link o-cf-btn-link o-cf-add"
+            t-on-click.prevent.stop="addConditionalFormat">
+            + Add another rule
+          </div>
+          <div
+            class="btn btn-link o-cf-btn-link o-cf-reorder"
+            t-on-click="reorderConditionalFormats">
+            Reorder rules
+          </div>
+        </t>
+        <t t-if="state.mode === 'reorder'">
+          <div class="btn btn-link o-cf-btn-link o-cf-exit-reorder" t-on-click="switchToList">
+            Stop reordering rules
+          </div>
+        </t>
+      </t>
+      <t t-if="state.mode === 'edit' || state.mode === 'add'" t-key="state.currentCF.id">
+        <div class="o-cf-ruleEditor">
+          <div class="o-section o-cf-range">
+            <div class="o-section-title">Apply to range</div>
+            <div class="o-selection-cf">
+              <SelectionInput
+                ranges="state.currentCF.ranges"
+                class="'o-range'"
+                isInvalid="isRangeValid"
+                onSelectionChanged="(ranges) => this.onRangesChanged(ranges)"
+                required="true"
+              />
+            </div>
+            <div class="o-section-title">Format rules</div>
+            <div class="o_field_radio o_horizontal o_field_widget o-cf-type-selector">
+              <div
+                class="custom-control form-check o_cf_radio_item"
+                t-on-click="() => this.changeRuleType('CellIsRule')">
+                <input
+                  class="form-check-input o_radio_input"
+                  t-attf-checked="{{state.currentCFType === 'CellIsRule'}}"
+                  type="radio"
+                  id="cellIsRule"
+                  name="ruleType"
+                  value="CellIsRule"
+                />
+                <label for="cellIsRule" class="form-check-label o_form_label">Single color</label>
+              </div>
+              <div
+                class="custom-control form-check o_cf_radio_item"
+                t-on-click="() => this.changeRuleType('ColorScaleRule')">
+                <input
+                  class="form-check-input o_radio_input"
+                  t-attf-checked="{{state.currentCFType === 'ColorScaleRule'}}"
+                  type="radio"
+                  id="colorScaleRule"
+                  name="ruleType"
+                  value="ColorScaleRule"
+                />
+                <label for="colorScaleRule" class="form-check-label o_form_label">
+                  Color scale
+                </label>
+              </div>
+
+              <div
+                class="custom-control form-check o_cf_radio_item"
+                t-on-click="() => this.changeRuleType('IconSetRule')">
+                <input
+                  class="form-check-input o_radio_input"
+                  t-attf-checked="{{state.currentCFType === 'IconSetRule'}}"
+                  type="radio"
+                  id="iconSetRule"
+                  name="ruleType"
+                  value="IconSetRule"
+                />
+                <label for="iconSetRule" class="form-check-label o_form_label">Icon set</label>
+              </div>
+            </div>
+          </div>
+          <div class="o-section o-cf-editor">
+            <t t-if="state.currentCFType === 'CellIsRule'" t-call="o-spreadsheet-CellIsRuleEditor">
+              <t t-set="rule" t-value="state.rules.cellIs"/>
+            </t>
+            <t
+              t-if="state.currentCFType === 'ColorScaleRule'"
+              t-call="o-spreadsheet-ColorScaleRuleEditor">
+              <t t-set="rule" t-value="state.rules.colorScale"/>
+            </t>
+            <t t-if="state.currentCFType === 'IconSetRule'" t-call="o-spreadsheet-IconSetEditor">
+              <t t-set="rule" t-value="state.rules.iconSet"/>
+            </t>
+            <div class="o-sidePanelButtons">
+              <button t-on-click="switchToList" class="o-sidePanelButton o-cf-cancel">
+                Cancel
+              </button>
+              <button t-on-click="saveConditionalFormat" class="o-sidePanelButton o-cf-save">
+                Save
+              </button>
+            </div>
+          </div>
+          <div class="o-section">
+            <div class="o-cf-error" t-foreach="state.errors || []" t-as="error" t-key="error_index">
+              <t t-esc="errorMessage(error)"/>
+            </div>
+          </div>
+        </div>
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-ConditionalFormattingPanelPreview" owl="1">
+    <div class="o-cf-preview" t-att-class="{ 'o-cf-cursor-ptr': state.mode !== 'reorder' }">
+      <t t-if="cf.rule.type==='IconSetRule'">
+        <div class="o-cf-preview-icon">
+          <t t-call="o-spreadsheet-Icon.{{icons[cf.rule.icons.upper].template}}"/>
+          <t t-call="o-spreadsheet-Icon.{{icons[cf.rule.icons.middle].template}}"/>
+          <t t-call="o-spreadsheet-Icon.{{icons[cf.rule.icons.lower].template}}"/>
+        </div>
+      </t>
+      <t t-else="">
+        <div t-att-style="getStyle(cf.rule)" class="o-cf-preview-image">123</div>
+      </t>
+      <div class="o-cf-preview-description">
+        <div class="o-cf-preview-ruletype">
+          <div class="o-cf-preview-description-rule">
+            <t t-esc="getDescription(cf)"/>
+          </div>
+        </div>
+        <div class="o-cf-preview-range" t-esc="cf.ranges"/>
+      </div>
+      <t t-if="state.mode === 'reorder'">
+        <div class="o-cf-reorder">
+          <t t-if="!cf_first">
+            <div
+              class="o-cf-reorder-button-up o-cf-reorder-button"
+              t-on-click="(ev) => this.reorderRule(cf, 'up', ev)">
+              <t t-call="o-spreadsheet-Icon.CARET_UP"/>
+            </div>
+          </t>
+          <t t-if="!cf_last">
+            <div
+              class="o-cf-reorder-button-down o-cf-reorder-button"
+              t-on-click="(ev) => this.reorderRule(cf, 'down', ev)">
+              <t t-call="o-spreadsheet-Icon.CARET_DOWN"/>
+            </div>
+          </t>
+        </div>
+      </t>
+      <t t-else="">
+        <div class="o-cf-delete">
+          <div
+            class="o-cf-delete-button"
+            t-on-click.stop="(ev) => this.deleteConditionalFormat(cf, ev)"
+            aria-label="Remove rule">
+            <t t-call="o-spreadsheet-Icon.TRASH"/>
+          </div>
+        </div>
+      </t>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-IconSets" owl="1">
+    <div>
+      <div class="o-section-subtitle">Icons</div>
+      <div class="o-cf-iconsets">
+        <div
+          class="o-cf-iconset"
+          t-foreach="['arrows', 'smiley', 'dots']"
+          t-as="iconSet"
+          t-key="iconSet"
+          t-on-click="(ev) => this.setIconSet(iconSet, ev)">
+          <div class="o-cf-icon">
+            <t t-call="o-spreadsheet-Icon.{{icons[iconSets[iconSet].good].template}}"/>
+          </div>
+          <div class="o-cf-icon">
+            <t t-call="o-spreadsheet-Icon.{{icons[iconSets[iconSet].neutral].template}}"/>
+          </div>
+          <div class="o-cf-icon">
+            <t t-call="o-spreadsheet-Icon.{{icons[iconSets[iconSet].bad].template}}"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-IconSetInflexionPointRow" owl="1">
+    <tr>
+      <td>
+        <div t-on-click.stop="(ev) => this.toggleMenu('iconSet-'+icon+'Icon', ev)">
+          <div class="o-cf-icon-button">
+            <t t-call="o-spreadsheet-Icon.{{icons[iconValue].template}}"/>
+          </div>
+        </div>
+        <IconPicker
+          t-if="state.openedMenu === 'iconSet-'+icon+'Icon'"
+          onIconPicked="(i) => this.setIcon(icon, i)"
+        />
+      </td>
+      <td>When value is</td>
+      <td>
+        <select class="o-input" name="valueType" t-model="inflectionPointValue.operator">
+          <option value="gt">
+            <span>&#62;</span>
+          </option>
+          <option value="ge">
+            <span>&#8805;</span>
+          </option>
+        </select>
+      </td>
+      <td>
+        <input
+          type="text"
+          class="o-input"
+          t-att-class="{ 'o-invalid': isInflectionPointInvalid(inflectionPoint) }"
+          t-model="rule[inflectionPoint].value"
+        />
+      </td>
+      <td>
+        <select class="o-input" name="valueType" t-model="inflectionPointValue.type">
+          <option value="number">Number</option>
+          <option value="percentage">Percentage</option>
+          <option value="percentile">Percentile</option>
+          <option value="formula">Formula</option>
+        </select>
+      </td>
+    </tr>
+  </t>
+
+  <t t-name="o-spreadsheet-IconSetInflexionPoints" owl="1">
+    <div class="o-inflection">
+      <table>
+        <tr>
+          <th class="o-cf-iconset-icons"/>
+          <th class="o-cf-iconset-text"/>
+          <th class="o-cf-iconset-operator"/>
+          <th class="o-cf-iconset-value">Value</th>
+          <th class="o-cf-iconset-type">Type</th>
+        </tr>
+        <t t-call="o-spreadsheet-IconSetInflexionPointRow">
+          <t t-set="iconValue" t-value="rule.icons.upper"/>
+          <t t-set="icon" t-value="'upper'"/>
+          <t t-set="inflectionPointValue" t-value="rule.upperInflectionPoint"/>
+          <t t-set="inflectionPoint" t-value="'upperInflectionPoint'"/>
+        </t>
+        <t t-call="o-spreadsheet-IconSetInflexionPointRow">
+          <t t-set="iconValue" t-value="rule.icons.middle"/>
+          <t t-set="icon" t-value="'middle'"/>
+          <t t-set="inflectionPointValue" t-value="rule.lowerInflectionPoint"/>
+          <t t-set="inflectionPoint" t-value="'lowerInflectionPoint'"/>
+        </t>
+        <tr>
+          <td>
+            <div t-on-click.stop="(ev) => this.toggleMenu('iconSet-lowerIcon', ev)">
+              <div class="o-cf-icon-button">
+                <t t-call="o-spreadsheet-Icon.{{icons[rule.icons.lower].template}}"/>
+              </div>
+            </div>
+            <IconPicker
+              t-if="state.openedMenu === 'iconSet-lowerIcon'"
+              onIconPicked="(icon) => this.setIcon('lower', icon)"
+            />
+          </td>
+          <td>Else</td>
+          <td/>
+          <td/>
+          <td/>
+        </tr>
+      </table>
+    </div>
+  </t>
+  <t t-name="o-spreadsheet-IconSetEditor" owl="1">
+    <div class="o-cf-iconset-rule">
+      <t t-call="o-spreadsheet-IconSets"/>
+      <t t-call="o-spreadsheet-IconSetInflexionPoints"/>
+      <div class="btn btn-link o_refresh_measures o-cf-iconset-reverse" t-on-click="reverseIcons">
+        <div class="me-1 d-inline-block">
+          <t t-call="o-spreadsheet-Icon.REFRESH"/>
+        </div>
+        Reverse icons
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-CustomCurrencyPanel" owl="1">
+    <div class="o-custom-currency">
+      <div class="o-section" t-if="availableCurrencies.length > 1">
+        <div class="o-section-title">Currency</div>
+        <select
+          class="o-input o-available-currencies"
+          t-on-change="(ev) => this.updateSelectCurrency(ev)">
+          <t t-foreach="availableCurrencies" t-as="currency" t-key="currency_index">
+            <option
+              t-att-value="currency_index"
+              t-esc="currencyDisplayName(currency)"
+              t-att-selected="currency_index === state.selectedCurrencyIndex"
+            />
+          </t>
+        </select>
+      </div>
+      <div class="o-section">
+        <div class="o-subsection-left">
+          <div class="o-section-title">Code</div>
+          <input
+            type="text"
+            class="o-input"
+            t-model="state.currencyCode"
+            t-on-input="(ev) => this.updateCode(ev)"
+          />
+        </div>
+        <div class="o-subsection-right">
+          <div class="o-section-title">Symbol</div>
+          <input
+            type="text"
+            class="o-input"
+            t-model="state.currencySymbol"
+            t-on-input="(ev) => this.updateSymbol(ev)"
+          />
+        </div>
+      </div>
+      <div class="o-section">
+        <div class="o-section-title">Format</div>
+        <select
+          class="o-input o-format-proposals"
+          t-on-change="(ev) => this.updateSelectFormat(ev)"
+          t-att-disabled="!formatProposals.length">
+          <t t-foreach="formatProposals" t-as="proposal" t-key="proposal_index">
+            <option
+              t-att-value="proposal_index"
+              t-esc="proposal.example"
+              t-att-selected="proposal_index === state.selectedFormatIndex"
+            />
+          </t>
+        </select>
+      </div>
+      <div class="o-sidePanelButtons">
+        <button
+          class="o-sidePanelButton"
+          t-on-click="() => this.apply()"
+          t-att-disabled="!formatProposals.length || isSameFormat">
+          Apply
+        </button>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-FindAndReplacePanel" owl="1">
+    <div
+      class="o-find-and-replace"
+      tabindex="0"
+      t-on-focusin="onFocusSidePanel"
+      t-ref="findAndReplace">
+      <div class="o-section">
+        <div class="o-section-title">Search</div>
+        <div class="o-input-search-container">
+          <input
+            type="text"
+            class="o-input o-input-with-count"
+            t-on-input="onInput"
+            t-on-keydown="onKeydownSearch"
+          />
+          <div class="o-input-count" t-if="hasSearchResult">
+            <t t-esc="env.model.getters.getCurrentSelectedMatchIndex()+1"/>
+            /
+            <t t-esc="env.model.getters.getSearchMatches().length"/>
+          </div>
+        </div>
+        <div>
+          <div class="o-far-item">
+            <label class="o-far-checkbox">
+              <input
+                t-model="state.searchOptions.matchCase"
+                t-on-change="updateSearch"
+                class="o-far-input"
+                type="checkbox"
+              />
+              <span class="o-far-label">Match case</span>
+            </label>
+          </div>
+          <div class="o-far-item">
+            <label class="o-far-checkbox">
+              <input
+                t-model="state.searchOptions.exactMatch"
+                t-on-change="updateSearch"
+                class="o-far-input"
+                type="checkbox"
+              />
+              <span class="o-far-label">Match entire cell content</span>
+            </label>
+          </div>
+          <div class="o-far-item">
+            <label class="o-far-checkbox">
+              <input
+                t-model="state.searchOptions.searchFormulas"
+                t-on-change="searchFormulas"
+                class="o-far-input"
+                type="checkbox"
+              />
+              <span class="o-far-label">Search in formulas</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="o-sidePanelButtons">
+        <button
+          t-att-disabled="!hasSearchResult"
+          t-on-click="onSelectPreviousCell"
+          class="o-sidePanelButton">
+          Previous
+        </button>
+        <button
+          t-att-disabled="!hasSearchResult"
+          t-on-click="onSelectNextCell"
+          class="o-sidePanelButton">
+          Next
+        </button>
+      </div>
+      <div class="o-section" t-if="!env.model.getters.isReadonly()">
+        <div class="o-section-title">Replace</div>
+        <div class="o-input-search-container">
+          <input
+            type="text"
+            class="o-input o-input-without-count"
+            t-model="state.replaceWith"
+            t-on-keydown="onKeydownReplace"
+          />
+        </div>
+      </div>
+
+      <div class="o-sidePanelButtons" t-if="!env.model.getters.isReadonly()">
+        <button
+          t-att-disabled="env.model.getters.getCurrentSelectedMatchIndex() === null"
+          t-on-click="replace"
+          class="o-sidePanelButton">
+          Replace
+        </button>
+        <button
+          t-att-disabled="env.model.getters.getCurrentSelectedMatchIndex() === null"
+          t-on-click="replaceAll"
+          class="o-sidePanelButton">
+          Replace all
+        </button>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-SidePanel" owl="1">
+    <div class="o-sidePanel">
+      <div class="o-sidePanelHeader">
+        <div class="o-sidePanelTitle" t-esc="getTitle()"/>
+        <div class="o-sidePanelClose" t-on-click="() => this.props.onCloseSidePanel()">×</div>
+      </div>
+      <div class="o-sidePanelBody">
+        <t
+          t-component="state.panel.Body"
+          t-props="props.panelProps"
+          onCloseSidePanel="props.onCloseSidePanel"
+          t-key="'Body_' + props.component"
+        />
+      </div>
+      <div class="o-sidePanelFooter" t-if="state.panel.Footer">
+        <t
+          t-component="state.panel.Footer"
+          t-props="props.panelProps"
+          t-key="'Footer_' + props.component"
+        />
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-Spreadsheet" owl="1">
+    <div class="o-spreadsheet" t-on-keydown="onKeydown" t-att-style="getStyle()">
+      <TopBar
+        t-if="!env.isDashboard()"
+        onClick="() => this.focusGrid()"
+        onComposerContentFocused="(selection) => this.onTopBarComposerFocused(selection)"
+        focusComposer="focusTopBarComposer"
+      />
+      <Grid
+        sidePanelIsOpen="sidePanel.isOpen"
+        onSaveRequested="() => this.save()"
+        focusComposer="focusGridComposer"
+        exposeFocus="(focus) => this._focusGrid = focus"
+        onComposerContentFocused="() => this.onGridComposerContentFocused()"
+        onGridComposerCellFocused="(content, selection) => this.onGridComposerCellFocused(content, selection)"
+      />
+      <SidePanel
+        t-if="sidePanel.isOpen"
+        onCloseSidePanel="() => this.closeSidePanel()"
+        component="sidePanel.component"
+        panelProps="sidePanel.panelProps"
+      />
+      <BottomBar onClick="() => this.focusGrid()" t-if="!env.isDashboard()"/>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-TopBar" owl="1">
+    <div class="o-spreadsheet-topbar o-two-columns" t-on-click="props.onClick">
+      <div class="o-topbar-top">
+        <!-- Menus -->
+        <div class="o-topbar-topleft">
+          <t t-foreach="menus" t-as="menu" t-key="menu_index">
+            <div
+              t-if="menu.children.length !== 0"
+              class="o-topbar-menu"
+              t-att-class="{'o-topbar-menu-active': state.menuState.parentMenu and state.menuState.parentMenu.id === menu.id}"
+              t-on-click="(ev) => this.toggleContextMenu(menu, ev)"
+              t-on-mouseover="(ev) => this.onMenuMouseOver(menu, ev)"
+              t-att-data-id="menu.id">
+              <t t-esc="getMenuName(menu)"/>
+            </div>
+          </t>
+          <Menu
+            t-if="state.menuState.isOpen"
+            position="state.menuState.position"
+            menuItems="state.menuState.menuItems"
+            onClose="() => this.closeMenus()"
+          />
+        </div>
+        <div class="o-topbar-topright">
+          <div t-foreach="topbarComponents" t-as="comp" t-key="comp.id">
+            <t t-component="comp.component"/>
+          </div>
+        </div>
+      </div>
+      <!-- Toolbar and Cell Content -->
+      <div class="o-topbar-toolbar">
+        <!-- Toolbar -->
+        <div t-if="env.model.getters.isReadonly()" class="o-readonly-toolbar text-muted">
+          <span>
+            <i class="fa fa-eye"/>
+            Readonly Access
+          </span>
+        </div>
+        <div t-else="" class="o-toolbar-tools">
+          <div
+            class="o-tool"
+            title="Undo"
+            t-att-class="{'o-disabled': !undoTool}"
+            t-on-click="undo">
+            <t t-call="o-spreadsheet-Icon.UNDO"/>
+          </div>
+          <div
+            class="o-tool"
+            t-att-class="{'o-disabled': !redoTool}"
+            title="Redo"
+            t-on-click="redo">
+            <t t-call="o-spreadsheet-Icon.REDO"/>
+          </div>
+          <div
+            class="o-tool"
+            title="Paint Format"
+            t-att-class="{active:paintFormatTool}"
+            t-on-click="paintFormat">
+            <t t-call="o-spreadsheet-Icon.PAINT_FORMAT"/>
+          </div>
+          <div class="o-tool" title="Clear Format" t-on-click="clearFormatting">
+            <t t-call="o-spreadsheet-Icon.CLEAR_FORMAT"/>
+          </div>
+          <div class="o-divider"/>
+          <div
+            class="o-tool"
+            title="Format as percent"
+            t-on-click="(ev) => this.toogleFormat('percent', ev)">
+            %
+          </div>
+          <div
+            class="o-tool"
+            title="Decrease decimal places"
+            t-on-click="(ev) => this.setDecimal(-1, ev)">
+            .0
+          </div>
+          <div
+            class="o-tool"
+            title="Increase decimal places"
+            t-on-click="(ev) => this.setDecimal(+1, ev)">
+            .00
+          </div>
+          <div
+            class="o-tool o-dropdown"
+            title="More formats"
+            t-on-click="(ev) => this.toggleDropdownTool('formatTool', ev)">
+            <div class="o-text-icon">
+              123
+              <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+            </div>
+            <div
+              class="o-dropdown-content o-text-options  o-format-tool "
+              t-if="state.activeTool === 'formatTool'"
+              t-on-click="setFormat">
+              <t t-foreach="commonFormats" t-as="commonFormat" t-key="commonFormat.name">
+                <div
+                  t-att-data-format="commonFormat.name"
+                  t-att-class="{active: currentFormatName === commonFormat.name}">
+                  <t t-esc="commonFormat.text"/>
+                  <span class="float-end text-muted" t-esc="commonFormat.description"/>
+                </div>
+              </t>
+              <t t-foreach="customFormats" t-as="customFormat" t-key="customFormat.name">
+                <div t-att-data-custom="customFormat.name">
+                  <t t-esc="customFormat.text"/>
+                </div>
+              </t>
+            </div>
+          </div>
+          <div class="o-divider"/>
+          <div
+            class="o-tool o-dropdown"
+            title="Font Size"
+            t-on-click="(ev) => this.toggleDropdownTool('fontSizeTool', ev)">
+            <div class="o-text-icon">
+              <t t-esc="style.fontSize || DEFAULT_FONT_SIZE"/>
+              <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+            </div>
+            <div
+              class="o-dropdown-content o-text-options "
+              t-if="state.activeTool === 'fontSizeTool'"
+              t-on-click="setSize">
+              <t t-foreach="fontSizes" t-as="font" t-key="font_index">
+                <div t-esc="font.pt" t-att-data-size="font.pt"/>
+              </t>
+            </div>
+          </div>
+          <div class="o-divider"/>
+          <div
+            class="o-tool"
+            title="Bold"
+            t-att-class="{active:style.bold}"
+            t-on-click="(ev) => this.toogleStyle('bold', ev)">
+            <t t-call="o-spreadsheet-Icon.BOLD"/>
+          </div>
+          <div
+            class="o-tool"
+            title="Italic"
+            t-att-class="{active:style.italic}"
+            t-on-click="(ev) => this.toogleStyle('italic', ev)">
+            <t t-call="o-spreadsheet-Icon.ITALIC"/>
+          </div>
+          <div
+            class="o-tool"
+            title="Strikethrough"
+            t-att-class="{active:style.strikethrough}"
+            t-on-click="(ev) => this.toogleStyle('strikethrough', ev)">
+            <t t-call="o-spreadsheet-Icon.STRIKE"/>
+          </div>
+          <div
+            class="o-tool o-dropdown o-with-color"
+            title="Text Color"
+            t-on-click="(ev) => this.toggleDropdownTool('textColorTool', ev)">
+            <span t-attf-style="border-color:{{textColor}}">
+              <t t-call="o-spreadsheet-Icon.TEXT_COLOR"/>
+            </span>
+            <ColorPicker
+              t-if="state.activeTool === 'textColorTool'"
+              onColorPicked="(color) => this.setColor('textColor', color)"
+              currentColor="textColor"
+              t-key="textColor"
+            />
+          </div>
+          <div class="o-divider"/>
+          <div
+            class="o-tool  o-dropdown o-with-color"
+            title="Fill Color"
+            t-on-click="(ev) => this.toggleDropdownTool('fillColorTool', ev)">
+            <span t-attf-style="border-color:{{fillColor}}">
+              <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
+            </span>
+            <ColorPicker
+              t-if="state.activeTool === 'fillColorTool'"
+              onColorPicked="(color) => this.setColor('fillColor', color)"
+              currentColor="fillColor"
+              t-key="fillColor"
+            />
+          </div>
+          <div
+            class="o-tool o-dropdown"
+            title="Borders"
+            t-on-click="(ev) => this.toggleDropdownTool('borderTool', ev)">
+            <span>
+              <t t-call="o-spreadsheet-Icon.BORDERS"/>
+            </span>
+            <div
+              class="o-dropdown-content o-border-dropdown"
+              t-if="state.activeTool === 'borderTool'">
+              <div class="o-dropdown-line">
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('all', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDERS"/>
+                </span>
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('hv', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_HV"/>
+                </span>
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('h', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_H"/>
+                </span>
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('v', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_V"/>
+                </span>
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('external', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_EXTERNAL"/>
+                </span>
+              </div>
+              <div class="o-dropdown-line">
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('left', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_LEFT"/>
+                </span>
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('top', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_TOP"/>
+                </span>
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('right', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_RIGHT"/>
+                </span>
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('bottom', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_BOTTOM"/>
+                </span>
+                <span class="o-line-item" t-on-click="(ev) => this.setBorder('clear', ev)">
+                  <t t-call="o-spreadsheet-Icon.BORDER_CLEAR"/>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="o-tool o-merge-tool"
+            title="Merge Cells"
+            t-att-class="{active:inMerge, 'o-disabled': cannotMerge}"
+            t-on-click="toggleMerge">
+            <t t-call="o-spreadsheet-Icon.MERGE_CELL"/>
+          </div>
+          <div class="o-divider"/>
+          <div
+            class="o-tool o-dropdown"
+            title="Horizontal align"
+            t-on-click="(ev) => this.toggleDropdownTool('alignTool', ev)">
+            <span>
+              <t t-if="style.align === 'right'">
+                <t t-call="o-spreadsheet-Icon.ALIGN_RIGHT"/>
+              </t>
+              <t t-elif="style.align === 'center'">
+                <t t-call="o-spreadsheet-Icon.ALIGN_CENTER"/>
+              </t>
+              <t t-else="">
+                <t t-call="o-spreadsheet-Icon.ALIGN_LEFT"/>
+              </t>
+              <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+            </span>
+            <div t-if="state.activeTool === 'alignTool'" class="o-dropdown-content">
+              <div class="o-dropdown-item" t-on-click="(ev) => this.toggleAlign('left', ev)">
+                <t t-call="o-spreadsheet-Icon.ALIGN_LEFT"/>
+              </div>
+              <div class="o-dropdown-item" t-on-click="(ev) => this.toggleAlign('center', ev)">
+                <t t-call="o-spreadsheet-Icon.ALIGN_CENTER"/>
+              </div>
+              <div class="o-dropdown-item" t-on-click="(ev) => this.toggleAlign('right', ev)">
+                <t t-call="o-spreadsheet-Icon.ALIGN_RIGHT"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Composer
+          inputStyle="composerStyle"
+          focus="props.focusComposer"
+          onComposerContentFocused="props.onComposerContentFocused"
+        />
+      </div>
+    </div>
+  </t>
+</odoo>
