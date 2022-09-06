@@ -115,6 +115,10 @@ class MailTestTicket(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     container_id = fields.Many2one('mail.test.container', tracking=True)
 
+    def _message_compute_subject(self):
+        self.ensure_one()
+        return f"Ticket for {self.name} on {self.datetime.strftime('%m/%d/%Y, %H:%M:%S')}"
+
     def _message_get_default_recipients(self):
         return dict(
             (record.id, {

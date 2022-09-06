@@ -79,6 +79,17 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
         return [author_id, email_from];
     },
     /**
+     * @param {string} model
+     * @param {integer[]} ids
+     *
+     * @returns {Map<integer:string>}
+     * Simulate `_message_compute_subject` on `mail.thread`
+     */
+    mockMailThread_MessageComputeSubject(model, ids) {
+        const records = this.getRecords(model, [["id", "in", ids]]);
+        return new Map(records.map(record => [record.id, record.name || '']));
+    },
+    /**
      * Simulates `_message_add_suggested_recipient` on `mail.thread`.
      *
      * @private

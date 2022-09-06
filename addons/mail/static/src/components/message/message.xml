@@ -119,7 +119,7 @@
                                     'border-warning bg-warning-light opacity-50': message.isHighlighted and (message.isDiscussionOrNotification or message.message_type === 'sms'),
                                 }"
                             />
-                            <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName" class="o_MessageView_subject position-relative mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
+                            <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadNameOrDefaultSubject" class="o_MessageView_subject position-relative mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
                             <div class="o_MessageView_content position-relative text-break" t-ref="content">
                                 <div t-if="!composerViewInEditing" class="o_MessageView_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
                                 <ComposerView t-if="composerViewInEditing"

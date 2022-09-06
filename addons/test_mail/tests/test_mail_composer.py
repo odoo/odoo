@@ -120,9 +120,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(composer_form.res_id, self.test_record.id)
-        self.assertEqual(
-            composer_form.subject, 'Re: %s' % self.test_record.name,
-            'MailComposer: comment mode should have default subject Re: record_name')
+        self.assertEqual(composer_form.subject, self.test_record._message_compute_subject())
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
 
     @users('employee')
@@ -503,7 +501,7 @@ class TestComposerInternals(TestMailComposer):
                 # (aka subject for comment mode)
                 if composition_mode == 'comment':
                     self.assertFalse(composer.body)
-                    self.assertEqual(composer.subject, 'Re: %s' % self.test_record.name)
+                    self.assertEqual(composer.subject, self.test_record._message_compute_subject())
                     # TDE FIXME: server id is kept, not sure why
                     # self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
@@ -571,6 +569,25 @@ class TestComposerInternals(TestMailComposer):
                 self.assertEqual(composer.body, '<p>Test Body</p>')
                 self.assertEqual(composer.mail_server_id.id, False)
                 self.assertEqual(composer.record_name, 'CustomName')
+
+    @users('employee')
+    def test_mail_composer_default_subject(self):
+        """Make sure the default subject is applied in the composer."""
+        simple_record = self.env['mail.test.simple'].create({'name': 'TestA'})
+        ticket_record = self.env['mail.test.ticket'].create({'name': 'Test1'})
+        # default behaviour, use the record name
+        ctx = self._get_web_context(simple_record, add_web=False, composition_mode='comment')
+        _, message = self.env['mail.compose.message'].with_context(ctx).create({
+            'body': '<p>Test Body</p>',
+        })._action_send_mail()
+
+        self.assertEqual(message.subject, simple_record.name)
+        # custom subject
+        ctx = self._get_web_context(ticket_record, add_web=False, composition_mode='comment')
+        _, messages = self.env['mail.compose.message'].with_context(ctx).create({
+            'body': '<p>Test Body</p>',
+        })._action_send_mail()
+        self.assertEqual(messages.subject, ticket_record._message_compute_subject())
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -736,7 +753,10 @@ class TestComposerInternals(TestMailComposer):
     def test_mail_composer_parent(self):
         """ Test specific management in comment mode when having parent_id set:
         record_name, subject, parent's partners. """
-        parent = self.test_record.message_post(body='Test', partner_ids=(self.partner_1 + self.partner_2).ids)
+        subject = "Parent Subject"
+        parent = self.test_record.message_post(subject=subject,
+                                               body='Test',
+                                               partner_ids=(self.partner_1 + self.partner_2).ids)
 
         composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record, add_web=False, default_parent_id=parent.id)
@@ -749,7 +769,7 @@ class TestComposerInternals(TestMailComposer):
         self.assertEqual(composer.parent_id, parent)
         self.assertEqual(composer.partner_ids, self.partner_1 + self.partner_2)
         self.assertEqual(composer.record_name, self.test_record.name)
-        self.assertEqual(composer.subject, 'Re: %s' % self.test_record.name)
+        self.assertEqual(composer.subject, subject)
 
     @users('user_rendering_restricted')
     @mute_logger('odoo.tests', 'odoo.addons.base.models.ir_rule', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -970,7 +990,7 @@ class TestComposerResultsComment(TestMailComposer):
         message = self.test_record.message_ids[0]
         self.assertEqual(message.author_id, self.user_employee.partner_id)
         self.assertEqual(message.body, '<p>Test Body</p>')
-        self.assertEqual(message.subject, 'Re: %s' % self.test_record.name)
+        self.assertEqual(message.subject, self.test_record._message_compute_subject())
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment'))
         self.assertEqual(message.partner_ids, self.partner_1 | self.partner_2)
 
