@@ -46,6 +46,7 @@ registerModel({
             if (this.chatterOwner && !this.chatterOwner.attachmentBoxView) {
                 this.chatterOwner.openAttachmentBoxView();
             }
+            this.messaging.messagingBus.trigger('o-file-uploader-upload', { files });
         },
         /**
          * Create an HTML element that will serve as file input.
