@@ -10,6 +10,7 @@ const { patchWebsocketWorkerWithCleanup } = require("@bus/../tests/helpers/mock_
 
 const { browser } = require("@web/core/browser/browser");
 const { registry } = require("@web/core/registry");
+const { session } = require('@web/session');
 const { makeDeferred, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
 const { createWebClient } = require("@web/../tests/webclient/helpers");
@@ -354,6 +355,65 @@ QUnit.module('Bus', {
         pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
         await nextTick();
         assert.containsNone(document.body, '.o_notification');
+    });
+
+    QUnit.test('Last notification id is passed to the worker on service start', async function (assert) {
+        const pyEnv = await startServer();
+        let updateLastNotificationDeferred = makeDeferred();
+        patchWebsocketWorkerWithCleanup({
+            _onClientMessage(_, { action, data }) {
+                assert.step(`${action} - ${data}`);
+                updateLastNotificationDeferred.resolve();
+            },
+        });
+        await makeTestEnv();
+        await updateLastNotificationDeferred;
+        // First bus service has never received notifications thus the
+        // default is 0.
+        assert.verifySteps(['update_last_notification_id - 0']);
+
+        pyEnv['bus.bus']._sendmany([
+            ['lambda', 'notifType', 'beta'],
+            ['lambda', 'notifType', 'beta'],
+        ]);
+        // let the bus service store the last notification id.
+        await nextTick();
+
+        updateLastNotificationDeferred = makeDeferred();
+        await makeTestEnv();
+        await updateLastNotificationDeferred;
+        // Second bus service sends the last known notification id.
+        assert.verifySteps([`update_last_notification_id - 1`]);
+    });
+
+    QUnit.test('Last notification id reset after db change', async function (assert) {
+        const pyEnv = await startServer();
+        let updateLastNotificationDeferred = makeDeferred();
+        patchWebsocketWorkerWithCleanup({
+            _onClientMessage(_, { action, data }) {
+                assert.step(`${action} - ${data}`);
+                updateLastNotificationDeferred.resolve();
+            },
+        });
+        await makeTestEnv();
+        await updateLastNotificationDeferred;
+        // First bus service has never received notifications thus the
+        // default is 0.
+        assert.verifySteps(['update_last_notification_id - 0']);
+
+        pyEnv['bus.bus']._sendmany([
+            ['lambda', 'notifType', 'beta'],
+            ['lambda', 'notifType', 'beta'],
+        ]);
+        // let the bus service store the last notification id.
+        await nextTick();
+        // dbuuid change should reset last notification id.
+        patchWithCleanup(session, { dbuuid: 'ABCDE-FGHIJ-KLMNO' });
+
+        updateLastNotificationDeferred = makeDeferred();
+        await makeTestEnv();
+        await updateLastNotificationDeferred;
+        assert.verifySteps([`update_last_notification_id - 0`]);
     });
 });
 

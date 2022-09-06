@@ -4,6 +4,7 @@ import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from '@web/core/registry';
+import { session } from '@web/session';
 
 const { EventBus } = owl;
 const NO_POPUP_CLOSE_CODES = [
@@ -23,9 +24,13 @@ const NO_POPUP_CLOSE_CODES = [
  *  @emits notification
  */
 export const busService = {
-    dependencies: ['localization', 'notification'],
+    dependencies: ['localization', 'multi_tab', 'notification'],
 
-    start(env) {
+    start(env, { multi_tab: multiTab }) {
+        if (multiTab.getSharedValue('dbuuid') !== session.dbuuid) {
+            multiTab.setSharedValue('dbuuid', session.dbuuid);
+            multiTab.removeSharedValue('last_notification_id');
+        }
         const bus = new EventBus();
         const workerClass = 'SharedWorker' in window ? browser.SharedWorker : browser.Worker;
         const worker = new workerClass('/bus/websocket_worker_bundle', {
@@ -58,7 +63,8 @@ export const busService = {
          * @param {{type: WorkerEvent, data: any}[]}  messageEv.data
          */
         function handleMessage(messageEv) {
-            const { type, data } = messageEv.data;
+            const { type } = messageEv.data;
+            let { data } = messageEv.data;
             // Do not trigger the connection lost pop up if the reconnecting
             // event is caused by a session expired/keep_alive_timeout.
             if (type === 'reconnecting' && !NO_POPUP_CLOSE_CODES.includes(data.closeCode)) {
@@ -69,6 +75,9 @@ export const busService = {
             } else if (type === 'reconnect' && removeConnectionLostNotification) {
                 removeConnectionLostNotification();
                 removeConnectionLostNotification = null;
+            } else if (type === 'notification') {
+                multiTab.setSharedValue('last_notification_id', data[data.length - 1].id);
+                data = data.map(notification => notification.message);
             }
             bus.trigger(type, data);
         }
@@ -79,6 +88,7 @@ export const busService = {
         } else {
             worker.addEventListener('message', handleMessage);
         }
+        send('update_last_notification_id', multiTab.getSharedValue('last_notification_id', 0));
         browser.addEventListener('unload', () => send('leave'));
 
 

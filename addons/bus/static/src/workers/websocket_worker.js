@@ -81,7 +81,6 @@ export class WebsocketWorker {
             this._onClientMessage(messagePort, ev.data);
         };
         this.channelsByClient.set(messagePort, []);
-        this._updateChannels();
     }
 
     /**
@@ -122,6 +121,9 @@ export class WebsocketWorker {
                 return this._deleteChannel(client, data);
             case 'force_update_channels':
                 return this._forceUpdateChannels();
+            case 'update_last_notification_id':
+                this.lastNotificationId = data;
+                this._updateChannels();
         }
     }
 
@@ -240,7 +242,7 @@ export class WebsocketWorker {
     _onWebsocketMessage(messageEv) {
         const notifications = JSON.parse(messageEv.data);
         this.lastNotificationId = notifications[notifications.length - 1].id;
-        this.broadcast('notification', notifications.map(notification => notification.message));
+        this.broadcast('notification', notifications);
     }
 
     /**
