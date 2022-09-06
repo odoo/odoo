@@ -9,7 +9,7 @@ from socket import gethostbyname
 import odoo
 from odoo.http import Request, Session
 from odoo.tests import tagged
-from odoo.tests.common import HOST, HttpCase, new_test_user
+from odoo.tests.common import HOST, HttpCase, new_test_user, get_db_name
 from odoo.tools import config, file_open, mute_logger
 from odoo.tools.func import lazy_property
 from odoo.addons.test_http.controllers import CT_JSON
@@ -417,6 +417,23 @@ class TestHttpMisc(TestHttpBase):
         self.assertEqual(self.nodb_redirect('www.domain.com/hello?a=b'), '/www.domain.com/hello?a=b')
         self.assertEqual(self.nodb_redirect('https://www.domain.comhttps://www.domain2.com/hello?a=b'), '/www.domain2.com/hello?a=b')
         self.assertEqual(self.nodb_redirect('https://https://www.domain.com/hello?a=b'), '/www.domain.com/hello?a=b')
+
+    def test_misc3_rpc_qweb(self):
+        jack = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
+        milky_way = self.env.ref('test_http.milky_way')
+
+        payload = json.dumps({'jsonrpc': '2.0', 'method': 'call', 'id': None, 'params': {
+            'service': 'object', 'method': 'execute', 'args': [
+                get_db_name(), jack.id, 'jackoneill', 'test_http.galaxy', 'render', milky_way.id
+            ]
+        }})
+
+        res = self.nodb_url_open('/jsonrpc', data=payload, headers=CT_JSON)
+        res.raise_for_status()
+
+        res_rpc = res.json()
+        self.assertNotIn('error', res_rpc.keys(), res_rpc.get('error', {}).get('data', {}).get('message'))
+        self.assertIn(milky_way.name, res_rpc['result'], "QWeb template was correctly rendered")
 
 
 @tagged('post_install', '-at_install')
