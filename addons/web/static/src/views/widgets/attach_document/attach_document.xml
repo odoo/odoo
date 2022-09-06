@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+
+    <t t-name="web.AttachDocument" owl="1">
+        <button t-attf-class="btn o_attachment_button #{props.highlight ? 'btn-primary' : 'btn-secondary'}">
+            <FileInput
+                onUpload.bind="onFileUploaded"
+                resId="props.record.resId || undefined"
+                resModel="props.record.resModel"
+                beforeOpen.bind="beforeOpen"
+                multiUpload="true"
+            >
+                <t t-set-slot="default">
+                    <span class="o_attach_document" t-esc="props.string"/>
+                </t>
+            </FileInput>
+        </button>
+    </t>
+
+</template>

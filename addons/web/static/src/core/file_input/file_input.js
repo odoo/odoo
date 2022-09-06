@@ -68,8 +68,10 @@ export class FileInput extends Component {
     /**
      * Redirect clicks from the trigger element to the input.
      */
-    onTriggerClicked() {
-        this.fileInputRef.el.click();
+    async onTriggerClicked() {
+        if (await this.props.beforeOpen()) {
+            this.fileInputRef.el.click();
+        }
     }
 }
 
@@ -79,6 +81,7 @@ FileInput.defaultProps = {
     multiUpload: false,
     onUpload: () => {},
     route: "/web/binary/upload_attachment",
+    beforeOpen: async () => true,
 };
 FileInput.props = {
     acceptedFileExtensions: { type: String, optional: true },
@@ -86,6 +89,7 @@ FileInput.props = {
     hidden: { type: Boolean, optional: true },
     multiUpload: { type: Boolean, optional: true },
     onUpload: { type: Function, optional: true },
+    beforeOpen: { type: Function, optional: true },
     resId: { type: Number, optional: true },
     resModel: { type: String, optional: true },
     route: { type: String, optional: true },
