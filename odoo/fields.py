@@ -16,6 +16,7 @@ import enum
 import itertools
 import json
 import logging
+import uuid
 import warnings
 
 from markupsafe import Markup
@@ -3198,8 +3199,8 @@ class Properties(Field):
     # names to their corresponding value, like
     #
     #       {
-    #           '3adf37f3258cfe40f0907d9cbdd7d091': 'red',
-    #           'aa34746a6851ee4ea1f8d95746e45788': 1337,
+    #           '3adf37f3258cfe40': 'red',
+    #           'aa34746a6851ee4e': 1337,
     #       }
     #
     def convert_to_column(self, value, record, values=None, validate=True):
@@ -3254,13 +3255,13 @@ class Properties(Field):
     # corresponding value, like
     #
     #       [{
-    #           'name': '3adf37f3258cfe40f0907d9cbdd7d091',
+    #           'name': '3adf37f3258cfe40',
     #           'string': 'Color Code',
     #           'type': 'char',
     #           'default': 'blue',
     #           'value': 'red',
     #       }, {
-    #           'name': 'aa34746a6851ee4ea1f8d95746e45788',
+    #           'name': 'aa34746a6851ee4e',
     #           'string': 'Partner',
     #           'type': 'many2one',
     #           'comodel': 'test_new_api.partner',
@@ -3283,13 +3284,13 @@ class Properties(Field):
     # field values have a display name.
     #
     #       [{
-    #           'name': '3adf37f3258cfe40f0907d9cbdd7d091',
+    #           'name': '3adf37f3258cfe40',
     #           'string': 'Color Code',
     #           'type': 'char',
     #           'default': 'blue',
     #           'value': 'red',
     #       }, {
-    #           'name': 'aa34746a6851ee4ea1f8d95746e45788',
+    #           'name': 'aa34746a6851ee4e',
     #           'string': 'Partner',
     #           'type': 'many2one',
     #           'comodel': 'test_new_api.partner',
@@ -3494,6 +3495,19 @@ class Properties(Field):
                     ]
 
     @classmethod
+    def _add_missing_names(cls, values_list):
+        """Generate new properties name if needed.
+
+        Modify in place "values_list".
+
+        :param values_list: List of properties definition with properties value
+        """
+        for definition in values_list:
+            if definition.get('definition_changed') and not definition.get('name'):
+                # keep only the first 64 bits
+                definition['name'] = str(uuid.uuid4()).replace('-', '')[:16]
+
+    @classmethod
     def _parse_json_types(cls, values_list, env, check_existence=True):
         """Parse the value stored in the JSON.
 
@@ -3563,13 +3577,13 @@ class Properties(Field):
         E.G.
             Input list:
             [{
-                'name': '3adf37f3258cfe40f0907d9cbdd7d091',
+                'name': '3adf37f3258cfe40',
                 'string': 'Color Code',
                 'type': 'char',
                 'default': 'blue',
                 'value': 'red',
             }, {
-                'name': 'aa34746a6851ee4ea1f8d95746e45788',
+                'name': 'aa34746a6851ee4e',
                 'string': 'Partner',
                 'type': 'many2one',
                 'comodel': 'test_new_api.partner',
@@ -3578,8 +3592,8 @@ class Properties(Field):
 
             Output dict:
             {
-                '3adf37f3258cfe40f0907d9cbdd7d091': 'red',
-                'aa34746a6851ee4ea1f8d95746e45788': 1337,
+                '3adf37f3258cfe40': 'red',
+                'aa34746a6851ee4e': 1337,
             }
 
         :param values_list: List of properties definition and value
@@ -3587,6 +3601,8 @@ class Properties(Field):
         """
         if not is_list_of(values_list, dict):
             raise ValueError(f'Wrong properties value {values_list!r}')
+
+        cls._add_missing_names(values_list)
 
         dict_value = {}
         for property_definition in values_list:
@@ -3650,13 +3666,13 @@ class PropertiesDefinition(Field):
         might contain the name_get of those records (and will be removed).
 
         [{
-            'name': '3adf37f3258cfe40f0907d9cbdd7d091',
+            'name': '3adf37f3258cfe40',
             'string': 'Color Code',
             'type': 'char',
             'default': 'blue',
             'default': 'red',
         }, {
-            'name': 'aa34746a6851ee4ea1f8d95746e45788',
+            'name': 'aa34746a6851ee4e',
             'string': 'Partner',
             'type': 'many2one',
             'comodel': 'test_new_api.partner',
