@@ -2,8 +2,7 @@
 
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
 import { getCell, getCellValue } from "@spreadsheet/../tests/utils/getters";
-import { nextTick } from "@web/../tests/helpers/utils";
-import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
+import { createModelWithDataSource, waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
 
 QUnit.module("spreadsheet > Currency");
 
@@ -18,7 +17,7 @@ QUnit.test("Basic exchange formula", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     assert.strictEqual(getCellValue(model, "A1"), "Loading...");
-    await nextTick();
+    await waitForDataSourcesLoaded(model);
     assert.strictEqual(getCellValue(model, "A1"), 0.9);
 });
 
@@ -32,7 +31,7 @@ QUnit.test("Currency rate throw with unknown currency", async (assert) => {
         },
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("INVALID","USD")`);
-    await nextTick();
+    await waitForDataSourcesLoaded(model);
     assert.strictEqual(getCell(model, "A1").evaluated.error.message, "Currency rate unavailable.");
 });
 
@@ -47,10 +46,10 @@ QUnit.test("Currency rates are only loaded once", async (assert) => {
         },
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
-    await nextTick();
+    await waitForDataSourcesLoaded(model);
     assert.verifySteps(["FETCH"]);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","USD")`);
-    await nextTick();
+    await waitForDataSourcesLoaded(model);
     assert.verifySteps([]);
 });
 
@@ -70,6 +69,6 @@ QUnit.test("Currency rates are loaded once by clock", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("EUR","USD")`);
     setCellContent(model, "A2", `=ODOO.CURRENCY.RATE("EUR","SEK")`);
-    await nextTick();
+    await waitForDataSourcesLoaded(model);
     assert.verifySteps(["FETCH:2"]);
 });
