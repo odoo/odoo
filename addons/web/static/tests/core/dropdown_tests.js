@@ -883,6 +883,32 @@ QUnit.module("Components", ({ beforeEach }) => {
         }
     });
 
+    QUnit.test("showCaret props adds caret class", async (assert) => {
+        class Parent extends Component {}
+        Parent.template = xml`
+            <Dropdown class="'first'" hotkey="'1'" showCaret="true">
+                <DropdownItem class="'first-first'">O</DropdownItem>
+                <Dropdown class="'second'" showCaret="false">
+                    <DropdownItem class="'second-first'">O</DropdownItem>
+                </Dropdown>
+            </Dropdown>
+        `;
+        Parent.components = { Dropdown, DropdownItem };
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        assert.containsNone(
+            target,
+            ".first.o-dropdown--no-caret",
+            "first dropdown should have a caret"
+        );
+        await click(target, ".dropdown-toggle");
+        assert.containsOnce(
+            target,
+            ".second.o-dropdown--no-caret",
+            "second dropdown should not have a caret"
+        );
+    });
+
     QUnit.test(
         "multi-level dropdown: mouseentering a dropdown item should close any subdropdown",
         async (assert) => {

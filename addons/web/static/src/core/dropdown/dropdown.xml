@@ -8,7 +8,7 @@
       t-attf-class="
         {{ directionCaretClass || ''}}
         {{ state.open ? 'show' : ''}}
-        {{ !parentDropdown ? 'o-dropdown--no-caret' : '' }}
+        {{ !showCaret ? 'o-dropdown--no-caret' : '' }}
       "
       t-ref="root"
     >
