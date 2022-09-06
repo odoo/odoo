@@ -207,6 +207,10 @@ export class Dropdown extends Component {
         return this.changeStateAndNotify({ open: toggled, groupIsOpen: toggled });
     }
 
+    get showCaret() {
+        return this.props.showCaret === undefined ? this.parentDropdown : this.props.showCaret;
+    }
+
     // -------------------------------------------------------------------------
     // Handlers
     // -------------------------------------------------------------------------
@@ -339,6 +343,10 @@ Dropdown.props = {
     },
     slots: {
         type: Object,
+        optional: true,
+    },
+    showCaret: {
+        type: Boolean,
         optional: true,
     },
 };
