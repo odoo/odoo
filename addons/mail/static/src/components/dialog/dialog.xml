@@ -3,7 +3,7 @@
 
     <t t-name="mail.Dialog" owl="1">
         <t t-if="dialog">
-            <div class="o_Dialog fixed-top bottom-0 d-flex justify-content-center align-items-center" t-attf-class="{{ className }}" t-att-style="dialog.style" t-ref="root">
+            <div class="o_Dialog modal fixed-top bottom-0 d-flex justify-content-center" t-attf-class="{{ className }}" t-att-style="dialog.style" t-ref="root">
                 <t
                     t-component="constructor.components[dialog.componentName]"
                     t-props="{
