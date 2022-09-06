@@ -71,7 +71,7 @@ class StockValuationLayer(models.Model):
     def action_open_reference(self):
         self.ensure_one()
         if self.stock_move_id:
-            action = self.move_id.action_open_reference()
+            action = self.stock_move_id.action_open_reference()
             if action['res_model'] != 'stock.move':
                 return action
         return {
