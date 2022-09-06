@@ -2,9 +2,6 @@ $o-rightpanel-p: $o-horizontal-padding;
 $o-rightpanel-p-small: $o-horizontal-padding*0.5;
 $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
 
-$o-rightpanel-category-default-color: $o-brand-primary;
-$o-rightpanel-filter-default-color: #D59244;
-
 .o_controller_with_rightpanel .o_content {
     overflow: hidden;
     display: flex;
@@ -37,26 +34,6 @@ $o-rightpanel-filter-default-color: #D59244;
         &:nth-child(n+3) {
             border-top: 1px solid $border-color;
         }
-
-        /* UNUSED SCSS TO REMOVE
-        .o_rightpanel_data {
-            .o_rightpanel_left_col {
-                font-size: small;
-                padding-top: 0;
-                padding-bottom: 0;
-                &.o_rightpanel_left_button {
-                    color: $o-brand-primary;
-                    padding-left: 0;
-                }
-                &.o_rightpanel_left_text {
-                    padding-right: $o-rightpanel-p-small;
-                }
-            }
-            
-        .o_rightpanel_hidden {
-            display: none;
-        }
-        */
 
         .o_form_view {
             .oe_button_box {
