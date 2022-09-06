@@ -307,13 +307,6 @@ class TestUnbuild(TestMrpCommon):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final), 5, 'You should have consumed 3 final product in stock')
 
-        with self.assertRaises(AssertionError):
-            x.product_id = p_final
-            x.bom_id = bom
-            x.mo_id = mo
-            x.product_qty = 3
-            x.save()
-
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final), 5, 'You should have consumed 3 final product in stock')
 
         x = Form(self.env['mrp.unbuild'])
