@@ -1942,10 +1942,6 @@ class MailThread(models.AbstractModel):
 
         self = self._fallback_lang() # add lang to context immediately since it will be useful in various flows latter.
 
-        # Explicit access rights check, because display_name is computed as sudo.
-        self.check_access_rights('read')
-        self.check_access_rule('read')
-
         # Find the message's author
         if self.env.user._is_public() and 'guest' in self.env.context:
             author_guest_id = self.env.context['guest'].id
