@@ -81,7 +81,7 @@ QUnit.test('notification event is broadcasted', async function (assert) {
         broadcast(type, message) {
             if (type === 'notification') {
                 assert.step(`broadcast ${type}`);
-                assert.deepEqual(message, notifications.map(notif => notif.message));
+                assert.deepEqual(message, notifications);
             }
         },
     });
