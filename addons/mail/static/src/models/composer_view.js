@@ -573,7 +573,7 @@ registerModel({
                 const message = messaging.models['Message'].insert(
                     messaging.models['Message'].convertData(messageData)
                 );
-                if (this.messaging.hasLinkPreviewFeature) {
+                if (this.messaging.hasLinkPreviewFeature && !message.isBodyEmpty) {
                     this.messaging.rpc({
                         route: `/mail/link_preview`,
                         params: {
