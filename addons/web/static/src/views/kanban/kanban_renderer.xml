@@ -47,7 +47,7 @@
                                             </DropdownItem>
                                         </t>
                                     </Dropdown>
-                                    <button t-if="props.list.canQuickCreate()" class="o_kanban_quick_add btn p-0 border-0 fs-6 shadow-none" t-on-click="() => this.quickCreate(group)">
+                                    <button t-if="canQuickCreate()" class="o_kanban_quick_add btn p-0 border-0 fs-6 shadow-none" t-on-click="() => this.quickCreate(group)">
                                         <i class="fa fa-plus fa-stack d-block small text-end text-700 opacity-50 opacity-100-hover cursor-pointer" role="img" aria-label="Quick add" title="Quick add" />
                                     </button>
                                 </t>

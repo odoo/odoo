@@ -365,6 +365,10 @@ export class KanbanRenderer extends Component {
         return this.props.archInfo.activeActions.edit;
     }
 
+    canQuickCreate() {
+        return this.props.archInfo.activeActions.quickCreate && this.props.list.canQuickCreate();
+    }
+
     // ------------------------------------------------------------------------
     // Edition methods
     // ------------------------------------------------------------------------
