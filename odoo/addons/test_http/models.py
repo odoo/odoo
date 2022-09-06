@@ -56,4 +56,10 @@ class Galaxy(models.Model):
     _name = 'test_http.galaxy'
     _description = 'Galaxy'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, help='The galaxy common name.')
+
+    @api.model
+    def render(self, galaxy_id):
+        return self.env['ir.qweb']._render('test_http.tmpl_galaxy', {
+            'galaxy': self.browse([galaxy_id])
+        })
