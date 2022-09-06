@@ -71,6 +71,8 @@ QUnit.module("Components", (hooks) => {
             ev.preventDefault();
         };
         window.addEventListener("unhandledrejection", handler);
+        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
+        registry.category("services").add("error", { start: () => {} });
         patch(QUnit, "MainComponentsContainer QUnit patch", {
             onUnhandledRejection: () => {},
         });
@@ -124,6 +126,8 @@ QUnit.module("Components", (hooks) => {
             ev.preventDefault();
         };
         window.addEventListener("unhandledrejection", handler);
+        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
+        registry.category("services").add("error", { start: () => {} });
         patch(QUnit, "MainComponentsContainer QUnit patch", {
             onUnhandledRejection: () => {},
         });

@@ -11,6 +11,7 @@ import {
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
+import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
 import { listView } from "../../../src/views/list/list_view";
 
@@ -193,6 +194,8 @@ QUnit.module("ActionManager", (hooks) => {
             // need to preventDefault to remove error from console (so python test pass)
             ev.preventDefault();
         };
+        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
+        registry.category("services").add("error", { start: () => {} });
         window.addEventListener("unhandledrejection", handler);
         registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
         patchWithCleanup(QUnit, {
