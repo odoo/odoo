@@ -449,7 +449,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/config.js',
             'web/static/src/legacy/js/services/core.js',
             'web/static/src/legacy/js/services/local_storage_service.js',
-            'web/static/src/legacy/js/core/error_utils.js',
             'web/static/src/legacy/js/services/session_storage_service.js',
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
