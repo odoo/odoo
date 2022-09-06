@@ -162,6 +162,7 @@ class HrEmployee(models.Model):
         action_message['barcode'] = employee.barcode
         action_message['next_action'] = next_action
         action_message['hours_today'] = employee.hours_today
+        action_message['kiosk_delay'] = employee.company_id.attendance_kiosk_delay * 1000
 
         if employee.user_id:
             modified_attendance = employee.with_user(employee.user_id).sudo()._attendance_action_change()

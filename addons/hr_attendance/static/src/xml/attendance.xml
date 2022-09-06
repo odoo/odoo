@@ -39,17 +39,19 @@
             <t t-set="bodyContent">
                 <h2 class="mb-2"><small>Welcome to</small> <t t-esc="widget.company_name"/></h2>
                 <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo" class="o_hr_attendance_kiosk_company_image align-self-center img img-fluid mb-3" width="200"/>
-                <div class="o_hr_attendance_kiosk_welcome_row row align-items-stretch pb-5">
-                    <div class="col-md-5 position-relative mt-5 mb-5 mb-md-0">
-                        <img class="img img-fluid d-block mx-auto" src="/barcodes/static/img/barcode.png"/>
-                        <h6 class="position-absolute top-100 start-0 end-0 mt-2 text-muted">Scan your badge</h6>
+                <div class="o_hr_attendance_kiosk_welcome_row d-flex flex-column pb-5">
+                    <div class="col-md-5 mt-5 mb-5 mb-md-0 align-self-center" t-if="widget.kiosk_mode != 'manual'">
+                        <img src="/barcodes/static/img/barcode.png" alt="Barcode"/>
+                        <h6 class="mt-2 text-muted">Scan your badge</h6>
                     </div>
-                    <div class="col-md-2 align-self-center mt-5">
-                        <h4 class="mt0 mb8"><i>or</i></h4>
-                    </div>
-                    <div class="col-md-5 mt-5">
-                        <button class="o_hr_attendance_button_employees btn btn-primary py-5 py-md-2 h-100">
+                    <div class="mt-5 align-self-end" t-if="widget.kiosk_mode == 'barcode_manual'">
+                        <button class="o_hr_attendance_button_employees btn btn-link">
                             Identify Manually
+                        </button>
+                    </div>
+                    <div class="mt-5 align-self-center" t-if="widget.kiosk_mode == 'manual'">
+                        <button class="o_hr_attendance_button_employees btn btn-primary px-5 py-3 mt-4 mb-2">
+                            <span class="fs-2">Identify Manually</span>
                         </button>
                     </div>
                 </div>
