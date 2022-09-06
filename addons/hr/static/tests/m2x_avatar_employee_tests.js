@@ -223,14 +223,14 @@ QUnit.module('hr', {}, function () {
             res_id: m2xAvatarEmployeeId1,
             views: [[false, 'form']],
         });
-        assert.containsN(document.body, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+        assert.containsN(document.body, '.o_field_many2manytags.avatar_wrap.o_field_widget .badge', 2,
             "should have 2 records");
-        assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
+        assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar_wrap.o_field_widget .badge img').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
 
-        await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
-        await dom.click(document.querySelectorAll('.o_field_many2manytags.avatar .badge .o_m2m_avatar')[1]);
+        await dom.click(document.querySelector('.o_field_many2manytags.avatar_wrap .badge .o_m2m_avatar'));
+        await dom.click(document.querySelectorAll('.o_field_many2manytags.avatar_wrap .badge .o_m2m_avatar')[1]);
 
         assert.verifySteps([
             `read m2x.avatar.employee ${m2xAvatarEmployeeId1}`,
@@ -428,14 +428,14 @@ QUnit.module('hr', {}, function () {
             views: [[false, 'form']],
         });
 
-        assert.containsN(document.body, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+        assert.containsN(document.body, '.o_field_many2manytags.avatar_wrap.o_field_widget .badge', 2,
             "should have 2 records");
-        assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
+        assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar_wrap.o_field_widget .badge img').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
 
-        await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
-        await dom.click(document.querySelectorAll('.o_field_many2manytags.avatar .badge .o_m2m_avatar')[1]);
+        await dom.click(document.querySelector('.o_field_many2manytags.avatar_wrap .badge .o_m2m_avatar'));
+        await dom.click(document.querySelectorAll('.o_field_many2manytags.avatar_wrap .badge .o_m2m_avatar')[1]);
 
         assert.verifySteps([
             `read m2x.avatar.employee ${hrEmployeePublicId1}`,

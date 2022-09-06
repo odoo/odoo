@@ -33,7 +33,7 @@ const Many2ManyAttendee = FieldMany2ManyTagsAvatar.extend({
     // context probably won't work
     // supportedFieldTypes: ['many2many'],
     specialData: "_fetchSpecialAttendeeStatus",
-    className: 'o_field_many2manytags avatar',
+    className: 'o_field_many2manytags avatar_wrap',
 
     init: function () {
         this._super.apply(this, arguments);

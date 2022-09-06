@@ -2802,7 +2802,7 @@ var FieldMany2ManyTags = AbstractField.extend({
 
 var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
     tag_template: 'FieldMany2ManyTagAvatar',
-    className: 'o_field_many2manytags avatar',
+    className: 'o_field_many2manytags avatar_wrap',
 
     //--------------------------------------------------------------------------
     // Private

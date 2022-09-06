@@ -67,7 +67,7 @@ QUnit.module('mail', {}, function () {
             views: [[false, 'form']],
         });
 
-        await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
+        await dom.click(document.querySelector('.o_field_many2manytags.avatar_wrap .badge .o_m2m_avatar'));
         assert.containsOnce(document.body, '.o_ChatWindow', 'Chat window should be opened');
         assert.strictEqual(
             document.querySelector('.o_ChatWindowHeader_name').textContent,
@@ -380,7 +380,7 @@ QUnit.module('mail', {}, function () {
             views: [[false, 'form']],
         });
         assert.strictEqual(
-            document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
+            document.querySelector('.o_field_many2manytags.avatar_wrap.o_field_widget .badge img').getAttribute('data-src'),
             `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
