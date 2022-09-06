@@ -35,4 +35,13 @@ patch(MockServer.prototype, "mail/models/res_fake", {
         }
         return result;
     },
+    /**
+     * @override
+     */
+    mockMailThread_MessageComputeSubject(model, ids) {
+        if (model === 'res.fake') {
+            return new Map(ids.map(id => [id, "Custom Default Subject"]));
+        }
+        return this._super(model, ids);
+    },
 });

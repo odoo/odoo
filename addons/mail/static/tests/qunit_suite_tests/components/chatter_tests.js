@@ -371,7 +371,7 @@ QUnit.module("mail", {}, function () {
             );
 
             QUnit.test(
-                "should display subject when subject is not the same as the thread name",
+                "should display subject when subject isn't infered from the record",
                 async function (assert) {
                     assert.expect(2);
 
@@ -428,11 +428,70 @@ QUnit.module("mail", {}, function () {
                     assert.containsNone(
                         document.body,
                         ".o_MessageView_subject",
-                        "should not display subject of the message"
+                        "should not display subject of the message",
                     );
                 }
             );
 
+            QUnit.test(
+                "should not display subject when subject is the same as the default subject",
+                async function (assert) {
+                    assert.expect(1);
+
+                    const pyEnv = await startServer();
+                    const fakeRecordId = pyEnv["res.fake"].create({
+                        name: "Salutations, voyageur",
+                    });
+                    pyEnv["mail.message"].create({
+                        body: "not empty",
+                        model: "res.fake",
+                        res_id: fakeRecordId,
+                        subject: "Custom Default Subject", // default subject for res.fake, set on the model
+                    });
+                    const { openView } = await start();
+                    await openView({
+                        res_id: fakeRecordId,
+                        res_model: "res.fake",
+                        views: [[false, "form"]],
+                    });
+
+                    assert.containsNone(
+                        document.body,
+                        ".o_MessageView_subject",
+                        "should not display subject of the message",
+                    );
+                }
+            );
+
+            QUnit.test(
+                "should not display subject when subject is the same as the thread name with custom default subject",
+                async function (assert) {
+                    assert.expect(1);
+
+                    const pyEnv = await startServer();
+                    const fakeRecordId = pyEnv["res.fake"].create({
+                        name: "Salutations, voyageur",
+                    });
+                    pyEnv["mail.message"].create({
+                        body: "not empty",
+                        model: "res.fake",
+                        res_id: fakeRecordId,
+                        subject: "Salutations, voyageur",
+                    });
+                    const { openView } = await start();
+                    await openView({
+                        res_id: fakeRecordId,
+                        res_model: "res.fake",
+                        views: [[false, "form"]],
+                    });
+
+                    assert.containsNone(
+                        document.body,
+                        ".o_MessageView_subject",
+                        "should not display subject of the message",
+                    );
+                }
+            );
             QUnit.test(
                 "should not display user notification messages in chatter",
                 async function (assert) {

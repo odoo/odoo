@@ -191,21 +191,21 @@ class MailComposer(models.TransientModel):
         if values.get('parent_id'):
             parent = self.env['mail.message'].browse(values.get('parent_id'))
             result['record_name'] = parent.record_name
-            subject = tools.ustr(parent.subject or parent.record_name or '')
             if not values.get('model'):
                 result['model'] = parent.model
             if not values.get('res_id'):
                 result['res_id'] = parent.res_id
             partner_ids = values.get('partner_ids', list()) + parent.partner_ids.ids
             result['partner_ids'] = partner_ids
+            record = self.env[values.get('model') or result['model']].browse(values.get('res_id') or result['res_id'])
+            parent_subject = tools.ustr(parent.subject or '')
+            subject = parent_subject or record._message_compute_subject()
         elif values.get('model') and values.get('res_id'):
-            doc_name_get = self.env[values.get('model')].browse(values.get('res_id')).name_get()
-            result['record_name'] = doc_name_get and doc_name_get[0][1] or ''
-            subject = tools.ustr(result['record_name'])
+            record = self.env[values['model']].browse(values['res_id'])
+            doc_name = record.display_name
+            result['record_name'] = doc_name or ''
+            subject = record._message_compute_subject()
 
-        re_prefix = _('Re:')
-        if subject and not (subject.startswith('Re:') or subject.startswith(re_prefix)):
-            subject = "%s %s" % (re_prefix, subject)
         result['subject'] = subject
 
         return result

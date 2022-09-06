@@ -54,6 +54,7 @@ class TestImLivechatMessage(TransactionCase):
             'guestAuthor': [('clear',)],
             'history_partner_ids': [],
             'id': message.id,
+            'default_subject': channel_livechat_1.name,
             'is_discussion': False,
             'is_note': True,
             'is_notification': False,

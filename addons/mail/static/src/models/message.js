@@ -42,6 +42,9 @@ Model({
             if ("id" in data) {
                 data2.id = data.id;
             }
+            if ("default_subject" in data) {
+                data2.defaultSubject = data.default_subject;
+            }
             if ("is_discussion" in data) {
                 data2.is_discussion = data.is_discussion;
             }
@@ -363,6 +366,10 @@ Model({
                 return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
             },
         }),
+        /**
+         * The subject the message would have received by default
+         */
+        defaultSubject: attr(),
         date: attr(),
         /**
          * Determines the date of the message as a moment object.
@@ -534,25 +541,29 @@ Model({
             },
         }),
         /**
-         * States whether `originThread.name` and `subject` contain similar
-         * values except it contains the extra prefix at the start
-         * of the subject.
+         * States whether `originThread.name` or `defaultSubject` contain
+         * similar values to `subject` with prefixes.
          *
          * This is necessary to avoid displaying the subject, if
-         * the subject is same as threadname.
+         * the subject is same as threadname or the default subject for that thread.
          */
-        isSubjectSimilarToOriginThreadName: attr({
+        isSubjectSimilarToOriginThreadNameOrDefaultSubject: attr({
             compute() {
-                if (!this.subject || !this.originThread || !this.originThread.name) {
+                if (!this.subject || ((!this.originThread || !this.originThread.name) && !this.defaultSubject)) {
                     return false;
                 }
                 const threadName = this.originThread.name.toLowerCase().trim();
+                const defaultSubject = this.defaultSubject.toLowerCase();
+                const hiddenSubjects = [defaultSubject];
+                if (defaultSubject !== threadName) {
+                    hiddenSubjects.push(threadName);
+                }
                 const prefixList = ["re:", "fw:", "fwd:"];
                 let cleanedSubject = this.subject.toLowerCase();
                 let wasSubjectCleaned = true;
                 while (wasSubjectCleaned) {
                     wasSubjectCleaned = false;
-                    if (threadName === cleanedSubject) {
+                    if (hiddenSubjects.includes(cleanedSubject)) {
                         return true;
                     }
                     for (const prefix of prefixList) {

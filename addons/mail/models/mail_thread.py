@@ -2320,6 +2320,14 @@ class MailThread(models.AbstractModel):
                 parent_id = current_ancestor.parent_id.id if current_ancestor.parent_id else parent_id
         return parent_id
 
+    def _message_compute_subject(self):
+        """Overridable method to get the default subject for a message related to this record.
+
+        :return str:
+        """
+        self.ensure_one()
+        return self.name_get()[0][1]
+
     def _message_create(self, values_list):
         if not isinstance(values_list, (list)):
             values_list = [values_list]
@@ -2739,7 +2747,16 @@ class MailThread(models.AbstractModel):
         :param dict base_mail_values: base mail.mail values, holding message
         to notify (mail_message_id and its fields), server, references, subject.
         """
-        mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
+        mail_subject = message.subject
+        if not message.subject:
+            thread = self
+            if not thread and message.model:
+                thread = self.env[message.model].browse(message.res_id)
+            if not thread:
+                mail_subject = message.record_name
+            else:
+                mail_subject = thread._message_compute_subject()
+
         # Replace new lines by spaces to conform to email headers requirements
         mail_subject = ' '.join((mail_subject or '').splitlines())
         # compute references: set references to the parent and add current message just to

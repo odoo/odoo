@@ -846,13 +846,12 @@ class Message(models.Model):
                 'name': message_sudo.author_guest_id.name,
             } if message_sudo.author_guest_id else [('clear',)]
             if message_sudo.model and message_sudo.res_id:
-                record_name = self.env[message_sudo.model] \
-                    .browse(message_sudo.res_id) \
-                    .sudo() \
-                    .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
-                    .display_name
+                record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
+                record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
+                default_subject = record_sudo._message_compute_subject()
             else:
                 record_name = False
+                default_subject = False
             reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
@@ -868,6 +867,7 @@ class Message(models.Model):
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update({
                 'author': author,
+                'default_subject': default_subject,
                 'guestAuthor': guestAuthor,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),

@@ -166,6 +166,8 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                 attachment_ids: formattedAttachments,
                 author: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
+                default_subject: message.model && message.res_id &&
+                    this.mockMailThread_MessageComputeSubject(message.model, [message.res_id]).get(message.res_id),
                 linkPreviews: linkPreviewsFormatted,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
