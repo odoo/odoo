@@ -152,25 +152,9 @@ class EventRegistration(models.Model):
         return ret
 
     def name_get(self):
-        """ Custom name_get implementation to better differentiate registrations
-        linked to a given partner but with different name (one partner buying
-        several registrations)
-
-          * name, partner_id has no name -> take name
-          * partner_id has name, name void or same -> take partner name
-          * both have name: partner + name
+        """ Custom name_get in case a registration is nott linked to an attendee
         """
-        ret_list = []
-        for registration in self:
-            if registration.partner_id.name:
-                if registration.name and registration.name != registration.partner_id.name:
-                    name = '%s, %s' % (registration.partner_id.name, registration.name)
-                else:
-                    name = registration.partner_id.name
-            else:
-                name = registration.name
-            ret_list.append((registration.id, name))
-        return ret_list
+        return [(registration.id, registration.name or f"#{registration.id}") for registration in self]
 
     def toggle_active(self):
         pre_inactive = self - self.filtered(self._active_name)
@@ -251,6 +235,19 @@ class EventRegistration(models.Model):
     # ------------------------------------------------------------
     # MAILING / GATEWAY
     # ------------------------------------------------------------
+
+    def _message_compute_subject(self):
+        if self.name:
+            return _(
+                "%(event_name)s - Registration for %(attendee_name)s",
+                event_name=self.event_id.name,
+                attendee_name=self.name,
+            )
+        return _(
+            "%(event_name)s - Registration #%(registration_id)s",
+            event_name=self.event_id.name,
+            registration_id=self.id,
+        )
 
     def _message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self)._message_get_suggested_recipients()

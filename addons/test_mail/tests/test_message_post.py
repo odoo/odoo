@@ -326,6 +326,20 @@ class TestMessageNotify(TestMessagePostCommon):
             )
 
     @users('employee')
+    def test_notify_default_subject(self):
+        """ Test notify in batch. Currently not supported. """
+        test_partner = self.env['res.partner'].sudo().create([{'name': 'John', 'email': 'john@test.lan'}])
+        test_record = self.env['mail.test.ticket'].create({'name': 'Test'})
+        mt_comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        test_record.message_subscribe([test_partner.id], subtype_ids=[mt_comment])
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            test_record.message_post(body="Test Message", message_type="comment", subtype_id=mt_comment)
+
+        self.assertEqual(len(self._new_msgs), 1)
+        self.assertEqual(self._new_msgs.subject, test_record._message_compute_subject())
+
+    @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_notify_from_user_id(self):
         """ Test notify coming from user_id assignment. """
@@ -911,7 +925,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             [self.partner_2],
             body_content='<p>Test Answer Bis</p>',
             reply_to=msg.reply_to,
-            subject='Re: %s' % self.test_record.name,
+            subject=self.test_record.name,
             references_content='openerp-%d-mail.test.simple' % self.test_record.id,
             references='%s %s' % (parent_msg.message_id, new_msg.message_id),
         )

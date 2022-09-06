@@ -54,9 +54,9 @@ tour.register(
             trigger: '[name="subject"] input',
             run() {
                 const subjectValue = document.querySelector('[name="subject"] input').value;
-                if (subjectValue !== "Re: Test User") {
+                if (subjectValue !== "Test User") {
                     console.error(
-                        `Full composer should have "Re: Test User" in subject input (actual: ${subjectValue})`
+                        `Full composer should have "Test User" in subject input (actual: ${subjectValue})`
                     );
                 }
             },
