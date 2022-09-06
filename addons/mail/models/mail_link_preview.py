@@ -26,6 +26,8 @@ class LinkPreview(models.Model):
 
     @api.model
     def _create_link_previews(self, message):
+        if not message.body:
+            return
         tree = html.fromstring(message.body)
         urls = tree.xpath('//a/@href')
         link_previews = self.env['mail.link.preview']
