@@ -109,7 +109,7 @@ export default class ListDataSource extends OdooViewsDataSource {
             this._metaData.columns.push(fieldName);
             this._metaData.columns = [...new Set(this._metaData.columns)]; //Remove duplicates
             this._triggerFetching();
-            return undefined;
+            throw new LoadingDataError();
         }
         switch (field.type) {
             case "many2one":
