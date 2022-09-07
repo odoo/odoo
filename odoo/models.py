@@ -1654,11 +1654,22 @@ class BaseModel(metaclass=MetaModel):
             for [v_id, v_type] in views
         }
 
-        result['models'] = {
-            model: fields
-            for info in result['views'].values()
-            for model, fields in info.pop('models').items()
-        }
+        models = {}
+        for view in result['views'].values():
+            for model, model_fields in view.pop('models').items():
+                models.setdefault(model, {'id', self.CONCURRENCY_CHECK_FIELD}).update(model_fields)
+
+        result['models'] = {}
+
+        if 'search' in result['views']:
+            # If the search view is requested, all fields of the main model must be passed.
+            result['models'][self._name] = self.fields_get(attributes=self._get_view_field_attributes())
+            models.pop(self._name)
+
+        for model, model_fields in models.items():
+            result['models'][model] = self.env[model].fields_get(
+                allfields=model_fields, attributes=self._get_view_field_attributes()
+            )
 
         # Add related action information if asked
         if options.get('toolbar'):
@@ -1791,10 +1802,8 @@ class BaseModel(metaclass=MetaModel):
             # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
             # you just called `get_views` for that model, so obviously the web client already knows the model.
             'model': self._name,
-            # sudo is important to get all fields, including fields restricted to groups, in the cache.
-            'models': {model: frozendict(self.env[model].sudo().fields_get(
-                attributes=self._get_view_field_attributes(),
-            )) for model in models},
+            # Set a frozendict and tuple for the field list to make sure the value in cache cannot be updated.
+            'models': frozendict({model: tuple(fields) for model, fields in models.items()}),
         }
 
         return frozendict(result)
@@ -1824,7 +1833,7 @@ class BaseModel(metaclass=MetaModel):
         result = dict(self._get_view_cache(view_id, view_type, **options))
 
         node = etree.fromstring(result['arch'])
-        node, result['models'] = self.env['ir.ui.view']._postprocess_access_rights(node, result['models'])
+        node = self.env['ir.ui.view']._postprocess_access_rights(node)
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result
