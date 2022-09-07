@@ -1324,9 +1324,14 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
         contentType: 'text/plain',
         name: 'text.txt',
     });
-    await afterNextRender(() =>
-        inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
-    );
+    await afterNextRender(() => afterEvent({
+        eventName: 'o-file-uploader-upload',
+        func() {
+            inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file]);
+        },
+        message: 'should wait until files are uploaded',
+        predicate: ({ files: uploadedFiles }) => uploadedFiles[0] === file,
+    }));
     assert.containsOnce(
         document.body,
         '.o_Composer_attachmentList',
