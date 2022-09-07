@@ -19,5 +19,23 @@
 </div>
             </field>
         </record>
+
+        <record id="digest_tip_project_1" model="digest.tip">
+            <field name="name">Tip: Create tasks from incoming emails</field>
+            <field name="sequence">1300</field>
+            <field name="group_id" ref="project.group_project_user"/>
+            <field name="tip_description" type="html">
+<div>
+    <t t-set="project_record" t-value="object.env['project.project'].search([('alias_name', '!=', False)], limit=1, order='sequence asc')"/>
+    <p class="tip_title">Tip: Create tasks from incoming emails</p>
+    <t t-if="project_record and project_record.alias_domain">
+        <p class="tip_content">Emails sent to <a t-attf-href="mailto:{{project_record.alias_value}}" target="_blank" style="color: #875a7b; text-decoration: none;"><t t-out="project_record.alias_value" /></a> will generate tasks in your <t t-out="project_record.name"></t> project.</p>
+    </t>
+    <t t-else="">
+        <p class="tip_content">Create tasks by sending an email to the email address of your project.</p>
+    </t>
+</div>
+            </field>
+        </record>
     </data>
 </odoo>
