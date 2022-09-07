@@ -690,17 +690,10 @@ registerModel({
                 body: body,
                 attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
             };
-            try {
-                composer.update({ isPostingMessage: true });
-                const messageViewInEditing = this.messageViewInEditing;
-                await messageViewInEditing.message.updateContent(data);
-                if (messageViewInEditing.exists()) {
-                    messageViewInEditing.stopEditing();
-                }
-            } finally {
-                if (composer.exists()) {
-                    composer.update({ isPostingMessage: false });
-                }
+            const messageViewInEditing = this.messageViewInEditing;
+            await messageViewInEditing.message.updateContent(data);
+            if (messageViewInEditing.exists()) {
+                messageViewInEditing.stopEditing();
             }
         },
         /**
