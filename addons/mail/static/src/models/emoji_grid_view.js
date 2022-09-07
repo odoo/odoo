@@ -21,6 +21,19 @@ registerModel({
         onScroll() {
             this.onScrollThrottle.do();
         },
+        _onChangeScrollRecomputeCount() {
+            for (const viewCategory of this.emojiPickerViewOwner.categories) {
+                const rowIndex = this.firstRenderedRowIndex + this.topBufferAmount;
+                if (
+                    viewCategory.emojiGridRowView &&
+                    rowIndex >= viewCategory.emojiGridRowView.index &&
+                    (viewCategory.emojiPickerViewOwnerAsLastCategory || rowIndex <= viewCategory.endSectionIndex)
+                ) {
+                    this.emojiPickerViewOwner.update({ activeCategoryByGridViewScroll: viewCategory });
+                    break;
+                }
+            }
+        },
         /**
          * @private
          * @returns {boolean}
@@ -112,22 +125,6 @@ registerModel({
             inverse: 'emojiGridViewOwnerAsNonSearch',
             isCausal: true,
         }),
-        onScrollActiveCategory: attr({
-            compute() {
-                this.scrollRecomputeCount; // observe scroll changes
-                for (const viewCategory of this.emojiPickerViewOwner.categories) {
-                    const rowIndex = this.firstRenderedRowIndex + this.topBufferAmount;
-                    if (
-                        viewCategory.emojiGridRowView &&
-                        rowIndex >= viewCategory.emojiGridRowView.index &&
-                        (viewCategory.emojiPickerViewOwnerAsLastCategory || rowIndex <= viewCategory.endSectionIndex)
-                    ) {
-                        this.emojiPickerViewOwner.update({ activeCategoryByGridViewScroll: viewCategory });
-                        break;
-                    }
-                }
-            },
-        }),
         onScrollThrottle: one('Throttle', {
             compute() {
                 return { func: () => this.update({ scrollRecomputeCount: increment() }) };
@@ -200,4 +197,10 @@ registerModel({
             },
         }),
     },
+    onChanges: [
+        {
+            dependencies: ['scrollRecomputeCount'],
+            methodName: '_onChangeScrollRecomputeCount',
+        },
+    ],
 });
