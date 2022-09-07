@@ -1006,14 +1006,14 @@ actual arch.
 
         arch = etree.tostring(node, encoding="unicode").replace('\t', '')
 
-        models = set()
+        models = {}
         name_managers = [name_manager]
         for name_manager in name_managers:
-            models.add(name_manager.model._name)
+            models.setdefault(name_manager.model._name, set()).update(name_manager.available_fields)
             name_managers.extend(name_manager.children)
         return arch, models
 
-    def _postprocess_access_rights(self, tree, models):
+    def _postprocess_access_rights(self, tree):
         """
         Apply group restrictions: elements with a 'groups' attribute should
         be removed from the view to people who are not members.
@@ -1022,14 +1022,6 @@ actual arch.
         views can add additional specific rights like creating columns for
         many2one-based grouping views.
         """
-        models = {
-            model: {
-                fname: field
-                for fname, field in fields.items()
-                if not field.get('groups') or self.user_has_groups(field['groups'])
-            }
-            for model, fields in models.items()
-        }
 
         for node in tree.xpath('//*[@groups]'):
             if not self.user_has_groups(node.attrib.pop('groups')):
@@ -1073,7 +1065,7 @@ actual arch.
                                     not self._context.get(action, True) and is_base_model):
                                 node.set(action, 'false')
 
-        return tree, models
+        return tree
 
     def _postprocess_view(self, node, model_name, editable=True, parent_name_manager=None, **options):
         """ Process the given architecture, modifying it in-place to add and
