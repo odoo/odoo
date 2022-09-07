@@ -64,7 +64,8 @@ class Http(models.AbstractModel):
 
     @classmethod
     def routing_map(cls, key=None):
-        key = key or (request and request.website_routing)
+        if not key and request:
+            key = request.website_routing
         return super(Http, cls).routing_map(key=key)
 
     @classmethod
@@ -82,6 +83,10 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _generate_routing_rules(cls, modules, converters):
+        if not request:
+            yield from super()._generate_routing_rules(modules, converters)
+            return
+
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
         domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
