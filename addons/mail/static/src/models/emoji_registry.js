@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many } from '@mail/model/model_field';
+import { many } from '@mail/model/model_field';
 import { insert } from '@mail/model/model_field_command';
 import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
-import { executeGracefully } from '@mail/utils/utils';
 
 registerModel({
     name: 'EmojiRegistry',
@@ -15,7 +14,7 @@ registerModel({
     },
     recordMethods: {
         async _populateFromEmojiData(dataCategories, dataEmojis) {
-            await executeGracefully(dataCategories.map(category => () => {
+            await this.messaging.executeGracefully(dataCategories.map(category => () => {
                 if (!this.exists()) {
                     return;
                 }
@@ -29,8 +28,10 @@ registerModel({
                     }),
                 });
             }));
-            this.update({ allEmojiCount: dataEmojis.length }); // Set the total number of emojis to the category before all emojis are processed and created.
-            await executeGracefully(dataEmojis.map(emojiData => () => {
+            if (!this.exists()) {
+                return;
+            }
+            await this.messaging.executeGracefully(dataEmojis.map(emojiData => () => {
                 if (!this.exists()) {
                     return;
                 }
@@ -58,9 +59,6 @@ registerModel({
             },
             inverse: 'emojiRegistry',
             sort: '_sortAllCategories',
-        }),
-        allEmojiCount: attr({
-            default: 0,
         }),
         allEmojis: many('Emoji', {
             inverse: 'emojiRegistry',

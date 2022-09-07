@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { executeGracefully } from '@mail/utils/utils';
 import { insert } from '@mail/model/model_field_command';
 
 registerModel({
@@ -118,7 +117,10 @@ registerModel({
          * @param {Object[]} channelsData
          */
         async _initChannels(channelsData) {
-            return executeGracefully(channelsData.map(channelData => () => {
+            return this.messaging.executeGracefully(channelsData.map(channelData => () => {
+                if (!this.exists()) {
+                    return;
+                }
                 const convertedData = this.messaging.models['Thread'].convertData(channelData);
                 const channel = this.messaging.models['Thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
@@ -173,7 +175,10 @@ registerModel({
          * @param {Object[]} mailFailuresData
          */
         async _initMailFailures(mailFailuresData) {
-            await executeGracefully(mailFailuresData.map(messageData => () => {
+            await this.messaging.executeGracefully(mailFailuresData.map(messageData => () => {
+                if (!this.exists()) {
+                    return;
+                }
                 const message = this.messaging.models['Message'].insert(
                     this.messaging.models['Message'].convertData(messageData)
                 );
