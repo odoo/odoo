@@ -4,6 +4,7 @@ import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     drag,
+    clickSave,
     dragAndDrop,
     editInput,
     getFixture,
@@ -27,7 +28,7 @@ import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
-import { makeErrorFromResponse } from "@web/core/network/rpc_service";
+import { makeErrorFromResponse, RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { nbsp } from "@web/core/utils/strings";
 import { getNextTabableElement } from "@web/core/utils/ui";
@@ -11470,5 +11471,94 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(getColumn(0), ".o_kanban_record", 1);
         assert.doesNotHaveClass(getColumn(1), "o_column_folded");
         assert.containsN(getColumn(1), ".o_kanban_record", 3);
+    });
+
+    QUnit.test("quick create record in grouped kanban in a form view dialog", async (assert) => {
+        serverData.models.partner.fields.foo.default = "ABC";
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="bar"/>
+                </form>
+            `,
+        };
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-if="record.foo.raw_value" t-set="foo"/>
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+            async mockRPC(route, { method }) {
+                assert.step(method || route);
+                if (method === "name_create") {
+                    throw new RPCError();
+                }
+            },
+        });
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:first-child .o_kanban_record",
+            2,
+            "first column should contain two records"
+        );
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:first-child .o_kanban_record")].map(
+                (el) => el.innerText
+            ),
+            ["yop", "gnap"]
+        );
+
+        assert.containsNone(target, ".modal");
+
+        // click on 'Create', fill the quick create and validate
+        await createRecord();
+        await editQuickCreateInput("display_name", "new partner");
+        await validateRecord();
+
+        assert.containsOnce(target, ".modal");
+        await clickSave(target.querySelector(".modal"));
+
+        assert.containsN(
+            target,
+            ".o_kanban_group:first-child .o_kanban_record",
+            3,
+            "first column should contain three records"
+        );
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_group:first-child .o_kanban_record")].map(
+                (el) => el.innerText
+            ),
+            ["ABC", "yop", "gnap"]
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group", // initial read_group
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "onchange", // quick create
+            "name_create", // should perform a name_create to create the record
+            "get_views", // load views for form view dialog
+            "onchange", // load of a virtual record in form view dialog
+            "create", // save virtual record
+            "read", // read the created record to get foo value
+            "onchange", // reopen the quick create automatically
+        ]);
     });
 });
