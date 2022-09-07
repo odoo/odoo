@@ -959,7 +959,7 @@ options.registry.ReplaceMedia.include({
      */
     async willStart() {
         const parent = this.$target.parent();
-        this.isProductPageImage = this.$target.closest('#product_detail').length > 0;
+        this.isProductPageImage = this.$target.closest('.o_wsale_product_images').length > 0;
         // Product Page images may be the product's image or a record of `product.image`
         this.recordModel = parent.data('oe-model');
         this.recordId = parent.data('oe-id');
