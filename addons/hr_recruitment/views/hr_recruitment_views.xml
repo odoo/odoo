@@ -47,6 +47,7 @@
                 <field name="salary_proposed" optional="hide"/>
                 <field name="availability" optional="hide"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)" readonly="1"/>
+                <field name="company_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
             </tree>
         </field>
