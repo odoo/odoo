@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
 from odoo.tools import get_lang
+from odoo.tools.origin import create_origin, union_origins
 
 
 class PurchaseOrderGroup(models.Model):
@@ -62,12 +63,7 @@ class PurchaseOrder(models.Model):
         self.payment_term_id = payment_term.id,
         self.company_id = requisition.company_id.id
         self.currency_id = requisition.currency_id.id
-        if not self.origin or requisition.name not in self.origin.split(', '):
-            if self.origin:
-                if requisition.name:
-                    self.origin = self.origin + ', ' + requisition.name
-            else:
-                self.origin = requisition.name
+        self.origin = union_origins([self.origin or "[]", create_origin(requisition) if requisition.name else "[]"])
         self.notes = requisition.description
         self.date_order = fields.Datetime.now()
 

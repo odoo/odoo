@@ -9,7 +9,7 @@ from odoo.tools import float_compare
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import groupby
-
+from odoo.tools.origin import union_origins
 
 class StockRule(models.Model):
     _inherit = 'stock.rule'
@@ -86,9 +86,8 @@ class StockRule(models.Model):
             # Get the rules for the current domain. Their only use is to create
             # the PO if it does not exist.
             procurements, rules = zip(*procurements_rules)
-
             # Get the set of procurement origin for the current domain.
-            origins = set([p.origin for p in procurements])
+            origins = union_origins([p.origin for p in procurements])
             # Check if a PO exists for the current domain.
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
@@ -106,12 +105,7 @@ class StockRule(models.Model):
                     po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
             else:
                 # If a purchase order is found, adapt its `origin` field.
-                if po.origin:
-                    missing_origins = origins - set(po.origin.split(', '))
-                    if missing_origins:
-                        po.write({'origin': po.origin + ', ' + ', '.join(missing_origins)})
-                else:
-                    po.write({'origin': ', '.join(origins)})
+                po.write({'origin': union_origins([origins, po.origin if po.origin else "[]"])})
 
             procurements_to_merge = self._get_procurements_to_merge(procurements)
             procurements = self._merge_procurements(procurements_to_merge)
@@ -287,7 +281,7 @@ class StockRule(models.Model):
             'company_id': company_id.id,
             'currency_id': partner.with_company(company_id).property_purchase_currency_id.id or company_id.currency_id.id,
             'dest_address_id': values.get('partner_id', False),
-            'origin': ', '.join(origins),
+            'origin': origins,
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
             'date_order': purchase_date,
             'fiscal_position_id': fpos.id,

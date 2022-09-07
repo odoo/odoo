@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, is_html_empty
-
+from odoo.tools.origin import create_origin, union_origins
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -387,7 +387,7 @@ class Repair(models.Model):
                     'partner_shipping_id': repair.address_id.id,
                     'currency_id': currency.id,
                     'narration': narration if not is_html_empty(narration) else '',
-                    'invoice_origin': repair.name,
+                    'invoice_origin': create_origin(repair),
                     'repair_ids': [(4, repair.id)],
                     'invoice_line_ids': [],
                     'fiscal_position_id': fpos.id
@@ -398,7 +398,7 @@ class Repair(models.Model):
             else:
                 # if group == True: concatenate invoices by partner and currency
                 invoice_vals = current_invoices_list[0]
-                invoice_vals['invoice_origin'] += ', ' + repair.name
+                invoice_vals['invoice_origin'] = union_origins([invoice_vals['invoice_origin'], create_origin(repair)])
                 invoice_vals['repair_ids'].append((4, repair.id))
                 if not is_html_empty(narration):
                     if  is_html_empty(invoice_vals['narration']):
@@ -578,7 +578,7 @@ class Repair(models.Model):
                     'location_id': operation.location_id.id,
                     'location_dest_id': operation.location_dest_id.id,
                     'repair_id': repair.id,
-                    'origin': repair.name,
+                    'origin': create_origin(repair),
                     'company_id': repair.company_id.id,
                 })
 
@@ -627,7 +627,7 @@ class Repair(models.Model):
                                            'company_id': repair.company_id.id,
                                            'location_dest_id': repair.location_id.id,})],
                 'repair_id': repair.id,
-                'origin': repair.name,
+                'origin': create_origin(repair),
                 'company_id': repair.company_id.id,
             })
             consumed_lines = moves.mapped('move_line_ids')

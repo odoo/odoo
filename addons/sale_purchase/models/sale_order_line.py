@@ -7,7 +7,9 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 from odoo.tools.misc import get_lang
+from odoo.tools.origin import create_origin, union_origins
 
+import json
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
@@ -131,7 +133,7 @@ class SaleOrderLine(models.Model):
             'company_id': self.company_id.id,
             'currency_id': partner_supplier.property_purchase_currency_id.id or self.env.company.currency_id.id,
             'dest_address_id': False, # False since only supported in stock
-            'origin': self.order_id.name,
+            'origin': create_origin(self.order_id),
             'payment_term_id': partner_supplier.property_supplier_payment_term_id.id,
             'date_order': date_order,
             'fiscal_position_id': fpos.id,
@@ -219,14 +221,14 @@ class SaleOrderLine(models.Model):
                 values = line._purchase_service_prepare_order_values(supplierinfo)
                 purchase_order = PurchaseOrder.create(values)
             else:  # update origin of existing PO
-                so_name = line.order_id.name
-                origins = []
-                if purchase_order.origin:
-                    origins = purchase_order.origin.split(', ') + origins
-                if so_name not in origins:
-                    origins += [so_name]
+                so_origin = create_origin(line.order_id)
+                po_origin = purchase_order.origin if purchase_order.origin else "[]"
+                origins = union_origins([po_origin, so_origin])
+
+                # If the union cause changes
+                if len(json.loads(origins)) != len(json.loads(po_origin)):
                     purchase_order.write({
-                        'origin': ', '.join(origins)
+                        'origin': origins
                     })
             supplier_po_map[partner_supplier.id] = purchase_order
 

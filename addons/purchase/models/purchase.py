@@ -12,6 +12,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, format_date, formatLang, get_lang, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.origin import create_origin, union_origins
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -578,7 +579,7 @@ class PurchaseOrder(models.Model):
         # 2) group by (company_id, partner_id, currency_id) for batch creation
         new_invoice_vals_list = []
         for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: (x.get('company_id'), x.get('partner_id'), x.get('currency_id'))):
-            origins = set()
+            origins = []
             payment_refs = set()
             refs = set()
             ref_invoice_vals = None
@@ -587,12 +588,12 @@ class PurchaseOrder(models.Model):
                     ref_invoice_vals = invoice_vals
                 else:
                     ref_invoice_vals['invoice_line_ids'] += invoice_vals['invoice_line_ids']
-                origins.add(invoice_vals['invoice_origin'])
+                origins.append(invoice_vals['invoice_origin'])
                 payment_refs.add(invoice_vals['payment_reference'])
                 refs.add(invoice_vals['ref'])
             ref_invoice_vals.update({
                 'ref': ', '.join(refs)[:2000],
-                'invoice_origin': ', '.join(origins),
+                'invoice_origin': union_origins(origins),
                 'payment_reference': len(payment_refs) == 1 and payment_refs.pop() or False,
             })
             new_invoice_vals_list.append(ref_invoice_vals)
@@ -630,7 +631,7 @@ class PurchaseOrder(models.Model):
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
             'payment_reference': self.partner_ref or '',
             'partner_bank_id': partner_bank_id.id,
-            'invoice_origin': self.name,
+            'invoice_origin': create_origin(self),
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_line_ids': [],
             'company_id': self.company_id.id,

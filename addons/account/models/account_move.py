@@ -5,7 +5,7 @@ from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from hashlib import sha256
-from json import dumps
+from json import dumps, loads
 import re
 from textwrap import shorten
 from unittest.mock import patch
@@ -500,6 +500,9 @@ class AccountMove(models.Model):
         readonly=True,
         tracking=True,
         help="The document(s) that generated the invoice.",
+    )
+    invoice_origin_names = fields.Char(
+        compute="_compute_invoice_origin_names"
     )
     invoice_incoterm_id = fields.Many2one(
         comodel_name='account.incoterms',
@@ -1352,6 +1355,12 @@ class AccountMove(models.Model):
             self.env['account.move'].browse(res['move_id']): self.env['account.move'].browse(res['duplicate_ids'])
             for res in self.env.cr.dictfetchall()
         }
+
+    @api.depends('invoice_origin')
+    def _compute_invoice_origin_names(self):
+        for move in self:
+            if move.invoice_origin:
+                move.invoice_origin_names = ', '.join([o['name'] for o in loads(move.invoice_origin)])
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS

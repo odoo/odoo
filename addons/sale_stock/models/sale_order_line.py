@@ -7,7 +7,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.tools import float_compare
 from odoo.exceptions import UserError
-
+from odoo.tools.origin import create_origin
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
@@ -328,10 +328,11 @@ class SaleOrderLine(models.Model):
             line_uom = line.product_uom
             quant_uom = line.product_id.uom_id
             product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
+            origin = create_origin(line.order_id)
             procurements.append(self.env['procurement.group'].Procurement(
                 line.product_id, product_qty, procurement_uom,
                 line.order_id.partner_shipping_id.property_stock_customer,
-                line.name, line.order_id.name, line.order_id.company_id, values))
+                line.name, origin, line.order_id.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
 

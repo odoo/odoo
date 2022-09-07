@@ -4,7 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
-
+from odoo.tools.origin import create_origin
 
 class StockScrap(models.Model):
     _name = 'stock.scrap'
@@ -118,7 +118,7 @@ class StockScrap(models.Model):
         self.ensure_one()
         return {
             'name': self.name,
-            'origin': self.origin or self.picking_id.name or self.name,
+            'origin': self.origin or create_origin(self.picking_id) or create_origin(self),
             'company_id': self.company_id.id,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,

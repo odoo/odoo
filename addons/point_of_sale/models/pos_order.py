@@ -12,6 +12,7 @@ import re
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
+from odoo.tools.origin import create_origin
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
 import base64
@@ -595,7 +596,7 @@ class PosOrder(models.Model):
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         invoice_date = fields.Datetime.now() if self.session_id.state == 'closed' else self.date_order
         vals = {
-            'invoice_origin': self.name,
+            'invoice_origin': create_origin(self),
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
@@ -897,7 +898,7 @@ class PosOrder(models.Model):
                     destination_id = picking_type.default_location_dest_id.id
 
                 pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
-                pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
+                pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': create_origin(self)})
 
     def add_payment(self, data):
         """Create a new payment for the order"""
@@ -1268,7 +1269,7 @@ class PosOrderLine(models.Model):
             procurements.append(self.env['procurement.group'].Procurement(
                 line.product_id, product_qty, procurement_uom,
                 line.order_id.partner_id.property_stock_customer,
-                line.name, line.order_id.name, line.order_id.company_id, values))
+                line.name, create_origin(line.order_id), line.order_id.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
 

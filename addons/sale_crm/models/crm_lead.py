@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.osv import expression
-
+from odoo.tools.origin import create_origin
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
@@ -82,7 +82,7 @@ class CrmLead(models.Model):
             'default_partner_id': self.partner_id.id,
             'default_campaign_id': self.campaign_id.id,
             'default_medium_id': self.medium_id.id,
-            'default_origin': self.name,
+            'default_origin': create_origin(self),
             'default_source_id': self.source_id.id,
             'default_company_id': self.company_id.id or self.env.company.id,
             'default_tag_ids': [(6, 0, self.tag_ids.ids)]

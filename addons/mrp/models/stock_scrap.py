@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.tools.origin import create_origin
 
 
 class StockScrap(models.Model):
@@ -28,7 +29,7 @@ class StockScrap(models.Model):
     def _prepare_move_values(self):
         vals = super(StockScrap, self)._prepare_move_values()
         if self.production_id:
-            vals['origin'] = vals['origin'] or self.production_id.name
+            vals['origin'] = vals['origin'] or create_origin(self.production_id)
             if self.product_id in self.production_id.move_finished_ids.mapped('product_id'):
                 vals.update({'production_id': self.production_id.id})
             else:

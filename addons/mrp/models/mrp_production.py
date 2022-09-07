@@ -14,6 +14,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
 from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby
+from odoo.tools.origin import create_origin, union_origins
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 
@@ -870,7 +871,7 @@ class MrpProduction(models.Model):
             action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
             if 'views' in action:
                 action['views'] += [(state, view) for state, view in action['views'] if view != 'form']
-        action['context'] = dict(self._context, default_origin=self.name)
+        action['context'] = dict(self._context, default_origin=create_origin(self))
         return action
 
     def action_toggle_is_locked(self):
@@ -918,7 +919,7 @@ class MrpProduction(models.Model):
             'company_id': self.company_id.id,
             'production_id': self.id,
             'warehouse_id': self.location_dest_id.warehouse_id.id,
-            'origin': self.product_id.partner_ref,
+            'origin': create_origin(self.product_id, self.product_id.partner_ref),
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if not byproduct_id],
@@ -1020,11 +1021,10 @@ class MrpProduction(models.Model):
         return data
 
     def _get_origin(self):
-        origin = self.name
+        origin = create_origin(self) if self.name else False
         if self.orderpoint_id and self.origin:
-            origin = self.origin.replace(
-                '%s - ' % (self.orderpoint_id.display_name), '')
-            origin = '%s,%s' % (origin, self.name)
+            origin = create_origin(self, self.origin.replace('%s - ' % (self.orderpoint_id.display_name), ''))
+            origin = union_origins([origin, create_origin(self)])
         return origin
 
     def _set_qty_producing(self):
@@ -1873,7 +1873,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         action['domain'] = [('production_id', '=', self.id)]
-        action['context'] = dict(self._context, default_origin=self.name)
+        action['context'] = dict(self._context, default_origin=create_origin(self))
         return action
 
     def action_view_reception_report(self):
@@ -2029,7 +2029,7 @@ class MrpProduction(models.Model):
             'product_qty': sum(production.product_uom_qty for production in self),
             'product_uom_id': product_id.uom_id.id,
             'user_id': user_id.id,
-            'origin': ",".join(sorted([production.name for production in self])),
+            'origin':  union_origins([create_origin(p) for p in sorted(list(self), key=lambda p: p.name)]),
         })
 
         for move in production.move_raw_ids:

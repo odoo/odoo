@@ -8,6 +8,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import float_compare, OrderedSet
+from odoo.tools.origin import name_in_origin
 
 
 class StockRule(models.Model):
@@ -133,7 +134,8 @@ class StockRule(models.Model):
         }
         # Use the procurement group created in _run_pull mrp override
         # Preserve the origin from the original stock move, if available
-        if location_dest_id.warehouse_id.manufacture_steps == 'pbm_sam' and values.get('move_dest_ids') and values.get('group_id') and values['move_dest_ids'][0].origin != values['group_id'].name:
+        # NTR Will break this
+        if location_dest_id.warehouse_id.manufacture_steps == 'pbm_sam' and values.get('move_dest_ids') and values.get('group_id') and not name_in_origin(values['move_dest_ids'][0].origin, values['group_id'].name):
             origin = values['move_dest_ids'][0].origin
             mo_values.update({
                 'name': values['group_id'].name,

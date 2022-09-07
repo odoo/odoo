@@ -45,7 +45,8 @@ class Orderpoint(models.Model):
     def _quantity_in_progress(self):
         res = super(Orderpoint, self)._quantity_in_progress()
         for op in self:
-            for pr in self.env['purchase.requisition'].search([('state', '=', 'draft'), ('origin', '=', op.name)]):
+            # NTR this one can be broken
+            for pr in self.env['purchase.requisition'].search([('state', '=', 'draft'), ('origin', 'like', f'%{op.name}%')]):
                 for prline in pr.line_ids.filtered(lambda l: l.product_id.id == op.product_id.id and not l.move_dest_id):
                     res[op.id] += prline.product_uom_id._compute_quantity(prline.product_qty, op.product_uom, round=False)
         return res

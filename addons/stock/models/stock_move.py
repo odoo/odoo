@@ -11,6 +11,9 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import clean_context, OrderedSet, groupby
+from odoo.tools.origin import create_origin, name_in_origin, union_origins
+
+import json
 
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
@@ -810,14 +813,13 @@ class StockMove(models.Model):
     def _merge_moves_fields(self):
         """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """
         state = self._get_relevant_state_among_moves()
-        origin = '/'.join(set(self.filtered(lambda m: m.origin).mapped('origin')))
         return {
             'product_uom_qty': sum(self.mapped('product_uom_qty')),
             'date': min(self.mapped('date')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date')),
             'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
             'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
             'state': state,
-            'origin': origin,
+            'origin': union_origins(list(self.filtered(lambda m: m.origin).mapped('origin'))),
         }
 
     @api.model
@@ -1176,16 +1178,11 @@ class StockMove(models.Model):
         """ return create values for new picking that will be linked with group
         of moves in self.
         """
-        origins = self.filtered(lambda m: m.origin).mapped('origin')
-        origins = list(dict.fromkeys(origins)) # create a list of unique items
-        # Will display source document if any, when multiple different origins
-        # are found display a maximum of 5
-        if len(origins) == 0:
+        origin = union_origins(list(self.filtered(lambda m: m.origin).mapped('origin')))
+
+        if len(json.loads(origin)) == 0:
             origin = False
-        else:
-            origin = ','.join(origins[:5])
-            if len(origins) > 5:
-                origin += "..."
+
         partners = self.mapped('partner_id')
         partner = len(partners) == 1 and partners.id or False
         return {
@@ -1293,7 +1290,17 @@ class StockMove(models.Model):
 
     def _prepare_procurement_origin(self):
         self.ensure_one()
-        return self.group_id and self.group_id.name or (self.origin or self.picking_id.name or "/")
+        if self.group_id:
+            if self.origin and name_in_origin(self.origin, self.group_id.name):
+                return self.origin
+            else:
+                return create_origin(self.group_id)
+        elif self.origin:
+            return self.origin
+        elif self.picking_id:
+            return create_origin(self.picking_id)
+        else:
+            return "[]"
 
     def _prepare_procurement_values(self):
         """ Prepare specific key for moves or other componenets that will be created from a stock rule

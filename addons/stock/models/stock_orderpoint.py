@@ -12,6 +12,7 @@ from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import add, float_compare, frozendict, split_every
+from odoo.tools.origin import create_origin, union_origins
 
 _logger = logging.getLogger(__name__)
 
@@ -501,10 +502,7 @@ class StockWarehouseOrderpoint(models.Model):
                 procurements = []
                 for orderpoint in orderpoints_batch:
                     origins = orderpoint.env.context.get('origins', {}).get(orderpoint.id, False)
-                    if origins:
-                        origin = '%s - %s' % (orderpoint.display_name, ','.join(origins))
-                    else:
-                        origin = orderpoint.name
+                    origin = union_origins(origins) if origins else create_origin(orderpoint)
                     if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
                         date = orderpoint._get_orderpoint_procurement_date()
                         values = orderpoint._prepare_procurement_values(date=date)

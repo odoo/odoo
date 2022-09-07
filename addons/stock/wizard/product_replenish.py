@@ -6,6 +6,7 @@ import datetime
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import clean_context
+from odoo.tools.origin import create_origin
 
 
 class ProductReplenish(models.TransientModel):
@@ -71,7 +72,7 @@ class ProductReplenish(models.TransientModel):
                     uom_reference,
                     self.warehouse_id.lot_stock_id,  # Location
                     _("Manual Replenishment"),  # Name
-                    _("Manual Replenishment"),  # Origin
+                    create_origin(name=_("Manual Replenishment")),  # Origin
                     self.warehouse_id.company_id,
                     self._prepare_run_values()  # Values
                 )

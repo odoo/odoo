@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.origin import create_origin
 from odoo.exceptions import UserError
 
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
@@ -145,7 +146,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         result = self.env["ir.actions.actions"]._for_xml_id('stock.action_picking_tree_all')
         # override the context to get rid of the default filtering on operation type
-        result['context'] = {'default_partner_id': self.partner_id.id, 'default_origin': self.name, 'default_picking_type_id': self.picking_type_id.id}
+        result['context'] = {'default_partner_id': self.partner_id.id, 'default_origin': create_origin(self), 'default_picking_type_id': self.picking_type_id.id}
         # choose the view_mode accordingly
         if not pickings or len(pickings) > 1:
             result['domain'] = [('id', 'in', pickings.ids)]
@@ -220,7 +221,7 @@ class PurchaseOrder(models.Model):
             'partner_id': self.partner_id.id,
             'user_id': False,
             'date': self.date_order,
-            'origin': self.name,
+            'origin': create_origin(self),
             'location_dest_id': self._get_destination_location(),
             'location_id': self.partner_id.property_stock_supplier.id,
             'company_id': self.company_id.id,
@@ -534,7 +535,7 @@ class PurchaseOrderLine(models.Model):
             'price_unit': price_unit,
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
-            'origin': self.order_id.name,
+            'origin': create_origin(self.order_id),
             'description_picking': product.description_pickingin or self.name,
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,

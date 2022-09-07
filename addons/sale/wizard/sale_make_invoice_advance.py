@@ -7,7 +7,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
 
-
 class SaleAdvancePaymentInv(models.TransientModel):
     _name = 'sale.advance.payment.inv'
     _description = "Sales Advance Payment Invoice"

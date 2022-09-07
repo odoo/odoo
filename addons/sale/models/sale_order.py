@@ -11,6 +11,7 @@ from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 from odoo.tools.sql import create_index
+from odoo.tools.origin import create_origin, union_origins
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -963,7 +964,7 @@ class SaleOrder(models.Model):
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(self.partner_invoice_id)).id,
-            'invoice_origin': self.name,
+            'invoice_origin': create_origin(self),
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_user_id': self.user_id.id,
             'payment_reference': self.reference,
@@ -1107,7 +1108,7 @@ class SaleOrder(models.Model):
                 ]
             )
             for _grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
-                origins = set()
+                origins = []
                 payment_refs = set()
                 refs = set()
                 ref_invoice_vals = None
@@ -1116,12 +1117,13 @@ class SaleOrder(models.Model):
                         ref_invoice_vals = invoice_vals
                     else:
                         ref_invoice_vals['invoice_line_ids'] += invoice_vals['invoice_line_ids']
-                    origins.add(invoice_vals['invoice_origin'])
+                    if invoice_vals['invoice_origin']:
+                        origins.append(invoice_vals['invoice_origin'])
                     payment_refs.add(invoice_vals['payment_reference'])
                     refs.add(invoice_vals['ref'])
                 ref_invoice_vals.update({
                     'ref': ', '.join(refs)[:2000],
-                    'invoice_origin': ', '.join(origins),
+                    'invoice_origin': union_origins(origins),
                     'payment_reference': len(payment_refs) == 1 and payment_refs.pop() or False,
                 })
                 new_invoice_vals_list.append(ref_invoice_vals)

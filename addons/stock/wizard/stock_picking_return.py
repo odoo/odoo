@@ -4,7 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
-
+from odoo.tools.origin import create_origin
 
 class ReturnPickingLine(models.TransientModel):
     _name = "stock.return.picking.line"
@@ -115,7 +115,7 @@ class ReturnPicking(models.TransientModel):
             'move_ids': [],
             'picking_type_id': self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id,
             'state': 'draft',
-            'origin': _("Return of %s") % self.picking_id.name,
+            'origin': create_origin(self.picking_id, _("Return of %s") % self.picking_id.name),
         }
         # TestPickShip.test_mto_moves_return, TestPickShip.test_mto_moves_return_extra,
         # TestPickShip.test_pick_pack_ship_return, TestPickShip.test_pick_ship_return, TestPickShip.test_return_lot

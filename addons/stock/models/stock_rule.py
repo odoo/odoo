@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, html_escape
 from odoo.tools.misc import split_every
+from odoo.tools.origin import create_origin
 
 _logger = logging.getLogger(__name__)
 
@@ -201,7 +202,7 @@ class StockRule(models.Model):
         if not company_id:
             company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
         new_move_vals = {
-            'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
+            'origin': move_to_copy.origin or create_origin(move_to_copy.picking_id) or "[]",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_dest_id.id,
             'date': new_date,

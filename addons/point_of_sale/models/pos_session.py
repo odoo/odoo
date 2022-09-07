@@ -8,6 +8,7 @@ from itertools import groupby
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
+from odoo.tools.origin import create_origin
 from odoo.osv.expression import AND, OR
 from odoo.service.common import exp_version
 
@@ -601,7 +602,7 @@ class PosSession(models.Model):
 
         for location_dest_id, lines in lines_grouped_by_dest_location.items():
             pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type)
-            pickings.write({'pos_session_id': self.id, 'origin': self.name})
+            pickings.write({'pos_session_id': self.id, 'origin': create_origin(self)})
 
     def _create_balancing_line(self, data, balancing_account, amount_to_balance):
         if (not float_is_zero(amount_to_balance, precision_rounding=self.currency_id.rounding)):
