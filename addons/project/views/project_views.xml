@@ -521,11 +521,10 @@
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <span colspan="2" class="text-muted" attrs="{'invisible':[('access_instruction_message', '=', '')]}">
-                                        <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field name="access_instruction_message" nolabel="1"/>
+                                        <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field class="d-inline" name="access_instruction_message" nolabel="1"/>
                                     </span>
                                     <span colspan="2" class="text-muted" attrs="{'invisible':[('privacy_visibility_warning', '=', '')]}">
-                                        <i class="fa fa-warning">&amp;nbsp;</i>
-                                        <field name="privacy_visibility_warning" nolabel="1"/>
+                                        <i class="fa fa-warning"/>&amp;nbsp;<field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
                                     </span>
                                 </group>
                                 <group>
