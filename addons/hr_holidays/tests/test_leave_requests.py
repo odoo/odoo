@@ -52,6 +52,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'leave_validation_type': 'manager',
         })
 
+        cls.holidays_type_4 = LeaveType.create({
+            'name': 'Limited with 2 approvals',
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
+            'leave_validation_type': 'both',
+        })
+
         cls.set_employee_create_date(cls.employee_emp_id, '2010-02-03 00:00:00')
         cls.set_employee_create_date(cls.employee_hruser_id, '2010-02-03 00:00:00')
 
@@ -843,3 +850,38 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                     'virtual_leaves_taken': 6,
                 }
             )
+
+    def test_cancel_leave(self):
+        with freeze_time('2020-09-15'):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Annual Time Off',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_4.id,
+                'number_of_days': 20,
+                'state': 'confirm',
+                'date_from': '2020-01-01',
+                'date_to': '2020-12-31',
+            })
+            allocation.action_validate()
+
+            leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_4.id,
+                'date_from': '2020-09-21',
+                'date_to': '2020-09-23',
+                'number_of_days': 3,
+            })
+
+            # A meeting is only created once the leave is validated
+            self.assertFalse(leave.meeting_id)
+            leave.with_user(self.user_hrmanager_id).action_approve()
+            self.assertFalse(leave.meeting_id)
+
+            # A meeting is created in the user's calendar when a leave is validated
+            leave.with_user(self.user_hrmanager_id).action_validate()
+            self.assertTrue(leave.meeting_id.active)
+
+            # The meeting is archived when the leave is cancelled
+            leave.with_user(self.user_employee_id)._action_user_cancel('Cancel leave')
+            self.assertFalse(leave.meeting_id.active)
