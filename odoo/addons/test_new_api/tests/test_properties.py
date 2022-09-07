@@ -154,6 +154,7 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(sql_values_1, {'discussion_color_code': 'orange', 'moderator_partner_id': self.partner_2.id, 'state': 'done'})
         self.assertEqual(sql_values_3, {'discussion_color_code': 'orange', 'moderator_partner_id': self.partner_2.id, 'state': 'done'})
 
+    @mute_logger('odoo.models.unlink')
     def test_properties_field_read_batch(self):
         values = self.message_1.read(['attributes'])[0]['attributes']
         self.assertEqual(len(values), 2)
@@ -179,11 +180,35 @@ class PropertiesCase(TransactionCase):
         with self.assertQueryCount(5), self.assertQueries(expected_queries):
             self.message_1.read(['attributes'])
 
+        # read in batch a lot of records
+        discussions = [self.discussion_1, self.discussion_2]
+        partners = self.env['test_new_api.partner'].create([{'name': f'Test {i}'} for i in range(50)])
+        messages = self.env['test_new_api.message'].create([{
+            'name': f'Test Message {i}',
+            'discussion': discussions[i % 2].id,
+            'author': self.user.id,
+            'attributes': [{
+                'name': 'partner_id',
+                'type': 'many2one',
+                'comodel': 'test_new_api.partner',
+                'value': partner.id,
+                'definition_changed': True,
+            }]
+        } for i, partner in enumerate(partners)])
+
         self.env.invalidate_all()
-        expected_queries += expected_queries[-2:]
-        with self.assertQueryCount(7), self.assertQueries(expected_queries):
-            # 2 more queries for message 2 to verify his partner existence / name_get
-            (self.message_1 | self.message_2).read(['attributes'])
+
+        with self.assertQueryCount(5), self.assertQueries(expected_queries):
+            values = messages.read(['attributes'])
+
+        # remove some partners in the list
+        partners[:20].unlink()
+        self.env.invalidate_all()
+        # 5 queries instead of 25 queries, thanks to the cache values that has been
+        # cleaned (the properties field can trust the cached value, the deleted ids
+        # are not in the cache even if they still exists in the database)
+        with self.assertQueryCount(5):
+            values = messages.read(['attributes'])
 
     def test_properties_field_delete(self):
         """Test to delete a property using the flag "definition_deleted"."""
@@ -807,7 +832,7 @@ class PropertiesCase(TransactionCase):
             'comodel': 'test_new_api.partner',
         }]
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(2):
             self.message_1.attributes = [
                 {
                     "name": "moderator_partner_ids",
@@ -820,7 +845,7 @@ class PropertiesCase(TransactionCase):
             self.assertEqual(self.message_1.attributes[0]['value'], partners[:10].ids)
 
         partners[:5].unlink()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(5):
             self.assertEqual(self.message_1.attributes[0]['value'], partners[5:10].ids)
 
         partners[5].unlink()
@@ -830,7 +855,9 @@ class PropertiesCase(TransactionCase):
 
         # need to wait next write to clean data in database
         # a single read won't clean the removed many2many
-        self.message_1.attributes = self.message_1.read(['attributes'])[0]['attributes']
+        attributes = self.message_1.read(['attributes'])[0]['attributes']
+        self.message_1.invalidate_recordset()
+        self.message_1.attributes = attributes
 
         sql_values = self._get_sql_properties(self.message_1)
         self.assertEqual(sql_values, {'moderator_partner_ids': partners[6:10].ids})
@@ -898,14 +925,12 @@ class PropertiesCase(TransactionCase):
             }])
 
     def test_properties_field_performance(self):
-        with self.assertQueryCount(4):
-            self.message_1.attributes
+        self.env.invalidate_all()
+        with self.assertQueryCount(5):
+            # read to put the partner name in cache
+            self.message_1.read(['attributes'])
 
-        expected = ['SELECT "test_new_api_partner".id FROM "test_new_api_partner" WHERE "test_new_api_partner".id IN %s']
-        with self.assertQueryCount(1, msg='Must read value from cache'), self.assertQueries(expected):
-            # still cost 1 SQL query to check existence because the ORM stores
-            # the raw SQL response in cache (not the result of convert_to_cache)
-            # so the value in cache is not verified (see models.py@_read)
+        with self.assertQueryCount(0, msg='Must read value from cache'):
             self.message_1.attributes
 
         expected = ['UPDATE "test_new_api_message" SET "attributes" = %s, "write_date" = %s, "write_uid" = %s WHERE id IN %s']
@@ -1034,7 +1059,7 @@ class PropertiesCase(TransactionCase):
 
         # change the definition record, change the definition and add default values
         self.assertEqual(message.discussion, self.discussion_2)
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(5):
             message.discussion = self.discussion_1
         self.assertEqual(
             self.discussion_1.attributes_definition,
@@ -1189,8 +1214,10 @@ class PropertiesCase(TransactionCase):
         """Check the access right related to the Properties fields."""
         MultiTag = type(self.env['test_new_api.multi.tag'])
 
-        def _mocked_check_access_rights(*args, **kwargs):
-            raise AccessError('')
+        def _mocked_check_access_rights(operation, raise_exception=True):
+            if raise_exception:
+                raise AccessError('')
+            return False
 
         # a user read a properties with a many2one to a record he doesn't have access to
         tag = self.env['test_new_api.multi.tag'].create({'name': 'Test Tag'})

@@ -3677,6 +3677,12 @@ class BaseModel(metaclass=MetaModel):
             if field.store and field.translate:
                 translated_field_names.append(field.name)
 
+            if field.type == 'properties':
+                # force calling fields.read for properties field because
+                # we want to read all relational properties in batch
+                # (and check their existence in batch as well)
+                other_fields.append(field)
+
         if column_fields:
             cr, context = self.env.cr, self.env.context
 
