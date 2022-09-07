@@ -193,6 +193,16 @@ QUnit.module("Fields", (hooks) => {
             cell.querySelector(".o-checkbox input:checked").disabled,
             "input should be disabled in readonly mode"
         );
+        await click(cell, ".o-checkbox");
+        assert.hasClass(
+            document.querySelector("tr.o_data_row:nth-child(1)"),
+            "o_selected_row",
+            "the row is now selected, in edition"
+        );
+        assert.ok(
+            !cell.querySelector(".o-checkbox input:checked").disabled,
+            "input should now be enabled"
+        );
         await click(cell);
         assert.notOk(
             cell.querySelector(".o-checkbox input:checked").disabled,
