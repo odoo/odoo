@@ -27,12 +27,11 @@ are agreements you have with vendors to benefit from a predetermined pricing.
     ],
     'assets': {
         'web.assets_backend': [
-            'purchase_requisition/static/src/js/purchase_order_alternatives_widget.js',
-            'purchase_requisition/static/src/js/purchase_order_compare_list_renderer.js',
-            'purchase_requisition/static/src/js/purchase_order_line_compare_list_controller.js',
-            'purchase_requisition/static/src/js/purchase_order_line_compare_list_renderer.js',
-            'purchase_requisition/static/src/js/purchase_order_line_compare_list_view.js',
-            'purchase_requisition/static/src/xml/purchase_order_line_compare.xml',
+            'purchase_requisition/static/src/*/**.js',
+            'purchase_requisition/static/src/views/*/**.js',
+        ],
+        'web.assets_qweb': [
+            'purchase_requisition/static/src/*/**.xml',
         ],
     },
     'license': 'LGPL-3',
