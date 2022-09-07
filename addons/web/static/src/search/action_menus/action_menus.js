@@ -98,7 +98,7 @@ export class ActionMenus extends Component {
         const context = makeContext([this.props.context, activeIdsContext]);
         return this.actionService.doAction(action.id, {
             additionalContext: context,
-            on_close: () => this.trigger("reload"),
+            onClose: this.props.onActionExecuted,
         });
     }
 
@@ -141,5 +141,9 @@ ActionMenus.props = {
             other: { type: Array, optional: true },
         },
     },
+    onActionExecuted: { type: Function, optional: true },
+};
+ActionMenus.defaultProps = {
+    onActionExecuted: () => {},
 };
 ActionMenus.template = "web.ActionMenus";

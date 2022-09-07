@@ -7460,6 +7460,53 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "Action partner");
     });
 
+    QUnit.test("execute ActionMenus actions", async function (assert) {
+        const actionService = {
+            start() {
+                return {
+                    doAction(id, { additionalContext, onClose }) {
+                        assert.step(JSON.stringify({ action_id: id, context: additionalContext }));
+                        onClose(); // simulate closing of target new action's dialog
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `<form><field name="bar"/></form>`,
+            info: {
+                actionMenus: {
+                    action: [
+                        {
+                            id: 29,
+                            name: "Action partner",
+                        },
+                    ],
+                },
+            },
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle:contains(Action)");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Action Partner");
+
+        assert.verifySteps([
+            "get_views",
+            "read",
+            `{"action_id":29,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1],"active_model":"partner","active_domain":[]}}`,
+            "read",
+        ]);
+    });
+
     QUnit.test("control panel is not present in FormViewDialogs", async function (assert) {
         serverData.models.partner.records[0].product_id = 37;
         serverData.views = {

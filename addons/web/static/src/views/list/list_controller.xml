@@ -22,7 +22,8 @@
                             domain="props.domain"
                             items="getActionMenuItems()"
                             isDomainSelected="model.root.isDomainSelected"
-                            resModel="model.root.resModel"/>
+                            resModel="model.root.resModel"
+                            onActionExecuted="() => model.load()"/>
                     </t>
                 </t>
                 <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" allowSelectors="props.allowSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord"/>
