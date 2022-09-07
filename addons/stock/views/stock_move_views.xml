@@ -333,7 +333,7 @@
                             </group>
                         </group>
                         <group name="origin_grp" string="Origin" groups="base.group_no_one" >
-                            <field name="origin"/>
+                            <field name="origin" widget="origin_widget"/>
                             <field name="group_id"/>
                             <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                         </group>
@@ -463,7 +463,7 @@
                     <field name="date_deadline" optional="hide"/>
                     <field name="picking_id" string="Reference" invisible="1"/>
                     <field name="sequence" invisible="1"/>
-                    <field name="origin" optional="show"/>
+                    <field name="origin" optional="show" widget="origin_widget"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>

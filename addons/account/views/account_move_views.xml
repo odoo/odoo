@@ -406,7 +406,7 @@
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
                     <field name="date" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')" string="Accounting Date"/>
                     <field name="invoice_date_due" widget="remaining_days" optional="show" attrs="{'invisible': [['payment_state', 'in', ('paid', 'in_payment', 'reversed')]]}"/>
-                    <field name="invoice_origin" optional="hide" string="Source Document"/>
+                    <field name="invoice_origin" optional="hide" string="Source Document" widget="origin_widget"/>
                     <field name="payment_reference" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')"/>
                     <field name="ref" optional="hide"/>
                     <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Salesperson" widget="many2one_avatar_user"/>
@@ -1162,7 +1162,7 @@
                                         <field name="ref" nolabel="1"/>
                                         <field name="user_id" invisible="1" force_save="1"/>
                                         <field name="invoice_user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
-                                        <field name="invoice_origin" string="Source Document" force_save="1" invisible="1"/>
+                                        <field name="invoice_origin" string="Source Document" force_save="1" invisible="1" widget="origin_widget"/>
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': bank_partner_id}"
                                                domain="[('partner_id', '=', bank_partner_id)]"

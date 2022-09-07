@@ -145,7 +145,7 @@
                         <field name="date_end" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
                         <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
                         <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
-                        <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="origin"  widget="origin_widget" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                 </group>
@@ -204,7 +204,7 @@
                 <field name="ordering_date" optional="show"/>
                 <field name="schedule_date" optional="hide"/>
                 <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" attrs="{'invisible': [('state','in', ('done', 'cancel'))]}"/>
-                <field name="origin" optional="show"/>
+                <field name="origin"  widget="origin_widget" optional="show"/>
                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>

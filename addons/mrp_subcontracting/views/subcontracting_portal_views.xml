@@ -17,7 +17,7 @@
                         <field name="state" invisible='1'/>
                         <field name="scheduled_date" attrs="{'required': [('id', '!=', False)]}" decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now" decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date" decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
                         <field name="date_deadline" attrs="{'invisible': ['|', ('state', 'in', ('done', 'cancel')), ('date_deadline', '=', False)]}" decoration-danger="date_deadline and date_deadline &lt; current_date" decoration-bf="date_deadline and date_deadline &lt; current_date"/>
-                        <field name="origin" placeholder="e.g. PO0032"/>
+                        <field name="origin" placeholder="e.g. PO0032" widget="origin_widget"/>
                     </group>
                     <notebook>
                         <page string="Operations" name="operations">

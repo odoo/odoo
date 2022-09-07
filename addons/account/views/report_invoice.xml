@@ -71,7 +71,7 @@
                             </div>
                             <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_origin" name="origin">
                                 <strong>Source:</strong>
-                                <p class="m-0" t-field="o.invoice_origin"/>
+                                <p class="m-0" t-field="o.invoice_origin_names" widget="origin_widget"/>
                             </div>
                             <div class="col-auto col-3 mw-100 mb-2" t-if="o.partner_id.ref" name="customer_code">
                                 <strong>Customer Code:</strong>

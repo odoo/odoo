@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="scheduled_date" color="partner_id" event_limit="5">
                     <field name="partner_id" filters="1"/>
-                    <field name="origin"/>
+                    <field name="origin" widget="origin_widget"/>
                     <field name="picking_type_id"/>
                     <field name="state"/>
                 </calendar>
@@ -82,7 +82,7 @@
                         decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
                     <field name="date_done" string="Effective Date" optional="hide"/>
-                    <field name="origin" optional="show"/>
+                    <field name="origin" optional="show" widget="origin_widget"/>
                     <field name="backorder_id" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
@@ -222,7 +222,7 @@
                                 decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
                                 decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
                             <field name="date_done" string="Effective Date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
-                            <field name="origin" placeholder="e.g. PO0032"/>
+                            <field name="origin" placeholder="e.g. PO0032" widget="origin_widget"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"
                                    attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
                         </group>
