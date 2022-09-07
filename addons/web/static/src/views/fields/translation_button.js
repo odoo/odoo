@@ -17,7 +17,6 @@ const { Component, useEnv } = owl;
  */
 export function useTranslationDialog() {
     const dialog = useService("dialog");
-    const rpc = useService("rpc");
     const env = useEnv();
 
     async function openTranslationDialog({ record, fieldName, updateField }) {
@@ -43,22 +42,14 @@ export function useTranslationDialog() {
                 return;
             }
         }
-        const { resModel, resId, context } = record;
-        const result = await rpc("/web/dataset/call_button", {
-            model: "ir.translation",
-            method: "translate_fields",
-            args: [resModel, resId, fieldName],
-            kwargs: { context },
-        });
+        const { resModel, resId } = record;
 
         dialog.add(TranslationDialog, {
-            domain: result.domain,
-            searchName: result.context.search_default_name,
             fieldName: fieldName,
+            resId: resId,
+            resModel: resModel,
             userLanguageValue: record.data[fieldName] || "",
             isComingFromTranslationAlert: false,
-            isText: result.context.translation_type === "text",
-            showSource: result.context.translation_show_src,
             updateField,
         });
     }

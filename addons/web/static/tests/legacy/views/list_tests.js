@@ -123,31 +123,6 @@ QUnit.module('LegacyViews', {
                     {id: "2-20170808020000", name: "virtual"},
                 ]
             },
-            "ir.translation": {
-                fields: {
-                    lang_code: {type: "char"},
-                    src: {type: "char"},
-                    value: {type: "char"},
-                    res_id: {type: "integer"},
-                    name: {type: "char"},
-                    lang: {type: "char"},
-                },
-                records: [{
-                    id: 99,
-                    res_id: 1,
-                    value: '',
-                    lang_code: 'en_US',
-                    lang: 'en_US',
-                    name: 'foo,foo'
-                },{
-                    id: 100,
-                    res_id: 1,
-                    value: '',
-                    lang_code: 'fr_BE',
-                    lang: 'fr_BE',
-                    name: 'foo,foo'
-                }]
-            },
         };
 
         serverData = { models: this.data };
@@ -3620,11 +3595,11 @@ QUnit.module('LegacyViews', {
             model: 'foo',
             data: this.data,
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    return Promise.resolve({
-                        domain: [],
-                        context: {search_default_name: 'foo,foo'},
-                    });
+                if (route === "/web/dataset/call_kw/foo/get_field_translations") {
+                    return Promise.resolve([
+                        [{lang: "en_US", source: "yop", value: "yop"}, {lang: "fr_BE", source: "yop", value: "valeur français"}],
+                        {translation_type: "char", translation_show_source: false},
+                    ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([["en_US","English"], ["fr_BE", "Frenglish"]]);
