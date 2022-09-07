@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import AccessError
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests.common import Form, TransactionCase, users
 from odoo.tools import mute_logger
 
 
@@ -20,6 +20,12 @@ class PropertiesCase(TransactionCase):
         cls.user = cls.env.user
         cls.partner = cls.env['test_new_api.partner'].create({'name': 'Test Partner Properties'})
         cls.partner_2 = cls.env['test_new_api.partner'].create({'name': 'Test Partner Properties 2'})
+
+        cls.test_user = cls.env['res.users'].create({
+            'name': 'Test',
+            'login': 'test',
+            'company_id': cls.env.company.id,
+        })
 
         attributes_definition_1 = [{
             'name': 'discussion_color_code',
@@ -905,6 +911,40 @@ class PropertiesCase(TransactionCase):
                 'value': [(partners[9].id, partners[9].display_name)],
             }])
 
+    @users('test')
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    def test_properties_field_many2many_filtering(self):
+        # a user read a properties with a many2many and he doesn't have access to all records
+        tags = self.env['test_new_api.multi.tag'].create(
+            [{'name': f'Test Tag {i}'} for i in range(10)])
+
+        message = self.env['test_new_api.message'].create({
+            'name': 'Test Message',
+            'discussion': self.discussion_1.id,
+            'author': self.user.id,
+            'attributes': [{
+                'name': 'My Tags',
+                'type': 'many2many',
+                'comodel': 'test_new_api.multi.tag',
+                'value': tags.ids,
+                'definition_changed': True,
+            }],
+        })
+
+        self.env['ir.rule'].sudo().create({
+            'name': 'test_rule_tags',
+            'model_id': self.env['ir.model']._get('test_new_api.multi.tag').id,
+            'domain_force': [('name', 'not in', tags[5:].mapped('name'))],
+            'perm_read': True,
+            'perm_create': True,
+            'perm_write': True,
+        })
+
+        self.env.invalidate_all()
+
+        values = message.read(['attributes'])[0]['attributes'][0]['value']
+        self.assertEqual(values, [(tag.id, None if i >= 5 else tag.name) for i, tag in enumerate(tags.sudo())])
+
     def test_properties_field_performance(self):
         with self.assertQueryCount(4):
             self.message_1.attributes
@@ -1214,7 +1254,7 @@ class PropertiesCase(TransactionCase):
         self.env.invalidate_all()
         with patch.object(MultiTag, 'check_access_rights', side_effect=_mocked_check_access_rights):
             values = self.message_1.read(['attributes'])[0]['attributes'][0]
-        self.assertEqual(values['value'], (tag.id, 'No Access'))
+        self.assertEqual(values['value'], (tag.id, None))
 
     def _get_sql_properties(self, message):
         self.env.flush_all()
