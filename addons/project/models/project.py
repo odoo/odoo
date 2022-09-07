@@ -2043,6 +2043,9 @@ class Task(models.Model):
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self}
 
+        if "personal_stage_type_id" in vals and not vals['personal_stage_type_id']:
+            del vals['personal_stage_type_id']
+
         result = super(Task, tasks).write(vals)
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
