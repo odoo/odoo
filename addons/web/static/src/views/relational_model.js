@@ -1754,6 +1754,33 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
 
     /**
+     * @param {number} resId
+     * @param {boolean} [atFirstPosition]
+     * @returns {Promise<Record>} the newly created record
+     */
+    async addExistingRecord(resId, atFirstPosition) {
+        const newRecord = this.model.createDataPoint("record", {
+            resModel: this.resModel,
+            fields: this.fields,
+            activeFields: this.activeFields,
+            parentActiveFields: this.activeFields,
+            onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+            defaultContext: this.defaultContext,
+            rawContext: {
+                parent: this.rawContext,
+                make: () => this.context,
+            },
+            resId,
+        });
+        if (this.model.useSampleModel) {
+            this.model.useSampleModel = false;
+            await this.load();
+        }
+        await this.model.keepLast.add(this.model.mutex.exec(() => newRecord.load()));
+        return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
+    }
+
+    /**
      * @param {Record} record
      * @param {number} [index]
      * @returns {Record}
@@ -2446,6 +2473,11 @@ export class Group extends DataPoint {
         this.count++;
         return this.list.addRecord(record, index);
     }
+
+    addExistingRecord(resId, atFirstPosition = false) {
+        this.count++;
+        return this.list.addExistingRecord(resId, atFirstPosition);
+    } 
 
     createRecord(params = {}, atFirstPosition = false) {
         this.count++;
