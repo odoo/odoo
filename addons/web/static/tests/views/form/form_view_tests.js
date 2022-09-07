@@ -635,6 +635,46 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector('.o_field_widget[name="foo"]'), "text-danger");
     });
 
+    QUnit.test("decoration-bf works on fields", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="display_name" decoration-bf="int_field &lt; 5"/>
+                    <field name="foo" decoration-bf="int_field &gt; 5"/>
+                </form>`,
+            resId: 2,
+        });
+        assert.doesNotHaveClass(
+            target.querySelector('.o_field_widget[name="display_name"]'),
+            "fw-bold"
+        );
+        assert.hasClass(target.querySelector('.o_field_widget[name="foo"]'), "fw-bold");
+    });
+
+    QUnit.test("decoration-it works on fields", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="display_name" decoration-it="int_field &lt; 5"/>
+                    <field name="foo" decoration-it="int_field &gt; 5"/>
+                </form>`,
+            resId: 2,
+        });
+        assert.doesNotHaveClass(
+            target.querySelector('.o_field_widget[name="display_name"]'),
+            "fst-italic"
+        );
+        assert.hasClass(target.querySelector('.o_field_widget[name="foo"]'), "fst-italic");
+    });
+
     QUnit.test("decoration on widgets are reevaluated if necessary", async function (assert) {
         await makeView({
             type: "form",
