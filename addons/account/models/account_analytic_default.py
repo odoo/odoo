@@ -33,6 +33,7 @@ class AccountAnalyticDefault(models.Model):
     @api.model
     def account_get(self, product_id=None, partner_id=None, account_id=None, user_id=None, date=None, company_id=None):
         domain = []
+        analytic_id = self.env.context.get('analytic_id')
         if product_id:
             domain += ['|', ('product_id', '=', product_id)]
         domain += [('product_id', '=', False)]
@@ -48,6 +49,8 @@ class AccountAnalyticDefault(models.Model):
         if user_id:
             domain += ['|', ('user_id', '=', user_id)]
         domain += [('user_id', '=', False)]
+        if analytic_id:
+            domain += [('analytic_id', '=', analytic_id)]
         if date:
             domain += ['|', ('date_start', '<=', date), ('date_start', '=', False)]
             domain += ['|', ('date_stop', '>=', date), ('date_stop', '=', False)]
@@ -60,6 +63,8 @@ class AccountAnalyticDefault(models.Model):
             if rec.account_id: index += 1
             if rec.company_id: index += 1
             if rec.user_id: index += 1
+            if rec.analytic_id:
+                index += 1
             if rec.date_start: index += 1
             if rec.date_stop: index += 1
             if index > best_index:
