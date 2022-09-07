@@ -1674,6 +1674,7 @@ QUnit.module("Fields", (hooks) => {
 
         await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
         assert.containsNone(target, ".o-autocomplete.dropdown li.o_m2o_dropdown_option");
+        assert.containsOnce(target, ".o-autocomplete.dropdown li.o_m2o_no_result");
     });
 
     QUnit.test("Many2ManyTagsField with attribute 'can_create' set to false", async (assert) => {
