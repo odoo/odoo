@@ -134,14 +134,20 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
     let maxRowEnd = 0;
     const columnSpans = [];
     const columnCount = columnEls.length; // number of column in the grid.
+    const imageColumns = []; // array of boolean telling if it is a column with only an image.
+
+    // Checking if all the columns have a background color to take that into
+    // account when computing their size and padding (to make them look good).
+    const allBackgroundColor = [...columnEls].every(columnEl => columnEl.classList.contains('o_cc'));
+
     for (const columnEl of columnEls) {
         const style = window.getComputedStyle(columnEl);
         // Horizontal placement.
         const columnLeft = columnEl.offsetLeft;
         // Getting the width of the column.
         const paddingLeft = parseFloat(style.paddingLeft);
-        const width = parseFloat(columnEl.scrollWidth) - 2 * paddingLeft;
-        const columnSpan = Math.ceil((width + columnGap) / (columnSize + columnGap));
+        const width = parseFloat(columnEl.scrollWidth) - (allBackgroundColor ? 0 : 2 * paddingLeft);
+        const columnSpan = Math.round((width + columnGap) / (columnSize + columnGap));
         const columnStart = Math.round(columnLeft / (columnSize + columnGap)) + 1;
         const columnEnd = columnStart + columnSpan;
 
@@ -152,9 +158,9 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         const paddingBottom = parseFloat(style.paddingBottom);
         const rowOffsetTop = Math.floor((paddingTop + rowGap) / (rowSize + rowGap));
         // Getting the height of the column.
-        const height = parseFloat(columnEl.scrollHeight) - paddingTop - paddingBottom;
+        const height = parseFloat(columnEl.scrollHeight) - (allBackgroundColor ? 0 : paddingTop + paddingBottom);
         const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
-        const rowStart = Math.round(columnTop / (rowSize + rowGap)) + 1 + rowOffsetTop;
+        const rowStart = Math.round(columnTop / (rowSize + rowGap)) + 1 + (allBackgroundColor ? 0 : rowOffsetTop);
         const rowEnd = rowStart + rowSpan;
 
         columnEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`;
@@ -177,6 +183,17 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
 
         maxRowEnd = Math.max(rowEnd, maxRowEnd);
         columnSpans.push(columnSpan);
+    }
+
+    // If all the columns have a background color, set their padding to the
+    // original padding of the first column.
+    if (allBackgroundColor) {
+        const style = window.getComputedStyle(columnEls[0]);
+        const paddingY = style.paddingTop;
+        const paddingX = style.paddingLeft;
+        const rowEl = columnEls[0].parentNode;
+        rowEl.style.setProperty('--grid-item-padding-y', paddingY);
+        rowEl.style.setProperty('--grid-item-padding-x', paddingX);
     }
 
     // Removing padding and offset classes.
