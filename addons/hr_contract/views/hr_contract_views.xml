@@ -33,7 +33,10 @@
                                 <span class="o_stat_value text-danger">
                                    <field name="contracts_count"/>
                                 </span>
-                                <span class="o_stat_text text-danger">
+                                <span attrs="{'invisible' : [('contracts_count', '!=', 1)]}" class="o_stat_text text-danger" >
+                                    Contract
+                                </span>
+                                <span attrs="{'invisible' : [('contracts_count', '=', 1)]}" class="o_stat_text text-danger">
                                     Contracts
                                 </span>
                             </div>
