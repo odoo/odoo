@@ -187,13 +187,14 @@ registerModel({
             } else {
                 const { args, method, model, kwargs = {} } = params;
                 const { domain, fields, groupBy } = kwargs;
+                delete kwargs.fields;
 
                 const ormService = 'shadow' in options ? this.env.services.orm.silent : this.env.services.orm;
                 switch (method) {
                     case 'create':
                         return ormService.create(model, args[0], kwargs);
                     case 'read':
-                        return ormService.read(model, args[0], args.length > 1 ? args[1] : undefined, kwargs);
+                        return ormService.read(model, args[0], args.length > 1 ? args[1] : fields, kwargs);
                     case 'read_group':
                         return ormService.readGroup(model, domain, fields, groupBy, kwargs);
                     case 'search':
