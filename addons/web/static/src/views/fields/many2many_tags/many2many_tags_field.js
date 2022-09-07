@@ -257,6 +257,7 @@ Many2ManyTagsField.extractProps = ({ attrs, field }) => {
         colorField: attrs.options.color_field,
         nameCreateField: attrs.options.create_name_field,
         relation: field.relation,
+        canCreate,
         canQuickCreate: canCreate && !noQuickCreate,
         canCreateEdit: canCreate && !noCreateEdit,
         createDomain: attrs.options.create,
