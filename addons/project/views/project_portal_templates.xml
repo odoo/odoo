@@ -128,7 +128,11 @@
                     <tbody>
                         <tr t-if="not groupby == 'none'" class="table-light">
                             <th t-if="groupby == 'project'" t-attf-colspan="{{grouped_tasks_colspan}}">
-                                <span t-field="tasks[0].sudo().project_id.name"/></th>
+                                <!-- This div is necessary for documents_project_sale -->
+                                <div name="project_name" class="d-flex w-100 align-items-center">
+                                    <span t-field="tasks[0].sudo().project_id.name"/>
+                                </div>
+                            </th>
                             <th t-if="groupby == 'milestone'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <span t-if="tasks[0].sudo().milestone_id and tasks[0].sudo().allow_milestones"
                                       class="text-truncate"
