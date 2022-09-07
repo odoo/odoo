@@ -8,7 +8,7 @@
         </t>
     </xpath>
     <xpath expr="//tr[@class='o_data_row']" position="attributes">
-        <attribute name="t-if">pageFilter(record, list.records)</attribute>
+        <attribute name="t-if">recordFilter(record, list.records)</attribute>
     </xpath>
 </t>
 
@@ -17,7 +17,7 @@
         <attribute name="activeWebsite">state.activeWebsite</attribute>
     </xpath>
     <xpath expr="//Layout" position="inside">
-        <t t-set-slot="control-panel-website-extra-actions" t-if="props.resModel === 'website.page'">
+        <t t-set-slot="control-panel-website-extra-actions">
             <div class="btn-group" role="toolbar" aria-label="Main actions">
                 <button class="btn btn-light dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="me-1 fa fa-globe"/><span t-esc="state.activeWebsite.name"/>
