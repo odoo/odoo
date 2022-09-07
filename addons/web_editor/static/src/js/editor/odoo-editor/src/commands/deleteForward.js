@@ -71,8 +71,8 @@ Text.prototype.oDeleteForward = function (offset, alreadyMoved = false) {
     const parentElement = this.parentElement;
 
     if (offset === this.nodeValue.length) {
-        // Delete at the end of a text node is not a specific case to
-        // handle, let the element implementation handle it.
+        // Delete at the end of a text node is not a specific case to handle,
+        // let the element implementation handle it.
         parentElement.oDeleteForward([...parentElement.childNodes].indexOf(this) + 1);
         return;
     }
@@ -124,7 +124,14 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
     }
 
     if (firstLeafNode && (isFontAwesome(firstLeafNode) || isNotEditableNode(firstLeafNode))) {
+        const nextSibling = firstLeafNode.nextSibling;
+        const nextSiblingText = nextSibling ? nextSibling.textContent : '';
         firstLeafNode.remove();
+        if (isEditorTab(firstLeafNode) && nextSiblingText[0] === '\u200B') {
+            // When deleting an editor tab, we need to ensure it's related ZWS
+            // il deleted as well.
+            nextSibling.textContent = nextSiblingText.replace('\u200B', '');
+        }
         return;
     }
     if (

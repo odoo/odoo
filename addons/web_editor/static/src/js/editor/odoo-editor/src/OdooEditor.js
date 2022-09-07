@@ -3031,7 +3031,7 @@ export class OdooEditor extends EventTarget {
             } else if (closestTag === 'TABLE') {
                 this._onTabulationInTable(ev);
             } else if (!ev.shiftKey) {
-                this.execCommand('insert', '\u00A0 \u00A0\u00A0');
+                this.execCommand('insert', parseHTML('<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B'));
             }
             ev.preventDefault();
             ev.stopPropagation();
@@ -3159,7 +3159,7 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean}
      */
     isSelectionInEditable(selection) {
-        selection = selection || this.document.getSelection()
+        selection = selection || this.document.getSelection();
         return selection && selection.anchorNode && this.editable.contains(selection.anchorNode) &&
             this.editable.contains(selection.focusNode);
     }
@@ -3259,6 +3259,10 @@ export class OdooEditor extends EventTarget {
         // at the end of the edition (see cleanForSave())
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             el.setAttribute('data-oe-keep-contenteditable', '');
+        }
+        // Flag elements .oe-tabs contenteditable=false.
+        for (const el of element.querySelectorAll('.oe-tabs')) {
+            el.setAttribute('contenteditable', 'false');
         }
     }
 
