@@ -195,15 +195,9 @@ class PurchaseOrder(models.Model):
         }
 
     def action_compare_alternative_lines(self):
-        best_price_ids, best_date_ids, best_price_unit_ids = self.get_tender_best_lines()
         ctx = dict(
             self.env.context,
             search_default_groupby_product=True,
-            params={
-                'best_price_ids': best_price_ids,
-                'best_date_ids': best_date_ids,
-                'best_price_unit_ids': best_price_unit_ids,
-            },
         )
         view_id = self.env.ref('purchase_requisition.purchase_order_line_compare_tree').id
         return {

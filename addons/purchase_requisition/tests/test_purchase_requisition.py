@@ -150,11 +150,13 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_1.order_line.date_planned += timedelta(days=1)
         alt_po_1.order_line.price_unit = unit_price - 10
         action = orig_po.action_compare_alternative_lines()
-        params = action['context']['params']
-        best_price_pol = self.env['purchase.order.line'].browse(params['best_price_ids'])
-        best_date_pol = self.env['purchase.order.line'].browse(params['best_date_ids'])
+        best_price_ids, best_date_ids, best_price_unit_ids = orig_po.get_tender_best_lines()
+        best_price_pol = self.env['purchase.order.line'].browse(best_price_ids)
+        best_date_pol = self.env['purchase.order.line'].browse(best_date_ids)
+        best_unit_price_pol = self.env['purchase.order.line'].browse(best_price_unit_ids)
         self.assertEqual(best_price_pol.order_id.id, alt_po_1.id, "Best price PO line was not correctly calculated")
         self.assertEqual(best_date_pol.order_id.id, orig_po.id, "Best date PO line was not correctly calculated")
+        self.assertEqual(best_unit_price_pol.order_id.id, alt_po_1.id, "Best unit price PO line was not correctly calculated")
 
         # second flow: create extra alt PO, check that all 3 POs are correctly auto-linked
         action = orig_po.action_create_alternative()
