@@ -909,6 +909,29 @@ class PropertiesCase(TransactionCase):
                 'value': [(partners[9].id, partners[9].display_name)],
             }])
 
+    def test_properties_field_many2many_filtering(self):
+        # a user read a properties with a many2many and he doesn't have access to all records
+        MultiTag = type(self.env['test_new_api.multi.tag'])
+        tags = self.env['test_new_api.multi.tag'].create(
+            [{'name': f'Test Tag {i}'} for i in range(10)])
+        self.message_1.attributes = [{
+            'name': 'My Tags',
+            'type': 'many2many',
+            'comodel': 'test_new_api.multi.tag',
+            'value': tags.ids,
+            'definition_changed': True,
+        }]
+
+        def _mocked_filter_access_rules_m2m(*args, **kwargs):
+            # the current user has access to 50% of the tags
+            return tags[::2]
+
+        self.env.invalidate_all()
+        with patch.object(MultiTag, '_filter_access_rules', side_effect=_mocked_filter_access_rules_m2m):
+            values = self.message_1.read(['attributes'])[0]['attributes'][0]['value']
+
+        self.assertEqual(values, [(tag.id, None if i % 2 else tag.name) for i, tag in enumerate(tags)])
+
     def test_properties_field_performance(self):
         with self.assertQueryCount(4):
             self.message_1.attributes
@@ -1218,7 +1241,7 @@ class PropertiesCase(TransactionCase):
         self.env.invalidate_all()
         with patch.object(MultiTag, 'check_access_rights', side_effect=_mocked_check_access_rights):
             values = self.message_1.read(['attributes'])[0]['attributes'][0]
-        self.assertEqual(values['value'], (tag.id, 'No Access'))
+        self.assertEqual(values['value'], (tag.id, None))
 
     def _get_sql_properties(self, message):
         self.env.flush_all()

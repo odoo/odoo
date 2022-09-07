@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -40,6 +41,8 @@ export class PropertyValue extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+
+        this.noAccessMessage = _lt('No Access');
 
         this.openMany2X = useOpenMany2XRecord({
             resModel: this.props.model,
@@ -97,18 +100,20 @@ export class PropertyValue extends Component {
                 return [];
             }
 
-            // Convert to TagList component format
+            // Convert to TagsList component format
             return value.map((many2manyValue) => {
+                const hasAccess = many2manyValue[1] !== null;
                 return {
                     id: many2manyValue[0],
-                    text: many2manyValue[1],
-                    onClick: async () =>
-                        await this._openRecord(this.props.comodel, many2manyValue[0]),
+                    text: hasAccess ? many2manyValue[1] : this.noAccessMessage,
+                    onClick: hasAccess
+                        && (async () => await this._openRecord(this.props.comodel, many2manyValue[0])),
                     onDelete:
-                        !this.props.readonly && (() => this.onMany2manyDelete(many2manyValue[0])),
+                        !this.props.readonly && hasAccess
+                        && (() => this.onMany2manyDelete(many2manyValue[0])),
                     colorIndex: 0,
                     img: this.showAvatar
-                        ? `/web/image/${this.props.comodel}/${many2manyValue[0]}/avatar_128`
+                        ? `/web/image/${this.props.comodel}/${hasAccess ? many2manyValue[0] : 0}/avatar_128`
                         : null,
                 };
             });
