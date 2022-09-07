@@ -116,6 +116,16 @@ export class PropertiesField extends Component {
             return true;
         }
 
+        if (event.target.closest(".o_tag_popover")) {
+            // tag color popover
+            return true;
+        }
+
+        if (event.target.closest(".o_field_selector_popover")) {
+            // domain selector
+            return true;
+        }
+
         return false;
     }
 
