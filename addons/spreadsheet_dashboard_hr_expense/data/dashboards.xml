@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_expense" model="spreadsheet.dashboard">
+        <field name="name">Expenses</field>
+        <field name="data" type="base64" file="spreadsheet_dashboard_hr_expense/data/files/expense_dashboard.json"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_finance"/>
+        <field name="group_ids" eval="[Command.link(ref('hr_expense.group_hr_expense_manager'))]"/>
+        <field name="sequence">40</field>
+    </record>
+
+</odoo>
