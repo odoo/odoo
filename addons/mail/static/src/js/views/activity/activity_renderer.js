@@ -31,7 +31,7 @@ class ActivityRecordAdapter extends ComponentAdapter {
 }
 
 /**
- * Owl Component Adapter for ActivityCell which is BasicActivity (AbstractField)
+ * Owl Component Adapter for ActivityCell which is KanbanActivity (AbstractField)
  * TODO: Remove this adapter when ActivityCell is a Component
  */
 class ActivityCellAdapter extends ComponentAdapter {
