@@ -681,13 +681,8 @@ registerModel({
                 this.messageViewInEditing.messageActionList.update({ deleteConfirmDialog: {} });
                 return;
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
             let data = {
-                body: body,
+                body: this._generateMessageBody(),
                 attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
             };
             const messageViewInEditing = this.messageViewInEditing;
@@ -1126,6 +1121,20 @@ registerModel({
             }
             return body;
         },
+        _generateMessageBody() {
+            const escapedAndCompactContent = escapeAndCompactTextContent(this.composer.textInputContent);
+            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            // This message will be received from the mail composer as html content
+            // subtype but the urls will not be linkified. If the mail composer
+            // takes the responsibility to linkify the urls we end up with double
+            // linkification a bit everywhere. Ideally we want to keep the content
+            // as text internally and only make html enrichment at display time but
+            // the current design makes this quite hard to do.
+            body = this._generateMentionsLinks(body);
+            body = parseAndTransform(body, addLink);
+            body = this._generateEmojisOnHtml(body);
+            return body;
+        },
         /**
          * @private
          * @param {string} content html content
@@ -1153,20 +1162,9 @@ registerModel({
          * @returns {Object}
          */
         _getMessageData() {
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
             return {
                 attachment_ids: this.composer.attachments.map(attachment => attachment.id),
-                body,
+                body: this._generateMessageBody(),
                 message_type: 'comment',
                 partner_ids: this.composer.recipients.map(partner => partner.id),
             };
