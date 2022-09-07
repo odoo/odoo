@@ -94,53 +94,44 @@ export const emojiCategoriesData = JSON.parse(`[
         "name": "Symbols",
         "title": "🚰",
         "sortId": 8
-    },
-    {
-        "name": "Flags",
-        "title": "🇻🇨",
-        "sortId": 9
     }
 ]`);
 
 export const emojisData = JSON.parse(`[
     {
-        "codepoints": "😀",
-        "name": "grinning face",
-        "shortcodes": [
-            ":grinning:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😀",
+        "emoticons": [],
         "keywords": [
             "face",
             "grin",
             "grinning face"
+        ],
+        "name": "grinning face",
+        "shortcodes": [
+            ":grinning:"
         ]
     },
     {
-        "codepoints": "😃",
-        "name": "grinning face with big eyes",
-        "shortcodes": [
-            ":smiley:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😃",
+        "emoticons": [],
         "keywords": [
             "face",
             "grinning face with big eyes",
             "mouth",
             "open",
             "smile"
+        ],
+        "name": "grinning face with big eyes",
+        "shortcodes": [
+            ":smiley:"
         ]
     },
     {
-        "codepoints": "😄",
-        "name": "grinning face with smiling eyes",
-        "shortcodes": [
-            ":smile:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😄",
+        "emoticons": [],
         "keywords": [
             "eye",
             "face",
@@ -148,32 +139,32 @@ export const emojisData = JSON.parse(`[
             "mouth",
             "open",
             "smile"
+        ],
+        "name": "grinning face with smiling eyes",
+        "shortcodes": [
+            ":smile:"
         ]
     },
     {
-        "codepoints": "😁",
-        "name": "beaming face with smiling eyes",
-        "shortcodes": [
-            ":grin:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😁",
+        "emoticons": [],
         "keywords": [
             "beaming face with smiling eyes",
             "eye",
             "face",
             "grin",
             "smile"
+        ],
+        "name": "beaming face with smiling eyes",
+        "shortcodes": [
+            ":grin:"
         ]
     },
     {
-        "codepoints": "😆",
-        "name": "grinning squinting face",
-        "shortcodes": [
-            ":laughing:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😆",
+        "emoticons": [],
         "keywords": [
             "face",
             "grinning squinting face",
@@ -181,16 +172,16 @@ export const emojisData = JSON.parse(`[
             "mouth",
             "satisfied",
             "smile"
+        ],
+        "name": "grinning squinting face",
+        "shortcodes": [
+            ":laughing:"
         ]
     },
     {
-        "codepoints": "😅",
-        "name": "grinning face with sweat",
-        "shortcodes": [
-            ":sweat_smile:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😅",
+        "emoticons": [],
         "keywords": [
             "cold",
             "face",
@@ -198,16 +189,16 @@ export const emojisData = JSON.parse(`[
             "open",
             "smile",
             "sweat"
+        ],
+        "name": "grinning face with sweat",
+        "shortcodes": [
+            ":sweat_smile:"
         ]
     },
     {
-        "codepoints": "🤣",
-        "name": "rolling on the floor laughing",
-        "shortcodes": [
-            ":rofl:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤣",
+        "emoticons": [],
         "keywords": [
             "face",
             "floor",
@@ -216,109 +207,92 @@ export const emojisData = JSON.parse(`[
             "rolling",
             "rolling on the floor laughing",
             "rotfl"
+        ],
+        "name": "rolling on the floor laughing",
+        "shortcodes": [
+            ":rofl:"
         ]
     },
     {
-        "codepoints": "😂",
-        "name": "face with tears of joy",
-        "shortcodes": [
-            ":joy:",
-            ":jpp:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😂",
+        "emoticons": [],
         "keywords": [
             "face",
             "face with tears of joy",
             "joy",
             "laugh",
             "tear"
+        ],
+        "name": "face with tears of joy",
+        "shortcodes": [
+            ":joy:",
+            ":jpp:"
         ]
     },
     {
-        "codepoints": "🙂",
-        "name": "slightly smiling face",
-        "shortcodes": [
-            ":slight_smile:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🙂",
+        "emoticons": [],
         "keywords": [
             "face",
             "slightly smiling face",
             "smile"
+        ],
+        "name": "slightly smiling face",
+        "shortcodes": [
+            ":slight_smile:"
         ]
     },
     {
-        "codepoints": "🙃",
-        "name": "upside-down face",
-        "shortcodes": [
-            ":upside_down:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🙃",
+        "emoticons": [],
         "keywords": [
             "face",
             "upside-down",
             "upside down",
             "upside-down face"
-        ]
-    },
-    {
-        "codepoints": "🫠",
-        "name": "melting face",
-        "shortcodes": [
-            ":melt:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "disappear",
-            "dissolve",
-            "liquid",
-            "melt",
-            "melting face"
+        "name": "upside-down face",
+        "shortcodes": [
+            ":upside_down:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😉",
-        "name": "winking face",
-        "shortcodes": [
-            ":wink:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "face",
             "wink",
             "winking face"
+        ],
+        "name": "winking face",
+        "shortcodes": [
+            ":wink:"
         ]
     },
     {
-        "codepoints": "😊",
-        "name": "smiling face with smiling eyes",
-        "shortcodes": [
-            ":smiling_face_with_smiling_eyes:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😊",
+        "emoticons": [],
         "keywords": [
             "blush",
             "eye",
             "face",
             "smile",
             "smiling face with smiling eyes"
+        ],
+        "name": "smiling face with smiling eyes",
+        "shortcodes": [
+            ":smiling_face_with_smiling_eyes:"
         ]
     },
     {
-        "codepoints": "😇",
-        "name": "smiling face with halo",
-        "shortcodes": [
-            ":innocent:",
-            ":halo:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😇",
+        "emoticons": [],
         "keywords": [
             "angel",
             "face",
@@ -326,32 +300,33 @@ export const emojisData = JSON.parse(`[
             "halo",
             "innocent",
             "smiling face with halo"
+        ],
+        "name": "smiling face with halo",
+        "shortcodes": [
+            ":innocent:",
+            ":halo:"
         ]
     },
     {
-        "codepoints": "🥰",
-        "name": "smiling face with hearts",
-        "shortcodes": [
-            ":smiling_face_with_hearts:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🥰",
+        "emoticons": [],
         "keywords": [
             "adore",
             "crush",
             "hearts",
             "in love",
             "smiling face with hearts"
+        ],
+        "name": "smiling face with hearts",
+        "shortcodes": [
+            ":smiling_face_with_hearts:"
         ]
     },
     {
-        "codepoints": "😍",
-        "name": "smiling face with heart-eyes",
-        "shortcodes": [
-            ":heart_eyes:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😍",
+        "emoticons": [],
         "keywords": [
             "eye",
             "face",
@@ -359,126 +334,92 @@ export const emojisData = JSON.parse(`[
             "smile",
             "smiling face with heart-eyes",
             "smiling face with heart eyes"
+        ],
+        "name": "smiling face with heart-eyes",
+        "shortcodes": [
+            ":heart_eyes:"
         ]
     },
     {
-        "codepoints": "🤩",
-        "name": "star-struck",
-        "shortcodes": [
-            ":star_struck:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤩",
+        "emoticons": [],
         "keywords": [
             "eyes",
             "face",
             "grinning",
             "star",
             "star-struck"
+        ],
+        "name": "star-struck",
+        "shortcodes": [
+            ":star_struck:"
         ]
     },
     {
-        "codepoints": "😘",
-        "name": "face blowing a kiss",
-        "shortcodes": [
-            ":kissing_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😘",
+        "emoticons": [],
         "keywords": [
             "face",
             "face blowing a kiss",
             "kiss"
+        ],
+        "name": "face blowing a kiss",
+        "shortcodes": [
+            ":kissing_heart:"
         ]
     },
     {
-        "codepoints": "😗",
-        "name": "kissing face",
-        "shortcodes": [
-            ":kissing:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😗",
+        "emoticons": [],
         "keywords": [
             "face",
             "kiss",
             "kissing face"
-        ]
-    },
-    {
-        "codepoints": "☺️",
-        "name": "smiling face",
-        "shortcodes": [
-            ":smiling_face:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "face",
-            "outlined",
-            "relaxed",
-            "smile",
-            "smiling face"
+        "name": "kissing face",
+        "shortcodes": [
+            ":kissing:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😚",
-        "name": "kissing face with closed eyes",
-        "shortcodes": [
-            ":kissing_closed_eyes:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "closed",
             "eye",
             "face",
             "kiss",
             "kissing face with closed eyes"
+        ],
+        "name": "kissing face with closed eyes",
+        "shortcodes": [
+            ":kissing_closed_eyes:"
         ]
     },
     {
-        "codepoints": "😙",
-        "name": "kissing face with smiling eyes",
-        "shortcodes": [
-            ":kissing_smiling_eyes:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😙",
+        "emoticons": [],
         "keywords": [
             "eye",
             "face",
             "kiss",
             "kissing face with smiling eyes",
             "smile"
-        ]
-    },
-    {
-        "codepoints": "🥲",
-        "name": "smiling face with tear",
-        "shortcodes": [
-            ":smiling_face_with_tear:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "grateful",
-            "proud",
-            "relieved",
-            "smiling",
-            "smiling face with tear",
-            "tear",
-            "touched"
+        "name": "kissing face with smiling eyes",
+        "shortcodes": [
+            ":kissing_smiling_eyes:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😋",
-        "name": "face savoring food",
-        "shortcodes": [
-            ":yum:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "delicious",
             "face",
@@ -488,32 +429,32 @@ export const emojisData = JSON.parse(`[
             "yum",
             "face savouring food",
             "savoring"
+        ],
+        "name": "face savoring food",
+        "shortcodes": [
+            ":yum:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😛",
-        "name": "face with tongue",
-        "shortcodes": [
-            ":stuck_out_tongue:"
-        ],
         "emoticons": [
             ":P"
         ],
-        "category": "Smileys & Emotion",
         "keywords": [
             "face",
             "face with tongue",
             "tongue"
+        ],
+        "name": "face with tongue",
+        "shortcodes": [
+            ":stuck_out_tongue:"
         ]
     },
     {
-        "codepoints": "😜",
-        "name": "winking face with tongue",
-        "shortcodes": [
-            ":stuck_out_tongue_winking_eye:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😜",
+        "emoticons": [],
         "keywords": [
             "eye",
             "face",
@@ -521,32 +462,32 @@ export const emojisData = JSON.parse(`[
             "tongue",
             "wink",
             "winking face with tongue"
+        ],
+        "name": "winking face with tongue",
+        "shortcodes": [
+            ":stuck_out_tongue_winking_eye:"
         ]
     },
     {
-        "codepoints": "🤪",
-        "name": "zany face",
-        "shortcodes": [
-            ":zany:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤪",
+        "emoticons": [],
         "keywords": [
             "eye",
             "goofy",
             "large",
             "small",
             "zany face"
+        ],
+        "name": "zany face",
+        "shortcodes": [
+            ":zany:"
         ]
     },
     {
-        "codepoints": "😝",
-        "name": "squinting face with tongue",
-        "shortcodes": [
-            ":stuck_out_tongue_closed_eyes:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😝",
+        "emoticons": [],
         "keywords": [
             "eye",
             "face",
@@ -554,31 +495,31 @@ export const emojisData = JSON.parse(`[
             "squinting face with tongue",
             "taste",
             "tongue"
+        ],
+        "name": "squinting face with tongue",
+        "shortcodes": [
+            ":stuck_out_tongue_closed_eyes:"
         ]
     },
     {
-        "codepoints": "🤑",
-        "name": "money-mouth face",
-        "shortcodes": [
-            ":money_mouth:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤑",
+        "emoticons": [],
         "keywords": [
             "face",
             "money",
             "money-mouth face",
             "mouth"
+        ],
+        "name": "money-mouth face",
+        "shortcodes": [
+            ":money_mouth:"
         ]
     },
     {
-        "codepoints": "🤗",
-        "name": "smiling face with open hands",
-        "shortcodes": [
-            ":hugging_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤗",
+        "emoticons": [],
         "keywords": [
             "face",
             "hug",
@@ -586,384 +527,283 @@ export const emojisData = JSON.parse(`[
             "open hands",
             "smiling face",
             "smiling face with open hands"
+        ],
+        "name": "smiling face with open hands",
+        "shortcodes": [
+            ":hugging_face:"
         ]
     },
     {
-        "codepoints": "🤭",
-        "name": "face with hand over mouth",
-        "shortcodes": [
-            ":hand_over_mouth:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤭",
+        "emoticons": [],
         "keywords": [
             "face with hand over mouth",
             "whoops",
             "oops",
             "embarrassed"
-        ]
-    },
-    {
-        "codepoints": "🫢",
-        "name": "face with open eyes and hand over mouth",
-        "shortcodes": [
-            ":gasp:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "amazement",
-            "awe",
-            "disbelief",
-            "embarrass",
-            "face with open eyes and hand over mouth",
-            "scared",
-            "surprise"
-        ]
-    },
-    {
-        "codepoints": "🫣",
-        "name": "face with peeking eye",
+        "name": "face with hand over mouth",
         "shortcodes": [
-            ":peek:"
-        ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "captivated",
-            "face with peeking eye",
-            "peep",
-            "stare"
+            ":hand_over_mouth:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "🤫",
-        "name": "shushing face",
-        "shortcodes": [
-            ":shush:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "quiet",
             "shooshing face",
             "shush",
             "shushing face"
+        ],
+        "name": "shushing face",
+        "shortcodes": [
+            ":shush:"
         ]
     },
     {
-        "codepoints": "🤔",
-        "name": "thinking face",
-        "shortcodes": [
-            ":thinking:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤔",
+        "emoticons": [],
         "keywords": [
             "face",
             "thinking"
-        ]
-    },
-    {
-        "codepoints": "🫡",
-        "name": "saluting face",
-        "shortcodes": [
-            ":salute:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "OK",
-            "salute",
-            "saluting face",
-            "sunny",
-            "troops",
-            "yes"
+        "name": "thinking face",
+        "shortcodes": [
+            ":thinking:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "🤐",
-        "name": "zipper-mouth face",
-        "shortcodes": [
-            ":zipper_mouth:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "face",
             "mouth",
             "zipper",
             "zipper-mouth face"
+        ],
+        "name": "zipper-mouth face",
+        "shortcodes": [
+            ":zipper_mouth:"
         ]
     },
     {
-        "codepoints": "🤨",
-        "name": "face with raised eyebrow",
-        "shortcodes": [
-            ":raised_eyebrow:",
-            ":skeptic:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤨",
+        "emoticons": [],
         "keywords": [
             "distrust",
             "face with raised eyebrow",
             "skeptic"
+        ],
+        "name": "face with raised eyebrow",
+        "shortcodes": [
+            ":raised_eyebrow:",
+            ":skeptic:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😐",
-        "name": "neutral face",
-        "shortcodes": [
-            ":neutral:"
-        ],
         "emoticons": [
             ":|",
             ":-|"
         ],
-        "category": "Smileys & Emotion",
         "keywords": [
             "deadpan",
             "face",
             "meh",
             "neutral"
+        ],
+        "name": "neutral face",
+        "shortcodes": [
+            ":neutral:"
         ]
     },
     {
-        "codepoints": "😑",
-        "name": "expressionless face",
-        "shortcodes": [
-            ":expressionless:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😑",
+        "emoticons": [],
         "keywords": [
             "expressionless",
             "face",
             "inexpressive",
             "meh",
             "unexpressive"
+        ],
+        "name": "expressionless face",
+        "shortcodes": [
+            ":expressionless:"
         ]
     },
     {
-        "codepoints": "😶",
-        "name": "face without mouth",
-        "shortcodes": [
-            ":no_mouth:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😶",
+        "emoticons": [],
         "keywords": [
             "face",
             "face without mouth",
             "mouth",
             "quiet",
             "silent"
-        ]
-    },
-    {
-        "codepoints": "🫥",
-        "name": "dotted line face",
-        "shortcodes": [
-            ":dotted_line_face:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "depressed",
-            "disappear",
-            "dotted line face",
-            "hide",
-            "introvert",
-            "invisible"
-        ]
-    },
-    {
-        "codepoints": "😶‍🌫️",
-        "name": "face in clouds",
+        "name": "face without mouth",
         "shortcodes": [
-            ":face_in_clouds:"
-        ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "absentminded",
-            "face in clouds",
-            "face in the fog",
-            "head in clouds",
-            "absent-minded"
+            ":no_mouth:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😏",
-        "name": "smirking face",
-        "shortcodes": [
-            ":smirk:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "face",
             "smirk",
             "smirking face"
+        ],
+        "name": "smirking face",
+        "shortcodes": [
+            ":smirk:"
         ]
     },
     {
-        "codepoints": "😒",
-        "name": "unamused face",
-        "shortcodes": [
-            ":unamused_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😒",
+        "emoticons": [],
         "keywords": [
             "face",
             "unamused",
             "unhappy"
+        ],
+        "name": "unamused face",
+        "shortcodes": [
+            ":unamused_face:"
         ]
     },
     {
-        "codepoints": "🙄",
-        "name": "face with rolling eyes",
-        "shortcodes": [
-            ":face_with_rolling_eyes:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🙄",
+        "emoticons": [],
         "keywords": [
             "eyeroll",
             "eyes",
             "face",
             "face with rolling eyes",
             "rolling"
+        ],
+        "name": "face with rolling eyes",
+        "shortcodes": [
+            ":face_with_rolling_eyes:"
         ]
     },
     {
-        "codepoints": "😬",
-        "name": "grimacing face",
-        "shortcodes": [
-            ":grimacing_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😬",
+        "emoticons": [],
         "keywords": [
             "face",
             "grimace",
             "grimacing face"
-        ]
-    },
-    {
-        "codepoints": "😮‍💨",
-        "name": "face exhaling",
-        "shortcodes": [
-            ":face_exhaling:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "exhale",
-            "face exhaling",
-            "gasp",
-            "groan",
-            "relief",
-            "whisper",
-            "whistle"
+        "name": "grimacing face",
+        "shortcodes": [
+            ":grimacing_face:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "🤥",
-        "name": "lying face",
-        "shortcodes": [
-            ":lying_face:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "face",
             "lie",
             "lying face",
             "pinocchio"
+        ],
+        "name": "lying face",
+        "shortcodes": [
+            ":lying_face:"
         ]
     },
     {
-        "codepoints": "😌",
-        "name": "relieved face",
-        "shortcodes": [
-            ":relieved_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😌",
+        "emoticons": [],
         "keywords": [
             "face",
             "relieved"
+        ],
+        "name": "relieved face",
+        "shortcodes": [
+            ":relieved_face:"
         ]
     },
     {
-        "codepoints": "😔",
-        "name": "pensive face",
-        "shortcodes": [
-            ":pensive_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😔",
+        "emoticons": [],
         "keywords": [
             "dejected",
             "face",
             "pensive"
+        ],
+        "name": "pensive face",
+        "shortcodes": [
+            ":pensive_face:"
         ]
     },
     {
-        "codepoints": "😪",
-        "name": "sleepy face",
-        "shortcodes": [
-            ":sleepy_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😪",
+        "emoticons": [],
         "keywords": [
             "face",
             "good night",
             "sleep",
             "sleepy face"
+        ],
+        "name": "sleepy face",
+        "shortcodes": [
+            ":sleepy_face:"
         ]
     },
     {
-        "codepoints": "🤤",
-        "name": "drooling face",
-        "shortcodes": [
-            ":drooling_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤤",
+        "emoticons": [],
         "keywords": [
             "drooling",
             "face"
+        ],
+        "name": "drooling face",
+        "shortcodes": [
+            ":drooling_face:"
         ]
     },
     {
-        "codepoints": "😴",
-        "name": "sleeping face",
-        "shortcodes": [
-            ":sleeping_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😴",
+        "emoticons": [],
         "keywords": [
             "face",
             "good night",
             "sleep",
             "sleeping face",
             "ZZZ"
+        ],
+        "name": "sleeping face",
+        "shortcodes": [
+            ":sleeping_face:"
         ]
     },
     {
-        "codepoints": "😷",
-        "name": "face with medical mask",
-        "shortcodes": [
-            ":face_with_medical_mask:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😷",
+        "emoticons": [],
         "keywords": [
             "cold",
             "doctor",
@@ -974,32 +814,32 @@ export const emojisData = JSON.parse(`[
             "ill",
             "medicine",
             "poorly"
+        ],
+        "name": "face with medical mask",
+        "shortcodes": [
+            ":face_with_medical_mask:"
         ]
     },
     {
-        "codepoints": "🤒",
-        "name": "face with thermometer",
-        "shortcodes": [
-            ":face_with_thermometer:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤒",
+        "emoticons": [],
         "keywords": [
             "face",
             "face with thermometer",
             "ill",
             "sick",
             "thermometer"
+        ],
+        "name": "face with thermometer",
+        "shortcodes": [
+            ":face_with_thermometer:"
         ]
     },
     {
-        "codepoints": "🤕",
-        "name": "face with head-bandage",
-        "shortcodes": [
-            ":face_with_head-bandage:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤕",
+        "emoticons": [],
         "keywords": [
             "bandage",
             "face",
@@ -1007,61 +847,61 @@ export const emojisData = JSON.parse(`[
             "hurt",
             "injury",
             "face with head bandage"
+        ],
+        "name": "face with head-bandage",
+        "shortcodes": [
+            ":face_with_head-bandage:"
         ]
     },
     {
-        "codepoints": "🤢",
-        "name": "nauseated face",
-        "shortcodes": [
-            ":nauseated_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤢",
+        "emoticons": [],
         "keywords": [
             "face",
             "nauseated",
             "vomit"
+        ],
+        "name": "nauseated face",
+        "shortcodes": [
+            ":nauseated_face:"
         ]
     },
     {
-        "codepoints": "🤮",
-        "name": "face vomiting",
-        "shortcodes": [
-            ":face_vomiting:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤮",
+        "emoticons": [],
         "keywords": [
             "face vomiting",
             "puke",
             "sick",
             "vomit"
+        ],
+        "name": "face vomiting",
+        "shortcodes": [
+            ":face_vomiting:"
         ]
     },
     {
-        "codepoints": "🤧",
-        "name": "sneezing face",
-        "shortcodes": [
-            ":sneezing_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤧",
+        "emoticons": [],
         "keywords": [
             "face",
             "gesundheit",
             "sneeze",
             "sneezing face",
             "bless you"
+        ],
+        "name": "sneezing face",
+        "shortcodes": [
+            ":sneezing_face:"
         ]
     },
     {
-        "codepoints": "🥵",
-        "name": "hot face",
-        "shortcodes": [
-            ":hot_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🥵",
+        "emoticons": [],
         "keywords": [
             "feverish",
             "flushed",
@@ -1070,16 +910,16 @@ export const emojisData = JSON.parse(`[
             "hot face",
             "red-faced",
             "sweating"
+        ],
+        "name": "hot face",
+        "shortcodes": [
+            ":hot_face:"
         ]
     },
     {
-        "codepoints": "🥶",
-        "name": "cold face",
-        "shortcodes": [
-            ":cold_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🥶",
+        "emoticons": [],
         "keywords": [
             "blue-faced",
             "cold",
@@ -1087,16 +927,16 @@ export const emojisData = JSON.parse(`[
             "freezing",
             "frostbite",
             "icicles"
+        ],
+        "name": "cold face",
+        "shortcodes": [
+            ":cold_face:"
         ]
     },
     {
-        "codepoints": "🥴",
-        "name": "woozy face",
-        "shortcodes": [
-            ":woozy_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🥴",
+        "emoticons": [],
         "keywords": [
             "dizzy",
             "intoxicated",
@@ -1104,112 +944,77 @@ export const emojisData = JSON.parse(`[
             "uneven eyes",
             "wavy mouth",
             "woozy face"
+        ],
+        "name": "woozy face",
+        "shortcodes": [
+            ":woozy_face:"
         ]
     },
     {
-        "codepoints": "😵",
-        "name": "face with crossed-out eyes",
-        "shortcodes": [
-            ":face_with_crossed-out_eyes:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😵",
+        "emoticons": [],
         "keywords": [
             "crossed-out eyes",
             "dead",
             "face",
             "face with crossed-out eyes",
             "knocked out"
-        ]
-    },
-    {
-        "codepoints": "😵‍💫",
-        "name": "face with spiral eyes",
-        "shortcodes": [
-            ":face_with_spiral_eyes:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "dizzy",
-            "face with spiral eyes",
-            "hypnotized",
-            "spiral",
-            "trouble",
-            "whoa",
-            "hypnotised"
+        "name": "face with crossed-out eyes",
+        "shortcodes": [
+            ":face_with_crossed-out_eyes:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "🤯",
-        "name": "exploding head",
-        "shortcodes": [
-            ":exploding_head:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "exploding head",
             "mind blown",
             "shocked"
+        ],
+        "name": "exploding head",
+        "shortcodes": [
+            ":exploding_head:"
         ]
     },
     {
-        "codepoints": "🤠",
-        "name": "cowboy hat face",
-        "shortcodes": [
-            ":cowboy_hat_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤠",
+        "emoticons": [],
         "keywords": [
             "cowboy",
             "cowgirl",
             "face",
             "hat"
+        ],
+        "name": "cowboy hat face",
+        "shortcodes": [
+            ":cowboy_hat_face:"
         ]
     },
     {
-        "codepoints": "🥳",
-        "name": "partying face",
-        "shortcodes": [
-            ":partying_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🥳",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "hat",
             "horn",
             "party",
             "partying face"
-        ]
-    },
-    {
-        "codepoints": "🥸",
-        "name": "disguised face",
-        "shortcodes": [
-            ":disguised_face:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "disguise",
-            "disguised face",
-            "face",
-            "glasses",
-            "incognito",
-            "nose"
+        "name": "partying face",
+        "shortcodes": [
+            ":partying_face:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😎",
-        "name": "smiling face with sunglasses",
-        "shortcodes": [
-            ":smiling_face_with_sunglasses:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "bright",
             "cool",
@@ -1217,253 +1022,205 @@ export const emojisData = JSON.parse(`[
             "smiling face with sunglasses",
             "sun",
             "sunglasses"
+        ],
+        "name": "smiling face with sunglasses",
+        "shortcodes": [
+            ":smiling_face_with_sunglasses:"
         ]
     },
     {
-        "codepoints": "🤓",
-        "name": "nerd face",
-        "shortcodes": [
-            ":nerd_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤓",
+        "emoticons": [],
         "keywords": [
             "face",
             "geek",
             "nerd"
+        ],
+        "name": "nerd face",
+        "shortcodes": [
+            ":nerd_face:"
         ]
     },
     {
-        "codepoints": "🧐",
-        "name": "face with monocle",
-        "shortcodes": [
-            ":face_with_monocle:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🧐",
+        "emoticons": [],
         "keywords": [
             "face",
             "face with monocle",
             "monocle",
             "stuffy"
+        ],
+        "name": "face with monocle",
+        "shortcodes": [
+            ":face_with_monocle:"
         ]
     },
     {
-        "codepoints": "😕",
-        "name": "confused face",
-        "shortcodes": [
-            ":confused_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😕",
+        "emoticons": [],
         "keywords": [
             "confused",
             "face",
             "meh"
-        ]
-    },
-    {
-        "codepoints": "🫤",
-        "name": "face with diagonal mouth",
-        "shortcodes": [
-            ":face_with_diagonal_mouth:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "disappointed",
-            "face with diagonal mouth",
-            "meh",
-            "skeptical",
-            "unsure",
-            "sceptical"
+        "name": "confused face",
+        "shortcodes": [
+            ":confused_face:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😟",
-        "name": "worried face",
-        "shortcodes": [
-            ":worried_face:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "face",
             "worried"
+        ],
+        "name": "worried face",
+        "shortcodes": [
+            ":worried_face:"
         ]
     },
     {
-        "codepoints": "🙁",
-        "name": "slightly frowning face",
-        "shortcodes": [
-            ":slightly_frowning_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🙁",
+        "emoticons": [],
         "keywords": [
             "face",
             "frown",
             "slightly frowning face"
-        ]
-    },
-    {
-        "codepoints": "☹️",
-        "name": "frowning face",
-        "shortcodes": [
-            ":frowning_face:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "face",
-            "frown",
-            "frowning face"
+        "name": "slightly frowning face",
+        "shortcodes": [
+            ":slightly_frowning_face:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😮",
-        "name": "face with open mouth",
-        "shortcodes": [
-            ":face_with_open_mouth:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "face",
             "face with open mouth",
             "mouth",
             "open",
             "sympathy"
+        ],
+        "name": "face with open mouth",
+        "shortcodes": [
+            ":face_with_open_mouth:"
         ]
     },
     {
-        "codepoints": "😯",
-        "name": "hushed face",
-        "shortcodes": [
-            ":hushed_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😯",
+        "emoticons": [],
         "keywords": [
             "face",
             "hushed",
             "stunned",
             "surprised"
+        ],
+        "name": "hushed face",
+        "shortcodes": [
+            ":hushed_face:"
         ]
     },
     {
-        "codepoints": "😲",
-        "name": "astonished face",
-        "shortcodes": [
-            ":astonished_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😲",
+        "emoticons": [],
         "keywords": [
             "astonished",
             "face",
             "shocked",
             "totally"
+        ],
+        "name": "astonished face",
+        "shortcodes": [
+            ":astonished_face:"
         ]
     },
     {
-        "codepoints": "😳",
-        "name": "flushed face",
-        "shortcodes": [
-            ":flushed_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😳",
+        "emoticons": [],
         "keywords": [
             "dazed",
             "face",
             "flushed"
+        ],
+        "name": "flushed face",
+        "shortcodes": [
+            ":flushed_face:"
         ]
     },
     {
-        "codepoints": "🥺",
-        "name": "pleading face",
-        "shortcodes": [
-            ":pleading_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🥺",
+        "emoticons": [],
         "keywords": [
             "begging",
             "mercy",
             "pleading face",
             "puppy eyes"
-        ]
-    },
-    {
-        "codepoints": "🥹",
-        "name": "face holding back tears",
-        "shortcodes": [
-            ":face_holding_back_tears:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "angry",
-            "cry",
-            "face holding back tears",
-            "proud",
-            "resist",
-            "sad"
+        "name": "pleading face",
+        "shortcodes": [
+            ":pleading_face:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "😦",
-        "name": "frowning face with open mouth",
-        "shortcodes": [
-            ":frowning_face_with_open_mouth:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "face",
             "frown",
             "frowning face with open mouth",
             "mouth",
             "open"
+        ],
+        "name": "frowning face with open mouth",
+        "shortcodes": [
+            ":frowning_face_with_open_mouth:"
         ]
     },
     {
-        "codepoints": "😧",
-        "name": "anguished face",
-        "shortcodes": [
-            ":anguished_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😧",
+        "emoticons": [],
         "keywords": [
             "anguished",
             "face"
+        ],
+        "name": "anguished face",
+        "shortcodes": [
+            ":anguished_face:"
         ]
     },
     {
-        "codepoints": "😨",
-        "name": "fearful face",
-        "shortcodes": [
-            ":fearful_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😨",
+        "emoticons": [],
         "keywords": [
             "face",
             "fear",
             "fearful",
             "scared"
+        ],
+        "name": "fearful face",
+        "shortcodes": [
+            ":fearful_face:"
         ]
     },
     {
-        "codepoints": "😰",
-        "name": "anxious face with sweat",
-        "shortcodes": [
-            ":anxious_face_with_sweat:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😰",
+        "emoticons": [],
         "keywords": [
             "anxious face with sweat",
             "blue",
@@ -1471,48 +1228,48 @@ export const emojisData = JSON.parse(`[
             "face",
             "rushed",
             "sweat"
+        ],
+        "name": "anxious face with sweat",
+        "shortcodes": [
+            ":anxious_face_with_sweat:"
         ]
     },
     {
-        "codepoints": "😥",
-        "name": "sad but relieved face",
-        "shortcodes": [
-            ":sad_but_relieved_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😥",
+        "emoticons": [],
         "keywords": [
             "disappointed",
             "face",
             "relieved",
             "sad but relieved face",
             "whew"
+        ],
+        "name": "sad but relieved face",
+        "shortcodes": [
+            ":sad_but_relieved_face:"
         ]
     },
     {
-        "codepoints": "😢",
-        "name": "crying face",
-        "shortcodes": [
-            ":crying_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😢",
+        "emoticons": [],
         "keywords": [
             "cry",
             "crying face",
             "face",
             "sad",
             "tear"
+        ],
+        "name": "crying face",
+        "shortcodes": [
+            ":crying_face:"
         ]
     },
     {
-        "codepoints": "😭",
-        "name": "loudly crying face",
-        "shortcodes": [
-            ":loudly_crying_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😭",
+        "emoticons": [],
         "keywords": [
             "cry",
             "face",
@@ -1520,16 +1277,16 @@ export const emojisData = JSON.parse(`[
             "sad",
             "sob",
             "tear"
+        ],
+        "name": "loudly crying face",
+        "shortcodes": [
+            ":loudly_crying_face:"
         ]
     },
     {
-        "codepoints": "😱",
-        "name": "face screaming in fear",
-        "shortcodes": [
-            ":face_screaming_in_fear:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😱",
+        "emoticons": [],
         "keywords": [
             "face",
             "face screaming in fear",
@@ -1538,113 +1295,113 @@ export const emojisData = JSON.parse(`[
             "scared",
             "scream",
             "munch"
+        ],
+        "name": "face screaming in fear",
+        "shortcodes": [
+            ":face_screaming_in_fear:"
         ]
     },
     {
-        "codepoints": "😖",
-        "name": "confounded face",
-        "shortcodes": [
-            ":confounded_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😖",
+        "emoticons": [],
         "keywords": [
             "confounded",
             "face"
+        ],
+        "name": "confounded face",
+        "shortcodes": [
+            ":confounded_face:"
         ]
     },
     {
-        "codepoints": "😣",
-        "name": "persevering face",
-        "shortcodes": [
-            ":persevering_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😣",
+        "emoticons": [],
         "keywords": [
             "face",
             "persevere",
             "persevering face"
+        ],
+        "name": "persevering face",
+        "shortcodes": [
+            ":persevering_face:"
         ]
     },
     {
-        "codepoints": "😞",
-        "name": "disappointed face",
-        "shortcodes": [
-            ":disappointed_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😞",
+        "emoticons": [],
         "keywords": [
             "disappointed",
             "face"
+        ],
+        "name": "disappointed face",
+        "shortcodes": [
+            ":disappointed_face:"
         ]
     },
     {
-        "codepoints": "😓",
-        "name": "downcast face with sweat",
-        "shortcodes": [
-            ":downcast_face_with_sweat:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😓",
+        "emoticons": [],
         "keywords": [
             "cold",
             "downcast face with sweat",
             "face",
             "sweat"
+        ],
+        "name": "downcast face with sweat",
+        "shortcodes": [
+            ":downcast_face_with_sweat:"
         ]
     },
     {
-        "codepoints": "😩",
-        "name": "weary face",
-        "shortcodes": [
-            ":weary_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😩",
+        "emoticons": [],
         "keywords": [
             "face",
             "tired",
             "weary"
+        ],
+        "name": "weary face",
+        "shortcodes": [
+            ":weary_face:"
         ]
     },
     {
-        "codepoints": "😫",
-        "name": "tired face",
-        "shortcodes": [
-            ":tired_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😫",
+        "emoticons": [],
         "keywords": [
             "face",
             "tired"
+        ],
+        "name": "tired face",
+        "shortcodes": [
+            ":tired_face:"
         ]
     },
     {
-        "codepoints": "🥱",
-        "name": "yawning face",
-        "shortcodes": [
-            ":yawning_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🥱",
+        "emoticons": [],
         "keywords": [
             "bored",
             "tired",
             "yawn",
             "yawning face"
+        ],
+        "name": "yawning face",
+        "shortcodes": [
+            ":yawning_face:"
         ]
     },
     {
-        "codepoints": "😤",
-        "name": "face with steam from nose",
-        "shortcodes": [
-            ":face_with_steam_from_nose:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😤",
+        "emoticons": [],
         "keywords": [
             "face",
             "face with steam from nose",
@@ -1652,16 +1409,16 @@ export const emojisData = JSON.parse(`[
             "won",
             "angry",
             "frustration"
+        ],
+        "name": "face with steam from nose",
+        "shortcodes": [
+            ":face_with_steam_from_nose:"
         ]
     },
     {
-        "codepoints": "😡",
-        "name": "enraged face",
-        "shortcodes": [
-            ":enraged_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😡",
+        "emoticons": [],
         "keywords": [
             "angry",
             "enraged",
@@ -1670,44 +1427,44 @@ export const emojisData = JSON.parse(`[
             "pouting",
             "rage",
             "red"
+        ],
+        "name": "enraged face",
+        "shortcodes": [
+            ":enraged_face:"
         ]
     },
     {
-        "codepoints": "😠",
-        "name": "angry face",
-        "shortcodes": [
-            ":angry_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😠",
+        "emoticons": [],
         "keywords": [
             "anger",
             "angry",
             "face",
             "mad"
+        ],
+        "name": "angry face",
+        "shortcodes": [
+            ":angry_face:"
         ]
     },
     {
-        "codepoints": "🤬",
-        "name": "face with symbols on mouth",
-        "shortcodes": [
-            ":face_with_symbols_on_mouth:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤬",
+        "emoticons": [],
         "keywords": [
             "face with symbols on mouth",
             "swearing"
+        ],
+        "name": "face with symbols on mouth",
+        "shortcodes": [
+            ":face_with_symbols_on_mouth:"
         ]
     },
     {
-        "codepoints": "😈",
-        "name": "smiling face with horns",
-        "shortcodes": [
-            ":smiling_face_with_horns:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😈",
+        "emoticons": [],
         "keywords": [
             "devil",
             "face",
@@ -1716,16 +1473,16 @@ export const emojisData = JSON.parse(`[
             "smile",
             "smiling face with horns",
             "fairy tale"
+        ],
+        "name": "smiling face with horns",
+        "shortcodes": [
+            ":smiling_face_with_horns:"
         ]
     },
     {
-        "codepoints": "👿",
-        "name": "angry face with horns",
-        "shortcodes": [
-            ":angry_face_with_horns:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "👿",
+        "emoticons": [],
         "keywords": [
             "angry face with horns",
             "demon",
@@ -1733,32 +1490,32 @@ export const emojisData = JSON.parse(`[
             "face",
             "fantasy",
             "imp"
+        ],
+        "name": "angry face with horns",
+        "shortcodes": [
+            ":angry_face_with_horns:"
         ]
     },
     {
-        "codepoints": "💀",
-        "name": "skull",
-        "shortcodes": [
-            ":skull:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💀",
+        "emoticons": [],
         "keywords": [
             "death",
             "face",
             "fairy tale",
             "monster",
             "skull"
+        ],
+        "name": "skull",
+        "shortcodes": [
+            ":skull:"
         ]
     },
     {
-        "codepoints": "☠️",
-        "name": "skull and crossbones",
-        "shortcodes": [
-            ":skull_and_crossbones:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "☠️",
+        "emoticons": [],
         "keywords": [
             "crossbones",
             "death",
@@ -1766,16 +1523,16 @@ export const emojisData = JSON.parse(`[
             "monster",
             "skull",
             "skull and crossbones"
+        ],
+        "name": "skull and crossbones",
+        "shortcodes": [
+            ":skull_and_crossbones:"
         ]
     },
     {
-        "codepoints": "💩",
-        "name": "pile of poo",
-        "shortcodes": [
-            ":pile_of_poo:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💩",
+        "emoticons": [],
         "keywords": [
             "dung",
             "face",
@@ -1783,29 +1540,29 @@ export const emojisData = JSON.parse(`[
             "pile of poo",
             "poo",
             "poop"
+        ],
+        "name": "pile of poo",
+        "shortcodes": [
+            ":pile_of_poo:"
         ]
     },
     {
-        "codepoints": "🤡",
-        "name": "clown face",
-        "shortcodes": [
-            ":clown_face:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤡",
+        "emoticons": [],
         "keywords": [
             "clown",
             "face"
+        ],
+        "name": "clown face",
+        "shortcodes": [
+            ":clown_face:"
         ]
     },
     {
-        "codepoints": "👹",
-        "name": "ogre",
-        "shortcodes": [
-            ":ogre:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "👹",
+        "emoticons": [],
         "keywords": [
             "creature",
             "face",
@@ -1813,16 +1570,16 @@ export const emojisData = JSON.parse(`[
             "fantasy",
             "monster",
             "ogre"
+        ],
+        "name": "ogre",
+        "shortcodes": [
+            ":ogre:"
         ]
     },
     {
-        "codepoints": "👺",
-        "name": "goblin",
-        "shortcodes": [
-            ":goblin:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "👺",
+        "emoticons": [],
         "keywords": [
             "creature",
             "face",
@@ -1830,16 +1587,16 @@ export const emojisData = JSON.parse(`[
             "fantasy",
             "goblin",
             "monster"
+        ],
+        "name": "goblin",
+        "shortcodes": [
+            ":goblin:"
         ]
     },
     {
-        "codepoints": "👻",
-        "name": "ghost",
-        "shortcodes": [
-            ":ghost:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "👻",
+        "emoticons": [],
         "keywords": [
             "creature",
             "face",
@@ -1847,16 +1604,16 @@ export const emojisData = JSON.parse(`[
             "fantasy",
             "ghost",
             "monster"
+        ],
+        "name": "ghost",
+        "shortcodes": [
+            ":ghost:"
         ]
     },
     {
-        "codepoints": "👽",
-        "name": "alien",
-        "shortcodes": [
-            ":alien:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "👽",
+        "emoticons": [],
         "keywords": [
             "alien",
             "creature",
@@ -1864,16 +1621,16 @@ export const emojisData = JSON.parse(`[
             "face",
             "fantasy",
             "ufo"
+        ],
+        "name": "alien",
+        "shortcodes": [
+            ":alien:"
         ]
     },
     {
-        "codepoints": "👾",
-        "name": "alien monster",
-        "shortcodes": [
-            ":alien_monster:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "👾",
+        "emoticons": [],
         "keywords": [
             "alien",
             "creature",
@@ -1881,30 +1638,30 @@ export const emojisData = JSON.parse(`[
             "face",
             "monster",
             "ufo"
+        ],
+        "name": "alien monster",
+        "shortcodes": [
+            ":alien_monster:"
         ]
     },
     {
-        "codepoints": "🤖",
-        "name": "robot",
-        "shortcodes": [
-            ":robot:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤖",
+        "emoticons": [],
         "keywords": [
             "face",
             "monster",
             "robot"
+        ],
+        "name": "robot",
+        "shortcodes": [
+            ":robot:"
         ]
     },
     {
-        "codepoints": "😺",
-        "name": "grinning cat",
-        "shortcodes": [
-            ":grinning_cat:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😺",
+        "emoticons": [],
         "keywords": [
             "cat",
             "face",
@@ -1912,16 +1669,16 @@ export const emojisData = JSON.parse(`[
             "mouth",
             "open",
             "smile"
+        ],
+        "name": "grinning cat",
+        "shortcodes": [
+            ":grinning_cat:"
         ]
     },
     {
-        "codepoints": "😸",
-        "name": "grinning cat with smiling eyes",
-        "shortcodes": [
-            ":grinning_cat_with_smiling_eyes:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😸",
+        "emoticons": [],
         "keywords": [
             "cat",
             "eye",
@@ -1929,32 +1686,32 @@ export const emojisData = JSON.parse(`[
             "grin",
             "grinning cat with smiling eyes",
             "smile"
+        ],
+        "name": "grinning cat with smiling eyes",
+        "shortcodes": [
+            ":grinning_cat_with_smiling_eyes:"
         ]
     },
     {
-        "codepoints": "😹",
-        "name": "cat with tears of joy",
-        "shortcodes": [
-            ":cat_with_tears_of_joy:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😹",
+        "emoticons": [],
         "keywords": [
             "cat",
             "cat with tears of joy",
             "face",
             "joy",
             "tear"
+        ],
+        "name": "cat with tears of joy",
+        "shortcodes": [
+            ":cat_with_tears_of_joy:"
         ]
     },
     {
-        "codepoints": "😻",
-        "name": "smiling cat with heart-eyes",
-        "shortcodes": [
-            ":smiling_cat_with_heart-eyes:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😻",
+        "emoticons": [],
         "keywords": [
             "cat",
             "eye",
@@ -1965,16 +1722,16 @@ export const emojisData = JSON.parse(`[
             "smiling cat with heart-eyes",
             "smiling cat face with heart eyes",
             "smiling cat face with heart-eyes"
+        ],
+        "name": "smiling cat with heart-eyes",
+        "shortcodes": [
+            ":smiling_cat_with_heart-eyes:"
         ]
     },
     {
-        "codepoints": "😼",
-        "name": "cat with wry smile",
-        "shortcodes": [
-            ":cat_with_wry_smile:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😼",
+        "emoticons": [],
         "keywords": [
             "cat",
             "cat with wry smile",
@@ -1982,48 +1739,48 @@ export const emojisData = JSON.parse(`[
             "ironic",
             "smile",
             "wry"
+        ],
+        "name": "cat with wry smile",
+        "shortcodes": [
+            ":cat_with_wry_smile:"
         ]
     },
     {
-        "codepoints": "😽",
-        "name": "kissing cat",
-        "shortcodes": [
-            ":kissing_cat:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😽",
+        "emoticons": [],
         "keywords": [
             "cat",
             "eye",
             "face",
             "kiss",
             "kissing cat"
+        ],
+        "name": "kissing cat",
+        "shortcodes": [
+            ":kissing_cat:"
         ]
     },
     {
-        "codepoints": "🙀",
-        "name": "weary cat",
-        "shortcodes": [
-            ":weary_cat:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🙀",
+        "emoticons": [],
         "keywords": [
             "cat",
             "face",
             "oh",
             "surprised",
             "weary"
+        ],
+        "name": "weary cat",
+        "shortcodes": [
+            ":weary_cat:"
         ]
     },
     {
-        "codepoints": "😿",
-        "name": "crying cat",
-        "shortcodes": [
-            ":crying_cat:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😿",
+        "emoticons": [],
         "keywords": [
             "cat",
             "cry",
@@ -2031,30 +1788,30 @@ export const emojisData = JSON.parse(`[
             "face",
             "sad",
             "tear"
+        ],
+        "name": "crying cat",
+        "shortcodes": [
+            ":crying_cat:"
         ]
     },
     {
-        "codepoints": "😾",
-        "name": "pouting cat",
-        "shortcodes": [
-            ":pouting_cat:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "😾",
+        "emoticons": [],
         "keywords": [
             "cat",
             "face",
             "pouting"
+        ],
+        "name": "pouting cat",
+        "shortcodes": [
+            ":pouting_cat:"
         ]
     },
     {
-        "codepoints": "🙈",
-        "name": "see-no-evil monkey",
-        "shortcodes": [
-            ":see-no-evil_monkey:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🙈",
+        "emoticons": [],
         "keywords": [
             "evil",
             "face",
@@ -2062,16 +1819,16 @@ export const emojisData = JSON.parse(`[
             "monkey",
             "see",
             "see-no-evil monkey"
+        ],
+        "name": "see-no-evil monkey",
+        "shortcodes": [
+            ":see-no-evil_monkey:"
         ]
     },
     {
-        "codepoints": "🙉",
-        "name": "hear-no-evil monkey",
-        "shortcodes": [
-            ":hear-no-evil_monkey:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🙉",
+        "emoticons": [],
         "keywords": [
             "evil",
             "face",
@@ -2079,16 +1836,16 @@ export const emojisData = JSON.parse(`[
             "hear",
             "hear-no-evil monkey",
             "monkey"
+        ],
+        "name": "hear-no-evil monkey",
+        "shortcodes": [
+            ":hear-no-evil_monkey:"
         ]
     },
     {
-        "codepoints": "🙊",
-        "name": "speak-no-evil monkey",
-        "shortcodes": [
-            ":speak-no-evil_monkey:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🙊",
+        "emoticons": [],
         "keywords": [
             "evil",
             "face",
@@ -2096,480 +1853,445 @@ export const emojisData = JSON.parse(`[
             "monkey",
             "speak",
             "speak-no-evil monkey"
+        ],
+        "name": "speak-no-evil monkey",
+        "shortcodes": [
+            ":speak-no-evil_monkey:"
         ]
     },
     {
-        "codepoints": "💋",
-        "name": "kiss mark",
-        "shortcodes": [
-            ":kiss_mark:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💋",
+        "emoticons": [],
         "keywords": [
             "kiss",
             "kiss mark",
             "lips"
+        ],
+        "name": "kiss mark",
+        "shortcodes": [
+            ":kiss_mark:"
         ]
     },
     {
-        "codepoints": "💌",
-        "name": "love letter",
-        "shortcodes": [
-            ":love_letter:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💌",
+        "emoticons": [],
         "keywords": [
             "heart",
             "letter",
             "love",
             "mail"
+        ],
+        "name": "love letter",
+        "shortcodes": [
+            ":love_letter:"
         ]
     },
     {
-        "codepoints": "💘",
-        "name": "heart with arrow",
-        "shortcodes": [
-            ":heart_with_arrow:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💘",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "cupid",
             "heart with arrow"
+        ],
+        "name": "heart with arrow",
+        "shortcodes": [
+            ":heart_with_arrow:"
         ]
     },
     {
-        "codepoints": "💝",
-        "name": "heart with ribbon",
-        "shortcodes": [
-            ":heart_with_ribbon:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💝",
+        "emoticons": [],
         "keywords": [
             "heart with ribbon",
             "ribbon",
             "valentine"
+        ],
+        "name": "heart with ribbon",
+        "shortcodes": [
+            ":heart_with_ribbon:"
         ]
     },
     {
-        "codepoints": "💖",
-        "name": "sparkling heart",
-        "shortcodes": [
-            ":sparkling_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💖",
+        "emoticons": [],
         "keywords": [
             "excited",
             "sparkle",
             "sparkling heart"
+        ],
+        "name": "sparkling heart",
+        "shortcodes": [
+            ":sparkling_heart:"
         ]
     },
     {
-        "codepoints": "💗",
-        "name": "growing heart",
-        "shortcodes": [
-            ":growing_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💗",
+        "emoticons": [],
         "keywords": [
             "excited",
             "growing",
             "growing heart",
             "nervous",
             "pulse"
+        ],
+        "name": "growing heart",
+        "shortcodes": [
+            ":growing_heart:"
         ]
     },
     {
-        "codepoints": "💓",
-        "name": "beating heart",
-        "shortcodes": [
-            ":beating_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💓",
+        "emoticons": [],
         "keywords": [
             "beating",
             "beating heart",
             "heartbeat",
             "pulsating"
+        ],
+        "name": "beating heart",
+        "shortcodes": [
+            ":beating_heart:"
         ]
     },
     {
-        "codepoints": "💞",
-        "name": "revolving hearts",
-        "shortcodes": [
-            ":revolving_hearts:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💞",
+        "emoticons": [],
         "keywords": [
             "revolving",
             "revolving hearts"
+        ],
+        "name": "revolving hearts",
+        "shortcodes": [
+            ":revolving_hearts:"
         ]
     },
     {
-        "codepoints": "💕",
-        "name": "two hearts",
-        "shortcodes": [
-            ":two_hearts:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💕",
+        "emoticons": [],
         "keywords": [
             "love",
             "two hearts"
+        ],
+        "name": "two hearts",
+        "shortcodes": [
+            ":two_hearts:"
         ]
     },
     {
-        "codepoints": "💟",
-        "name": "heart decoration",
-        "shortcodes": [
-            ":heart_decoration:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💟",
+        "emoticons": [],
         "keywords": [
             "heart",
             "heart decoration"
+        ],
+        "name": "heart decoration",
+        "shortcodes": [
+            ":heart_decoration:"
         ]
     },
     {
-        "codepoints": "❣️",
-        "name": "heart exclamation",
-        "shortcodes": [
-            ":heart_exclamation:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "❣️",
+        "emoticons": [],
         "keywords": [
             "exclamation",
             "heart exclamation",
             "mark",
             "punctuation"
+        ],
+        "name": "heart exclamation",
+        "shortcodes": [
+            ":heart_exclamation:"
         ]
     },
     {
-        "codepoints": "💔",
-        "name": "broken heart",
-        "shortcodes": [
-            ":broken_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💔",
+        "emoticons": [],
         "keywords": [
             "break",
             "broken",
             "broken heart"
-        ]
-    },
-    {
-        "codepoints": "❤️‍🔥",
-        "name": "heart on fire",
-        "shortcodes": [
-            ":heart_on_fire:"
         ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "burn",
-            "heart",
-            "heart on fire",
-            "love",
-            "lust",
-            "sacred heart"
-        ]
-    },
-    {
-        "codepoints": "❤️‍🩹",
-        "name": "mending heart",
+        "name": "broken heart",
         "shortcodes": [
-            ":mending_heart:"
-        ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "healthier",
-            "improving",
-            "mending",
-            "mending heart",
-            "recovering",
-            "recuperating",
-            "well"
+            ":broken_heart:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "❤️",
-        "name": "red heart",
-        "shortcodes": [
-            ":red_heart:"
-        ],
         "emoticons": [],
-        "category": "Smileys & Emotion",
         "keywords": [
             "heart",
             "red heart"
+        ],
+        "name": "red heart",
+        "shortcodes": [
+            ":red_heart:"
         ]
     },
     {
-        "codepoints": "🧡",
-        "name": "orange heart",
-        "shortcodes": [
-            ":orange_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🧡",
+        "emoticons": [],
         "keywords": [
             "orange",
             "orange heart"
+        ],
+        "name": "orange heart",
+        "shortcodes": [
+            ":orange_heart:"
         ]
     },
     {
-        "codepoints": "💛",
-        "name": "yellow heart",
-        "shortcodes": [
-            ":yellow_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💛",
+        "emoticons": [],
         "keywords": [
             "yellow",
             "yellow heart"
+        ],
+        "name": "yellow heart",
+        "shortcodes": [
+            ":yellow_heart:"
         ]
     },
     {
-        "codepoints": "💚",
-        "name": "green heart",
-        "shortcodes": [
-            ":green_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💚",
+        "emoticons": [],
         "keywords": [
             "green",
             "green heart"
+        ],
+        "name": "green heart",
+        "shortcodes": [
+            ":green_heart:"
         ]
     },
     {
-        "codepoints": "💙",
-        "name": "blue heart",
-        "shortcodes": [
-            ":blue_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💙",
+        "emoticons": [],
         "keywords": [
             "blue",
             "blue heart"
+        ],
+        "name": "blue heart",
+        "shortcodes": [
+            ":blue_heart:"
         ]
     },
     {
-        "codepoints": "💜",
-        "name": "purple heart",
-        "shortcodes": [
-            ":purple_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💜",
+        "emoticons": [],
         "keywords": [
             "purple",
             "purple heart"
+        ],
+        "name": "purple heart",
+        "shortcodes": [
+            ":purple_heart:"
         ]
     },
     {
-        "codepoints": "🤎",
-        "name": "brown heart",
-        "shortcodes": [
-            ":brown_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤎",
+        "emoticons": [],
         "keywords": [
             "brown",
             "heart"
+        ],
+        "name": "brown heart",
+        "shortcodes": [
+            ":brown_heart:"
         ]
     },
     {
-        "codepoints": "🖤",
-        "name": "black heart",
-        "shortcodes": [
-            ":black_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🖤",
+        "emoticons": [],
         "keywords": [
             "black",
             "black heart",
             "evil",
             "wicked"
+        ],
+        "name": "black heart",
+        "shortcodes": [
+            ":black_heart:"
         ]
     },
     {
-        "codepoints": "🤍",
-        "name": "white heart",
-        "shortcodes": [
-            ":white_heart:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🤍",
+        "emoticons": [],
         "keywords": [
             "heart",
             "white"
+        ],
+        "name": "white heart",
+        "shortcodes": [
+            ":white_heart:"
         ]
     },
     {
-        "codepoints": "💯",
-        "name": "hundred points",
-        "shortcodes": [
-            ":hundred_points:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💯",
+        "emoticons": [],
         "keywords": [
             "100",
             "full",
             "hundred",
             "hundred points",
             "score"
+        ],
+        "name": "hundred points",
+        "shortcodes": [
+            ":hundred_points:"
         ]
     },
     {
-        "codepoints": "💢",
-        "name": "anger symbol",
-        "shortcodes": [
-            ":anger_symbol:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💢",
+        "emoticons": [],
         "keywords": [
             "anger symbol",
             "angry",
             "comic",
             "mad"
+        ],
+        "name": "anger symbol",
+        "shortcodes": [
+            ":anger_symbol:"
         ]
     },
     {
-        "codepoints": "💥",
-        "name": "collision",
-        "shortcodes": [
-            ":collision:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💥",
+        "emoticons": [],
         "keywords": [
             "boom",
             "collision",
             "comic"
+        ],
+        "name": "collision",
+        "shortcodes": [
+            ":collision:"
         ]
     },
     {
-        "codepoints": "💫",
-        "name": "dizzy",
-        "shortcodes": [
-            ":dizzy:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💫",
+        "emoticons": [],
         "keywords": [
             "comic",
             "dizzy",
             "star"
+        ],
+        "name": "dizzy",
+        "shortcodes": [
+            ":dizzy:"
         ]
     },
     {
-        "codepoints": "💦",
-        "name": "sweat droplets",
-        "shortcodes": [
-            ":sweat_droplets:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💦",
+        "emoticons": [],
         "keywords": [
             "comic",
             "splashing",
             "sweat",
             "sweat droplets"
+        ],
+        "name": "sweat droplets",
+        "shortcodes": [
+            ":sweat_droplets:"
         ]
     },
     {
-        "codepoints": "💨",
-        "name": "dashing away",
-        "shortcodes": [
-            ":dashing_away:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💨",
+        "emoticons": [],
         "keywords": [
             "comic",
             "dash",
             "dashing away",
             "running"
+        ],
+        "name": "dashing away",
+        "shortcodes": [
+            ":dashing_away:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "🕳️",
+        "emoticons": [],
+        "keywords": [
+            "hole"
+        ],
         "name": "hole",
         "shortcodes": [
             ":hole:"
-        ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": [
-            "hole"
         ]
     },
     {
-        "codepoints": "💣",
-        "name": "bomb",
-        "shortcodes": [
-            ":bomb:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💣",
+        "emoticons": [],
         "keywords": [
             "bomb",
             "comic"
+        ],
+        "name": "bomb",
+        "shortcodes": [
+            ":bomb:"
         ]
     },
     {
-        "codepoints": "💬",
-        "name": "speech balloon",
-        "shortcodes": [
-            ":speech_balloon:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💬",
+        "emoticons": [],
         "keywords": [
             "balloon",
             "bubble",
             "comic",
             "dialog",
             "speech"
+        ],
+        "name": "speech balloon",
+        "shortcodes": [
+            ":speech_balloon:"
         ]
     },
     {
+        "category": "Smileys & Emotion",
         "codepoints": "👁️‍🗨️",
+        "emoticons": [],
+        "keywords": [],
         "name": "eye in speech bubble",
         "shortcodes": [
             ":eye_in_speech_bubble:"
-        ],
-        "emoticons": [],
-        "category": "Smileys & Emotion",
-        "keywords": []
+        ]
     },
     {
-        "codepoints": "🗨️",
-        "name": "left speech bubble",
-        "shortcodes": [
-            ":left_speech_bubble:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🗨️",
+        "emoticons": [],
         "keywords": [
             "balloon",
             "bubble",
@@ -2577,120 +2299,120 @@ export const emojisData = JSON.parse(`[
             "left speech bubble",
             "speech",
             "dialogue"
+        ],
+        "name": "left speech bubble",
+        "shortcodes": [
+            ":left_speech_bubble:"
         ]
     },
     {
-        "codepoints": "🗯️",
-        "name": "right anger bubble",
-        "shortcodes": [
-            ":right_anger_bubble:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "🗯️",
+        "emoticons": [],
         "keywords": [
             "angry",
             "balloon",
             "bubble",
             "mad",
             "right anger bubble"
+        ],
+        "name": "right anger bubble",
+        "shortcodes": [
+            ":right_anger_bubble:"
         ]
     },
     {
-        "codepoints": "💭",
-        "name": "thought balloon",
-        "shortcodes": [
-            ":thought_balloon:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💭",
+        "emoticons": [],
         "keywords": [
             "balloon",
             "bubble",
             "comic",
             "thought"
+        ],
+        "name": "thought balloon",
+        "shortcodes": [
+            ":thought_balloon:"
         ]
     },
     {
-        "codepoints": "💤",
-        "name": "ZZZ",
-        "shortcodes": [
-            ":ZZZ:"
-        ],
-        "emoticons": [],
         "category": "Smileys & Emotion",
+        "codepoints": "💤",
+        "emoticons": [],
         "keywords": [
             "comic",
             "good night",
             "sleep",
             "ZZZ"
+        ],
+        "name": "ZZZ",
+        "shortcodes": [
+            ":ZZZ:"
         ]
     },
     {
-        "codepoints": "👋",
-        "name": "waving hand",
-        "shortcodes": [
-            ":waving_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👋",
+        "emoticons": [],
         "keywords": [
             "hand",
             "wave",
             "waving"
+        ],
+        "name": "waving hand",
+        "shortcodes": [
+            ":waving_hand:"
         ]
     },
     {
-        "codepoints": "🤚",
-        "name": "raised back of hand",
-        "shortcodes": [
-            ":raised_back_of_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤚",
+        "emoticons": [],
         "keywords": [
             "backhand",
             "raised",
             "raised back of hand"
+        ],
+        "name": "raised back of hand",
+        "shortcodes": [
+            ":raised_back_of_hand:"
         ]
     },
     {
-        "codepoints": "🖐️",
-        "name": "hand with fingers splayed",
-        "shortcodes": [
-            ":hand_with_fingers_splayed:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🖐️",
+        "emoticons": [],
         "keywords": [
             "finger",
             "hand",
             "hand with fingers splayed",
             "splayed"
+        ],
+        "name": "hand with fingers splayed",
+        "shortcodes": [
+            ":hand_with_fingers_splayed:"
         ]
     },
     {
-        "codepoints": "✋",
-        "name": "raised hand",
-        "shortcodes": [
-            ":raised_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "✋",
+        "emoticons": [],
         "keywords": [
             "hand",
             "high 5",
             "high five",
             "raised hand"
+        ],
+        "name": "raised hand",
+        "shortcodes": [
+            ":raised_hand:"
         ]
     },
     {
-        "codepoints": "🖖",
-        "name": "vulcan salute",
-        "shortcodes": [
-            ":vulcan_salute:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🖖",
+        "emoticons": [],
         "keywords": [
             "finger",
             "hand",
@@ -2698,136 +2420,57 @@ export const emojisData = JSON.parse(`[
             "vulcan",
             "Vulcan salute",
             "vulcan salute"
-        ]
-    },
-    {
-        "codepoints": "🫱",
-        "name": "rightwards hand",
-        "shortcodes": [
-            ":rightwards_hand:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "hand",
-            "right",
-            "rightward",
-            "rightwards hand",
-            "rightwards"
-        ]
-    },
-    {
-        "codepoints": "🫲",
-        "name": "leftwards hand",
+        "name": "vulcan salute",
         "shortcodes": [
-            ":leftwards_hand:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "hand",
-            "left",
-            "leftward",
-            "leftwards hand",
-            "leftwards"
+            ":vulcan_salute:"
         ]
     },
     {
-        "codepoints": "🫳",
-        "name": "palm down hand",
-        "shortcodes": [
-            ":palm_down_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
-        "keywords": [
-            "dismiss",
-            "drop",
-            "palm down hand",
-            "shoo"
-        ]
-    },
-    {
-        "codepoints": "🫴",
-        "name": "palm up hand",
-        "shortcodes": [
-            ":palm_up_hand:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "beckon",
-            "catch",
-            "come",
-            "offer",
-            "palm up hand"
-        ]
-    },
-    {
         "codepoints": "👌",
-        "name": "OK hand",
-        "shortcodes": [
-            ":OK_hand:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "hand",
             "OK",
             "perfect"
-        ]
-    },
-    {
-        "codepoints": "🤌",
-        "name": "pinched fingers",
-        "shortcodes": [
-            ":pinched_fingers:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "fingers",
-            "hand gesture",
-            "interrogation",
-            "pinched",
-            "sarcastic"
+        "name": "OK hand",
+        "shortcodes": [
+            ":OK_hand:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🤏",
-        "name": "pinching hand",
-        "shortcodes": [
-            ":pinching_hand:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "pinching hand",
             "small amount"
+        ],
+        "name": "pinching hand",
+        "shortcodes": [
+            ":pinching_hand:"
         ]
     },
     {
-        "codepoints": "✌️",
-        "name": "victory hand",
-        "shortcodes": [
-            ":victory_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "✌️",
+        "emoticons": [],
         "keywords": [
             "hand",
             "v",
             "victory"
+        ],
+        "name": "victory hand",
+        "shortcodes": [
+            ":victory_hand:"
         ]
     },
     {
-        "codepoints": "🤞",
-        "name": "crossed fingers",
-        "shortcodes": [
-            ":crossed_fingers:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤞",
+        "emoticons": [],
         "keywords": [
             "cross",
             "crossed fingers",
@@ -2835,48 +2478,31 @@ export const emojisData = JSON.parse(`[
             "hand",
             "luck",
             "good luck"
-        ]
-    },
-    {
-        "codepoints": "🫰",
-        "name": "hand with index finger and thumb crossed",
-        "shortcodes": [
-            ":hand_with_index_finger_and_thumb_crossed:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "expensive",
-            "hand with index finger and thumb crossed",
-            "heart",
-            "love",
-            "money",
-            "snap"
+        "name": "crossed fingers",
+        "shortcodes": [
+            ":crossed_fingers:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🤟",
-        "name": "love-you gesture",
-        "shortcodes": [
-            ":love-you_gesture:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "hand",
             "ILY",
             "love-you gesture",
             "love you gesture"
+        ],
+        "name": "love-you gesture",
+        "shortcodes": [
+            ":love-you_gesture:"
         ]
     },
     {
-        "codepoints": "🤘",
-        "name": "sign of the horns",
-        "shortcodes": [
-            ":sign_of_the_horns:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤘",
+        "emoticons": [],
         "keywords": [
             "finger",
             "hand",
@@ -2884,16 +2510,16 @@ export const emojisData = JSON.parse(`[
             "rock-on",
             "sign of the horns",
             "rock on"
+        ],
+        "name": "sign of the horns",
+        "shortcodes": [
+            ":sign_of_the_horns:"
         ]
     },
     {
-        "codepoints": "🤙",
-        "name": "call me hand",
-        "shortcodes": [
-            ":call_me_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤙",
+        "emoticons": [],
         "keywords": [
             "call",
             "call me hand",
@@ -2902,16 +2528,16 @@ export const emojisData = JSON.parse(`[
             "shaka",
             "hang loose",
             "Shaka"
+        ],
+        "name": "call me hand",
+        "shortcodes": [
+            ":call_me_hand:"
         ]
     },
     {
-        "codepoints": "👈",
-        "name": "backhand index pointing left",
-        "shortcodes": [
-            ":backhand_index_pointing_left:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👈",
+        "emoticons": [],
         "keywords": [
             "backhand",
             "backhand index pointing left",
@@ -2919,16 +2545,16 @@ export const emojisData = JSON.parse(`[
             "hand",
             "index",
             "point"
+        ],
+        "name": "backhand index pointing left",
+        "shortcodes": [
+            ":backhand_index_pointing_left:"
         ]
     },
     {
-        "codepoints": "👉",
-        "name": "backhand index pointing right",
-        "shortcodes": [
-            ":backhand_index_pointing_right:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👉",
+        "emoticons": [],
         "keywords": [
             "backhand",
             "backhand index pointing right",
@@ -2936,16 +2562,16 @@ export const emojisData = JSON.parse(`[
             "hand",
             "index",
             "point"
+        ],
+        "name": "backhand index pointing right",
+        "shortcodes": [
+            ":backhand_index_pointing_right:"
         ]
     },
     {
-        "codepoints": "👆",
-        "name": "backhand index pointing up",
-        "shortcodes": [
-            ":backhand_index_pointing_up:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👆",
+        "emoticons": [],
         "keywords": [
             "backhand",
             "backhand index pointing up",
@@ -2953,30 +2579,30 @@ export const emojisData = JSON.parse(`[
             "hand",
             "point",
             "up"
+        ],
+        "name": "backhand index pointing up",
+        "shortcodes": [
+            ":backhand_index_pointing_up:"
         ]
     },
     {
-        "codepoints": "🖕",
-        "name": "middle finger",
-        "shortcodes": [
-            ":middle_finger:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🖕",
+        "emoticons": [],
         "keywords": [
             "finger",
             "hand",
             "middle finger"
+        ],
+        "name": "middle finger",
+        "shortcodes": [
+            ":middle_finger:"
         ]
     },
     {
-        "codepoints": "👇",
-        "name": "backhand index pointing down",
-        "shortcodes": [
-            ":backhand_index_pointing_down:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👇",
+        "emoticons": [],
         "keywords": [
             "backhand",
             "backhand index pointing down",
@@ -2984,16 +2610,16 @@ export const emojisData = JSON.parse(`[
             "finger",
             "hand",
             "point"
+        ],
+        "name": "backhand index pointing down",
+        "shortcodes": [
+            ":backhand_index_pointing_down:"
         ]
     },
     {
-        "codepoints": "☝️",
-        "name": "index pointing up",
-        "shortcodes": [
-            ":index_pointing_up:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "☝️",
+        "emoticons": [],
         "keywords": [
             "finger",
             "hand",
@@ -3001,138 +2627,124 @@ export const emojisData = JSON.parse(`[
             "index pointing up",
             "point",
             "up"
-        ]
-    },
-    {
-        "codepoints": "🫵",
-        "name": "index pointing at the viewer",
-        "shortcodes": [
-            ":index_pointing_at_the_viewer:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "index pointing at the viewer",
-            "point",
-            "you"
+        "name": "index pointing up",
+        "shortcodes": [
+            ":index_pointing_up:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👍",
-        "name": "thumbs up",
-        "shortcodes": [
-            ":thumbs_up:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "+1",
             "hand",
             "thumb",
             "thumbs up",
             "up"
+        ],
+        "name": "thumbs up",
+        "shortcodes": [
+            ":thumbs_up:"
         ]
     },
     {
-        "codepoints": "👎",
-        "name": "thumbs down",
-        "shortcodes": [
-            ":thumbs_down:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👎",
+        "emoticons": [],
         "keywords": [
             "-1",
             "down",
             "hand",
             "thumb",
             "thumbs down"
+        ],
+        "name": "thumbs down",
+        "shortcodes": [
+            ":thumbs_down:"
         ]
     },
     {
-        "codepoints": "✊",
-        "name": "raised fist",
-        "shortcodes": [
-            ":raised_fist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "✊",
+        "emoticons": [],
         "keywords": [
             "clenched",
             "fist",
             "hand",
             "punch",
             "raised fist"
+        ],
+        "name": "raised fist",
+        "shortcodes": [
+            ":raised_fist:"
         ]
     },
     {
-        "codepoints": "👊",
-        "name": "oncoming fist",
-        "shortcodes": [
-            ":oncoming_fist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👊",
+        "emoticons": [],
         "keywords": [
             "clenched",
             "fist",
             "hand",
             "oncoming fist",
             "punch"
+        ],
+        "name": "oncoming fist",
+        "shortcodes": [
+            ":oncoming_fist:"
         ]
     },
     {
-        "codepoints": "🤛",
-        "name": "left-facing fist",
-        "shortcodes": [
-            ":left-facing_fist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤛",
+        "emoticons": [],
         "keywords": [
             "fist",
             "left-facing fist",
             "leftwards",
             "leftward"
+        ],
+        "name": "left-facing fist",
+        "shortcodes": [
+            ":left-facing_fist:"
         ]
     },
     {
-        "codepoints": "🤜",
-        "name": "right-facing fist",
-        "shortcodes": [
-            ":right-facing_fist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤜",
+        "emoticons": [],
         "keywords": [
             "fist",
             "right-facing fist",
             "rightwards",
             "rightward"
+        ],
+        "name": "right-facing fist",
+        "shortcodes": [
+            ":right-facing_fist:"
         ]
     },
     {
-        "codepoints": "👏",
-        "name": "clapping hands",
-        "shortcodes": [
-            ":clapping_hands:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👏",
+        "emoticons": [],
         "keywords": [
             "clap",
             "clapping hands",
             "hand"
+        ],
+        "name": "clapping hands",
+        "shortcodes": [
+            ":clapping_hands:"
         ]
     },
     {
-        "codepoints": "🙌",
-        "name": "raising hands",
-        "shortcodes": [
-            ":raising_hands:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙌",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "gesture",
@@ -3142,72 +2754,59 @@ export const emojisData = JSON.parse(`[
             "raising hands",
             "woo hoo",
             "yay"
-        ]
-    },
-    {
-        "codepoints": "🫶",
-        "name": "heart hands",
-        "shortcodes": [
-            ":heart_hands:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "heart hands",
-            "love"
+        "name": "raising hands",
+        "shortcodes": [
+            ":raising_hands:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👐",
-        "name": "open hands",
-        "shortcodes": [
-            ":open_hands:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "hand",
             "open",
             "open hands"
+        ],
+        "name": "open hands",
+        "shortcodes": [
+            ":open_hands:"
         ]
     },
     {
-        "codepoints": "🤲",
-        "name": "palms up together",
-        "shortcodes": [
-            ":palms_up_together:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤲",
+        "emoticons": [],
         "keywords": [
             "palms up together",
             "prayer"
+        ],
+        "name": "palms up together",
+        "shortcodes": [
+            ":palms_up_together:"
         ]
     },
     {
-        "codepoints": "🤝",
-        "name": "handshake",
-        "shortcodes": [
-            ":handshake:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤝",
+        "emoticons": [],
         "keywords": [
             "agreement",
             "hand",
             "handshake",
             "meeting",
             "shake"
+        ],
+        "name": "handshake",
+        "shortcodes": [
+            ":handshake:"
         ]
     },
     {
-        "codepoints": "🙏",
-        "name": "folded hands",
-        "shortcodes": [
-            ":folded_hands:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙏",
+        "emoticons": [],
         "keywords": [
             "ask",
             "folded hands",
@@ -3217,825 +2816,745 @@ export const emojisData = JSON.parse(`[
             "please",
             "pray",
             "thanks"
+        ],
+        "name": "folded hands",
+        "shortcodes": [
+            ":folded_hands:"
         ]
     },
     {
-        "codepoints": "✍️",
-        "name": "writing hand",
-        "shortcodes": [
-            ":writing_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "✍️",
+        "emoticons": [],
         "keywords": [
             "hand",
             "write",
             "writing hand"
+        ],
+        "name": "writing hand",
+        "shortcodes": [
+            ":writing_hand:"
         ]
     },
     {
-        "codepoints": "💅",
-        "name": "nail polish",
-        "shortcodes": [
-            ":nail_polish:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💅",
+        "emoticons": [],
         "keywords": [
             "care",
             "cosmetics",
             "manicure",
             "nail",
             "polish"
+        ],
+        "name": "nail polish",
+        "shortcodes": [
+            ":nail_polish:"
         ]
     },
     {
-        "codepoints": "🤳",
-        "name": "selfie",
-        "shortcodes": [
-            ":selfie:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤳",
+        "emoticons": [],
         "keywords": [
             "camera",
             "phone",
             "selfie"
+        ],
+        "name": "selfie",
+        "shortcodes": [
+            ":selfie:"
         ]
     },
     {
-        "codepoints": "💪",
-        "name": "flexed biceps",
-        "shortcodes": [
-            ":flexed_biceps:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💪",
+        "emoticons": [],
         "keywords": [
             "biceps",
             "comic",
             "flex",
             "flexed biceps",
             "muscle"
+        ],
+        "name": "flexed biceps",
+        "shortcodes": [
+            ":flexed_biceps:"
         ]
     },
     {
-        "codepoints": "🦾",
-        "name": "mechanical arm",
-        "shortcodes": [
-            ":mechanical_arm:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦾",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "mechanical arm",
             "prosthetic"
+        ],
+        "name": "mechanical arm",
+        "shortcodes": [
+            ":mechanical_arm:"
         ]
     },
     {
-        "codepoints": "🦿",
-        "name": "mechanical leg",
-        "shortcodes": [
-            ":mechanical_leg:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦿",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "mechanical leg",
             "prosthetic"
+        ],
+        "name": "mechanical leg",
+        "shortcodes": [
+            ":mechanical_leg:"
         ]
     },
     {
-        "codepoints": "🦵",
-        "name": "leg",
-        "shortcodes": [
-            ":leg:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦵",
+        "emoticons": [],
         "keywords": [
             "kick",
             "leg",
             "limb"
+        ],
+        "name": "leg",
+        "shortcodes": [
+            ":leg:"
         ]
     },
     {
-        "codepoints": "🦶",
-        "name": "foot",
-        "shortcodes": [
-            ":foot:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦶",
+        "emoticons": [],
         "keywords": [
             "foot",
             "kick",
             "stomp"
+        ],
+        "name": "foot",
+        "shortcodes": [
+            ":foot:"
         ]
     },
     {
-        "codepoints": "👂",
-        "name": "ear",
-        "shortcodes": [
-            ":ear:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👂",
+        "emoticons": [],
         "keywords": [
             "body",
             "ear"
+        ],
+        "name": "ear",
+        "shortcodes": [
+            ":ear:"
         ]
     },
     {
-        "codepoints": "🦻",
-        "name": "ear with hearing aid",
-        "shortcodes": [
-            ":ear_with_hearing_aid:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦻",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "ear with hearing aid",
             "hard of hearing",
             "hearing impaired"
+        ],
+        "name": "ear with hearing aid",
+        "shortcodes": [
+            ":ear_with_hearing_aid:"
         ]
     },
     {
-        "codepoints": "👃",
-        "name": "nose",
-        "shortcodes": [
-            ":nose:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👃",
+        "emoticons": [],
         "keywords": [
             "body",
             "nose"
+        ],
+        "name": "nose",
+        "shortcodes": [
+            ":nose:"
         ]
     },
     {
-        "codepoints": "🧠",
-        "name": "brain",
-        "shortcodes": [
-            ":brain:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧠",
+        "emoticons": [],
         "keywords": [
             "brain",
             "intelligent"
-        ]
-    },
-    {
-        "codepoints": "🫀",
-        "name": "anatomical heart",
-        "shortcodes": [
-            ":anatomical_heart:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "anatomical",
-            "cardiology",
-            "heart",
-            "organ",
-            "pulse",
-            "anatomical heart"
-        ]
-    },
-    {
-        "codepoints": "🫁",
-        "name": "lungs",
+        "name": "brain",
         "shortcodes": [
-            ":lungs:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "breath",
-            "exhalation",
-            "inhalation",
-            "lungs",
-            "organ",
-            "respiration"
+            ":brain:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🦷",
-        "name": "tooth",
-        "shortcodes": [
-            ":tooth:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "dentist",
             "tooth"
+        ],
+        "name": "tooth",
+        "shortcodes": [
+            ":tooth:"
         ]
     },
     {
-        "codepoints": "🦴",
-        "name": "bone",
-        "shortcodes": [
-            ":bone:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦴",
+        "emoticons": [],
         "keywords": [
             "bone",
             "skeleton"
+        ],
+        "name": "bone",
+        "shortcodes": [
+            ":bone:"
         ]
     },
     {
-        "codepoints": "👀",
-        "name": "eyes",
-        "shortcodes": [
-            ":eyes:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👀",
+        "emoticons": [],
         "keywords": [
             "eye",
             "eyes",
             "face"
+        ],
+        "name": "eyes",
+        "shortcodes": [
+            ":eyes:"
         ]
     },
     {
-        "codepoints": "👁️",
-        "name": "eye",
-        "shortcodes": [
-            ":eye:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👁️",
+        "emoticons": [],
         "keywords": [
             "body",
             "eye"
+        ],
+        "name": "eye",
+        "shortcodes": [
+            ":eye:"
         ]
     },
     {
-        "codepoints": "👅",
-        "name": "tongue",
-        "shortcodes": [
-            ":tongue:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👅",
+        "emoticons": [],
         "keywords": [
             "body",
             "tongue"
+        ],
+        "name": "tongue",
+        "shortcodes": [
+            ":tongue:"
         ]
     },
     {
-        "codepoints": "👄",
-        "name": "mouth",
-        "shortcodes": [
-            ":mouth:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👄",
+        "emoticons": [],
         "keywords": [
             "lips",
             "mouth"
-        ]
-    },
-    {
-        "codepoints": "🫦",
-        "name": "biting lip",
-        "shortcodes": [
-            ":biting_lip:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "anxious",
-            "biting lip",
-            "fear",
-            "flirting",
-            "nervous",
-            "uncomfortable",
-            "worried"
+        "name": "mouth",
+        "shortcodes": [
+            ":mouth:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👶",
-        "name": "baby",
-        "shortcodes": [
-            ":baby:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "baby",
             "young"
+        ],
+        "name": "baby",
+        "shortcodes": [
+            ":baby:"
         ]
     },
     {
-        "codepoints": "🧒",
-        "name": "child",
-        "shortcodes": [
-            ":child:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧒",
+        "emoticons": [],
         "keywords": [
             "child",
             "gender-neutral",
             "unspecified gender",
             "young"
+        ],
+        "name": "child",
+        "shortcodes": [
+            ":child:"
         ]
     },
     {
-        "codepoints": "👦",
-        "name": "boy",
-        "shortcodes": [
-            ":boy:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👦",
+        "emoticons": [],
         "keywords": [
             "boy",
             "young",
             "young person"
+        ],
+        "name": "boy",
+        "shortcodes": [
+            ":boy:"
         ]
     },
     {
-        "codepoints": "👧",
-        "name": "girl",
-        "shortcodes": [
-            ":girl:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👧",
+        "emoticons": [],
         "keywords": [
             "girl",
             "Virgo",
             "young person",
             "zodiac",
             "young"
+        ],
+        "name": "girl",
+        "shortcodes": [
+            ":girl:"
         ]
     },
     {
-        "codepoints": "🧑",
-        "name": "person",
-        "shortcodes": [
-            ":person:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑",
+        "emoticons": [],
         "keywords": [
             "adult",
             "gender-neutral",
             "person",
             "unspecified gender"
+        ],
+        "name": "person",
+        "shortcodes": [
+            ":person:"
         ]
     },
     {
-        "codepoints": "👱",
-        "name": "person: blond hair",
-        "shortcodes": [
-            ":person:_blond_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👱",
+        "emoticons": [],
         "keywords": [
             "blond",
             "blond-haired person",
             "hair",
             "person: blond hair"
+        ],
+        "name": "person: blond hair",
+        "shortcodes": [
+            ":person:_blond_hair:"
         ]
     },
     {
-        "codepoints": "👨",
-        "name": "man",
-        "shortcodes": [
-            ":man:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨",
+        "emoticons": [],
         "keywords": [
             "adult",
             "man"
+        ],
+        "name": "man",
+        "shortcodes": [
+            ":man:"
         ]
     },
     {
-        "codepoints": "🧔",
-        "name": "person: beard",
-        "shortcodes": [
-            ":person:_beard:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧔",
+        "emoticons": [],
         "keywords": [
             "beard",
             "person",
             "person: beard"
-        ]
-    },
-    {
-        "codepoints": "🧔‍♂️",
-        "name": "man: beard",
-        "shortcodes": [
-            ":man:_beard:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "beard",
-            "man",
-            "man: beard"
-        ]
-    },
-    {
-        "codepoints": "🧔‍♀️",
-        "name": "woman: beard",
+        "name": "person: beard",
         "shortcodes": [
-            ":woman:_beard:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "beard",
-            "woman",
-            "woman: beard"
+            ":person:_beard:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍🦰",
-        "name": "man: red hair",
-        "shortcodes": [
-            ":man:_red_hair:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "adult",
             "man",
             "red hair"
+        ],
+        "name": "man: red hair",
+        "shortcodes": [
+            ":man:_red_hair:"
         ]
     },
     {
-        "codepoints": "👨‍🦱",
-        "name": "man: curly hair",
-        "shortcodes": [
-            ":man:_curly_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🦱",
+        "emoticons": [],
         "keywords": [
             "adult",
             "curly hair",
             "man"
+        ],
+        "name": "man: curly hair",
+        "shortcodes": [
+            ":man:_curly_hair:"
         ]
     },
     {
-        "codepoints": "👨‍🦳",
-        "name": "man: white hair",
-        "shortcodes": [
-            ":man:_white_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🦳",
+        "emoticons": [],
         "keywords": [
             "adult",
             "man",
             "white hair"
+        ],
+        "name": "man: white hair",
+        "shortcodes": [
+            ":man:_white_hair:"
         ]
     },
     {
-        "codepoints": "👨‍🦲",
-        "name": "man: bald",
-        "shortcodes": [
-            ":man:_bald:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🦲",
+        "emoticons": [],
         "keywords": [
             "adult",
             "bald",
             "man"
+        ],
+        "name": "man: bald",
+        "shortcodes": [
+            ":man:_bald:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩",
+        "emoticons": [],
+        "keywords": [
+            "adult",
+            "woman"
+        ],
         "name": "woman",
         "shortcodes": [
             ":woman:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "adult",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍🦰",
+        "emoticons": [],
+        "keywords": [
+            "adult",
+            "red hair",
+            "woman"
+        ],
         "name": "woman: red hair",
         "shortcodes": [
             ":woman:_red_hair:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "adult",
-            "red hair",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🧑‍🦰",
+        "emoticons": [],
+        "keywords": [
+            "adult",
+            "gender-neutral",
+            "person",
+            "red hair",
+            "unspecified gender"
+        ],
         "name": "person: red hair",
         "shortcodes": [
             ":person:_red_hair:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "adult",
-            "gender-neutral",
-            "person",
-            "red hair",
-            "unspecified gender"
         ]
     },
     {
-        "codepoints": "👩‍🦱",
-        "name": "woman: curly hair",
-        "shortcodes": [
-            ":woman:_curly_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🦱",
+        "emoticons": [],
         "keywords": [
             "adult",
             "curly hair",
             "woman"
+        ],
+        "name": "woman: curly hair",
+        "shortcodes": [
+            ":woman:_curly_hair:"
         ]
     },
     {
-        "codepoints": "🧑‍🦱",
-        "name": "person: curly hair",
-        "shortcodes": [
-            ":person:_curly_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🦱",
+        "emoticons": [],
         "keywords": [
             "adult",
             "curly hair",
             "gender-neutral",
             "person",
             "unspecified gender"
+        ],
+        "name": "person: curly hair",
+        "shortcodes": [
+            ":person:_curly_hair:"
         ]
     },
     {
-        "codepoints": "👩‍🦳",
-        "name": "woman: white hair",
-        "shortcodes": [
-            ":woman:_white_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🦳",
+        "emoticons": [],
         "keywords": [
             "adult",
             "white hair",
             "woman"
+        ],
+        "name": "woman: white hair",
+        "shortcodes": [
+            ":woman:_white_hair:"
         ]
     },
     {
-        "codepoints": "🧑‍🦳",
-        "name": "person: white hair",
-        "shortcodes": [
-            ":person:_white_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🦳",
+        "emoticons": [],
         "keywords": [
             "adult",
             "gender-neutral",
             "person",
             "unspecified gender",
             "white hair"
+        ],
+        "name": "person: white hair",
+        "shortcodes": [
+            ":person:_white_hair:"
         ]
     },
     {
-        "codepoints": "👩‍🦲",
-        "name": "woman: bald",
-        "shortcodes": [
-            ":woman:_bald:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🦲",
+        "emoticons": [],
         "keywords": [
             "adult",
             "bald",
             "woman"
+        ],
+        "name": "woman: bald",
+        "shortcodes": [
+            ":woman:_bald:"
         ]
     },
     {
-        "codepoints": "🧑‍🦲",
-        "name": "person: bald",
-        "shortcodes": [
-            ":person:_bald:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🦲",
+        "emoticons": [],
         "keywords": [
             "adult",
             "bald",
             "gender-neutral",
             "person",
             "unspecified gender"
+        ],
+        "name": "person: bald",
+        "shortcodes": [
+            ":person:_bald:"
         ]
     },
     {
-        "codepoints": "👱‍♀️",
-        "name": "woman: blond hair",
-        "shortcodes": [
-            ":woman:_blond_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👱‍♀️",
+        "emoticons": [],
         "keywords": [
             "blond-haired woman",
             "blonde",
             "hair",
             "woman",
             "woman: blond hair"
+        ],
+        "name": "woman: blond hair",
+        "shortcodes": [
+            ":woman:_blond_hair:"
         ]
     },
     {
-        "codepoints": "👱‍♂️",
-        "name": "man: blond hair",
-        "shortcodes": [
-            ":man:_blond_hair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👱‍♂️",
+        "emoticons": [],
         "keywords": [
             "blond",
             "blond-haired man",
             "hair",
             "man",
             "man: blond hair"
+        ],
+        "name": "man: blond hair",
+        "shortcodes": [
+            ":man:_blond_hair:"
         ]
     },
     {
-        "codepoints": "🧓",
-        "name": "older person",
-        "shortcodes": [
-            ":older_person:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧓",
+        "emoticons": [],
         "keywords": [
             "adult",
             "gender-neutral",
             "old",
             "older person",
             "unspecified gender"
+        ],
+        "name": "older person",
+        "shortcodes": [
+            ":older_person:"
         ]
     },
     {
-        "codepoints": "👴",
-        "name": "old man",
-        "shortcodes": [
-            ":old_man:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👴",
+        "emoticons": [],
         "keywords": [
             "adult",
             "man",
             "old"
+        ],
+        "name": "old man",
+        "shortcodes": [
+            ":old_man:"
         ]
     },
     {
-        "codepoints": "👵",
-        "name": "old woman",
-        "shortcodes": [
-            ":old_woman:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👵",
+        "emoticons": [],
         "keywords": [
             "adult",
             "old",
             "woman"
+        ],
+        "name": "old woman",
+        "shortcodes": [
+            ":old_woman:"
         ]
     },
     {
-        "codepoints": "🙍",
-        "name": "person frowning",
-        "shortcodes": [
-            ":person_frowning:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙍",
+        "emoticons": [],
         "keywords": [
             "frown",
             "gesture",
             "person frowning"
+        ],
+        "name": "person frowning",
+        "shortcodes": [
+            ":person_frowning:"
         ]
     },
     {
-        "codepoints": "🙍‍♂️",
-        "name": "man frowning",
-        "shortcodes": [
-            ":man_frowning:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙍‍♂️",
+        "emoticons": [],
         "keywords": [
             "frowning",
             "gesture",
             "man"
+        ],
+        "name": "man frowning",
+        "shortcodes": [
+            ":man_frowning:"
         ]
     },
     {
-        "codepoints": "🙍‍♀️",
-        "name": "woman frowning",
-        "shortcodes": [
-            ":woman_frowning:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙍‍♀️",
+        "emoticons": [],
         "keywords": [
             "frowning",
             "gesture",
             "woman"
+        ],
+        "name": "woman frowning",
+        "shortcodes": [
+            ":woman_frowning:"
         ]
     },
     {
-        "codepoints": "🙎",
-        "name": "person pouting",
-        "shortcodes": [
-            ":person_pouting:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙎",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "person pouting",
             "pouting"
+        ],
+        "name": "person pouting",
+        "shortcodes": [
+            ":person_pouting:"
         ]
     },
     {
-        "codepoints": "🙎‍♂️",
-        "name": "man pouting",
-        "shortcodes": [
-            ":man_pouting:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙎‍♂️",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "man",
             "pouting"
+        ],
+        "name": "man pouting",
+        "shortcodes": [
+            ":man_pouting:"
         ]
     },
     {
-        "codepoints": "🙎‍♀️",
-        "name": "woman pouting",
-        "shortcodes": [
-            ":woman_pouting:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙎‍♀️",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "pouting",
             "woman"
+        ],
+        "name": "woman pouting",
+        "shortcodes": [
+            ":woman_pouting:"
         ]
     },
     {
-        "codepoints": "🙅",
-        "name": "person gesturing NO",
-        "shortcodes": [
-            ":person_gesturing_NO:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙅",
+        "emoticons": [],
         "keywords": [
             "forbidden",
             "gesture",
             "hand",
             "person gesturing NO",
             "prohibited"
+        ],
+        "name": "person gesturing NO",
+        "shortcodes": [
+            ":person_gesturing_NO:"
         ]
     },
     {
-        "codepoints": "🙅‍♂️",
-        "name": "man gesturing NO",
-        "shortcodes": [
-            ":man_gesturing_NO:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙅‍♂️",
+        "emoticons": [],
         "keywords": [
             "forbidden",
             "gesture",
@@ -4043,16 +3562,16 @@ export const emojisData = JSON.parse(`[
             "man",
             "man gesturing NO",
             "prohibited"
+        ],
+        "name": "man gesturing NO",
+        "shortcodes": [
+            ":man_gesturing_NO:"
         ]
     },
     {
-        "codepoints": "🙅‍♀️",
-        "name": "woman gesturing NO",
-        "shortcodes": [
-            ":woman_gesturing_NO:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙅‍♀️",
+        "emoticons": [],
         "keywords": [
             "forbidden",
             "gesture",
@@ -4060,63 +3579,63 @@ export const emojisData = JSON.parse(`[
             "prohibited",
             "woman",
             "woman gesturing NO"
+        ],
+        "name": "woman gesturing NO",
+        "shortcodes": [
+            ":woman_gesturing_NO:"
         ]
     },
     {
-        "codepoints": "🙆",
-        "name": "person gesturing OK",
-        "shortcodes": [
-            ":person_gesturing_OK:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙆",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "hand",
             "OK",
             "person gesturing OK"
+        ],
+        "name": "person gesturing OK",
+        "shortcodes": [
+            ":person_gesturing_OK:"
         ]
     },
     {
-        "codepoints": "🙆‍♂️",
-        "name": "man gesturing OK",
-        "shortcodes": [
-            ":man_gesturing_OK:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙆‍♂️",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "hand",
             "man",
             "man gesturing OK",
             "OK"
+        ],
+        "name": "man gesturing OK",
+        "shortcodes": [
+            ":man_gesturing_OK:"
         ]
     },
     {
-        "codepoints": "🙆‍♀️",
-        "name": "woman gesturing OK",
-        "shortcodes": [
-            ":woman_gesturing_OK:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙆‍♀️",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "hand",
             "OK",
             "woman",
             "woman gesturing OK"
+        ],
+        "name": "woman gesturing OK",
+        "shortcodes": [
+            ":woman_gesturing_OK:"
         ]
     },
     {
-        "codepoints": "💁",
-        "name": "person tipping hand",
-        "shortcodes": [
-            ":person_tipping_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💁",
+        "emoticons": [],
         "keywords": [
             "hand",
             "help",
@@ -4124,92 +3643,92 @@ export const emojisData = JSON.parse(`[
             "person tipping hand",
             "sassy",
             "tipping"
+        ],
+        "name": "person tipping hand",
+        "shortcodes": [
+            ":person_tipping_hand:"
         ]
     },
     {
-        "codepoints": "💁‍♂️",
-        "name": "man tipping hand",
-        "shortcodes": [
-            ":man_tipping_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💁‍♂️",
+        "emoticons": [],
         "keywords": [
             "man",
             "man tipping hand",
             "sassy",
             "tipping hand"
+        ],
+        "name": "man tipping hand",
+        "shortcodes": [
+            ":man_tipping_hand:"
         ]
     },
     {
-        "codepoints": "💁‍♀️",
-        "name": "woman tipping hand",
-        "shortcodes": [
-            ":woman_tipping_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💁‍♀️",
+        "emoticons": [],
         "keywords": [
             "sassy",
             "tipping hand",
             "woman",
             "woman tipping hand"
+        ],
+        "name": "woman tipping hand",
+        "shortcodes": [
+            ":woman_tipping_hand:"
         ]
     },
     {
-        "codepoints": "🙋",
-        "name": "person raising hand",
-        "shortcodes": [
-            ":person_raising_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙋",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "hand",
             "happy",
             "person raising hand",
             "raised"
+        ],
+        "name": "person raising hand",
+        "shortcodes": [
+            ":person_raising_hand:"
         ]
     },
     {
-        "codepoints": "🙋‍♂️",
-        "name": "man raising hand",
-        "shortcodes": [
-            ":man_raising_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙋‍♂️",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "man",
             "man raising hand",
             "raising hand"
+        ],
+        "name": "man raising hand",
+        "shortcodes": [
+            ":man_raising_hand:"
         ]
     },
     {
-        "codepoints": "🙋‍♀️",
-        "name": "woman raising hand",
-        "shortcodes": [
-            ":woman_raising_hand:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙋‍♀️",
+        "emoticons": [],
         "keywords": [
             "gesture",
             "raising hand",
             "woman",
             "woman raising hand"
+        ],
+        "name": "woman raising hand",
+        "shortcodes": [
+            ":woman_raising_hand:"
         ]
     },
     {
-        "codepoints": "🧏",
-        "name": "deaf person",
-        "shortcodes": [
-            ":deaf_person:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧏",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "deaf",
@@ -4217,58 +3736,58 @@ export const emojisData = JSON.parse(`[
             "ear",
             "hear",
             "hearing impaired"
+        ],
+        "name": "deaf person",
+        "shortcodes": [
+            ":deaf_person:"
         ]
     },
     {
-        "codepoints": "🧏‍♂️",
-        "name": "deaf man",
-        "shortcodes": [
-            ":deaf_man:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧏‍♂️",
+        "emoticons": [],
         "keywords": [
             "deaf",
             "man"
+        ],
+        "name": "deaf man",
+        "shortcodes": [
+            ":deaf_man:"
         ]
     },
     {
-        "codepoints": "🧏‍♀️",
-        "name": "deaf woman",
-        "shortcodes": [
-            ":deaf_woman:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧏‍♀️",
+        "emoticons": [],
         "keywords": [
             "deaf",
             "woman"
+        ],
+        "name": "deaf woman",
+        "shortcodes": [
+            ":deaf_woman:"
         ]
     },
     {
-        "codepoints": "🙇",
-        "name": "person bowing",
-        "shortcodes": [
-            ":person_bowing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙇",
+        "emoticons": [],
         "keywords": [
             "apology",
             "bow",
             "gesture",
             "person bowing",
             "sorry"
+        ],
+        "name": "person bowing",
+        "shortcodes": [
+            ":person_bowing:"
         ]
     },
     {
-        "codepoints": "🙇‍♂️",
-        "name": "man bowing",
-        "shortcodes": [
-            ":man_bowing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙇‍♂️",
+        "emoticons": [],
         "keywords": [
             "apology",
             "bowing",
@@ -4276,16 +3795,16 @@ export const emojisData = JSON.parse(`[
             "gesture",
             "man",
             "sorry"
+        ],
+        "name": "man bowing",
+        "shortcodes": [
+            ":man_bowing:"
         ]
     },
     {
-        "codepoints": "🙇‍♀️",
-        "name": "woman bowing",
-        "shortcodes": [
-            ":woman_bowing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🙇‍♀️",
+        "emoticons": [],
         "keywords": [
             "apology",
             "bowing",
@@ -4293,80 +3812,80 @@ export const emojisData = JSON.parse(`[
             "gesture",
             "sorry",
             "woman"
+        ],
+        "name": "woman bowing",
+        "shortcodes": [
+            ":woman_bowing:"
         ]
     },
     {
-        "codepoints": "🤦",
-        "name": "person facepalming",
-        "shortcodes": [
-            ":person_facepalming:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤦",
+        "emoticons": [],
         "keywords": [
             "disbelief",
             "exasperation",
             "face",
             "palm",
             "person facepalming"
+        ],
+        "name": "person facepalming",
+        "shortcodes": [
+            ":person_facepalming:"
         ]
     },
     {
-        "codepoints": "🤦‍♂️",
-        "name": "man facepalming",
-        "shortcodes": [
-            ":man_facepalming:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤦‍♂️",
+        "emoticons": [],
         "keywords": [
             "disbelief",
             "exasperation",
             "facepalm",
             "man",
             "man facepalming"
+        ],
+        "name": "man facepalming",
+        "shortcodes": [
+            ":man_facepalming:"
         ]
     },
     {
-        "codepoints": "🤦‍♀️",
-        "name": "woman facepalming",
-        "shortcodes": [
-            ":woman_facepalming:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤦‍♀️",
+        "emoticons": [],
         "keywords": [
             "disbelief",
             "exasperation",
             "facepalm",
             "woman",
             "woman facepalming"
+        ],
+        "name": "woman facepalming",
+        "shortcodes": [
+            ":woman_facepalming:"
         ]
     },
     {
-        "codepoints": "🤷",
-        "name": "person shrugging",
-        "shortcodes": [
-            ":person_shrugging:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤷",
+        "emoticons": [],
         "keywords": [
             "doubt",
             "ignorance",
             "indifference",
             "person shrugging",
             "shrug"
+        ],
+        "name": "person shrugging",
+        "shortcodes": [
+            ":person_shrugging:"
         ]
     },
     {
-        "codepoints": "🤷‍♂️",
-        "name": "man shrugging",
-        "shortcodes": [
-            ":man_shrugging:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤷‍♂️",
+        "emoticons": [],
         "keywords": [
             "doubt",
             "ignorance",
@@ -4374,16 +3893,16 @@ export const emojisData = JSON.parse(`[
             "man",
             "man shrugging",
             "shrug"
+        ],
+        "name": "man shrugging",
+        "shortcodes": [
+            ":man_shrugging:"
         ]
     },
     {
-        "codepoints": "🤷‍♀️",
-        "name": "woman shrugging",
-        "shortcodes": [
-            ":woman_shrugging:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤷‍♀️",
+        "emoticons": [],
         "keywords": [
             "doubt",
             "ignorance",
@@ -4391,16 +3910,16 @@ export const emojisData = JSON.parse(`[
             "shrug",
             "woman",
             "woman shrugging"
+        ],
+        "name": "woman shrugging",
+        "shortcodes": [
+            ":woman_shrugging:"
         ]
     },
     {
-        "codepoints": "🧑‍⚕️",
-        "name": "health worker",
-        "shortcodes": [
-            ":health_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍⚕️",
+        "emoticons": [],
         "keywords": [
             "doctor",
             "health worker",
@@ -4409,16 +3928,16 @@ export const emojisData = JSON.parse(`[
             "therapist",
             "care",
             "health"
+        ],
+        "name": "health worker",
+        "shortcodes": [
+            ":health_worker:"
         ]
     },
     {
-        "codepoints": "👨‍⚕️",
-        "name": "man health worker",
-        "shortcodes": [
-            ":man_health_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍⚕️",
+        "emoticons": [],
         "keywords": [
             "doctor",
             "healthcare",
@@ -4427,16 +3946,16 @@ export const emojisData = JSON.parse(`[
             "nurse",
             "therapist",
             "health care"
+        ],
+        "name": "man health worker",
+        "shortcodes": [
+            ":man_health_worker:"
         ]
     },
     {
-        "codepoints": "👩‍⚕️",
-        "name": "woman health worker",
-        "shortcodes": [
-            ":woman_health_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍⚕️",
+        "emoticons": [],
         "keywords": [
             "doctor",
             "healthcare",
@@ -4445,343 +3964,343 @@ export const emojisData = JSON.parse(`[
             "woman",
             "woman health worker",
             "health care"
+        ],
+        "name": "woman health worker",
+        "shortcodes": [
+            ":woman_health_worker:"
         ]
     },
     {
-        "codepoints": "🧑‍🎓",
-        "name": "student",
-        "shortcodes": [
-            ":student:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🎓",
+        "emoticons": [],
         "keywords": [
             "graduate",
             "student"
+        ],
+        "name": "student",
+        "shortcodes": [
+            ":student:"
         ]
     },
     {
-        "codepoints": "👨‍🎓",
-        "name": "man student",
-        "shortcodes": [
-            ":man_student:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🎓",
+        "emoticons": [],
         "keywords": [
             "graduate",
             "man",
             "student"
+        ],
+        "name": "man student",
+        "shortcodes": [
+            ":man_student:"
         ]
     },
     {
-        "codepoints": "👩‍🎓",
-        "name": "woman student",
-        "shortcodes": [
-            ":woman_student:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🎓",
+        "emoticons": [],
         "keywords": [
             "graduate",
             "student",
             "woman"
+        ],
+        "name": "woman student",
+        "shortcodes": [
+            ":woman_student:"
         ]
     },
     {
-        "codepoints": "🧑‍🏫",
-        "name": "teacher",
-        "shortcodes": [
-            ":teacher:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🏫",
+        "emoticons": [],
         "keywords": [
             "instructor",
             "professor",
             "teacher",
             "lecturer"
+        ],
+        "name": "teacher",
+        "shortcodes": [
+            ":teacher:"
         ]
     },
     {
-        "codepoints": "👨‍🏫",
-        "name": "man teacher",
-        "shortcodes": [
-            ":man_teacher:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🏫",
+        "emoticons": [],
         "keywords": [
             "instructor",
             "man",
             "professor",
             "teacher"
+        ],
+        "name": "man teacher",
+        "shortcodes": [
+            ":man_teacher:"
         ]
     },
     {
-        "codepoints": "👩‍🏫",
-        "name": "woman teacher",
-        "shortcodes": [
-            ":woman_teacher:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🏫",
+        "emoticons": [],
         "keywords": [
             "instructor",
             "professor",
             "teacher",
             "woman"
+        ],
+        "name": "woman teacher",
+        "shortcodes": [
+            ":woman_teacher:"
         ]
     },
     {
-        "codepoints": "🧑‍⚖️",
-        "name": "judge",
-        "shortcodes": [
-            ":judge:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍⚖️",
+        "emoticons": [],
         "keywords": [
             "judge",
             "justice",
             "scales",
             "law"
+        ],
+        "name": "judge",
+        "shortcodes": [
+            ":judge:"
         ]
     },
     {
-        "codepoints": "👨‍⚖️",
-        "name": "man judge",
-        "shortcodes": [
-            ":man_judge:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍⚖️",
+        "emoticons": [],
         "keywords": [
             "judge",
             "justice",
             "man",
             "scales"
+        ],
+        "name": "man judge",
+        "shortcodes": [
+            ":man_judge:"
         ]
     },
     {
-        "codepoints": "👩‍⚖️",
-        "name": "woman judge",
-        "shortcodes": [
-            ":woman_judge:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍⚖️",
+        "emoticons": [],
         "keywords": [
             "judge",
             "justice",
             "scales",
             "woman"
+        ],
+        "name": "woman judge",
+        "shortcodes": [
+            ":woman_judge:"
         ]
     },
     {
-        "codepoints": "🧑‍🌾",
-        "name": "farmer",
-        "shortcodes": [
-            ":farmer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🌾",
+        "emoticons": [],
         "keywords": [
             "farmer",
             "gardener",
             "rancher"
+        ],
+        "name": "farmer",
+        "shortcodes": [
+            ":farmer:"
         ]
     },
     {
-        "codepoints": "👨‍🌾",
-        "name": "man farmer",
-        "shortcodes": [
-            ":man_farmer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🌾",
+        "emoticons": [],
         "keywords": [
             "farmer",
             "gardener",
             "man",
             "rancher"
+        ],
+        "name": "man farmer",
+        "shortcodes": [
+            ":man_farmer:"
         ]
     },
     {
-        "codepoints": "👩‍🌾",
-        "name": "woman farmer",
-        "shortcodes": [
-            ":woman_farmer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🌾",
+        "emoticons": [],
         "keywords": [
             "farmer",
             "gardener",
             "rancher",
             "woman"
+        ],
+        "name": "woman farmer",
+        "shortcodes": [
+            ":woman_farmer:"
         ]
     },
     {
-        "codepoints": "🧑‍🍳",
-        "name": "cook",
-        "shortcodes": [
-            ":cook:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🍳",
+        "emoticons": [],
         "keywords": [
             "chef",
             "cook"
+        ],
+        "name": "cook",
+        "shortcodes": [
+            ":cook:"
         ]
     },
     {
-        "codepoints": "👨‍🍳",
-        "name": "man cook",
-        "shortcodes": [
-            ":man_cook:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🍳",
+        "emoticons": [],
         "keywords": [
             "chef",
             "cook",
             "man"
+        ],
+        "name": "man cook",
+        "shortcodes": [
+            ":man_cook:"
         ]
     },
     {
-        "codepoints": "👩‍🍳",
-        "name": "woman cook",
-        "shortcodes": [
-            ":woman_cook:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🍳",
+        "emoticons": [],
         "keywords": [
             "chef",
             "cook",
             "woman"
+        ],
+        "name": "woman cook",
+        "shortcodes": [
+            ":woman_cook:"
         ]
     },
     {
-        "codepoints": "🧑‍🔧",
-        "name": "mechanic",
-        "shortcodes": [
-            ":mechanic:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🔧",
+        "emoticons": [],
         "keywords": [
             "electrician",
             "mechanic",
             "plumber",
             "tradesperson",
             "tradie"
+        ],
+        "name": "mechanic",
+        "shortcodes": [
+            ":mechanic:"
         ]
     },
     {
-        "codepoints": "👨‍🔧",
-        "name": "man mechanic",
-        "shortcodes": [
-            ":man_mechanic:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🔧",
+        "emoticons": [],
         "keywords": [
             "electrician",
             "man",
             "mechanic",
             "plumber",
             "tradesperson"
+        ],
+        "name": "man mechanic",
+        "shortcodes": [
+            ":man_mechanic:"
         ]
     },
     {
-        "codepoints": "👩‍🔧",
-        "name": "woman mechanic",
-        "shortcodes": [
-            ":woman_mechanic:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🔧",
+        "emoticons": [],
         "keywords": [
             "electrician",
             "mechanic",
             "plumber",
             "tradesperson",
             "woman"
+        ],
+        "name": "woman mechanic",
+        "shortcodes": [
+            ":woman_mechanic:"
         ]
     },
     {
-        "codepoints": "🧑‍🏭",
-        "name": "factory worker",
-        "shortcodes": [
-            ":factory_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🏭",
+        "emoticons": [],
         "keywords": [
             "assembly",
             "factory",
             "industrial",
             "worker"
+        ],
+        "name": "factory worker",
+        "shortcodes": [
+            ":factory_worker:"
         ]
     },
     {
-        "codepoints": "👨‍🏭",
-        "name": "man factory worker",
-        "shortcodes": [
-            ":man_factory_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🏭",
+        "emoticons": [],
         "keywords": [
             "assembly",
             "factory",
             "industrial",
             "man",
             "worker"
+        ],
+        "name": "man factory worker",
+        "shortcodes": [
+            ":man_factory_worker:"
         ]
     },
     {
-        "codepoints": "👩‍🏭",
-        "name": "woman factory worker",
-        "shortcodes": [
-            ":woman_factory_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🏭",
+        "emoticons": [],
         "keywords": [
             "assembly",
             "factory",
             "industrial",
             "woman",
             "worker"
+        ],
+        "name": "woman factory worker",
+        "shortcodes": [
+            ":woman_factory_worker:"
         ]
     },
     {
-        "codepoints": "🧑‍💼",
-        "name": "office worker",
-        "shortcodes": [
-            ":office_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍💼",
+        "emoticons": [],
         "keywords": [
             "architect",
             "business",
             "manager",
             "office worker",
             "white-collar"
+        ],
+        "name": "office worker",
+        "shortcodes": [
+            ":office_worker:"
         ]
     },
     {
-        "codepoints": "👨‍💼",
-        "name": "man office worker",
-        "shortcodes": [
-            ":man_office_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍💼",
+        "emoticons": [],
         "keywords": [
             "business man",
             "man office worker",
@@ -4792,16 +4311,16 @@ export const emojisData = JSON.parse(`[
             "business",
             "man",
             "white-collar"
+        ],
+        "name": "man office worker",
+        "shortcodes": [
+            ":man_office_worker:"
         ]
     },
     {
-        "codepoints": "👩‍💼",
-        "name": "woman office worker",
-        "shortcodes": [
-            ":woman_office_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍💼",
+        "emoticons": [],
         "keywords": [
             "business woman",
             "manager",
@@ -4812,32 +4331,32 @@ export const emojisData = JSON.parse(`[
             "business",
             "white-collar",
             "woman"
+        ],
+        "name": "woman office worker",
+        "shortcodes": [
+            ":woman_office_worker:"
         ]
     },
     {
-        "codepoints": "🧑‍🔬",
-        "name": "scientist",
-        "shortcodes": [
-            ":scientist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🔬",
+        "emoticons": [],
         "keywords": [
             "biologist",
             "chemist",
             "engineer",
             "physicist",
             "scientist"
+        ],
+        "name": "scientist",
+        "shortcodes": [
+            ":scientist:"
         ]
     },
     {
-        "codepoints": "👨‍🔬",
-        "name": "man scientist",
-        "shortcodes": [
-            ":man_scientist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🔬",
+        "emoticons": [],
         "keywords": [
             "biologist",
             "chemist",
@@ -4845,16 +4364,16 @@ export const emojisData = JSON.parse(`[
             "man",
             "physicist",
             "scientist"
+        ],
+        "name": "man scientist",
+        "shortcodes": [
+            ":man_scientist:"
         ]
     },
     {
-        "codepoints": "👩‍🔬",
-        "name": "woman scientist",
-        "shortcodes": [
-            ":woman_scientist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🔬",
+        "emoticons": [],
         "keywords": [
             "biologist",
             "chemist",
@@ -4862,32 +4381,32 @@ export const emojisData = JSON.parse(`[
             "physicist",
             "scientist",
             "woman"
+        ],
+        "name": "woman scientist",
+        "shortcodes": [
+            ":woman_scientist:"
         ]
     },
     {
-        "codepoints": "🧑‍💻",
-        "name": "technologist",
-        "shortcodes": [
-            ":technologist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍💻",
+        "emoticons": [],
         "keywords": [
             "coder",
             "developer",
             "inventor",
             "software",
             "technologist"
+        ],
+        "name": "technologist",
+        "shortcodes": [
+            ":technologist:"
         ]
     },
     {
-        "codepoints": "👨‍💻",
-        "name": "man technologist",
-        "shortcodes": [
-            ":man_technologist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍💻",
+        "emoticons": [],
         "keywords": [
             "coder",
             "developer",
@@ -4895,16 +4414,16 @@ export const emojisData = JSON.parse(`[
             "man",
             "software",
             "technologist"
+        ],
+        "name": "man technologist",
+        "shortcodes": [
+            ":man_technologist:"
         ]
     },
     {
-        "codepoints": "👩‍💻",
-        "name": "woman technologist",
-        "shortcodes": [
-            ":woman_technologist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍💻",
+        "emoticons": [],
         "keywords": [
             "coder",
             "developer",
@@ -4912,32 +4431,32 @@ export const emojisData = JSON.parse(`[
             "software",
             "technologist",
             "woman"
+        ],
+        "name": "woman technologist",
+        "shortcodes": [
+            ":woman_technologist:"
         ]
     },
     {
-        "codepoints": "🧑‍🎤",
-        "name": "singer",
-        "shortcodes": [
-            ":singer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🎤",
+        "emoticons": [],
         "keywords": [
             "actor",
             "entertainer",
             "rock",
             "singer",
             "star"
+        ],
+        "name": "singer",
+        "shortcodes": [
+            ":singer:"
         ]
     },
     {
-        "codepoints": "👨‍🎤",
-        "name": "man singer",
-        "shortcodes": [
-            ":man_singer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🎤",
+        "emoticons": [],
         "keywords": [
             "entertainer",
             "man",
@@ -4948,16 +4467,16 @@ export const emojisData = JSON.parse(`[
             "actor",
             "rock",
             "singer"
+        ],
+        "name": "man singer",
+        "shortcodes": [
+            ":man_singer:"
         ]
     },
     {
-        "codepoints": "👩‍🎤",
-        "name": "woman singer",
-        "shortcodes": [
-            ":woman_singer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🎤",
+        "emoticons": [],
         "keywords": [
             "entertainer",
             "performer",
@@ -4968,141 +4487,141 @@ export const emojisData = JSON.parse(`[
             "actor",
             "rock",
             "singer"
+        ],
+        "name": "woman singer",
+        "shortcodes": [
+            ":woman_singer:"
         ]
     },
     {
-        "codepoints": "🧑‍🎨",
-        "name": "artist",
-        "shortcodes": [
-            ":artist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🎨",
+        "emoticons": [],
         "keywords": [
             "artist",
             "palette"
+        ],
+        "name": "artist",
+        "shortcodes": [
+            ":artist:"
         ]
     },
     {
-        "codepoints": "👨‍🎨",
-        "name": "man artist",
-        "shortcodes": [
-            ":man_artist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🎨",
+        "emoticons": [],
         "keywords": [
             "artist",
             "man",
             "painter",
             "palette"
+        ],
+        "name": "man artist",
+        "shortcodes": [
+            ":man_artist:"
         ]
     },
     {
-        "codepoints": "👩‍🎨",
-        "name": "woman artist",
-        "shortcodes": [
-            ":woman_artist:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🎨",
+        "emoticons": [],
         "keywords": [
             "artist",
             "painter",
             "palette",
             "woman"
+        ],
+        "name": "woman artist",
+        "shortcodes": [
+            ":woman_artist:"
         ]
     },
     {
-        "codepoints": "🧑‍✈️",
-        "name": "pilot",
-        "shortcodes": [
-            ":pilot:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍✈️",
+        "emoticons": [],
         "keywords": [
             "pilot",
             "plane"
+        ],
+        "name": "pilot",
+        "shortcodes": [
+            ":pilot:"
         ]
     },
     {
-        "codepoints": "👨‍✈️",
-        "name": "man pilot",
-        "shortcodes": [
-            ":man_pilot:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍✈️",
+        "emoticons": [],
         "keywords": [
             "man",
             "pilot",
             "plane"
+        ],
+        "name": "man pilot",
+        "shortcodes": [
+            ":man_pilot:"
         ]
     },
     {
-        "codepoints": "👩‍✈️",
-        "name": "woman pilot",
-        "shortcodes": [
-            ":woman_pilot:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍✈️",
+        "emoticons": [],
         "keywords": [
             "pilot",
             "plane",
             "woman"
+        ],
+        "name": "woman pilot",
+        "shortcodes": [
+            ":woman_pilot:"
         ]
     },
     {
-        "codepoints": "🧑‍🚀",
-        "name": "astronaut",
-        "shortcodes": [
-            ":astronaut:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🚀",
+        "emoticons": [],
         "keywords": [
             "astronaut",
             "rocket"
+        ],
+        "name": "astronaut",
+        "shortcodes": [
+            ":astronaut:"
         ]
     },
     {
-        "codepoints": "👨‍🚀",
-        "name": "man astronaut",
-        "shortcodes": [
-            ":man_astronaut:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🚀",
+        "emoticons": [],
         "keywords": [
             "astronaut",
             "man",
             "rocket"
+        ],
+        "name": "man astronaut",
+        "shortcodes": [
+            ":man_astronaut:"
         ]
     },
     {
-        "codepoints": "👩‍🚀",
-        "name": "woman astronaut",
-        "shortcodes": [
-            ":woman_astronaut:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🚀",
+        "emoticons": [],
         "keywords": [
             "astronaut",
             "rocket",
             "woman"
+        ],
+        "name": "woman astronaut",
+        "shortcodes": [
+            ":woman_astronaut:"
         ]
     },
     {
-        "codepoints": "🧑‍🚒",
-        "name": "firefighter",
-        "shortcodes": [
-            ":firefighter:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🚒",
+        "emoticons": [],
         "keywords": [
             "firefighter",
             "firetruck",
@@ -5111,32 +4630,32 @@ export const emojisData = JSON.parse(`[
             "truck",
             "fire engine",
             "fire truck"
+        ],
+        "name": "firefighter",
+        "shortcodes": [
+            ":firefighter:"
         ]
     },
     {
-        "codepoints": "👨‍🚒",
-        "name": "man firefighter",
-        "shortcodes": [
-            ":man_firefighter:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🚒",
+        "emoticons": [],
         "keywords": [
             "fire truck",
             "firefighter",
             "man",
             "firetruck",
             "fireman"
+        ],
+        "name": "man firefighter",
+        "shortcodes": [
+            ":man_firefighter:"
         ]
     },
     {
-        "codepoints": "👩‍🚒",
-        "name": "woman firefighter",
-        "shortcodes": [
-            ":woman_firefighter:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🚒",
+        "emoticons": [],
         "keywords": [
             "fire truck",
             "firefighter",
@@ -5146,273 +4665,242 @@ export const emojisData = JSON.parse(`[
             "fire",
             "firewoman",
             "truck"
+        ],
+        "name": "woman firefighter",
+        "shortcodes": [
+            ":woman_firefighter:"
         ]
     },
     {
-        "codepoints": "👮",
-        "name": "police officer",
-        "shortcodes": [
-            ":police_officer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👮",
+        "emoticons": [],
         "keywords": [
             "cop",
             "officer",
             "police"
+        ],
+        "name": "police officer",
+        "shortcodes": [
+            ":police_officer:"
         ]
     },
     {
-        "codepoints": "👮‍♂️",
-        "name": "man police officer",
-        "shortcodes": [
-            ":man_police_officer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👮‍♂️",
+        "emoticons": [],
         "keywords": [
             "cop",
             "man",
             "officer",
             "police"
+        ],
+        "name": "man police officer",
+        "shortcodes": [
+            ":man_police_officer:"
         ]
     },
     {
-        "codepoints": "👮‍♀️",
-        "name": "woman police officer",
-        "shortcodes": [
-            ":woman_police_officer:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👮‍♀️",
+        "emoticons": [],
         "keywords": [
             "cop",
             "officer",
             "police",
             "woman"
+        ],
+        "name": "woman police officer",
+        "shortcodes": [
+            ":woman_police_officer:"
         ]
     },
     {
-        "codepoints": "🕵️",
-        "name": "detective",
-        "shortcodes": [
-            ":detective:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🕵️",
+        "emoticons": [],
         "keywords": [
             "detective",
             "investigator",
             "sleuth",
             "spy"
+        ],
+        "name": "detective",
+        "shortcodes": [
+            ":detective:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🕵️‍♂️",
+        "emoticons": [],
+        "keywords": [],
         "name": "man detective",
         "shortcodes": [
             ":man_detective:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": []
+        ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🕵️‍♀️",
+        "emoticons": [],
+        "keywords": [],
         "name": "woman detective",
         "shortcodes": [
             ":woman_detective:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": []
+        ]
     },
     {
+        "category": "People & Body",
         "codepoints": "💂",
+        "emoticons": [],
+        "keywords": [
+            "guard"
+        ],
         "name": "guard",
         "shortcodes": [
             ":guard:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "guard"
         ]
     },
     {
-        "codepoints": "💂‍♂️",
-        "name": "man guard",
-        "shortcodes": [
-            ":man_guard:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💂‍♂️",
+        "emoticons": [],
         "keywords": [
             "guard",
             "man"
+        ],
+        "name": "man guard",
+        "shortcodes": [
+            ":man_guard:"
         ]
     },
     {
-        "codepoints": "💂‍♀️",
-        "name": "woman guard",
-        "shortcodes": [
-            ":woman_guard:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💂‍♀️",
+        "emoticons": [],
         "keywords": [
             "guard",
             "woman"
-        ]
-    },
-    {
-        "codepoints": "🥷",
-        "name": "ninja",
-        "shortcodes": [
-            ":ninja:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "fighter",
-            "hidden",
-            "ninja",
-            "stealth"
+        "name": "woman guard",
+        "shortcodes": [
+            ":woman_guard:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👷",
-        "name": "construction worker",
-        "shortcodes": [
-            ":construction_worker:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "construction",
             "hat",
             "worker"
+        ],
+        "name": "construction worker",
+        "shortcodes": [
+            ":construction_worker:"
         ]
     },
     {
-        "codepoints": "👷‍♂️",
-        "name": "man construction worker",
-        "shortcodes": [
-            ":man_construction_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👷‍♂️",
+        "emoticons": [],
         "keywords": [
             "construction",
             "man",
             "worker"
+        ],
+        "name": "man construction worker",
+        "shortcodes": [
+            ":man_construction_worker:"
         ]
     },
     {
-        "codepoints": "👷‍♀️",
-        "name": "woman construction worker",
-        "shortcodes": [
-            ":woman_construction_worker:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👷‍♀️",
+        "emoticons": [],
         "keywords": [
             "construction",
             "woman",
             "worker"
-        ]
-    },
-    {
-        "codepoints": "🫅",
-        "name": "person with crown",
-        "shortcodes": [
-            ":person_with_crown:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "monarch",
-            "noble",
-            "person with crown",
-            "regal",
-            "royalty"
+        "name": "woman construction worker",
+        "shortcodes": [
+            ":woman_construction_worker:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🤴",
+        "emoticons": [],
+        "keywords": [
+            "prince"
+        ],
         "name": "prince",
         "shortcodes": [
             ":prince:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "prince"
         ]
     },
     {
-        "codepoints": "👸",
-        "name": "princess",
-        "shortcodes": [
-            ":princess:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👸",
+        "emoticons": [],
         "keywords": [
             "fairy tale",
             "fantasy",
             "princess"
+        ],
+        "name": "princess",
+        "shortcodes": [
+            ":princess:"
         ]
     },
     {
-        "codepoints": "👳",
-        "name": "person wearing turban",
-        "shortcodes": [
-            ":person_wearing_turban:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👳",
+        "emoticons": [],
         "keywords": [
             "person wearing turban",
             "turban"
+        ],
+        "name": "person wearing turban",
+        "shortcodes": [
+            ":person_wearing_turban:"
         ]
     },
     {
-        "codepoints": "👳‍♂️",
-        "name": "man wearing turban",
-        "shortcodes": [
-            ":man_wearing_turban:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👳‍♂️",
+        "emoticons": [],
         "keywords": [
             "man",
             "man wearing turban",
             "turban"
+        ],
+        "name": "man wearing turban",
+        "shortcodes": [
+            ":man_wearing_turban:"
         ]
     },
     {
-        "codepoints": "👳‍♀️",
-        "name": "woman wearing turban",
-        "shortcodes": [
-            ":woman_wearing_turban:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👳‍♀️",
+        "emoticons": [],
         "keywords": [
             "turban",
             "woman",
             "woman wearing turban"
+        ],
+        "name": "woman wearing turban",
+        "shortcodes": [
+            ":woman_wearing_turban:"
         ]
     },
     {
-        "codepoints": "👲",
-        "name": "person with skullcap",
-        "shortcodes": [
-            ":person_with_skullcap:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👲",
+        "emoticons": [],
         "keywords": [
             "cap",
             "gua pi mao",
@@ -5420,245 +4908,108 @@ export const emojisData = JSON.parse(`[
             "person",
             "person with skullcap",
             "skullcap"
+        ],
+        "name": "person with skullcap",
+        "shortcodes": [
+            ":person_with_skullcap:"
         ]
     },
     {
-        "codepoints": "🧕",
-        "name": "woman with headscarf",
-        "shortcodes": [
-            ":woman_with_headscarf:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧕",
+        "emoticons": [],
         "keywords": [
             "headscarf",
             "hijab",
             "mantilla",
             "tichel",
             "woman with headscarf"
+        ],
+        "name": "woman with headscarf",
+        "shortcodes": [
+            ":woman_with_headscarf:"
         ]
     },
     {
-        "codepoints": "🤵",
-        "name": "person in tuxedo",
-        "shortcodes": [
-            ":person_in_tuxedo:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤵",
+        "emoticons": [],
         "keywords": [
             "groom",
             "person",
             "person in tux",
             "person in tuxedo",
             "tuxedo"
-        ]
-    },
-    {
-        "codepoints": "🤵‍♂️",
-        "name": "man in tuxedo",
-        "shortcodes": [
-            ":man_in_tuxedo:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "man",
-            "man in tux",
-            "man in tuxedo",
-            "tux",
-            "tuxedo"
-        ]
-    },
-    {
-        "codepoints": "🤵‍♀️",
-        "name": "woman in tuxedo",
+        "name": "person in tuxedo",
         "shortcodes": [
-            ":woman_in_tuxedo:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "tuxedo",
-            "woman",
-            "woman in tux",
-            "woman in tuxedo"
+            ":person_in_tuxedo:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👰",
-        "name": "person with veil",
-        "shortcodes": [
-            ":person_with_veil:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "bride",
             "person",
             "person with veil",
             "veil",
             "wedding"
-        ]
-    },
-    {
-        "codepoints": "👰‍♂️",
-        "name": "man with veil",
-        "shortcodes": [
-            ":man_with_veil:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "man",
-            "man with veil",
-            "veil"
-        ]
-    },
-    {
-        "codepoints": "👰‍♀️",
-        "name": "woman with veil",
+        "name": "person with veil",
         "shortcodes": [
-            ":woman_with_veil:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "bride",
-            "veil",
-            "woman",
-            "woman with veil"
+            ":person_with_veil:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🤰",
-        "name": "pregnant woman",
-        "shortcodes": [
-            ":pregnant_woman:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "pregnant",
             "woman"
-        ]
-    },
-    {
-        "codepoints": "🫃",
-        "name": "pregnant man",
-        "shortcodes": [
-            ":pregnant_man:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "belly",
-            "bloated",
-            "full",
-            "pregnant",
-            "pregnant man"
-        ]
-    },
-    {
-        "codepoints": "🫄",
-        "name": "pregnant person",
+        "name": "pregnant woman",
         "shortcodes": [
-            ":pregnant_person:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "belly",
-            "bloated",
-            "full",
-            "pregnant",
-            "pregnant person"
+            ":pregnant_woman:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🤱",
-        "name": "breast-feeding",
-        "shortcodes": [
-            ":breast-feeding:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "baby",
             "breast",
             "breast-feeding",
             "nursing"
-        ]
-    },
-    {
-        "codepoints": "👩‍🍼",
-        "name": "woman feeding baby",
-        "shortcodes": [
-            ":woman_feeding_baby:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "baby",
-            "feeding",
-            "nursing",
-            "woman"
-        ]
-    },
-    {
-        "codepoints": "👨‍🍼",
-        "name": "man feeding baby",
+        "name": "breast-feeding",
         "shortcodes": [
-            ":man_feeding_baby:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "baby",
-            "feeding",
-            "man",
-            "nursing"
+            ":breast-feeding:"
         ]
     },
     {
-        "codepoints": "🧑‍🍼",
-        "name": "person feeding baby",
-        "shortcodes": [
-            ":person_feeding_baby:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
-        "keywords": [
-            "baby",
-            "feeding",
-            "nursing",
-            "person"
-        ]
-    },
-    {
         "codepoints": "👼",
-        "name": "baby angel",
-        "shortcodes": [
-            ":baby_angel:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "angel",
             "baby",
             "face",
             "fairy tale",
             "fantasy"
+        ],
+        "name": "baby angel",
+        "shortcodes": [
+            ":baby_angel:"
         ]
     },
     {
-        "codepoints": "🎅",
-        "name": "Santa Claus",
-        "shortcodes": [
-            ":Santa_Claus:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🎅",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "Christmas",
@@ -5670,16 +5021,16 @@ export const emojisData = JSON.parse(`[
             "santa",
             "Claus",
             "Father"
+        ],
+        "name": "Santa Claus",
+        "shortcodes": [
+            ":Santa_Claus:"
         ]
     },
     {
-        "codepoints": "🤶",
-        "name": "Mrs. Claus",
-        "shortcodes": [
-            ":Mrs._Claus:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤶",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "Christmas",
@@ -5691,63 +5042,48 @@ export const emojisData = JSON.parse(`[
             "Mrs.",
             "Claus",
             "Mother"
-        ]
-    },
-    {
-        "codepoints": "🧑‍🎄",
-        "name": "mx claus",
-        "shortcodes": [
-            ":mx_claus:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "Claus, christmas",
-            "mx claus",
-            "Claus, Christmas",
-            "Mx. Claus"
+        "name": "Mrs. Claus",
+        "shortcodes": [
+            ":Mrs._Claus:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🦸",
-        "name": "superhero",
-        "shortcodes": [
-            ":superhero:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "good",
             "hero",
             "heroine",
             "superhero",
             "superpower"
+        ],
+        "name": "superhero",
+        "shortcodes": [
+            ":superhero:"
         ]
     },
     {
-        "codepoints": "🦸‍♂️",
-        "name": "man superhero",
-        "shortcodes": [
-            ":man_superhero:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦸‍♂️",
+        "emoticons": [],
         "keywords": [
             "good",
             "hero",
             "man",
             "man superhero",
             "superpower"
+        ],
+        "name": "man superhero",
+        "shortcodes": [
+            ":man_superhero:"
         ]
     },
     {
-        "codepoints": "🦸‍♀️",
-        "name": "woman superhero",
-        "shortcodes": [
-            ":woman_superhero:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦸‍♀️",
+        "emoticons": [],
         "keywords": [
             "good",
             "hero",
@@ -5755,32 +5091,32 @@ export const emojisData = JSON.parse(`[
             "superpower",
             "woman",
             "woman superhero"
+        ],
+        "name": "woman superhero",
+        "shortcodes": [
+            ":woman_superhero:"
         ]
     },
     {
-        "codepoints": "🦹",
-        "name": "supervillain",
-        "shortcodes": [
-            ":supervillain:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦹",
+        "emoticons": [],
         "keywords": [
             "criminal",
             "evil",
             "superpower",
             "supervillain",
             "villain"
+        ],
+        "name": "supervillain",
+        "shortcodes": [
+            ":supervillain:"
         ]
     },
     {
-        "codepoints": "🦹‍♂️",
-        "name": "man supervillain",
-        "shortcodes": [
-            ":man_supervillain:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦹‍♂️",
+        "emoticons": [],
         "keywords": [
             "criminal",
             "evil",
@@ -5788,16 +5124,16 @@ export const emojisData = JSON.parse(`[
             "man supervillain",
             "superpower",
             "villain"
+        ],
+        "name": "man supervillain",
+        "shortcodes": [
+            ":man_supervillain:"
         ]
     },
     {
-        "codepoints": "🦹‍♀️",
-        "name": "woman supervillain",
-        "shortcodes": [
-            ":woman_supervillain:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🦹‍♀️",
+        "emoticons": [],
         "keywords": [
             "criminal",
             "evil",
@@ -5805,364 +5141,349 @@ export const emojisData = JSON.parse(`[
             "villain",
             "woman",
             "woman supervillain"
+        ],
+        "name": "woman supervillain",
+        "shortcodes": [
+            ":woman_supervillain:"
         ]
     },
     {
-        "codepoints": "🧙",
-        "name": "mage",
-        "shortcodes": [
-            ":mage:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧙",
+        "emoticons": [],
         "keywords": [
             "mage",
             "sorcerer",
             "sorceress",
             "witch",
             "wizard"
+        ],
+        "name": "mage",
+        "shortcodes": [
+            ":mage:"
         ]
     },
     {
-        "codepoints": "🧙‍♂️",
-        "name": "man mage",
-        "shortcodes": [
-            ":man_mage:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧙‍♂️",
+        "emoticons": [],
         "keywords": [
             "man mage",
             "sorcerer",
             "wizard"
+        ],
+        "name": "man mage",
+        "shortcodes": [
+            ":man_mage:"
         ]
     },
     {
-        "codepoints": "🧙‍♀️",
-        "name": "woman mage",
-        "shortcodes": [
-            ":woman_mage:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧙‍♀️",
+        "emoticons": [],
         "keywords": [
             "sorceress",
             "witch",
             "woman mage"
+        ],
+        "name": "woman mage",
+        "shortcodes": [
+            ":woman_mage:"
         ]
     },
     {
-        "codepoints": "🧚",
-        "name": "fairy",
-        "shortcodes": [
-            ":fairy:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧚",
+        "emoticons": [],
         "keywords": [
             "fairy",
             "Oberon",
             "Puck",
             "Titania"
+        ],
+        "name": "fairy",
+        "shortcodes": [
+            ":fairy:"
         ]
     },
     {
-        "codepoints": "🧚‍♂️",
-        "name": "man fairy",
-        "shortcodes": [
-            ":man_fairy:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧚‍♂️",
+        "emoticons": [],
         "keywords": [
             "man fairy",
             "Oberon",
             "Puck"
+        ],
+        "name": "man fairy",
+        "shortcodes": [
+            ":man_fairy:"
         ]
     },
     {
-        "codepoints": "🧚‍♀️",
-        "name": "woman fairy",
-        "shortcodes": [
-            ":woman_fairy:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧚‍♀️",
+        "emoticons": [],
         "keywords": [
             "Titania",
             "woman fairy"
+        ],
+        "name": "woman fairy",
+        "shortcodes": [
+            ":woman_fairy:"
         ]
     },
     {
-        "codepoints": "🧛",
-        "name": "vampire",
-        "shortcodes": [
-            ":vampire:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧛",
+        "emoticons": [],
         "keywords": [
             "Dracula",
             "undead",
             "vampire"
+        ],
+        "name": "vampire",
+        "shortcodes": [
+            ":vampire:"
         ]
     },
     {
-        "codepoints": "🧛‍♂️",
-        "name": "man vampire",
-        "shortcodes": [
-            ":man_vampire:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧛‍♂️",
+        "emoticons": [],
         "keywords": [
             "Dracula",
             "man vampire",
             "undead"
+        ],
+        "name": "man vampire",
+        "shortcodes": [
+            ":man_vampire:"
         ]
     },
     {
-        "codepoints": "🧛‍♀️",
-        "name": "woman vampire",
-        "shortcodes": [
-            ":woman_vampire:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧛‍♀️",
+        "emoticons": [],
         "keywords": [
             "undead",
             "woman vampire"
+        ],
+        "name": "woman vampire",
+        "shortcodes": [
+            ":woman_vampire:"
         ]
     },
     {
-        "codepoints": "🧜",
-        "name": "merperson",
-        "shortcodes": [
-            ":merperson:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧜",
+        "emoticons": [],
         "keywords": [
             "mermaid",
             "merman",
             "merperson",
             "merwoman"
+        ],
+        "name": "merperson",
+        "shortcodes": [
+            ":merperson:"
         ]
     },
     {
-        "codepoints": "🧜‍♂️",
-        "name": "merman",
-        "shortcodes": [
-            ":merman:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧜‍♂️",
+        "emoticons": [],
         "keywords": [
             "merman",
             "Triton"
+        ],
+        "name": "merman",
+        "shortcodes": [
+            ":merman:"
         ]
     },
     {
-        "codepoints": "🧜‍♀️",
-        "name": "mermaid",
-        "shortcodes": [
-            ":mermaid:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧜‍♀️",
+        "emoticons": [],
         "keywords": [
             "mermaid",
             "merwoman"
+        ],
+        "name": "mermaid",
+        "shortcodes": [
+            ":mermaid:"
         ]
     },
     {
-        "codepoints": "🧝",
-        "name": "elf",
-        "shortcodes": [
-            ":elf:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧝",
+        "emoticons": [],
         "keywords": [
             "elf",
             "magical"
+        ],
+        "name": "elf",
+        "shortcodes": [
+            ":elf:"
         ]
     },
     {
-        "codepoints": "🧝‍♂️",
-        "name": "man elf",
-        "shortcodes": [
-            ":man_elf:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧝‍♂️",
+        "emoticons": [],
         "keywords": [
             "magical",
             "man elf"
+        ],
+        "name": "man elf",
+        "shortcodes": [
+            ":man_elf:"
         ]
     },
     {
-        "codepoints": "🧝‍♀️",
-        "name": "woman elf",
-        "shortcodes": [
-            ":woman_elf:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧝‍♀️",
+        "emoticons": [],
         "keywords": [
             "magical",
             "woman elf"
+        ],
+        "name": "woman elf",
+        "shortcodes": [
+            ":woman_elf:"
         ]
     },
     {
-        "codepoints": "🧞",
-        "name": "genie",
-        "shortcodes": [
-            ":genie:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧞",
+        "emoticons": [],
         "keywords": [
             "djinn",
             "genie"
+        ],
+        "name": "genie",
+        "shortcodes": [
+            ":genie:"
         ]
     },
     {
-        "codepoints": "🧞‍♂️",
-        "name": "man genie",
-        "shortcodes": [
-            ":man_genie:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧞‍♂️",
+        "emoticons": [],
         "keywords": [
             "djinn",
             "man genie"
+        ],
+        "name": "man genie",
+        "shortcodes": [
+            ":man_genie:"
         ]
     },
     {
-        "codepoints": "🧞‍♀️",
-        "name": "woman genie",
-        "shortcodes": [
-            ":woman_genie:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧞‍♀️",
+        "emoticons": [],
         "keywords": [
             "djinn",
             "woman genie"
+        ],
+        "name": "woman genie",
+        "shortcodes": [
+            ":woman_genie:"
         ]
     },
     {
-        "codepoints": "🧟",
-        "name": "zombie",
-        "shortcodes": [
-            ":zombie:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧟",
+        "emoticons": [],
         "keywords": [
             "undead",
             "walking dead",
             "zombie"
+        ],
+        "name": "zombie",
+        "shortcodes": [
+            ":zombie:"
         ]
     },
     {
-        "codepoints": "🧟‍♂️",
-        "name": "man zombie",
-        "shortcodes": [
-            ":man_zombie:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧟‍♂️",
+        "emoticons": [],
         "keywords": [
             "man zombie",
             "undead",
             "walking dead"
+        ],
+        "name": "man zombie",
+        "shortcodes": [
+            ":man_zombie:"
         ]
     },
     {
-        "codepoints": "🧟‍♀️",
-        "name": "woman zombie",
-        "shortcodes": [
-            ":woman_zombie:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧟‍♀️",
+        "emoticons": [],
         "keywords": [
             "undead",
             "walking dead",
             "woman zombie"
-        ]
-    },
-    {
-        "codepoints": "🧌",
-        "name": "troll",
-        "shortcodes": [
-            ":troll:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "fairy tale",
-            "fantasy",
-            "monster",
-            "troll"
+        "name": "woman zombie",
+        "shortcodes": [
+            ":woman_zombie:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "💆",
-        "name": "person getting massage",
-        "shortcodes": [
-            ":person_getting_massage:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "face",
             "massage",
             "person getting massage",
             "salon"
+        ],
+        "name": "person getting massage",
+        "shortcodes": [
+            ":person_getting_massage:"
         ]
     },
     {
-        "codepoints": "💆‍♂️",
-        "name": "man getting massage",
-        "shortcodes": [
-            ":man_getting_massage:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💆‍♂️",
+        "emoticons": [],
         "keywords": [
             "face",
             "man",
             "man getting massage",
             "massage"
+        ],
+        "name": "man getting massage",
+        "shortcodes": [
+            ":man_getting_massage:"
         ]
     },
     {
-        "codepoints": "💆‍♀️",
-        "name": "woman getting massage",
-        "shortcodes": [
-            ":woman_getting_massage:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💆‍♀️",
+        "emoticons": [],
         "keywords": [
             "face",
             "massage",
             "woman",
             "woman getting massage"
+        ],
+        "name": "woman getting massage",
+        "shortcodes": [
+            ":woman_getting_massage:"
         ]
     },
     {
-        "codepoints": "💇",
-        "name": "person getting haircut",
-        "shortcodes": [
-            ":person_getting_haircut:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💇",
+        "emoticons": [],
         "keywords": [
             "barber",
             "beauty",
@@ -6170,235 +5491,235 @@ export const emojisData = JSON.parse(`[
             "parlor",
             "person getting haircut",
             "parlour"
+        ],
+        "name": "person getting haircut",
+        "shortcodes": [
+            ":person_getting_haircut:"
         ]
     },
     {
-        "codepoints": "💇‍♂️",
-        "name": "man getting haircut",
-        "shortcodes": [
-            ":man_getting_haircut:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💇‍♂️",
+        "emoticons": [],
         "keywords": [
             "haircut",
             "hairdresser",
             "man",
             "man getting haircut"
+        ],
+        "name": "man getting haircut",
+        "shortcodes": [
+            ":man_getting_haircut:"
         ]
     },
     {
-        "codepoints": "💇‍♀️",
-        "name": "woman getting haircut",
-        "shortcodes": [
-            ":woman_getting_haircut:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💇‍♀️",
+        "emoticons": [],
         "keywords": [
             "haircut",
             "hairdresser",
             "woman",
             "woman getting haircut"
+        ],
+        "name": "woman getting haircut",
+        "shortcodes": [
+            ":woman_getting_haircut:"
         ]
     },
     {
-        "codepoints": "🚶",
-        "name": "person walking",
-        "shortcodes": [
-            ":person_walking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚶",
+        "emoticons": [],
         "keywords": [
             "hike",
             "person walking",
             "walk",
             "walking"
+        ],
+        "name": "person walking",
+        "shortcodes": [
+            ":person_walking:"
         ]
     },
     {
-        "codepoints": "🚶‍♂️",
-        "name": "man walking",
-        "shortcodes": [
-            ":man_walking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚶‍♂️",
+        "emoticons": [],
         "keywords": [
             "hike",
             "man",
             "man walking",
             "walk"
+        ],
+        "name": "man walking",
+        "shortcodes": [
+            ":man_walking:"
         ]
     },
     {
-        "codepoints": "🚶‍♀️",
-        "name": "woman walking",
-        "shortcodes": [
-            ":woman_walking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚶‍♀️",
+        "emoticons": [],
         "keywords": [
             "hike",
             "walk",
             "woman",
             "woman walking"
+        ],
+        "name": "woman walking",
+        "shortcodes": [
+            ":woman_walking:"
         ]
     },
     {
-        "codepoints": "🧍",
-        "name": "person standing",
-        "shortcodes": [
-            ":person_standing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧍",
+        "emoticons": [],
         "keywords": [
             "person standing",
             "stand",
             "standing"
+        ],
+        "name": "person standing",
+        "shortcodes": [
+            ":person_standing:"
         ]
     },
     {
-        "codepoints": "🧍‍♂️",
-        "name": "man standing",
-        "shortcodes": [
-            ":man_standing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧍‍♂️",
+        "emoticons": [],
         "keywords": [
             "man",
             "standing"
+        ],
+        "name": "man standing",
+        "shortcodes": [
+            ":man_standing:"
         ]
     },
     {
-        "codepoints": "🧍‍♀️",
-        "name": "woman standing",
-        "shortcodes": [
-            ":woman_standing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧍‍♀️",
+        "emoticons": [],
         "keywords": [
             "standing",
             "woman"
+        ],
+        "name": "woman standing",
+        "shortcodes": [
+            ":woman_standing:"
         ]
     },
     {
-        "codepoints": "🧎",
-        "name": "person kneeling",
-        "shortcodes": [
-            ":person_kneeling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧎",
+        "emoticons": [],
         "keywords": [
             "kneel",
             "kneeling",
             "person kneeling"
+        ],
+        "name": "person kneeling",
+        "shortcodes": [
+            ":person_kneeling:"
         ]
     },
     {
-        "codepoints": "🧎‍♂️",
-        "name": "man kneeling",
-        "shortcodes": [
-            ":man_kneeling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧎‍♂️",
+        "emoticons": [],
         "keywords": [
             "kneeling",
             "man"
+        ],
+        "name": "man kneeling",
+        "shortcodes": [
+            ":man_kneeling:"
         ]
     },
     {
-        "codepoints": "🧎‍♀️",
-        "name": "woman kneeling",
-        "shortcodes": [
-            ":woman_kneeling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧎‍♀️",
+        "emoticons": [],
         "keywords": [
             "kneeling",
             "woman"
+        ],
+        "name": "woman kneeling",
+        "shortcodes": [
+            ":woman_kneeling:"
         ]
     },
     {
-        "codepoints": "🧑‍🦯",
-        "name": "person with white cane",
-        "shortcodes": [
-            ":person_with_white_cane:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🦯",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "blind",
             "person with guide cane",
             "person with long mobility cane",
             "person with white cane"
+        ],
+        "name": "person with white cane",
+        "shortcodes": [
+            ":person_with_white_cane:"
         ]
     },
     {
-        "codepoints": "👨‍🦯",
-        "name": "man with white cane",
-        "shortcodes": [
-            ":man_with_white_cane:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🦯",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "blind",
             "man",
             "man with white cane",
             "man with guide cane"
+        ],
+        "name": "man with white cane",
+        "shortcodes": [
+            ":man_with_white_cane:"
         ]
     },
     {
-        "codepoints": "👩‍🦯",
-        "name": "woman with white cane",
-        "shortcodes": [
-            ":woman_with_white_cane:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🦯",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "blind",
             "woman",
             "woman with white cane",
             "woman with guide cane"
+        ],
+        "name": "woman with white cane",
+        "shortcodes": [
+            ":woman_with_white_cane:"
         ]
     },
     {
-        "codepoints": "🧑‍🦼",
-        "name": "person in motorized wheelchair",
-        "shortcodes": [
-            ":person_in_motorized_wheelchair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🦼",
+        "emoticons": [],
         "keywords": [
             "person in motorised wheelchair",
             "accessibility",
             "person in motorized wheelchair",
             "wheelchair",
             "person in powered wheelchair"
+        ],
+        "name": "person in motorized wheelchair",
+        "shortcodes": [
+            ":person_in_motorized_wheelchair:"
         ]
     },
     {
-        "codepoints": "👨‍🦼",
-        "name": "man in motorized wheelchair",
-        "shortcodes": [
-            ":man_in_motorized_wheelchair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🦼",
+        "emoticons": [],
         "keywords": [
             "man in motorised wheelchair",
             "accessibility",
@@ -6406,16 +5727,16 @@ export const emojisData = JSON.parse(`[
             "man in motorized wheelchair",
             "wheelchair",
             "man in powered wheelchair"
+        ],
+        "name": "man in motorized wheelchair",
+        "shortcodes": [
+            ":man_in_motorized_wheelchair:"
         ]
     },
     {
-        "codepoints": "👩‍🦼",
-        "name": "woman in motorized wheelchair",
-        "shortcodes": [
-            ":woman_in_motorized_wheelchair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🦼",
+        "emoticons": [],
         "keywords": [
             "woman in motorised wheelchair",
             "accessibility",
@@ -6423,618 +5744,618 @@ export const emojisData = JSON.parse(`[
             "woman",
             "woman in motorized wheelchair",
             "woman in powered wheelchair"
+        ],
+        "name": "woman in motorized wheelchair",
+        "shortcodes": [
+            ":woman_in_motorized_wheelchair:"
         ]
     },
     {
-        "codepoints": "🧑‍🦽",
-        "name": "person in manual wheelchair",
-        "shortcodes": [
-            ":person_in_manual_wheelchair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🦽",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "person in manual wheelchair",
             "wheelchair"
+        ],
+        "name": "person in manual wheelchair",
+        "shortcodes": [
+            ":person_in_manual_wheelchair:"
         ]
     },
     {
-        "codepoints": "👨‍🦽",
-        "name": "man in manual wheelchair",
-        "shortcodes": [
-            ":man_in_manual_wheelchair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍🦽",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "man",
             "man in manual wheelchair",
             "wheelchair"
+        ],
+        "name": "man in manual wheelchair",
+        "shortcodes": [
+            ":man_in_manual_wheelchair:"
         ]
     },
     {
-        "codepoints": "👩‍🦽",
-        "name": "woman in manual wheelchair",
-        "shortcodes": [
-            ":woman_in_manual_wheelchair:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍🦽",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "wheelchair",
             "woman",
             "woman in manual wheelchair"
+        ],
+        "name": "woman in manual wheelchair",
+        "shortcodes": [
+            ":woman_in_manual_wheelchair:"
         ]
     },
     {
-        "codepoints": "🏃",
-        "name": "person running",
-        "shortcodes": [
-            ":person_running:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏃",
+        "emoticons": [],
         "keywords": [
             "marathon",
             "person running",
             "running"
+        ],
+        "name": "person running",
+        "shortcodes": [
+            ":person_running:"
         ]
     },
     {
-        "codepoints": "🏃‍♂️",
-        "name": "man running",
-        "shortcodes": [
-            ":man_running:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏃‍♂️",
+        "emoticons": [],
         "keywords": [
             "man",
             "marathon",
             "racing",
             "running"
+        ],
+        "name": "man running",
+        "shortcodes": [
+            ":man_running:"
         ]
     },
     {
-        "codepoints": "🏃‍♀️",
-        "name": "woman running",
-        "shortcodes": [
-            ":woman_running:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏃‍♀️",
+        "emoticons": [],
         "keywords": [
             "marathon",
             "racing",
             "running",
             "woman"
+        ],
+        "name": "woman running",
+        "shortcodes": [
+            ":woman_running:"
         ]
     },
     {
-        "codepoints": "💃",
-        "name": "woman dancing",
-        "shortcodes": [
-            ":woman_dancing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💃",
+        "emoticons": [],
         "keywords": [
             "dance",
             "dancing",
             "woman"
+        ],
+        "name": "woman dancing",
+        "shortcodes": [
+            ":woman_dancing:"
         ]
     },
     {
-        "codepoints": "🕺",
-        "name": "man dancing",
-        "shortcodes": [
-            ":man_dancing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🕺",
+        "emoticons": [],
         "keywords": [
             "dance",
             "dancing",
             "man"
+        ],
+        "name": "man dancing",
+        "shortcodes": [
+            ":man_dancing:"
         ]
     },
     {
-        "codepoints": "🕴️",
-        "name": "person in suit levitating",
-        "shortcodes": [
-            ":person_in_suit_levitating:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🕴️",
+        "emoticons": [],
         "keywords": [
             "business",
             "person",
             "person in suit levitating",
             "suit"
+        ],
+        "name": "person in suit levitating",
+        "shortcodes": [
+            ":person_in_suit_levitating:"
         ]
     },
     {
-        "codepoints": "👯",
-        "name": "people with bunny ears",
-        "shortcodes": [
-            ":people_with_bunny_ears:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👯",
+        "emoticons": [],
         "keywords": [
             "bunny ear",
             "dancer",
             "partying",
             "people with bunny ears"
+        ],
+        "name": "people with bunny ears",
+        "shortcodes": [
+            ":people_with_bunny_ears:"
         ]
     },
     {
-        "codepoints": "👯‍♂️",
-        "name": "men with bunny ears",
-        "shortcodes": [
-            ":men_with_bunny_ears:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👯‍♂️",
+        "emoticons": [],
         "keywords": [
             "bunny ear",
             "dancer",
             "men",
             "men with bunny ears",
             "partying"
+        ],
+        "name": "men with bunny ears",
+        "shortcodes": [
+            ":men_with_bunny_ears:"
         ]
     },
     {
-        "codepoints": "👯‍♀️",
-        "name": "women with bunny ears",
-        "shortcodes": [
-            ":women_with_bunny_ears:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👯‍♀️",
+        "emoticons": [],
         "keywords": [
             "bunny ear",
             "dancer",
             "partying",
             "women",
             "women with bunny ears"
+        ],
+        "name": "women with bunny ears",
+        "shortcodes": [
+            ":women_with_bunny_ears:"
         ]
     },
     {
-        "codepoints": "🧖",
-        "name": "person in steamy room",
-        "shortcodes": [
-            ":person_in_steamy_room:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧖",
+        "emoticons": [],
         "keywords": [
             "person in steamy room",
             "sauna",
             "steam room"
+        ],
+        "name": "person in steamy room",
+        "shortcodes": [
+            ":person_in_steamy_room:"
         ]
     },
     {
-        "codepoints": "🧖‍♂️",
-        "name": "man in steamy room",
-        "shortcodes": [
-            ":man_in_steamy_room:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧖‍♂️",
+        "emoticons": [],
         "keywords": [
             "man in steam room",
             "man in steamy room",
             "sauna",
             "steam room"
+        ],
+        "name": "man in steamy room",
+        "shortcodes": [
+            ":man_in_steamy_room:"
         ]
     },
     {
-        "codepoints": "🧖‍♀️",
-        "name": "woman in steamy room",
-        "shortcodes": [
-            ":woman_in_steamy_room:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧖‍♀️",
+        "emoticons": [],
         "keywords": [
             "sauna",
             "steam room",
             "woman in steam room",
             "woman in steamy room"
+        ],
+        "name": "woman in steamy room",
+        "shortcodes": [
+            ":woman_in_steamy_room:"
         ]
     },
     {
-        "codepoints": "🧗",
-        "name": "person climbing",
-        "shortcodes": [
-            ":person_climbing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧗",
+        "emoticons": [],
         "keywords": [
             "climber",
             "person climbing"
+        ],
+        "name": "person climbing",
+        "shortcodes": [
+            ":person_climbing:"
         ]
     },
     {
-        "codepoints": "🧗‍♂️",
-        "name": "man climbing",
-        "shortcodes": [
-            ":man_climbing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧗‍♂️",
+        "emoticons": [],
         "keywords": [
             "climber",
             "man climbing"
+        ],
+        "name": "man climbing",
+        "shortcodes": [
+            ":man_climbing:"
         ]
     },
     {
-        "codepoints": "🧗‍♀️",
-        "name": "woman climbing",
-        "shortcodes": [
-            ":woman_climbing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧗‍♀️",
+        "emoticons": [],
         "keywords": [
             "climber",
             "woman climbing"
+        ],
+        "name": "woman climbing",
+        "shortcodes": [
+            ":woman_climbing:"
         ]
     },
     {
-        "codepoints": "🤺",
-        "name": "person fencing",
-        "shortcodes": [
-            ":person_fencing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤺",
+        "emoticons": [],
         "keywords": [
             "fencer",
             "fencing",
             "person fencing",
             "sword"
+        ],
+        "name": "person fencing",
+        "shortcodes": [
+            ":person_fencing:"
         ]
     },
     {
-        "codepoints": "🏇",
-        "name": "horse racing",
-        "shortcodes": [
-            ":horse_racing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏇",
+        "emoticons": [],
         "keywords": [
             "horse",
             "jockey",
             "racehorse",
             "racing"
+        ],
+        "name": "horse racing",
+        "shortcodes": [
+            ":horse_racing:"
         ]
     },
     {
-        "codepoints": "⛷️",
-        "name": "skier",
-        "shortcodes": [
-            ":skier:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "⛷️",
+        "emoticons": [],
         "keywords": [
             "ski",
             "skier",
             "snow"
+        ],
+        "name": "skier",
+        "shortcodes": [
+            ":skier:"
         ]
     },
     {
-        "codepoints": "🏂",
-        "name": "snowboarder",
-        "shortcodes": [
-            ":snowboarder:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏂",
+        "emoticons": [],
         "keywords": [
             "ski",
             "snow",
             "snowboard",
             "snowboarder"
+        ],
+        "name": "snowboarder",
+        "shortcodes": [
+            ":snowboarder:"
         ]
     },
     {
-        "codepoints": "🏌️",
-        "name": "person golfing",
-        "shortcodes": [
-            ":person_golfing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏌️",
+        "emoticons": [],
         "keywords": [
             "ball",
             "golf",
             "golfer",
             "person golfing"
+        ],
+        "name": "person golfing",
+        "shortcodes": [
+            ":person_golfing:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🏌️‍♂️",
+        "emoticons": [],
+        "keywords": [],
         "name": "man golfing",
         "shortcodes": [
             ":man_golfing:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": []
+        ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🏌️‍♀️",
+        "emoticons": [],
+        "keywords": [],
         "name": "woman golfing",
         "shortcodes": [
             ":woman_golfing:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": []
+        ]
     },
     {
-        "codepoints": "🏄",
-        "name": "person surfing",
-        "shortcodes": [
-            ":person_surfing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏄",
+        "emoticons": [],
         "keywords": [
             "person surfing",
             "surfer",
             "surfing"
+        ],
+        "name": "person surfing",
+        "shortcodes": [
+            ":person_surfing:"
         ]
     },
     {
-        "codepoints": "🏄‍♂️",
-        "name": "man surfing",
-        "shortcodes": [
-            ":man_surfing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏄‍♂️",
+        "emoticons": [],
         "keywords": [
             "man",
             "surfer",
             "surfing"
+        ],
+        "name": "man surfing",
+        "shortcodes": [
+            ":man_surfing:"
         ]
     },
     {
-        "codepoints": "🏄‍♀️",
-        "name": "woman surfing",
-        "shortcodes": [
-            ":woman_surfing:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏄‍♀️",
+        "emoticons": [],
         "keywords": [
             "surfer",
             "surfing",
             "woman"
+        ],
+        "name": "woman surfing",
+        "shortcodes": [
+            ":woman_surfing:"
         ]
     },
     {
-        "codepoints": "🚣",
-        "name": "person rowing boat",
-        "shortcodes": [
-            ":person_rowing_boat:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚣",
+        "emoticons": [],
         "keywords": [
             "boat",
             "person",
             "person rowing boat",
             "rowboat"
+        ],
+        "name": "person rowing boat",
+        "shortcodes": [
+            ":person_rowing_boat:"
         ]
     },
     {
-        "codepoints": "🚣‍♂️",
-        "name": "man rowing boat",
-        "shortcodes": [
-            ":man_rowing_boat:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚣‍♂️",
+        "emoticons": [],
         "keywords": [
             "boat",
             "man",
             "man rowing boat",
             "rowboat"
+        ],
+        "name": "man rowing boat",
+        "shortcodes": [
+            ":man_rowing_boat:"
         ]
     },
     {
-        "codepoints": "🚣‍♀️",
-        "name": "woman rowing boat",
-        "shortcodes": [
-            ":woman_rowing_boat:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚣‍♀️",
+        "emoticons": [],
         "keywords": [
             "boat",
             "rowboat",
             "woman",
             "woman rowing boat"
+        ],
+        "name": "woman rowing boat",
+        "shortcodes": [
+            ":woman_rowing_boat:"
         ]
     },
     {
-        "codepoints": "🏊",
-        "name": "person swimming",
-        "shortcodes": [
-            ":person_swimming:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏊",
+        "emoticons": [],
         "keywords": [
             "person swimming",
             "swim",
             "swimmer"
+        ],
+        "name": "person swimming",
+        "shortcodes": [
+            ":person_swimming:"
         ]
     },
     {
-        "codepoints": "🏊‍♂️",
-        "name": "man swimming",
-        "shortcodes": [
-            ":man_swimming:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏊‍♂️",
+        "emoticons": [],
         "keywords": [
             "man",
             "man swimming",
             "swim",
             "swimmer"
+        ],
+        "name": "man swimming",
+        "shortcodes": [
+            ":man_swimming:"
         ]
     },
     {
-        "codepoints": "🏊‍♀️",
-        "name": "woman swimming",
-        "shortcodes": [
-            ":woman_swimming:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏊‍♀️",
+        "emoticons": [],
         "keywords": [
             "swim",
             "swimmer",
             "woman",
             "woman swimming"
+        ],
+        "name": "woman swimming",
+        "shortcodes": [
+            ":woman_swimming:"
         ]
     },
     {
-        "codepoints": "⛹️",
-        "name": "person bouncing ball",
-        "shortcodes": [
-            ":person_bouncing_ball:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "⛹️",
+        "emoticons": [],
         "keywords": [
             "ball",
             "person bouncing ball"
+        ],
+        "name": "person bouncing ball",
+        "shortcodes": [
+            ":person_bouncing_ball:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "⛹️‍♂️",
+        "emoticons": [],
+        "keywords": [],
         "name": "man bouncing ball",
         "shortcodes": [
             ":man_bouncing_ball:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": []
+        ]
     },
     {
+        "category": "People & Body",
         "codepoints": "⛹️‍♀️",
+        "emoticons": [],
+        "keywords": [],
         "name": "woman bouncing ball",
         "shortcodes": [
             ":woman_bouncing_ball:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": []
+        ]
     },
     {
-        "codepoints": "🏋️",
-        "name": "person lifting weights",
-        "shortcodes": [
-            ":person_lifting_weights:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🏋️",
+        "emoticons": [],
         "keywords": [
             "lifter",
             "person lifting weights",
             "weight",
             "weightlifter"
+        ],
+        "name": "person lifting weights",
+        "shortcodes": [
+            ":person_lifting_weights:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🏋️‍♂️",
+        "emoticons": [],
+        "keywords": [],
         "name": "man lifting weights",
         "shortcodes": [
             ":man_lifting_weights:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": []
+        ]
     },
     {
+        "category": "People & Body",
         "codepoints": "🏋️‍♀️",
+        "emoticons": [],
+        "keywords": [],
         "name": "woman lifting weights",
         "shortcodes": [
             ":woman_lifting_weights:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": []
+        ]
     },
     {
-        "codepoints": "🚴",
-        "name": "person biking",
-        "shortcodes": [
-            ":person_biking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚴",
+        "emoticons": [],
         "keywords": [
             "bicycle",
             "biking",
             "cyclist",
             "person biking",
             "person riding a bike"
+        ],
+        "name": "person biking",
+        "shortcodes": [
+            ":person_biking:"
         ]
     },
     {
-        "codepoints": "🚴‍♂️",
-        "name": "man biking",
-        "shortcodes": [
-            ":man_biking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚴‍♂️",
+        "emoticons": [],
         "keywords": [
             "bicycle",
             "biking",
             "cyclist",
             "man",
             "man riding a bike"
+        ],
+        "name": "man biking",
+        "shortcodes": [
+            ":man_biking:"
         ]
     },
     {
-        "codepoints": "🚴‍♀️",
-        "name": "woman biking",
-        "shortcodes": [
-            ":woman_biking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚴‍♀️",
+        "emoticons": [],
         "keywords": [
             "bicycle",
             "biking",
             "cyclist",
             "woman",
             "woman riding a bike"
+        ],
+        "name": "woman biking",
+        "shortcodes": [
+            ":woman_biking:"
         ]
     },
     {
-        "codepoints": "🚵",
-        "name": "person mountain biking",
-        "shortcodes": [
-            ":person_mountain_biking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚵",
+        "emoticons": [],
         "keywords": [
             "bicycle",
             "bicyclist",
@@ -7042,16 +6363,16 @@ export const emojisData = JSON.parse(`[
             "cyclist",
             "mountain",
             "person mountain biking"
+        ],
+        "name": "person mountain biking",
+        "shortcodes": [
+            ":person_mountain_biking:"
         ]
     },
     {
-        "codepoints": "🚵‍♂️",
-        "name": "man mountain biking",
-        "shortcodes": [
-            ":man_mountain_biking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚵‍♂️",
+        "emoticons": [],
         "keywords": [
             "bicycle",
             "bike",
@@ -7059,16 +6380,16 @@ export const emojisData = JSON.parse(`[
             "man",
             "man mountain biking",
             "mountain"
+        ],
+        "name": "man mountain biking",
+        "shortcodes": [
+            ":man_mountain_biking:"
         ]
     },
     {
-        "codepoints": "🚵‍♀️",
-        "name": "woman mountain biking",
-        "shortcodes": [
-            ":woman_mountain_biking:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🚵‍♀️",
+        "emoticons": [],
         "keywords": [
             "bicycle",
             "bike",
@@ -7076,186 +6397,186 @@ export const emojisData = JSON.parse(`[
             "cyclist",
             "mountain",
             "woman"
+        ],
+        "name": "woman mountain biking",
+        "shortcodes": [
+            ":woman_mountain_biking:"
         ]
     },
     {
-        "codepoints": "🤸",
-        "name": "person cartwheeling",
-        "shortcodes": [
-            ":person_cartwheeling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤸",
+        "emoticons": [],
         "keywords": [
             "cartwheel",
             "gymnastics",
             "person cartwheeling"
+        ],
+        "name": "person cartwheeling",
+        "shortcodes": [
+            ":person_cartwheeling:"
         ]
     },
     {
-        "codepoints": "🤸‍♂️",
-        "name": "man cartwheeling",
-        "shortcodes": [
-            ":man_cartwheeling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤸‍♂️",
+        "emoticons": [],
         "keywords": [
             "cartwheel",
             "gymnastics",
             "man",
             "man cartwheeling"
+        ],
+        "name": "man cartwheeling",
+        "shortcodes": [
+            ":man_cartwheeling:"
         ]
     },
     {
-        "codepoints": "🤸‍♀️",
-        "name": "woman cartwheeling",
-        "shortcodes": [
-            ":woman_cartwheeling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤸‍♀️",
+        "emoticons": [],
         "keywords": [
             "cartwheel",
             "gymnastics",
             "woman",
             "woman cartwheeling"
+        ],
+        "name": "woman cartwheeling",
+        "shortcodes": [
+            ":woman_cartwheeling:"
         ]
     },
     {
-        "codepoints": "🤼",
-        "name": "people wrestling",
-        "shortcodes": [
-            ":people_wrestling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤼",
+        "emoticons": [],
         "keywords": [
             "people wrestling",
             "wrestle",
             "wrestler"
+        ],
+        "name": "people wrestling",
+        "shortcodes": [
+            ":people_wrestling:"
         ]
     },
     {
-        "codepoints": "🤼‍♂️",
-        "name": "men wrestling",
-        "shortcodes": [
-            ":men_wrestling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤼‍♂️",
+        "emoticons": [],
         "keywords": [
             "men",
             "men wrestling",
             "wrestle"
+        ],
+        "name": "men wrestling",
+        "shortcodes": [
+            ":men_wrestling:"
         ]
     },
     {
-        "codepoints": "🤼‍♀️",
-        "name": "women wrestling",
-        "shortcodes": [
-            ":women_wrestling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤼‍♀️",
+        "emoticons": [],
         "keywords": [
             "women",
             "women wrestling",
             "wrestle"
+        ],
+        "name": "women wrestling",
+        "shortcodes": [
+            ":women_wrestling:"
         ]
     },
     {
-        "codepoints": "🤽",
-        "name": "person playing water polo",
-        "shortcodes": [
-            ":person_playing_water_polo:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤽",
+        "emoticons": [],
         "keywords": [
             "person playing water polo",
             "polo",
             "water"
+        ],
+        "name": "person playing water polo",
+        "shortcodes": [
+            ":person_playing_water_polo:"
         ]
     },
     {
-        "codepoints": "🤽‍♂️",
-        "name": "man playing water polo",
-        "shortcodes": [
-            ":man_playing_water_polo:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤽‍♂️",
+        "emoticons": [],
         "keywords": [
             "man",
             "man playing water polo",
             "water polo"
+        ],
+        "name": "man playing water polo",
+        "shortcodes": [
+            ":man_playing_water_polo:"
         ]
     },
     {
-        "codepoints": "🤽‍♀️",
-        "name": "woman playing water polo",
-        "shortcodes": [
-            ":woman_playing_water_polo:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤽‍♀️",
+        "emoticons": [],
         "keywords": [
             "water polo",
             "woman",
             "woman playing water polo"
+        ],
+        "name": "woman playing water polo",
+        "shortcodes": [
+            ":woman_playing_water_polo:"
         ]
     },
     {
-        "codepoints": "🤾",
-        "name": "person playing handball",
-        "shortcodes": [
-            ":person_playing_handball:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤾",
+        "emoticons": [],
         "keywords": [
             "ball",
             "handball",
             "person playing handball"
+        ],
+        "name": "person playing handball",
+        "shortcodes": [
+            ":person_playing_handball:"
         ]
     },
     {
-        "codepoints": "🤾‍♂️",
-        "name": "man playing handball",
-        "shortcodes": [
-            ":man_playing_handball:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤾‍♂️",
+        "emoticons": [],
         "keywords": [
             "handball",
             "man",
             "man playing handball"
+        ],
+        "name": "man playing handball",
+        "shortcodes": [
+            ":man_playing_handball:"
         ]
     },
     {
-        "codepoints": "🤾‍♀️",
-        "name": "woman playing handball",
-        "shortcodes": [
-            ":woman_playing_handball:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤾‍♀️",
+        "emoticons": [],
         "keywords": [
             "handball",
             "woman",
             "woman playing handball"
+        ],
+        "name": "woman playing handball",
+        "shortcodes": [
+            ":woman_playing_handball:"
         ]
     },
     {
-        "codepoints": "🤹",
-        "name": "person juggling",
-        "shortcodes": [
-            ":person_juggling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤹",
+        "emoticons": [],
         "keywords": [
             "balance",
             "juggle",
@@ -7263,119 +6584,119 @@ export const emojisData = JSON.parse(`[
             "person juggling",
             "skill",
             "multitask"
+        ],
+        "name": "person juggling",
+        "shortcodes": [
+            ":person_juggling:"
         ]
     },
     {
-        "codepoints": "🤹‍♂️",
-        "name": "man juggling",
-        "shortcodes": [
-            ":man_juggling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤹‍♂️",
+        "emoticons": [],
         "keywords": [
             "juggling",
             "man",
             "multi-task",
             "multitask"
+        ],
+        "name": "man juggling",
+        "shortcodes": [
+            ":man_juggling:"
         ]
     },
     {
-        "codepoints": "🤹‍♀️",
-        "name": "woman juggling",
-        "shortcodes": [
-            ":woman_juggling:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🤹‍♀️",
+        "emoticons": [],
         "keywords": [
             "juggling",
             "multi-task",
             "woman",
             "multitask"
+        ],
+        "name": "woman juggling",
+        "shortcodes": [
+            ":woman_juggling:"
         ]
     },
     {
-        "codepoints": "🧘",
-        "name": "person in lotus position",
-        "shortcodes": [
-            ":person_in_lotus_position:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧘",
+        "emoticons": [],
         "keywords": [
             "meditation",
             "person in lotus position",
             "yoga"
+        ],
+        "name": "person in lotus position",
+        "shortcodes": [
+            ":person_in_lotus_position:"
         ]
     },
     {
-        "codepoints": "🧘‍♂️",
-        "name": "man in lotus position",
-        "shortcodes": [
-            ":man_in_lotus_position:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧘‍♂️",
+        "emoticons": [],
         "keywords": [
             "man in lotus position",
             "meditation",
             "yoga"
+        ],
+        "name": "man in lotus position",
+        "shortcodes": [
+            ":man_in_lotus_position:"
         ]
     },
     {
-        "codepoints": "🧘‍♀️",
-        "name": "woman in lotus position",
-        "shortcodes": [
-            ":woman_in_lotus_position:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧘‍♀️",
+        "emoticons": [],
         "keywords": [
             "meditation",
             "woman in lotus position",
             "yoga"
+        ],
+        "name": "woman in lotus position",
+        "shortcodes": [
+            ":woman_in_lotus_position:"
         ]
     },
     {
-        "codepoints": "🛀",
-        "name": "person taking bath",
-        "shortcodes": [
-            ":person_taking_bath:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🛀",
+        "emoticons": [],
         "keywords": [
             "bath",
             "bathtub",
             "person taking bath",
             "tub"
+        ],
+        "name": "person taking bath",
+        "shortcodes": [
+            ":person_taking_bath:"
         ]
     },
     {
-        "codepoints": "🛌",
-        "name": "person in bed",
-        "shortcodes": [
-            ":person_in_bed:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🛌",
+        "emoticons": [],
         "keywords": [
             "hotel",
             "person in bed",
             "sleep",
             "sleeping",
             "good night"
+        ],
+        "name": "person in bed",
+        "shortcodes": [
+            ":person_in_bed:"
         ]
     },
     {
-        "codepoints": "🧑‍🤝‍🧑",
-        "name": "people holding hands",
-        "shortcodes": [
-            ":people_holding_hands:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🧑‍🤝‍🧑",
+        "emoticons": [],
         "keywords": [
             "couple",
             "hand",
@@ -7383,16 +6704,16 @@ export const emojisData = JSON.parse(`[
             "holding hands",
             "people holding hands",
             "person"
+        ],
+        "name": "people holding hands",
+        "shortcodes": [
+            ":people_holding_hands:"
         ]
     },
     {
-        "codepoints": "👭",
-        "name": "women holding hands",
-        "shortcodes": [
-            ":women_holding_hands:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👭",
+        "emoticons": [],
         "keywords": [
             "couple",
             "hand",
@@ -7400,16 +6721,16 @@ export const emojisData = JSON.parse(`[
             "women",
             "women holding hands",
             "two women holding hands"
+        ],
+        "name": "women holding hands",
+        "shortcodes": [
+            ":women_holding_hands:"
         ]
     },
     {
-        "codepoints": "👫",
-        "name": "woman and man holding hands",
-        "shortcodes": [
-            ":woman_and_man_holding_hands:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👫",
+        "emoticons": [],
         "keywords": [
             "couple",
             "hand",
@@ -7419,16 +6740,16 @@ export const emojisData = JSON.parse(`[
             "woman",
             "woman and man holding hands",
             "man and woman holding hands"
+        ],
+        "name": "woman and man holding hands",
+        "shortcodes": [
+            ":woman_and_man_holding_hands:"
         ]
     },
     {
-        "codepoints": "👬",
-        "name": "men holding hands",
-        "shortcodes": [
-            ":men_holding_hands:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👬",
+        "emoticons": [],
         "keywords": [
             "couple",
             "Gemini",
@@ -7439,2152 +6760,1976 @@ export const emojisData = JSON.parse(`[
             "twins",
             "zodiac",
             "two men holding hands"
+        ],
+        "name": "men holding hands",
+        "shortcodes": [
+            ":men_holding_hands:"
         ]
     },
     {
-        "codepoints": "💏",
-        "name": "kiss",
-        "shortcodes": [
-            ":kiss:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💏",
+        "emoticons": [],
         "keywords": [
             "couple",
             "kiss"
+        ],
+        "name": "kiss",
+        "shortcodes": [
+            ":kiss:"
         ]
     },
     {
-        "codepoints": "👩‍❤️‍💋‍👨",
-        "name": "kiss: woman, man",
-        "shortcodes": [
-            ":kiss:_woman,_man:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍❤️‍💋‍👨",
+        "emoticons": [],
         "keywords": [
             "couple",
             "kiss",
             "man",
             "woman"
+        ],
+        "name": "kiss: woman, man",
+        "shortcodes": [
+            ":kiss:_woman,_man:"
         ]
     },
     {
-        "codepoints": "👨‍❤️‍💋‍👨",
-        "name": "kiss: man, man",
-        "shortcodes": [
-            ":kiss:_man,_man:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👨‍❤️‍💋‍👨",
+        "emoticons": [],
         "keywords": [
             "couple",
             "kiss",
             "man"
+        ],
+        "name": "kiss: man, man",
+        "shortcodes": [
+            ":kiss:_man,_man:"
         ]
     },
     {
-        "codepoints": "👩‍❤️‍💋‍👩",
-        "name": "kiss: woman, woman",
-        "shortcodes": [
-            ":kiss:_woman,_woman:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍❤️‍💋‍👩",
+        "emoticons": [],
         "keywords": [
             "couple",
             "kiss",
             "woman"
+        ],
+        "name": "kiss: woman, woman",
+        "shortcodes": [
+            ":kiss:_woman,_woman:"
         ]
     },
     {
-        "codepoints": "💑",
-        "name": "couple with heart",
-        "shortcodes": [
-            ":couple_with_heart:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "💑",
+        "emoticons": [],
         "keywords": [
             "couple",
             "couple with heart",
             "love"
+        ],
+        "name": "couple with heart",
+        "shortcodes": [
+            ":couple_with_heart:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍❤️‍👨",
+        "emoticons": [],
+        "keywords": [
+            "couple",
+            "couple with heart",
+            "love",
+            "man",
+            "woman"
+        ],
         "name": "couple with heart: woman, man",
         "shortcodes": [
             ":couple_with_heart:_woman,_man:"
-        ],
-        "emoticons": [],
+        ]
+    },
+    {
         "category": "People & Body",
+        "codepoints": "👨‍❤️‍👨",
+        "emoticons": [],
         "keywords": [
             "couple",
             "couple with heart",
             "love",
-            "man",
-            "woman"
-        ]
-    },
-    {
-        "codepoints": "👨‍❤️‍👨",
+            "man"
+        ],
         "name": "couple with heart: man, man",
         "shortcodes": [
             ":couple_with_heart:_man,_man:"
-        ],
-        "emoticons": [],
+        ]
+    },
+    {
         "category": "People & Body",
+        "codepoints": "👩‍❤️‍👩",
+        "emoticons": [],
         "keywords": [
             "couple",
             "couple with heart",
             "love",
-            "man"
-        ]
-    },
-    {
-        "codepoints": "👩‍❤️‍👩",
+            "woman"
+        ],
         "name": "couple with heart: woman, woman",
         "shortcodes": [
             ":couple_with_heart:_woman,_woman:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "couple",
-            "couple with heart",
-            "love",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👪",
+        "emoticons": [],
+        "keywords": [
+            "family"
+        ],
         "name": "family",
         "shortcodes": [
             ":family:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👩‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "man",
+            "woman"
+        ],
         "name": "family: man, woman, boy",
         "shortcodes": [
             ":family:_man,_woman,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "man",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👩‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "man",
+            "woman"
+        ],
         "name": "family: man, woman, girl",
         "shortcodes": [
             ":family:_man,_woman,_girl:"
-        ],
-        "emoticons": [],
+        ]
+    },
+    {
         "category": "People & Body",
+        "codepoints": "👨‍👩‍👧‍👦",
+        "emoticons": [],
         "keywords": [
+            "boy",
             "family",
             "girl",
             "man",
             "woman"
-        ]
-    },
-    {
-        "codepoints": "👨‍👩‍👧‍👦",
+        ],
         "name": "family: man, woman, girl, boy",
         "shortcodes": [
             ":family:_man,_woman,_girl,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "girl",
-            "man",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👩‍👦‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "man",
+            "woman"
+        ],
         "name": "family: man, woman, boy, boy",
         "shortcodes": [
             ":family:_man,_woman,_boy,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "man",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👩‍👧‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "man",
+            "woman"
+        ],
         "name": "family: man, woman, girl, girl",
         "shortcodes": [
             ":family:_man,_woman,_girl,_girl:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family",
-            "girl",
-            "man",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👨‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "man"
+        ],
         "name": "family: man, man, boy",
         "shortcodes": [
             ":family:_man,_man,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👨‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "man"
+        ],
         "name": "family: man, man, girl",
         "shortcodes": [
             ":family:_man,_man,_girl:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family",
-            "girl",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👨‍👧‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "girl",
+            "man"
+        ],
         "name": "family: man, man, girl, boy",
         "shortcodes": [
             ":family:_man,_man,_girl,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "girl",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👨‍👦‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "man"
+        ],
         "name": "family: man, man, boy, boy",
         "shortcodes": [
             ":family:_man,_man,_boy,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👨‍👧‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "man"
+        ],
         "name": "family: man, man, girl, girl",
         "shortcodes": [
             ":family:_man,_man,_girl,_girl:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family",
-            "girl",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍👩‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "woman"
+        ],
         "name": "family: woman, woman, boy",
         "shortcodes": [
             ":family:_woman,_woman,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍👩‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "woman"
+        ],
         "name": "family: woman, woman, girl",
         "shortcodes": [
             ":family:_woman,_woman,_girl:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family",
-            "girl",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍👩‍👧‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "girl",
+            "woman"
+        ],
         "name": "family: woman, woman, girl, boy",
         "shortcodes": [
             ":family:_woman,_woman,_girl,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "girl",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍👩‍👦‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "woman"
+        ],
         "name": "family: woman, woman, boy, boy",
         "shortcodes": [
             ":family:_woman,_woman,_boy,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍👩‍👧‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "woman"
+        ],
         "name": "family: woman, woman, girl, girl",
         "shortcodes": [
             ":family:_woman,_woman,_girl,_girl:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family",
-            "girl",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "man"
+        ],
         "name": "family: man, boy",
         "shortcodes": [
             ":family:_man,_boy:"
-        ],
-        "emoticons": [],
+        ]
+    },
+    {
         "category": "People & Body",
+        "codepoints": "👨‍👦‍👦",
+        "emoticons": [],
         "keywords": [
             "boy",
             "family",
             "man"
-        ]
-    },
-    {
-        "codepoints": "👨‍👦‍👦",
+        ],
         "name": "family: man, boy, boy",
         "shortcodes": [
             ":family:_man,_boy,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "man"
+        ],
         "name": "family: man, girl",
         "shortcodes": [
             ":family:_man,_girl:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family",
-            "girl",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👧‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "girl",
+            "man"
+        ],
         "name": "family: man, girl, boy",
         "shortcodes": [
             ":family:_man,_girl,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "girl",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👨‍👧‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "man"
+        ],
         "name": "family: man, girl, girl",
         "shortcodes": [
             ":family:_man,_girl,_girl:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family",
-            "girl",
-            "man"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍👦",
+        "emoticons": [],
+        "keywords": [
+            "boy",
+            "family",
+            "woman"
+        ],
         "name": "family: woman, boy",
         "shortcodes": [
             ":family:_woman,_boy:"
-        ],
-        "emoticons": [],
+        ]
+    },
+    {
         "category": "People & Body",
+        "codepoints": "👩‍👦‍👦",
+        "emoticons": [],
         "keywords": [
             "boy",
             "family",
             "woman"
-        ]
-    },
-    {
-        "codepoints": "👩‍👦‍👦",
+        ],
         "name": "family: woman, boy, boy",
         "shortcodes": [
             ":family:_woman,_boy,_boy:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "boy",
-            "family",
-            "woman"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👩‍👧",
+        "emoticons": [],
+        "keywords": [
+            "family",
+            "girl",
+            "woman"
+        ],
         "name": "family: woman, girl",
         "shortcodes": [
             ":family:_woman,_girl:"
-        ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "family",
-            "girl",
-            "woman"
         ]
     },
     {
-        "codepoints": "👩‍👧‍👦",
-        "name": "family: woman, girl, boy",
-        "shortcodes": [
-            ":family:_woman,_girl,_boy:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍👧‍👦",
+        "emoticons": [],
         "keywords": [
             "boy",
             "family",
             "girl",
             "woman"
+        ],
+        "name": "family: woman, girl, boy",
+        "shortcodes": [
+            ":family:_woman,_girl,_boy:"
         ]
     },
     {
-        "codepoints": "👩‍👧‍👧",
-        "name": "family: woman, girl, girl",
-        "shortcodes": [
-            ":family:_woman,_girl,_girl:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👩‍👧‍👧",
+        "emoticons": [],
         "keywords": [
             "family",
             "girl",
             "woman"
+        ],
+        "name": "family: woman, girl, girl",
+        "shortcodes": [
+            ":family:_woman,_girl,_girl:"
         ]
     },
     {
-        "codepoints": "🗣️",
-        "name": "speaking head",
-        "shortcodes": [
-            ":speaking_head:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "🗣️",
+        "emoticons": [],
         "keywords": [
             "face",
             "head",
             "silhouette",
             "speak",
             "speaking"
+        ],
+        "name": "speaking head",
+        "shortcodes": [
+            ":speaking_head:"
         ]
     },
     {
-        "codepoints": "👤",
-        "name": "bust in silhouette",
-        "shortcodes": [
-            ":bust_in_silhouette:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👤",
+        "emoticons": [],
         "keywords": [
             "bust",
             "bust in silhouette",
             "silhouette"
+        ],
+        "name": "bust in silhouette",
+        "shortcodes": [
+            ":bust_in_silhouette:"
         ]
     },
     {
-        "codepoints": "👥",
-        "name": "busts in silhouette",
-        "shortcodes": [
-            ":busts_in_silhouette:"
-        ],
-        "emoticons": [],
         "category": "People & Body",
+        "codepoints": "👥",
+        "emoticons": [],
         "keywords": [
             "bust",
             "busts in silhouette",
             "silhouette"
-        ]
-    },
-    {
-        "codepoints": "🫂",
-        "name": "people hugging",
-        "shortcodes": [
-            ":people_hugging:"
         ],
-        "emoticons": [],
-        "category": "People & Body",
-        "keywords": [
-            "goodbye",
-            "hello",
-            "hug",
-            "people hugging",
-            "thanks"
+        "name": "busts in silhouette",
+        "shortcodes": [
+            ":busts_in_silhouette:"
         ]
     },
     {
+        "category": "People & Body",
         "codepoints": "👣",
-        "name": "footprints",
-        "shortcodes": [
-            ":footprints:"
-        ],
         "emoticons": [],
-        "category": "People & Body",
         "keywords": [
             "clothing",
             "footprint",
             "footprints",
             "print"
+        ],
+        "name": "footprints",
+        "shortcodes": [
+            ":footprints:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐵",
+        "emoticons": [],
+        "keywords": [
+            "face",
+            "monkey"
+        ],
         "name": "monkey face",
         "shortcodes": [
             ":monkey_face:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "face",
-            "monkey"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐒",
+        "emoticons": [],
+        "keywords": [
+            "monkey"
+        ],
         "name": "monkey",
         "shortcodes": [
             ":monkey:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "monkey"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🦍",
+        "emoticons": [],
+        "keywords": [
+            "gorilla"
+        ],
         "name": "gorilla",
         "shortcodes": [
             ":gorilla:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "gorilla"
         ]
     },
     {
-        "codepoints": "🦧",
-        "name": "orangutan",
-        "shortcodes": [
-            ":orangutan:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦧",
+        "emoticons": [],
         "keywords": [
             "ape",
             "orangutan"
+        ],
+        "name": "orangutan",
+        "shortcodes": [
+            ":orangutan:"
         ]
     },
     {
-        "codepoints": "🐶",
-        "name": "dog face",
-        "shortcodes": [
-            ":dog_face:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐶",
+        "emoticons": [],
         "keywords": [
             "dog",
             "face",
             "pet"
+        ],
+        "name": "dog face",
+        "shortcodes": [
+            ":dog_face:"
         ]
     },
     {
-        "codepoints": "🐕",
-        "name": "dog",
-        "shortcodes": [
-            ":dog:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐕",
+        "emoticons": [],
         "keywords": [
             "dog",
             "pet"
+        ],
+        "name": "dog",
+        "shortcodes": [
+            ":dog:"
         ]
     },
     {
-        "codepoints": "🦮",
-        "name": "guide dog",
-        "shortcodes": [
-            ":guide_dog:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦮",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "blind",
             "guide",
             "guide dog"
+        ],
+        "name": "guide dog",
+        "shortcodes": [
+            ":guide_dog:"
         ]
     },
     {
-        "codepoints": "🐕‍🦺",
-        "name": "service dog",
-        "shortcodes": [
-            ":service_dog:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐕‍🦺",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "assistance",
             "dog",
             "service"
+        ],
+        "name": "service dog",
+        "shortcodes": [
+            ":service_dog:"
         ]
     },
     {
-        "codepoints": "🐩",
-        "name": "poodle",
-        "shortcodes": [
-            ":poodle:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐩",
+        "emoticons": [],
         "keywords": [
             "dog",
             "poodle"
+        ],
+        "name": "poodle",
+        "shortcodes": [
+            ":poodle:"
         ]
     },
     {
-        "codepoints": "🐺",
-        "name": "wolf",
-        "shortcodes": [
-            ":wolf:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐺",
+        "emoticons": [],
         "keywords": [
             "face",
             "wolf"
+        ],
+        "name": "wolf",
+        "shortcodes": [
+            ":wolf:"
         ]
     },
     {
-        "codepoints": "🦊",
-        "name": "fox",
-        "shortcodes": [
-            ":fox:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦊",
+        "emoticons": [],
         "keywords": [
             "face",
             "fox"
+        ],
+        "name": "fox",
+        "shortcodes": [
+            ":fox:"
         ]
     },
     {
-        "codepoints": "🦝",
-        "name": "raccoon",
-        "shortcodes": [
-            ":raccoon:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦝",
+        "emoticons": [],
         "keywords": [
             "curious",
             "raccoon",
             "sly"
+        ],
+        "name": "raccoon",
+        "shortcodes": [
+            ":raccoon:"
         ]
     },
     {
-        "codepoints": "🐱",
-        "name": "cat face",
-        "shortcodes": [
-            ":cat_face:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐱",
+        "emoticons": [],
         "keywords": [
             "cat",
             "face",
             "pet"
+        ],
+        "name": "cat face",
+        "shortcodes": [
+            ":cat_face:"
         ]
     },
     {
-        "codepoints": "🐈",
-        "name": "cat",
-        "shortcodes": [
-            ":cat:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐈",
+        "emoticons": [],
         "keywords": [
             "cat",
             "pet"
-        ]
-    },
-    {
-        "codepoints": "🐈‍⬛",
-        "name": "black cat",
-        "shortcodes": [
-            ":black_cat:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "black",
-            "cat",
-            "unlucky"
+        "name": "cat",
+        "shortcodes": [
+            ":cat:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🦁",
-        "name": "lion",
-        "shortcodes": [
-            ":lion:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "face",
             "Leo",
             "lion",
             "zodiac"
+        ],
+        "name": "lion",
+        "shortcodes": [
+            ":lion:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐯",
+        "emoticons": [],
+        "keywords": [
+            "face",
+            "tiger"
+        ],
         "name": "tiger face",
         "shortcodes": [
             ":tiger_face:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "face",
-            "tiger"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐅",
+        "emoticons": [],
+        "keywords": [
+            "tiger"
+        ],
         "name": "tiger",
         "shortcodes": [
             ":tiger:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "tiger"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐆",
+        "emoticons": [],
+        "keywords": [
+            "leopard"
+        ],
         "name": "leopard",
         "shortcodes": [
             ":leopard:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "leopard"
         ]
     },
     {
-        "codepoints": "🐴",
-        "name": "horse face",
-        "shortcodes": [
-            ":horse_face:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐴",
+        "emoticons": [],
         "keywords": [
             "face",
             "horse"
+        ],
+        "name": "horse face",
+        "shortcodes": [
+            ":horse_face:"
         ]
     },
     {
-        "codepoints": "🐎",
-        "name": "horse",
-        "shortcodes": [
-            ":horse:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐎",
+        "emoticons": [],
         "keywords": [
             "equestrian",
             "horse",
             "racehorse",
             "racing"
+        ],
+        "name": "horse",
+        "shortcodes": [
+            ":horse:"
         ]
     },
     {
-        "codepoints": "🦄",
-        "name": "unicorn",
-        "shortcodes": [
-            ":unicorn:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦄",
+        "emoticons": [],
         "keywords": [
             "face",
             "unicorn"
+        ],
+        "name": "unicorn",
+        "shortcodes": [
+            ":unicorn:"
         ]
     },
     {
-        "codepoints": "🦓",
-        "name": "zebra",
-        "shortcodes": [
-            ":zebra:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦓",
+        "emoticons": [],
         "keywords": [
             "stripe",
             "zebra"
+        ],
+        "name": "zebra",
+        "shortcodes": [
+            ":zebra:"
         ]
     },
     {
-        "codepoints": "🦌",
-        "name": "deer",
-        "shortcodes": [
-            ":deer:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦌",
+        "emoticons": [],
         "keywords": [
             "deer",
             "stag"
-        ]
-    },
-    {
-        "codepoints": "🦬",
-        "name": "bison",
-        "shortcodes": [
-            ":bison:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "bison",
-            "buffalo",
-            "herd",
-            "wisent"
+        "name": "deer",
+        "shortcodes": [
+            ":deer:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐮",
-        "name": "cow face",
-        "shortcodes": [
-            ":cow_face:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "cow",
             "face"
+        ],
+        "name": "cow face",
+        "shortcodes": [
+            ":cow_face:"
         ]
     },
     {
-        "codepoints": "🐂",
-        "name": "ox",
-        "shortcodes": [
-            ":ox:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐂",
+        "emoticons": [],
         "keywords": [
             "bull",
             "ox",
             "Taurus",
             "zodiac"
+        ],
+        "name": "ox",
+        "shortcodes": [
+            ":ox:"
         ]
     },
     {
-        "codepoints": "🐃",
-        "name": "water buffalo",
-        "shortcodes": [
-            ":water_buffalo:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐃",
+        "emoticons": [],
         "keywords": [
             "buffalo",
             "water"
+        ],
+        "name": "water buffalo",
+        "shortcodes": [
+            ":water_buffalo:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐄",
+        "emoticons": [],
+        "keywords": [
+            "cow"
+        ],
         "name": "cow",
         "shortcodes": [
             ":cow:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "cow"
         ]
     },
     {
-        "codepoints": "🐷",
-        "name": "pig face",
-        "shortcodes": [
-            ":pig_face:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐷",
+        "emoticons": [],
         "keywords": [
             "face",
             "pig"
+        ],
+        "name": "pig face",
+        "shortcodes": [
+            ":pig_face:"
         ]
     },
     {
-        "codepoints": "🐖",
-        "name": "pig",
-        "shortcodes": [
-            ":pig:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐖",
+        "emoticons": [],
         "keywords": [
             "pig",
             "sow"
+        ],
+        "name": "pig",
+        "shortcodes": [
+            ":pig:"
         ]
     },
     {
-        "codepoints": "🐗",
-        "name": "boar",
-        "shortcodes": [
-            ":boar:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐗",
+        "emoticons": [],
         "keywords": [
             "boar",
             "pig"
+        ],
+        "name": "boar",
+        "shortcodes": [
+            ":boar:"
         ]
     },
     {
-        "codepoints": "🐽",
-        "name": "pig nose",
-        "shortcodes": [
-            ":pig_nose:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐽",
+        "emoticons": [],
         "keywords": [
             "face",
             "nose",
             "pig"
+        ],
+        "name": "pig nose",
+        "shortcodes": [
+            ":pig_nose:"
         ]
     },
     {
-        "codepoints": "🐏",
-        "name": "ram",
-        "shortcodes": [
-            ":ram:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐏",
+        "emoticons": [],
         "keywords": [
             "Aries",
             "male",
             "ram",
             "sheep",
             "zodiac"
+        ],
+        "name": "ram",
+        "shortcodes": [
+            ":ram:"
         ]
     },
     {
-        "codepoints": "🐑",
-        "name": "ewe",
-        "shortcodes": [
-            ":ewe:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐑",
+        "emoticons": [],
         "keywords": [
             "ewe",
             "female",
             "sheep"
+        ],
+        "name": "ewe",
+        "shortcodes": [
+            ":ewe:"
         ]
     },
     {
-        "codepoints": "🐐",
-        "name": "goat",
-        "shortcodes": [
-            ":goat:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐐",
+        "emoticons": [],
         "keywords": [
             "Capricorn",
             "goat",
             "zodiac"
+        ],
+        "name": "goat",
+        "shortcodes": [
+            ":goat:"
         ]
     },
     {
-        "codepoints": "🐪",
-        "name": "camel",
-        "shortcodes": [
-            ":camel:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐪",
+        "emoticons": [],
         "keywords": [
             "camel",
             "dromedary",
             "hump"
+        ],
+        "name": "camel",
+        "shortcodes": [
+            ":camel:"
         ]
     },
     {
-        "codepoints": "🐫",
-        "name": "two-hump camel",
-        "shortcodes": [
-            ":two-hump_camel:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐫",
+        "emoticons": [],
         "keywords": [
             "bactrian",
             "camel",
             "hump",
             "two-hump camel",
             "Bactrian"
+        ],
+        "name": "two-hump camel",
+        "shortcodes": [
+            ":two-hump_camel:"
         ]
     },
     {
-        "codepoints": "🦙",
-        "name": "llama",
-        "shortcodes": [
-            ":llama:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦙",
+        "emoticons": [],
         "keywords": [
             "alpaca",
             "guanaco",
             "llama",
             "vicuña",
             "wool"
+        ],
+        "name": "llama",
+        "shortcodes": [
+            ":llama:"
         ]
     },
     {
-        "codepoints": "🦒",
-        "name": "giraffe",
-        "shortcodes": [
-            ":giraffe:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦒",
+        "emoticons": [],
         "keywords": [
             "giraffe",
             "spots"
+        ],
+        "name": "giraffe",
+        "shortcodes": [
+            ":giraffe:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐘",
+        "emoticons": [],
+        "keywords": [
+            "elephant"
+        ],
         "name": "elephant",
         "shortcodes": [
             ":elephant:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "elephant"
         ]
     },
     {
-        "codepoints": "🦣",
-        "name": "mammoth",
-        "shortcodes": [
-            ":mammoth:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
-        "keywords": [
-            "extinction",
-            "large",
-            "mammoth",
-            "tusk",
-            "woolly"
-        ]
-    },
-    {
         "codepoints": "🦏",
-        "name": "rhinoceros",
-        "shortcodes": [
-            ":rhinoceros:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "rhino",
             "rhinoceros"
+        ],
+        "name": "rhinoceros",
+        "shortcodes": [
+            ":rhinoceros:"
         ]
     },
     {
-        "codepoints": "🦛",
-        "name": "hippopotamus",
-        "shortcodes": [
-            ":hippopotamus:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦛",
+        "emoticons": [],
         "keywords": [
             "hippo",
             "hippopotamus"
+        ],
+        "name": "hippopotamus",
+        "shortcodes": [
+            ":hippopotamus:"
         ]
     },
     {
-        "codepoints": "🐭",
-        "name": "mouse face",
-        "shortcodes": [
-            ":mouse_face:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐭",
+        "emoticons": [],
         "keywords": [
             "face",
             "mouse",
             "pet"
+        ],
+        "name": "mouse face",
+        "shortcodes": [
+            ":mouse_face:"
         ]
     },
     {
-        "codepoints": "🐁",
-        "name": "mouse",
-        "shortcodes": [
-            ":mouse:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐁",
+        "emoticons": [],
         "keywords": [
             "mouse",
             "pet",
             "rodent"
+        ],
+        "name": "mouse",
+        "shortcodes": [
+            ":mouse:"
         ]
     },
     {
-        "codepoints": "🐀",
-        "name": "rat",
-        "shortcodes": [
-            ":rat:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐀",
+        "emoticons": [],
         "keywords": [
             "pet",
             "rat",
             "rodent"
+        ],
+        "name": "rat",
+        "shortcodes": [
+            ":rat:"
         ]
     },
     {
-        "codepoints": "🐹",
-        "name": "hamster",
-        "shortcodes": [
-            ":hamster:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐹",
+        "emoticons": [],
         "keywords": [
             "face",
             "hamster",
             "pet"
+        ],
+        "name": "hamster",
+        "shortcodes": [
+            ":hamster:"
         ]
     },
     {
-        "codepoints": "🐰",
-        "name": "rabbit face",
-        "shortcodes": [
-            ":rabbit_face:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐰",
+        "emoticons": [],
         "keywords": [
             "bunny",
             "face",
             "pet",
             "rabbit"
+        ],
+        "name": "rabbit face",
+        "shortcodes": [
+            ":rabbit_face:"
         ]
     },
     {
-        "codepoints": "🐇",
-        "name": "rabbit",
-        "shortcodes": [
-            ":rabbit:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐇",
+        "emoticons": [],
         "keywords": [
             "bunny",
             "pet",
             "rabbit"
+        ],
+        "name": "rabbit",
+        "shortcodes": [
+            ":rabbit:"
         ]
     },
     {
-        "codepoints": "🐿️",
-        "name": "chipmunk",
-        "shortcodes": [
-            ":chipmunk:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐿️",
+        "emoticons": [],
         "keywords": [
             "chipmunk",
             "squirrel"
-        ]
-    },
-    {
-        "codepoints": "🦫",
-        "name": "beaver",
-        "shortcodes": [
-            ":beaver:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "beaver",
-            "dam"
+        "name": "chipmunk",
+        "shortcodes": [
+            ":chipmunk:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🦔",
-        "name": "hedgehog",
-        "shortcodes": [
-            ":hedgehog:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "hedgehog",
             "spiny"
+        ],
+        "name": "hedgehog",
+        "shortcodes": [
+            ":hedgehog:"
         ]
     },
     {
-        "codepoints": "🦇",
-        "name": "bat",
-        "shortcodes": [
-            ":bat:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦇",
+        "emoticons": [],
         "keywords": [
             "bat",
             "vampire"
+        ],
+        "name": "bat",
+        "shortcodes": [
+            ":bat:"
         ]
     },
     {
-        "codepoints": "🐻",
-        "name": "bear",
-        "shortcodes": [
-            ":bear:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐻",
+        "emoticons": [],
         "keywords": [
             "bear",
             "face"
-        ]
-    },
-    {
-        "codepoints": "🐻‍❄️",
-        "name": "polar bear",
-        "shortcodes": [
-            ":polar_bear:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "arctic",
-            "bear",
-            "polar bear",
-            "white"
+        "name": "bear",
+        "shortcodes": [
+            ":bear:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐨",
-        "name": "koala",
-        "shortcodes": [
-            ":koala:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "koala",
             "marsupial",
             "face"
+        ],
+        "name": "koala",
+        "shortcodes": [
+            ":koala:"
         ]
     },
     {
-        "codepoints": "🐼",
-        "name": "panda",
-        "shortcodes": [
-            ":panda:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐼",
+        "emoticons": [],
         "keywords": [
             "face",
             "panda"
+        ],
+        "name": "panda",
+        "shortcodes": [
+            ":panda:"
         ]
     },
     {
-        "codepoints": "🦥",
-        "name": "sloth",
-        "shortcodes": [
-            ":sloth:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦥",
+        "emoticons": [],
         "keywords": [
             "lazy",
             "sloth",
             "slow"
+        ],
+        "name": "sloth",
+        "shortcodes": [
+            ":sloth:"
         ]
     },
     {
-        "codepoints": "🦦",
-        "name": "otter",
-        "shortcodes": [
-            ":otter:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦦",
+        "emoticons": [],
         "keywords": [
             "fishing",
             "otter",
             "playful"
+        ],
+        "name": "otter",
+        "shortcodes": [
+            ":otter:"
         ]
     },
     {
-        "codepoints": "🦨",
-        "name": "skunk",
-        "shortcodes": [
-            ":skunk:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦨",
+        "emoticons": [],
         "keywords": [
             "skunk",
             "stink"
+        ],
+        "name": "skunk",
+        "shortcodes": [
+            ":skunk:"
         ]
     },
     {
-        "codepoints": "🦘",
-        "name": "kangaroo",
-        "shortcodes": [
-            ":kangaroo:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦘",
+        "emoticons": [],
         "keywords": [
             "Australia",
             "joey",
             "jump",
             "kangaroo",
             "marsupial"
+        ],
+        "name": "kangaroo",
+        "shortcodes": [
+            ":kangaroo:"
         ]
     },
     {
-        "codepoints": "🦡",
-        "name": "badger",
-        "shortcodes": [
-            ":badger:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦡",
+        "emoticons": [],
         "keywords": [
             "badger",
             "honey badger",
             "pester"
+        ],
+        "name": "badger",
+        "shortcodes": [
+            ":badger:"
         ]
     },
     {
-        "codepoints": "🐾",
-        "name": "paw prints",
-        "shortcodes": [
-            ":paw_prints:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐾",
+        "emoticons": [],
         "keywords": [
             "feet",
             "paw",
             "paw prints",
             "print"
+        ],
+        "name": "paw prints",
+        "shortcodes": [
+            ":paw_prints:"
         ]
     },
     {
-        "codepoints": "🦃",
-        "name": "turkey",
-        "shortcodes": [
-            ":turkey:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦃",
+        "emoticons": [],
         "keywords": [
             "bird",
             "poultry",
             "turkey"
+        ],
+        "name": "turkey",
+        "shortcodes": [
+            ":turkey:"
         ]
     },
     {
-        "codepoints": "🐔",
-        "name": "chicken",
-        "shortcodes": [
-            ":chicken:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐔",
+        "emoticons": [],
         "keywords": [
             "bird",
             "chicken",
             "poultry"
+        ],
+        "name": "chicken",
+        "shortcodes": [
+            ":chicken:"
         ]
     },
     {
-        "codepoints": "🐓",
-        "name": "rooster",
-        "shortcodes": [
-            ":rooster:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐓",
+        "emoticons": [],
         "keywords": [
             "bird",
             "rooster"
+        ],
+        "name": "rooster",
+        "shortcodes": [
+            ":rooster:"
         ]
     },
     {
-        "codepoints": "🐣",
-        "name": "hatching chick",
-        "shortcodes": [
-            ":hatching_chick:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐣",
+        "emoticons": [],
         "keywords": [
             "baby",
             "bird",
             "chick",
             "hatching"
+        ],
+        "name": "hatching chick",
+        "shortcodes": [
+            ":hatching_chick:"
         ]
     },
     {
-        "codepoints": "🐤",
-        "name": "baby chick",
-        "shortcodes": [
-            ":baby_chick:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐤",
+        "emoticons": [],
         "keywords": [
             "baby",
             "bird",
             "chick"
+        ],
+        "name": "baby chick",
+        "shortcodes": [
+            ":baby_chick:"
         ]
     },
     {
-        "codepoints": "🐥",
-        "name": "front-facing baby chick",
-        "shortcodes": [
-            ":front-facing_baby_chick:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐥",
+        "emoticons": [],
         "keywords": [
             "baby",
             "bird",
             "chick",
             "front-facing baby chick"
+        ],
+        "name": "front-facing baby chick",
+        "shortcodes": [
+            ":front-facing_baby_chick:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐦",
+        "emoticons": [],
+        "keywords": [
+            "bird"
+        ],
         "name": "bird",
         "shortcodes": [
             ":bird:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "bird"
         ]
     },
     {
-        "codepoints": "🐧",
-        "name": "penguin",
-        "shortcodes": [
-            ":penguin:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐧",
+        "emoticons": [],
         "keywords": [
             "bird",
             "penguin"
+        ],
+        "name": "penguin",
+        "shortcodes": [
+            ":penguin:"
         ]
     },
     {
-        "codepoints": "🕊️",
-        "name": "dove",
-        "shortcodes": [
-            ":dove:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🕊️",
+        "emoticons": [],
         "keywords": [
             "bird",
             "dove",
             "fly",
             "peace"
+        ],
+        "name": "dove",
+        "shortcodes": [
+            ":dove:"
         ]
     },
     {
-        "codepoints": "🦅",
-        "name": "eagle",
-        "shortcodes": [
-            ":eagle:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦅",
+        "emoticons": [],
         "keywords": [
             "bird of prey",
             "eagle",
             "bird"
+        ],
+        "name": "eagle",
+        "shortcodes": [
+            ":eagle:"
         ]
     },
     {
-        "codepoints": "🦆",
-        "name": "duck",
-        "shortcodes": [
-            ":duck:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦆",
+        "emoticons": [],
         "keywords": [
             "bird",
             "duck"
+        ],
+        "name": "duck",
+        "shortcodes": [
+            ":duck:"
         ]
     },
     {
-        "codepoints": "🦢",
-        "name": "swan",
-        "shortcodes": [
-            ":swan:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦢",
+        "emoticons": [],
         "keywords": [
             "bird",
             "cygnet",
             "swan",
             "ugly duckling"
+        ],
+        "name": "swan",
+        "shortcodes": [
+            ":swan:"
         ]
     },
     {
-        "codepoints": "🦉",
-        "name": "owl",
-        "shortcodes": [
-            ":owl:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦉",
+        "emoticons": [],
         "keywords": [
             "bird of prey",
             "owl",
             "wise",
             "bird"
-        ]
-    },
-    {
-        "codepoints": "🦤",
-        "name": "dodo",
-        "shortcodes": [
-            ":dodo:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "dodo",
-            "extinction",
-            "large",
-            "Mauritius"
-        ]
-    },
-    {
-        "codepoints": "🪶",
-        "name": "feather",
+        "name": "owl",
         "shortcodes": [
-            ":feather:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "bird",
-            "feather",
-            "flight",
-            "light",
-            "plumage"
+            ":owl:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🦩",
-        "name": "flamingo",
-        "shortcodes": [
-            ":flamingo:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "flamboyant",
             "flamingo",
             "tropical"
+        ],
+        "name": "flamingo",
+        "shortcodes": [
+            ":flamingo:"
         ]
     },
     {
-        "codepoints": "🦚",
-        "name": "peacock",
-        "shortcodes": [
-            ":peacock:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦚",
+        "emoticons": [],
         "keywords": [
             "bird",
             "ostentatious",
             "peacock",
             "peahen",
             "proud"
+        ],
+        "name": "peacock",
+        "shortcodes": [
+            ":peacock:"
         ]
     },
     {
-        "codepoints": "🦜",
-        "name": "parrot",
-        "shortcodes": [
-            ":parrot:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦜",
+        "emoticons": [],
         "keywords": [
             "bird",
             "parrot",
             "pirate",
             "talk"
+        ],
+        "name": "parrot",
+        "shortcodes": [
+            ":parrot:"
         ]
     },
     {
-        "codepoints": "🐸",
-        "name": "frog",
-        "shortcodes": [
-            ":frog:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐸",
+        "emoticons": [],
         "keywords": [
             "face",
             "frog"
+        ],
+        "name": "frog",
+        "shortcodes": [
+            ":frog:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐊",
+        "emoticons": [],
+        "keywords": [
+            "crocodile"
+        ],
         "name": "crocodile",
         "shortcodes": [
             ":crocodile:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "crocodile"
         ]
     },
     {
-        "codepoints": "🐢",
-        "name": "turtle",
-        "shortcodes": [
-            ":turtle:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐢",
+        "emoticons": [],
         "keywords": [
             "terrapin",
             "tortoise",
             "turtle"
+        ],
+        "name": "turtle",
+        "shortcodes": [
+            ":turtle:"
         ]
     },
     {
-        "codepoints": "🦎",
-        "name": "lizard",
-        "shortcodes": [
-            ":lizard:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦎",
+        "emoticons": [],
         "keywords": [
             "lizard",
             "reptile"
+        ],
+        "name": "lizard",
+        "shortcodes": [
+            ":lizard:"
         ]
     },
     {
-        "codepoints": "🐍",
-        "name": "snake",
-        "shortcodes": [
-            ":snake:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐍",
+        "emoticons": [],
         "keywords": [
             "bearer",
             "Ophiuchus",
             "serpent",
             "snake",
             "zodiac"
+        ],
+        "name": "snake",
+        "shortcodes": [
+            ":snake:"
         ]
     },
     {
-        "codepoints": "🐲",
-        "name": "dragon face",
-        "shortcodes": [
-            ":dragon_face:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐲",
+        "emoticons": [],
         "keywords": [
             "dragon",
             "face",
             "fairy tale"
+        ],
+        "name": "dragon face",
+        "shortcodes": [
+            ":dragon_face:"
         ]
     },
     {
-        "codepoints": "🐉",
-        "name": "dragon",
-        "shortcodes": [
-            ":dragon:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐉",
+        "emoticons": [],
         "keywords": [
             "dragon",
             "fairy tale"
+        ],
+        "name": "dragon",
+        "shortcodes": [
+            ":dragon:"
         ]
     },
     {
-        "codepoints": "🦕",
-        "name": "sauropod",
-        "shortcodes": [
-            ":sauropod:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦕",
+        "emoticons": [],
         "keywords": [
             "brachiosaurus",
             "brontosaurus",
             "diplodocus",
             "sauropod"
+        ],
+        "name": "sauropod",
+        "shortcodes": [
+            ":sauropod:"
         ]
     },
     {
-        "codepoints": "🦖",
-        "name": "T-Rex",
-        "shortcodes": [
-            ":T-Rex:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦖",
+        "emoticons": [],
         "keywords": [
             "T-Rex",
             "Tyrannosaurus Rex"
+        ],
+        "name": "T-Rex",
+        "shortcodes": [
+            ":T-Rex:"
         ]
     },
     {
-        "codepoints": "🐳",
-        "name": "spouting whale",
-        "shortcodes": [
-            ":spouting_whale:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐳",
+        "emoticons": [],
         "keywords": [
             "face",
             "spouting",
             "whale"
+        ],
+        "name": "spouting whale",
+        "shortcodes": [
+            ":spouting_whale:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐋",
+        "emoticons": [],
+        "keywords": [
+            "whale"
+        ],
         "name": "whale",
         "shortcodes": [
             ":whale:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "whale"
         ]
     },
     {
-        "codepoints": "🐬",
-        "name": "dolphin",
-        "shortcodes": [
-            ":dolphin:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐬",
+        "emoticons": [],
         "keywords": [
             "dolphin",
             "porpoise",
             "flipper"
-        ]
-    },
-    {
-        "codepoints": "🦭",
-        "name": "seal",
-        "shortcodes": [
-            ":seal:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "sea lion",
-            "seal"
+        "name": "dolphin",
+        "shortcodes": [
+            ":dolphin:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐟",
-        "name": "fish",
-        "shortcodes": [
-            ":fish:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "fish",
             "Pisces",
             "zodiac"
+        ],
+        "name": "fish",
+        "shortcodes": [
+            ":fish:"
         ]
     },
     {
-        "codepoints": "🐠",
-        "name": "tropical fish",
-        "shortcodes": [
-            ":tropical_fish:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐠",
+        "emoticons": [],
         "keywords": [
             "fish",
             "reef fish",
             "tropical"
+        ],
+        "name": "tropical fish",
+        "shortcodes": [
+            ":tropical_fish:"
         ]
     },
     {
-        "codepoints": "🐡",
-        "name": "blowfish",
-        "shortcodes": [
-            ":blowfish:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐡",
+        "emoticons": [],
         "keywords": [
             "blowfish",
             "fish"
+        ],
+        "name": "blowfish",
+        "shortcodes": [
+            ":blowfish:"
         ]
     },
     {
-        "codepoints": "🦈",
-        "name": "shark",
-        "shortcodes": [
-            ":shark:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦈",
+        "emoticons": [],
         "keywords": [
             "fish",
             "shark"
+        ],
+        "name": "shark",
+        "shortcodes": [
+            ":shark:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐙",
+        "emoticons": [],
+        "keywords": [
+            "octopus"
+        ],
         "name": "octopus",
         "shortcodes": [
             ":octopus:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "octopus"
         ]
     },
     {
-        "codepoints": "🐚",
-        "name": "spiral shell",
-        "shortcodes": [
-            ":spiral_shell:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐚",
+        "emoticons": [],
         "keywords": [
             "shell",
             "spiral"
-        ]
-    },
-    {
-        "codepoints": "🪸",
-        "name": "coral",
-        "shortcodes": [
-            ":coral:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "coral",
-            "ocean",
-            "reef"
+        "name": "spiral shell",
+        "shortcodes": [
+            ":spiral_shell:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐌",
-        "name": "snail",
-        "shortcodes": [
-            ":snail:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "mollusc",
             "snail"
+        ],
+        "name": "snail",
+        "shortcodes": [
+            ":snail:"
         ]
     },
     {
-        "codepoints": "🦋",
-        "name": "butterfly",
-        "shortcodes": [
-            ":butterfly:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦋",
+        "emoticons": [],
         "keywords": [
             "butterfly",
             "insect",
             "moth",
             "pretty"
+        ],
+        "name": "butterfly",
+        "shortcodes": [
+            ":butterfly:"
         ]
     },
     {
-        "codepoints": "🐛",
-        "name": "bug",
-        "shortcodes": [
-            ":bug:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐛",
+        "emoticons": [],
         "keywords": [
             "bug",
             "caterpillar",
             "insect",
             "worm"
+        ],
+        "name": "bug",
+        "shortcodes": [
+            ":bug:"
         ]
     },
     {
-        "codepoints": "🐜",
-        "name": "ant",
-        "shortcodes": [
-            ":ant:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐜",
+        "emoticons": [],
         "keywords": [
             "ant",
             "insect"
+        ],
+        "name": "ant",
+        "shortcodes": [
+            ":ant:"
         ]
     },
     {
-        "codepoints": "🐝",
-        "name": "honeybee",
-        "shortcodes": [
-            ":honeybee:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🐝",
+        "emoticons": [],
         "keywords": [
             "bee",
             "honeybee",
             "insect"
-        ]
-    },
-    {
-        "codepoints": "🪲",
-        "name": "beetle",
-        "shortcodes": [
-            ":beetle:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "beetle",
-            "bug",
-            "insect"
+        "name": "honeybee",
+        "shortcodes": [
+            ":honeybee:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🐞",
-        "name": "lady beetle",
-        "shortcodes": [
-            ":lady_beetle:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "beetle",
             "insect",
             "lady beetle",
             "ladybird",
             "ladybug"
+        ],
+        "name": "lady beetle",
+        "shortcodes": [
+            ":lady_beetle:"
         ]
     },
     {
-        "codepoints": "🦗",
-        "name": "cricket",
-        "shortcodes": [
-            ":cricket:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦗",
+        "emoticons": [],
         "keywords": [
             "cricket",
             "grasshopper"
-        ]
-    },
-    {
-        "codepoints": "🪳",
-        "name": "cockroach",
-        "shortcodes": [
-            ":cockroach:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "cockroach",
-            "insect",
-            "pest",
-            "roach"
+        "name": "cricket",
+        "shortcodes": [
+            ":cricket:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🕷️",
-        "name": "spider",
-        "shortcodes": [
-            ":spider:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "arachnid",
             "spider",
             "insect"
+        ],
+        "name": "spider",
+        "shortcodes": [
+            ":spider:"
         ]
     },
     {
-        "codepoints": "🕸️",
-        "name": "spider web",
-        "shortcodes": [
-            ":spider_web:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🕸️",
+        "emoticons": [],
         "keywords": [
             "spider",
             "web"
+        ],
+        "name": "spider web",
+        "shortcodes": [
+            ":spider_web:"
         ]
     },
     {
-        "codepoints": "🦂",
-        "name": "scorpion",
-        "shortcodes": [
-            ":scorpion:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦂",
+        "emoticons": [],
         "keywords": [
             "scorpio",
             "Scorpio",
             "scorpion",
             "zodiac"
+        ],
+        "name": "scorpion",
+        "shortcodes": [
+            ":scorpion:"
         ]
     },
     {
-        "codepoints": "🦟",
-        "name": "mosquito",
-        "shortcodes": [
-            ":mosquito:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🦟",
+        "emoticons": [],
         "keywords": [
             "dengue",
             "fever",
@@ -9595,746 +8740,623 @@ export const emojisData = JSON.parse(`[
             "virus",
             "disease",
             "pest"
-        ]
-    },
-    {
-        "codepoints": "🪰",
-        "name": "fly",
-        "shortcodes": [
-            ":fly:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "disease",
-            "fly",
-            "maggot",
-            "pest",
-            "rotting"
-        ]
-    },
-    {
-        "codepoints": "🪱",
-        "name": "worm",
+        "name": "mosquito",
         "shortcodes": [
-            ":worm:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "annelid",
-            "earthworm",
-            "parasite",
-            "worm"
+            ":mosquito:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🦠",
-        "name": "microbe",
-        "shortcodes": [
-            ":microbe:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "amoeba",
             "bacteria",
             "microbe",
             "virus"
+        ],
+        "name": "microbe",
+        "shortcodes": [
+            ":microbe:"
         ]
     },
     {
-        "codepoints": "💐",
-        "name": "bouquet",
-        "shortcodes": [
-            ":bouquet:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "💐",
+        "emoticons": [],
         "keywords": [
             "bouquet",
             "flower"
+        ],
+        "name": "bouquet",
+        "shortcodes": [
+            ":bouquet:"
         ]
     },
     {
-        "codepoints": "🌸",
-        "name": "cherry blossom",
-        "shortcodes": [
-            ":cherry_blossom:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌸",
+        "emoticons": [],
         "keywords": [
             "blossom",
             "cherry",
             "flower"
+        ],
+        "name": "cherry blossom",
+        "shortcodes": [
+            ":cherry_blossom:"
         ]
     },
     {
-        "codepoints": "💮",
-        "name": "white flower",
-        "shortcodes": [
-            ":white_flower:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "💮",
+        "emoticons": [],
         "keywords": [
             "flower",
             "white flower"
-        ]
-    },
-    {
-        "codepoints": "🪷",
-        "name": "lotus",
-        "shortcodes": [
-            ":lotus:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "Buddhism",
-            "flower",
-            "Hinduism",
-            "India",
-            "lotus",
-            "purity",
-            "Vietnam"
+        "name": "white flower",
+        "shortcodes": [
+            ":white_flower:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🏵️",
-        "name": "rosette",
-        "shortcodes": [
-            ":rosette:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "plant",
             "rosette"
+        ],
+        "name": "rosette",
+        "shortcodes": [
+            ":rosette:"
         ]
     },
     {
-        "codepoints": "🌹",
-        "name": "rose",
-        "shortcodes": [
-            ":rose:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌹",
+        "emoticons": [],
         "keywords": [
             "flower",
             "rose"
+        ],
+        "name": "rose",
+        "shortcodes": [
+            ":rose:"
         ]
     },
     {
-        "codepoints": "🥀",
-        "name": "wilted flower",
-        "shortcodes": [
-            ":wilted_flower:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🥀",
+        "emoticons": [],
         "keywords": [
             "flower",
             "wilted"
+        ],
+        "name": "wilted flower",
+        "shortcodes": [
+            ":wilted_flower:"
         ]
     },
     {
-        "codepoints": "🌺",
-        "name": "hibiscus",
-        "shortcodes": [
-            ":hibiscus:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌺",
+        "emoticons": [],
         "keywords": [
             "flower",
             "hibiscus"
+        ],
+        "name": "hibiscus",
+        "shortcodes": [
+            ":hibiscus:"
         ]
     },
     {
-        "codepoints": "🌻",
-        "name": "sunflower",
-        "shortcodes": [
-            ":sunflower:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌻",
+        "emoticons": [],
         "keywords": [
             "flower",
             "sun",
             "sunflower"
+        ],
+        "name": "sunflower",
+        "shortcodes": [
+            ":sunflower:"
         ]
     },
     {
-        "codepoints": "🌼",
-        "name": "blossom",
-        "shortcodes": [
-            ":blossom:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌼",
+        "emoticons": [],
         "keywords": [
             "blossom",
             "flower"
+        ],
+        "name": "blossom",
+        "shortcodes": [
+            ":blossom:"
         ]
     },
     {
-        "codepoints": "🌷",
-        "name": "tulip",
-        "shortcodes": [
-            ":tulip:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌷",
+        "emoticons": [],
         "keywords": [
             "flower",
             "tulip"
+        ],
+        "name": "tulip",
+        "shortcodes": [
+            ":tulip:"
         ]
     },
     {
-        "codepoints": "🌱",
-        "name": "seedling",
-        "shortcodes": [
-            ":seedling:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌱",
+        "emoticons": [],
         "keywords": [
             "seedling",
             "young"
-        ]
-    },
-    {
-        "codepoints": "🪴",
-        "name": "potted plant",
-        "shortcodes": [
-            ":potted_plant:"
         ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "grow",
-            "house",
-            "nurturing",
-            "plant",
-            "pot plant",
-            "boring",
-            "potted plant",
-            "useless"
+        "name": "seedling",
+        "shortcodes": [
+            ":seedling:"
         ]
     },
     {
+        "category": "Animals & Nature",
         "codepoints": "🌲",
-        "name": "evergreen tree",
-        "shortcodes": [
-            ":evergreen_tree:"
-        ],
         "emoticons": [],
-        "category": "Animals & Nature",
         "keywords": [
             "evergreen tree",
             "tree"
+        ],
+        "name": "evergreen tree",
+        "shortcodes": [
+            ":evergreen_tree:"
         ]
     },
     {
-        "codepoints": "🌳",
-        "name": "deciduous tree",
-        "shortcodes": [
-            ":deciduous_tree:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌳",
+        "emoticons": [],
         "keywords": [
             "deciduous",
             "shedding",
             "tree"
+        ],
+        "name": "deciduous tree",
+        "shortcodes": [
+            ":deciduous_tree:"
         ]
     },
     {
-        "codepoints": "🌴",
-        "name": "palm tree",
-        "shortcodes": [
-            ":palm_tree:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌴",
+        "emoticons": [],
         "keywords": [
             "palm",
             "tree"
+        ],
+        "name": "palm tree",
+        "shortcodes": [
+            ":palm_tree:"
         ]
     },
     {
-        "codepoints": "🌵",
-        "name": "cactus",
-        "shortcodes": [
-            ":cactus:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌵",
+        "emoticons": [],
         "keywords": [
             "cactus",
             "plant"
+        ],
+        "name": "cactus",
+        "shortcodes": [
+            ":cactus:"
         ]
     },
     {
-        "codepoints": "🌾",
-        "name": "sheaf of rice",
-        "shortcodes": [
-            ":sheaf_of_rice:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌾",
+        "emoticons": [],
         "keywords": [
             "ear",
             "grain",
             "rice",
             "sheaf of rice",
             "sheaf"
+        ],
+        "name": "sheaf of rice",
+        "shortcodes": [
+            ":sheaf_of_rice:"
         ]
     },
     {
-        "codepoints": "🌿",
-        "name": "herb",
-        "shortcodes": [
-            ":herb:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🌿",
+        "emoticons": [],
         "keywords": [
             "herb",
             "leaf"
+        ],
+        "name": "herb",
+        "shortcodes": [
+            ":herb:"
         ]
     },
     {
-        "codepoints": "☘️",
-        "name": "shamrock",
-        "shortcodes": [
-            ":shamrock:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "☘️",
+        "emoticons": [],
         "keywords": [
             "plant",
             "shamrock"
+        ],
+        "name": "shamrock",
+        "shortcodes": [
+            ":shamrock:"
         ]
     },
     {
-        "codepoints": "🍀",
-        "name": "four leaf clover",
-        "shortcodes": [
-            ":four_leaf_clover:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🍀",
+        "emoticons": [],
         "keywords": [
             "4",
             "clover",
             "four",
             "four-leaf clover",
             "leaf"
+        ],
+        "name": "four leaf clover",
+        "shortcodes": [
+            ":four_leaf_clover:"
         ]
     },
     {
-        "codepoints": "🍁",
-        "name": "maple leaf",
-        "shortcodes": [
-            ":maple_leaf:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🍁",
+        "emoticons": [],
         "keywords": [
             "falling",
             "leaf",
             "maple"
+        ],
+        "name": "maple leaf",
+        "shortcodes": [
+            ":maple_leaf:"
         ]
     },
     {
-        "codepoints": "🍂",
-        "name": "fallen leaf",
-        "shortcodes": [
-            ":fallen_leaf:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🍂",
+        "emoticons": [],
         "keywords": [
             "fallen leaf",
             "falling",
             "leaf"
+        ],
+        "name": "fallen leaf",
+        "shortcodes": [
+            ":fallen_leaf:"
         ]
     },
     {
-        "codepoints": "🍃",
-        "name": "leaf fluttering in wind",
-        "shortcodes": [
-            ":leaf_fluttering_in_wind:"
-        ],
-        "emoticons": [],
         "category": "Animals & Nature",
+        "codepoints": "🍃",
+        "emoticons": [],
         "keywords": [
             "blow",
             "flutter",
             "leaf",
             "leaf fluttering in wind",
             "wind"
+        ],
+        "name": "leaf fluttering in wind",
+        "shortcodes": [
+            ":leaf_fluttering_in_wind:"
         ]
     },
     {
-        "codepoints": "🪹",
-        "name": "empty nest",
-        "shortcodes": [
-            ":empty_nest:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "empty nest",
-            "nesting"
-        ]
-    },
-    {
-        "codepoints": "🪺",
-        "name": "nest with eggs",
-        "shortcodes": [
-            ":nest_with_eggs:"
-        ],
-        "emoticons": [],
-        "category": "Animals & Nature",
-        "keywords": [
-            "nest with eggs",
-            "nesting"
-        ]
-    },
-    {
-        "codepoints": "🍇",
-        "name": "grapes",
-        "shortcodes": [
-            ":grapes:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍇",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "grape",
             "grapes"
+        ],
+        "name": "grapes",
+        "shortcodes": [
+            ":grapes:"
         ]
     },
     {
-        "codepoints": "🍈",
-        "name": "melon",
-        "shortcodes": [
-            ":melon:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍈",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "melon"
+        ],
+        "name": "melon",
+        "shortcodes": [
+            ":melon:"
         ]
     },
     {
-        "codepoints": "🍉",
-        "name": "watermelon",
-        "shortcodes": [
-            ":watermelon:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍉",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "watermelon"
+        ],
+        "name": "watermelon",
+        "shortcodes": [
+            ":watermelon:"
         ]
     },
     {
-        "codepoints": "🍊",
-        "name": "tangerine",
-        "shortcodes": [
-            ":tangerine:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍊",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "mandarin",
             "orange",
             "tangerine"
+        ],
+        "name": "tangerine",
+        "shortcodes": [
+            ":tangerine:"
         ]
     },
     {
-        "codepoints": "🍋",
-        "name": "lemon",
-        "shortcodes": [
-            ":lemon:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍋",
+        "emoticons": [],
         "keywords": [
             "citrus",
             "fruit",
             "lemon"
+        ],
+        "name": "lemon",
+        "shortcodes": [
+            ":lemon:"
         ]
     },
     {
-        "codepoints": "🍌",
-        "name": "banana",
-        "shortcodes": [
-            ":banana:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍌",
+        "emoticons": [],
         "keywords": [
             "banana",
             "fruit"
+        ],
+        "name": "banana",
+        "shortcodes": [
+            ":banana:"
         ]
     },
     {
-        "codepoints": "🍍",
-        "name": "pineapple",
-        "shortcodes": [
-            ":pineapple:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍍",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "pineapple"
+        ],
+        "name": "pineapple",
+        "shortcodes": [
+            ":pineapple:"
         ]
     },
     {
-        "codepoints": "🥭",
-        "name": "mango",
-        "shortcodes": [
-            ":mango:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥭",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "mango",
             "tropical"
+        ],
+        "name": "mango",
+        "shortcodes": [
+            ":mango:"
         ]
     },
     {
-        "codepoints": "🍎",
-        "name": "red apple",
-        "shortcodes": [
-            ":red_apple:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍎",
+        "emoticons": [],
         "keywords": [
             "apple",
             "fruit",
             "red"
+        ],
+        "name": "red apple",
+        "shortcodes": [
+            ":red_apple:"
         ]
     },
     {
-        "codepoints": "🍏",
-        "name": "green apple",
-        "shortcodes": [
-            ":green_apple:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍏",
+        "emoticons": [],
         "keywords": [
             "apple",
             "fruit",
             "green"
+        ],
+        "name": "green apple",
+        "shortcodes": [
+            ":green_apple:"
         ]
     },
     {
-        "codepoints": "🍐",
-        "name": "pear",
-        "shortcodes": [
-            ":pear:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍐",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "pear"
+        ],
+        "name": "pear",
+        "shortcodes": [
+            ":pear:"
         ]
     },
     {
-        "codepoints": "🍑",
-        "name": "peach",
-        "shortcodes": [
-            ":peach:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍑",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "peach"
+        ],
+        "name": "peach",
+        "shortcodes": [
+            ":peach:"
         ]
     },
     {
-        "codepoints": "🍒",
-        "name": "cherries",
-        "shortcodes": [
-            ":cherries:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍒",
+        "emoticons": [],
         "keywords": [
             "berries",
             "cherries",
             "cherry",
             "fruit",
             "red"
+        ],
+        "name": "cherries",
+        "shortcodes": [
+            ":cherries:"
         ]
     },
     {
-        "codepoints": "🍓",
-        "name": "strawberry",
-        "shortcodes": [
-            ":strawberry:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍓",
+        "emoticons": [],
         "keywords": [
             "berry",
             "fruit",
             "strawberry"
-        ]
-    },
-    {
-        "codepoints": "🫐",
-        "name": "blueberries",
-        "shortcodes": [
-            ":blueberries:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "berry",
-            "bilberry",
-            "blue",
-            "blueberries",
-            "blueberry"
+        "name": "strawberry",
+        "shortcodes": [
+            ":strawberry:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🥝",
-        "name": "kiwi fruit",
-        "shortcodes": [
-            ":kiwi_fruit:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "food",
             "fruit",
             "kiwi fruit",
             "kiwi"
+        ],
+        "name": "kiwi fruit",
+        "shortcodes": [
+            ":kiwi_fruit:"
         ]
     },
     {
-        "codepoints": "🍅",
-        "name": "tomato",
-        "shortcodes": [
-            ":tomato:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍅",
+        "emoticons": [],
         "keywords": [
             "fruit",
             "tomato",
             "vegetable"
-        ]
-    },
-    {
-        "codepoints": "🫒",
-        "name": "olive",
-        "shortcodes": [
-            ":olive:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "food",
-            "olive"
+        "name": "tomato",
+        "shortcodes": [
+            ":tomato:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🥥",
-        "name": "coconut",
-        "shortcodes": [
-            ":coconut:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "coconut",
             "palm",
             "piña colada"
+        ],
+        "name": "coconut",
+        "shortcodes": [
+            ":coconut:"
         ]
     },
     {
-        "codepoints": "🥑",
-        "name": "avocado",
-        "shortcodes": [
-            ":avocado:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥑",
+        "emoticons": [],
         "keywords": [
             "avocado",
             "food",
             "fruit"
+        ],
+        "name": "avocado",
+        "shortcodes": [
+            ":avocado:"
         ]
     },
     {
-        "codepoints": "🍆",
-        "name": "eggplant",
-        "shortcodes": [
-            ":eggplant:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍆",
+        "emoticons": [],
         "keywords": [
             "aubergine",
             "eggplant",
             "vegetable"
+        ],
+        "name": "eggplant",
+        "shortcodes": [
+            ":eggplant:"
         ]
     },
     {
-        "codepoints": "🥔",
-        "name": "potato",
-        "shortcodes": [
-            ":potato:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥔",
+        "emoticons": [],
         "keywords": [
             "food",
             "potato",
             "vegetable"
+        ],
+        "name": "potato",
+        "shortcodes": [
+            ":potato:"
         ]
     },
     {
-        "codepoints": "🥕",
-        "name": "carrot",
-        "shortcodes": [
-            ":carrot:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥕",
+        "emoticons": [],
         "keywords": [
             "carrot",
             "food",
             "vegetable"
+        ],
+        "name": "carrot",
+        "shortcodes": [
+            ":carrot:"
         ]
     },
     {
-        "codepoints": "🌽",
-        "name": "ear of corn",
-        "shortcodes": [
-            ":ear_of_corn:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🌽",
+        "emoticons": [],
         "keywords": [
             "corn",
             "corn on the cob",
@@ -10343,62 +9365,46 @@ export const emojisData = JSON.parse(`[
             "ear of corn",
             "maize",
             "maze"
+        ],
+        "name": "ear of corn",
+        "shortcodes": [
+            ":ear_of_corn:"
         ]
     },
     {
-        "codepoints": "🌶️",
-        "name": "hot pepper",
-        "shortcodes": [
-            ":hot_pepper:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🌶️",
+        "emoticons": [],
         "keywords": [
             "chilli",
             "hot pepper",
             "pepper",
             "hot"
-        ]
-    },
-    {
-        "codepoints": "🫑",
-        "name": "bell pepper",
-        "shortcodes": [
-            ":bell_pepper:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "bell pepper",
-            "capsicum",
-            "pepper",
-            "vegetable",
-            "sweet pepper"
+        "name": "hot pepper",
+        "shortcodes": [
+            ":hot_pepper:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🥒",
-        "name": "cucumber",
-        "shortcodes": [
-            ":cucumber:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "cucumber",
             "food",
             "pickle",
             "vegetable"
+        ],
+        "name": "cucumber",
+        "shortcodes": [
+            ":cucumber:"
         ]
     },
     {
-        "codepoints": "🥬",
-        "name": "leafy green",
-        "shortcodes": [
-            ":leafy_green:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥬",
+        "emoticons": [],
         "keywords": [
             "bok choy",
             "leafy green",
@@ -10406,70 +9412,70 @@ export const emojisData = JSON.parse(`[
             "cabbage",
             "kale",
             "lettuce"
+        ],
+        "name": "leafy green",
+        "shortcodes": [
+            ":leafy_green:"
         ]
     },
     {
-        "codepoints": "🥦",
-        "name": "broccoli",
-        "shortcodes": [
-            ":broccoli:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥦",
+        "emoticons": [],
         "keywords": [
             "broccoli",
             "wild cabbage"
+        ],
+        "name": "broccoli",
+        "shortcodes": [
+            ":broccoli:"
         ]
     },
     {
-        "codepoints": "🧄",
-        "name": "garlic",
-        "shortcodes": [
-            ":garlic:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧄",
+        "emoticons": [],
         "keywords": [
             "flavouring",
             "garlic",
             "flavoring"
+        ],
+        "name": "garlic",
+        "shortcodes": [
+            ":garlic:"
         ]
     },
     {
-        "codepoints": "🧅",
-        "name": "onion",
-        "shortcodes": [
-            ":onion:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧅",
+        "emoticons": [],
         "keywords": [
             "flavouring",
             "onion",
             "flavoring"
+        ],
+        "name": "onion",
+        "shortcodes": [
+            ":onion:"
         ]
     },
     {
-        "codepoints": "🍄",
-        "name": "mushroom",
-        "shortcodes": [
-            ":mushroom:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍄",
+        "emoticons": [],
         "keywords": [
             "mushroom",
             "toadstool"
+        ],
+        "name": "mushroom",
+        "shortcodes": [
+            ":mushroom:"
         ]
     },
     {
-        "codepoints": "🥜",
-        "name": "peanuts",
-        "shortcodes": [
-            ":peanuts:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥜",
+        "emoticons": [],
         "keywords": [
             "food",
             "nut",
@@ -10477,60 +9483,43 @@ export const emojisData = JSON.parse(`[
             "peanut",
             "peanuts",
             "vegetable"
-        ]
-    },
-    {
-        "codepoints": "🫘",
-        "name": "beans",
-        "shortcodes": [
-            ":beans:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "food",
-            "kidney bean",
-            "kidney beans",
-            "legume",
-            "beans",
-            "kidney"
+        "name": "peanuts",
+        "shortcodes": [
+            ":peanuts:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🌰",
-        "name": "chestnut",
-        "shortcodes": [
-            ":chestnut:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "chestnut",
             "plant",
             "nut"
+        ],
+        "name": "chestnut",
+        "shortcodes": [
+            ":chestnut:"
         ]
     },
     {
-        "codepoints": "🍞",
-        "name": "bread",
-        "shortcodes": [
-            ":bread:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍞",
+        "emoticons": [],
         "keywords": [
             "bread",
             "loaf"
+        ],
+        "name": "bread",
+        "shortcodes": [
+            ":bread:"
         ]
     },
     {
-        "codepoints": "🥐",
-        "name": "croissant",
-        "shortcodes": [
-            ":croissant:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥐",
+        "emoticons": [],
         "keywords": [
             "bread",
             "breakfast",
@@ -10540,16 +9529,16 @@ export const emojisData = JSON.parse(`[
             "roll",
             "crescent roll",
             "French"
+        ],
+        "name": "croissant",
+        "shortcodes": [
+            ":croissant:"
         ]
     },
     {
-        "codepoints": "🥖",
-        "name": "baguette bread",
-        "shortcodes": [
-            ":baguette_bread:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥖",
+        "emoticons": [],
         "keywords": [
             "baguette",
             "bread",
@@ -10557,60 +9546,44 @@ export const emojisData = JSON.parse(`[
             "french",
             "French stick",
             "French"
-        ]
-    },
-    {
-        "codepoints": "🫓",
-        "name": "flatbread",
-        "shortcodes": [
-            ":flatbread:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "arepa",
-            "flatbread",
-            "lavash",
-            "naan",
-            "pita"
+        "name": "baguette bread",
+        "shortcodes": [
+            ":baguette_bread:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🥨",
-        "name": "pretzel",
-        "shortcodes": [
-            ":pretzel:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "pretzel",
             "twisted"
+        ],
+        "name": "pretzel",
+        "shortcodes": [
+            ":pretzel:"
         ]
     },
     {
-        "codepoints": "🥯",
-        "name": "bagel",
-        "shortcodes": [
-            ":bagel:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥯",
+        "emoticons": [],
         "keywords": [
             "bagel",
             "bakery",
             "breakfast",
             "schmear"
+        ],
+        "name": "bagel",
+        "shortcodes": [
+            ":bagel:"
         ]
     },
     {
-        "codepoints": "🥞",
-        "name": "pancakes",
-        "shortcodes": [
-            ":pancakes:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥞",
+        "emoticons": [],
         "keywords": [
             "breakfast",
             "crêpe",
@@ -10618,16 +9591,16 @@ export const emojisData = JSON.parse(`[
             "hotcake",
             "pancake",
             "pancakes"
+        ],
+        "name": "pancakes",
+        "shortcodes": [
+            ":pancakes:"
         ]
     },
     {
-        "codepoints": "🧇",
-        "name": "waffle",
-        "shortcodes": [
-            ":waffle:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧇",
+        "emoticons": [],
         "keywords": [
             "waffle",
             "waffle with butter",
@@ -10636,59 +9609,59 @@ export const emojisData = JSON.parse(`[
             "iron",
             "unclear",
             "vague"
+        ],
+        "name": "waffle",
+        "shortcodes": [
+            ":waffle:"
         ]
     },
     {
-        "codepoints": "🧀",
-        "name": "cheese wedge",
-        "shortcodes": [
-            ":cheese_wedge:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧀",
+        "emoticons": [],
         "keywords": [
             "cheese",
             "cheese wedge"
+        ],
+        "name": "cheese wedge",
+        "shortcodes": [
+            ":cheese_wedge:"
         ]
     },
     {
-        "codepoints": "🍖",
-        "name": "meat on bone",
-        "shortcodes": [
-            ":meat_on_bone:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍖",
+        "emoticons": [],
         "keywords": [
             "bone",
             "meat",
             "meat on bone"
+        ],
+        "name": "meat on bone",
+        "shortcodes": [
+            ":meat_on_bone:"
         ]
     },
     {
-        "codepoints": "🍗",
-        "name": "poultry leg",
-        "shortcodes": [
-            ":poultry_leg:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍗",
+        "emoticons": [],
         "keywords": [
             "bone",
             "chicken",
             "drumstick",
             "leg",
             "poultry"
+        ],
+        "name": "poultry leg",
+        "shortcodes": [
+            ":poultry_leg:"
         ]
     },
     {
-        "codepoints": "🥩",
-        "name": "cut of meat",
-        "shortcodes": [
-            ":cut_of_meat:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥩",
+        "emoticons": [],
         "keywords": [
             "chop",
             "cut of meat",
@@ -10697,146 +9670,132 @@ export const emojisData = JSON.parse(`[
             "steak",
             "lamb chop",
             "pork chop"
+        ],
+        "name": "cut of meat",
+        "shortcodes": [
+            ":cut_of_meat:"
         ]
     },
     {
-        "codepoints": "🥓",
-        "name": "bacon",
-        "shortcodes": [
-            ":bacon:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥓",
+        "emoticons": [],
         "keywords": [
             "bacon",
             "breakfast",
             "food",
             "meat"
+        ],
+        "name": "bacon",
+        "shortcodes": [
+            ":bacon:"
         ]
     },
     {
-        "codepoints": "🍔",
-        "name": "hamburger",
-        "shortcodes": [
-            ":hamburger:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍔",
+        "emoticons": [],
         "keywords": [
             "beefburger",
             "burger",
             "hamburger"
+        ],
+        "name": "hamburger",
+        "shortcodes": [
+            ":hamburger:"
         ]
     },
     {
-        "codepoints": "🍟",
-        "name": "french fries",
-        "shortcodes": [
-            ":french_fries:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍟",
+        "emoticons": [],
         "keywords": [
             "chips",
             "french fries",
             "fries",
             "french",
             "French"
+        ],
+        "name": "french fries",
+        "shortcodes": [
+            ":french_fries:"
         ]
     },
     {
-        "codepoints": "🍕",
-        "name": "pizza",
-        "shortcodes": [
-            ":pizza:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍕",
+        "emoticons": [],
         "keywords": [
             "cheese",
             "pizza",
             "slice"
+        ],
+        "name": "pizza",
+        "shortcodes": [
+            ":pizza:"
         ]
     },
     {
-        "codepoints": "🌭",
-        "name": "hot dog",
-        "shortcodes": [
-            ":hot_dog:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🌭",
+        "emoticons": [],
         "keywords": [
             "frankfurter",
             "hot dog",
             "hotdog",
             "sausage"
+        ],
+        "name": "hot dog",
+        "shortcodes": [
+            ":hot_dog:"
         ]
     },
     {
-        "codepoints": "🥪",
-        "name": "sandwich",
-        "shortcodes": [
-            ":sandwich:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥪",
+        "emoticons": [],
         "keywords": [
             "bread",
             "sandwich"
+        ],
+        "name": "sandwich",
+        "shortcodes": [
+            ":sandwich:"
         ]
     },
     {
-        "codepoints": "🌮",
-        "name": "taco",
-        "shortcodes": [
-            ":taco:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🌮",
+        "emoticons": [],
         "keywords": [
             "mexican",
             "taco",
             "Mexican"
+        ],
+        "name": "taco",
+        "shortcodes": [
+            ":taco:"
         ]
     },
     {
-        "codepoints": "🌯",
-        "name": "burrito",
-        "shortcodes": [
-            ":burrito:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🌯",
+        "emoticons": [],
         "keywords": [
             "burrito",
             "mexican",
             "wrap",
             "Mexican"
-        ]
-    },
-    {
-        "codepoints": "🫔",
-        "name": "tamale",
-        "shortcodes": [
-            ":tamale:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "mexican",
-            "tamale",
-            "wrapped"
+        "name": "burrito",
+        "shortcodes": [
+            ":burrito:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🥙",
-        "name": "stuffed flatbread",
-        "shortcodes": [
-            ":stuffed_flatbread:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "falafel",
             "flatbread",
@@ -10846,61 +9805,61 @@ export const emojisData = JSON.parse(`[
             "pita",
             "pita roll",
             "stuffed"
+        ],
+        "name": "stuffed flatbread",
+        "shortcodes": [
+            ":stuffed_flatbread:"
         ]
     },
     {
-        "codepoints": "🧆",
-        "name": "falafel",
-        "shortcodes": [
-            ":falafel:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧆",
+        "emoticons": [],
         "keywords": [
             "chickpea",
             "falafel",
             "meatball",
             "chick pea"
+        ],
+        "name": "falafel",
+        "shortcodes": [
+            ":falafel:"
         ]
     },
     {
-        "codepoints": "🥚",
-        "name": "egg",
-        "shortcodes": [
-            ":egg:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥚",
+        "emoticons": [],
         "keywords": [
             "breakfast",
             "egg",
             "food"
+        ],
+        "name": "egg",
+        "shortcodes": [
+            ":egg:"
         ]
     },
     {
-        "codepoints": "🍳",
-        "name": "cooking",
-        "shortcodes": [
-            ":cooking:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍳",
+        "emoticons": [],
         "keywords": [
             "breakfast",
             "cooking",
             "egg",
             "frying",
             "pan"
+        ],
+        "name": "cooking",
+        "shortcodes": [
+            ":cooking:"
         ]
     },
     {
-        "codepoints": "🥘",
-        "name": "shallow pan of food",
-        "shortcodes": [
-            ":shallow_pan_of_food:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥘",
+        "emoticons": [],
         "keywords": [
             "casserole",
             "food",
@@ -10908,281 +9867,264 @@ export const emojisData = JSON.parse(`[
             "pan",
             "shallow",
             "shallow pan of food"
+        ],
+        "name": "shallow pan of food",
+        "shortcodes": [
+            ":shallow_pan_of_food:"
         ]
     },
     {
-        "codepoints": "🍲",
-        "name": "pot of food",
-        "shortcodes": [
-            ":pot_of_food:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍲",
+        "emoticons": [],
         "keywords": [
             "pot",
             "pot of food",
             "stew"
-        ]
-    },
-    {
-        "codepoints": "🫕",
-        "name": "fondue",
-        "shortcodes": [
-            ":fondue:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "cheese",
-            "chocolate",
-            "fondue",
-            "melted",
-            "pot",
-            "Swiss"
+        "name": "pot of food",
+        "shortcodes": [
+            ":pot_of_food:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🥣",
-        "name": "bowl with spoon",
-        "shortcodes": [
-            ":bowl_with_spoon:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "bowl with spoon",
             "breakfast",
             "cereal",
             "congee"
+        ],
+        "name": "bowl with spoon",
+        "shortcodes": [
+            ":bowl_with_spoon:"
         ]
     },
     {
-        "codepoints": "🥗",
-        "name": "green salad",
-        "shortcodes": [
-            ":green_salad:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥗",
+        "emoticons": [],
         "keywords": [
             "food",
             "garden",
             "salad",
             "green"
+        ],
+        "name": "green salad",
+        "shortcodes": [
+            ":green_salad:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🍿",
+        "emoticons": [],
+        "keywords": [
+            "popcorn"
+        ],
         "name": "popcorn",
         "shortcodes": [
             ":popcorn:"
-        ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "popcorn"
         ]
     },
     {
-        "codepoints": "🧈",
-        "name": "butter",
-        "shortcodes": [
-            ":butter:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧈",
+        "emoticons": [],
         "keywords": [
             "butter",
             "dairy"
+        ],
+        "name": "butter",
+        "shortcodes": [
+            ":butter:"
         ]
     },
     {
-        "codepoints": "🧂",
-        "name": "salt",
-        "shortcodes": [
-            ":salt:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧂",
+        "emoticons": [],
         "keywords": [
             "condiment",
             "salt",
             "shaker"
+        ],
+        "name": "salt",
+        "shortcodes": [
+            ":salt:"
         ]
     },
     {
-        "codepoints": "🥫",
-        "name": "canned food",
-        "shortcodes": [
-            ":canned_food:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥫",
+        "emoticons": [],
         "keywords": [
             "can",
             "canned food"
+        ],
+        "name": "canned food",
+        "shortcodes": [
+            ":canned_food:"
         ]
     },
     {
-        "codepoints": "🍱",
-        "name": "bento box",
-        "shortcodes": [
-            ":bento_box:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍱",
+        "emoticons": [],
         "keywords": [
             "bento",
             "box"
+        ],
+        "name": "bento box",
+        "shortcodes": [
+            ":bento_box:"
         ]
     },
     {
-        "codepoints": "🍘",
-        "name": "rice cracker",
-        "shortcodes": [
-            ":rice_cracker:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍘",
+        "emoticons": [],
         "keywords": [
             "cracker",
             "rice"
+        ],
+        "name": "rice cracker",
+        "shortcodes": [
+            ":rice_cracker:"
         ]
     },
     {
-        "codepoints": "🍙",
-        "name": "rice ball",
-        "shortcodes": [
-            ":rice_ball:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍙",
+        "emoticons": [],
         "keywords": [
             "ball",
             "Japanese",
             "rice"
+        ],
+        "name": "rice ball",
+        "shortcodes": [
+            ":rice_ball:"
         ]
     },
     {
-        "codepoints": "🍚",
-        "name": "cooked rice",
-        "shortcodes": [
-            ":cooked_rice:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍚",
+        "emoticons": [],
         "keywords": [
             "cooked",
             "rice"
+        ],
+        "name": "cooked rice",
+        "shortcodes": [
+            ":cooked_rice:"
         ]
     },
     {
-        "codepoints": "🍛",
-        "name": "curry rice",
-        "shortcodes": [
-            ":curry_rice:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍛",
+        "emoticons": [],
         "keywords": [
             "curry",
             "rice"
+        ],
+        "name": "curry rice",
+        "shortcodes": [
+            ":curry_rice:"
         ]
     },
     {
-        "codepoints": "🍜",
-        "name": "steaming bowl",
-        "shortcodes": [
-            ":steaming_bowl:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍜",
+        "emoticons": [],
         "keywords": [
             "bowl",
             "noodle",
             "ramen",
             "steaming"
+        ],
+        "name": "steaming bowl",
+        "shortcodes": [
+            ":steaming_bowl:"
         ]
     },
     {
-        "codepoints": "🍝",
-        "name": "spaghetti",
-        "shortcodes": [
-            ":spaghetti:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍝",
+        "emoticons": [],
         "keywords": [
             "pasta",
             "spaghetti"
+        ],
+        "name": "spaghetti",
+        "shortcodes": [
+            ":spaghetti:"
         ]
     },
     {
-        "codepoints": "🍠",
-        "name": "roasted sweet potato",
-        "shortcodes": [
-            ":roasted_sweet_potato:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍠",
+        "emoticons": [],
         "keywords": [
             "potato",
             "roasted",
             "sweet"
+        ],
+        "name": "roasted sweet potato",
+        "shortcodes": [
+            ":roasted_sweet_potato:"
         ]
     },
     {
-        "codepoints": "🍢",
-        "name": "oden",
-        "shortcodes": [
-            ":oden:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍢",
+        "emoticons": [],
         "keywords": [
             "kebab",
             "oden",
             "seafood",
             "skewer",
             "stick"
+        ],
+        "name": "oden",
+        "shortcodes": [
+            ":oden:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🍣",
+        "emoticons": [],
+        "keywords": [
+            "sushi"
+        ],
         "name": "sushi",
         "shortcodes": [
             ":sushi:"
-        ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "sushi"
         ]
     },
     {
-        "codepoints": "🍤",
-        "name": "fried shrimp",
-        "shortcodes": [
-            ":fried_shrimp:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍤",
+        "emoticons": [],
         "keywords": [
             "battered",
             "fried",
             "prawn",
             "shrimp",
             "tempura"
+        ],
+        "name": "fried shrimp",
+        "shortcodes": [
+            ":fried_shrimp:"
         ]
     },
     {
-        "codepoints": "🍥",
-        "name": "fish cake with swirl",
-        "shortcodes": [
-            ":fish_cake_with_swirl:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍥",
+        "emoticons": [],
         "keywords": [
             "cake",
             "fish",
@@ -11190,31 +10132,31 @@ export const emojisData = JSON.parse(`[
             "pastry",
             "swirl",
             "narutomaki"
+        ],
+        "name": "fish cake with swirl",
+        "shortcodes": [
+            ":fish_cake_with_swirl:"
         ]
     },
     {
-        "codepoints": "🥮",
-        "name": "moon cake",
-        "shortcodes": [
-            ":moon_cake:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥮",
+        "emoticons": [],
         "keywords": [
             "autumn",
             "festival",
             "moon cake",
             "yuèbǐng"
+        ],
+        "name": "moon cake",
+        "shortcodes": [
+            ":moon_cake:"
         ]
     },
     {
-        "codepoints": "🍡",
-        "name": "dango",
-        "shortcodes": [
-            ":dango:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍡",
+        "emoticons": [],
         "keywords": [
             "dango",
             "dessert",
@@ -11222,16 +10164,16 @@ export const emojisData = JSON.parse(`[
             "skewer",
             "stick",
             "sweet"
+        ],
+        "name": "dango",
+        "shortcodes": [
+            ":dango:"
         ]
     },
     {
-        "codepoints": "🥟",
-        "name": "dumpling",
-        "shortcodes": [
-            ":dumpling:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥟",
+        "emoticons": [],
         "keywords": [
             "dumpling",
             "empanada",
@@ -11241,45 +10183,45 @@ export const emojisData = JSON.parse(`[
             "jiaozi",
             "pierogi",
             "potsticker"
+        ],
+        "name": "dumpling",
+        "shortcodes": [
+            ":dumpling:"
         ]
     },
     {
-        "codepoints": "🥠",
-        "name": "fortune cookie",
-        "shortcodes": [
-            ":fortune_cookie:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥠",
+        "emoticons": [],
         "keywords": [
             "fortune cookie",
             "prophecy"
+        ],
+        "name": "fortune cookie",
+        "shortcodes": [
+            ":fortune_cookie:"
         ]
     },
     {
-        "codepoints": "🥡",
-        "name": "takeout box",
-        "shortcodes": [
-            ":takeout_box:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥡",
+        "emoticons": [],
         "keywords": [
             "takeaway container",
             "takeout",
             "oyster pail",
             "takeout box",
             "takeaway box"
+        ],
+        "name": "takeout box",
+        "shortcodes": [
+            ":takeout_box:"
         ]
     },
     {
-        "codepoints": "🦀",
-        "name": "crab",
-        "shortcodes": [
-            ":crab:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🦀",
+        "emoticons": [],
         "keywords": [
             "crab",
             "crustacean",
@@ -11287,32 +10229,32 @@ export const emojisData = JSON.parse(`[
             "shellfish",
             "Cancer",
             "zodiac"
+        ],
+        "name": "crab",
+        "shortcodes": [
+            ":crab:"
         ]
     },
     {
-        "codepoints": "🦞",
-        "name": "lobster",
-        "shortcodes": [
-            ":lobster:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🦞",
+        "emoticons": [],
         "keywords": [
             "bisque",
             "claws",
             "lobster",
             "seafood",
             "shellfish"
+        ],
+        "name": "lobster",
+        "shortcodes": [
+            ":lobster:"
         ]
     },
     {
-        "codepoints": "🦐",
-        "name": "shrimp",
-        "shortcodes": [
-            ":shrimp:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🦐",
+        "emoticons": [],
         "keywords": [
             "prawn",
             "seafood",
@@ -11320,46 +10262,46 @@ export const emojisData = JSON.parse(`[
             "shrimp",
             "food",
             "small"
+        ],
+        "name": "shrimp",
+        "shortcodes": [
+            ":shrimp:"
         ]
     },
     {
-        "codepoints": "🦑",
-        "name": "squid",
-        "shortcodes": [
-            ":squid:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🦑",
+        "emoticons": [],
         "keywords": [
             "decapod",
             "seafood",
             "squid",
             "food",
             "molusc"
+        ],
+        "name": "squid",
+        "shortcodes": [
+            ":squid:"
         ]
     },
     {
-        "codepoints": "🦪",
-        "name": "oyster",
-        "shortcodes": [
-            ":oyster:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🦪",
+        "emoticons": [],
         "keywords": [
             "diving",
             "oyster",
             "pearl"
+        ],
+        "name": "oyster",
+        "shortcodes": [
+            ":oyster:"
         ]
     },
     {
-        "codepoints": "🍦",
-        "name": "soft ice cream",
-        "shortcodes": [
-            ":soft_ice_cream:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍦",
+        "emoticons": [],
         "keywords": [
             "cream",
             "dessert",
@@ -11369,79 +10311,79 @@ export const emojisData = JSON.parse(`[
             "ice",
             "icecream",
             "soft"
+        ],
+        "name": "soft ice cream",
+        "shortcodes": [
+            ":soft_ice_cream:"
         ]
     },
     {
-        "codepoints": "🍧",
-        "name": "shaved ice",
-        "shortcodes": [
-            ":shaved_ice:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍧",
+        "emoticons": [],
         "keywords": [
             "dessert",
             "granita",
             "ice",
             "sweet",
             "shaved"
+        ],
+        "name": "shaved ice",
+        "shortcodes": [
+            ":shaved_ice:"
         ]
     },
     {
-        "codepoints": "🍨",
-        "name": "ice cream",
-        "shortcodes": [
-            ":ice_cream:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍨",
+        "emoticons": [],
         "keywords": [
             "cream",
             "dessert",
             "ice cream",
             "sweet",
             "ice"
+        ],
+        "name": "ice cream",
+        "shortcodes": [
+            ":ice_cream:"
         ]
     },
     {
-        "codepoints": "🍩",
-        "name": "doughnut",
-        "shortcodes": [
-            ":doughnut:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍩",
+        "emoticons": [],
         "keywords": [
             "breakfast",
             "dessert",
             "donut",
             "doughnut",
             "sweet"
+        ],
+        "name": "doughnut",
+        "shortcodes": [
+            ":doughnut:"
         ]
     },
     {
-        "codepoints": "🍪",
-        "name": "cookie",
-        "shortcodes": [
-            ":cookie:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍪",
+        "emoticons": [],
         "keywords": [
             "biscuit",
             "cookie",
             "dessert",
             "sweet"
+        ],
+        "name": "cookie",
+        "shortcodes": [
+            ":cookie:"
         ]
     },
     {
-        "codepoints": "🎂",
-        "name": "birthday cake",
-        "shortcodes": [
-            ":birthday_cake:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🎂",
+        "emoticons": [],
         "keywords": [
             "birthday",
             "cake",
@@ -11449,16 +10391,16 @@ export const emojisData = JSON.parse(`[
             "dessert",
             "pastry",
             "sweet"
+        ],
+        "name": "birthday cake",
+        "shortcodes": [
+            ":birthday_cake:"
         ]
     },
     {
-        "codepoints": "🍰",
-        "name": "shortcake",
-        "shortcodes": [
-            ":shortcake:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍰",
+        "emoticons": [],
         "keywords": [
             "cake",
             "dessert",
@@ -11466,150 +10408,150 @@ export const emojisData = JSON.parse(`[
             "shortcake",
             "slice",
             "sweet"
+        ],
+        "name": "shortcake",
+        "shortcodes": [
+            ":shortcake:"
         ]
     },
     {
-        "codepoints": "🧁",
-        "name": "cupcake",
-        "shortcodes": [
-            ":cupcake:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧁",
+        "emoticons": [],
         "keywords": [
             "bakery",
             "cupcake",
             "sweet"
+        ],
+        "name": "cupcake",
+        "shortcodes": [
+            ":cupcake:"
         ]
     },
     {
-        "codepoints": "🥧",
-        "name": "pie",
-        "shortcodes": [
-            ":pie:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥧",
+        "emoticons": [],
         "keywords": [
             "filling",
             "pastry",
             "pie"
+        ],
+        "name": "pie",
+        "shortcodes": [
+            ":pie:"
         ]
     },
     {
-        "codepoints": "🍫",
-        "name": "chocolate bar",
-        "shortcodes": [
-            ":chocolate_bar:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍫",
+        "emoticons": [],
         "keywords": [
             "bar",
             "chocolate",
             "dessert",
             "sweet"
+        ],
+        "name": "chocolate bar",
+        "shortcodes": [
+            ":chocolate_bar:"
         ]
     },
     {
-        "codepoints": "🍬",
-        "name": "candy",
-        "shortcodes": [
-            ":candy:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍬",
+        "emoticons": [],
         "keywords": [
             "candy",
             "dessert",
             "sweet",
             "sweets"
+        ],
+        "name": "candy",
+        "shortcodes": [
+            ":candy:"
         ]
     },
     {
-        "codepoints": "🍭",
-        "name": "lollipop",
-        "shortcodes": [
-            ":lollipop:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍭",
+        "emoticons": [],
         "keywords": [
             "candy",
             "dessert",
             "lollipop",
             "sweet"
+        ],
+        "name": "lollipop",
+        "shortcodes": [
+            ":lollipop:"
         ]
     },
     {
-        "codepoints": "🍮",
-        "name": "custard",
-        "shortcodes": [
-            ":custard:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍮",
+        "emoticons": [],
         "keywords": [
             "baked custard",
             "dessert",
             "pudding",
             "sweet",
             "custard"
+        ],
+        "name": "custard",
+        "shortcodes": [
+            ":custard:"
         ]
     },
     {
-        "codepoints": "🍯",
-        "name": "honey pot",
-        "shortcodes": [
-            ":honey_pot:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍯",
+        "emoticons": [],
         "keywords": [
             "honey",
             "honeypot",
             "pot",
             "sweet"
+        ],
+        "name": "honey pot",
+        "shortcodes": [
+            ":honey_pot:"
         ]
     },
     {
-        "codepoints": "🍼",
-        "name": "baby bottle",
-        "shortcodes": [
-            ":baby_bottle:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍼",
+        "emoticons": [],
         "keywords": [
             "baby",
             "bottle",
             "drink",
             "milk"
+        ],
+        "name": "baby bottle",
+        "shortcodes": [
+            ":baby_bottle:"
         ]
     },
     {
-        "codepoints": "🥛",
-        "name": "glass of milk",
-        "shortcodes": [
-            ":glass_of_milk:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥛",
+        "emoticons": [],
         "keywords": [
             "drink",
             "glass",
             "glass of milk",
             "milk"
+        ],
+        "name": "glass of milk",
+        "shortcodes": [
+            ":glass_of_milk:"
         ]
     },
     {
-        "codepoints": "☕",
-        "name": "hot beverage",
-        "shortcodes": [
-            ":hot_beverage:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "☕",
+        "emoticons": [],
         "keywords": [
             "beverage",
             "coffee",
@@ -11617,31 +10559,16 @@ export const emojisData = JSON.parse(`[
             "hot",
             "steaming",
             "tea"
-        ]
-    },
-    {
-        "codepoints": "🫖",
-        "name": "teapot",
-        "shortcodes": [
-            ":teapot:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "drink",
-            "pot",
-            "tea",
-            "teapot"
+        "name": "hot beverage",
+        "shortcodes": [
+            ":hot_beverage:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🍵",
-        "name": "teacup without handle",
-        "shortcodes": [
-            ":teacup_without_handle:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "beverage",
             "cup",
@@ -11649,16 +10576,16 @@ export const emojisData = JSON.parse(`[
             "tea",
             "teacup",
             "teacup without handle"
+        ],
+        "name": "teacup without handle",
+        "shortcodes": [
+            ":teacup_without_handle:"
         ]
     },
     {
-        "codepoints": "🍶",
-        "name": "sake",
-        "shortcodes": [
-            ":sake:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍶",
+        "emoticons": [],
         "keywords": [
             "bar",
             "beverage",
@@ -11667,16 +10594,16 @@ export const emojisData = JSON.parse(`[
             "drink",
             "sake",
             "saké"
+        ],
+        "name": "sake",
+        "shortcodes": [
+            ":sake:"
         ]
     },
     {
-        "codepoints": "🍾",
-        "name": "bottle with popping cork",
-        "shortcodes": [
-            ":bottle_with_popping_cork:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍾",
+        "emoticons": [],
         "keywords": [
             "bar",
             "bottle",
@@ -11684,76 +10611,76 @@ export const emojisData = JSON.parse(`[
             "cork",
             "drink",
             "popping"
+        ],
+        "name": "bottle with popping cork",
+        "shortcodes": [
+            ":bottle_with_popping_cork:"
         ]
     },
     {
-        "codepoints": "🍷",
-        "name": "wine glass",
-        "shortcodes": [
-            ":wine_glass:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍷",
+        "emoticons": [],
         "keywords": [
             "bar",
             "beverage",
             "drink",
             "glass",
             "wine"
+        ],
+        "name": "wine glass",
+        "shortcodes": [
+            ":wine_glass:"
         ]
     },
     {
-        "codepoints": "🍸",
-        "name": "cocktail glass",
-        "shortcodes": [
-            ":cocktail_glass:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍸",
+        "emoticons": [],
         "keywords": [
             "bar",
             "cocktail",
             "drink",
             "glass"
+        ],
+        "name": "cocktail glass",
+        "shortcodes": [
+            ":cocktail_glass:"
         ]
     },
     {
-        "codepoints": "🍹",
-        "name": "tropical drink",
-        "shortcodes": [
-            ":tropical_drink:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍹",
+        "emoticons": [],
         "keywords": [
             "bar",
             "drink",
             "tropical"
+        ],
+        "name": "tropical drink",
+        "shortcodes": [
+            ":tropical_drink:"
         ]
     },
     {
-        "codepoints": "🍺",
-        "name": "beer mug",
-        "shortcodes": [
-            ":beer_mug:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍺",
+        "emoticons": [],
         "keywords": [
             "bar",
             "beer",
             "drink",
             "mug"
+        ],
+        "name": "beer mug",
+        "shortcodes": [
+            ":beer_mug:"
         ]
     },
     {
-        "codepoints": "🍻",
-        "name": "clinking beer mugs",
-        "shortcodes": [
-            ":clinking_beer_mugs:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍻",
+        "emoticons": [],
         "keywords": [
             "bar",
             "beer",
@@ -11761,93 +10688,62 @@ export const emojisData = JSON.parse(`[
             "clinking beer mugs",
             "drink",
             "mug"
+        ],
+        "name": "clinking beer mugs",
+        "shortcodes": [
+            ":clinking_beer_mugs:"
         ]
     },
     {
-        "codepoints": "🥂",
-        "name": "clinking glasses",
-        "shortcodes": [
-            ":clinking_glasses:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥂",
+        "emoticons": [],
         "keywords": [
             "celebrate",
             "clink",
             "clinking glasses",
             "drink",
             "glass"
+        ],
+        "name": "clinking glasses",
+        "shortcodes": [
+            ":clinking_glasses:"
         ]
     },
     {
-        "codepoints": "🥃",
-        "name": "tumbler glass",
-        "shortcodes": [
-            ":tumbler_glass:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥃",
+        "emoticons": [],
         "keywords": [
             "glass",
             "liquor",
             "shot",
             "tumbler",
             "whisky"
-        ]
-    },
-    {
-        "codepoints": "🫗",
-        "name": "pouring liquid",
-        "shortcodes": [
-            ":pouring_liquid:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "drink",
-            "empty",
-            "glass",
-            "pouring liquid",
-            "spill"
+        "name": "tumbler glass",
+        "shortcodes": [
+            ":tumbler_glass:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🥤",
-        "name": "cup with straw",
-        "shortcodes": [
-            ":cup_with_straw:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "cup with straw",
             "juice",
             "soda"
-        ]
-    },
-    {
-        "codepoints": "🧋",
-        "name": "bubble tea",
-        "shortcodes": [
-            ":bubble_tea:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "bubble",
-            "milk",
-            "pearl",
-            "tea"
+        "name": "cup with straw",
+        "shortcodes": [
+            ":cup_with_straw:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🧃",
-        "name": "beverage box",
-        "shortcodes": [
-            ":beverage_box:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "drink carton",
             "juice box",
@@ -11857,75 +10753,75 @@ export const emojisData = JSON.parse(`[
             "juice",
             "straw",
             "sweet"
+        ],
+        "name": "beverage box",
+        "shortcodes": [
+            ":beverage_box:"
         ]
     },
     {
-        "codepoints": "🧉",
-        "name": "mate",
-        "shortcodes": [
-            ":mate:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧉",
+        "emoticons": [],
         "keywords": [
             "drink",
             "mate",
             "maté"
+        ],
+        "name": "mate",
+        "shortcodes": [
+            ":mate:"
         ]
     },
     {
-        "codepoints": "🧊",
-        "name": "ice",
-        "shortcodes": [
-            ":ice:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🧊",
+        "emoticons": [],
         "keywords": [
             "cold",
             "ice",
             "ice cube",
             "iceberg"
+        ],
+        "name": "ice",
+        "shortcodes": [
+            ":ice:"
         ]
     },
     {
-        "codepoints": "🥢",
-        "name": "chopsticks",
-        "shortcodes": [
-            ":chopsticks:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥢",
+        "emoticons": [],
         "keywords": [
             "chopsticks",
             "pair of chopsticks",
             "hashi"
+        ],
+        "name": "chopsticks",
+        "shortcodes": [
+            ":chopsticks:"
         ]
     },
     {
-        "codepoints": "🍽️",
-        "name": "fork and knife with plate",
-        "shortcodes": [
-            ":fork_and_knife_with_plate:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍽️",
+        "emoticons": [],
         "keywords": [
             "cooking",
             "fork",
             "fork and knife with plate",
             "knife",
             "plate"
+        ],
+        "name": "fork and knife with plate",
+        "shortcodes": [
+            ":fork_and_knife_with_plate:"
         ]
     },
     {
-        "codepoints": "🍴",
-        "name": "fork and knife",
-        "shortcodes": [
-            ":fork_and_knife:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🍴",
+        "emoticons": [],
         "keywords": [
             "cooking",
             "cutlery",
@@ -11933,29 +10829,29 @@ export const emojisData = JSON.parse(`[
             "fork and knife",
             "knife",
             "knife and fork"
+        ],
+        "name": "fork and knife",
+        "shortcodes": [
+            ":fork_and_knife:"
         ]
     },
     {
-        "codepoints": "🥄",
-        "name": "spoon",
-        "shortcodes": [
-            ":spoon:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🥄",
+        "emoticons": [],
         "keywords": [
             "spoon",
             "tableware"
+        ],
+        "name": "spoon",
+        "shortcodes": [
+            ":spoon:"
         ]
     },
     {
-        "codepoints": "🔪",
-        "name": "kitchen knife",
-        "shortcodes": [
-            ":kitchen_knife:"
-        ],
-        "emoticons": [],
         "category": "Food & Drink",
+        "codepoints": "🔪",
+        "emoticons": [],
         "keywords": [
             "cooking",
             "hocho",
@@ -11963,33 +10859,16 @@ export const emojisData = JSON.parse(`[
             "knife",
             "tool",
             "weapon"
-        ]
-    },
-    {
-        "codepoints": "🫙",
-        "name": "jar",
-        "shortcodes": [
-            ":jar:"
         ],
-        "emoticons": [],
-        "category": "Food & Drink",
-        "keywords": [
-            "condiment",
-            "container",
-            "empty",
-            "jar",
-            "sauce",
-            "store"
+        "name": "kitchen knife",
+        "shortcodes": [
+            ":kitchen_knife:"
         ]
     },
     {
+        "category": "Food & Drink",
         "codepoints": "🏺",
-        "name": "amphora",
-        "shortcodes": [
-            ":amphora:"
-        ],
         "emoticons": [],
-        "category": "Food & Drink",
         "keywords": [
             "amphora",
             "Aquarius",
@@ -11998,16 +10877,16 @@ export const emojisData = JSON.parse(`[
             "jug",
             "zodiac",
             "jar"
+        ],
+        "name": "amphora",
+        "shortcodes": [
+            ":amphora:"
         ]
     },
     {
-        "codepoints": "🌍",
-        "name": "globe showing Europe-Africa",
-        "shortcodes": [
-            ":globe_showing_Europe-Africa:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌍",
+        "emoticons": [],
         "keywords": [
             "Africa",
             "earth",
@@ -12015,32 +10894,32 @@ export const emojisData = JSON.parse(`[
             "globe",
             "globe showing Europe-Africa",
             "world"
+        ],
+        "name": "globe showing Europe-Africa",
+        "shortcodes": [
+            ":globe_showing_Europe-Africa:"
         ]
     },
     {
-        "codepoints": "🌎",
-        "name": "globe showing Americas",
-        "shortcodes": [
-            ":globe_showing_Americas:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌎",
+        "emoticons": [],
         "keywords": [
             "Americas",
             "earth",
             "globe",
             "globe showing Americas",
             "world"
+        ],
+        "name": "globe showing Americas",
+        "shortcodes": [
+            ":globe_showing_Americas:"
         ]
     },
     {
-        "codepoints": "🌏",
-        "name": "globe showing Asia-Australia",
-        "shortcodes": [
-            ":globe_showing_Asia-Australia:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌏",
+        "emoticons": [],
         "keywords": [
             "Asia",
             "Australia",
@@ -12048,115 +10927,115 @@ export const emojisData = JSON.parse(`[
             "globe",
             "globe showing Asia-Australia",
             "world"
+        ],
+        "name": "globe showing Asia-Australia",
+        "shortcodes": [
+            ":globe_showing_Asia-Australia:"
         ]
     },
     {
-        "codepoints": "🌐",
-        "name": "globe with meridians",
-        "shortcodes": [
-            ":globe_with_meridians:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌐",
+        "emoticons": [],
         "keywords": [
             "earth",
             "globe",
             "globe with meridians",
             "meridians",
             "world"
+        ],
+        "name": "globe with meridians",
+        "shortcodes": [
+            ":globe_with_meridians:"
         ]
     },
     {
-        "codepoints": "🗺️",
-        "name": "world map",
-        "shortcodes": [
-            ":world_map:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🗺️",
+        "emoticons": [],
         "keywords": [
             "map",
             "world"
+        ],
+        "name": "world map",
+        "shortcodes": [
+            ":world_map:"
         ]
     },
     {
-        "codepoints": "🗾",
-        "name": "map of Japan",
-        "shortcodes": [
-            ":map_of_Japan:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🗾",
+        "emoticons": [],
         "keywords": [
             "Japan",
             "map",
             "map of Japan"
+        ],
+        "name": "map of Japan",
+        "shortcodes": [
+            ":map_of_Japan:"
         ]
     },
     {
-        "codepoints": "🧭",
-        "name": "compass",
-        "shortcodes": [
-            ":compass:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🧭",
+        "emoticons": [],
         "keywords": [
             "compass",
             "magnetic",
             "navigation",
             "orienteering"
+        ],
+        "name": "compass",
+        "shortcodes": [
+            ":compass:"
         ]
     },
     {
-        "codepoints": "🏔️",
-        "name": "snow-capped mountain",
-        "shortcodes": [
-            ":snow-capped_mountain:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏔️",
+        "emoticons": [],
         "keywords": [
             "cold",
             "mountain",
             "snow",
             "snow-capped mountain"
+        ],
+        "name": "snow-capped mountain",
+        "shortcodes": [
+            ":snow-capped_mountain:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "⛰️",
+        "emoticons": [],
+        "keywords": [
+            "mountain"
+        ],
         "name": "mountain",
         "shortcodes": [
             ":mountain:"
-        ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "mountain"
         ]
     },
     {
-        "codepoints": "🌋",
-        "name": "volcano",
-        "shortcodes": [
-            ":volcano:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌋",
+        "emoticons": [],
         "keywords": [
             "eruption",
             "mountain",
             "volcano"
+        ],
+        "name": "volcano",
+        "shortcodes": [
+            ":volcano:"
         ]
     },
     {
-        "codepoints": "🗻",
-        "name": "mount fuji",
-        "shortcodes": [
-            ":mount_fuji:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🗻",
+        "emoticons": [],
         "keywords": [
             "Fuji",
             "mount Fuji",
@@ -12164,497 +11043,451 @@ export const emojisData = JSON.parse(`[
             "fuji",
             "mount fuji",
             "Mount Fuji"
+        ],
+        "name": "mount fuji",
+        "shortcodes": [
+            ":mount_fuji:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "🏕️",
+        "emoticons": [],
+        "keywords": [
+            "camping"
+        ],
         "name": "camping",
         "shortcodes": [
             ":camping:"
-        ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "camping"
         ]
     },
     {
-        "codepoints": "🏖️",
-        "name": "beach with umbrella",
-        "shortcodes": [
-            ":beach_with_umbrella:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏖️",
+        "emoticons": [],
         "keywords": [
             "beach",
             "beach with umbrella",
             "umbrella"
+        ],
+        "name": "beach with umbrella",
+        "shortcodes": [
+            ":beach_with_umbrella:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "🏜️",
+        "emoticons": [],
+        "keywords": [
+            "desert"
+        ],
         "name": "desert",
         "shortcodes": [
             ":desert:"
-        ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "desert"
         ]
     },
     {
-        "codepoints": "🏝️",
-        "name": "desert island",
-        "shortcodes": [
-            ":desert_island:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏝️",
+        "emoticons": [],
         "keywords": [
             "desert",
             "island"
+        ],
+        "name": "desert island",
+        "shortcodes": [
+            ":desert_island:"
         ]
     },
     {
-        "codepoints": "🏞️",
-        "name": "national park",
-        "shortcodes": [
-            ":national_park:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏞️",
+        "emoticons": [],
         "keywords": [
             "national park",
             "park"
+        ],
+        "name": "national park",
+        "shortcodes": [
+            ":national_park:"
         ]
     },
     {
-        "codepoints": "🏟️",
-        "name": "stadium",
-        "shortcodes": [
-            ":stadium:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏟️",
+        "emoticons": [],
         "keywords": [
             "arena",
             "stadium"
+        ],
+        "name": "stadium",
+        "shortcodes": [
+            ":stadium:"
         ]
     },
     {
-        "codepoints": "🏛️",
-        "name": "classical building",
-        "shortcodes": [
-            ":classical_building:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏛️",
+        "emoticons": [],
         "keywords": [
             "classical",
             "classical building",
             "column"
+        ],
+        "name": "classical building",
+        "shortcodes": [
+            ":classical_building:"
         ]
     },
     {
-        "codepoints": "🏗️",
-        "name": "building construction",
-        "shortcodes": [
-            ":building_construction:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏗️",
+        "emoticons": [],
         "keywords": [
             "building construction",
             "construction"
+        ],
+        "name": "building construction",
+        "shortcodes": [
+            ":building_construction:"
         ]
     },
     {
-        "codepoints": "🧱",
-        "name": "brick",
-        "shortcodes": [
-            ":brick:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🧱",
+        "emoticons": [],
         "keywords": [
             "brick",
             "bricks",
             "clay",
             "mortar",
             "wall"
-        ]
-    },
-    {
-        "codepoints": "🪨",
-        "name": "rock",
-        "shortcodes": [
-            ":rock:"
         ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "boulder",
-            "heavy",
-            "rock",
-            "solid",
-            "stone"
-        ]
-    },
-    {
-        "codepoints": "🪵",
-        "name": "wood",
+        "name": "brick",
         "shortcodes": [
-            ":wood:"
-        ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "log",
-            "lumber",
-            "timber",
-            "wood"
+            ":brick:"
         ]
     },
     {
-        "codepoints": "🛖",
-        "name": "hut",
-        "shortcodes": [
-            ":hut:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
-        "keywords": [
-            "house",
-            "hut",
-            "roundhouse",
-            "yurt"
-        ]
-    },
-    {
         "codepoints": "🏘️",
+        "emoticons": [],
+        "keywords": [
+            "houses"
+        ],
         "name": "houses",
         "shortcodes": [
             ":houses:"
-        ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "houses"
         ]
     },
     {
-        "codepoints": "🏚️",
-        "name": "derelict house",
-        "shortcodes": [
-            ":derelict_house:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏚️",
+        "emoticons": [],
         "keywords": [
             "derelict",
             "house"
+        ],
+        "name": "derelict house",
+        "shortcodes": [
+            ":derelict_house:"
         ]
     },
     {
-        "codepoints": "🏠",
-        "name": "house",
-        "shortcodes": [
-            ":house:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏠",
+        "emoticons": [],
         "keywords": [
             "home",
             "house"
+        ],
+        "name": "house",
+        "shortcodes": [
+            ":house:"
         ]
     },
     {
-        "codepoints": "🏡",
-        "name": "house with garden",
-        "shortcodes": [
-            ":house_with_garden:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏡",
+        "emoticons": [],
         "keywords": [
             "garden",
             "home",
             "house",
             "house with garden"
+        ],
+        "name": "house with garden",
+        "shortcodes": [
+            ":house_with_garden:"
         ]
     },
     {
-        "codepoints": "🏢",
-        "name": "office building",
-        "shortcodes": [
-            ":office_building:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏢",
+        "emoticons": [],
         "keywords": [
             "building",
             "office building"
+        ],
+        "name": "office building",
+        "shortcodes": [
+            ":office_building:"
         ]
     },
     {
-        "codepoints": "🏣",
-        "name": "Japanese post office",
-        "shortcodes": [
-            ":Japanese_post_office:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏣",
+        "emoticons": [],
         "keywords": [
             "Japanese",
             "Japanese post office",
             "post"
+        ],
+        "name": "Japanese post office",
+        "shortcodes": [
+            ":Japanese_post_office:"
         ]
     },
     {
-        "codepoints": "🏤",
-        "name": "post office",
-        "shortcodes": [
-            ":post_office:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏤",
+        "emoticons": [],
         "keywords": [
             "European",
             "post",
             "post office"
+        ],
+        "name": "post office",
+        "shortcodes": [
+            ":post_office:"
         ]
     },
     {
-        "codepoints": "🏥",
-        "name": "hospital",
-        "shortcodes": [
-            ":hospital:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏥",
+        "emoticons": [],
         "keywords": [
             "doctor",
             "hospital",
             "medicine"
+        ],
+        "name": "hospital",
+        "shortcodes": [
+            ":hospital:"
         ]
     },
     {
-        "codepoints": "🏦",
-        "name": "bank",
-        "shortcodes": [
-            ":bank:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏦",
+        "emoticons": [],
         "keywords": [
             "bank",
             "building"
+        ],
+        "name": "bank",
+        "shortcodes": [
+            ":bank:"
         ]
     },
     {
-        "codepoints": "🏨",
-        "name": "hotel",
-        "shortcodes": [
-            ":hotel:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏨",
+        "emoticons": [],
         "keywords": [
             "building",
             "hotel"
+        ],
+        "name": "hotel",
+        "shortcodes": [
+            ":hotel:"
         ]
     },
     {
-        "codepoints": "🏩",
-        "name": "love hotel",
-        "shortcodes": [
-            ":love_hotel:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏩",
+        "emoticons": [],
         "keywords": [
             "hotel",
             "love"
+        ],
+        "name": "love hotel",
+        "shortcodes": [
+            ":love_hotel:"
         ]
     },
     {
-        "codepoints": "🏪",
-        "name": "convenience store",
-        "shortcodes": [
-            ":convenience_store:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏪",
+        "emoticons": [],
         "keywords": [
             "convenience",
             "store",
             "dépanneur"
+        ],
+        "name": "convenience store",
+        "shortcodes": [
+            ":convenience_store:"
         ]
     },
     {
-        "codepoints": "🏫",
-        "name": "school",
-        "shortcodes": [
-            ":school:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏫",
+        "emoticons": [],
         "keywords": [
             "building",
             "school"
+        ],
+        "name": "school",
+        "shortcodes": [
+            ":school:"
         ]
     },
     {
-        "codepoints": "🏬",
-        "name": "department store",
-        "shortcodes": [
-            ":department_store:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏬",
+        "emoticons": [],
         "keywords": [
             "department",
             "store"
+        ],
+        "name": "department store",
+        "shortcodes": [
+            ":department_store:"
         ]
     },
     {
-        "codepoints": "🏭",
-        "name": "factory",
-        "shortcodes": [
-            ":factory:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏭",
+        "emoticons": [],
         "keywords": [
             "building",
             "factory"
+        ],
+        "name": "factory",
+        "shortcodes": [
+            ":factory:"
         ]
     },
     {
-        "codepoints": "🏯",
-        "name": "Japanese castle",
-        "shortcodes": [
-            ":Japanese_castle:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏯",
+        "emoticons": [],
         "keywords": [
             "castle",
             "Japanese"
+        ],
+        "name": "Japanese castle",
+        "shortcodes": [
+            ":Japanese_castle:"
         ]
     },
     {
-        "codepoints": "🏰",
-        "name": "castle",
-        "shortcodes": [
-            ":castle:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏰",
+        "emoticons": [],
         "keywords": [
             "castle",
             "European"
+        ],
+        "name": "castle",
+        "shortcodes": [
+            ":castle:"
         ]
     },
     {
-        "codepoints": "💒",
-        "name": "wedding",
-        "shortcodes": [
-            ":wedding:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "💒",
+        "emoticons": [],
         "keywords": [
             "chapel",
             "romance",
             "wedding"
+        ],
+        "name": "wedding",
+        "shortcodes": [
+            ":wedding:"
         ]
     },
     {
-        "codepoints": "🗼",
-        "name": "Tokyo tower",
-        "shortcodes": [
-            ":Tokyo_tower:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🗼",
+        "emoticons": [],
         "keywords": [
             "Tokyo",
             "tower",
             "Tower"
+        ],
+        "name": "Tokyo tower",
+        "shortcodes": [
+            ":Tokyo_tower:"
         ]
     },
     {
-        "codepoints": "🗽",
-        "name": "Statue of Liberty",
-        "shortcodes": [
-            ":Statue_of_Liberty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🗽",
+        "emoticons": [],
         "keywords": [
             "liberty",
             "statue",
             "Statue of Liberty",
             "Liberty",
             "Statue"
+        ],
+        "name": "Statue of Liberty",
+        "shortcodes": [
+            ":Statue_of_Liberty:"
         ]
     },
     {
-        "codepoints": "⛪",
-        "name": "church",
-        "shortcodes": [
-            ":church:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛪",
+        "emoticons": [],
         "keywords": [
             "Christian",
             "church",
             "cross",
             "religion"
+        ],
+        "name": "church",
+        "shortcodes": [
+            ":church:"
         ]
     },
     {
-        "codepoints": "🕌",
-        "name": "mosque",
-        "shortcodes": [
-            ":mosque:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕌",
+        "emoticons": [],
         "keywords": [
             "Islam",
             "mosque",
             "Muslim",
             "religion",
             "islam"
+        ],
+        "name": "mosque",
+        "shortcodes": [
+            ":mosque:"
         ]
     },
     {
-        "codepoints": "🛕",
-        "name": "hindu temple",
-        "shortcodes": [
-            ":hindu_temple:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛕",
+        "emoticons": [],
         "keywords": [
             "hindu",
             "temple",
             "Hindu"
+        ],
+        "name": "hindu temple",
+        "shortcodes": [
+            ":hindu_temple:"
         ]
     },
     {
-        "codepoints": "🕍",
-        "name": "synagogue",
-        "shortcodes": [
-            ":synagogue:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕍",
+        "emoticons": [],
         "keywords": [
             "Jew",
             "Jewish",
@@ -12662,31 +11495,31 @@ export const emojisData = JSON.parse(`[
             "synagogue",
             "temple",
             "shul"
+        ],
+        "name": "synagogue",
+        "shortcodes": [
+            ":synagogue:"
         ]
     },
     {
-        "codepoints": "⛩️",
-        "name": "shinto shrine",
-        "shortcodes": [
-            ":shinto_shrine:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛩️",
+        "emoticons": [],
         "keywords": [
             "religion",
             "Shinto",
             "shrine",
             "shinto"
+        ],
+        "name": "shinto shrine",
+        "shortcodes": [
+            ":shinto_shrine:"
         ]
     },
     {
-        "codepoints": "🕋",
-        "name": "kaaba",
-        "shortcodes": [
-            ":kaaba:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕋",
+        "emoticons": [],
         "keywords": [
             "Islam",
             "Kaaba",
@@ -12694,111 +11527,111 @@ export const emojisData = JSON.parse(`[
             "religion",
             "islam",
             "kaaba"
+        ],
+        "name": "kaaba",
+        "shortcodes": [
+            ":kaaba:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "⛲",
+        "emoticons": [],
+        "keywords": [
+            "fountain"
+        ],
         "name": "fountain",
         "shortcodes": [
             ":fountain:"
-        ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "fountain"
         ]
     },
     {
-        "codepoints": "⛺",
-        "name": "tent",
-        "shortcodes": [
-            ":tent:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛺",
+        "emoticons": [],
         "keywords": [
             "camping",
             "tent"
+        ],
+        "name": "tent",
+        "shortcodes": [
+            ":tent:"
         ]
     },
     {
-        "codepoints": "🌁",
-        "name": "foggy",
-        "shortcodes": [
-            ":foggy:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌁",
+        "emoticons": [],
         "keywords": [
             "fog",
             "foggy"
+        ],
+        "name": "foggy",
+        "shortcodes": [
+            ":foggy:"
         ]
     },
     {
-        "codepoints": "🌃",
-        "name": "night with stars",
-        "shortcodes": [
-            ":night_with_stars:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌃",
+        "emoticons": [],
         "keywords": [
             "night",
             "night with stars",
             "star"
+        ],
+        "name": "night with stars",
+        "shortcodes": [
+            ":night_with_stars:"
         ]
     },
     {
-        "codepoints": "🏙️",
-        "name": "cityscape",
-        "shortcodes": [
-            ":cityscape:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏙️",
+        "emoticons": [],
         "keywords": [
             "city",
             "cityscape"
+        ],
+        "name": "cityscape",
+        "shortcodes": [
+            ":cityscape:"
         ]
     },
     {
-        "codepoints": "🌄",
-        "name": "sunrise over mountains",
-        "shortcodes": [
-            ":sunrise_over_mountains:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌄",
+        "emoticons": [],
         "keywords": [
             "morning",
             "mountain",
             "sun",
             "sunrise",
             "sunrise over mountains"
+        ],
+        "name": "sunrise over mountains",
+        "shortcodes": [
+            ":sunrise_over_mountains:"
         ]
     },
     {
-        "codepoints": "🌅",
-        "name": "sunrise",
-        "shortcodes": [
-            ":sunrise:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌅",
+        "emoticons": [],
         "keywords": [
             "morning",
             "sun",
             "sunrise"
+        ],
+        "name": "sunrise",
+        "shortcodes": [
+            ":sunrise:"
         ]
     },
     {
-        "codepoints": "🌆",
-        "name": "cityscape at dusk",
-        "shortcodes": [
-            ":cityscape_at_dusk:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌆",
+        "emoticons": [],
         "keywords": [
             "city",
             "cityscape at dusk",
@@ -12806,161 +11639,147 @@ export const emojisData = JSON.parse(`[
             "evening",
             "landscape",
             "sunset"
+        ],
+        "name": "cityscape at dusk",
+        "shortcodes": [
+            ":cityscape_at_dusk:"
         ]
     },
     {
-        "codepoints": "🌇",
-        "name": "sunset",
-        "shortcodes": [
-            ":sunset:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌇",
+        "emoticons": [],
         "keywords": [
             "dusk",
             "sun",
             "sunset"
+        ],
+        "name": "sunset",
+        "shortcodes": [
+            ":sunset:"
         ]
     },
     {
-        "codepoints": "🌉",
-        "name": "bridge at night",
-        "shortcodes": [
-            ":bridge_at_night:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌉",
+        "emoticons": [],
         "keywords": [
             "bridge",
             "bridge at night",
             "night"
+        ],
+        "name": "bridge at night",
+        "shortcodes": [
+            ":bridge_at_night:"
         ]
     },
     {
-        "codepoints": "♨️",
-        "name": "hot springs",
-        "shortcodes": [
-            ":hot_springs:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "♨️",
+        "emoticons": [],
         "keywords": [
             "hot",
             "hotsprings",
             "springs",
             "steaming"
+        ],
+        "name": "hot springs",
+        "shortcodes": [
+            ":hot_springs:"
         ]
     },
     {
-        "codepoints": "🎠",
-        "name": "carousel horse",
-        "shortcodes": [
-            ":carousel_horse:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🎠",
+        "emoticons": [],
         "keywords": [
             "carousel",
             "horse",
             "merry-go-round"
-        ]
-    },
-    {
-        "codepoints": "🛝",
-        "name": "playground slide",
-        "shortcodes": [
-            ":playground_slide:"
         ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "amusement park",
-            "play",
-            "playground slide"
+        "name": "carousel horse",
+        "shortcodes": [
+            ":carousel_horse:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "🎡",
-        "name": "ferris wheel",
-        "shortcodes": [
-            ":ferris_wheel:"
-        ],
         "emoticons": [],
-        "category": "Travel & Places",
         "keywords": [
             "amusement park",
             "ferris",
             "wheel",
             "Ferris",
             "theme park"
+        ],
+        "name": "ferris wheel",
+        "shortcodes": [
+            ":ferris_wheel:"
         ]
     },
     {
-        "codepoints": "🎢",
-        "name": "roller coaster",
-        "shortcodes": [
-            ":roller_coaster:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🎢",
+        "emoticons": [],
         "keywords": [
             "amusement park",
             "coaster",
             "roller"
+        ],
+        "name": "roller coaster",
+        "shortcodes": [
+            ":roller_coaster:"
         ]
     },
     {
-        "codepoints": "💈",
-        "name": "barber pole",
-        "shortcodes": [
-            ":barber_pole:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "💈",
+        "emoticons": [],
         "keywords": [
             "barber",
             "haircut",
             "pole"
+        ],
+        "name": "barber pole",
+        "shortcodes": [
+            ":barber_pole:"
         ]
     },
     {
-        "codepoints": "🎪",
-        "name": "circus tent",
-        "shortcodes": [
-            ":circus_tent:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🎪",
+        "emoticons": [],
         "keywords": [
             "big top",
             "circus",
             "tent"
+        ],
+        "name": "circus tent",
+        "shortcodes": [
+            ":circus_tent:"
         ]
     },
     {
-        "codepoints": "🚂",
-        "name": "locomotive",
-        "shortcodes": [
-            ":locomotive:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚂",
+        "emoticons": [],
         "keywords": [
             "engine",
             "locomotive",
             "railway",
             "steam",
             "train"
+        ],
+        "name": "locomotive",
+        "shortcodes": [
+            ":locomotive:"
         ]
     },
     {
-        "codepoints": "🚃",
-        "name": "railway car",
-        "shortcodes": [
-            ":railway_car:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚃",
+        "emoticons": [],
         "keywords": [
             "car",
             "electric",
@@ -12970,16 +11789,16 @@ export const emojisData = JSON.parse(`[
             "trolley bus",
             "trolleybus",
             "railway carriage"
+        ],
+        "name": "railway car",
+        "shortcodes": [
+            ":railway_car:"
         ]
     },
     {
-        "codepoints": "🚄",
-        "name": "high-speed train",
-        "shortcodes": [
-            ":high-speed_train:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚄",
+        "emoticons": [],
         "keywords": [
             "high-speed train",
             "railway",
@@ -12987,16 +11806,16 @@ export const emojisData = JSON.parse(`[
             "speed",
             "train",
             "Shinkansen"
+        ],
+        "name": "high-speed train",
+        "shortcodes": [
+            ":high-speed_train:"
         ]
     },
     {
-        "codepoints": "🚅",
-        "name": "bullet train",
-        "shortcodes": [
-            ":bullet_train:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚅",
+        "emoticons": [],
         "keywords": [
             "bullet",
             "railway",
@@ -13004,69 +11823,69 @@ export const emojisData = JSON.parse(`[
             "speed",
             "train",
             "Shinkansen"
+        ],
+        "name": "bullet train",
+        "shortcodes": [
+            ":bullet_train:"
         ]
     },
     {
-        "codepoints": "🚆",
-        "name": "train",
-        "shortcodes": [
-            ":train:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚆",
+        "emoticons": [],
         "keywords": [
             "railway",
             "train"
+        ],
+        "name": "train",
+        "shortcodes": [
+            ":train:"
         ]
     },
     {
-        "codepoints": "🚇",
-        "name": "metro",
-        "shortcodes": [
-            ":metro:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚇",
+        "emoticons": [],
         "keywords": [
             "metro",
             "subway"
+        ],
+        "name": "metro",
+        "shortcodes": [
+            ":metro:"
         ]
     },
     {
-        "codepoints": "🚈",
-        "name": "light rail",
-        "shortcodes": [
-            ":light_rail:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚈",
+        "emoticons": [],
         "keywords": [
             "light rail",
             "railway"
+        ],
+        "name": "light rail",
+        "shortcodes": [
+            ":light_rail:"
         ]
     },
     {
-        "codepoints": "🚉",
-        "name": "station",
-        "shortcodes": [
-            ":station:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚉",
+        "emoticons": [],
         "keywords": [
             "railway",
             "station",
             "train"
+        ],
+        "name": "station",
+        "shortcodes": [
+            ":station:"
         ]
     },
     {
-        "codepoints": "🚊",
-        "name": "tram",
-        "shortcodes": [
-            ":tram:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚊",
+        "emoticons": [],
         "keywords": [
             "light rail",
             "oncoming",
@@ -13078,43 +11897,43 @@ export const emojisData = JSON.parse(`[
             "tramcar",
             "trolley",
             "trolley bus"
+        ],
+        "name": "tram",
+        "shortcodes": [
+            ":tram:"
         ]
     },
     {
-        "codepoints": "🚝",
-        "name": "monorail",
-        "shortcodes": [
-            ":monorail:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚝",
+        "emoticons": [],
         "keywords": [
             "monorail",
             "vehicle"
+        ],
+        "name": "monorail",
+        "shortcodes": [
+            ":monorail:"
         ]
     },
     {
-        "codepoints": "🚞",
-        "name": "mountain railway",
-        "shortcodes": [
-            ":mountain_railway:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚞",
+        "emoticons": [],
         "keywords": [
             "car",
             "mountain",
             "railway"
+        ],
+        "name": "mountain railway",
+        "shortcodes": [
+            ":mountain_railway:"
         ]
     },
     {
-        "codepoints": "🚋",
-        "name": "tram car",
-        "shortcodes": [
-            ":tram_car:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚋",
+        "emoticons": [],
         "keywords": [
             "car",
             "tram",
@@ -13123,179 +11942,179 @@ export const emojisData = JSON.parse(`[
             "streetcar",
             "tramcar",
             "trolley"
+        ],
+        "name": "tram car",
+        "shortcodes": [
+            ":tram_car:"
         ]
     },
     {
-        "codepoints": "🚌",
-        "name": "bus",
-        "shortcodes": [
-            ":bus:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚌",
+        "emoticons": [],
         "keywords": [
             "bus",
             "vehicle"
+        ],
+        "name": "bus",
+        "shortcodes": [
+            ":bus:"
         ]
     },
     {
-        "codepoints": "🚍",
-        "name": "oncoming bus",
-        "shortcodes": [
-            ":oncoming_bus:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚍",
+        "emoticons": [],
         "keywords": [
             "bus",
             "oncoming"
+        ],
+        "name": "oncoming bus",
+        "shortcodes": [
+            ":oncoming_bus:"
         ]
     },
     {
-        "codepoints": "🚎",
-        "name": "trolleybus",
-        "shortcodes": [
-            ":trolleybus:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚎",
+        "emoticons": [],
         "keywords": [
             "bus",
             "tram",
             "trolley",
             "trolleybus",
             "streetcar"
+        ],
+        "name": "trolleybus",
+        "shortcodes": [
+            ":trolleybus:"
         ]
     },
     {
-        "codepoints": "🚐",
-        "name": "minibus",
-        "shortcodes": [
-            ":minibus:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚐",
+        "emoticons": [],
         "keywords": [
             "bus",
             "minibus"
+        ],
+        "name": "minibus",
+        "shortcodes": [
+            ":minibus:"
         ]
     },
     {
-        "codepoints": "🚑",
-        "name": "ambulance",
-        "shortcodes": [
-            ":ambulance:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚑",
+        "emoticons": [],
         "keywords": [
             "ambulance",
             "vehicle"
+        ],
+        "name": "ambulance",
+        "shortcodes": [
+            ":ambulance:"
         ]
     },
     {
-        "codepoints": "🚒",
-        "name": "fire engine",
-        "shortcodes": [
-            ":fire_engine:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚒",
+        "emoticons": [],
         "keywords": [
             "engine",
             "fire",
             "truck"
+        ],
+        "name": "fire engine",
+        "shortcodes": [
+            ":fire_engine:"
         ]
     },
     {
-        "codepoints": "🚓",
-        "name": "police car",
-        "shortcodes": [
-            ":police_car:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚓",
+        "emoticons": [],
         "keywords": [
             "car",
             "patrol",
             "police"
+        ],
+        "name": "police car",
+        "shortcodes": [
+            ":police_car:"
         ]
     },
     {
-        "codepoints": "🚔",
-        "name": "oncoming police car",
-        "shortcodes": [
-            ":oncoming_police_car:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚔",
+        "emoticons": [],
         "keywords": [
             "car",
             "oncoming",
             "police"
+        ],
+        "name": "oncoming police car",
+        "shortcodes": [
+            ":oncoming_police_car:"
         ]
     },
     {
-        "codepoints": "🚕",
-        "name": "taxi",
-        "shortcodes": [
-            ":taxi:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚕",
+        "emoticons": [],
         "keywords": [
             "taxi",
             "vehicle"
+        ],
+        "name": "taxi",
+        "shortcodes": [
+            ":taxi:"
         ]
     },
     {
-        "codepoints": "🚖",
-        "name": "oncoming taxi",
-        "shortcodes": [
-            ":oncoming_taxi:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚖",
+        "emoticons": [],
         "keywords": [
             "oncoming",
             "taxi"
+        ],
+        "name": "oncoming taxi",
+        "shortcodes": [
+            ":oncoming_taxi:"
         ]
     },
     {
-        "codepoints": "🚗",
-        "name": "automobile",
-        "shortcodes": [
-            ":automobile:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚗",
+        "emoticons": [],
         "keywords": [
             "automobile",
             "car"
+        ],
+        "name": "automobile",
+        "shortcodes": [
+            ":automobile:"
         ]
     },
     {
-        "codepoints": "🚘",
-        "name": "oncoming automobile",
-        "shortcodes": [
-            ":oncoming_automobile:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚘",
+        "emoticons": [],
         "keywords": [
             "automobile",
             "car",
             "oncoming"
+        ],
+        "name": "oncoming automobile",
+        "shortcodes": [
+            ":oncoming_automobile:"
         ]
     },
     {
-        "codepoints": "🚙",
-        "name": "sport utility vehicle",
-        "shortcodes": [
-            ":sport_utility_vehicle:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚙",
+        "emoticons": [],
         "keywords": [
             "4WD",
             "four-wheel drive",
@@ -13305,264 +12124,235 @@ export const emojisData = JSON.parse(`[
             "4x4",
             "off-road vehicle",
             "SUV"
-        ]
-    },
-    {
-        "codepoints": "🛻",
-        "name": "pickup truck",
-        "shortcodes": [
-            ":pickup_truck:"
         ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "pick-up",
-            "pickup",
-            "truck",
-            "ute"
+        "name": "sport utility vehicle",
+        "shortcodes": [
+            ":sport_utility_vehicle:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "🚚",
-        "name": "delivery truck",
-        "shortcodes": [
-            ":delivery_truck:"
-        ],
         "emoticons": [],
-        "category": "Travel & Places",
         "keywords": [
             "delivery",
             "truck"
+        ],
+        "name": "delivery truck",
+        "shortcodes": [
+            ":delivery_truck:"
         ]
     },
     {
-        "codepoints": "🚛",
-        "name": "articulated lorry",
-        "shortcodes": [
-            ":articulated_lorry:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚛",
+        "emoticons": [],
         "keywords": [
             "articulated truck",
             "lorry",
             "semi",
             "truck",
             "articulated lorry"
+        ],
+        "name": "articulated lorry",
+        "shortcodes": [
+            ":articulated_lorry:"
         ]
     },
     {
-        "codepoints": "🚜",
-        "name": "tractor",
-        "shortcodes": [
-            ":tractor:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚜",
+        "emoticons": [],
         "keywords": [
             "tractor",
             "vehicle"
+        ],
+        "name": "tractor",
+        "shortcodes": [
+            ":tractor:"
         ]
     },
     {
-        "codepoints": "🏎️",
-        "name": "racing car",
-        "shortcodes": [
-            ":racing_car:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏎️",
+        "emoticons": [],
         "keywords": [
             "car",
             "racing"
+        ],
+        "name": "racing car",
+        "shortcodes": [
+            ":racing_car:"
         ]
     },
     {
-        "codepoints": "🏍️",
-        "name": "motorcycle",
-        "shortcodes": [
-            ":motorcycle:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🏍️",
+        "emoticons": [],
         "keywords": [
             "motorcycle",
             "racing"
+        ],
+        "name": "motorcycle",
+        "shortcodes": [
+            ":motorcycle:"
         ]
     },
     {
-        "codepoints": "🛵",
-        "name": "motor scooter",
-        "shortcodes": [
-            ":motor_scooter:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛵",
+        "emoticons": [],
         "keywords": [
             "motor",
             "scooter"
+        ],
+        "name": "motor scooter",
+        "shortcodes": [
+            ":motor_scooter:"
         ]
     },
     {
-        "codepoints": "🦽",
-        "name": "manual wheelchair",
-        "shortcodes": [
-            ":manual_wheelchair:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🦽",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "manual wheelchair"
+        ],
+        "name": "manual wheelchair",
+        "shortcodes": [
+            ":manual_wheelchair:"
         ]
     },
     {
-        "codepoints": "🦼",
-        "name": "motorized wheelchair",
-        "shortcodes": [
-            ":motorized_wheelchair:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🦼",
+        "emoticons": [],
         "keywords": [
             "mobility scooter",
             "accessibility",
             "motorized wheelchair",
             "powered wheelchair"
+        ],
+        "name": "motorized wheelchair",
+        "shortcodes": [
+            ":motorized_wheelchair:"
         ]
     },
     {
-        "codepoints": "🛺",
-        "name": "auto rickshaw",
-        "shortcodes": [
-            ":auto_rickshaw:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛺",
+        "emoticons": [],
         "keywords": [
             "auto rickshaw",
             "tuk tuk",
             "tuk-tuk",
             "tuktuk"
+        ],
+        "name": "auto rickshaw",
+        "shortcodes": [
+            ":auto_rickshaw:"
         ]
     },
     {
-        "codepoints": "🚲",
-        "name": "bicycle",
-        "shortcodes": [
-            ":bicycle:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚲",
+        "emoticons": [],
         "keywords": [
             "bicycle",
             "bike"
+        ],
+        "name": "bicycle",
+        "shortcodes": [
+            ":bicycle:"
         ]
     },
     {
-        "codepoints": "🛴",
-        "name": "kick scooter",
-        "shortcodes": [
-            ":kick_scooter:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛴",
+        "emoticons": [],
         "keywords": [
             "kick",
             "scooter"
+        ],
+        "name": "kick scooter",
+        "shortcodes": [
+            ":kick_scooter:"
         ]
     },
     {
-        "codepoints": "🛹",
-        "name": "skateboard",
-        "shortcodes": [
-            ":skateboard:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛹",
+        "emoticons": [],
         "keywords": [
             "board",
             "skateboard"
-        ]
-    },
-    {
-        "codepoints": "🛼",
-        "name": "roller skate",
-        "shortcodes": [
-            ":roller_skate:"
         ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "roller",
-            "rollerskate",
-            "skate"
+        "name": "skateboard",
+        "shortcodes": [
+            ":skateboard:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "🚏",
-        "name": "bus stop",
-        "shortcodes": [
-            ":bus_stop:"
-        ],
         "emoticons": [],
-        "category": "Travel & Places",
         "keywords": [
             "bus",
             "stop",
             "busstop"
+        ],
+        "name": "bus stop",
+        "shortcodes": [
+            ":bus_stop:"
         ]
     },
     {
-        "codepoints": "🛣️",
-        "name": "motorway",
-        "shortcodes": [
-            ":motorway:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛣️",
+        "emoticons": [],
         "keywords": [
             "freeway",
             "highway",
             "road",
             "motorway"
+        ],
+        "name": "motorway",
+        "shortcodes": [
+            ":motorway:"
         ]
     },
     {
-        "codepoints": "🛤️",
-        "name": "railway track",
-        "shortcodes": [
-            ":railway_track:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛤️",
+        "emoticons": [],
         "keywords": [
             "railway",
             "railway track",
             "train"
+        ],
+        "name": "railway track",
+        "shortcodes": [
+            ":railway_track:"
         ]
     },
     {
-        "codepoints": "🛢️",
-        "name": "oil drum",
-        "shortcodes": [
-            ":oil_drum:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛢️",
+        "emoticons": [],
         "keywords": [
             "drum",
             "oil"
+        ],
+        "name": "oil drum",
+        "shortcodes": [
+            ":oil_drum:"
         ]
     },
     {
-        "codepoints": "⛽",
-        "name": "fuel pump",
-        "shortcodes": [
-            ":fuel_pump:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛽",
+        "emoticons": [],
         "keywords": [
             "diesel",
             "fuel",
@@ -13571,48 +12361,32 @@ export const emojisData = JSON.parse(`[
             "pump",
             "station",
             "fuelpump"
-        ]
-    },
-    {
-        "codepoints": "🛞",
-        "name": "wheel",
-        "shortcodes": [
-            ":wheel:"
         ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "circle",
-            "turn",
-            "tyre",
-            "wheel",
-            "tire"
+        "name": "fuel pump",
+        "shortcodes": [
+            ":fuel_pump:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "🚨",
-        "name": "police car light",
-        "shortcodes": [
-            ":police_car_light:"
-        ],
         "emoticons": [],
-        "category": "Travel & Places",
         "keywords": [
             "beacon",
             "car",
             "light",
             "police",
             "revolving"
+        ],
+        "name": "police car light",
+        "shortcodes": [
+            ":police_car_light:"
         ]
     },
     {
-        "codepoints": "🚥",
-        "name": "horizontal traffic light",
-        "shortcodes": [
-            ":horizontal_traffic_light:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚥",
+        "emoticons": [],
         "keywords": [
             "horizontal traffic lights",
             "lights",
@@ -13620,16 +12394,16 @@ export const emojisData = JSON.parse(`[
             "traffic",
             "horizontal traffic light",
             "light"
+        ],
+        "name": "horizontal traffic light",
+        "shortcodes": [
+            ":horizontal_traffic_light:"
         ]
     },
     {
-        "codepoints": "🚦",
-        "name": "vertical traffic light",
-        "shortcodes": [
-            ":vertical_traffic_light:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚦",
+        "emoticons": [],
         "keywords": [
             "lights",
             "signal",
@@ -13637,199 +12411,181 @@ export const emojisData = JSON.parse(`[
             "vertical traffic lights",
             "light",
             "vertical traffic light"
+        ],
+        "name": "vertical traffic light",
+        "shortcodes": [
+            ":vertical_traffic_light:"
         ]
     },
     {
-        "codepoints": "🛑",
-        "name": "stop sign",
-        "shortcodes": [
-            ":stop_sign:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛑",
+        "emoticons": [],
         "keywords": [
             "octagonal",
             "sign",
             "stop"
+        ],
+        "name": "stop sign",
+        "shortcodes": [
+            ":stop_sign:"
         ]
     },
     {
-        "codepoints": "🚧",
-        "name": "construction",
-        "shortcodes": [
-            ":construction:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚧",
+        "emoticons": [],
         "keywords": [
             "barrier",
             "construction"
+        ],
+        "name": "construction",
+        "shortcodes": [
+            ":construction:"
         ]
     },
     {
-        "codepoints": "⚓",
-        "name": "anchor",
-        "shortcodes": [
-            ":anchor:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⚓",
+        "emoticons": [],
         "keywords": [
             "anchor",
             "ship",
             "tool"
-        ]
-    },
-    {
-        "codepoints": "🛟",
-        "name": "ring buoy",
-        "shortcodes": [
-            ":ring_buoy:"
         ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "buoy",
-            "float",
-            "life preserver",
-            "rescue",
-            "ring buoy",
-            "safety",
-            "life saver"
+        "name": "anchor",
+        "shortcodes": [
+            ":anchor:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "⛵",
-        "name": "sailboat",
-        "shortcodes": [
-            ":sailboat:"
-        ],
         "emoticons": [],
-        "category": "Travel & Places",
         "keywords": [
             "boat",
             "resort",
             "sailboat",
             "sea",
             "yacht"
+        ],
+        "name": "sailboat",
+        "shortcodes": [
+            ":sailboat:"
         ]
     },
     {
-        "codepoints": "🛶",
-        "name": "canoe",
-        "shortcodes": [
-            ":canoe:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛶",
+        "emoticons": [],
         "keywords": [
             "boat",
             "canoe"
+        ],
+        "name": "canoe",
+        "shortcodes": [
+            ":canoe:"
         ]
     },
     {
-        "codepoints": "🚤",
-        "name": "speedboat",
-        "shortcodes": [
-            ":speedboat:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚤",
+        "emoticons": [],
         "keywords": [
             "boat",
             "speedboat"
+        ],
+        "name": "speedboat",
+        "shortcodes": [
+            ":speedboat:"
         ]
     },
     {
-        "codepoints": "🛳️",
-        "name": "passenger ship",
-        "shortcodes": [
-            ":passenger_ship:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛳️",
+        "emoticons": [],
         "keywords": [
             "passenger",
             "ship"
+        ],
+        "name": "passenger ship",
+        "shortcodes": [
+            ":passenger_ship:"
         ]
     },
     {
-        "codepoints": "⛴️",
-        "name": "ferry",
-        "shortcodes": [
-            ":ferry:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛴️",
+        "emoticons": [],
         "keywords": [
             "boat",
             "ferry",
             "passenger"
+        ],
+        "name": "ferry",
+        "shortcodes": [
+            ":ferry:"
         ]
     },
     {
-        "codepoints": "🛥️",
-        "name": "motor boat",
-        "shortcodes": [
-            ":motor_boat:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛥️",
+        "emoticons": [],
         "keywords": [
             "boat",
             "motor boat",
             "motorboat"
+        ],
+        "name": "motor boat",
+        "shortcodes": [
+            ":motor_boat:"
         ]
     },
     {
-        "codepoints": "🚢",
-        "name": "ship",
-        "shortcodes": [
-            ":ship:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚢",
+        "emoticons": [],
         "keywords": [
             "boat",
             "passenger",
             "ship"
+        ],
+        "name": "ship",
+        "shortcodes": [
+            ":ship:"
         ]
     },
     {
-        "codepoints": "✈️",
-        "name": "airplane",
-        "shortcodes": [
-            ":airplane:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "✈️",
+        "emoticons": [],
         "keywords": [
             "aeroplane",
             "airplane"
+        ],
+        "name": "airplane",
+        "shortcodes": [
+            ":airplane:"
         ]
     },
     {
-        "codepoints": "🛩️",
-        "name": "small airplane",
-        "shortcodes": [
-            ":small_airplane:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛩️",
+        "emoticons": [],
         "keywords": [
             "aeroplane",
             "airplane",
             "small airplane"
+        ],
+        "name": "small airplane",
+        "shortcodes": [
+            ":small_airplane:"
         ]
     },
     {
-        "codepoints": "🛫",
-        "name": "airplane departure",
-        "shortcodes": [
-            ":airplane_departure:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛫",
+        "emoticons": [],
         "keywords": [
             "aeroplane",
             "airplane",
@@ -13837,16 +12593,16 @@ export const emojisData = JSON.parse(`[
             "departure",
             "departures",
             "take-off"
+        ],
+        "name": "airplane departure",
+        "shortcodes": [
+            ":airplane_departure:"
         ]
     },
     {
-        "codepoints": "🛬",
-        "name": "airplane arrival",
-        "shortcodes": [
-            ":airplane_arrival:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛬",
+        "emoticons": [],
         "keywords": [
             "aeroplane",
             "airplane",
@@ -13854,267 +12610,267 @@ export const emojisData = JSON.parse(`[
             "arrivals",
             "arriving",
             "landing"
+        ],
+        "name": "airplane arrival",
+        "shortcodes": [
+            ":airplane_arrival:"
         ]
     },
     {
-        "codepoints": "🪂",
-        "name": "parachute",
-        "shortcodes": [
-            ":parachute:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🪂",
+        "emoticons": [],
         "keywords": [
             "hang-glide",
             "parachute",
             "parasail",
             "skydive",
             "parascend"
+        ],
+        "name": "parachute",
+        "shortcodes": [
+            ":parachute:"
         ]
     },
     {
-        "codepoints": "💺",
-        "name": "seat",
-        "shortcodes": [
-            ":seat:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "💺",
+        "emoticons": [],
         "keywords": [
             "chair",
             "seat"
+        ],
+        "name": "seat",
+        "shortcodes": [
+            ":seat:"
         ]
     },
     {
-        "codepoints": "🚁",
-        "name": "helicopter",
-        "shortcodes": [
-            ":helicopter:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚁",
+        "emoticons": [],
         "keywords": [
             "helicopter",
             "vehicle"
+        ],
+        "name": "helicopter",
+        "shortcodes": [
+            ":helicopter:"
         ]
     },
     {
-        "codepoints": "🚟",
-        "name": "suspension railway",
-        "shortcodes": [
-            ":suspension_railway:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚟",
+        "emoticons": [],
         "keywords": [
             "cable",
             "railway",
             "suspension"
+        ],
+        "name": "suspension railway",
+        "shortcodes": [
+            ":suspension_railway:"
         ]
     },
     {
-        "codepoints": "🚠",
-        "name": "mountain cableway",
-        "shortcodes": [
-            ":mountain_cableway:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚠",
+        "emoticons": [],
         "keywords": [
             "cable",
             "cableway",
             "gondola",
             "mountain",
             "mountain cableway"
+        ],
+        "name": "mountain cableway",
+        "shortcodes": [
+            ":mountain_cableway:"
         ]
     },
     {
-        "codepoints": "🚡",
-        "name": "aerial tramway",
-        "shortcodes": [
-            ":aerial_tramway:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚡",
+        "emoticons": [],
         "keywords": [
             "aerial",
             "cable",
             "car",
             "gondola",
             "tramway"
+        ],
+        "name": "aerial tramway",
+        "shortcodes": [
+            ":aerial_tramway:"
         ]
     },
     {
-        "codepoints": "🛰️",
-        "name": "satellite",
-        "shortcodes": [
-            ":satellite:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛰️",
+        "emoticons": [],
         "keywords": [
             "satellite",
             "space"
+        ],
+        "name": "satellite",
+        "shortcodes": [
+            ":satellite:"
         ]
     },
     {
-        "codepoints": "🚀",
-        "name": "rocket",
-        "shortcodes": [
-            ":rocket:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🚀",
+        "emoticons": [],
         "keywords": [
             "rocket",
             "space"
+        ],
+        "name": "rocket",
+        "shortcodes": [
+            ":rocket:"
         ]
     },
     {
-        "codepoints": "🛸",
-        "name": "flying saucer",
-        "shortcodes": [
-            ":flying_saucer:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛸",
+        "emoticons": [],
         "keywords": [
             "flying saucer",
             "UFO"
+        ],
+        "name": "flying saucer",
+        "shortcodes": [
+            ":flying_saucer:"
         ]
     },
     {
-        "codepoints": "🛎️",
-        "name": "bellhop bell",
-        "shortcodes": [
-            ":bellhop_bell:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🛎️",
+        "emoticons": [],
         "keywords": [
             "bell",
             "hotel",
             "porter",
             "bellhop"
+        ],
+        "name": "bellhop bell",
+        "shortcodes": [
+            ":bellhop_bell:"
         ]
     },
     {
-        "codepoints": "🧳",
-        "name": "luggage",
-        "shortcodes": [
-            ":luggage:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🧳",
+        "emoticons": [],
         "keywords": [
             "luggage",
             "packing",
             "travel"
+        ],
+        "name": "luggage",
+        "shortcodes": [
+            ":luggage:"
         ]
     },
     {
-        "codepoints": "⌛",
-        "name": "hourglass done",
-        "shortcodes": [
-            ":hourglass_done:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⌛",
+        "emoticons": [],
         "keywords": [
             "hourglass",
             "hourglass done",
             "sand",
             "timer"
+        ],
+        "name": "hourglass done",
+        "shortcodes": [
+            ":hourglass_done:"
         ]
     },
     {
-        "codepoints": "⏳",
-        "name": "hourglass not done",
-        "shortcodes": [
-            ":hourglass_not_done:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⏳",
+        "emoticons": [],
         "keywords": [
             "hourglass",
             "hourglass not done",
             "sand",
             "timer"
+        ],
+        "name": "hourglass not done",
+        "shortcodes": [
+            ":hourglass_not_done:"
         ]
     },
     {
-        "codepoints": "⌚",
-        "name": "watch",
-        "shortcodes": [
-            ":watch:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⌚",
+        "emoticons": [],
         "keywords": [
             "clock",
             "watch"
+        ],
+        "name": "watch",
+        "shortcodes": [
+            ":watch:"
         ]
     },
     {
-        "codepoints": "⏰",
-        "name": "alarm clock",
-        "shortcodes": [
-            ":alarm_clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⏰",
+        "emoticons": [],
         "keywords": [
             "alarm",
             "clock"
+        ],
+        "name": "alarm clock",
+        "shortcodes": [
+            ":alarm_clock:"
         ]
     },
     {
-        "codepoints": "⏱️",
-        "name": "stopwatch",
-        "shortcodes": [
-            ":stopwatch:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⏱️",
+        "emoticons": [],
         "keywords": [
             "clock",
             "stopwatch"
+        ],
+        "name": "stopwatch",
+        "shortcodes": [
+            ":stopwatch:"
         ]
     },
     {
-        "codepoints": "⏲️",
-        "name": "timer clock",
-        "shortcodes": [
-            ":timer_clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⏲️",
+        "emoticons": [],
         "keywords": [
             "clock",
             "timer"
+        ],
+        "name": "timer clock",
+        "shortcodes": [
+            ":timer_clock:"
         ]
     },
     {
-        "codepoints": "🕰️",
-        "name": "mantelpiece clock",
-        "shortcodes": [
-            ":mantelpiece_clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕰️",
+        "emoticons": [],
         "keywords": [
             "clock",
             "mantelpiece clock"
+        ],
+        "name": "mantelpiece clock",
+        "shortcodes": [
+            ":mantelpiece_clock:"
         ]
     },
     {
-        "codepoints": "🕛",
-        "name": "twelve o’clock",
-        "shortcodes": [
-            ":twelve_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕛",
+        "emoticons": [],
         "keywords": [
             "00",
             "12",
@@ -14122,16 +12878,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "o’clock",
             "twelve"
+        ],
+        "name": "twelve o’clock",
+        "shortcodes": [
+            ":twelve_o’clock:"
         ]
     },
     {
-        "codepoints": "🕧",
-        "name": "twelve-thirty",
-        "shortcodes": [
-            ":twelve-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕧",
+        "emoticons": [],
         "keywords": [
             "12",
             "12:30",
@@ -14141,16 +12897,16 @@ export const emojisData = JSON.parse(`[
             "twelve-thirty",
             "half past twelve",
             "12.30"
+        ],
+        "name": "twelve-thirty",
+        "shortcodes": [
+            ":twelve-thirty:"
         ]
     },
     {
-        "codepoints": "🕐",
-        "name": "one o’clock",
-        "shortcodes": [
-            ":one_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕐",
+        "emoticons": [],
         "keywords": [
             "00",
             "1",
@@ -14158,16 +12914,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "o’clock",
             "one"
+        ],
+        "name": "one o’clock",
+        "shortcodes": [
+            ":one_o’clock:"
         ]
     },
     {
-        "codepoints": "🕜",
-        "name": "one-thirty",
-        "shortcodes": [
-            ":one-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕜",
+        "emoticons": [],
         "keywords": [
             "1",
             "1:30",
@@ -14177,16 +12933,16 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past one",
             "1.30"
+        ],
+        "name": "one-thirty",
+        "shortcodes": [
+            ":one-thirty:"
         ]
     },
     {
-        "codepoints": "🕑",
-        "name": "two o’clock",
-        "shortcodes": [
-            ":two_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕑",
+        "emoticons": [],
         "keywords": [
             "00",
             "2",
@@ -14194,16 +12950,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "o’clock",
             "two"
+        ],
+        "name": "two o’clock",
+        "shortcodes": [
+            ":two_o’clock:"
         ]
     },
     {
-        "codepoints": "🕝",
-        "name": "two-thirty",
-        "shortcodes": [
-            ":two-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕝",
+        "emoticons": [],
         "keywords": [
             "2",
             "2:30",
@@ -14213,16 +12969,16 @@ export const emojisData = JSON.parse(`[
             "two-thirty",
             "half past two",
             "2.30"
+        ],
+        "name": "two-thirty",
+        "shortcodes": [
+            ":two-thirty:"
         ]
     },
     {
-        "codepoints": "🕒",
-        "name": "three o’clock",
-        "shortcodes": [
-            ":three_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕒",
+        "emoticons": [],
         "keywords": [
             "00",
             "3",
@@ -14230,16 +12986,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "o’clock",
             "three"
+        ],
+        "name": "three o’clock",
+        "shortcodes": [
+            ":three_o’clock:"
         ]
     },
     {
-        "codepoints": "🕞",
-        "name": "three-thirty",
-        "shortcodes": [
-            ":three-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕞",
+        "emoticons": [],
         "keywords": [
             "3",
             "3:30",
@@ -14249,16 +13005,16 @@ export const emojisData = JSON.parse(`[
             "three-thirty",
             "half past three",
             "3.30"
+        ],
+        "name": "three-thirty",
+        "shortcodes": [
+            ":three-thirty:"
         ]
     },
     {
-        "codepoints": "🕓",
-        "name": "four o’clock",
-        "shortcodes": [
-            ":four_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕓",
+        "emoticons": [],
         "keywords": [
             "00",
             "4",
@@ -14266,16 +13022,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "four",
             "o’clock"
+        ],
+        "name": "four o’clock",
+        "shortcodes": [
+            ":four_o’clock:"
         ]
     },
     {
-        "codepoints": "🕟",
-        "name": "four-thirty",
-        "shortcodes": [
-            ":four-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕟",
+        "emoticons": [],
         "keywords": [
             "4",
             "4:30",
@@ -14285,16 +13041,16 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past four",
             "4.30"
+        ],
+        "name": "four-thirty",
+        "shortcodes": [
+            ":four-thirty:"
         ]
     },
     {
-        "codepoints": "🕔",
-        "name": "five o’clock",
-        "shortcodes": [
-            ":five_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕔",
+        "emoticons": [],
         "keywords": [
             "00",
             "5",
@@ -14302,16 +13058,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "five",
             "o’clock"
+        ],
+        "name": "five o’clock",
+        "shortcodes": [
+            ":five_o’clock:"
         ]
     },
     {
-        "codepoints": "🕠",
-        "name": "five-thirty",
-        "shortcodes": [
-            ":five-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕠",
+        "emoticons": [],
         "keywords": [
             "5",
             "5:30",
@@ -14321,16 +13077,16 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past five",
             "5.30"
+        ],
+        "name": "five-thirty",
+        "shortcodes": [
+            ":five-thirty:"
         ]
     },
     {
-        "codepoints": "🕕",
-        "name": "six o’clock",
-        "shortcodes": [
-            ":six_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕕",
+        "emoticons": [],
         "keywords": [
             "00",
             "6",
@@ -14338,16 +13094,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "o’clock",
             "six"
+        ],
+        "name": "six o’clock",
+        "shortcodes": [
+            ":six_o’clock:"
         ]
     },
     {
-        "codepoints": "🕡",
-        "name": "six-thirty",
-        "shortcodes": [
-            ":six-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕡",
+        "emoticons": [],
         "keywords": [
             "6",
             "6:30",
@@ -14357,16 +13113,16 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past six",
             "6.30"
+        ],
+        "name": "six-thirty",
+        "shortcodes": [
+            ":six-thirty:"
         ]
     },
     {
-        "codepoints": "🕖",
-        "name": "seven o’clock",
-        "shortcodes": [
-            ":seven_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕖",
+        "emoticons": [],
         "keywords": [
             "00",
             "7",
@@ -14374,16 +13130,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "o’clock",
             "seven"
+        ],
+        "name": "seven o’clock",
+        "shortcodes": [
+            ":seven_o’clock:"
         ]
     },
     {
-        "codepoints": "🕢",
-        "name": "seven-thirty",
-        "shortcodes": [
-            ":seven-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕢",
+        "emoticons": [],
         "keywords": [
             "7",
             "7:30",
@@ -14393,16 +13149,16 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past seven",
             "7.30"
+        ],
+        "name": "seven-thirty",
+        "shortcodes": [
+            ":seven-thirty:"
         ]
     },
     {
-        "codepoints": "🕗",
-        "name": "eight o’clock",
-        "shortcodes": [
-            ":eight_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕗",
+        "emoticons": [],
         "keywords": [
             "00",
             "8",
@@ -14410,16 +13166,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "eight",
             "o’clock"
+        ],
+        "name": "eight o’clock",
+        "shortcodes": [
+            ":eight_o’clock:"
         ]
     },
     {
-        "codepoints": "🕣",
-        "name": "eight-thirty",
-        "shortcodes": [
-            ":eight-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕣",
+        "emoticons": [],
         "keywords": [
             "8",
             "8:30",
@@ -14429,16 +13185,16 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past eight",
             "8.30"
+        ],
+        "name": "eight-thirty",
+        "shortcodes": [
+            ":eight-thirty:"
         ]
     },
     {
-        "codepoints": "🕘",
-        "name": "nine o’clock",
-        "shortcodes": [
-            ":nine_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕘",
+        "emoticons": [],
         "keywords": [
             "00",
             "9",
@@ -14446,16 +13202,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "nine",
             "o’clock"
+        ],
+        "name": "nine o’clock",
+        "shortcodes": [
+            ":nine_o’clock:"
         ]
     },
     {
-        "codepoints": "🕤",
-        "name": "nine-thirty",
-        "shortcodes": [
-            ":nine-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕤",
+        "emoticons": [],
         "keywords": [
             "9",
             "9:30",
@@ -14465,16 +13221,16 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past nine",
             "9.30"
+        ],
+        "name": "nine-thirty",
+        "shortcodes": [
+            ":nine-thirty:"
         ]
     },
     {
-        "codepoints": "🕙",
-        "name": "ten o’clock",
-        "shortcodes": [
-            ":ten_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕙",
+        "emoticons": [],
         "keywords": [
             "00",
             "10",
@@ -14482,16 +13238,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "o’clock",
             "ten"
+        ],
+        "name": "ten o’clock",
+        "shortcodes": [
+            ":ten_o’clock:"
         ]
     },
     {
-        "codepoints": "🕥",
-        "name": "ten-thirty",
-        "shortcodes": [
-            ":ten-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕥",
+        "emoticons": [],
         "keywords": [
             "10",
             "10:30",
@@ -14501,16 +13257,16 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past ten",
             "10.30"
+        ],
+        "name": "ten-thirty",
+        "shortcodes": [
+            ":ten-thirty:"
         ]
     },
     {
-        "codepoints": "🕚",
-        "name": "eleven o’clock",
-        "shortcodes": [
-            ":eleven_o’clock:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕚",
+        "emoticons": [],
         "keywords": [
             "00",
             "11",
@@ -14518,16 +13274,16 @@ export const emojisData = JSON.parse(`[
             "clock",
             "eleven",
             "o’clock"
+        ],
+        "name": "eleven o’clock",
+        "shortcodes": [
+            ":eleven_o’clock:"
         ]
     },
     {
-        "codepoints": "🕦",
-        "name": "eleven-thirty",
-        "shortcodes": [
-            ":eleven-thirty:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🕦",
+        "emoticons": [],
         "keywords": [
             "11",
             "11:30",
@@ -14537,269 +13293,269 @@ export const emojisData = JSON.parse(`[
             "thirty",
             "half past eleven",
             "11.30"
+        ],
+        "name": "eleven-thirty",
+        "shortcodes": [
+            ":eleven-thirty:"
         ]
     },
     {
-        "codepoints": "🌑",
-        "name": "new moon",
-        "shortcodes": [
-            ":new_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌑",
+        "emoticons": [],
         "keywords": [
             "dark",
             "moon",
             "new moon"
+        ],
+        "name": "new moon",
+        "shortcodes": [
+            ":new_moon:"
         ]
     },
     {
-        "codepoints": "🌒",
-        "name": "waxing crescent moon",
-        "shortcodes": [
-            ":waxing_crescent_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌒",
+        "emoticons": [],
         "keywords": [
             "crescent",
             "moon",
             "waxing"
+        ],
+        "name": "waxing crescent moon",
+        "shortcodes": [
+            ":waxing_crescent_moon:"
         ]
     },
     {
-        "codepoints": "🌓",
-        "name": "first quarter moon",
-        "shortcodes": [
-            ":first_quarter_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌓",
+        "emoticons": [],
         "keywords": [
             "first quarter moon",
             "moon",
             "quarter"
+        ],
+        "name": "first quarter moon",
+        "shortcodes": [
+            ":first_quarter_moon:"
         ]
     },
     {
-        "codepoints": "🌔",
-        "name": "waxing gibbous moon",
-        "shortcodes": [
-            ":waxing_gibbous_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌔",
+        "emoticons": [],
         "keywords": [
             "gibbous",
             "moon",
             "waxing"
+        ],
+        "name": "waxing gibbous moon",
+        "shortcodes": [
+            ":waxing_gibbous_moon:"
         ]
     },
     {
-        "codepoints": "🌕",
-        "name": "full moon",
-        "shortcodes": [
-            ":full_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌕",
+        "emoticons": [],
         "keywords": [
             "full",
             "moon"
+        ],
+        "name": "full moon",
+        "shortcodes": [
+            ":full_moon:"
         ]
     },
     {
-        "codepoints": "🌖",
-        "name": "waning gibbous moon",
-        "shortcodes": [
-            ":waning_gibbous_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌖",
+        "emoticons": [],
         "keywords": [
             "gibbous",
             "moon",
             "waning"
+        ],
+        "name": "waning gibbous moon",
+        "shortcodes": [
+            ":waning_gibbous_moon:"
         ]
     },
     {
-        "codepoints": "🌗",
-        "name": "last quarter moon",
-        "shortcodes": [
-            ":last_quarter_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌗",
+        "emoticons": [],
         "keywords": [
             "last quarter moon",
             "moon",
             "quarter"
+        ],
+        "name": "last quarter moon",
+        "shortcodes": [
+            ":last_quarter_moon:"
         ]
     },
     {
-        "codepoints": "🌘",
-        "name": "waning crescent moon",
-        "shortcodes": [
-            ":waning_crescent_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌘",
+        "emoticons": [],
         "keywords": [
             "crescent",
             "moon",
             "waning"
+        ],
+        "name": "waning crescent moon",
+        "shortcodes": [
+            ":waning_crescent_moon:"
         ]
     },
     {
-        "codepoints": "🌙",
-        "name": "crescent moon",
-        "shortcodes": [
-            ":crescent_moon:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌙",
+        "emoticons": [],
         "keywords": [
             "crescent",
             "moon"
+        ],
+        "name": "crescent moon",
+        "shortcodes": [
+            ":crescent_moon:"
         ]
     },
     {
-        "codepoints": "🌚",
-        "name": "new moon face",
-        "shortcodes": [
-            ":new_moon_face:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌚",
+        "emoticons": [],
         "keywords": [
             "face",
             "moon",
             "new moon face"
+        ],
+        "name": "new moon face",
+        "shortcodes": [
+            ":new_moon_face:"
         ]
     },
     {
-        "codepoints": "🌛",
-        "name": "first quarter moon face",
-        "shortcodes": [
-            ":first_quarter_moon_face:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌛",
+        "emoticons": [],
         "keywords": [
             "face",
             "first quarter moon face",
             "moon",
             "quarter"
+        ],
+        "name": "first quarter moon face",
+        "shortcodes": [
+            ":first_quarter_moon_face:"
         ]
     },
     {
-        "codepoints": "🌜",
-        "name": "last quarter moon face",
-        "shortcodes": [
-            ":last_quarter_moon_face:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌜",
+        "emoticons": [],
         "keywords": [
             "face",
             "last quarter moon face",
             "moon",
             "quarter"
+        ],
+        "name": "last quarter moon face",
+        "shortcodes": [
+            ":last_quarter_moon_face:"
         ]
     },
     {
-        "codepoints": "🌡️",
-        "name": "thermometer",
-        "shortcodes": [
-            ":thermometer:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌡️",
+        "emoticons": [],
         "keywords": [
             "thermometer",
             "weather"
+        ],
+        "name": "thermometer",
+        "shortcodes": [
+            ":thermometer:"
         ]
     },
     {
-        "codepoints": "☀️",
-        "name": "sun",
-        "shortcodes": [
-            ":sun:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "☀️",
+        "emoticons": [],
         "keywords": [
             "bright",
             "rays",
             "sun",
             "sunny"
+        ],
+        "name": "sun",
+        "shortcodes": [
+            ":sun:"
         ]
     },
     {
-        "codepoints": "🌝",
-        "name": "full moon face",
-        "shortcodes": [
-            ":full_moon_face:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌝",
+        "emoticons": [],
         "keywords": [
             "bright",
             "face",
             "full",
             "moon",
             "full-moon face"
+        ],
+        "name": "full moon face",
+        "shortcodes": [
+            ":full_moon_face:"
         ]
     },
     {
-        "codepoints": "🌞",
-        "name": "sun with face",
-        "shortcodes": [
-            ":sun_with_face:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌞",
+        "emoticons": [],
         "keywords": [
             "bright",
             "face",
             "sun",
             "sun with face"
+        ],
+        "name": "sun with face",
+        "shortcodes": [
+            ":sun_with_face:"
         ]
     },
     {
-        "codepoints": "🪐",
-        "name": "ringed planet",
-        "shortcodes": [
-            ":ringed_planet:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🪐",
+        "emoticons": [],
         "keywords": [
             "ringed planet",
             "saturn",
             "saturnine"
+        ],
+        "name": "ringed planet",
+        "shortcodes": [
+            ":ringed_planet:"
         ]
     },
     {
+        "category": "Travel & Places",
         "codepoints": "⭐",
+        "emoticons": [],
+        "keywords": [
+            "star"
+        ],
         "name": "star",
         "shortcodes": [
             ":star:"
-        ],
-        "emoticons": [],
-        "category": "Travel & Places",
-        "keywords": [
-            "star"
         ]
     },
     {
-        "codepoints": "🌟",
-        "name": "glowing star",
-        "shortcodes": [
-            ":glowing_star:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌟",
+        "emoticons": [],
         "keywords": [
             "glittery",
             "glow",
@@ -14807,290 +13563,290 @@ export const emojisData = JSON.parse(`[
             "shining",
             "sparkle",
             "star"
+        ],
+        "name": "glowing star",
+        "shortcodes": [
+            ":glowing_star:"
         ]
     },
     {
-        "codepoints": "🌠",
-        "name": "shooting star",
-        "shortcodes": [
-            ":shooting_star:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌠",
+        "emoticons": [],
         "keywords": [
             "falling",
             "shooting",
             "star"
+        ],
+        "name": "shooting star",
+        "shortcodes": [
+            ":shooting_star:"
         ]
     },
     {
-        "codepoints": "🌌",
-        "name": "milky way",
-        "shortcodes": [
-            ":milky_way:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌌",
+        "emoticons": [],
         "keywords": [
             "Milky Way",
             "space",
             "milky way",
             "Milky",
             "Way"
+        ],
+        "name": "milky way",
+        "shortcodes": [
+            ":milky_way:"
         ]
     },
     {
-        "codepoints": "☁️",
-        "name": "cloud",
-        "shortcodes": [
-            ":cloud:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "☁️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "weather"
+        ],
+        "name": "cloud",
+        "shortcodes": [
+            ":cloud:"
         ]
     },
     {
-        "codepoints": "⛅",
-        "name": "sun behind cloud",
-        "shortcodes": [
-            ":sun_behind_cloud:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛅",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "sun",
             "sun behind cloud"
+        ],
+        "name": "sun behind cloud",
+        "shortcodes": [
+            ":sun_behind_cloud:"
         ]
     },
     {
-        "codepoints": "⛈️",
-        "name": "cloud with lightning and rain",
-        "shortcodes": [
-            ":cloud_with_lightning_and_rain:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛈️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "cloud with lightning and rain",
             "rain",
             "thunder"
+        ],
+        "name": "cloud with lightning and rain",
+        "shortcodes": [
+            ":cloud_with_lightning_and_rain:"
         ]
     },
     {
-        "codepoints": "🌤️",
-        "name": "sun behind small cloud",
-        "shortcodes": [
-            ":sun_behind_small_cloud:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌤️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "sun",
             "sun behind small cloud"
+        ],
+        "name": "sun behind small cloud",
+        "shortcodes": [
+            ":sun_behind_small_cloud:"
         ]
     },
     {
-        "codepoints": "🌥️",
-        "name": "sun behind large cloud",
-        "shortcodes": [
-            ":sun_behind_large_cloud:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌥️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "sun",
             "sun behind large cloud"
+        ],
+        "name": "sun behind large cloud",
+        "shortcodes": [
+            ":sun_behind_large_cloud:"
         ]
     },
     {
-        "codepoints": "🌦️",
-        "name": "sun behind rain cloud",
-        "shortcodes": [
-            ":sun_behind_rain_cloud:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌦️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "rain",
             "sun",
             "sun behind rain cloud"
+        ],
+        "name": "sun behind rain cloud",
+        "shortcodes": [
+            ":sun_behind_rain_cloud:"
         ]
     },
     {
-        "codepoints": "🌧️",
-        "name": "cloud with rain",
-        "shortcodes": [
-            ":cloud_with_rain:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌧️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "cloud with rain",
             "rain"
+        ],
+        "name": "cloud with rain",
+        "shortcodes": [
+            ":cloud_with_rain:"
         ]
     },
     {
-        "codepoints": "🌨️",
-        "name": "cloud with snow",
-        "shortcodes": [
-            ":cloud_with_snow:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌨️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "cloud with snow",
             "cold",
             "snow"
+        ],
+        "name": "cloud with snow",
+        "shortcodes": [
+            ":cloud_with_snow:"
         ]
     },
     {
-        "codepoints": "🌩️",
-        "name": "cloud with lightning",
-        "shortcodes": [
-            ":cloud_with_lightning:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌩️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "cloud with lightning",
             "lightning"
+        ],
+        "name": "cloud with lightning",
+        "shortcodes": [
+            ":cloud_with_lightning:"
         ]
     },
     {
-        "codepoints": "🌪️",
-        "name": "tornado",
-        "shortcodes": [
-            ":tornado:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌪️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "tornado",
             "whirlwind"
+        ],
+        "name": "tornado",
+        "shortcodes": [
+            ":tornado:"
         ]
     },
     {
-        "codepoints": "🌫️",
-        "name": "fog",
-        "shortcodes": [
-            ":fog:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌫️",
+        "emoticons": [],
         "keywords": [
             "cloud",
             "fog"
+        ],
+        "name": "fog",
+        "shortcodes": [
+            ":fog:"
         ]
     },
     {
-        "codepoints": "🌬️",
-        "name": "wind face",
-        "shortcodes": [
-            ":wind_face:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌬️",
+        "emoticons": [],
         "keywords": [
             "blow",
             "cloud",
             "face",
             "wind"
+        ],
+        "name": "wind face",
+        "shortcodes": [
+            ":wind_face:"
         ]
     },
     {
-        "codepoints": "🌀",
-        "name": "cyclone",
-        "shortcodes": [
-            ":cyclone:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌀",
+        "emoticons": [],
         "keywords": [
             "cyclone",
             "dizzy",
             "hurricane",
             "twister",
             "typhoon"
+        ],
+        "name": "cyclone",
+        "shortcodes": [
+            ":cyclone:"
         ]
     },
     {
-        "codepoints": "🌈",
-        "name": "rainbow",
-        "shortcodes": [
-            ":rainbow:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌈",
+        "emoticons": [],
         "keywords": [
             "rain",
             "rainbow"
+        ],
+        "name": "rainbow",
+        "shortcodes": [
+            ":rainbow:"
         ]
     },
     {
-        "codepoints": "🌂",
-        "name": "closed umbrella",
-        "shortcodes": [
-            ":closed_umbrella:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌂",
+        "emoticons": [],
         "keywords": [
             "closed umbrella",
             "clothing",
             "rain",
             "umbrella"
+        ],
+        "name": "closed umbrella",
+        "shortcodes": [
+            ":closed_umbrella:"
         ]
     },
     {
-        "codepoints": "☂️",
-        "name": "umbrella",
-        "shortcodes": [
-            ":umbrella:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "☂️",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "rain",
             "umbrella"
+        ],
+        "name": "umbrella",
+        "shortcodes": [
+            ":umbrella:"
         ]
     },
     {
-        "codepoints": "☔",
-        "name": "umbrella with rain drops",
-        "shortcodes": [
-            ":umbrella_with_rain_drops:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "☔",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "drop",
             "rain",
             "umbrella",
             "umbrella with rain drops"
+        ],
+        "name": "umbrella with rain drops",
+        "shortcodes": [
+            ":umbrella_with_rain_drops:"
         ]
     },
     {
-        "codepoints": "⛱️",
-        "name": "umbrella on ground",
-        "shortcodes": [
-            ":umbrella_on_ground:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛱️",
+        "emoticons": [],
         "keywords": [
             "beach",
             "sand",
@@ -15098,16 +13854,16 @@ export const emojisData = JSON.parse(`[
             "umbrella",
             "rain",
             "umbrella on ground"
+        ],
+        "name": "umbrella on ground",
+        "shortcodes": [
+            ":umbrella_on_ground:"
         ]
     },
     {
-        "codepoints": "⚡",
-        "name": "high voltage",
-        "shortcodes": [
-            ":high_voltage:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⚡",
+        "emoticons": [],
         "keywords": [
             "danger",
             "electric",
@@ -15115,116 +13871,116 @@ export const emojisData = JSON.parse(`[
             "lightning",
             "voltage",
             "zap"
+        ],
+        "name": "high voltage",
+        "shortcodes": [
+            ":high_voltage:"
         ]
     },
     {
-        "codepoints": "❄️",
-        "name": "snowflake",
-        "shortcodes": [
-            ":snowflake:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "❄️",
+        "emoticons": [],
         "keywords": [
             "cold",
             "snow",
             "snowflake"
+        ],
+        "name": "snowflake",
+        "shortcodes": [
+            ":snowflake:"
         ]
     },
     {
-        "codepoints": "☃️",
-        "name": "snowman",
-        "shortcodes": [
-            ":snowman:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "☃️",
+        "emoticons": [],
         "keywords": [
             "cold",
             "snow",
             "snowman"
+        ],
+        "name": "snowman",
+        "shortcodes": [
+            ":snowman:"
         ]
     },
     {
-        "codepoints": "⛄",
-        "name": "snowman without snow",
-        "shortcodes": [
-            ":snowman_without_snow:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "⛄",
+        "emoticons": [],
         "keywords": [
             "cold",
             "snow",
             "snowman",
             "snowman without snow"
+        ],
+        "name": "snowman without snow",
+        "shortcodes": [
+            ":snowman_without_snow:"
         ]
     },
     {
-        "codepoints": "☄️",
-        "name": "comet",
-        "shortcodes": [
-            ":comet:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "☄️",
+        "emoticons": [],
         "keywords": [
             "comet",
             "space"
+        ],
+        "name": "comet",
+        "shortcodes": [
+            ":comet:"
         ]
     },
     {
-        "codepoints": "🔥",
-        "name": "fire",
-        "shortcodes": [
-            ":fire:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🔥",
+        "emoticons": [],
         "keywords": [
             "fire",
             "flame",
             "tool"
+        ],
+        "name": "fire",
+        "shortcodes": [
+            ":fire:"
         ]
     },
     {
-        "codepoints": "💧",
-        "name": "droplet",
-        "shortcodes": [
-            ":droplet:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "💧",
+        "emoticons": [],
         "keywords": [
             "cold",
             "comic",
             "drop",
             "droplet",
             "sweat"
+        ],
+        "name": "droplet",
+        "shortcodes": [
+            ":droplet:"
         ]
     },
     {
-        "codepoints": "🌊",
-        "name": "water wave",
-        "shortcodes": [
-            ":water_wave:"
-        ],
-        "emoticons": [],
         "category": "Travel & Places",
+        "codepoints": "🌊",
+        "emoticons": [],
         "keywords": [
             "ocean",
             "water",
             "wave"
+        ],
+        "name": "water wave",
+        "shortcodes": [
+            ":water_wave:"
         ]
     },
     {
-        "codepoints": "🎃",
-        "name": "jack-o-lantern",
-        "shortcodes": [
-            ":jack-o-lantern:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎃",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "halloween",
@@ -15233,131 +13989,131 @@ export const emojisData = JSON.parse(`[
             "lantern",
             "Halloween",
             "jack-o’-lantern"
+        ],
+        "name": "jack-o-lantern",
+        "shortcodes": [
+            ":jack-o-lantern:"
         ]
     },
     {
-        "codepoints": "🎄",
-        "name": "Christmas tree",
-        "shortcodes": [
-            ":Christmas_tree:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎄",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "Christmas",
             "tree"
+        ],
+        "name": "Christmas tree",
+        "shortcodes": [
+            ":Christmas_tree:"
         ]
     },
     {
-        "codepoints": "🎆",
-        "name": "fireworks",
-        "shortcodes": [
-            ":fireworks:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎆",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "fireworks"
+        ],
+        "name": "fireworks",
+        "shortcodes": [
+            ":fireworks:"
         ]
     },
     {
-        "codepoints": "🎇",
-        "name": "sparkler",
-        "shortcodes": [
-            ":sparkler:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎇",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "fireworks",
             "sparkle",
             "sparkler"
+        ],
+        "name": "sparkler",
+        "shortcodes": [
+            ":sparkler:"
         ]
     },
     {
-        "codepoints": "🧨",
-        "name": "firecracker",
-        "shortcodes": [
-            ":firecracker:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🧨",
+        "emoticons": [],
         "keywords": [
             "dynamite",
             "explosive",
             "firecracker",
             "fireworks"
+        ],
+        "name": "firecracker",
+        "shortcodes": [
+            ":firecracker:"
         ]
     },
     {
-        "codepoints": "✨",
-        "name": "sparkles",
-        "shortcodes": [
-            ":sparkles:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "✨",
+        "emoticons": [],
         "keywords": [
             "*",
             "sparkle",
             "sparkles",
             "star"
+        ],
+        "name": "sparkles",
+        "shortcodes": [
+            ":sparkles:"
         ]
     },
     {
-        "codepoints": "🎈",
-        "name": "balloon",
-        "shortcodes": [
-            ":balloon:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎈",
+        "emoticons": [],
         "keywords": [
             "balloon",
             "celebration"
+        ],
+        "name": "balloon",
+        "shortcodes": [
+            ":balloon:"
         ]
     },
     {
-        "codepoints": "🎉",
-        "name": "party popper",
-        "shortcodes": [
-            ":party_popper:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎉",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "party",
             "popper",
             "ta-da",
             "tada"
+        ],
+        "name": "party popper",
+        "shortcodes": [
+            ":party_popper:"
         ]
     },
     {
-        "codepoints": "🎊",
-        "name": "confetti ball",
-        "shortcodes": [
-            ":confetti_ball:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎊",
+        "emoticons": [],
         "keywords": [
             "ball",
             "celebration",
             "confetti"
+        ],
+        "name": "confetti ball",
+        "shortcodes": [
+            ":confetti_ball:"
         ]
     },
     {
-        "codepoints": "🎋",
-        "name": "tanabata tree",
-        "shortcodes": [
-            ":tanabata_tree:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎋",
+        "emoticons": [],
         "keywords": [
             "banner",
             "celebration",
@@ -15365,16 +14121,16 @@ export const emojisData = JSON.parse(`[
             "tanabata tree",
             "tree",
             "Tanabata tree"
+        ],
+        "name": "tanabata tree",
+        "shortcodes": [
+            ":tanabata_tree:"
         ]
     },
     {
-        "codepoints": "🎍",
-        "name": "pine decoration",
-        "shortcodes": [
-            ":pine_decoration:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎍",
+        "emoticons": [],
         "keywords": [
             "bamboo",
             "celebration",
@@ -15382,32 +14138,32 @@ export const emojisData = JSON.parse(`[
             "Japanese",
             "pine",
             "pine decoration"
+        ],
+        "name": "pine decoration",
+        "shortcodes": [
+            ":pine_decoration:"
         ]
     },
     {
-        "codepoints": "🎎",
-        "name": "Japanese dolls",
-        "shortcodes": [
-            ":Japanese_dolls:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎎",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "doll",
             "festival",
             "Japanese",
             "Japanese dolls"
+        ],
+        "name": "Japanese dolls",
+        "shortcodes": [
+            ":Japanese_dolls:"
         ]
     },
     {
-        "codepoints": "🎏",
-        "name": "carp streamer",
-        "shortcodes": [
-            ":carp_streamer:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎏",
+        "emoticons": [],
         "keywords": [
             "carp",
             "celebration",
@@ -15415,47 +14171,47 @@ export const emojisData = JSON.parse(`[
             "carp wind sock",
             "Japanese wind socks",
             "koinobori"
+        ],
+        "name": "carp streamer",
+        "shortcodes": [
+            ":carp_streamer:"
         ]
     },
     {
-        "codepoints": "🎐",
-        "name": "wind chime",
-        "shortcodes": [
-            ":wind_chime:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎐",
+        "emoticons": [],
         "keywords": [
             "bell",
             "celebration",
             "chime",
             "wind"
+        ],
+        "name": "wind chime",
+        "shortcodes": [
+            ":wind_chime:"
         ]
     },
     {
-        "codepoints": "🎑",
-        "name": "moon viewing ceremony",
-        "shortcodes": [
-            ":moon_viewing_ceremony:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎑",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "ceremony",
             "moon",
             "moon viewing ceremony",
             "moon-viewing ceremony"
+        ],
+        "name": "moon viewing ceremony",
+        "shortcodes": [
+            ":moon_viewing_ceremony:"
         ]
     },
     {
-        "codepoints": "🧧",
-        "name": "red envelope",
-        "shortcodes": [
-            ":red_envelope:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🧧",
+        "emoticons": [],
         "keywords": [
             "gift",
             "good luck",
@@ -15463,259 +14219,259 @@ export const emojisData = JSON.parse(`[
             "lai see",
             "money",
             "red envelope"
+        ],
+        "name": "red envelope",
+        "shortcodes": [
+            ":red_envelope:"
         ]
     },
     {
-        "codepoints": "🎀",
-        "name": "ribbon",
-        "shortcodes": [
-            ":ribbon:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎀",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "ribbon"
+        ],
+        "name": "ribbon",
+        "shortcodes": [
+            ":ribbon:"
         ]
     },
     {
-        "codepoints": "🎁",
-        "name": "wrapped gift",
-        "shortcodes": [
-            ":wrapped_gift:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎁",
+        "emoticons": [],
         "keywords": [
             "box",
             "celebration",
             "gift",
             "present",
             "wrapped"
+        ],
+        "name": "wrapped gift",
+        "shortcodes": [
+            ":wrapped_gift:"
         ]
     },
     {
-        "codepoints": "🎗️",
-        "name": "reminder ribbon",
-        "shortcodes": [
-            ":reminder_ribbon:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎗️",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "reminder",
             "ribbon"
+        ],
+        "name": "reminder ribbon",
+        "shortcodes": [
+            ":reminder_ribbon:"
         ]
     },
     {
-        "codepoints": "🎟️",
-        "name": "admission tickets",
-        "shortcodes": [
-            ":admission_tickets:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎟️",
+        "emoticons": [],
         "keywords": [
             "admission",
             "admission tickets",
             "entry",
             "ticket"
+        ],
+        "name": "admission tickets",
+        "shortcodes": [
+            ":admission_tickets:"
         ]
     },
     {
-        "codepoints": "🎫",
-        "name": "ticket",
-        "shortcodes": [
-            ":ticket:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎫",
+        "emoticons": [],
         "keywords": [
             "admission",
             "ticket"
+        ],
+        "name": "ticket",
+        "shortcodes": [
+            ":ticket:"
         ]
     },
     {
-        "codepoints": "🎖️",
-        "name": "military medal",
-        "shortcodes": [
-            ":military_medal:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎖️",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "medal",
             "military"
+        ],
+        "name": "military medal",
+        "shortcodes": [
+            ":military_medal:"
         ]
     },
     {
-        "codepoints": "🏆",
-        "name": "trophy",
-        "shortcodes": [
-            ":trophy:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏆",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "prize",
             "trophy"
+        ],
+        "name": "trophy",
+        "shortcodes": [
+            ":trophy:"
         ]
     },
     {
-        "codepoints": "🏅",
-        "name": "sports medal",
-        "shortcodes": [
-            ":sports_medal:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏅",
+        "emoticons": [],
         "keywords": [
             "celebration",
             "medal",
             "sports",
             "sports medal"
+        ],
+        "name": "sports medal",
+        "shortcodes": [
+            ":sports_medal:"
         ]
     },
     {
-        "codepoints": "🥇",
-        "name": "1st place medal",
-        "shortcodes": [
-            ":1st_place_medal:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥇",
+        "emoticons": [],
         "keywords": [
             "1st place medal",
             "first",
             "gold",
             "medal"
+        ],
+        "name": "1st place medal",
+        "shortcodes": [
+            ":1st_place_medal:"
         ]
     },
     {
-        "codepoints": "🥈",
-        "name": "2nd place medal",
-        "shortcodes": [
-            ":2nd_place_medal:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥈",
+        "emoticons": [],
         "keywords": [
             "2nd place medal",
             "medal",
             "second",
             "silver"
+        ],
+        "name": "2nd place medal",
+        "shortcodes": [
+            ":2nd_place_medal:"
         ]
     },
     {
-        "codepoints": "🥉",
-        "name": "3rd place medal",
-        "shortcodes": [
-            ":3rd_place_medal:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥉",
+        "emoticons": [],
         "keywords": [
             "3rd place medal",
             "bronze",
             "medal",
             "third"
+        ],
+        "name": "3rd place medal",
+        "shortcodes": [
+            ":3rd_place_medal:"
         ]
     },
     {
-        "codepoints": "⚽",
-        "name": "soccer ball",
-        "shortcodes": [
-            ":soccer_ball:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "⚽",
+        "emoticons": [],
         "keywords": [
             "ball",
             "football",
             "soccer"
+        ],
+        "name": "soccer ball",
+        "shortcodes": [
+            ":soccer_ball:"
         ]
     },
     {
-        "codepoints": "⚾",
-        "name": "baseball",
-        "shortcodes": [
-            ":baseball:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "⚾",
+        "emoticons": [],
         "keywords": [
             "ball",
             "baseball"
+        ],
+        "name": "baseball",
+        "shortcodes": [
+            ":baseball:"
         ]
     },
     {
-        "codepoints": "🥎",
-        "name": "softball",
-        "shortcodes": [
-            ":softball:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥎",
+        "emoticons": [],
         "keywords": [
             "ball",
             "glove",
             "softball",
             "underarm"
+        ],
+        "name": "softball",
+        "shortcodes": [
+            ":softball:"
         ]
     },
     {
-        "codepoints": "🏀",
-        "name": "basketball",
-        "shortcodes": [
-            ":basketball:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏀",
+        "emoticons": [],
         "keywords": [
             "ball",
             "basketball",
             "hoop"
+        ],
+        "name": "basketball",
+        "shortcodes": [
+            ":basketball:"
         ]
     },
     {
-        "codepoints": "🏐",
-        "name": "volleyball",
-        "shortcodes": [
-            ":volleyball:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏐",
+        "emoticons": [],
         "keywords": [
             "ball",
             "game",
             "volleyball"
+        ],
+        "name": "volleyball",
+        "shortcodes": [
+            ":volleyball:"
         ]
     },
     {
-        "codepoints": "🏈",
-        "name": "american football",
-        "shortcodes": [
-            ":american_football:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏈",
+        "emoticons": [],
         "keywords": [
             "american",
             "ball",
             "football"
+        ],
+        "name": "american football",
+        "shortcodes": [
+            ":american_football:"
         ]
     },
     {
-        "codepoints": "🏉",
-        "name": "rugby football",
-        "shortcodes": [
-            ":rugby_football:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏉",
+        "emoticons": [],
         "keywords": [
             "australian football",
             "rugby ball",
@@ -15724,60 +14480,60 @@ export const emojisData = JSON.parse(`[
             "ball",
             "football",
             "rugby"
+        ],
+        "name": "rugby football",
+        "shortcodes": [
+            ":rugby_football:"
         ]
     },
     {
-        "codepoints": "🎾",
-        "name": "tennis",
-        "shortcodes": [
-            ":tennis:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎾",
+        "emoticons": [],
         "keywords": [
             "ball",
             "racquet",
             "tennis"
+        ],
+        "name": "tennis",
+        "shortcodes": [
+            ":tennis:"
         ]
     },
     {
-        "codepoints": "🥏",
-        "name": "flying disc",
-        "shortcodes": [
-            ":flying_disc:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥏",
+        "emoticons": [],
         "keywords": [
             "flying disc",
             "frisbee",
             "ultimate",
             "Frisbee"
+        ],
+        "name": "flying disc",
+        "shortcodes": [
+            ":flying_disc:"
         ]
     },
     {
-        "codepoints": "🎳",
-        "name": "bowling",
-        "shortcodes": [
-            ":bowling:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎳",
+        "emoticons": [],
         "keywords": [
             "ball",
             "game",
             "tenpin bowling",
             "bowling"
+        ],
+        "name": "bowling",
+        "shortcodes": [
+            ":bowling:"
         ]
     },
     {
-        "codepoints": "🏏",
-        "name": "cricket game",
-        "shortcodes": [
-            ":cricket_game:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏏",
+        "emoticons": [],
         "keywords": [
             "ball",
             "bat",
@@ -15785,63 +14541,63 @@ export const emojisData = JSON.parse(`[
             "game",
             "cricket",
             "cricket match"
+        ],
+        "name": "cricket game",
+        "shortcodes": [
+            ":cricket_game:"
         ]
     },
     {
-        "codepoints": "🏑",
-        "name": "field hockey",
-        "shortcodes": [
-            ":field_hockey:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏑",
+        "emoticons": [],
         "keywords": [
             "ball",
             "field",
             "game",
             "hockey",
             "stick"
+        ],
+        "name": "field hockey",
+        "shortcodes": [
+            ":field_hockey:"
         ]
     },
     {
-        "codepoints": "🏒",
-        "name": "ice hockey",
-        "shortcodes": [
-            ":ice_hockey:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏒",
+        "emoticons": [],
         "keywords": [
             "game",
             "hockey",
             "ice",
             "puck",
             "stick"
+        ],
+        "name": "ice hockey",
+        "shortcodes": [
+            ":ice_hockey:"
         ]
     },
     {
-        "codepoints": "🥍",
-        "name": "lacrosse",
-        "shortcodes": [
-            ":lacrosse:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥍",
+        "emoticons": [],
         "keywords": [
             "ball",
             "goal",
             "lacrosse",
             "stick"
+        ],
+        "name": "lacrosse",
+        "shortcodes": [
+            ":lacrosse:"
         ]
     },
     {
-        "codepoints": "🏓",
-        "name": "ping pong",
-        "shortcodes": [
-            ":ping_pong:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏓",
+        "emoticons": [],
         "keywords": [
             "ball",
             "bat",
@@ -15849,45 +14605,45 @@ export const emojisData = JSON.parse(`[
             "paddle",
             "ping pong",
             "table tennis"
+        ],
+        "name": "ping pong",
+        "shortcodes": [
+            ":ping_pong:"
         ]
     },
     {
-        "codepoints": "🏸",
-        "name": "badminton",
-        "shortcodes": [
-            ":badminton:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🏸",
+        "emoticons": [],
         "keywords": [
             "badminton",
             "birdie",
             "game",
             "racquet",
             "shuttlecock"
+        ],
+        "name": "badminton",
+        "shortcodes": [
+            ":badminton:"
         ]
     },
     {
-        "codepoints": "🥊",
-        "name": "boxing glove",
-        "shortcodes": [
-            ":boxing_glove:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥊",
+        "emoticons": [],
         "keywords": [
             "boxing",
             "glove"
+        ],
+        "name": "boxing glove",
+        "shortcodes": [
+            ":boxing_glove:"
         ]
     },
     {
-        "codepoints": "🥋",
-        "name": "martial arts uniform",
-        "shortcodes": [
-            ":martial_arts_uniform:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥋",
+        "emoticons": [],
         "keywords": [
             "judo",
             "karate",
@@ -15895,135 +14651,135 @@ export const emojisData = JSON.parse(`[
             "martial arts uniform",
             "taekwondo",
             "uniform"
+        ],
+        "name": "martial arts uniform",
+        "shortcodes": [
+            ":martial_arts_uniform:"
         ]
     },
     {
-        "codepoints": "🥅",
-        "name": "goal net",
-        "shortcodes": [
-            ":goal_net:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥅",
+        "emoticons": [],
         "keywords": [
             "goal",
             "goal cage",
             "net"
+        ],
+        "name": "goal net",
+        "shortcodes": [
+            ":goal_net:"
         ]
     },
     {
-        "codepoints": "⛳",
-        "name": "flag in hole",
-        "shortcodes": [
-            ":flag_in_hole:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "⛳",
+        "emoticons": [],
         "keywords": [
             "flag",
             "flag in hole",
             "golf",
             "hole"
+        ],
+        "name": "flag in hole",
+        "shortcodes": [
+            ":flag_in_hole:"
         ]
     },
     {
-        "codepoints": "⛸️",
-        "name": "ice skate",
-        "shortcodes": [
-            ":ice_skate:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "⛸️",
+        "emoticons": [],
         "keywords": [
             "ice",
             "ice skating",
             "skate"
+        ],
+        "name": "ice skate",
+        "shortcodes": [
+            ":ice_skate:"
         ]
     },
     {
-        "codepoints": "🎣",
-        "name": "fishing pole",
-        "shortcodes": [
-            ":fishing_pole:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎣",
+        "emoticons": [],
         "keywords": [
             "fish",
             "fishing",
             "pole",
             "rod",
             "fishing pole"
+        ],
+        "name": "fishing pole",
+        "shortcodes": [
+            ":fishing_pole:"
         ]
     },
     {
-        "codepoints": "🤿",
-        "name": "diving mask",
-        "shortcodes": [
-            ":diving_mask:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🤿",
+        "emoticons": [],
         "keywords": [
             "diving",
             "diving mask",
             "scuba",
             "snorkeling",
             "snorkelling"
+        ],
+        "name": "diving mask",
+        "shortcodes": [
+            ":diving_mask:"
         ]
     },
     {
-        "codepoints": "🎽",
-        "name": "running shirt",
-        "shortcodes": [
-            ":running_shirt:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎽",
+        "emoticons": [],
         "keywords": [
             "athletics",
             "running",
             "sash",
             "shirt"
+        ],
+        "name": "running shirt",
+        "shortcodes": [
+            ":running_shirt:"
         ]
     },
     {
-        "codepoints": "🎿",
-        "name": "skis",
-        "shortcodes": [
-            ":skis:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎿",
+        "emoticons": [],
         "keywords": [
             "ski",
             "skiing",
             "skis",
             "snow"
+        ],
+        "name": "skis",
+        "shortcodes": [
+            ":skis:"
         ]
     },
     {
-        "codepoints": "🛷",
-        "name": "sled",
-        "shortcodes": [
-            ":sled:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🛷",
+        "emoticons": [],
         "keywords": [
             "sled",
             "sledge",
             "sleigh"
+        ],
+        "name": "sled",
+        "shortcodes": [
+            ":sled:"
         ]
     },
     {
-        "codepoints": "🥌",
-        "name": "curling stone",
-        "shortcodes": [
-            ":curling_stone:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🥌",
+        "emoticons": [],
         "keywords": [
             "curling",
             "game",
@@ -16031,16 +14787,16 @@ export const emojisData = JSON.parse(`[
             "stone",
             "curling stone",
             "curling rock"
+        ],
+        "name": "curling stone",
+        "shortcodes": [
+            ":curling_stone:"
         ]
     },
     {
-        "codepoints": "🎯",
-        "name": "bullseye",
-        "shortcodes": [
-            ":bullseye:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎯",
+        "emoticons": [],
         "keywords": [
             "bullseye",
             "dart",
@@ -16048,44 +14804,44 @@ export const emojisData = JSON.parse(`[
             "game",
             "hit",
             "target"
+        ],
+        "name": "bullseye",
+        "shortcodes": [
+            ":bullseye:"
         ]
     },
     {
-        "codepoints": "🪀",
-        "name": "yo-yo",
-        "shortcodes": [
-            ":yo-yo:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🪀",
+        "emoticons": [],
         "keywords": [
             "fluctuate",
             "toy",
             "yo-yo"
+        ],
+        "name": "yo-yo",
+        "shortcodes": [
+            ":yo-yo:"
         ]
     },
     {
-        "codepoints": "🪁",
-        "name": "kite",
-        "shortcodes": [
-            ":kite:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🪁",
+        "emoticons": [],
         "keywords": [
             "fly",
             "kite",
             "soar"
+        ],
+        "name": "kite",
+        "shortcodes": [
+            ":kite:"
         ]
     },
     {
-        "codepoints": "🎱",
-        "name": "pool 8 ball",
-        "shortcodes": [
-            ":pool_8_ball:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎱",
+        "emoticons": [],
         "keywords": [
             "8",
             "ball",
@@ -16093,16 +14849,16 @@ export const emojisData = JSON.parse(`[
             "eight",
             "game",
             "pool 8 ball"
+        ],
+        "name": "pool 8 ball",
+        "shortcodes": [
+            ":pool_8_ball:"
         ]
     },
     {
-        "codepoints": "🔮",
-        "name": "crystal ball",
-        "shortcodes": [
-            ":crystal_ball:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🔮",
+        "emoticons": [],
         "keywords": [
             "ball",
             "crystal",
@@ -16110,31 +14866,16 @@ export const emojisData = JSON.parse(`[
             "fantasy",
             "fortune",
             "tool"
-        ]
-    },
-    {
-        "codepoints": "🪄",
-        "name": "magic wand",
-        "shortcodes": [
-            ":magic_wand:"
         ],
-        "emoticons": [],
-        "category": "Activities",
-        "keywords": [
-            "magic",
-            "magic wand",
-            "witch",
-            "wizard"
+        "name": "crystal ball",
+        "shortcodes": [
+            ":crystal_ball:"
         ]
     },
     {
+        "category": "Activities",
         "codepoints": "🧿",
-        "name": "nazar amulet",
-        "shortcodes": [
-            ":nazar_amulet:"
-        ],
         "emoticons": [],
-        "category": "Activities",
         "keywords": [
             "amulet",
             "charm",
@@ -16144,260 +14885,194 @@ export const emojisData = JSON.parse(`[
             "bead",
             "nazar amulet",
             "evil eye"
-        ]
-    },
-    {
-        "codepoints": "🪬",
-        "name": "hamsa",
-        "shortcodes": [
-            ":hamsa:"
         ],
-        "emoticons": [],
-        "category": "Activities",
-        "keywords": [
-            "amulet",
-            "Fatima",
-            "hamsa",
-            "hand",
-            "Mary",
-            "Miriam",
-            "protection"
+        "name": "nazar amulet",
+        "shortcodes": [
+            ":nazar_amulet:"
         ]
     },
     {
+        "category": "Activities",
         "codepoints": "🎮",
-        "name": "video game",
-        "shortcodes": [
-            ":video_game:"
-        ],
         "emoticons": [],
-        "category": "Activities",
         "keywords": [
             "controller",
             "game",
             "video game"
+        ],
+        "name": "video game",
+        "shortcodes": [
+            ":video_game:"
         ]
     },
     {
-        "codepoints": "🕹️",
-        "name": "joystick",
-        "shortcodes": [
-            ":joystick:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🕹️",
+        "emoticons": [],
         "keywords": [
             "game",
             "joystick",
             "video game"
+        ],
+        "name": "joystick",
+        "shortcodes": [
+            ":joystick:"
         ]
     },
     {
-        "codepoints": "🎰",
-        "name": "slot machine",
-        "shortcodes": [
-            ":slot_machine:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎰",
+        "emoticons": [],
         "keywords": [
             "game",
             "pokie",
             "pokies",
             "slot",
             "slot machine"
+        ],
+        "name": "slot machine",
+        "shortcodes": [
+            ":slot_machine:"
         ]
     },
     {
-        "codepoints": "🎲",
-        "name": "game die",
-        "shortcodes": [
-            ":game_die:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎲",
+        "emoticons": [],
         "keywords": [
             "dice",
             "die",
             "game"
+        ],
+        "name": "game die",
+        "shortcodes": [
+            ":game_die:"
         ]
     },
     {
-        "codepoints": "🧩",
-        "name": "puzzle piece",
-        "shortcodes": [
-            ":puzzle_piece:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🧩",
+        "emoticons": [],
         "keywords": [
             "clue",
             "interlocking",
             "jigsaw",
             "piece",
             "puzzle"
+        ],
+        "name": "puzzle piece",
+        "shortcodes": [
+            ":puzzle_piece:"
         ]
     },
     {
-        "codepoints": "🧸",
-        "name": "teddy bear",
-        "shortcodes": [
-            ":teddy_bear:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🧸",
+        "emoticons": [],
         "keywords": [
             "plaything",
             "plush",
             "stuffed",
             "teddy bear",
             "toy"
-        ]
-    },
-    {
-        "codepoints": "🪅",
-        "name": "piñata",
-        "shortcodes": [
-            ":piñata:"
         ],
-        "emoticons": [],
-        "category": "Activities",
-        "keywords": [
-            "celebration",
-            "party",
-            "piñata"
-        ]
-    },
-    {
-        "codepoints": "🪩",
-        "name": "mirror ball",
+        "name": "teddy bear",
         "shortcodes": [
-            ":mirror_ball:"
-        ],
-        "emoticons": [],
-        "category": "Activities",
-        "keywords": [
-            "dance",
-            "disco",
-            "glitter",
-            "mirror ball",
-            "party"
+            ":teddy_bear:"
         ]
     },
     {
-        "codepoints": "🪆",
-        "name": "nesting dolls",
-        "shortcodes": [
-            ":nesting_dolls:"
-        ],
-        "emoticons": [],
         "category": "Activities",
-        "keywords": [
-            "doll",
-            "nesting",
-            "nesting dolls",
-            "russia",
-            "babushka",
-            "matryoshka",
-            "Russian dolls"
-        ]
-    },
-    {
         "codepoints": "♠️",
-        "name": "spade suit",
-        "shortcodes": [
-            ":spade_suit:"
-        ],
         "emoticons": [],
-        "category": "Activities",
         "keywords": [
             "card",
             "game",
             "spade suit"
+        ],
+        "name": "spade suit",
+        "shortcodes": [
+            ":spade_suit:"
         ]
     },
     {
-        "codepoints": "♥️",
-        "name": "heart suit",
-        "shortcodes": [
-            ":heart_suit:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "♥️",
+        "emoticons": [],
         "keywords": [
             "card",
             "game",
             "heart suit"
+        ],
+        "name": "heart suit",
+        "shortcodes": [
+            ":heart_suit:"
         ]
     },
     {
-        "codepoints": "♦️",
-        "name": "diamond suit",
-        "shortcodes": [
-            ":diamond_suit:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "♦️",
+        "emoticons": [],
         "keywords": [
             "card",
             "diamond suit",
             "diamonds",
             "game"
+        ],
+        "name": "diamond suit",
+        "shortcodes": [
+            ":diamond_suit:"
         ]
     },
     {
-        "codepoints": "♣️",
-        "name": "club suit",
-        "shortcodes": [
-            ":club_suit:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "♣️",
+        "emoticons": [],
         "keywords": [
             "card",
             "club suit",
             "clubs",
             "game"
+        ],
+        "name": "club suit",
+        "shortcodes": [
+            ":club_suit:"
         ]
     },
     {
-        "codepoints": "♟️",
-        "name": "chess pawn",
-        "shortcodes": [
-            ":chess_pawn:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "♟️",
+        "emoticons": [],
         "keywords": [
             "chess",
             "chess pawn",
             "dupe",
             "expendable"
+        ],
+        "name": "chess pawn",
+        "shortcodes": [
+            ":chess_pawn:"
         ]
     },
     {
-        "codepoints": "🃏",
-        "name": "joker",
-        "shortcodes": [
-            ":joker:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🃏",
+        "emoticons": [],
         "keywords": [
             "card",
             "game",
             "joker",
             "wildcard"
+        ],
+        "name": "joker",
+        "shortcodes": [
+            ":joker:"
         ]
     },
     {
-        "codepoints": "🀄",
-        "name": "mahjong red dragon",
-        "shortcodes": [
-            ":mahjong_red_dragon:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🀄",
+        "emoticons": [],
         "keywords": [
             "game",
             "mahjong",
@@ -16405,16 +15080,16 @@ export const emojisData = JSON.parse(`[
             "red",
             "Mahjong",
             "Mahjong red dragon"
+        ],
+        "name": "mahjong red dragon",
+        "shortcodes": [
+            ":mahjong_red_dragon:"
         ]
     },
     {
-        "codepoints": "🎴",
-        "name": "flower playing cards",
-        "shortcodes": [
-            ":flower_playing_cards:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎴",
+        "emoticons": [],
         "keywords": [
             "card",
             "flower",
@@ -16422,16 +15097,16 @@ export const emojisData = JSON.parse(`[
             "game",
             "Japanese",
             "playing"
+        ],
+        "name": "flower playing cards",
+        "shortcodes": [
+            ":flower_playing_cards:"
         ]
     },
     {
-        "codepoints": "🎭",
-        "name": "performing arts",
-        "shortcodes": [
-            ":performing_arts:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎭",
+        "emoticons": [],
         "keywords": [
             "art",
             "mask",
@@ -16439,16 +15114,16 @@ export const emojisData = JSON.parse(`[
             "performing arts",
             "theater",
             "theatre"
+        ],
+        "name": "performing arts",
+        "shortcodes": [
+            ":performing_arts:"
         ]
     },
     {
-        "codepoints": "🖼️",
-        "name": "framed picture",
-        "shortcodes": [
-            ":framed_picture:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🖼️",
+        "emoticons": [],
         "keywords": [
             "art",
             "frame",
@@ -16456,114 +15131,79 @@ export const emojisData = JSON.parse(`[
             "museum",
             "painting",
             "picture"
+        ],
+        "name": "framed picture",
+        "shortcodes": [
+            ":framed_picture:"
         ]
     },
     {
-        "codepoints": "🎨",
-        "name": "artist palette",
-        "shortcodes": [
-            ":artist_palette:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🎨",
+        "emoticons": [],
         "keywords": [
             "art",
             "artist palette",
             "museum",
             "painting",
             "palette"
+        ],
+        "name": "artist palette",
+        "shortcodes": [
+            ":artist_palette:"
         ]
     },
     {
-        "codepoints": "🧵",
-        "name": "thread",
-        "shortcodes": [
-            ":thread:"
-        ],
-        "emoticons": [],
         "category": "Activities",
+        "codepoints": "🧵",
+        "emoticons": [],
         "keywords": [
             "needle",
             "sewing",
             "spool",
             "string",
             "thread"
-        ]
-    },
-    {
-        "codepoints": "🪡",
-        "name": "sewing needle",
-        "shortcodes": [
-            ":sewing_needle:"
         ],
-        "emoticons": [],
-        "category": "Activities",
-        "keywords": [
-            "embroidery",
-            "needle",
-            "needle and thread",
-            "sewing",
-            "stitches",
-            "sutures",
-            "tailoring"
+        "name": "thread",
+        "shortcodes": [
+            ":thread:"
         ]
     },
     {
+        "category": "Activities",
         "codepoints": "🧶",
-        "name": "yarn",
-        "shortcodes": [
-            ":yarn:"
-        ],
         "emoticons": [],
-        "category": "Activities",
         "keywords": [
             "ball",
             "crochet",
             "knit",
             "yarn"
+        ],
+        "name": "yarn",
+        "shortcodes": [
+            ":yarn:"
         ]
     },
     {
-        "codepoints": "🪢",
-        "name": "knot",
-        "shortcodes": [
-            ":knot:"
-        ],
-        "emoticons": [],
-        "category": "Activities",
-        "keywords": [
-            "knot",
-            "rope",
-            "tangled",
-            "tie",
-            "twine",
-            "twist"
-        ]
-    },
-    {
-        "codepoints": "👓",
-        "name": "glasses",
-        "shortcodes": [
-            ":glasses:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👓",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "eye",
             "eyeglasses",
             "eyewear",
             "glasses"
+        ],
+        "name": "glasses",
+        "shortcodes": [
+            ":glasses:"
         ]
     },
     {
-        "codepoints": "🕶️",
-        "name": "sunglasses",
-        "shortcodes": [
-            ":sunglasses:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🕶️",
+        "emoticons": [],
         "keywords": [
             "dark",
             "eye",
@@ -16571,46 +15211,46 @@ export const emojisData = JSON.parse(`[
             "glasses",
             "sunglasses",
             "sunnies"
+        ],
+        "name": "sunglasses",
+        "shortcodes": [
+            ":sunglasses:"
         ]
     },
     {
-        "codepoints": "🥽",
-        "name": "goggles",
-        "shortcodes": [
-            ":goggles:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🥽",
+        "emoticons": [],
         "keywords": [
             "eye protection",
             "goggles",
             "swimming",
             "welding"
+        ],
+        "name": "goggles",
+        "shortcodes": [
+            ":goggles:"
         ]
     },
     {
-        "codepoints": "🥼",
-        "name": "lab coat",
-        "shortcodes": [
-            ":lab_coat:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🥼",
+        "emoticons": [],
         "keywords": [
             "doctor",
             "experiment",
             "lab coat",
             "scientist"
+        ],
+        "name": "lab coat",
+        "shortcodes": [
+            ":lab_coat:"
         ]
     },
     {
-        "codepoints": "🦺",
-        "name": "safety vest",
-        "shortcodes": [
-            ":safety_vest:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🦺",
+        "emoticons": [],
         "keywords": [
             "emergency",
             "safety",
@@ -16619,30 +15259,30 @@ export const emojisData = JSON.parse(`[
             "high-vis",
             "jacket",
             "life jacket"
+        ],
+        "name": "safety vest",
+        "shortcodes": [
+            ":safety_vest:"
         ]
     },
     {
-        "codepoints": "👔",
-        "name": "necktie",
-        "shortcodes": [
-            ":necktie:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👔",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "necktie",
             "tie"
+        ],
+        "name": "necktie",
+        "shortcodes": [
+            ":necktie:"
         ]
     },
     {
-        "codepoints": "👕",
-        "name": "t-shirt",
-        "shortcodes": [
-            ":t-shirt:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👕",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "shirt",
@@ -16651,138 +15291,138 @@ export const emojisData = JSON.parse(`[
             "tee",
             "tshirt",
             "tee-shirt"
+        ],
+        "name": "t-shirt",
+        "shortcodes": [
+            ":t-shirt:"
         ]
     },
     {
-        "codepoints": "👖",
-        "name": "jeans",
-        "shortcodes": [
-            ":jeans:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👖",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "jeans",
             "pants",
             "trousers"
+        ],
+        "name": "jeans",
+        "shortcodes": [
+            ":jeans:"
         ]
     },
     {
-        "codepoints": "🧣",
-        "name": "scarf",
-        "shortcodes": [
-            ":scarf:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧣",
+        "emoticons": [],
         "keywords": [
             "neck",
             "scarf"
+        ],
+        "name": "scarf",
+        "shortcodes": [
+            ":scarf:"
         ]
     },
     {
-        "codepoints": "🧤",
-        "name": "gloves",
-        "shortcodes": [
-            ":gloves:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧤",
+        "emoticons": [],
         "keywords": [
             "gloves",
             "hand"
+        ],
+        "name": "gloves",
+        "shortcodes": [
+            ":gloves:"
         ]
     },
     {
-        "codepoints": "🧥",
-        "name": "coat",
-        "shortcodes": [
-            ":coat:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧥",
+        "emoticons": [],
         "keywords": [
             "coat",
             "jacket"
+        ],
+        "name": "coat",
+        "shortcodes": [
+            ":coat:"
         ]
     },
     {
-        "codepoints": "🧦",
-        "name": "socks",
-        "shortcodes": [
-            ":socks:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧦",
+        "emoticons": [],
         "keywords": [
             "socks",
             "stocking"
+        ],
+        "name": "socks",
+        "shortcodes": [
+            ":socks:"
         ]
     },
     {
-        "codepoints": "👗",
-        "name": "dress",
-        "shortcodes": [
-            ":dress:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👗",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "dress",
             "woman’s clothes"
+        ],
+        "name": "dress",
+        "shortcodes": [
+            ":dress:"
         ]
     },
     {
-        "codepoints": "👘",
-        "name": "kimono",
-        "shortcodes": [
-            ":kimono:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👘",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "kimono"
+        ],
+        "name": "kimono",
+        "shortcodes": [
+            ":kimono:"
         ]
     },
     {
-        "codepoints": "🥻",
-        "name": "sari",
-        "shortcodes": [
-            ":sari:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🥻",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "dress",
             "sari"
+        ],
+        "name": "sari",
+        "shortcodes": [
+            ":sari:"
         ]
     },
     {
-        "codepoints": "🩱",
-        "name": "one-piece swimsuit",
-        "shortcodes": [
-            ":one-piece_swimsuit:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🩱",
+        "emoticons": [],
         "keywords": [
             "bathing suit",
             "one-piece swimsuit",
             "swimming costume"
+        ],
+        "name": "one-piece swimsuit",
+        "shortcodes": [
+            ":one-piece_swimsuit:"
         ]
     },
     {
-        "codepoints": "🩲",
-        "name": "briefs",
-        "shortcodes": [
-            ":briefs:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🩲",
+        "emoticons": [],
         "keywords": [
             "bathers",
             "briefs",
@@ -16792,16 +15432,16 @@ export const emojisData = JSON.parse(`[
             "one-piece",
             "swimsuit",
             "pants"
+        ],
+        "name": "briefs",
+        "shortcodes": [
+            ":briefs:"
         ]
     },
     {
-        "codepoints": "🩳",
-        "name": "shorts",
-        "shortcodes": [
-            ":shorts:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🩳",
+        "emoticons": [],
         "keywords": [
             "bathing suit",
             "boardies",
@@ -16810,63 +15450,63 @@ export const emojisData = JSON.parse(`[
             "swim shorts",
             "underwear",
             "pants"
+        ],
+        "name": "shorts",
+        "shortcodes": [
+            ":shorts:"
         ]
     },
     {
-        "codepoints": "👙",
-        "name": "bikini",
-        "shortcodes": [
-            ":bikini:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👙",
+        "emoticons": [],
         "keywords": [
             "bikini",
             "clothing",
             "swim suit",
             "two-piece",
             "swim"
+        ],
+        "name": "bikini",
+        "shortcodes": [
+            ":bikini:"
         ]
     },
     {
-        "codepoints": "👚",
-        "name": "woman’s clothes",
-        "shortcodes": [
-            ":woman’s_clothes:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👚",
+        "emoticons": [],
         "keywords": [
             "blouse",
             "clothing",
             "top",
             "woman",
             "woman’s clothes"
+        ],
+        "name": "woman’s clothes",
+        "shortcodes": [
+            ":woman’s_clothes:"
         ]
     },
     {
-        "codepoints": "👛",
-        "name": "purse",
-        "shortcodes": [
-            ":purse:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👛",
+        "emoticons": [],
         "keywords": [
             "accessories",
             "coin",
             "purse",
             "clothing"
+        ],
+        "name": "purse",
+        "shortcodes": [
+            ":purse:"
         ]
     },
     {
-        "codepoints": "👜",
-        "name": "handbag",
-        "shortcodes": [
-            ":handbag:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👜",
+        "emoticons": [],
         "keywords": [
             "accessories",
             "bag",
@@ -16874,101 +15514,78 @@ export const emojisData = JSON.parse(`[
             "tote",
             "clothing",
             "purse"
+        ],
+        "name": "handbag",
+        "shortcodes": [
+            ":handbag:"
         ]
     },
     {
-        "codepoints": "👝",
-        "name": "clutch bag",
-        "shortcodes": [
-            ":clutch_bag:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👝",
+        "emoticons": [],
         "keywords": [
             "accessories",
             "bag",
             "clutch bag",
             "pouch",
             "clothing"
+        ],
+        "name": "clutch bag",
+        "shortcodes": [
+            ":clutch_bag:"
         ]
     },
     {
-        "codepoints": "🛍️",
-        "name": "shopping bags",
-        "shortcodes": [
-            ":shopping_bags:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🛍️",
+        "emoticons": [],
         "keywords": [
             "bag",
             "hotel",
             "shopping",
             "shopping bags"
+        ],
+        "name": "shopping bags",
+        "shortcodes": [
+            ":shopping_bags:"
         ]
     },
     {
-        "codepoints": "🎒",
-        "name": "backpack",
-        "shortcodes": [
-            ":backpack:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎒",
+        "emoticons": [],
         "keywords": [
             "backpack",
             "bag",
             "rucksack",
             "satchel",
             "school"
-        ]
-    },
-    {
-        "codepoints": "🩴",
-        "name": "thong sandal",
-        "shortcodes": [
-            ":thong_sandal:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "beach sandals",
-            "sandals",
-            "thong sandal",
-            "thong sandals",
-            "thongs",
-            "zōri",
-            "flip-flop",
-            "beach sandal",
-            "sandal",
-            "thong",
-            "flipflop",
-            "zori"
+        "name": "backpack",
+        "shortcodes": [
+            ":backpack:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "👞",
-        "name": "man’s shoe",
-        "shortcodes": [
-            ":man’s_shoe:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "clothing",
             "man",
             "man’s shoe",
             "shoe"
+        ],
+        "name": "man’s shoe",
+        "shortcodes": [
+            ":man’s_shoe:"
         ]
     },
     {
-        "codepoints": "👟",
-        "name": "running shoe",
-        "shortcodes": [
-            ":running_shoe:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👟",
+        "emoticons": [],
         "keywords": [
             "athletic",
             "clothing",
@@ -16977,199 +15594,183 @@ export const emojisData = JSON.parse(`[
             "shoe",
             "sneaker",
             "trainer"
+        ],
+        "name": "running shoe",
+        "shortcodes": [
+            ":running_shoe:"
         ]
     },
     {
-        "codepoints": "🥾",
-        "name": "hiking boot",
-        "shortcodes": [
-            ":hiking_boot:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🥾",
+        "emoticons": [],
         "keywords": [
             "backpacking",
             "boot",
             "camping",
             "hiking"
+        ],
+        "name": "hiking boot",
+        "shortcodes": [
+            ":hiking_boot:"
         ]
     },
     {
-        "codepoints": "🥿",
-        "name": "flat shoe",
-        "shortcodes": [
-            ":flat_shoe:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🥿",
+        "emoticons": [],
         "keywords": [
             "ballet flat",
             "flat shoe",
             "slip-on",
             "slipper",
             "pump"
+        ],
+        "name": "flat shoe",
+        "shortcodes": [
+            ":flat_shoe:"
         ]
     },
     {
-        "codepoints": "👠",
-        "name": "high-heeled shoe",
-        "shortcodes": [
-            ":high-heeled_shoe:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👠",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "heel",
             "high-heeled shoe",
             "shoe",
             "woman"
+        ],
+        "name": "high-heeled shoe",
+        "shortcodes": [
+            ":high-heeled_shoe:"
         ]
     },
     {
-        "codepoints": "👡",
-        "name": "woman’s sandal",
-        "shortcodes": [
-            ":woman’s_sandal:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👡",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "sandal",
             "shoe",
             "woman",
             "woman’s sandal"
+        ],
+        "name": "woman’s sandal",
+        "shortcodes": [
+            ":woman’s_sandal:"
         ]
     },
     {
-        "codepoints": "🩰",
-        "name": "ballet shoes",
-        "shortcodes": [
-            ":ballet_shoes:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🩰",
+        "emoticons": [],
         "keywords": [
             "ballet",
             "ballet shoes",
             "dance"
+        ],
+        "name": "ballet shoes",
+        "shortcodes": [
+            ":ballet_shoes:"
         ]
     },
     {
-        "codepoints": "👢",
-        "name": "woman’s boot",
-        "shortcodes": [
-            ":woman’s_boot:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👢",
+        "emoticons": [],
         "keywords": [
             "boot",
             "clothing",
             "shoe",
             "woman",
             "woman’s boot"
+        ],
+        "name": "woman’s boot",
+        "shortcodes": [
+            ":woman’s_boot:"
         ]
     },
     {
-        "codepoints": "👑",
-        "name": "crown",
-        "shortcodes": [
-            ":crown:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👑",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "crown",
             "king",
             "queen"
+        ],
+        "name": "crown",
+        "shortcodes": [
+            ":crown:"
         ]
     },
     {
-        "codepoints": "👒",
-        "name": "woman’s hat",
-        "shortcodes": [
-            ":woman’s_hat:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "👒",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "hat",
             "woman",
             "woman’s hat"
+        ],
+        "name": "woman’s hat",
+        "shortcodes": [
+            ":woman’s_hat:"
         ]
     },
     {
-        "codepoints": "🎩",
-        "name": "top hat",
-        "shortcodes": [
-            ":top_hat:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎩",
+        "emoticons": [],
         "keywords": [
             "clothing",
             "hat",
             "top",
             "tophat"
+        ],
+        "name": "top hat",
+        "shortcodes": [
+            ":top_hat:"
         ]
     },
     {
-        "codepoints": "🎓",
-        "name": "graduation cap",
-        "shortcodes": [
-            ":graduation_cap:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎓",
+        "emoticons": [],
         "keywords": [
             "cap",
             "celebration",
             "clothing",
             "graduation",
             "hat"
+        ],
+        "name": "graduation cap",
+        "shortcodes": [
+            ":graduation_cap:"
         ]
     },
     {
-        "codepoints": "🧢",
-        "name": "billed cap",
-        "shortcodes": [
-            ":billed_cap:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧢",
+        "emoticons": [],
         "keywords": [
             "baseball cap",
             "billed cap"
-        ]
-    },
-    {
-        "codepoints": "🪖",
-        "name": "military helmet",
-        "shortcodes": [
-            ":military_helmet:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "army",
-            "helmet",
-            "military",
-            "soldier",
-            "warrior"
+        "name": "billed cap",
+        "shortcodes": [
+            ":billed_cap:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "⛑️",
-        "name": "rescue worker’s helmet",
-        "shortcodes": [
-            ":rescue_worker’s_helmet:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "aid",
             "cross",
@@ -17177,92 +15778,92 @@ export const emojisData = JSON.parse(`[
             "hat",
             "helmet",
             "rescue worker’s helmet"
+        ],
+        "name": "rescue worker’s helmet",
+        "shortcodes": [
+            ":rescue_worker’s_helmet:"
         ]
     },
     {
-        "codepoints": "📿",
-        "name": "prayer beads",
-        "shortcodes": [
-            ":prayer_beads:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📿",
+        "emoticons": [],
         "keywords": [
             "beads",
             "clothing",
             "necklace",
             "prayer",
             "religion"
+        ],
+        "name": "prayer beads",
+        "shortcodes": [
+            ":prayer_beads:"
         ]
     },
     {
-        "codepoints": "💄",
-        "name": "lipstick",
-        "shortcodes": [
-            ":lipstick:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💄",
+        "emoticons": [],
         "keywords": [
             "cosmetics",
             "lipstick",
             "make-up",
             "makeup"
+        ],
+        "name": "lipstick",
+        "shortcodes": [
+            ":lipstick:"
         ]
     },
     {
-        "codepoints": "💍",
-        "name": "ring",
-        "shortcodes": [
-            ":ring:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💍",
+        "emoticons": [],
         "keywords": [
             "diamond",
             "ring"
+        ],
+        "name": "ring",
+        "shortcodes": [
+            ":ring:"
         ]
     },
     {
-        "codepoints": "💎",
-        "name": "gem stone",
-        "shortcodes": [
-            ":gem_stone:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💎",
+        "emoticons": [],
         "keywords": [
             "diamond",
             "gem",
             "gem stone",
             "jewel",
             "gemstone"
+        ],
+        "name": "gem stone",
+        "shortcodes": [
+            ":gem_stone:"
         ]
     },
     {
-        "codepoints": "🔇",
-        "name": "muted speaker",
-        "shortcodes": [
-            ":muted_speaker:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔇",
+        "emoticons": [],
         "keywords": [
             "mute",
             "muted speaker",
             "quiet",
             "silent",
             "speaker"
+        ],
+        "name": "muted speaker",
+        "shortcodes": [
+            ":muted_speaker:"
         ]
     },
     {
-        "codepoints": "🔈",
-        "name": "speaker low volume",
-        "shortcodes": [
-            ":speaker_low_volume:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔈",
+        "emoticons": [],
         "keywords": [
             "low",
             "quiet",
@@ -17270,95 +15871,95 @@ export const emojisData = JSON.parse(`[
             "speaker",
             "volume",
             "speaker low volume"
+        ],
+        "name": "speaker low volume",
+        "shortcodes": [
+            ":speaker_low_volume:"
         ]
     },
     {
-        "codepoints": "🔉",
-        "name": "speaker medium volume",
-        "shortcodes": [
-            ":speaker_medium_volume:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔉",
+        "emoticons": [],
         "keywords": [
             "medium",
             "speaker medium volume"
+        ],
+        "name": "speaker medium volume",
+        "shortcodes": [
+            ":speaker_medium_volume:"
         ]
     },
     {
-        "codepoints": "🔊",
-        "name": "speaker high volume",
-        "shortcodes": [
-            ":speaker_high_volume:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔊",
+        "emoticons": [],
         "keywords": [
             "loud",
             "speaker high volume"
+        ],
+        "name": "speaker high volume",
+        "shortcodes": [
+            ":speaker_high_volume:"
         ]
     },
     {
-        "codepoints": "📢",
-        "name": "loudspeaker",
-        "shortcodes": [
-            ":loudspeaker:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📢",
+        "emoticons": [],
         "keywords": [
             "loud",
             "loudspeaker",
             "public address"
+        ],
+        "name": "loudspeaker",
+        "shortcodes": [
+            ":loudspeaker:"
         ]
     },
     {
-        "codepoints": "📣",
-        "name": "megaphone",
-        "shortcodes": [
-            ":megaphone:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📣",
+        "emoticons": [],
         "keywords": [
             "cheering",
             "megaphone"
+        ],
+        "name": "megaphone",
+        "shortcodes": [
+            ":megaphone:"
         ]
     },
     {
-        "codepoints": "📯",
-        "name": "postal horn",
-        "shortcodes": [
-            ":postal_horn:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📯",
+        "emoticons": [],
         "keywords": [
             "horn",
             "post",
             "postal"
+        ],
+        "name": "postal horn",
+        "shortcodes": [
+            ":postal_horn:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🔔",
+        "emoticons": [],
+        "keywords": [
+            "bell"
+        ],
         "name": "bell",
         "shortcodes": [
             ":bell:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "bell"
         ]
     },
     {
-        "codepoints": "🔕",
-        "name": "bell with slash",
-        "shortcodes": [
-            ":bell_with_slash:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔕",
+        "emoticons": [],
         "keywords": [
             "bell",
             "bell with slash",
@@ -17366,188 +15967,174 @@ export const emojisData = JSON.parse(`[
             "mute",
             "quiet",
             "silent"
+        ],
+        "name": "bell with slash",
+        "shortcodes": [
+            ":bell_with_slash:"
         ]
     },
     {
-        "codepoints": "🎼",
-        "name": "musical score",
-        "shortcodes": [
-            ":musical_score:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎼",
+        "emoticons": [],
         "keywords": [
             "music",
             "musical score",
             "score"
+        ],
+        "name": "musical score",
+        "shortcodes": [
+            ":musical_score:"
         ]
     },
     {
-        "codepoints": "🎵",
-        "name": "musical note",
-        "shortcodes": [
-            ":musical_note:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎵",
+        "emoticons": [],
         "keywords": [
             "music",
             "musical note",
             "note"
+        ],
+        "name": "musical note",
+        "shortcodes": [
+            ":musical_note:"
         ]
     },
     {
-        "codepoints": "🎶",
-        "name": "musical notes",
-        "shortcodes": [
-            ":musical_notes:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎶",
+        "emoticons": [],
         "keywords": [
             "music",
             "musical notes",
             "note",
             "notes"
+        ],
+        "name": "musical notes",
+        "shortcodes": [
+            ":musical_notes:"
         ]
     },
     {
-        "codepoints": "🎙️",
-        "name": "studio microphone",
-        "shortcodes": [
-            ":studio_microphone:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎙️",
+        "emoticons": [],
         "keywords": [
             "mic",
             "microphone",
             "music",
             "studio"
+        ],
+        "name": "studio microphone",
+        "shortcodes": [
+            ":studio_microphone:"
         ]
     },
     {
-        "codepoints": "🎚️",
-        "name": "level slider",
-        "shortcodes": [
-            ":level_slider:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎚️",
+        "emoticons": [],
         "keywords": [
             "level",
             "music",
             "slider"
+        ],
+        "name": "level slider",
+        "shortcodes": [
+            ":level_slider:"
         ]
     },
     {
-        "codepoints": "🎛️",
-        "name": "control knobs",
-        "shortcodes": [
-            ":control_knobs:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎛️",
+        "emoticons": [],
         "keywords": [
             "control",
             "knobs",
             "music"
+        ],
+        "name": "control knobs",
+        "shortcodes": [
+            ":control_knobs:"
         ]
     },
     {
-        "codepoints": "🎤",
-        "name": "microphone",
-        "shortcodes": [
-            ":microphone:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎤",
+        "emoticons": [],
         "keywords": [
             "karaoke",
             "mic",
             "microphone"
+        ],
+        "name": "microphone",
+        "shortcodes": [
+            ":microphone:"
         ]
     },
     {
-        "codepoints": "🎧",
-        "name": "headphone",
-        "shortcodes": [
-            ":headphone:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎧",
+        "emoticons": [],
         "keywords": [
             "earbud",
             "headphone"
+        ],
+        "name": "headphone",
+        "shortcodes": [
+            ":headphone:"
         ]
     },
     {
-        "codepoints": "📻",
-        "name": "radio",
-        "shortcodes": [
-            ":radio:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📻",
+        "emoticons": [],
         "keywords": [
             "AM",
             "FM",
             "radio",
             "wireless",
             "video"
+        ],
+        "name": "radio",
+        "shortcodes": [
+            ":radio:"
         ]
     },
     {
-        "codepoints": "🎷",
-        "name": "saxophone",
-        "shortcodes": [
-            ":saxophone:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎷",
+        "emoticons": [],
         "keywords": [
             "instrument",
             "music",
             "sax",
             "saxophone"
-        ]
-    },
-    {
-        "codepoints": "🪗",
-        "name": "accordion",
-        "shortcodes": [
-            ":accordion:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "accordion",
-            "concertina",
-            "squeeze box"
+        "name": "saxophone",
+        "shortcodes": [
+            ":saxophone:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🎸",
-        "name": "guitar",
-        "shortcodes": [
-            ":guitar:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "guitar",
             "instrument",
             "music"
+        ],
+        "name": "guitar",
+        "shortcodes": [
+            ":guitar:"
         ]
     },
     {
-        "codepoints": "🎹",
-        "name": "musical keyboard",
-        "shortcodes": [
-            ":musical_keyboard:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎹",
+        "emoticons": [],
         "keywords": [
             "instrument",
             "keyboard",
@@ -17555,104 +16142,88 @@ export const emojisData = JSON.parse(`[
             "musical keyboard",
             "organ",
             "piano"
+        ],
+        "name": "musical keyboard",
+        "shortcodes": [
+            ":musical_keyboard:"
         ]
     },
     {
-        "codepoints": "🎺",
-        "name": "trumpet",
-        "shortcodes": [
-            ":trumpet:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎺",
+        "emoticons": [],
         "keywords": [
             "instrument",
             "music",
             "trumpet"
+        ],
+        "name": "trumpet",
+        "shortcodes": [
+            ":trumpet:"
         ]
     },
     {
-        "codepoints": "🎻",
-        "name": "violin",
-        "shortcodes": [
-            ":violin:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎻",
+        "emoticons": [],
         "keywords": [
             "instrument",
             "music",
             "violin"
+        ],
+        "name": "violin",
+        "shortcodes": [
+            ":violin:"
         ]
     },
     {
-        "codepoints": "🪕",
-        "name": "banjo",
-        "shortcodes": [
-            ":banjo:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🪕",
+        "emoticons": [],
         "keywords": [
             "banjo",
             "music",
             "stringed"
+        ],
+        "name": "banjo",
+        "shortcodes": [
+            ":banjo:"
         ]
     },
     {
-        "codepoints": "🥁",
-        "name": "drum",
-        "shortcodes": [
-            ":drum:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🥁",
+        "emoticons": [],
         "keywords": [
             "drum",
             "drumsticks",
             "music",
             "percussions"
-        ]
-    },
-    {
-        "codepoints": "🪘",
-        "name": "long drum",
-        "shortcodes": [
-            ":long_drum:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "beat",
-            "conga",
-            "drum",
-            "long drum",
-            "rhythm"
+        "name": "drum",
+        "shortcodes": [
+            ":drum:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "📱",
-        "name": "mobile phone",
-        "shortcodes": [
-            ":mobile_phone:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "cell",
             "mobile",
             "phone",
             "telephone"
+        ],
+        "name": "mobile phone",
+        "shortcodes": [
+            ":mobile_phone:"
         ]
     },
     {
-        "codepoints": "📲",
-        "name": "mobile phone with arrow",
-        "shortcodes": [
-            ":mobile_phone_with_arrow:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📲",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "cell",
@@ -17660,235 +16231,221 @@ export const emojisData = JSON.parse(`[
             "mobile phone with arrow",
             "phone",
             "receive"
+        ],
+        "name": "mobile phone with arrow",
+        "shortcodes": [
+            ":mobile_phone_with_arrow:"
         ]
     },
     {
-        "codepoints": "☎️",
-        "name": "telephone",
-        "shortcodes": [
-            ":telephone:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "☎️",
+        "emoticons": [],
         "keywords": [
             "landline",
             "phone",
             "telephone"
+        ],
+        "name": "telephone",
+        "shortcodes": [
+            ":telephone:"
         ]
     },
     {
-        "codepoints": "📞",
-        "name": "telephone receiver",
-        "shortcodes": [
-            ":telephone_receiver:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📞",
+        "emoticons": [],
         "keywords": [
             "phone",
             "receiver",
             "telephone"
+        ],
+        "name": "telephone receiver",
+        "shortcodes": [
+            ":telephone_receiver:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "📟",
+        "emoticons": [],
+        "keywords": [
+            "pager"
+        ],
         "name": "pager",
         "shortcodes": [
             ":pager:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "pager"
         ]
     },
     {
-        "codepoints": "📠",
-        "name": "fax machine",
-        "shortcodes": [
-            ":fax_machine:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📠",
+        "emoticons": [],
         "keywords": [
             "fax",
             "fax machine"
+        ],
+        "name": "fax machine",
+        "shortcodes": [
+            ":fax_machine:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🔋",
+        "emoticons": [],
+        "keywords": [
+            "battery"
+        ],
         "name": "battery",
         "shortcodes": [
             ":battery:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "battery"
         ]
     },
     {
-        "codepoints": "🪫",
-        "name": "low battery",
-        "shortcodes": [
-            ":low_battery:"
-        ],
-        "emoticons": [],
         "category": "Objects",
-        "keywords": [
-            "electronic",
-            "low battery",
-            "low energy"
-        ]
-    },
-    {
         "codepoints": "🔌",
-        "name": "electric plug",
-        "shortcodes": [
-            ":electric_plug:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "electric",
             "electricity",
             "plug"
+        ],
+        "name": "electric plug",
+        "shortcodes": [
+            ":electric_plug:"
         ]
     },
     {
-        "codepoints": "💻",
-        "name": "laptop",
-        "shortcodes": [
-            ":laptop:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💻",
+        "emoticons": [],
         "keywords": [
             "computer",
             "laptop",
             "PC",
             "personal",
             "pc"
+        ],
+        "name": "laptop",
+        "shortcodes": [
+            ":laptop:"
         ]
     },
     {
-        "codepoints": "🖥️",
-        "name": "desktop computer",
-        "shortcodes": [
-            ":desktop_computer:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🖥️",
+        "emoticons": [],
         "keywords": [
             "computer",
             "desktop"
+        ],
+        "name": "desktop computer",
+        "shortcodes": [
+            ":desktop_computer:"
         ]
     },
     {
-        "codepoints": "🖨️",
-        "name": "printer",
-        "shortcodes": [
-            ":printer:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🖨️",
+        "emoticons": [],
         "keywords": [
             "computer",
             "printer"
+        ],
+        "name": "printer",
+        "shortcodes": [
+            ":printer:"
         ]
     },
     {
-        "codepoints": "⌨️",
-        "name": "keyboard",
-        "shortcodes": [
-            ":keyboard:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "⌨️",
+        "emoticons": [],
         "keywords": [
             "computer",
             "keyboard"
+        ],
+        "name": "keyboard",
+        "shortcodes": [
+            ":keyboard:"
         ]
     },
     {
-        "codepoints": "🖱️",
-        "name": "computer mouse",
-        "shortcodes": [
-            ":computer_mouse:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🖱️",
+        "emoticons": [],
         "keywords": [
             "computer",
             "computer mouse"
+        ],
+        "name": "computer mouse",
+        "shortcodes": [
+            ":computer_mouse:"
         ]
     },
     {
-        "codepoints": "🖲️",
-        "name": "trackball",
-        "shortcodes": [
-            ":trackball:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🖲️",
+        "emoticons": [],
         "keywords": [
             "computer",
             "trackball"
+        ],
+        "name": "trackball",
+        "shortcodes": [
+            ":trackball:"
         ]
     },
     {
-        "codepoints": "💽",
-        "name": "computer disk",
-        "shortcodes": [
-            ":computer_disk:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💽",
+        "emoticons": [],
         "keywords": [
             "computer",
             "disk",
             "minidisk",
             "optical"
+        ],
+        "name": "computer disk",
+        "shortcodes": [
+            ":computer_disk:"
         ]
     },
     {
-        "codepoints": "💾",
-        "name": "floppy disk",
-        "shortcodes": [
-            ":floppy_disk:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💾",
+        "emoticons": [],
         "keywords": [
             "computer",
             "disk",
             "diskette",
             "floppy"
+        ],
+        "name": "floppy disk",
+        "shortcodes": [
+            ":floppy_disk:"
         ]
     },
     {
-        "codepoints": "💿",
-        "name": "optical disk",
-        "shortcodes": [
-            ":optical_disk:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💿",
+        "emoticons": [],
         "keywords": [
             "CD",
             "computer",
             "disk",
             "optical"
+        ],
+        "name": "optical disk",
+        "shortcodes": [
+            ":optical_disk:"
         ]
     },
     {
-        "codepoints": "📀",
-        "name": "dvd",
-        "shortcodes": [
-            ":dvd:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📀",
+        "emoticons": [],
         "keywords": [
             "blu-ray",
             "computer",
@@ -17897,207 +16454,207 @@ export const emojisData = JSON.parse(`[
             "DVD",
             "optical",
             "Blu-ray"
+        ],
+        "name": "dvd",
+        "shortcodes": [
+            ":dvd:"
         ]
     },
     {
-        "codepoints": "🧮",
-        "name": "abacus",
-        "shortcodes": [
-            ":abacus:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧮",
+        "emoticons": [],
         "keywords": [
             "abacus",
             "calculation"
+        ],
+        "name": "abacus",
+        "shortcodes": [
+            ":abacus:"
         ]
     },
     {
-        "codepoints": "🎥",
-        "name": "movie camera",
-        "shortcodes": [
-            ":movie_camera:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎥",
+        "emoticons": [],
         "keywords": [
             "camera",
             "cinema",
             "movie"
+        ],
+        "name": "movie camera",
+        "shortcodes": [
+            ":movie_camera:"
         ]
     },
     {
-        "codepoints": "🎞️",
-        "name": "film frames",
-        "shortcodes": [
-            ":film_frames:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎞️",
+        "emoticons": [],
         "keywords": [
             "cinema",
             "film",
             "frames",
             "movie"
+        ],
+        "name": "film frames",
+        "shortcodes": [
+            ":film_frames:"
         ]
     },
     {
-        "codepoints": "📽️",
-        "name": "film projector",
-        "shortcodes": [
-            ":film_projector:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📽️",
+        "emoticons": [],
         "keywords": [
             "cinema",
             "film",
             "movie",
             "projector",
             "video"
+        ],
+        "name": "film projector",
+        "shortcodes": [
+            ":film_projector:"
         ]
     },
     {
-        "codepoints": "🎬",
-        "name": "clapper board",
-        "shortcodes": [
-            ":clapper_board:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🎬",
+        "emoticons": [],
         "keywords": [
             "clapper",
             "clapper board",
             "clapperboard",
             "film",
             "movie"
+        ],
+        "name": "clapper board",
+        "shortcodes": [
+            ":clapper_board:"
         ]
     },
     {
-        "codepoints": "📺",
-        "name": "television",
-        "shortcodes": [
-            ":television:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📺",
+        "emoticons": [],
         "keywords": [
             "television",
             "TV",
             "video",
             "tv"
+        ],
+        "name": "television",
+        "shortcodes": [
+            ":television:"
         ]
     },
     {
-        "codepoints": "📷",
-        "name": "camera",
-        "shortcodes": [
-            ":camera:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📷",
+        "emoticons": [],
         "keywords": [
             "camera",
             "video"
+        ],
+        "name": "camera",
+        "shortcodes": [
+            ":camera:"
         ]
     },
     {
-        "codepoints": "📸",
-        "name": "camera with flash",
-        "shortcodes": [
-            ":camera_with_flash:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📸",
+        "emoticons": [],
         "keywords": [
             "camera",
             "camera with flash",
             "flash",
             "video"
+        ],
+        "name": "camera with flash",
+        "shortcodes": [
+            ":camera_with_flash:"
         ]
     },
     {
-        "codepoints": "📹",
-        "name": "video camera",
-        "shortcodes": [
-            ":video_camera:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📹",
+        "emoticons": [],
         "keywords": [
             "camera",
             "video"
+        ],
+        "name": "video camera",
+        "shortcodes": [
+            ":video_camera:"
         ]
     },
     {
-        "codepoints": "📼",
-        "name": "videocassette",
-        "shortcodes": [
-            ":videocassette:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📼",
+        "emoticons": [],
         "keywords": [
             "tape",
             "VHS",
             "video",
             "videocassette",
             "vhs"
+        ],
+        "name": "videocassette",
+        "shortcodes": [
+            ":videocassette:"
         ]
     },
     {
-        "codepoints": "🔍",
-        "name": "magnifying glass tilted left",
-        "shortcodes": [
-            ":magnifying_glass_tilted_left:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔍",
+        "emoticons": [],
         "keywords": [
             "glass",
             "magnifying",
             "magnifying glass tilted left",
             "search",
             "tool"
+        ],
+        "name": "magnifying glass tilted left",
+        "shortcodes": [
+            ":magnifying_glass_tilted_left:"
         ]
     },
     {
-        "codepoints": "🔎",
-        "name": "magnifying glass tilted right",
-        "shortcodes": [
-            ":magnifying_glass_tilted_right:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔎",
+        "emoticons": [],
         "keywords": [
             "glass",
             "magnifying",
             "magnifying glass tilted right",
             "search",
             "tool"
+        ],
+        "name": "magnifying glass tilted right",
+        "shortcodes": [
+            ":magnifying_glass_tilted_right:"
         ]
     },
     {
-        "codepoints": "🕯️",
-        "name": "candle",
-        "shortcodes": [
-            ":candle:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🕯️",
+        "emoticons": [],
         "keywords": [
             "candle",
             "light"
+        ],
+        "name": "candle",
+        "shortcodes": [
+            ":candle:"
         ]
     },
     {
-        "codepoints": "💡",
-        "name": "light bulb",
-        "shortcodes": [
-            ":light_bulb:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💡",
+        "emoticons": [],
         "keywords": [
             "bulb",
             "comic",
@@ -18105,325 +16662,308 @@ export const emojisData = JSON.parse(`[
             "globe",
             "idea",
             "light"
+        ],
+        "name": "light bulb",
+        "shortcodes": [
+            ":light_bulb:"
         ]
     },
     {
-        "codepoints": "🔦",
-        "name": "flashlight",
-        "shortcodes": [
-            ":flashlight:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔦",
+        "emoticons": [],
         "keywords": [
             "electric",
             "flashlight",
             "light",
             "tool",
             "torch"
+        ],
+        "name": "flashlight",
+        "shortcodes": [
+            ":flashlight:"
         ]
     },
     {
-        "codepoints": "🏮",
-        "name": "red paper lantern",
-        "shortcodes": [
-            ":red_paper_lantern:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🏮",
+        "emoticons": [],
         "keywords": [
             "bar",
             "lantern",
             "light",
             "red",
             "red paper lantern"
+        ],
+        "name": "red paper lantern",
+        "shortcodes": [
+            ":red_paper_lantern:"
         ]
     },
     {
-        "codepoints": "🪔",
-        "name": "diya lamp",
-        "shortcodes": [
-            ":diya_lamp:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🪔",
+        "emoticons": [],
         "keywords": [
             "diya",
             "lamp",
             "oil"
+        ],
+        "name": "diya lamp",
+        "shortcodes": [
+            ":diya_lamp:"
         ]
     },
     {
-        "codepoints": "📔",
-        "name": "notebook with decorative cover",
-        "shortcodes": [
-            ":notebook_with_decorative_cover:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📔",
+        "emoticons": [],
         "keywords": [
             "book",
             "cover",
             "decorated",
             "notebook",
             "notebook with decorative cover"
+        ],
+        "name": "notebook with decorative cover",
+        "shortcodes": [
+            ":notebook_with_decorative_cover:"
         ]
     },
     {
-        "codepoints": "📕",
-        "name": "closed book",
-        "shortcodes": [
-            ":closed_book:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📕",
+        "emoticons": [],
         "keywords": [
             "book",
             "closed"
+        ],
+        "name": "closed book",
+        "shortcodes": [
+            ":closed_book:"
         ]
     },
     {
-        "codepoints": "📖",
-        "name": "open book",
-        "shortcodes": [
-            ":open_book:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📖",
+        "emoticons": [],
         "keywords": [
             "book",
             "open"
+        ],
+        "name": "open book",
+        "shortcodes": [
+            ":open_book:"
         ]
     },
     {
-        "codepoints": "📗",
-        "name": "green book",
-        "shortcodes": [
-            ":green_book:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📗",
+        "emoticons": [],
         "keywords": [
             "book",
             "green"
+        ],
+        "name": "green book",
+        "shortcodes": [
+            ":green_book:"
         ]
     },
     {
-        "codepoints": "📘",
-        "name": "blue book",
-        "shortcodes": [
-            ":blue_book:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📘",
+        "emoticons": [],
         "keywords": [
             "blue",
             "book"
+        ],
+        "name": "blue book",
+        "shortcodes": [
+            ":blue_book:"
         ]
     },
     {
-        "codepoints": "📙",
-        "name": "orange book",
-        "shortcodes": [
-            ":orange_book:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📙",
+        "emoticons": [],
         "keywords": [
             "book",
             "orange"
+        ],
+        "name": "orange book",
+        "shortcodes": [
+            ":orange_book:"
         ]
     },
     {
-        "codepoints": "📚",
-        "name": "books",
-        "shortcodes": [
-            ":books:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📚",
+        "emoticons": [],
         "keywords": [
             "book",
             "books"
+        ],
+        "name": "books",
+        "shortcodes": [
+            ":books:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "📓",
+        "emoticons": [],
+        "keywords": [
+            "notebook"
+        ],
         "name": "notebook",
         "shortcodes": [
             ":notebook:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "notebook"
         ]
     },
     {
-        "codepoints": "📒",
-        "name": "ledger",
-        "shortcodes": [
-            ":ledger:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📒",
+        "emoticons": [],
         "keywords": [
             "ledger",
             "notebook"
+        ],
+        "name": "ledger",
+        "shortcodes": [
+            ":ledger:"
         ]
     },
     {
-        "codepoints": "📃",
-        "name": "page with curl",
-        "shortcodes": [
-            ":page_with_curl:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📃",
+        "emoticons": [],
         "keywords": [
             "curl",
             "document",
             "page",
             "page with curl"
+        ],
+        "name": "page with curl",
+        "shortcodes": [
+            ":page_with_curl:"
         ]
     },
     {
-        "codepoints": "📜",
-        "name": "scroll",
-        "shortcodes": [
-            ":scroll:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📜",
+        "emoticons": [],
         "keywords": [
             "paper",
             "scroll"
+        ],
+        "name": "scroll",
+        "shortcodes": [
+            ":scroll:"
         ]
     },
     {
-        "codepoints": "📄",
-        "name": "page facing up",
-        "shortcodes": [
-            ":page_facing_up:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📄",
+        "emoticons": [],
         "keywords": [
             "document",
             "page",
             "page facing up"
+        ],
+        "name": "page facing up",
+        "shortcodes": [
+            ":page_facing_up:"
         ]
     },
     {
-        "codepoints": "📰",
-        "name": "newspaper",
-        "shortcodes": [
-            ":newspaper:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📰",
+        "emoticons": [],
         "keywords": [
             "news",
             "newspaper",
             "paper"
+        ],
+        "name": "newspaper",
+        "shortcodes": [
+            ":newspaper:"
         ]
     },
     {
-        "codepoints": "🗞️",
-        "name": "rolled-up newspaper",
-        "shortcodes": [
-            ":rolled-up_newspaper:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗞️",
+        "emoticons": [],
         "keywords": [
             "news",
             "newspaper",
             "paper",
             "rolled",
             "rolled-up newspaper"
+        ],
+        "name": "rolled-up newspaper",
+        "shortcodes": [
+            ":rolled-up_newspaper:"
         ]
     },
     {
-        "codepoints": "📑",
-        "name": "bookmark tabs",
-        "shortcodes": [
-            ":bookmark_tabs:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📑",
+        "emoticons": [],
         "keywords": [
             "bookmark",
             "mark",
             "marker",
             "tabs"
+        ],
+        "name": "bookmark tabs",
+        "shortcodes": [
+            ":bookmark_tabs:"
         ]
     },
     {
-        "codepoints": "🔖",
-        "name": "bookmark",
-        "shortcodes": [
-            ":bookmark:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔖",
+        "emoticons": [],
         "keywords": [
             "bookmark",
             "mark"
+        ],
+        "name": "bookmark",
+        "shortcodes": [
+            ":bookmark:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🏷️",
+        "emoticons": [],
+        "keywords": [
+            "label"
+        ],
         "name": "label",
         "shortcodes": [
             ":label:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "label"
         ]
     },
     {
-        "codepoints": "💰",
-        "name": "money bag",
-        "shortcodes": [
-            ":money_bag:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💰",
+        "emoticons": [],
         "keywords": [
             "bag",
             "dollar",
             "money",
             "moneybag"
-        ]
-    },
-    {
-        "codepoints": "🪙",
-        "name": "coin",
-        "shortcodes": [
-            ":coin:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "coin",
-            "gold",
-            "metal",
-            "money",
-            "silver",
-            "treasure"
+        "name": "money bag",
+        "shortcodes": [
+            ":money_bag:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "💴",
-        "name": "yen banknote",
-        "shortcodes": [
-            ":yen_banknote:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "banknote",
             "bill",
@@ -18431,16 +16971,16 @@ export const emojisData = JSON.parse(`[
             "money",
             "note",
             "yen"
+        ],
+        "name": "yen banknote",
+        "shortcodes": [
+            ":yen_banknote:"
         ]
     },
     {
-        "codepoints": "💵",
-        "name": "dollar banknote",
-        "shortcodes": [
-            ":dollar_banknote:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💵",
+        "emoticons": [],
         "keywords": [
             "banknote",
             "bill",
@@ -18448,16 +16988,16 @@ export const emojisData = JSON.parse(`[
             "dollar",
             "money",
             "note"
+        ],
+        "name": "dollar banknote",
+        "shortcodes": [
+            ":dollar_banknote:"
         ]
     },
     {
-        "codepoints": "💶",
-        "name": "euro banknote",
-        "shortcodes": [
-            ":euro_banknote:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💶",
+        "emoticons": [],
         "keywords": [
             "banknote",
             "bill",
@@ -18465,16 +17005,16 @@ export const emojisData = JSON.parse(`[
             "euro",
             "money",
             "note"
+        ],
+        "name": "euro banknote",
+        "shortcodes": [
+            ":euro_banknote:"
         ]
     },
     {
-        "codepoints": "💷",
-        "name": "pound banknote",
-        "shortcodes": [
-            ":pound_banknote:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💷",
+        "emoticons": [],
         "keywords": [
             "banknote",
             "bill",
@@ -18483,16 +17023,16 @@ export const emojisData = JSON.parse(`[
             "note",
             "pound",
             "sterling"
+        ],
+        "name": "pound banknote",
+        "shortcodes": [
+            ":pound_banknote:"
         ]
     },
     {
-        "codepoints": "💸",
-        "name": "money with wings",
-        "shortcodes": [
-            ":money_with_wings:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💸",
+        "emoticons": [],
         "keywords": [
             "banknote",
             "bill",
@@ -18500,46 +17040,46 @@ export const emojisData = JSON.parse(`[
             "money",
             "money with wings",
             "wings"
+        ],
+        "name": "money with wings",
+        "shortcodes": [
+            ":money_with_wings:"
         ]
     },
     {
-        "codepoints": "💳",
-        "name": "credit card",
-        "shortcodes": [
-            ":credit_card:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💳",
+        "emoticons": [],
         "keywords": [
             "card",
             "credit",
             "money"
+        ],
+        "name": "credit card",
+        "shortcodes": [
+            ":credit_card:"
         ]
     },
     {
-        "codepoints": "🧾",
-        "name": "receipt",
-        "shortcodes": [
-            ":receipt:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧾",
+        "emoticons": [],
         "keywords": [
             "accounting",
             "bookkeeping",
             "evidence",
             "proof",
             "receipt"
+        ],
+        "name": "receipt",
+        "shortcodes": [
+            ":receipt:"
         ]
     },
     {
-        "codepoints": "💹",
-        "name": "chart increasing with yen",
-        "shortcodes": [
-            ":chart_increasing_with_yen:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💹",
+        "emoticons": [],
         "keywords": [
             "chart",
             "chart increasing with yen",
@@ -18548,46 +17088,46 @@ export const emojisData = JSON.parse(`[
             "growth",
             "money",
             "yen"
+        ],
+        "name": "chart increasing with yen",
+        "shortcodes": [
+            ":chart_increasing_with_yen:"
         ]
     },
     {
-        "codepoints": "✉️",
-        "name": "envelope",
-        "shortcodes": [
-            ":envelope:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "✉️",
+        "emoticons": [],
         "keywords": [
             "email",
             "envelope",
             "letter",
             "e-mail"
+        ],
+        "name": "envelope",
+        "shortcodes": [
+            ":envelope:"
         ]
     },
     {
-        "codepoints": "📧",
-        "name": "e-mail",
-        "shortcodes": [
-            ":e-mail:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📧",
+        "emoticons": [],
         "keywords": [
             "e-mail",
             "email",
             "letter",
             "mail"
+        ],
+        "name": "e-mail",
+        "shortcodes": [
+            ":e-mail:"
         ]
     },
     {
-        "codepoints": "📨",
-        "name": "incoming envelope",
-        "shortcodes": [
-            ":incoming_envelope:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📨",
+        "emoticons": [],
         "keywords": [
             "e-mail",
             "email",
@@ -18595,16 +17135,16 @@ export const emojisData = JSON.parse(`[
             "incoming",
             "letter",
             "receive"
+        ],
+        "name": "incoming envelope",
+        "shortcodes": [
+            ":incoming_envelope:"
         ]
     },
     {
-        "codepoints": "📩",
-        "name": "envelope with arrow",
-        "shortcodes": [
-            ":envelope_with_arrow:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📩",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "e-mail",
@@ -18612,16 +17152,16 @@ export const emojisData = JSON.parse(`[
             "envelope",
             "envelope with arrow",
             "outgoing"
+        ],
+        "name": "envelope with arrow",
+        "shortcodes": [
+            ":envelope_with_arrow:"
         ]
     },
     {
-        "codepoints": "📤",
-        "name": "outbox tray",
-        "shortcodes": [
-            ":outbox_tray:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📤",
+        "emoticons": [],
         "keywords": [
             "box",
             "letter",
@@ -18630,16 +17170,16 @@ export const emojisData = JSON.parse(`[
             "outbox",
             "sent",
             "tray"
+        ],
+        "name": "outbox tray",
+        "shortcodes": [
+            ":outbox_tray:"
         ]
     },
     {
-        "codepoints": "📥",
-        "name": "inbox tray",
-        "shortcodes": [
-            ":inbox_tray:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📥",
+        "emoticons": [],
         "keywords": [
             "box",
             "in tray",
@@ -18648,30 +17188,30 @@ export const emojisData = JSON.parse(`[
             "mail",
             "receive",
             "tray"
+        ],
+        "name": "inbox tray",
+        "shortcodes": [
+            ":inbox_tray:"
         ]
     },
     {
-        "codepoints": "📦",
-        "name": "package",
-        "shortcodes": [
-            ":package:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📦",
+        "emoticons": [],
         "keywords": [
             "box",
             "package",
             "parcel"
+        ],
+        "name": "package",
+        "shortcodes": [
+            ":package:"
         ]
     },
     {
-        "codepoints": "📫",
-        "name": "closed mailbox with raised flag",
-        "shortcodes": [
-            ":closed_mailbox_with_raised_flag:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📫",
+        "emoticons": [],
         "keywords": [
             "closed",
             "closed letterbox with raised flag",
@@ -18683,16 +17223,16 @@ export const emojisData = JSON.parse(`[
             "letterbox",
             "post",
             "post box"
+        ],
+        "name": "closed mailbox with raised flag",
+        "shortcodes": [
+            ":closed_mailbox_with_raised_flag:"
         ]
     },
     {
-        "codepoints": "📪",
-        "name": "closed mailbox with lowered flag",
-        "shortcodes": [
-            ":closed_mailbox_with_lowered_flag:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📪",
+        "emoticons": [],
         "keywords": [
             "closed",
             "closed letterbox with lowered flag",
@@ -18705,16 +17245,16 @@ export const emojisData = JSON.parse(`[
             "letterbox",
             "post box",
             "post"
+        ],
+        "name": "closed mailbox with lowered flag",
+        "shortcodes": [
+            ":closed_mailbox_with_lowered_flag:"
         ]
     },
     {
-        "codepoints": "📬",
-        "name": "open mailbox with raised flag",
-        "shortcodes": [
-            ":open_mailbox_with_raised_flag:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📬",
+        "emoticons": [],
         "keywords": [
             "mail",
             "mailbox",
@@ -18725,16 +17265,16 @@ export const emojisData = JSON.parse(`[
             "open postbox with raised flag",
             "post",
             "post box"
+        ],
+        "name": "open mailbox with raised flag",
+        "shortcodes": [
+            ":open_mailbox_with_raised_flag:"
         ]
     },
     {
-        "codepoints": "📭",
-        "name": "open mailbox with lowered flag",
-        "shortcodes": [
-            ":open_mailbox_with_lowered_flag:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📭",
+        "emoticons": [],
         "keywords": [
             "lowered",
             "mail",
@@ -18746,258 +17286,258 @@ export const emojisData = JSON.parse(`[
             "open postbox with lowered flag",
             "post",
             "post box"
+        ],
+        "name": "open mailbox with lowered flag",
+        "shortcodes": [
+            ":open_mailbox_with_lowered_flag:"
         ]
     },
     {
-        "codepoints": "📮",
-        "name": "postbox",
-        "shortcodes": [
-            ":postbox:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📮",
+        "emoticons": [],
         "keywords": [
             "mail",
             "mailbox",
             "postbox",
             "post",
             "post box"
+        ],
+        "name": "postbox",
+        "shortcodes": [
+            ":postbox:"
         ]
     },
     {
-        "codepoints": "🗳️",
-        "name": "ballot box with ballot",
-        "shortcodes": [
-            ":ballot_box_with_ballot:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗳️",
+        "emoticons": [],
         "keywords": [
             "ballot",
             "ballot box with ballot",
             "box"
+        ],
+        "name": "ballot box with ballot",
+        "shortcodes": [
+            ":ballot_box_with_ballot:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "✏️",
+        "emoticons": [],
+        "keywords": [
+            "pencil"
+        ],
         "name": "pencil",
         "shortcodes": [
             ":pencil:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "pencil"
         ]
     },
     {
-        "codepoints": "✒️",
-        "name": "black nib",
-        "shortcodes": [
-            ":black_nib:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "✒️",
+        "emoticons": [],
         "keywords": [
             "black nib",
             "nib",
             "pen"
+        ],
+        "name": "black nib",
+        "shortcodes": [
+            ":black_nib:"
         ]
     },
     {
-        "codepoints": "🖋️",
-        "name": "fountain pen",
-        "shortcodes": [
-            ":fountain_pen:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🖋️",
+        "emoticons": [],
         "keywords": [
             "fountain",
             "pen"
+        ],
+        "name": "fountain pen",
+        "shortcodes": [
+            ":fountain_pen:"
         ]
     },
     {
-        "codepoints": "🖊️",
-        "name": "pen",
-        "shortcodes": [
-            ":pen:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🖊️",
+        "emoticons": [],
         "keywords": [
             "ballpoint",
             "pen"
+        ],
+        "name": "pen",
+        "shortcodes": [
+            ":pen:"
         ]
     },
     {
-        "codepoints": "🖌️",
-        "name": "paintbrush",
-        "shortcodes": [
-            ":paintbrush:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🖌️",
+        "emoticons": [],
         "keywords": [
             "paintbrush",
             "painting"
+        ],
+        "name": "paintbrush",
+        "shortcodes": [
+            ":paintbrush:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🖍️",
+        "emoticons": [],
+        "keywords": [
+            "crayon"
+        ],
         "name": "crayon",
         "shortcodes": [
             ":crayon:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "crayon"
         ]
     },
     {
-        "codepoints": "📝",
-        "name": "memo",
-        "shortcodes": [
-            ":memo:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📝",
+        "emoticons": [],
         "keywords": [
             "memo",
             "pencil"
+        ],
+        "name": "memo",
+        "shortcodes": [
+            ":memo:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "💼",
+        "emoticons": [],
+        "keywords": [
+            "briefcase"
+        ],
         "name": "briefcase",
         "shortcodes": [
             ":briefcase:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "briefcase"
         ]
     },
     {
-        "codepoints": "📁",
-        "name": "file folder",
-        "shortcodes": [
-            ":file_folder:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📁",
+        "emoticons": [],
         "keywords": [
             "file",
             "folder"
+        ],
+        "name": "file folder",
+        "shortcodes": [
+            ":file_folder:"
         ]
     },
     {
-        "codepoints": "📂",
-        "name": "open file folder",
-        "shortcodes": [
-            ":open_file_folder:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📂",
+        "emoticons": [],
         "keywords": [
             "file",
             "folder",
             "open"
+        ],
+        "name": "open file folder",
+        "shortcodes": [
+            ":open_file_folder:"
         ]
     },
     {
-        "codepoints": "🗂️",
-        "name": "card index dividers",
-        "shortcodes": [
-            ":card_index_dividers:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗂️",
+        "emoticons": [],
         "keywords": [
             "card",
             "dividers",
             "index"
+        ],
+        "name": "card index dividers",
+        "shortcodes": [
+            ":card_index_dividers:"
         ]
     },
     {
-        "codepoints": "📅",
-        "name": "calendar",
-        "shortcodes": [
-            ":calendar:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📅",
+        "emoticons": [],
         "keywords": [
             "calendar",
             "date"
+        ],
+        "name": "calendar",
+        "shortcodes": [
+            ":calendar:"
         ]
     },
     {
-        "codepoints": "📆",
-        "name": "tear-off calendar",
-        "shortcodes": [
-            ":tear-off_calendar:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📆",
+        "emoticons": [],
         "keywords": [
             "calendar",
             "tear-off calendar"
+        ],
+        "name": "tear-off calendar",
+        "shortcodes": [
+            ":tear-off_calendar:"
         ]
     },
     {
-        "codepoints": "🗒️",
-        "name": "spiral notepad",
-        "shortcodes": [
-            ":spiral_notepad:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗒️",
+        "emoticons": [],
         "keywords": [
             "note",
             "pad",
             "spiral",
             "spiral notepad"
+        ],
+        "name": "spiral notepad",
+        "shortcodes": [
+            ":spiral_notepad:"
         ]
     },
     {
-        "codepoints": "🗓️",
-        "name": "spiral calendar",
-        "shortcodes": [
-            ":spiral_calendar:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗓️",
+        "emoticons": [],
         "keywords": [
             "calendar",
             "pad",
             "spiral"
+        ],
+        "name": "spiral calendar",
+        "shortcodes": [
+            ":spiral_calendar:"
         ]
     },
     {
-        "codepoints": "📇",
-        "name": "card index",
-        "shortcodes": [
-            ":card_index:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📇",
+        "emoticons": [],
         "keywords": [
             "card",
             "index",
             "rolodex"
+        ],
+        "name": "card index",
+        "shortcodes": [
+            ":card_index:"
         ]
     },
     {
-        "codepoints": "📈",
-        "name": "chart increasing",
-        "shortcodes": [
-            ":chart_increasing:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📈",
+        "emoticons": [],
         "keywords": [
             "chart",
             "chart increasing",
@@ -19006,16 +17546,16 @@ export const emojisData = JSON.parse(`[
             "growth",
             "trend",
             "upward"
+        ],
+        "name": "chart increasing",
+        "shortcodes": [
+            ":chart_increasing:"
         ]
     },
     {
-        "codepoints": "📉",
-        "name": "chart decreasing",
-        "shortcodes": [
-            ":chart_decreasing:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📉",
+        "emoticons": [],
         "keywords": [
             "chart",
             "chart decreasing",
@@ -19023,211 +17563,211 @@ export const emojisData = JSON.parse(`[
             "graph",
             "graph decreasing",
             "trend"
+        ],
+        "name": "chart decreasing",
+        "shortcodes": [
+            ":chart_decreasing:"
         ]
     },
     {
-        "codepoints": "📊",
-        "name": "bar chart",
-        "shortcodes": [
-            ":bar_chart:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📊",
+        "emoticons": [],
         "keywords": [
             "bar",
             "chart",
             "graph"
+        ],
+        "name": "bar chart",
+        "shortcodes": [
+            ":bar_chart:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "📋",
+        "emoticons": [],
+        "keywords": [
+            "clipboard"
+        ],
         "name": "clipboard",
         "shortcodes": [
             ":clipboard:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "clipboard"
         ]
     },
     {
-        "codepoints": "📌",
-        "name": "pushpin",
-        "shortcodes": [
-            ":pushpin:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📌",
+        "emoticons": [],
         "keywords": [
             "drawing-pin",
             "pin",
             "pushpin"
+        ],
+        "name": "pushpin",
+        "shortcodes": [
+            ":pushpin:"
         ]
     },
     {
-        "codepoints": "📍",
-        "name": "round pushpin",
-        "shortcodes": [
-            ":round_pushpin:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📍",
+        "emoticons": [],
         "keywords": [
             "pin",
             "pushpin",
             "round drawing-pin",
             "round pushpin"
+        ],
+        "name": "round pushpin",
+        "shortcodes": [
+            ":round_pushpin:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "📎",
+        "emoticons": [],
+        "keywords": [
+            "paperclip"
+        ],
         "name": "paperclip",
         "shortcodes": [
             ":paperclip:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "paperclip"
         ]
     },
     {
-        "codepoints": "🖇️",
-        "name": "linked paperclips",
-        "shortcodes": [
-            ":linked_paperclips:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🖇️",
+        "emoticons": [],
         "keywords": [
             "link",
             "linked paperclips",
             "paperclip"
+        ],
+        "name": "linked paperclips",
+        "shortcodes": [
+            ":linked_paperclips:"
         ]
     },
     {
-        "codepoints": "📏",
-        "name": "straight ruler",
-        "shortcodes": [
-            ":straight_ruler:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📏",
+        "emoticons": [],
         "keywords": [
             "ruler",
             "straight edge",
             "straight ruler"
+        ],
+        "name": "straight ruler",
+        "shortcodes": [
+            ":straight_ruler:"
         ]
     },
     {
-        "codepoints": "📐",
-        "name": "triangular ruler",
-        "shortcodes": [
-            ":triangular_ruler:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📐",
+        "emoticons": [],
         "keywords": [
             "ruler",
             "set",
             "triangle",
             "triangular ruler",
             "set square"
+        ],
+        "name": "triangular ruler",
+        "shortcodes": [
+            ":triangular_ruler:"
         ]
     },
     {
-        "codepoints": "✂️",
-        "name": "scissors",
-        "shortcodes": [
-            ":scissors:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "✂️",
+        "emoticons": [],
         "keywords": [
             "cutting",
             "scissors",
             "tool"
+        ],
+        "name": "scissors",
+        "shortcodes": [
+            ":scissors:"
         ]
     },
     {
-        "codepoints": "🗃️",
-        "name": "card file box",
-        "shortcodes": [
-            ":card_file_box:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗃️",
+        "emoticons": [],
         "keywords": [
             "box",
             "card",
             "file"
+        ],
+        "name": "card file box",
+        "shortcodes": [
+            ":card_file_box:"
         ]
     },
     {
-        "codepoints": "🗄️",
-        "name": "file cabinet",
-        "shortcodes": [
-            ":file_cabinet:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗄️",
+        "emoticons": [],
         "keywords": [
             "cabinet",
             "file",
             "filing"
+        ],
+        "name": "file cabinet",
+        "shortcodes": [
+            ":file_cabinet:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🗑️",
+        "emoticons": [],
+        "keywords": [
+            "wastebasket"
+        ],
         "name": "wastebasket",
         "shortcodes": [
             ":wastebasket:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "wastebasket"
         ]
     },
     {
-        "codepoints": "🔒",
-        "name": "locked",
-        "shortcodes": [
-            ":locked:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔒",
+        "emoticons": [],
         "keywords": [
             "closed",
             "locked",
             "padlock"
+        ],
+        "name": "locked",
+        "shortcodes": [
+            ":locked:"
         ]
     },
     {
-        "codepoints": "🔓",
-        "name": "unlocked",
-        "shortcodes": [
-            ":unlocked:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔓",
+        "emoticons": [],
         "keywords": [
             "lock",
             "open",
             "unlock",
             "unlocked",
             "padlock"
+        ],
+        "name": "unlocked",
+        "shortcodes": [
+            ":unlocked:"
         ]
     },
     {
-        "codepoints": "🔏",
-        "name": "locked with pen",
-        "shortcodes": [
-            ":locked_with_pen:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔏",
+        "emoticons": [],
         "keywords": [
             "ink",
             "lock",
@@ -19235,119 +17775,119 @@ export const emojisData = JSON.parse(`[
             "nib",
             "pen",
             "privacy"
+        ],
+        "name": "locked with pen",
+        "shortcodes": [
+            ":locked_with_pen:"
         ]
     },
     {
-        "codepoints": "🔐",
-        "name": "locked with key",
-        "shortcodes": [
-            ":locked_with_key:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔐",
+        "emoticons": [],
         "keywords": [
             "closed",
             "key",
             "lock",
             "locked with key",
             "secure"
+        ],
+        "name": "locked with key",
+        "shortcodes": [
+            ":locked_with_key:"
         ]
     },
     {
-        "codepoints": "🔑",
-        "name": "key",
-        "shortcodes": [
-            ":key:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔑",
+        "emoticons": [],
         "keywords": [
             "key",
             "lock",
             "password"
+        ],
+        "name": "key",
+        "shortcodes": [
+            ":key:"
         ]
     },
     {
-        "codepoints": "🗝️",
-        "name": "old key",
-        "shortcodes": [
-            ":old_key:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗝️",
+        "emoticons": [],
         "keywords": [
             "clue",
             "key",
             "lock",
             "old"
+        ],
+        "name": "old key",
+        "shortcodes": [
+            ":old_key:"
         ]
     },
     {
-        "codepoints": "🔨",
-        "name": "hammer",
-        "shortcodes": [
-            ":hammer:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔨",
+        "emoticons": [],
         "keywords": [
             "hammer",
             "tool"
+        ],
+        "name": "hammer",
+        "shortcodes": [
+            ":hammer:"
         ]
     },
     {
-        "codepoints": "🪓",
-        "name": "axe",
-        "shortcodes": [
-            ":axe:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🪓",
+        "emoticons": [],
         "keywords": [
             "axe",
             "chop",
             "hatchet",
             "split",
             "wood"
+        ],
+        "name": "axe",
+        "shortcodes": [
+            ":axe:"
         ]
     },
     {
-        "codepoints": "⛏️",
-        "name": "pick",
-        "shortcodes": [
-            ":pick:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "⛏️",
+        "emoticons": [],
         "keywords": [
             "mining",
             "pick",
             "tool"
+        ],
+        "name": "pick",
+        "shortcodes": [
+            ":pick:"
         ]
     },
     {
-        "codepoints": "⚒️",
-        "name": "hammer and pick",
-        "shortcodes": [
-            ":hammer_and_pick:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "⚒️",
+        "emoticons": [],
         "keywords": [
             "hammer",
             "hammer and pick",
             "pick",
             "tool"
+        ],
+        "name": "hammer and pick",
+        "shortcodes": [
+            ":hammer_and_pick:"
         ]
     },
     {
-        "codepoints": "🛠️",
-        "name": "hammer and wrench",
-        "shortcodes": [
-            ":hammer_and_wrench:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🛠️",
+        "emoticons": [],
         "keywords": [
             "hammer",
             "hammer and spanner",
@@ -19355,44 +17895,44 @@ export const emojisData = JSON.parse(`[
             "spanner",
             "tool",
             "wrench"
+        ],
+        "name": "hammer and wrench",
+        "shortcodes": [
+            ":hammer_and_wrench:"
         ]
     },
     {
-        "codepoints": "🗡️",
-        "name": "dagger",
-        "shortcodes": [
-            ":dagger:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗡️",
+        "emoticons": [],
         "keywords": [
             "dagger",
             "knife",
             "weapon"
+        ],
+        "name": "dagger",
+        "shortcodes": [
+            ":dagger:"
         ]
     },
     {
-        "codepoints": "⚔️",
-        "name": "crossed swords",
-        "shortcodes": [
-            ":crossed_swords:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "⚔️",
+        "emoticons": [],
         "keywords": [
             "crossed",
             "swords",
             "weapon"
+        ],
+        "name": "crossed swords",
+        "shortcodes": [
+            ":crossed_swords:"
         ]
     },
     {
-        "codepoints": "🔫",
-        "name": "water pistol",
-        "shortcodes": [
-            ":water_pistol:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔫",
+        "emoticons": [],
         "keywords": [
             "toy",
             "water pistol",
@@ -19403,31 +17943,16 @@ export const emojisData = JSON.parse(`[
             "tool",
             "water",
             "weapon"
-        ]
-    },
-    {
-        "codepoints": "🪃",
-        "name": "boomerang",
-        "shortcodes": [
-            ":boomerang:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "australia",
-            "boomerang",
-            "rebound",
-            "repercussion"
+        "name": "water pistol",
+        "shortcodes": [
+            ":water_pistol:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🏹",
-        "name": "bow and arrow",
-        "shortcodes": [
-            ":bow_and_arrow:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "archer",
             "arrow",
@@ -19435,252 +17960,189 @@ export const emojisData = JSON.parse(`[
             "bow and arrow",
             "Sagittarius",
             "zodiac"
+        ],
+        "name": "bow and arrow",
+        "shortcodes": [
+            ":bow_and_arrow:"
         ]
     },
     {
-        "codepoints": "🛡️",
-        "name": "shield",
-        "shortcodes": [
-            ":shield:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🛡️",
+        "emoticons": [],
         "keywords": [
             "shield",
             "weapon"
-        ]
-    },
-    {
-        "codepoints": "🪚",
-        "name": "carpentry saw",
-        "shortcodes": [
-            ":carpentry_saw:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "carpenter",
-            "carpentry saw",
-            "lumber",
-            "saw",
-            "tool"
+        "name": "shield",
+        "shortcodes": [
+            ":shield:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🔧",
-        "name": "wrench",
-        "shortcodes": [
-            ":wrench:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "spanner",
             "tool",
             "wrench"
-        ]
-    },
-    {
-        "codepoints": "🪛",
-        "name": "screwdriver",
-        "shortcodes": [
-            ":screwdriver:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "screw",
-            "screwdriver",
-            "tool"
+        "name": "wrench",
+        "shortcodes": [
+            ":wrench:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🔩",
-        "name": "nut and bolt",
-        "shortcodes": [
-            ":nut_and_bolt:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "bolt",
             "nut",
             "nut and bolt",
             "tool"
+        ],
+        "name": "nut and bolt",
+        "shortcodes": [
+            ":nut_and_bolt:"
         ]
     },
     {
-        "codepoints": "⚙️",
-        "name": "gear",
-        "shortcodes": [
-            ":gear:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "⚙️",
+        "emoticons": [],
         "keywords": [
             "cog",
             "cogwheel",
             "gear",
             "tool"
+        ],
+        "name": "gear",
+        "shortcodes": [
+            ":gear:"
         ]
     },
     {
-        "codepoints": "🗜️",
-        "name": "clamp",
-        "shortcodes": [
-            ":clamp:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗜️",
+        "emoticons": [],
         "keywords": [
             "clamp",
             "compress",
             "tool",
             "vice"
+        ],
+        "name": "clamp",
+        "shortcodes": [
+            ":clamp:"
         ]
     },
     {
-        "codepoints": "⚖️",
-        "name": "balance scale",
-        "shortcodes": [
-            ":balance_scale:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "⚖️",
+        "emoticons": [],
         "keywords": [
             "balance",
             "justice",
             "Libra",
             "scale",
             "zodiac"
+        ],
+        "name": "balance scale",
+        "shortcodes": [
+            ":balance_scale:"
         ]
     },
     {
-        "codepoints": "🦯",
-        "name": "white cane",
-        "shortcodes": [
-            ":white_cane:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🦯",
+        "emoticons": [],
         "keywords": [
             "accessibility",
             "long mobility cane",
             "white cane",
             "blind",
             "guide cane"
+        ],
+        "name": "white cane",
+        "shortcodes": [
+            ":white_cane:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🔗",
+        "emoticons": [],
+        "keywords": [
+            "link"
+        ],
         "name": "link",
         "shortcodes": [
             ":link:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "link"
         ]
     },
     {
-        "codepoints": "⛓️",
-        "name": "chains",
-        "shortcodes": [
-            ":chains:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "⛓️",
+        "emoticons": [],
         "keywords": [
             "chain",
             "chains"
-        ]
-    },
-    {
-        "codepoints": "🪝",
-        "name": "hook",
-        "shortcodes": [
-            ":hook:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "catch",
-            "crook",
-            "curve",
-            "ensnare",
-            "fishing",
-            "hook",
-            "selling point"
+        "name": "chains",
+        "shortcodes": [
+            ":chains:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🧰",
-        "name": "toolbox",
-        "shortcodes": [
-            ":toolbox:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "chest",
             "mechanic",
             "tool",
             "toolbox"
+        ],
+        "name": "toolbox",
+        "shortcodes": [
+            ":toolbox:"
         ]
     },
     {
-        "codepoints": "🧲",
-        "name": "magnet",
-        "shortcodes": [
-            ":magnet:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧲",
+        "emoticons": [],
         "keywords": [
             "attraction",
             "horseshoe",
             "magnet",
             "magnetic"
-        ]
-    },
-    {
-        "codepoints": "🪜",
-        "name": "ladder",
-        "shortcodes": [
-            ":ladder:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "climb",
-            "ladder",
-            "rung",
-            "step"
+        "name": "magnet",
+        "shortcodes": [
+            ":magnet:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "⚗️",
-        "name": "alembic",
-        "shortcodes": [
-            ":alembic:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "alembic",
             "chemistry",
             "tool"
+        ],
+        "name": "alembic",
+        "shortcodes": [
+            ":alembic:"
         ]
     },
     {
-        "codepoints": "🧪",
-        "name": "test tube",
-        "shortcodes": [
-            ":test_tube:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧪",
+        "emoticons": [],
         "keywords": [
             "chemist",
             "chemistry",
@@ -19688,16 +18150,16 @@ export const emojisData = JSON.parse(`[
             "lab",
             "science",
             "test tube"
+        ],
+        "name": "test tube",
+        "shortcodes": [
+            ":test_tube:"
         ]
     },
     {
-        "codepoints": "🧫",
-        "name": "petri dish",
-        "shortcodes": [
-            ":petri_dish:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧫",
+        "emoticons": [],
         "keywords": [
             "bacteria",
             "biologist",
@@ -19705,16 +18167,16 @@ export const emojisData = JSON.parse(`[
             "culture",
             "lab",
             "petri dish"
+        ],
+        "name": "petri dish",
+        "shortcodes": [
+            ":petri_dish:"
         ]
     },
     {
-        "codepoints": "🧬",
-        "name": "dna",
-        "shortcodes": [
-            ":dna:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧬",
+        "emoticons": [],
         "keywords": [
             "biologist",
             "dna",
@@ -19723,58 +18185,58 @@ export const emojisData = JSON.parse(`[
             "gene",
             "genetics",
             "life"
+        ],
+        "name": "dna",
+        "shortcodes": [
+            ":dna:"
         ]
     },
     {
-        "codepoints": "🔬",
-        "name": "microscope",
-        "shortcodes": [
-            ":microscope:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔬",
+        "emoticons": [],
         "keywords": [
             "microscope",
             "science",
             "tool"
+        ],
+        "name": "microscope",
+        "shortcodes": [
+            ":microscope:"
         ]
     },
     {
-        "codepoints": "🔭",
-        "name": "telescope",
-        "shortcodes": [
-            ":telescope:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🔭",
+        "emoticons": [],
         "keywords": [
             "science",
             "telescope",
             "tool"
+        ],
+        "name": "telescope",
+        "shortcodes": [
+            ":telescope:"
         ]
     },
     {
-        "codepoints": "📡",
-        "name": "satellite antenna",
-        "shortcodes": [
-            ":satellite_antenna:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "📡",
+        "emoticons": [],
         "keywords": [
             "antenna",
             "dish",
             "satellite"
+        ],
+        "name": "satellite antenna",
+        "shortcodes": [
+            ":satellite_antenna:"
         ]
     },
     {
-        "codepoints": "💉",
-        "name": "syringe",
-        "shortcodes": [
-            ":syringe:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💉",
+        "emoticons": [],
         "keywords": [
             "medicine",
             "needle",
@@ -19783,16 +18245,16 @@ export const emojisData = JSON.parse(`[
             "syringe",
             "ill",
             "injection"
+        ],
+        "name": "syringe",
+        "shortcodes": [
+            ":syringe:"
         ]
     },
     {
-        "codepoints": "🩸",
-        "name": "drop of blood",
-        "shortcodes": [
-            ":drop_of_blood:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🩸",
+        "emoticons": [],
         "keywords": [
             "bleed",
             "blood donation",
@@ -19800,31 +18262,31 @@ export const emojisData = JSON.parse(`[
             "injury",
             "medicine",
             "menstruation"
+        ],
+        "name": "drop of blood",
+        "shortcodes": [
+            ":drop_of_blood:"
         ]
     },
     {
-        "codepoints": "💊",
-        "name": "pill",
-        "shortcodes": [
-            ":pill:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "💊",
+        "emoticons": [],
         "keywords": [
             "doctor",
             "medicine",
             "pill",
             "sick"
+        ],
+        "name": "pill",
+        "shortcodes": [
+            ":pill:"
         ]
     },
     {
-        "codepoints": "🩹",
-        "name": "adhesive bandage",
-        "shortcodes": [
-            ":adhesive_bandage:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🩹",
+        "emoticons": [],
         "keywords": [
             "adhesive bandage",
             "bandage",
@@ -19833,138 +18295,57 @@ export const emojisData = JSON.parse(`[
             "injury",
             "plaster",
             "sticking plaster"
-        ]
-    },
-    {
-        "codepoints": "🩼",
-        "name": "crutch",
-        "shortcodes": [
-            ":crutch:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "cane",
-            "crutch",
-            "disability",
-            "hurt",
-            "mobility aid",
-            "stick"
+        "name": "adhesive bandage",
+        "shortcodes": [
+            ":adhesive_bandage:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🩺",
-        "name": "stethoscope",
-        "shortcodes": [
-            ":stethoscope:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "doctor",
             "heart",
             "medicine",
             "stethoscope"
-        ]
-    },
-    {
-        "codepoints": "🩻",
-        "name": "x-ray",
-        "shortcodes": [
-            ":x-ray:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "bones",
-            "doctor",
-            "medical",
-            "skeleton",
-            "x-ray"
+        "name": "stethoscope",
+        "shortcodes": [
+            ":stethoscope:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🚪",
+        "emoticons": [],
+        "keywords": [
+            "door"
+        ],
         "name": "door",
         "shortcodes": [
             ":door:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "door"
         ]
     },
     {
-        "codepoints": "🛗",
-        "name": "elevator",
-        "shortcodes": [
-            ":elevator:"
-        ],
-        "emoticons": [],
         "category": "Objects",
-        "keywords": [
-            "accessibility",
-            "elevator",
-            "hoist",
-            "lift"
-        ]
-    },
-    {
-        "codepoints": "🪞",
-        "name": "mirror",
-        "shortcodes": [
-            ":mirror:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "looking glass",
-            "mirror",
-            "reflection",
-            "reflector",
-            "speculum"
-        ]
-    },
-    {
-        "codepoints": "🪟",
-        "name": "window",
-        "shortcodes": [
-            ":window:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "frame",
-            "fresh air",
-            "opening",
-            "transparent",
-            "view",
-            "window"
-        ]
-    },
-    {
         "codepoints": "🛏️",
-        "name": "bed",
-        "shortcodes": [
-            ":bed:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "bed",
             "hotel",
             "sleep"
+        ],
+        "name": "bed",
+        "shortcodes": [
+            ":bed:"
         ]
     },
     {
-        "codepoints": "🛋️",
-        "name": "couch and lamp",
-        "shortcodes": [
-            ":couch_and_lamp:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🛋️",
+        "emoticons": [],
         "keywords": [
             "couch",
             "couch and lamp",
@@ -19972,120 +18353,87 @@ export const emojisData = JSON.parse(`[
             "lamp",
             "sofa",
             "sofa and lamp"
+        ],
+        "name": "couch and lamp",
+        "shortcodes": [
+            ":couch_and_lamp:"
         ]
     },
     {
-        "codepoints": "🪑",
-        "name": "chair",
-        "shortcodes": [
-            ":chair:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🪑",
+        "emoticons": [],
         "keywords": [
             "chair",
             "seat",
             "sit"
+        ],
+        "name": "chair",
+        "shortcodes": [
+            ":chair:"
         ]
     },
     {
-        "codepoints": "🚽",
-        "name": "toilet",
-        "shortcodes": [
-            ":toilet:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🚽",
+        "emoticons": [],
         "keywords": [
             "facilities",
             "loo",
             "toilet",
             "WC",
             "lavatory"
-        ]
-    },
-    {
-        "codepoints": "🪠",
-        "name": "plunger",
-        "shortcodes": [
-            ":plunger:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "force cup",
-            "plumber",
-            "plunger",
-            "suction",
-            "toilet"
+        "name": "toilet",
+        "shortcodes": [
+            ":toilet:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🚿",
-        "name": "shower",
-        "shortcodes": [
-            ":shower:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "shower",
             "water"
+        ],
+        "name": "shower",
+        "shortcodes": [
+            ":shower:"
         ]
     },
     {
-        "codepoints": "🛁",
-        "name": "bathtub",
-        "shortcodes": [
-            ":bathtub:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🛁",
+        "emoticons": [],
         "keywords": [
             "bath",
             "bathtub"
-        ]
-    },
-    {
-        "codepoints": "🪤",
-        "name": "mouse trap",
-        "shortcodes": [
-            ":mouse_trap:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "bait",
-            "mouse trap",
-            "mousetrap",
-            "snare",
-            "trap",
-            "mouse"
+        "name": "bathtub",
+        "shortcodes": [
+            ":bathtub:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🪒",
-        "name": "razor",
-        "shortcodes": [
-            ":razor:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "razor",
             "sharp",
             "shave",
             "cut-throat"
+        ],
+        "name": "razor",
+        "shortcodes": [
+            ":razor:"
         ]
     },
     {
-        "codepoints": "🧴",
-        "name": "lotion bottle",
-        "shortcodes": [
-            ":lotion_bottle:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧴",
+        "emoticons": [],
         "keywords": [
             "lotion",
             "lotion bottle",
@@ -20093,91 +18441,76 @@ export const emojisData = JSON.parse(`[
             "shampoo",
             "sunscreen",
             "moisturiser"
+        ],
+        "name": "lotion bottle",
+        "shortcodes": [
+            ":lotion_bottle:"
         ]
     },
     {
-        "codepoints": "🧷",
-        "name": "safety pin",
-        "shortcodes": [
-            ":safety_pin:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧷",
+        "emoticons": [],
         "keywords": [
             "nappy",
             "punk rock",
             "safety pin",
             "diaper"
+        ],
+        "name": "safety pin",
+        "shortcodes": [
+            ":safety_pin:"
         ]
     },
     {
-        "codepoints": "🧹",
-        "name": "broom",
-        "shortcodes": [
-            ":broom:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧹",
+        "emoticons": [],
         "keywords": [
             "broom",
             "cleaning",
             "sweeping",
             "witch"
+        ],
+        "name": "broom",
+        "shortcodes": [
+            ":broom:"
         ]
     },
     {
-        "codepoints": "🧺",
-        "name": "basket",
-        "shortcodes": [
-            ":basket:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧺",
+        "emoticons": [],
         "keywords": [
             "basket",
             "farming",
             "laundry",
             "picnic"
+        ],
+        "name": "basket",
+        "shortcodes": [
+            ":basket:"
         ]
     },
     {
-        "codepoints": "🧻",
-        "name": "roll of paper",
-        "shortcodes": [
-            ":roll_of_paper:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧻",
+        "emoticons": [],
         "keywords": [
             "paper towels",
             "roll of paper",
             "toilet paper",
             "toilet roll"
-        ]
-    },
-    {
-        "codepoints": "🪣",
-        "name": "bucket",
-        "shortcodes": [
-            ":bucket:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "bucket",
-            "cask",
-            "pail",
-            "vat"
+        "name": "roll of paper",
+        "shortcodes": [
+            ":roll_of_paper:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🧼",
-        "name": "soap",
-        "shortcodes": [
-            ":soap:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "bar",
             "bathing",
@@ -20185,261 +18518,177 @@ export const emojisData = JSON.parse(`[
             "lather",
             "soap",
             "soapdish"
-        ]
-    },
-    {
-        "codepoints": "🫧",
-        "name": "bubbles",
-        "shortcodes": [
-            ":bubbles:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "bubbles",
-            "burp",
-            "clean",
-            "soap",
-            "underwater"
-        ]
-    },
-    {
-        "codepoints": "🪥",
-        "name": "toothbrush",
+        "name": "soap",
         "shortcodes": [
-            ":toothbrush:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "bathroom",
-            "brush",
-            "clean",
-            "dental",
-            "hygiene",
-            "teeth",
-            "toothbrush"
+            ":soap:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "🧽",
-        "name": "sponge",
-        "shortcodes": [
-            ":sponge:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "absorbing",
             "cleaning",
             "porous",
             "sponge"
+        ],
+        "name": "sponge",
+        "shortcodes": [
+            ":sponge:"
         ]
     },
     {
-        "codepoints": "🧯",
-        "name": "fire extinguisher",
-        "shortcodes": [
-            ":fire_extinguisher:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🧯",
+        "emoticons": [],
         "keywords": [
             "extinguish",
             "fire",
             "fire extinguisher",
             "quench"
+        ],
+        "name": "fire extinguisher",
+        "shortcodes": [
+            ":fire_extinguisher:"
         ]
     },
     {
-        "codepoints": "🛒",
-        "name": "shopping cart",
-        "shortcodes": [
-            ":shopping_cart:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🛒",
+        "emoticons": [],
         "keywords": [
             "cart",
             "shopping",
             "trolley",
             "basket"
+        ],
+        "name": "shopping cart",
+        "shortcodes": [
+            ":shopping_cart:"
         ]
     },
     {
-        "codepoints": "🚬",
-        "name": "cigarette",
-        "shortcodes": [
-            ":cigarette:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🚬",
+        "emoticons": [],
         "keywords": [
             "cigarette",
             "smoking"
+        ],
+        "name": "cigarette",
+        "shortcodes": [
+            ":cigarette:"
         ]
     },
     {
-        "codepoints": "⚰️",
-        "name": "coffin",
-        "shortcodes": [
-            ":coffin:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "⚰️",
+        "emoticons": [],
         "keywords": [
             "coffin",
             "death"
-        ]
-    },
-    {
-        "codepoints": "🪦",
-        "name": "headstone",
-        "shortcodes": [
-            ":headstone:"
         ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "cemetery",
-            "grave",
-            "graveyard",
-            "headstone",
-            "tombstone"
+        "name": "coffin",
+        "shortcodes": [
+            ":coffin:"
         ]
     },
     {
+        "category": "Objects",
         "codepoints": "⚱️",
-        "name": "funeral urn",
-        "shortcodes": [
-            ":funeral_urn:"
-        ],
         "emoticons": [],
-        "category": "Objects",
         "keywords": [
             "ashes",
             "death",
             "funeral",
             "urn"
+        ],
+        "name": "funeral urn",
+        "shortcodes": [
+            ":funeral_urn:"
         ]
     },
     {
-        "codepoints": "🗿",
-        "name": "moai",
-        "shortcodes": [
-            ":moai:"
-        ],
-        "emoticons": [],
         "category": "Objects",
+        "codepoints": "🗿",
+        "emoticons": [],
         "keywords": [
             "face",
             "moai",
             "moyai",
             "statue"
+        ],
+        "name": "moai",
+        "shortcodes": [
+            ":moai:"
         ]
     },
     {
-        "codepoints": "🪧",
-        "name": "placard",
-        "shortcodes": [
-            ":placard:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "demonstration",
-            "picket",
-            "placard",
-            "protest",
-            "sign"
-        ]
-    },
-    {
-        "codepoints": "🪪",
-        "name": "identification card",
-        "shortcodes": [
-            ":identification_card:"
-        ],
-        "emoticons": [],
-        "category": "Objects",
-        "keywords": [
-            "credentials",
-            "ID",
-            "identification card",
-            "license",
-            "security",
-            "driving",
-            "licence"
-        ]
-    },
-    {
-        "codepoints": "🏧",
-        "name": "ATM sign",
-        "shortcodes": [
-            ":ATM_sign:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🏧",
+        "emoticons": [],
         "keywords": [
             "ATM",
             "ATM sign",
             "automated",
             "bank",
             "teller"
+        ],
+        "name": "ATM sign",
+        "shortcodes": [
+            ":ATM_sign:"
         ]
     },
     {
-        "codepoints": "🚮",
-        "name": "litter in bin sign",
-        "shortcodes": [
-            ":litter_in_bin_sign:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚮",
+        "emoticons": [],
         "keywords": [
             "litter",
             "litter bin",
             "litter in bin sign",
             "garbage",
             "trash"
+        ],
+        "name": "litter in bin sign",
+        "shortcodes": [
+            ":litter_in_bin_sign:"
         ]
     },
     {
-        "codepoints": "🚰",
-        "name": "potable water",
-        "shortcodes": [
-            ":potable_water:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚰",
+        "emoticons": [],
         "keywords": [
             "drinking",
             "potable",
             "water"
+        ],
+        "name": "potable water",
+        "shortcodes": [
+            ":potable_water:"
         ]
     },
     {
-        "codepoints": "♿",
-        "name": "wheelchair symbol",
-        "shortcodes": [
-            ":wheelchair_symbol:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♿",
+        "emoticons": [],
         "keywords": [
             "access",
             "disabled access",
             "wheelchair symbol"
+        ],
+        "name": "wheelchair symbol",
+        "shortcodes": [
+            ":wheelchair_symbol:"
         ]
     },
     {
-        "codepoints": "🚹",
-        "name": "men’s room",
-        "shortcodes": [
-            ":men’s_room:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚹",
+        "emoticons": [],
         "keywords": [
             "bathroom",
             "lavatory",
@@ -20451,16 +18700,16 @@ export const emojisData = JSON.parse(`[
             "men’s",
             "washroom",
             "wc"
+        ],
+        "name": "men’s room",
+        "shortcodes": [
+            ":men’s_room:"
         ]
     },
     {
-        "codepoints": "🚺",
-        "name": "women’s room",
-        "shortcodes": [
-            ":women’s_room:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚺",
+        "emoticons": [],
         "keywords": [
             "ladies room",
             "lavatory",
@@ -20475,16 +18724,16 @@ export const emojisData = JSON.parse(`[
             "ladies’ room",
             "washroom",
             "women’s"
+        ],
+        "name": "women’s room",
+        "shortcodes": [
+            ":women’s_room:"
         ]
     },
     {
-        "codepoints": "🚻",
-        "name": "restroom",
-        "shortcodes": [
-            ":restroom:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚻",
+        "emoticons": [],
         "keywords": [
             "bathroom",
             "lavatory",
@@ -20492,31 +18741,31 @@ export const emojisData = JSON.parse(`[
             "toilet",
             "WC",
             "washroom"
+        ],
+        "name": "restroom",
+        "shortcodes": [
+            ":restroom:"
         ]
     },
     {
-        "codepoints": "🚼",
-        "name": "baby symbol",
-        "shortcodes": [
-            ":baby_symbol:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚼",
+        "emoticons": [],
         "keywords": [
             "baby",
             "baby symbol",
             "change room",
             "changing"
+        ],
+        "name": "baby symbol",
+        "shortcodes": [
+            ":baby_symbol:"
         ]
     },
     {
-        "codepoints": "🚾",
-        "name": "water closet",
-        "shortcodes": [
-            ":water_closet:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚾",
+        "emoticons": [],
         "keywords": [
             "amenities",
             "bathroom",
@@ -20528,99 +18777,99 @@ export const emojisData = JSON.parse(`[
             "closet",
             "lavatory",
             "water"
+        ],
+        "name": "water closet",
+        "shortcodes": [
+            ":water_closet:"
         ]
     },
     {
-        "codepoints": "🛂",
-        "name": "passport control",
-        "shortcodes": [
-            ":passport_control:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🛂",
+        "emoticons": [],
         "keywords": [
             "border",
             "control",
             "passport",
             "security"
+        ],
+        "name": "passport control",
+        "shortcodes": [
+            ":passport_control:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🛃",
+        "emoticons": [],
+        "keywords": [
+            "customs"
+        ],
         "name": "customs",
         "shortcodes": [
             ":customs:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "customs"
         ]
     },
     {
-        "codepoints": "🛄",
-        "name": "baggage claim",
-        "shortcodes": [
-            ":baggage_claim:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🛄",
+        "emoticons": [],
         "keywords": [
             "baggage",
             "claim"
+        ],
+        "name": "baggage claim",
+        "shortcodes": [
+            ":baggage_claim:"
         ]
     },
     {
-        "codepoints": "🛅",
-        "name": "left luggage",
-        "shortcodes": [
-            ":left_luggage:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🛅",
+        "emoticons": [],
         "keywords": [
             "baggage",
             "left luggage",
             "locker",
             "luggage"
+        ],
+        "name": "left luggage",
+        "shortcodes": [
+            ":left_luggage:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "⚠️",
+        "emoticons": [],
+        "keywords": [
+            "warning"
+        ],
         "name": "warning",
         "shortcodes": [
             ":warning:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "warning"
         ]
     },
     {
-        "codepoints": "🚸",
-        "name": "children crossing",
-        "shortcodes": [
-            ":children_crossing:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚸",
+        "emoticons": [],
         "keywords": [
             "child",
             "children crossing",
             "crossing",
             "pedestrian",
             "traffic"
+        ],
+        "name": "children crossing",
+        "shortcodes": [
+            ":children_crossing:"
         ]
     },
     {
-        "codepoints": "⛔",
-        "name": "no entry",
-        "shortcodes": [
-            ":no_entry:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⛔",
+        "emoticons": [],
         "keywords": [
             "denied",
             "entry",
@@ -20629,16 +18878,16 @@ export const emojisData = JSON.parse(`[
             "prohibited",
             "traffic",
             "not"
+        ],
+        "name": "no entry",
+        "shortcodes": [
+            ":no_entry:"
         ]
     },
     {
-        "codepoints": "🚫",
-        "name": "prohibited",
-        "shortcodes": [
-            ":prohibited:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚫",
+        "emoticons": [],
         "keywords": [
             "denied",
             "entry",
@@ -20646,16 +18895,16 @@ export const emojisData = JSON.parse(`[
             "no",
             "prohibited",
             "not"
+        ],
+        "name": "prohibited",
+        "shortcodes": [
+            ":prohibited:"
         ]
     },
     {
-        "codepoints": "🚳",
-        "name": "no bicycles",
-        "shortcodes": [
-            ":no_bicycles:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚳",
+        "emoticons": [],
         "keywords": [
             "bicycle",
             "bike",
@@ -20663,16 +18912,16 @@ export const emojisData = JSON.parse(`[
             "no",
             "no bicycles",
             "prohibited"
+        ],
+        "name": "no bicycles",
+        "shortcodes": [
+            ":no_bicycles:"
         ]
     },
     {
-        "codepoints": "🚭",
-        "name": "no smoking",
-        "shortcodes": [
-            ":no_smoking:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚭",
+        "emoticons": [],
         "keywords": [
             "denied",
             "forbidden",
@@ -20680,16 +18929,16 @@ export const emojisData = JSON.parse(`[
             "prohibited",
             "smoking",
             "not"
+        ],
+        "name": "no smoking",
+        "shortcodes": [
+            ":no_smoking:"
         ]
     },
     {
-        "codepoints": "🚯",
-        "name": "no littering",
-        "shortcodes": [
-            ":no_littering:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚯",
+        "emoticons": [],
         "keywords": [
             "denied",
             "forbidden",
@@ -20698,31 +18947,31 @@ export const emojisData = JSON.parse(`[
             "no littering",
             "prohibited",
             "not"
+        ],
+        "name": "no littering",
+        "shortcodes": [
+            ":no_littering:"
         ]
     },
     {
-        "codepoints": "🚱",
-        "name": "non-potable water",
-        "shortcodes": [
-            ":non-potable_water:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚱",
+        "emoticons": [],
         "keywords": [
             "non-drinkable water",
             "non-drinking",
             "non-potable",
             "water"
+        ],
+        "name": "non-potable water",
+        "shortcodes": [
+            ":non-potable_water:"
         ]
     },
     {
-        "codepoints": "🚷",
-        "name": "no pedestrians",
-        "shortcodes": [
-            ":no_pedestrians:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🚷",
+        "emoticons": [],
         "keywords": [
             "denied",
             "forbidden",
@@ -20731,16 +18980,16 @@ export const emojisData = JSON.parse(`[
             "pedestrian",
             "prohibited",
             "not"
+        ],
+        "name": "no pedestrians",
+        "shortcodes": [
+            ":no_pedestrians:"
         ]
     },
     {
-        "codepoints": "📵",
-        "name": "no mobile phones",
-        "shortcodes": [
-            ":no_mobile_phones:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "📵",
+        "emoticons": [],
         "keywords": [
             "cell",
             "forbidden",
@@ -20748,16 +18997,16 @@ export const emojisData = JSON.parse(`[
             "no",
             "no mobile phones",
             "phone"
+        ],
+        "name": "no mobile phones",
+        "shortcodes": [
+            ":no_mobile_phones:"
         ]
     },
     {
-        "codepoints": "🔞",
-        "name": "no one under eighteen",
-        "shortcodes": [
-            ":no_one_under_eighteen:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔞",
+        "emoticons": [],
         "keywords": [
             "18",
             "age restriction",
@@ -20765,42 +19014,42 @@ export const emojisData = JSON.parse(`[
             "no one under eighteen",
             "prohibited",
             "underage"
+        ],
+        "name": "no one under eighteen",
+        "shortcodes": [
+            ":no_one_under_eighteen:"
         ]
     },
     {
-        "codepoints": "☢️",
-        "name": "radioactive",
-        "shortcodes": [
-            ":radioactive:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "☢️",
+        "emoticons": [],
         "keywords": [
             "radioactive",
             "sign"
+        ],
+        "name": "radioactive",
+        "shortcodes": [
+            ":radioactive:"
         ]
     },
     {
-        "codepoints": "☣️",
-        "name": "biohazard",
-        "shortcodes": [
-            ":biohazard:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "☣️",
+        "emoticons": [],
         "keywords": [
             "biohazard",
             "sign"
+        ],
+        "name": "biohazard",
+        "shortcodes": [
+            ":biohazard:"
         ]
     },
     {
-        "codepoints": "⬆️",
-        "name": "up arrow",
-        "shortcodes": [
-            ":up_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⬆️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "cardinal",
@@ -20808,222 +19057,222 @@ export const emojisData = JSON.parse(`[
             "north",
             "up",
             "up arrow"
+        ],
+        "name": "up arrow",
+        "shortcodes": [
+            ":up_arrow:"
         ]
     },
     {
-        "codepoints": "↗️",
-        "name": "up-right arrow",
-        "shortcodes": [
-            ":up-right_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "↗️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "direction",
             "intercardinal",
             "northeast",
             "up-right arrow"
+        ],
+        "name": "up-right arrow",
+        "shortcodes": [
+            ":up-right_arrow:"
         ]
     },
     {
-        "codepoints": "➡️",
-        "name": "right arrow",
-        "shortcodes": [
-            ":right_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "➡️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "cardinal",
             "direction",
             "east",
             "right arrow"
+        ],
+        "name": "right arrow",
+        "shortcodes": [
+            ":right_arrow:"
         ]
     },
     {
-        "codepoints": "↘️",
-        "name": "down-right arrow",
-        "shortcodes": [
-            ":down-right_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "↘️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "direction",
             "down-right arrow",
             "intercardinal",
             "southeast"
+        ],
+        "name": "down-right arrow",
+        "shortcodes": [
+            ":down-right_arrow:"
         ]
     },
     {
-        "codepoints": "⬇️",
-        "name": "down arrow",
-        "shortcodes": [
-            ":down_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⬇️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "cardinal",
             "direction",
             "down",
             "south"
+        ],
+        "name": "down arrow",
+        "shortcodes": [
+            ":down_arrow:"
         ]
     },
     {
-        "codepoints": "↙️",
-        "name": "down-left arrow",
-        "shortcodes": [
-            ":down-left_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "↙️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "direction",
             "down-left arrow",
             "intercardinal",
             "southwest"
+        ],
+        "name": "down-left arrow",
+        "shortcodes": [
+            ":down-left_arrow:"
         ]
     },
     {
-        "codepoints": "⬅️",
-        "name": "left arrow",
-        "shortcodes": [
-            ":left_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⬅️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "cardinal",
             "direction",
             "left arrow",
             "west"
+        ],
+        "name": "left arrow",
+        "shortcodes": [
+            ":left_arrow:"
         ]
     },
     {
-        "codepoints": "↖️",
-        "name": "up-left arrow",
-        "shortcodes": [
-            ":up-left_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "↖️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "direction",
             "intercardinal",
             "northwest",
             "up-left arrow"
+        ],
+        "name": "up-left arrow",
+        "shortcodes": [
+            ":up-left_arrow:"
         ]
     },
     {
-        "codepoints": "↕️",
-        "name": "up-down arrow",
-        "shortcodes": [
-            ":up-down_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "↕️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "up-down arrow"
+        ],
+        "name": "up-down arrow",
+        "shortcodes": [
+            ":up-down_arrow:"
         ]
     },
     {
-        "codepoints": "↔️",
-        "name": "left-right arrow",
-        "shortcodes": [
-            ":left-right_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "↔️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "left-right arrow"
+        ],
+        "name": "left-right arrow",
+        "shortcodes": [
+            ":left-right_arrow:"
         ]
     },
     {
-        "codepoints": "↩️",
-        "name": "right arrow curving left",
-        "shortcodes": [
-            ":right_arrow_curving_left:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "↩️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "right arrow curving left"
+        ],
+        "name": "right arrow curving left",
+        "shortcodes": [
+            ":right_arrow_curving_left:"
         ]
     },
     {
-        "codepoints": "↪️",
-        "name": "left arrow curving right",
-        "shortcodes": [
-            ":left_arrow_curving_right:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "↪️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "left arrow curving right"
+        ],
+        "name": "left arrow curving right",
+        "shortcodes": [
+            ":left_arrow_curving_right:"
         ]
     },
     {
-        "codepoints": "⤴️",
-        "name": "right arrow curving up",
-        "shortcodes": [
-            ":right_arrow_curving_up:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⤴️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "right arrow curving up"
+        ],
+        "name": "right arrow curving up",
+        "shortcodes": [
+            ":right_arrow_curving_up:"
         ]
     },
     {
-        "codepoints": "⤵️",
-        "name": "right arrow curving down",
-        "shortcodes": [
-            ":right_arrow_curving_down:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⤵️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "down",
             "right arrow curving down"
+        ],
+        "name": "right arrow curving down",
+        "shortcodes": [
+            ":right_arrow_curving_down:"
         ]
     },
     {
-        "codepoints": "🔃",
-        "name": "clockwise vertical arrows",
-        "shortcodes": [
-            ":clockwise_vertical_arrows:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔃",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "clockwise",
             "clockwise vertical arrows",
             "reload"
+        ],
+        "name": "clockwise vertical arrows",
+        "shortcodes": [
+            ":clockwise_vertical_arrows:"
         ]
     },
     {
-        "codepoints": "🔄",
-        "name": "counterclockwise arrows button",
-        "shortcodes": [
-            ":counterclockwise_arrows_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔄",
+        "emoticons": [],
         "keywords": [
             "anticlockwise",
             "arrow",
@@ -21031,126 +19280,126 @@ export const emojisData = JSON.parse(`[
             "counterclockwise arrows button",
             "withershins",
             "anticlockwise arrows button"
+        ],
+        "name": "counterclockwise arrows button",
+        "shortcodes": [
+            ":counterclockwise_arrows_button:"
         ]
     },
     {
-        "codepoints": "🔙",
-        "name": "BACK arrow",
-        "shortcodes": [
-            ":BACK_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔙",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "BACK"
+        ],
+        "name": "BACK arrow",
+        "shortcodes": [
+            ":BACK_arrow:"
         ]
     },
     {
-        "codepoints": "🔚",
-        "name": "END arrow",
-        "shortcodes": [
-            ":END_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔚",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "END"
+        ],
+        "name": "END arrow",
+        "shortcodes": [
+            ":END_arrow:"
         ]
     },
     {
-        "codepoints": "🔛",
-        "name": "ON! arrow",
-        "shortcodes": [
-            ":ON!_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔛",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "mark",
             "ON",
             "ON!"
+        ],
+        "name": "ON! arrow",
+        "shortcodes": [
+            ":ON!_arrow:"
         ]
     },
     {
-        "codepoints": "🔜",
-        "name": "SOON arrow",
-        "shortcodes": [
-            ":SOON_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔜",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "SOON"
+        ],
+        "name": "SOON arrow",
+        "shortcodes": [
+            ":SOON_arrow:"
         ]
     },
     {
-        "codepoints": "🔝",
-        "name": "TOP arrow",
-        "shortcodes": [
-            ":TOP_arrow:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔝",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "TOP",
             "up"
+        ],
+        "name": "TOP arrow",
+        "shortcodes": [
+            ":TOP_arrow:"
         ]
     },
     {
-        "codepoints": "🛐",
-        "name": "place of worship",
-        "shortcodes": [
-            ":place_of_worship:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🛐",
+        "emoticons": [],
         "keywords": [
             "place of worship",
             "religion",
             "worship"
+        ],
+        "name": "place of worship",
+        "shortcodes": [
+            ":place_of_worship:"
         ]
     },
     {
-        "codepoints": "⚛️",
-        "name": "atom symbol",
-        "shortcodes": [
-            ":atom_symbol:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⚛️",
+        "emoticons": [],
         "keywords": [
             "atheist",
             "atom",
             "atom symbol"
+        ],
+        "name": "atom symbol",
+        "shortcodes": [
+            ":atom_symbol:"
         ]
     },
     {
-        "codepoints": "🕉️",
-        "name": "om",
-        "shortcodes": [
-            ":om:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🕉️",
+        "emoticons": [],
         "keywords": [
             "Hindu",
             "om",
             "religion"
+        ],
+        "name": "om",
+        "shortcodes": [
+            ":om:"
         ]
     },
     {
-        "codepoints": "✡️",
-        "name": "star of David",
-        "shortcodes": [
-            ":star_of_David:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "✡️",
+        "emoticons": [],
         "keywords": [
             "David",
             "Jew",
@@ -21160,32 +19409,32 @@ export const emojisData = JSON.parse(`[
             "star of David",
             "Judaism",
             "Star of David"
+        ],
+        "name": "star of David",
+        "shortcodes": [
+            ":star_of_David:"
         ]
     },
     {
-        "codepoints": "☸️",
-        "name": "wheel of dharma",
-        "shortcodes": [
-            ":wheel_of_dharma:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "☸️",
+        "emoticons": [],
         "keywords": [
             "Buddhist",
             "dharma",
             "religion",
             "wheel",
             "wheel of dharma"
+        ],
+        "name": "wheel of dharma",
+        "shortcodes": [
+            ":wheel_of_dharma:"
         ]
     },
     {
-        "codepoints": "☯️",
-        "name": "yin yang",
-        "shortcodes": [
-            ":yin_yang:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "☯️",
+        "emoticons": [],
         "keywords": [
             "religion",
             "tao",
@@ -21194,358 +19443,358 @@ export const emojisData = JSON.parse(`[
             "yin",
             "Tao",
             "Taoist"
+        ],
+        "name": "yin yang",
+        "shortcodes": [
+            ":yin_yang:"
         ]
     },
     {
-        "codepoints": "✝️",
-        "name": "latin cross",
-        "shortcodes": [
-            ":latin_cross:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "✝️",
+        "emoticons": [],
         "keywords": [
             "Christian",
             "cross",
             "religion",
             "latin cross",
             "Latin cross"
+        ],
+        "name": "latin cross",
+        "shortcodes": [
+            ":latin_cross:"
         ]
     },
     {
-        "codepoints": "☦️",
-        "name": "orthodox cross",
-        "shortcodes": [
-            ":orthodox_cross:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "☦️",
+        "emoticons": [],
         "keywords": [
             "Christian",
             "cross",
             "orthodox cross",
             "religion",
             "Orthodox cross"
+        ],
+        "name": "orthodox cross",
+        "shortcodes": [
+            ":orthodox_cross:"
         ]
     },
     {
-        "codepoints": "☪️",
-        "name": "star and crescent",
-        "shortcodes": [
-            ":star_and_crescent:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "☪️",
+        "emoticons": [],
         "keywords": [
             "islam",
             "Muslim",
             "religion",
             "star and crescent",
             "Islam"
+        ],
+        "name": "star and crescent",
+        "shortcodes": [
+            ":star_and_crescent:"
         ]
     },
     {
-        "codepoints": "☮️",
-        "name": "peace symbol",
-        "shortcodes": [
-            ":peace_symbol:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "☮️",
+        "emoticons": [],
         "keywords": [
             "peace",
             "peace symbol"
+        ],
+        "name": "peace symbol",
+        "shortcodes": [
+            ":peace_symbol:"
         ]
     },
     {
-        "codepoints": "🕎",
-        "name": "menorah",
-        "shortcodes": [
-            ":menorah:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🕎",
+        "emoticons": [],
         "keywords": [
             "candelabrum",
             "candlestick",
             "menorah",
             "religion"
+        ],
+        "name": "menorah",
+        "shortcodes": [
+            ":menorah:"
         ]
     },
     {
-        "codepoints": "🔯",
-        "name": "dotted six-pointed star",
-        "shortcodes": [
-            ":dotted_six-pointed_star:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔯",
+        "emoticons": [],
         "keywords": [
             "dotted six-pointed star",
             "fortune",
             "star"
+        ],
+        "name": "dotted six-pointed star",
+        "shortcodes": [
+            ":dotted_six-pointed_star:"
         ]
     },
     {
-        "codepoints": "♈",
-        "name": "Aries",
-        "shortcodes": [
-            ":Aries:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♈",
+        "emoticons": [],
         "keywords": [
             "Aries",
             "ram",
             "zodiac"
+        ],
+        "name": "Aries",
+        "shortcodes": [
+            ":Aries:"
         ]
     },
     {
-        "codepoints": "♉",
-        "name": "Taurus",
-        "shortcodes": [
-            ":Taurus:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♉",
+        "emoticons": [],
         "keywords": [
             "bull",
             "ox",
             "Taurus",
             "zodiac"
+        ],
+        "name": "Taurus",
+        "shortcodes": [
+            ":Taurus:"
         ]
     },
     {
-        "codepoints": "♊",
-        "name": "Gemini",
-        "shortcodes": [
-            ":Gemini:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♊",
+        "emoticons": [],
         "keywords": [
             "Gemini",
             "twins",
             "zodiac"
+        ],
+        "name": "Gemini",
+        "shortcodes": [
+            ":Gemini:"
         ]
     },
     {
-        "codepoints": "♋",
-        "name": "Cancer",
-        "shortcodes": [
-            ":Cancer:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♋",
+        "emoticons": [],
         "keywords": [
             "Cancer",
             "crab",
             "zodiac"
+        ],
+        "name": "Cancer",
+        "shortcodes": [
+            ":Cancer:"
         ]
     },
     {
-        "codepoints": "♌",
-        "name": "Leo",
-        "shortcodes": [
-            ":Leo:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♌",
+        "emoticons": [],
         "keywords": [
             "Leo",
             "lion",
             "zodiac"
+        ],
+        "name": "Leo",
+        "shortcodes": [
+            ":Leo:"
         ]
     },
     {
-        "codepoints": "♍",
-        "name": "Virgo",
-        "shortcodes": [
-            ":Virgo:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♍",
+        "emoticons": [],
         "keywords": [
             "virgin",
             "Virgo",
             "zodiac"
+        ],
+        "name": "Virgo",
+        "shortcodes": [
+            ":Virgo:"
         ]
     },
     {
-        "codepoints": "♎",
-        "name": "Libra",
-        "shortcodes": [
-            ":Libra:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♎",
+        "emoticons": [],
         "keywords": [
             "balance",
             "justice",
             "Libra",
             "scales",
             "zodiac"
+        ],
+        "name": "Libra",
+        "shortcodes": [
+            ":Libra:"
         ]
     },
     {
-        "codepoints": "♏",
-        "name": "Scorpio",
-        "shortcodes": [
-            ":Scorpio:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♏",
+        "emoticons": [],
         "keywords": [
             "Scorpio",
             "scorpion",
             "scorpius",
             "zodiac",
             "Scorpius"
+        ],
+        "name": "Scorpio",
+        "shortcodes": [
+            ":Scorpio:"
         ]
     },
     {
-        "codepoints": "♐",
-        "name": "Sagittarius",
-        "shortcodes": [
-            ":Sagittarius:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♐",
+        "emoticons": [],
         "keywords": [
             "archer",
             "centaur",
             "Sagittarius",
             "zodiac"
+        ],
+        "name": "Sagittarius",
+        "shortcodes": [
+            ":Sagittarius:"
         ]
     },
     {
-        "codepoints": "♑",
-        "name": "Capricorn",
-        "shortcodes": [
-            ":Capricorn:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♑",
+        "emoticons": [],
         "keywords": [
             "Capricorn",
             "goat",
             "zodiac"
+        ],
+        "name": "Capricorn",
+        "shortcodes": [
+            ":Capricorn:"
         ]
     },
     {
-        "codepoints": "♒",
-        "name": "Aquarius",
-        "shortcodes": [
-            ":Aquarius:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♒",
+        "emoticons": [],
         "keywords": [
             "Aquarius",
             "water bearer",
             "zodiac",
             "bearer",
             "water"
+        ],
+        "name": "Aquarius",
+        "shortcodes": [
+            ":Aquarius:"
         ]
     },
     {
-        "codepoints": "♓",
-        "name": "Pisces",
-        "shortcodes": [
-            ":Pisces:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♓",
+        "emoticons": [],
         "keywords": [
             "fish",
             "Pisces",
             "zodiac"
+        ],
+        "name": "Pisces",
+        "shortcodes": [
+            ":Pisces:"
         ]
     },
     {
-        "codepoints": "⛎",
-        "name": "Ophiuchus",
-        "shortcodes": [
-            ":Ophiuchus:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⛎",
+        "emoticons": [],
         "keywords": [
             "bearer",
             "Ophiuchus",
             "serpent",
             "snake",
             "zodiac"
+        ],
+        "name": "Ophiuchus",
+        "shortcodes": [
+            ":Ophiuchus:"
         ]
     },
     {
-        "codepoints": "🔀",
-        "name": "shuffle tracks button",
-        "shortcodes": [
-            ":shuffle_tracks_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔀",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "crossed",
             "shuffle tracks button"
+        ],
+        "name": "shuffle tracks button",
+        "shortcodes": [
+            ":shuffle_tracks_button:"
         ]
     },
     {
-        "codepoints": "🔁",
-        "name": "repeat button",
-        "shortcodes": [
-            ":repeat_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔁",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "clockwise",
             "repeat",
             "repeat button"
+        ],
+        "name": "repeat button",
+        "shortcodes": [
+            ":repeat_button:"
         ]
     },
     {
-        "codepoints": "🔂",
-        "name": "repeat single button",
-        "shortcodes": [
-            ":repeat_single_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔂",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "clockwise",
             "once",
             "repeat single button"
+        ],
+        "name": "repeat single button",
+        "shortcodes": [
+            ":repeat_single_button:"
         ]
     },
     {
-        "codepoints": "▶️",
-        "name": "play button",
-        "shortcodes": [
-            ":play_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "▶️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "play",
             "play button",
             "right",
             "triangle"
+        ],
+        "name": "play button",
+        "shortcodes": [
+            ":play_button:"
         ]
     },
     {
-        "codepoints": "⏩",
-        "name": "fast-forward button",
-        "shortcodes": [
-            ":fast-forward_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏩",
+        "emoticons": [],
         "keywords": [
             "fast forward button",
             "arrow",
@@ -21553,32 +19802,32 @@ export const emojisData = JSON.parse(`[
             "fast",
             "fast-forward button",
             "forward"
+        ],
+        "name": "fast-forward button",
+        "shortcodes": [
+            ":fast-forward_button:"
         ]
     },
     {
-        "codepoints": "⏭️",
-        "name": "next track button",
-        "shortcodes": [
-            ":next_track_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏭️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "next scene",
             "next track",
             "next track button",
             "triangle"
+        ],
+        "name": "next track button",
+        "shortcodes": [
+            ":next_track_button:"
         ]
     },
     {
-        "codepoints": "⏯️",
-        "name": "play or pause button",
-        "shortcodes": [
-            ":play_or_pause_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏯️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "pause",
@@ -21586,93 +19835,93 @@ export const emojisData = JSON.parse(`[
             "play or pause button",
             "right",
             "triangle"
+        ],
+        "name": "play or pause button",
+        "shortcodes": [
+            ":play_or_pause_button:"
         ]
     },
     {
-        "codepoints": "◀️",
-        "name": "reverse button",
-        "shortcodes": [
-            ":reverse_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "◀️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "left",
             "reverse",
             "reverse button",
             "triangle"
+        ],
+        "name": "reverse button",
+        "shortcodes": [
+            ":reverse_button:"
         ]
     },
     {
-        "codepoints": "⏪",
-        "name": "fast reverse button",
-        "shortcodes": [
-            ":fast_reverse_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏪",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "double",
             "fast reverse button",
             "rewind"
+        ],
+        "name": "fast reverse button",
+        "shortcodes": [
+            ":fast_reverse_button:"
         ]
     },
     {
-        "codepoints": "⏮️",
-        "name": "last track button",
-        "shortcodes": [
-            ":last_track_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏮️",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "last track button",
             "previous scene",
             "previous track",
             "triangle"
+        ],
+        "name": "last track button",
+        "shortcodes": [
+            ":last_track_button:"
         ]
     },
     {
-        "codepoints": "🔼",
-        "name": "upwards button",
-        "shortcodes": [
-            ":upwards_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔼",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "button",
             "red",
             "upwards button",
             "upward button"
+        ],
+        "name": "upwards button",
+        "shortcodes": [
+            ":upwards_button:"
         ]
     },
     {
-        "codepoints": "⏫",
-        "name": "fast up button",
-        "shortcodes": [
-            ":fast_up_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏫",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "double",
             "fast up button"
+        ],
+        "name": "fast up button",
+        "shortcodes": [
+            ":fast_up_button:"
         ]
     },
     {
-        "codepoints": "🔽",
-        "name": "downwards button",
-        "shortcodes": [
-            ":downwards_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔽",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "button",
@@ -21680,133 +19929,133 @@ export const emojisData = JSON.parse(`[
             "downwards button",
             "red",
             "downward button"
+        ],
+        "name": "downwards button",
+        "shortcodes": [
+            ":downwards_button:"
         ]
     },
     {
-        "codepoints": "⏬",
-        "name": "fast down button",
-        "shortcodes": [
-            ":fast_down_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏬",
+        "emoticons": [],
         "keywords": [
             "arrow",
             "double",
             "down",
             "fast down button"
+        ],
+        "name": "fast down button",
+        "shortcodes": [
+            ":fast_down_button:"
         ]
     },
     {
-        "codepoints": "⏸️",
-        "name": "pause button",
-        "shortcodes": [
-            ":pause_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏸️",
+        "emoticons": [],
         "keywords": [
             "bar",
             "double",
             "pause",
             "pause button",
             "vertical"
+        ],
+        "name": "pause button",
+        "shortcodes": [
+            ":pause_button:"
         ]
     },
     {
-        "codepoints": "⏹️",
-        "name": "stop button",
-        "shortcodes": [
-            ":stop_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏹️",
+        "emoticons": [],
         "keywords": [
             "square",
             "stop",
             "stop button"
+        ],
+        "name": "stop button",
+        "shortcodes": [
+            ":stop_button:"
         ]
     },
     {
-        "codepoints": "⏺️",
-        "name": "record button",
-        "shortcodes": [
-            ":record_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏺️",
+        "emoticons": [],
         "keywords": [
             "circle",
             "record",
             "record button"
+        ],
+        "name": "record button",
+        "shortcodes": [
+            ":record_button:"
         ]
     },
     {
-        "codepoints": "⏏️",
-        "name": "eject button",
-        "shortcodes": [
-            ":eject_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⏏️",
+        "emoticons": [],
         "keywords": [
             "eject",
             "eject button"
+        ],
+        "name": "eject button",
+        "shortcodes": [
+            ":eject_button:"
         ]
     },
     {
-        "codepoints": "🎦",
-        "name": "cinema",
-        "shortcodes": [
-            ":cinema:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🎦",
+        "emoticons": [],
         "keywords": [
             "camera",
             "cinema",
             "film",
             "movie"
+        ],
+        "name": "cinema",
+        "shortcodes": [
+            ":cinema:"
         ]
     },
     {
-        "codepoints": "🔅",
-        "name": "dim button",
-        "shortcodes": [
-            ":dim_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔅",
+        "emoticons": [],
         "keywords": [
             "brightness",
             "dim",
             "dim button",
             "low"
+        ],
+        "name": "dim button",
+        "shortcodes": [
+            ":dim_button:"
         ]
     },
     {
-        "codepoints": "🔆",
-        "name": "bright button",
-        "shortcodes": [
-            ":bright_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔆",
+        "emoticons": [],
         "keywords": [
             "bright button",
             "brightness",
             "brightness button",
             "bright"
+        ],
+        "name": "bright button",
+        "shortcodes": [
+            ":bright_button:"
         ]
     },
     {
-        "codepoints": "📶",
-        "name": "antenna bars",
-        "shortcodes": [
-            ":antenna_bars:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "📶",
+        "emoticons": [],
         "keywords": [
             "antenna",
             "antenna bars",
@@ -21814,16 +20063,16 @@ export const emojisData = JSON.parse(`[
             "cell",
             "mobile",
             "phone"
+        ],
+        "name": "antenna bars",
+        "shortcodes": [
+            ":antenna_bars:"
         ]
     },
     {
-        "codepoints": "📳",
-        "name": "vibration mode",
-        "shortcodes": [
-            ":vibration_mode:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "📳",
+        "emoticons": [],
         "keywords": [
             "cell",
             "mobile",
@@ -21832,72 +20081,58 @@ export const emojisData = JSON.parse(`[
             "telephone",
             "vibration",
             "vibrate"
+        ],
+        "name": "vibration mode",
+        "shortcodes": [
+            ":vibration_mode:"
         ]
     },
     {
-        "codepoints": "📴",
-        "name": "mobile phone off",
-        "shortcodes": [
-            ":mobile_phone_off:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "📴",
+        "emoticons": [],
         "keywords": [
             "cell",
             "mobile",
             "off",
             "phone",
             "telephone"
+        ],
+        "name": "mobile phone off",
+        "shortcodes": [
+            ":mobile_phone_off:"
         ]
     },
     {
-        "codepoints": "♀️",
-        "name": "female sign",
-        "shortcodes": [
-            ":female_sign:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♀️",
+        "emoticons": [],
         "keywords": [
             "female sign",
             "woman"
+        ],
+        "name": "female sign",
+        "shortcodes": [
+            ":female_sign:"
         ]
     },
     {
-        "codepoints": "♂️",
-        "name": "male sign",
-        "shortcodes": [
-            ":male_sign:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♂️",
+        "emoticons": [],
         "keywords": [
             "male sign",
             "man"
-        ]
-    },
-    {
-        "codepoints": "⚧️",
-        "name": "transgender symbol",
-        "shortcodes": [
-            ":transgender_symbol:"
         ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "transgender",
-            "transgender symbol",
-            "trans"
+        "name": "male sign",
+        "shortcodes": [
+            ":male_sign:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "✖️",
-        "name": "multiply",
-        "shortcodes": [
-            ":multiply:"
-        ],
         "emoticons": [],
-        "category": "Symbols",
         "keywords": [
             "×",
             "cancel",
@@ -21906,16 +20141,16 @@ export const emojisData = JSON.parse(`[
             "sign",
             "x",
             "heavy multiplication sign"
+        ],
+        "name": "multiply",
+        "shortcodes": [
+            ":multiply:"
         ]
     },
     {
-        "codepoints": "➕",
-        "name": "plus",
-        "shortcodes": [
-            ":plus:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "➕",
+        "emoticons": [],
         "keywords": [
             "+",
             "add",
@@ -21924,16 +20159,16 @@ export const emojisData = JSON.parse(`[
             "maths",
             "plus",
             "sign"
+        ],
+        "name": "plus",
+        "shortcodes": [
+            ":plus:"
         ]
     },
     {
-        "codepoints": "➖",
-        "name": "minus",
-        "shortcodes": [
-            ":minus:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "➖",
+        "emoticons": [],
         "keywords": [
             "-",
             "–",
@@ -21944,47 +20179,32 @@ export const emojisData = JSON.parse(`[
             "subtraction",
             "−",
             "heavy minus sign"
+        ],
+        "name": "minus",
+        "shortcodes": [
+            ":minus:"
         ]
     },
     {
-        "codepoints": "➗",
-        "name": "divide",
-        "shortcodes": [
-            ":divide:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "➗",
+        "emoticons": [],
         "keywords": [
             "÷",
             "divide",
             "division",
             "math",
             "sign"
-        ]
-    },
-    {
-        "codepoints": "🟰",
-        "name": "heavy equals sign",
-        "shortcodes": [
-            ":heavy_equals_sign:"
         ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "equality",
-            "heavy equals sign",
-            "maths",
-            "math"
+        "name": "divide",
+        "shortcodes": [
+            ":divide:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "♾️",
-        "name": "infinity",
-        "shortcodes": [
-            ":infinity:"
-        ],
         "emoticons": [],
-        "category": "Symbols",
         "keywords": [
             "eternal",
             "forever",
@@ -21992,16 +20212,16 @@ export const emojisData = JSON.parse(`[
             "unbound",
             "universal",
             "unbounded"
+        ],
+        "name": "infinity",
+        "shortcodes": [
+            ":infinity:"
         ]
     },
     {
-        "codepoints": "‼️",
-        "name": "double exclamation mark",
-        "shortcodes": [
-            ":double_exclamation_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "‼️",
+        "emoticons": [],
         "keywords": [
             "double exclamation mark",
             "exclamation",
@@ -22010,16 +20230,16 @@ export const emojisData = JSON.parse(`[
             "!",
             "!!",
             "bangbang"
+        ],
+        "name": "double exclamation mark",
+        "shortcodes": [
+            ":double_exclamation_mark:"
         ]
     },
     {
-        "codepoints": "⁉️",
-        "name": "exclamation question mark",
-        "shortcodes": [
-            ":exclamation_question_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⁉️",
+        "emoticons": [],
         "keywords": [
             "exclamation",
             "mark",
@@ -22030,32 +20250,32 @@ export const emojisData = JSON.parse(`[
             "?",
             "interrobang",
             "exclamation question mark"
+        ],
+        "name": "exclamation question mark",
+        "shortcodes": [
+            ":exclamation_question_mark:"
         ]
     },
     {
-        "codepoints": "❓",
-        "name": "red question mark",
-        "shortcodes": [
-            ":red_question_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "❓",
+        "emoticons": [],
         "keywords": [
             "?",
             "mark",
             "punctuation",
             "question",
             "red question mark"
+        ],
+        "name": "red question mark",
+        "shortcodes": [
+            ":red_question_mark:"
         ]
     },
     {
-        "codepoints": "❔",
-        "name": "white question mark",
-        "shortcodes": [
-            ":white_question_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "❔",
+        "emoticons": [],
         "keywords": [
             "?",
             "mark",
@@ -22063,16 +20283,16 @@ export const emojisData = JSON.parse(`[
             "punctuation",
             "question",
             "white question mark"
+        ],
+        "name": "white question mark",
+        "shortcodes": [
+            ":white_question_mark:"
         ]
     },
     {
-        "codepoints": "❕",
-        "name": "white exclamation mark",
-        "shortcodes": [
-            ":white_exclamation_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "❕",
+        "emoticons": [],
         "keywords": [
             "!",
             "exclamation",
@@ -22080,193 +20300,193 @@ export const emojisData = JSON.parse(`[
             "outlined",
             "punctuation",
             "white exclamation mark"
+        ],
+        "name": "white exclamation mark",
+        "shortcodes": [
+            ":white_exclamation_mark:"
         ]
     },
     {
-        "codepoints": "❗",
-        "name": "red exclamation mark",
-        "shortcodes": [
-            ":red_exclamation_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "❗",
+        "emoticons": [],
         "keywords": [
             "!",
             "exclamation",
             "mark",
             "punctuation",
             "red exclamation mark"
+        ],
+        "name": "red exclamation mark",
+        "shortcodes": [
+            ":red_exclamation_mark:"
         ]
     },
     {
-        "codepoints": "〰️",
-        "name": "wavy dash",
-        "shortcodes": [
-            ":wavy_dash:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "〰️",
+        "emoticons": [],
         "keywords": [
             "dash",
             "punctuation",
             "wavy"
+        ],
+        "name": "wavy dash",
+        "shortcodes": [
+            ":wavy_dash:"
         ]
     },
     {
-        "codepoints": "💱",
-        "name": "currency exchange",
-        "shortcodes": [
-            ":currency_exchange:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "💱",
+        "emoticons": [],
         "keywords": [
             "bank",
             "currency",
             "exchange",
             "money"
+        ],
+        "name": "currency exchange",
+        "shortcodes": [
+            ":currency_exchange:"
         ]
     },
     {
-        "codepoints": "💲",
-        "name": "heavy dollar sign",
-        "shortcodes": [
-            ":heavy_dollar_sign:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "💲",
+        "emoticons": [],
         "keywords": [
             "currency",
             "dollar",
             "heavy dollar sign",
             "money"
+        ],
+        "name": "heavy dollar sign",
+        "shortcodes": [
+            ":heavy_dollar_sign:"
         ]
     },
     {
-        "codepoints": "⚕️",
-        "name": "medical symbol",
-        "shortcodes": [
-            ":medical_symbol:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⚕️",
+        "emoticons": [],
         "keywords": [
             "aesculapius",
             "medical symbol",
             "medicine",
             "staff"
+        ],
+        "name": "medical symbol",
+        "shortcodes": [
+            ":medical_symbol:"
         ]
     },
     {
-        "codepoints": "♻️",
-        "name": "recycling symbol",
-        "shortcodes": [
-            ":recycling_symbol:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "♻️",
+        "emoticons": [],
         "keywords": [
             "recycle",
             "recycling symbol"
+        ],
+        "name": "recycling symbol",
+        "shortcodes": [
+            ":recycling_symbol:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "⚜️",
+        "emoticons": [],
+        "keywords": [
+            "fleur-de-lis"
+        ],
         "name": "fleur-de-lis",
         "shortcodes": [
             ":fleur-de-lis:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "fleur-de-lis"
         ]
     },
     {
-        "codepoints": "🔱",
-        "name": "trident emblem",
-        "shortcodes": [
-            ":trident_emblem:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔱",
+        "emoticons": [],
         "keywords": [
             "anchor",
             "emblem",
             "ship",
             "tool",
             "trident"
+        ],
+        "name": "trident emblem",
+        "shortcodes": [
+            ":trident_emblem:"
         ]
     },
     {
-        "codepoints": "📛",
-        "name": "name badge",
-        "shortcodes": [
-            ":name_badge:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "📛",
+        "emoticons": [],
         "keywords": [
             "badge",
             "name"
+        ],
+        "name": "name badge",
+        "shortcodes": [
+            ":name_badge:"
         ]
     },
     {
-        "codepoints": "🔰",
-        "name": "Japanese symbol for beginner",
-        "shortcodes": [
-            ":Japanese_symbol_for_beginner:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔰",
+        "emoticons": [],
         "keywords": [
             "beginner",
             "chevron",
             "Japanese",
             "Japanese symbol for beginner",
             "leaf"
+        ],
+        "name": "Japanese symbol for beginner",
+        "shortcodes": [
+            ":Japanese_symbol_for_beginner:"
         ]
     },
     {
-        "codepoints": "⭕",
-        "name": "hollow red circle",
-        "shortcodes": [
-            ":hollow_red_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⭕",
+        "emoticons": [],
         "keywords": [
             "circle",
             "hollow red circle",
             "large",
             "o",
             "red"
+        ],
+        "name": "hollow red circle",
+        "shortcodes": [
+            ":hollow_red_circle:"
         ]
     },
     {
-        "codepoints": "✅",
-        "name": "check mark button",
-        "shortcodes": [
-            ":check_mark_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "✅",
+        "emoticons": [],
         "keywords": [
             "✓",
             "button",
             "check",
             "mark",
             "tick"
+        ],
+        "name": "check mark button",
+        "shortcodes": [
+            ":check_mark_button:"
         ]
     },
     {
-        "codepoints": "☑️",
-        "name": "check box with check",
-        "shortcodes": [
-            ":check_box_with_check:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "☑️",
+        "emoticons": [],
         "keywords": [
             "ballot",
             "box",
@@ -22275,16 +20495,16 @@ export const emojisData = JSON.parse(`[
             "tick box with tick",
             "✓",
             "check"
+        ],
+        "name": "check box with check",
+        "shortcodes": [
+            ":check_box_with_check:"
         ]
     },
     {
-        "codepoints": "✔️",
-        "name": "check mark",
-        "shortcodes": [
-            ":check_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "✔️",
+        "emoticons": [],
         "keywords": [
             "check mark",
             "heavy tick mark",
@@ -22292,16 +20512,16 @@ export const emojisData = JSON.parse(`[
             "tick",
             "✓",
             "check"
+        ],
+        "name": "check mark",
+        "shortcodes": [
+            ":check_mark:"
         ]
     },
     {
-        "codepoints": "❌",
-        "name": "cross mark",
-        "shortcodes": [
-            ":cross_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "❌",
+        "emoticons": [],
         "keywords": [
             "×",
             "cancel",
@@ -22310,315 +20530,315 @@ export const emojisData = JSON.parse(`[
             "multiplication",
             "multiply",
             "x"
+        ],
+        "name": "cross mark",
+        "shortcodes": [
+            ":cross_mark:"
         ]
     },
     {
-        "codepoints": "❎",
-        "name": "cross mark button",
-        "shortcodes": [
-            ":cross_mark_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "❎",
+        "emoticons": [],
         "keywords": [
             "×",
             "cross mark button",
             "mark",
             "square",
             "x"
+        ],
+        "name": "cross mark button",
+        "shortcodes": [
+            ":cross_mark_button:"
         ]
     },
     {
-        "codepoints": "➰",
-        "name": "curly loop",
-        "shortcodes": [
-            ":curly_loop:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "➰",
+        "emoticons": [],
         "keywords": [
             "curl",
             "curly loop",
             "loop"
+        ],
+        "name": "curly loop",
+        "shortcodes": [
+            ":curly_loop:"
         ]
     },
     {
-        "codepoints": "➿",
-        "name": "double curly loop",
-        "shortcodes": [
-            ":double_curly_loop:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "➿",
+        "emoticons": [],
         "keywords": [
             "curl",
             "double",
             "double curly loop",
             "loop"
+        ],
+        "name": "double curly loop",
+        "shortcodes": [
+            ":double_curly_loop:"
         ]
     },
     {
-        "codepoints": "〽️",
-        "name": "part alternation mark",
-        "shortcodes": [
-            ":part_alternation_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "〽️",
+        "emoticons": [],
         "keywords": [
             "mark",
             "part",
             "part alternation mark"
+        ],
+        "name": "part alternation mark",
+        "shortcodes": [
+            ":part_alternation_mark:"
         ]
     },
     {
-        "codepoints": "✳️",
-        "name": "eight-spoked asterisk",
-        "shortcodes": [
-            ":eight-spoked_asterisk:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "✳️",
+        "emoticons": [],
         "keywords": [
             "*",
             "asterisk",
             "eight-spoked asterisk"
+        ],
+        "name": "eight-spoked asterisk",
+        "shortcodes": [
+            ":eight-spoked_asterisk:"
         ]
     },
     {
-        "codepoints": "✴️",
-        "name": "eight-pointed star",
-        "shortcodes": [
-            ":eight-pointed_star:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "✴️",
+        "emoticons": [],
         "keywords": [
             "*",
             "eight-pointed star",
             "star"
+        ],
+        "name": "eight-pointed star",
+        "shortcodes": [
+            ":eight-pointed_star:"
         ]
     },
     {
-        "codepoints": "❇️",
-        "name": "sparkle",
-        "shortcodes": [
-            ":sparkle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "❇️",
+        "emoticons": [],
         "keywords": [
             "*",
             "sparkle"
+        ],
+        "name": "sparkle",
+        "shortcodes": [
+            ":sparkle:"
         ]
     },
     {
-        "codepoints": "©️",
-        "name": "copyright",
-        "shortcodes": [
-            ":copyright:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "©️",
+        "emoticons": [],
         "keywords": [
             "C",
             "copyright"
+        ],
+        "name": "copyright",
+        "shortcodes": [
+            ":copyright:"
         ]
     },
     {
-        "codepoints": "®️",
-        "name": "registered",
-        "shortcodes": [
-            ":registered:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "®️",
+        "emoticons": [],
         "keywords": [
             "R",
             "registered",
             "r",
             "trademark"
+        ],
+        "name": "registered",
+        "shortcodes": [
+            ":registered:"
         ]
     },
     {
-        "codepoints": "™️",
-        "name": "trade mark",
-        "shortcodes": [
-            ":trade_mark:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "™️",
+        "emoticons": [],
         "keywords": [
             "mark",
             "TM",
             "trade mark",
             "trademark"
+        ],
+        "name": "trade mark",
+        "shortcodes": [
+            ":trade_mark:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "#️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: #",
         "shortcodes": [
             ":keycap:_#:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "*️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: *",
         "shortcodes": [
             ":keycap:_*:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "0️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 0",
         "shortcodes": [
             ":keycap:_0:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "1️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 1",
         "shortcodes": [
             ":keycap:_1:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "2️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 2",
         "shortcodes": [
             ":keycap:_2:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "3️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 3",
         "shortcodes": [
             ":keycap:_3:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "4️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 4",
         "shortcodes": [
             ":keycap:_4:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "5️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 5",
         "shortcodes": [
             ":keycap:_5:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "6️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 6",
         "shortcodes": [
             ":keycap:_6:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "7️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 7",
         "shortcodes": [
             ":keycap:_7:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "8️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 8",
         "shortcodes": [
             ":keycap:_8:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "9️⃣",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 9",
         "shortcodes": [
             ":keycap:_9:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🔟",
+        "emoticons": [],
+        "keywords": [
+            "keycap"
+        ],
         "name": "keycap: 10",
         "shortcodes": [
             ":keycap:_10:"
-        ],
-        "emoticons": [],
-        "category": "Symbols",
-        "keywords": [
-            "keycap"
         ]
     },
     {
-        "codepoints": "🔠",
-        "name": "input latin uppercase",
-        "shortcodes": [
-            ":input_latin_uppercase:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔠",
+        "emoticons": [],
         "keywords": [
             "input Latin uppercase",
             "ABCD",
@@ -22627,16 +20847,16 @@ export const emojisData = JSON.parse(`[
             "letters",
             "uppercase",
             "Latin"
+        ],
+        "name": "input latin uppercase",
+        "shortcodes": [
+            ":input_latin_uppercase:"
         ]
     },
     {
-        "codepoints": "🔡",
-        "name": "input latin lowercase",
-        "shortcodes": [
-            ":input_latin_lowercase:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔡",
+        "emoticons": [],
         "keywords": [
             "input Latin lowercase",
             "abcd",
@@ -22645,44 +20865,44 @@ export const emojisData = JSON.parse(`[
             "letters",
             "lowercase",
             "Latin"
+        ],
+        "name": "input latin lowercase",
+        "shortcodes": [
+            ":input_latin_lowercase:"
         ]
     },
     {
-        "codepoints": "🔢",
-        "name": "input numbers",
-        "shortcodes": [
-            ":input_numbers:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔢",
+        "emoticons": [],
         "keywords": [
             "1234",
             "input",
             "numbers"
+        ],
+        "name": "input numbers",
+        "shortcodes": [
+            ":input_numbers:"
         ]
     },
     {
-        "codepoints": "🔣",
-        "name": "input symbols",
-        "shortcodes": [
-            ":input_symbols:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔣",
+        "emoticons": [],
         "keywords": [
             "〒♪&%",
             "input",
             "input symbols"
+        ],
+        "name": "input symbols",
+        "shortcodes": [
+            ":input_symbols:"
         ]
     },
     {
-        "codepoints": "🔤",
-        "name": "input latin letters",
-        "shortcodes": [
-            ":input_latin_letters:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔤",
+        "emoticons": [],
         "keywords": [
             "input Latin letters",
             "abc",
@@ -22691,4230 +20911,1127 @@ export const emojisData = JSON.parse(`[
             "latin",
             "letters",
             "Latin"
+        ],
+        "name": "input latin letters",
+        "shortcodes": [
+            ":input_latin_letters:"
         ]
     },
     {
-        "codepoints": "🅰️",
-        "name": "A button (blood type)",
-        "shortcodes": [
-            ":A_button_(blood_type):"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🅰️",
+        "emoticons": [],
         "keywords": [
             "A",
             "A button (blood type)",
             "blood type"
+        ],
+        "name": "A button (blood type)",
+        "shortcodes": [
+            ":A_button_(blood_type):"
         ]
     },
     {
-        "codepoints": "🆎",
-        "name": "AB button (blood type)",
-        "shortcodes": [
-            ":AB_button_(blood_type):"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆎",
+        "emoticons": [],
         "keywords": [
             "AB",
             "AB button (blood type)",
             "blood type"
+        ],
+        "name": "AB button (blood type)",
+        "shortcodes": [
+            ":AB_button_(blood_type):"
         ]
     },
     {
-        "codepoints": "🅱️",
-        "name": "B button (blood type)",
-        "shortcodes": [
-            ":B_button_(blood_type):"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🅱️",
+        "emoticons": [],
         "keywords": [
             "B",
             "B button (blood type)",
             "blood type"
+        ],
+        "name": "B button (blood type)",
+        "shortcodes": [
+            ":B_button_(blood_type):"
         ]
     },
     {
-        "codepoints": "🆑",
-        "name": "CL button",
-        "shortcodes": [
-            ":CL_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆑",
+        "emoticons": [],
         "keywords": [
             "CL",
             "CL button"
+        ],
+        "name": "CL button",
+        "shortcodes": [
+            ":CL_button:"
         ]
     },
     {
-        "codepoints": "🆒",
-        "name": "COOL button",
-        "shortcodes": [
-            ":COOL_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆒",
+        "emoticons": [],
         "keywords": [
             "COOL",
             "COOL button"
+        ],
+        "name": "COOL button",
+        "shortcodes": [
+            ":COOL_button:"
         ]
     },
     {
-        "codepoints": "🆓",
-        "name": "FREE button",
-        "shortcodes": [
-            ":FREE_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆓",
+        "emoticons": [],
         "keywords": [
             "FREE",
             "FREE button"
+        ],
+        "name": "FREE button",
+        "shortcodes": [
+            ":FREE_button:"
         ]
     },
     {
-        "codepoints": "ℹ️",
-        "name": "information",
-        "shortcodes": [
-            ":information:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "ℹ️",
+        "emoticons": [],
         "keywords": [
             "i",
             "information"
+        ],
+        "name": "information",
+        "shortcodes": [
+            ":information:"
         ]
     },
     {
-        "codepoints": "🆔",
-        "name": "ID button",
-        "shortcodes": [
-            ":ID_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆔",
+        "emoticons": [],
         "keywords": [
             "ID",
             "ID button",
             "identity"
+        ],
+        "name": "ID button",
+        "shortcodes": [
+            ":ID_button:"
         ]
     },
     {
-        "codepoints": "Ⓜ️",
-        "name": "circled M",
-        "shortcodes": [
-            ":circled_M:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "Ⓜ️",
+        "emoticons": [],
         "keywords": [
             "circle",
             "circled M",
             "M"
+        ],
+        "name": "circled M",
+        "shortcodes": [
+            ":circled_M:"
         ]
     },
     {
-        "codepoints": "🆕",
-        "name": "NEW button",
-        "shortcodes": [
-            ":NEW_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆕",
+        "emoticons": [],
         "keywords": [
             "NEW",
             "NEW button"
+        ],
+        "name": "NEW button",
+        "shortcodes": [
+            ":NEW_button:"
         ]
     },
     {
-        "codepoints": "🆖",
-        "name": "NG button",
-        "shortcodes": [
-            ":NG_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆖",
+        "emoticons": [],
         "keywords": [
             "NG",
             "NG button"
+        ],
+        "name": "NG button",
+        "shortcodes": [
+            ":NG_button:"
         ]
     },
     {
-        "codepoints": "🅾️",
-        "name": "O button (blood type)",
-        "shortcodes": [
-            ":O_button_(blood_type):"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🅾️",
+        "emoticons": [],
         "keywords": [
             "blood type",
             "O",
             "O button (blood type)"
+        ],
+        "name": "O button (blood type)",
+        "shortcodes": [
+            ":O_button_(blood_type):"
         ]
     },
     {
-        "codepoints": "🆗",
-        "name": "OK button",
-        "shortcodes": [
-            ":OK_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆗",
+        "emoticons": [],
         "keywords": [
             "OK",
             "OK button"
+        ],
+        "name": "OK button",
+        "shortcodes": [
+            ":OK_button:"
         ]
     },
     {
-        "codepoints": "🅿️",
-        "name": "P button",
-        "shortcodes": [
-            ":P_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🅿️",
+        "emoticons": [],
         "keywords": [
             "P",
             "P button",
             "parking"
+        ],
+        "name": "P button",
+        "shortcodes": [
+            ":P_button:"
         ]
     },
     {
-        "codepoints": "🆘",
-        "name": "SOS button",
-        "shortcodes": [
-            ":SOS_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆘",
+        "emoticons": [],
         "keywords": [
             "help",
             "SOS",
             "SOS button"
+        ],
+        "name": "SOS button",
+        "shortcodes": [
+            ":SOS_button:"
         ]
     },
     {
-        "codepoints": "🆙",
-        "name": "UP! button",
-        "shortcodes": [
-            ":UP!_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆙",
+        "emoticons": [],
         "keywords": [
             "mark",
             "UP",
             "UP!",
             "UP! button"
+        ],
+        "name": "UP! button",
+        "shortcodes": [
+            ":UP!_button:"
         ]
     },
     {
-        "codepoints": "🆚",
-        "name": "VS button",
-        "shortcodes": [
-            ":VS_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🆚",
+        "emoticons": [],
         "keywords": [
             "versus",
             "VS",
             "VS button"
+        ],
+        "name": "VS button",
+        "shortcodes": [
+            ":VS_button:"
         ]
     },
     {
-        "codepoints": "🈁",
-        "name": "Japanese “here” button",
-        "shortcodes": [
-            ":Japanese_“here”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈁",
+        "emoticons": [],
         "keywords": [
             "“here”",
             "Japanese",
             "Japanese “here” button",
             "katakana",
             "ココ"
+        ],
+        "name": "Japanese “here” button",
+        "shortcodes": [
+            ":Japanese_“here”_button:"
         ]
     },
     {
-        "codepoints": "🈂️",
-        "name": "Japanese “service charge” button",
-        "shortcodes": [
-            ":Japanese_“service_charge”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈂️",
+        "emoticons": [],
         "keywords": [
             "“service charge”",
             "Japanese",
             "Japanese “service charge” button",
             "katakana",
             "サ"
+        ],
+        "name": "Japanese “service charge” button",
+        "shortcodes": [
+            ":Japanese_“service_charge”_button:"
         ]
     },
     {
-        "codepoints": "🈷️",
-        "name": "Japanese “monthly amount” button",
-        "shortcodes": [
-            ":Japanese_“monthly_amount”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈷️",
+        "emoticons": [],
         "keywords": [
             "“monthly amount”",
             "ideograph",
             "Japanese",
             "Japanese “monthly amount” button",
             "月"
+        ],
+        "name": "Japanese “monthly amount” button",
+        "shortcodes": [
+            ":Japanese_“monthly_amount”_button:"
         ]
     },
     {
-        "codepoints": "🈶",
-        "name": "Japanese “not free of charge” button",
-        "shortcodes": [
-            ":Japanese_“not_free_of_charge”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈶",
+        "emoticons": [],
         "keywords": [
             "“not free of charge”",
             "ideograph",
             "Japanese",
             "Japanese “not free of charge” button",
             "有"
+        ],
+        "name": "Japanese “not free of charge” button",
+        "shortcodes": [
+            ":Japanese_“not_free_of_charge”_button:"
         ]
     },
     {
-        "codepoints": "🈯",
-        "name": "Japanese “reserved” button",
-        "shortcodes": [
-            ":Japanese_“reserved”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈯",
+        "emoticons": [],
         "keywords": [
             "“reserved”",
             "ideograph",
             "Japanese",
             "Japanese “reserved” button",
             "指"
+        ],
+        "name": "Japanese “reserved” button",
+        "shortcodes": [
+            ":Japanese_“reserved”_button:"
         ]
     },
     {
-        "codepoints": "🉐",
-        "name": "Japanese “bargain” button",
-        "shortcodes": [
-            ":Japanese_“bargain”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🉐",
+        "emoticons": [],
         "keywords": [
             "“bargain”",
             "ideograph",
             "Japanese",
             "Japanese “bargain” button",
             "得"
+        ],
+        "name": "Japanese “bargain” button",
+        "shortcodes": [
+            ":Japanese_“bargain”_button:"
         ]
     },
     {
-        "codepoints": "🈹",
-        "name": "Japanese “discount” button",
-        "shortcodes": [
-            ":Japanese_“discount”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈹",
+        "emoticons": [],
         "keywords": [
             "“discount”",
             "ideograph",
             "Japanese",
             "Japanese “discount” button",
             "割"
+        ],
+        "name": "Japanese “discount” button",
+        "shortcodes": [
+            ":Japanese_“discount”_button:"
         ]
     },
     {
-        "codepoints": "🈚",
-        "name": "Japanese “free of charge” button",
-        "shortcodes": [
-            ":Japanese_“free_of_charge”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈚",
+        "emoticons": [],
         "keywords": [
             "“free of charge”",
             "ideograph",
             "Japanese",
             "Japanese “free of charge” button",
             "無"
+        ],
+        "name": "Japanese “free of charge” button",
+        "shortcodes": [
+            ":Japanese_“free_of_charge”_button:"
         ]
     },
     {
-        "codepoints": "🈲",
-        "name": "Japanese “prohibited” button",
-        "shortcodes": [
-            ":Japanese_“prohibited”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈲",
+        "emoticons": [],
         "keywords": [
             "“prohibited”",
             "ideograph",
             "Japanese",
             "Japanese “prohibited” button",
             "禁"
+        ],
+        "name": "Japanese “prohibited” button",
+        "shortcodes": [
+            ":Japanese_“prohibited”_button:"
         ]
     },
     {
-        "codepoints": "🉑",
-        "name": "Japanese “acceptable” button",
-        "shortcodes": [
-            ":Japanese_“acceptable”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🉑",
+        "emoticons": [],
         "keywords": [
             "“acceptable”",
             "ideograph",
             "Japanese",
             "Japanese “acceptable” button",
             "可"
+        ],
+        "name": "Japanese “acceptable” button",
+        "shortcodes": [
+            ":Japanese_“acceptable”_button:"
         ]
     },
     {
-        "codepoints": "🈸",
-        "name": "Japanese “application” button",
-        "shortcodes": [
-            ":Japanese_“application”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈸",
+        "emoticons": [],
         "keywords": [
             "“application”",
             "ideograph",
             "Japanese",
             "Japanese “application” button",
             "申"
+        ],
+        "name": "Japanese “application” button",
+        "shortcodes": [
+            ":Japanese_“application”_button:"
         ]
     },
     {
-        "codepoints": "🈴",
-        "name": "Japanese “passing grade” button",
-        "shortcodes": [
-            ":Japanese_“passing_grade”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈴",
+        "emoticons": [],
         "keywords": [
             "“passing grade”",
             "ideograph",
             "Japanese",
             "Japanese “passing grade” button",
             "合"
+        ],
+        "name": "Japanese “passing grade” button",
+        "shortcodes": [
+            ":Japanese_“passing_grade”_button:"
         ]
     },
     {
-        "codepoints": "🈳",
-        "name": "Japanese “vacancy” button",
-        "shortcodes": [
-            ":Japanese_“vacancy”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈳",
+        "emoticons": [],
         "keywords": [
             "“vacancy”",
             "ideograph",
             "Japanese",
             "Japanese “vacancy” button",
             "空"
+        ],
+        "name": "Japanese “vacancy” button",
+        "shortcodes": [
+            ":Japanese_“vacancy”_button:"
         ]
     },
     {
-        "codepoints": "㊗️",
-        "name": "Japanese “congratulations” button",
-        "shortcodes": [
-            ":Japanese_“congratulations”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "㊗️",
+        "emoticons": [],
         "keywords": [
             "“congratulations”",
             "ideograph",
             "Japanese",
             "Japanese “congratulations” button",
             "祝"
+        ],
+        "name": "Japanese “congratulations” button",
+        "shortcodes": [
+            ":Japanese_“congratulations”_button:"
         ]
     },
     {
-        "codepoints": "㊙️",
-        "name": "Japanese “secret” button",
-        "shortcodes": [
-            ":Japanese_“secret”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "㊙️",
+        "emoticons": [],
         "keywords": [
             "“secret”",
             "ideograph",
             "Japanese",
             "Japanese “secret” button",
             "秘"
+        ],
+        "name": "Japanese “secret” button",
+        "shortcodes": [
+            ":Japanese_“secret”_button:"
         ]
     },
     {
-        "codepoints": "🈺",
-        "name": "Japanese “open for business” button",
-        "shortcodes": [
-            ":Japanese_“open_for_business”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈺",
+        "emoticons": [],
         "keywords": [
             "“open for business”",
             "ideograph",
             "Japanese",
             "Japanese “open for business” button",
             "営"
+        ],
+        "name": "Japanese “open for business” button",
+        "shortcodes": [
+            ":Japanese_“open_for_business”_button:"
         ]
     },
     {
-        "codepoints": "🈵",
-        "name": "Japanese “no vacancy” button",
-        "shortcodes": [
-            ":Japanese_“no_vacancy”_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🈵",
+        "emoticons": [],
         "keywords": [
             "“no vacancy”",
             "ideograph",
             "Japanese",
             "Japanese “no vacancy” button",
             "満"
+        ],
+        "name": "Japanese “no vacancy” button",
+        "shortcodes": [
+            ":Japanese_“no_vacancy”_button:"
         ]
     },
     {
-        "codepoints": "🔴",
-        "name": "red circle",
-        "shortcodes": [
-            ":red_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔴",
+        "emoticons": [],
         "keywords": [
             "circle",
             "geometric",
             "red"
+        ],
+        "name": "red circle",
+        "shortcodes": [
+            ":red_circle:"
         ]
     },
     {
-        "codepoints": "🟠",
-        "name": "orange circle",
-        "shortcodes": [
-            ":orange_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟠",
+        "emoticons": [],
         "keywords": [
             "circle",
             "orange"
+        ],
+        "name": "orange circle",
+        "shortcodes": [
+            ":orange_circle:"
         ]
     },
     {
-        "codepoints": "🟡",
-        "name": "yellow circle",
-        "shortcodes": [
-            ":yellow_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟡",
+        "emoticons": [],
         "keywords": [
             "circle",
             "yellow"
+        ],
+        "name": "yellow circle",
+        "shortcodes": [
+            ":yellow_circle:"
         ]
     },
     {
-        "codepoints": "🟢",
-        "name": "green circle",
-        "shortcodes": [
-            ":green_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟢",
+        "emoticons": [],
         "keywords": [
             "circle",
             "green"
+        ],
+        "name": "green circle",
+        "shortcodes": [
+            ":green_circle:"
         ]
     },
     {
-        "codepoints": "🔵",
-        "name": "blue circle",
-        "shortcodes": [
-            ":blue_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔵",
+        "emoticons": [],
         "keywords": [
             "blue",
             "circle",
             "geometric"
+        ],
+        "name": "blue circle",
+        "shortcodes": [
+            ":blue_circle:"
         ]
     },
     {
-        "codepoints": "🟣",
-        "name": "purple circle",
-        "shortcodes": [
-            ":purple_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟣",
+        "emoticons": [],
         "keywords": [
             "circle",
             "purple"
+        ],
+        "name": "purple circle",
+        "shortcodes": [
+            ":purple_circle:"
         ]
     },
     {
-        "codepoints": "🟤",
-        "name": "brown circle",
-        "shortcodes": [
-            ":brown_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟤",
+        "emoticons": [],
         "keywords": [
             "brown",
             "circle"
+        ],
+        "name": "brown circle",
+        "shortcodes": [
+            ":brown_circle:"
         ]
     },
     {
-        "codepoints": "⚫",
-        "name": "black circle",
-        "shortcodes": [
-            ":black_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⚫",
+        "emoticons": [],
         "keywords": [
             "black circle",
             "circle",
             "geometric"
+        ],
+        "name": "black circle",
+        "shortcodes": [
+            ":black_circle:"
         ]
     },
     {
-        "codepoints": "⚪",
-        "name": "white circle",
-        "shortcodes": [
-            ":white_circle:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⚪",
+        "emoticons": [],
         "keywords": [
             "circle",
             "geometric",
             "white circle"
+        ],
+        "name": "white circle",
+        "shortcodes": [
+            ":white_circle:"
         ]
     },
     {
-        "codepoints": "🟥",
-        "name": "red square",
-        "shortcodes": [
-            ":red_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟥",
+        "emoticons": [],
         "keywords": [
             "red",
             "square"
+        ],
+        "name": "red square",
+        "shortcodes": [
+            ":red_square:"
         ]
     },
     {
-        "codepoints": "🟧",
-        "name": "orange square",
-        "shortcodes": [
-            ":orange_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟧",
+        "emoticons": [],
         "keywords": [
             "orange",
             "square"
+        ],
+        "name": "orange square",
+        "shortcodes": [
+            ":orange_square:"
         ]
     },
     {
-        "codepoints": "🟨",
-        "name": "yellow square",
-        "shortcodes": [
-            ":yellow_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟨",
+        "emoticons": [],
         "keywords": [
             "square",
             "yellow"
+        ],
+        "name": "yellow square",
+        "shortcodes": [
+            ":yellow_square:"
         ]
     },
     {
-        "codepoints": "🟩",
-        "name": "green square",
-        "shortcodes": [
-            ":green_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟩",
+        "emoticons": [],
         "keywords": [
             "green",
             "square"
+        ],
+        "name": "green square",
+        "shortcodes": [
+            ":green_square:"
         ]
     },
     {
-        "codepoints": "🟦",
-        "name": "blue square",
-        "shortcodes": [
-            ":blue_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟦",
+        "emoticons": [],
         "keywords": [
             "blue",
             "square"
+        ],
+        "name": "blue square",
+        "shortcodes": [
+            ":blue_square:"
         ]
     },
     {
-        "codepoints": "🟪",
-        "name": "purple square",
-        "shortcodes": [
-            ":purple_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟪",
+        "emoticons": [],
         "keywords": [
             "purple",
             "square"
+        ],
+        "name": "purple square",
+        "shortcodes": [
+            ":purple_square:"
         ]
     },
     {
-        "codepoints": "🟫",
-        "name": "brown square",
-        "shortcodes": [
-            ":brown_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🟫",
+        "emoticons": [],
         "keywords": [
             "brown",
             "square"
+        ],
+        "name": "brown square",
+        "shortcodes": [
+            ":brown_square:"
         ]
     },
     {
-        "codepoints": "⬛",
-        "name": "black large square",
-        "shortcodes": [
-            ":black_large_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⬛",
+        "emoticons": [],
         "keywords": [
             "black large square",
             "geometric",
             "square"
+        ],
+        "name": "black large square",
+        "shortcodes": [
+            ":black_large_square:"
         ]
     },
     {
-        "codepoints": "⬜",
-        "name": "white large square",
-        "shortcodes": [
-            ":white_large_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "⬜",
+        "emoticons": [],
         "keywords": [
             "geometric",
             "square",
             "white large square"
+        ],
+        "name": "white large square",
+        "shortcodes": [
+            ":white_large_square:"
         ]
     },
     {
-        "codepoints": "◼️",
-        "name": "black medium square",
-        "shortcodes": [
-            ":black_medium_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "◼️",
+        "emoticons": [],
         "keywords": [
             "black medium square",
             "geometric",
             "square"
+        ],
+        "name": "black medium square",
+        "shortcodes": [
+            ":black_medium_square:"
         ]
     },
     {
-        "codepoints": "◻️",
-        "name": "white medium square",
-        "shortcodes": [
-            ":white_medium_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "◻️",
+        "emoticons": [],
         "keywords": [
             "geometric",
             "square",
             "white medium square"
+        ],
+        "name": "white medium square",
+        "shortcodes": [
+            ":white_medium_square:"
         ]
     },
     {
-        "codepoints": "◾",
-        "name": "black medium-small square",
-        "shortcodes": [
-            ":black_medium-small_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "◾",
+        "emoticons": [],
         "keywords": [
             "black medium-small square",
             "geometric",
             "square"
+        ],
+        "name": "black medium-small square",
+        "shortcodes": [
+            ":black_medium-small_square:"
         ]
     },
     {
-        "codepoints": "◽",
-        "name": "white medium-small square",
-        "shortcodes": [
-            ":white_medium-small_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "◽",
+        "emoticons": [],
         "keywords": [
             "geometric",
             "square",
             "white medium-small square"
+        ],
+        "name": "white medium-small square",
+        "shortcodes": [
+            ":white_medium-small_square:"
         ]
     },
     {
-        "codepoints": "▪️",
-        "name": "black small square",
-        "shortcodes": [
-            ":black_small_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "▪️",
+        "emoticons": [],
         "keywords": [
             "black small square",
             "geometric",
             "square"
+        ],
+        "name": "black small square",
+        "shortcodes": [
+            ":black_small_square:"
         ]
     },
     {
-        "codepoints": "▫️",
-        "name": "white small square",
-        "shortcodes": [
-            ":white_small_square:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "▫️",
+        "emoticons": [],
         "keywords": [
             "geometric",
             "square",
             "white small square"
+        ],
+        "name": "white small square",
+        "shortcodes": [
+            ":white_small_square:"
         ]
     },
     {
-        "codepoints": "🔶",
-        "name": "large orange diamond",
-        "shortcodes": [
-            ":large_orange_diamond:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔶",
+        "emoticons": [],
         "keywords": [
             "diamond",
             "geometric",
             "large orange diamond",
             "orange"
+        ],
+        "name": "large orange diamond",
+        "shortcodes": [
+            ":large_orange_diamond:"
         ]
     },
     {
-        "codepoints": "🔷",
-        "name": "large blue diamond",
-        "shortcodes": [
-            ":large_blue_diamond:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔷",
+        "emoticons": [],
         "keywords": [
             "blue",
             "diamond",
             "geometric",
             "large blue diamond"
+        ],
+        "name": "large blue diamond",
+        "shortcodes": [
+            ":large_blue_diamond:"
         ]
     },
     {
-        "codepoints": "🔸",
-        "name": "small orange diamond",
-        "shortcodes": [
-            ":small_orange_diamond:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔸",
+        "emoticons": [],
         "keywords": [
             "diamond",
             "geometric",
             "orange",
             "small orange diamond"
+        ],
+        "name": "small orange diamond",
+        "shortcodes": [
+            ":small_orange_diamond:"
         ]
     },
     {
-        "codepoints": "🔹",
-        "name": "small blue diamond",
-        "shortcodes": [
-            ":small_blue_diamond:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔹",
+        "emoticons": [],
         "keywords": [
             "blue",
             "diamond",
             "geometric",
             "small blue diamond"
+        ],
+        "name": "small blue diamond",
+        "shortcodes": [
+            ":small_blue_diamond:"
         ]
     },
     {
-        "codepoints": "🔺",
-        "name": "red triangle pointed up",
-        "shortcodes": [
-            ":red_triangle_pointed_up:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔺",
+        "emoticons": [],
         "keywords": [
             "geometric",
             "red",
             "red triangle pointed up"
+        ],
+        "name": "red triangle pointed up",
+        "shortcodes": [
+            ":red_triangle_pointed_up:"
         ]
     },
     {
-        "codepoints": "🔻",
-        "name": "red triangle pointed down",
-        "shortcodes": [
-            ":red_triangle_pointed_down:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔻",
+        "emoticons": [],
         "keywords": [
             "down",
             "geometric",
             "red",
             "red triangle pointed down"
+        ],
+        "name": "red triangle pointed down",
+        "shortcodes": [
+            ":red_triangle_pointed_down:"
         ]
     },
     {
-        "codepoints": "💠",
-        "name": "diamond with a dot",
-        "shortcodes": [
-            ":diamond_with_a_dot:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "💠",
+        "emoticons": [],
         "keywords": [
             "comic",
             "diamond",
             "diamond with a dot",
             "geometric",
             "inside"
+        ],
+        "name": "diamond with a dot",
+        "shortcodes": [
+            ":diamond_with_a_dot:"
         ]
     },
     {
-        "codepoints": "🔘",
-        "name": "radio button",
-        "shortcodes": [
-            ":radio_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔘",
+        "emoticons": [],
         "keywords": [
             "button",
             "geometric",
             "radio"
+        ],
+        "name": "radio button",
+        "shortcodes": [
+            ":radio_button:"
         ]
     },
     {
-        "codepoints": "🔳",
-        "name": "white square button",
-        "shortcodes": [
-            ":white_square_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔳",
+        "emoticons": [],
         "keywords": [
             "button",
             "geometric",
             "outlined",
             "square",
             "white square button"
+        ],
+        "name": "white square button",
+        "shortcodes": [
+            ":white_square_button:"
         ]
     },
     {
-        "codepoints": "🔲",
-        "name": "black square button",
-        "shortcodes": [
-            ":black_square_button:"
-        ],
-        "emoticons": [],
         "category": "Symbols",
+        "codepoints": "🔲",
+        "emoticons": [],
         "keywords": [
             "black square button",
             "button",
             "geometric",
             "square"
+        ],
+        "name": "black square button",
+        "shortcodes": [
+            ":black_square_button:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🏁",
-        "name": "chequered flag",
-        "shortcodes": [
-            ":chequered_flag:"
-        ],
         "emoticons": [],
-        "category": "Flags",
         "keywords": [
             "checkered",
             "chequered",
             "chequered flag",
             "racing",
             "checkered flag"
+        ],
+        "name": "chequered flag",
+        "shortcodes": [
+            ":chequered_flag:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🚩",
-        "name": "triangular flag",
-        "shortcodes": [
-            ":triangular_flag:"
-        ],
         "emoticons": [],
-        "category": "Flags",
         "keywords": [
             "post",
             "triangular flag",
             "red flag"
+        ],
+        "name": "triangular flag",
+        "shortcodes": [
+            ":triangular_flag:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🎌",
-        "name": "crossed flags",
-        "shortcodes": [
-            ":crossed_flags:"
-        ],
         "emoticons": [],
-        "category": "Flags",
         "keywords": [
             "celebration",
             "cross",
             "crossed",
             "crossed flags",
             "Japanese"
+        ],
+        "name": "crossed flags",
+        "shortcodes": [
+            ":crossed_flags:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🏴",
-        "name": "black flag",
-        "shortcodes": [
-            ":black_flag:"
-        ],
         "emoticons": [],
-        "category": "Flags",
         "keywords": [
             "black flag",
             "waving"
+        ],
+        "name": "black flag",
+        "shortcodes": [
+            ":black_flag:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🏳️",
-        "name": "white flag",
-        "shortcodes": [
-            ":white_flag:"
-        ],
         "emoticons": [],
-        "category": "Flags",
         "keywords": [
             "waving",
             "white flag",
             "surrender"
+        ],
+        "name": "white flag",
+        "shortcodes": [
+            ":white_flag:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🏳️‍🌈",
-        "name": "rainbow flag",
-        "shortcodes": [
-            ":rainbow_flag:"
-        ],
         "emoticons": [],
-        "category": "Flags",
         "keywords": [
             "pride",
             "rainbow",
             "rainbow flag"
+        ],
+        "name": "rainbow flag",
+        "shortcodes": [
+            ":rainbow_flag:"
         ]
     },
     {
-        "codepoints": "🏳️‍⚧️",
-        "name": "transgender flag",
-        "shortcodes": [
-            ":transgender_flag:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": []
-    },
-    {
+        "category": "Symbols",
         "codepoints": "🏴‍☠️",
-        "name": "pirate flag",
-        "shortcodes": [
-            ":pirate_flag:"
-        ],
         "emoticons": [],
-        "category": "Flags",
         "keywords": [
             "Jolly Roger",
             "pirate",
             "pirate flag",
             "plunder",
             "treasure"
-        ]
-    },
-    {
-        "codepoints": "🇦🇨",
-        "name": "flag: Ascension Island",
-        "shortcodes": [
-            ":flag_ac:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇩",
-        "name": "flag: Andorra",
-        "shortcodes": [
-            ":flag_ad:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇪",
-        "name": "flag: United Arab Emirates",
-        "shortcodes": [
-            ":flag_ae:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇫",
-        "name": "flag: Afghanistan",
-        "shortcodes": [
-            ":flag_af:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇬",
-        "name": "flag: Antigua & Barbuda",
-        "shortcodes": [
-            ":flag_ag:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇮",
-        "name": "flag: Anguilla",
-        "shortcodes": [
-            ":flag_ai:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇱",
-        "name": "flag: Albania",
-        "shortcodes": [
-            ":flag_al:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇲",
-        "name": "flag: Armenia",
-        "shortcodes": [
-            ":flag_am:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇴",
-        "name": "flag: Angola",
-        "shortcodes": [
-            ":flag_ao:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇶",
-        "name": "flag: Antarctica",
-        "shortcodes": [
-            ":flag_aq:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇷",
-        "name": "flag: Argentina",
-        "shortcodes": [
-            ":flag_ar:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇸",
-        "name": "flag: American Samoa",
-        "shortcodes": [
-            ":flag_as:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇹",
-        "name": "flag: Austria",
-        "shortcodes": [
-            ":flag_at:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇺",
-        "name": "flag: Australia",
-        "shortcodes": [
-            ":flag_au:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇼",
-        "name": "flag: Aruba",
-        "shortcodes": [
-            ":flag_aw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇽",
-        "name": "flag: Åland Islands",
-        "shortcodes": [
-            ":flag_ax:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇦🇿",
-        "name": "flag: Azerbaijan",
-        "shortcodes": [
-            ":flag_az:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇦",
-        "name": "flag: Bosnia & Herzegovina",
-        "shortcodes": [
-            ":flag_ba:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇧",
-        "name": "flag: Barbados",
-        "shortcodes": [
-            ":flag_bb:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇩",
-        "name": "flag: Bangladesh",
-        "shortcodes": [
-            ":flag_bd:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇪",
-        "name": "flag: Belgium",
-        "shortcodes": [
-            ":flag_be:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇫",
-        "name": "flag: Burkina Faso",
-        "shortcodes": [
-            ":flag_bf:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇬",
-        "name": "flag: Bulgaria",
-        "shortcodes": [
-            ":flag_bg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇭",
-        "name": "flag: Bahrain",
-        "shortcodes": [
-            ":flag_bh:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇮",
-        "name": "flag: Burundi",
-        "shortcodes": [
-            ":flag_bi:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇯",
-        "name": "flag: Benin",
-        "shortcodes": [
-            ":flag_bj:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇱",
-        "name": "flag: St. Barthélemy",
-        "shortcodes": [
-            ":flag_bl:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇲",
-        "name": "flag: Bermuda",
-        "shortcodes": [
-            ":flag_bm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇳",
-        "name": "flag: Brunei",
-        "shortcodes": [
-            ":flag_bn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇴",
-        "name": "flag: Bolivia",
-        "shortcodes": [
-            ":flag_bo:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇶",
-        "name": "flag: Caribbean Netherlands",
-        "shortcodes": [
-            ":flag_bq:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇷",
-        "name": "flag: Brazil",
-        "shortcodes": [
-            ":flag_br:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇸",
-        "name": "flag: Bahamas",
-        "shortcodes": [
-            ":flag_bs:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇹",
-        "name": "flag: Bhutan",
-        "shortcodes": [
-            ":flag_bt:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇻",
-        "name": "flag: Bouvet Island",
-        "shortcodes": [
-            ":flag_bv:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇼",
-        "name": "flag: Botswana",
-        "shortcodes": [
-            ":flag_bw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇾",
-        "name": "flag: Belarus",
-        "shortcodes": [
-            ":flag_by:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇧🇿",
-        "name": "flag: Belize",
-        "shortcodes": [
-            ":flag_bz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇦",
-        "name": "flag: Canada",
-        "shortcodes": [
-            ":flag_ca:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇨",
-        "name": "flag: Cocos (Keeling) Islands",
-        "shortcodes": [
-            ":flag_cc:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇩",
-        "name": "flag: Congo - Kinshasa",
-        "shortcodes": [
-            ":flag_cd:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇫",
-        "name": "flag: Central African Republic",
-        "shortcodes": [
-            ":flag_cf:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇬",
-        "name": "flag: Congo - Brazzaville",
-        "shortcodes": [
-            ":flag_cg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇭",
-        "name": "flag: Switzerland",
-        "shortcodes": [
-            ":flag_ch:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇮",
-        "name": "flag: Côte d’Ivoire",
-        "shortcodes": [
-            ":flag_ci:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇰",
-        "name": "flag: Cook Islands",
-        "shortcodes": [
-            ":flag_ck:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇱",
-        "name": "flag: Chile",
-        "shortcodes": [
-            ":flag_cl:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇲",
-        "name": "flag: Cameroon",
-        "shortcodes": [
-            ":flag_cm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇳",
-        "name": "flag: China",
-        "shortcodes": [
-            ":flag_cn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇴",
-        "name": "flag: Colombia",
-        "shortcodes": [
-            ":flag_co:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇵",
-        "name": "flag: Clipperton Island",
-        "shortcodes": [
-            ":flag_cp:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇷",
-        "name": "flag: Costa Rica",
-        "shortcodes": [
-            ":flag_cr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇺",
-        "name": "flag: Cuba",
-        "shortcodes": [
-            ":flag_cu:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇻",
-        "name": "flag: Cape Verde",
-        "shortcodes": [
-            ":flag_cv:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇼",
-        "name": "flag: Curaçao",
-        "shortcodes": [
-            ":flag_cw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇽",
-        "name": "flag: Christmas Island",
-        "shortcodes": [
-            ":flag_cx:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇾",
-        "name": "flag: Cyprus",
-        "shortcodes": [
-            ":flag_cy:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇨🇿",
-        "name": "flag: Czechia",
-        "shortcodes": [
-            ":flag_cz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇩🇪",
-        "name": "flag: Germany",
-        "shortcodes": [
-            ":flag_de:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇩🇬",
-        "name": "flag: Diego Garcia",
-        "shortcodes": [
-            ":flag_dg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇩🇯",
-        "name": "flag: Djibouti",
-        "shortcodes": [
-            ":flag_dj:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇩🇰",
-        "name": "flag: Denmark",
-        "shortcodes": [
-            ":flag_dk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇩🇲",
-        "name": "flag: Dominica",
-        "shortcodes": [
-            ":flag_dm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇩🇴",
-        "name": "flag: Dominican Republic",
-        "shortcodes": [
-            ":flag_do:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇩🇿",
-        "name": "flag: Algeria",
-        "shortcodes": [
-            ":flag_dz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇦",
-        "name": "flag: Ceuta & Melilla",
-        "shortcodes": [
-            ":flag_ea:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇨",
-        "name": "flag: Ecuador",
-        "shortcodes": [
-            ":flag_ec:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇪",
-        "name": "flag: Estonia",
-        "shortcodes": [
-            ":flag_ee:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇬",
-        "name": "flag: Egypt",
-        "shortcodes": [
-            ":flag_eg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇭",
-        "name": "flag: Western Sahara",
-        "shortcodes": [
-            ":flag_eh:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇷",
-        "name": "flag: Eritrea",
-        "shortcodes": [
-            ":flag_er:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇸",
-        "name": "flag: Spain",
-        "shortcodes": [
-            ":flag_es:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇹",
-        "name": "flag: Ethiopia",
-        "shortcodes": [
-            ":flag_et:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇪🇺",
-        "name": "flag: European Union",
-        "shortcodes": [
-            ":flag_eu:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇫🇮",
-        "name": "flag: Finland",
-        "shortcodes": [
-            ":flag_fi:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇫🇯",
-        "name": "flag: Fiji",
-        "shortcodes": [
-            ":flag_fj:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇫🇰",
-        "name": "flag: Falkland Islands",
-        "shortcodes": [
-            ":flag_fk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇫🇲",
-        "name": "flag: Micronesia",
-        "shortcodes": [
-            ":flag_fm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇫🇴",
-        "name": "flag: Faroe Islands",
-        "shortcodes": [
-            ":flag_fo:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇫🇷",
-        "name": "flag: France",
-        "shortcodes": [
-            ":flag_fr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇦",
-        "name": "flag: Gabon",
-        "shortcodes": [
-            ":flag_ga:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇧",
-        "name": "flag: United Kingdom",
-        "shortcodes": [
-            ":flag_gb:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇩",
-        "name": "flag: Grenada",
-        "shortcodes": [
-            ":flag_gd:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇪",
-        "name": "flag: Georgia",
-        "shortcodes": [
-            ":flag_ge:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇫",
-        "name": "flag: French Guiana",
-        "shortcodes": [
-            ":flag_gf:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇬",
-        "name": "flag: Guernsey",
-        "shortcodes": [
-            ":flag_gg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇭",
-        "name": "flag: Ghana",
-        "shortcodes": [
-            ":flag_gh:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇮",
-        "name": "flag: Gibraltar",
-        "shortcodes": [
-            ":flag_gi:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇱",
-        "name": "flag: Greenland",
-        "shortcodes": [
-            ":flag_gl:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇲",
-        "name": "flag: Gambia",
-        "shortcodes": [
-            ":flag_gm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇳",
-        "name": "flag: Guinea",
-        "shortcodes": [
-            ":flag_gn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇵",
-        "name": "flag: Guadeloupe",
-        "shortcodes": [
-            ":flag_gp:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇶",
-        "name": "flag: Equatorial Guinea",
-        "shortcodes": [
-            ":flag_gq:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇷",
-        "name": "flag: Greece",
-        "shortcodes": [
-            ":flag_gr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇸",
-        "name": "flag: South Georgia & South Sandwich Islands",
-        "shortcodes": [
-            ":flag_gs:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇹",
-        "name": "flag: Guatemala",
-        "shortcodes": [
-            ":flag_gt:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇺",
-        "name": "flag: Guam",
-        "shortcodes": [
-            ":flag_gu:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇼",
-        "name": "flag: Guinea-Bissau",
-        "shortcodes": [
-            ":flag_gw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇬🇾",
-        "name": "flag: Guyana",
-        "shortcodes": [
-            ":flag_gy:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇭🇰",
-        "name": "flag: Hong Kong SAR China",
-        "shortcodes": [
-            ":flag_hk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇭🇲",
-        "name": "flag: Heard & McDonald Islands",
-        "shortcodes": [
-            ":flag_hm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇭🇳",
-        "name": "flag: Honduras",
-        "shortcodes": [
-            ":flag_hn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇭🇷",
-        "name": "flag: Croatia",
-        "shortcodes": [
-            ":flag_hr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇭🇹",
-        "name": "flag: Haiti",
-        "shortcodes": [
-            ":flag_ht:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇭🇺",
-        "name": "flag: Hungary",
-        "shortcodes": [
-            ":flag_hu:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇨",
-        "name": "flag: Canary Islands",
-        "shortcodes": [
-            ":flag_ic:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇩",
-        "name": "flag: Indonesia",
-        "shortcodes": [
-            ":flag_id:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇪",
-        "name": "flag: Ireland",
-        "shortcodes": [
-            ":flag_ie:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇱",
-        "name": "flag: Israel",
-        "shortcodes": [
-            ":flag_il:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇲",
-        "name": "flag: Isle of Man",
-        "shortcodes": [
-            ":flag_im:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇳",
-        "name": "flag: India",
-        "shortcodes": [
-            ":flag_in:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇴",
-        "name": "flag: British Indian Ocean Territory",
-        "shortcodes": [
-            ":flag_io:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇶",
-        "name": "flag: Iraq",
-        "shortcodes": [
-            ":flag_iq:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇷",
-        "name": "flag: Iran",
-        "shortcodes": [
-            ":flag_ir:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇸",
-        "name": "flag: Iceland",
-        "shortcodes": [
-            ":flag_is:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇮🇹",
-        "name": "flag: Italy",
-        "shortcodes": [
-            ":flag_it:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇯🇪",
-        "name": "flag: Jersey",
-        "shortcodes": [
-            ":flag_je:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇯🇲",
-        "name": "flag: Jamaica",
-        "shortcodes": [
-            ":flag_jm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇯🇴",
-        "name": "flag: Jordan",
-        "shortcodes": [
-            ":flag_jo:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇯🇵",
-        "name": "flag: Japan",
-        "shortcodes": [
-            ":flag_jp:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇪",
-        "name": "flag: Kenya",
-        "shortcodes": [
-            ":flag_ke:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇬",
-        "name": "flag: Kyrgyzstan",
-        "shortcodes": [
-            ":flag_kg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇭",
-        "name": "flag: Cambodia",
-        "shortcodes": [
-            ":flag_kh:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇮",
-        "name": "flag: Kiribati",
-        "shortcodes": [
-            ":flag_ki:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇲",
-        "name": "flag: Comoros",
-        "shortcodes": [
-            ":flag_km:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇳",
-        "name": "flag: St. Kitts & Nevis",
-        "shortcodes": [
-            ":flag_kn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇵",
-        "name": "flag: North Korea",
-        "shortcodes": [
-            ":flag_kp:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇷",
-        "name": "flag: South Korea",
-        "shortcodes": [
-            ":flag_kr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇼",
-        "name": "flag: Kuwait",
-        "shortcodes": [
-            ":flag_kw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇾",
-        "name": "flag: Cayman Islands",
-        "shortcodes": [
-            ":flag_ky:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇰🇿",
-        "name": "flag: Kazakhstan",
-        "shortcodes": [
-            ":flag_kz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇦",
-        "name": "flag: Laos",
-        "shortcodes": [
-            ":flag_la:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇧",
-        "name": "flag: Lebanon",
-        "shortcodes": [
-            ":flag_lb:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇨",
-        "name": "flag: St. Lucia",
-        "shortcodes": [
-            ":flag_lc:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇮",
-        "name": "flag: Liechtenstein",
-        "shortcodes": [
-            ":flag_li:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇰",
-        "name": "flag: Sri Lanka",
-        "shortcodes": [
-            ":flag_lk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇷",
-        "name": "flag: Liberia",
-        "shortcodes": [
-            ":flag_lr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇸",
-        "name": "flag: Lesotho",
-        "shortcodes": [
-            ":flag_ls:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇹",
-        "name": "flag: Lithuania",
-        "shortcodes": [
-            ":flag_lt:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇺",
-        "name": "flag: Luxembourg",
-        "shortcodes": [
-            ":flag_lu:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇻",
-        "name": "flag: Latvia",
-        "shortcodes": [
-            ":flag_lv:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇱🇾",
-        "name": "flag: Libya",
-        "shortcodes": [
-            ":flag_ly:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇦",
-        "name": "flag: Morocco",
-        "shortcodes": [
-            ":flag_ma:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇨",
-        "name": "flag: Monaco",
-        "shortcodes": [
-            ":flag_mc:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇩",
-        "name": "flag: Moldova",
-        "shortcodes": [
-            ":flag_md:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇪",
-        "name": "flag: Montenegro",
-        "shortcodes": [
-            ":flag_me:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇫",
-        "name": "flag: St. Martin",
-        "shortcodes": [
-            ":flag_mf:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇬",
-        "name": "flag: Madagascar",
-        "shortcodes": [
-            ":flag_mg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇭",
-        "name": "flag: Marshall Islands",
-        "shortcodes": [
-            ":flag_mh:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇰",
-        "name": "flag: North Macedonia",
-        "shortcodes": [
-            ":flag_mk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇱",
-        "name": "flag: Mali",
-        "shortcodes": [
-            ":flag_ml:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇲",
-        "name": "flag: Myanmar (Burma)",
-        "shortcodes": [
-            ":flag_mm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇳",
-        "name": "flag: Mongolia",
-        "shortcodes": [
-            ":flag_mn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇴",
-        "name": "flag: Macao SAR China",
-        "shortcodes": [
-            ":flag_mo:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇵",
-        "name": "flag: Northern Mariana Islands",
-        "shortcodes": [
-            ":flag_mp:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇶",
-        "name": "flag: Martinique",
-        "shortcodes": [
-            ":flag_mq:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇷",
-        "name": "flag: Mauritania",
-        "shortcodes": [
-            ":flag_mr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇸",
-        "name": "flag: Montserrat",
-        "shortcodes": [
-            ":flag_ms:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇹",
-        "name": "flag: Malta",
-        "shortcodes": [
-            ":flag_mt:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇺",
-        "name": "flag: Mauritius",
-        "shortcodes": [
-            ":flag_mu:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇻",
-        "name": "flag: Maldives",
-        "shortcodes": [
-            ":flag_mv:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇼",
-        "name": "flag: Malawi",
-        "shortcodes": [
-            ":flag_mw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇽",
-        "name": "flag: Mexico",
-        "shortcodes": [
-            ":flag_mx:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇾",
-        "name": "flag: Malaysia",
-        "shortcodes": [
-            ":flag_my:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇲🇿",
-        "name": "flag: Mozambique",
-        "shortcodes": [
-            ":flag_mz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇦",
-        "name": "flag: Namibia",
-        "shortcodes": [
-            ":flag_na:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇨",
-        "name": "flag: New Caledonia",
-        "shortcodes": [
-            ":flag_nc:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇪",
-        "name": "flag: Niger",
-        "shortcodes": [
-            ":flag_ne:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇫",
-        "name": "flag: Norfolk Island",
-        "shortcodes": [
-            ":flag_nf:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇬",
-        "name": "flag: Nigeria",
-        "shortcodes": [
-            ":flag_ng:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇮",
-        "name": "flag: Nicaragua",
-        "shortcodes": [
-            ":flag_ni:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇱",
-        "name": "flag: Netherlands",
-        "shortcodes": [
-            ":flag_nl:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇴",
-        "name": "flag: Norway",
-        "shortcodes": [
-            ":flag_no:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇵",
-        "name": "flag: Nepal",
-        "shortcodes": [
-            ":flag_np:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇷",
-        "name": "flag: Nauru",
-        "shortcodes": [
-            ":flag_nr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇺",
-        "name": "flag: Niue",
-        "shortcodes": [
-            ":flag_nu:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇳🇿",
-        "name": "flag: New Zealand",
-        "shortcodes": [
-            ":flag_nz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇴🇲",
-        "name": "flag: Oman",
-        "shortcodes": [
-            ":flag_om:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇦",
-        "name": "flag: Panama",
-        "shortcodes": [
-            ":flag_pa:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇪",
-        "name": "flag: Peru",
-        "shortcodes": [
-            ":flag_pe:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇫",
-        "name": "flag: French Polynesia",
-        "shortcodes": [
-            ":flag_pf:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇬",
-        "name": "flag: Papua New Guinea",
-        "shortcodes": [
-            ":flag_pg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇭",
-        "name": "flag: Philippines",
-        "shortcodes": [
-            ":flag_ph:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇰",
-        "name": "flag: Pakistan",
-        "shortcodes": [
-            ":flag_pk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇱",
-        "name": "flag: Poland",
-        "shortcodes": [
-            ":flag_pl:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇲",
-        "name": "flag: St. Pierre & Miquelon",
-        "shortcodes": [
-            ":flag_pm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇳",
-        "name": "flag: Pitcairn Islands",
-        "shortcodes": [
-            ":flag_pn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇷",
-        "name": "flag: Puerto Rico",
-        "shortcodes": [
-            ":flag_pr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇸",
-        "name": "flag: Palestinian Territories",
-        "shortcodes": [
-            ":flag_ps:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇹",
-        "name": "flag: Portugal",
-        "shortcodes": [
-            ":flag_pt:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇼",
-        "name": "flag: Palau",
-        "shortcodes": [
-            ":flag_pw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇵🇾",
-        "name": "flag: Paraguay",
-        "shortcodes": [
-            ":flag_py:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇶🇦",
-        "name": "flag: Qatar",
-        "shortcodes": [
-            ":flag_qa:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇷🇪",
-        "name": "flag: Réunion",
-        "shortcodes": [
-            ":flag_re:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇷🇴",
-        "name": "flag: Romania",
-        "shortcodes": [
-            ":flag_ro:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇷🇸",
-        "name": "flag: Serbia",
-        "shortcodes": [
-            ":flag_rs:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇷🇺",
-        "name": "flag: Russia",
-        "shortcodes": [
-            ":flag_ru:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇷🇼",
-        "name": "flag: Rwanda",
-        "shortcodes": [
-            ":flag_rw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇦",
-        "name": "flag: Saudi Arabia",
-        "shortcodes": [
-            ":flag_sa:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇧",
-        "name": "flag: Solomon Islands",
-        "shortcodes": [
-            ":flag_sb:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇨",
-        "name": "flag: Seychelles",
-        "shortcodes": [
-            ":flag_sc:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇩",
-        "name": "flag: Sudan",
-        "shortcodes": [
-            ":flag_sd:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇪",
-        "name": "flag: Sweden",
-        "shortcodes": [
-            ":flag_se:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇬",
-        "name": "flag: Singapore",
-        "shortcodes": [
-            ":flag_sg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇭",
-        "name": "flag: St. Helena",
-        "shortcodes": [
-            ":flag_sh:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇮",
-        "name": "flag: Slovenia",
-        "shortcodes": [
-            ":flag_si:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇯",
-        "name": "flag: Svalbard & Jan Mayen",
-        "shortcodes": [
-            ":flag_sj:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇰",
-        "name": "flag: Slovakia",
-        "shortcodes": [
-            ":flag_sk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇱",
-        "name": "flag: Sierra Leone",
-        "shortcodes": [
-            ":flag_sl:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇲",
-        "name": "flag: San Marino",
-        "shortcodes": [
-            ":flag_sm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇳",
-        "name": "flag: Senegal",
-        "shortcodes": [
-            ":flag_sn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇴",
-        "name": "flag: Somalia",
-        "shortcodes": [
-            ":flag_so:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇷",
-        "name": "flag: Suriname",
-        "shortcodes": [
-            ":flag_sr:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇸",
-        "name": "flag: South Sudan",
-        "shortcodes": [
-            ":flag_ss:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇹",
-        "name": "flag: São Tomé & Príncipe",
-        "shortcodes": [
-            ":flag_st:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇻",
-        "name": "flag: El Salvador",
-        "shortcodes": [
-            ":flag_sv:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇽",
-        "name": "flag: Sint Maarten",
-        "shortcodes": [
-            ":flag_sx:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇾",
-        "name": "flag: Syria",
-        "shortcodes": [
-            ":flag_sy:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇸🇿",
-        "name": "flag: Eswatini",
-        "shortcodes": [
-            ":flag_sz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇦",
-        "name": "flag: Tristan da Cunha",
-        "shortcodes": [
-            ":flag_ta:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇨",
-        "name": "flag: Turks & Caicos Islands",
-        "shortcodes": [
-            ":flag_tc:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇩",
-        "name": "flag: Chad",
-        "shortcodes": [
-            ":flag_td:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇫",
-        "name": "flag: French Southern Territories",
-        "shortcodes": [
-            ":flag_tf:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇬",
-        "name": "flag: Togo",
-        "shortcodes": [
-            ":flag_tg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇭",
-        "name": "flag: Thailand",
-        "shortcodes": [
-            ":flag_th:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇯",
-        "name": "flag: Tajikistan",
-        "shortcodes": [
-            ":flag_tj:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇰",
-        "name": "flag: Tokelau",
-        "shortcodes": [
-            ":flag_tk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇱",
-        "name": "flag: Timor-Leste",
-        "shortcodes": [
-            ":flag_tl:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇲",
-        "name": "flag: Turkmenistan",
-        "shortcodes": [
-            ":flag_tm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇳",
-        "name": "flag: Tunisia",
-        "shortcodes": [
-            ":flag_tn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇴",
-        "name": "flag: Tonga",
-        "shortcodes": [
-            ":flag_to:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇷",
-        "name": "flag: Turkey",
-        "shortcodes": [
-            ":flag_tr:"
         ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇹",
-        "name": "flag: Trinidad & Tobago",
-        "shortcodes": [
-            ":flag_tt:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇻",
-        "name": "flag: Tuvalu",
-        "shortcodes": [
-            ":flag_tv:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇼",
-        "name": "flag: Taiwan",
-        "shortcodes": [
-            ":flag_tw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇹🇿",
-        "name": "flag: Tanzania",
-        "shortcodes": [
-            ":flag_tz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇺🇦",
-        "name": "flag: Ukraine",
-        "shortcodes": [
-            ":flag_ua:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇺🇬",
-        "name": "flag: Uganda",
-        "shortcodes": [
-            ":flag_ug:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇺🇲",
-        "name": "flag: U.S. Outlying Islands",
-        "shortcodes": [
-            ":flag_um:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇺🇳",
-        "name": "flag: United Nations",
-        "shortcodes": [
-            ":flag_un:",
-            ":united_nations:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇺🇸",
-        "name": "flag: United States",
-        "shortcodes": [
-            ":flag_us:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇺🇾",
-        "name": "flag: Uruguay",
-        "shortcodes": [
-            ":flag_uy:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇺🇿",
-        "name": "flag: Uzbekistan",
-        "shortcodes": [
-            ":flag_uz:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇻🇦",
-        "name": "flag: Vatican City",
-        "shortcodes": [
-            ":flag_va:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇻🇨",
-        "name": "flag: St. Vincent & Grenadines",
-        "shortcodes": [
-            ":flag_vc:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇻🇪",
-        "name": "flag: Venezuela",
-        "shortcodes": [
-            ":flag_ve:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇻🇬",
-        "name": "flag: British Virgin Islands",
-        "shortcodes": [
-            ":flag_vg:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇻🇮",
-        "name": "flag: U.S. Virgin Islands",
-        "shortcodes": [
-            ":flag_vi:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇻🇳",
-        "name": "flag: Vietnam",
-        "shortcodes": [
-            ":flag_vn:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇻🇺",
-        "name": "flag: Vanuatu",
-        "shortcodes": [
-            ":flag_vu:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇼🇫",
-        "name": "flag: Wallis & Futuna",
-        "shortcodes": [
-            ":flag_wf:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇼🇸",
-        "name": "flag: Samoa",
-        "shortcodes": [
-            ":flag_ws:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇽🇰",
-        "name": "flag: Kosovo",
-        "shortcodes": [
-            ":flag_xk:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇾🇪",
-        "name": "flag: Yemen",
-        "shortcodes": [
-            ":flag_ye:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇾🇹",
-        "name": "flag: Mayotte",
-        "shortcodes": [
-            ":flag_yt:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇿🇦",
-        "name": "flag: South Africa",
-        "shortcodes": [
-            ":flag_za:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇿🇲",
-        "name": "flag: Zambia",
-        "shortcodes": [
-            ":flag_zm:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
-        ]
-    },
-    {
-        "codepoints": "🇿🇼",
-        "name": "flag: Zimbabwe",
+        "name": "pirate flag",
         "shortcodes": [
-            ":flag_zw:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
+            ":pirate_flag:"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "emoticons": [],
+        "keywords": [
+            "flag"
+        ],
         "name": "flag: England",
         "shortcodes": [
             ":england:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+        "emoticons": [],
+        "keywords": [
+            "flag"
+        ],
         "name": "flag: Scotland",
         "shortcodes": [
             ":scotland:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
         ]
     },
     {
+        "category": "Symbols",
         "codepoints": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
+        "emoticons": [],
+        "keywords": [
+            "flag"
+        ],
         "name": "flag: Wales",
         "shortcodes": [
             ":wales:"
-        ],
-        "emoticons": [],
-        "category": "Flags",
-        "keywords": [
-            "flag"
         ]
     }
 ]`);
