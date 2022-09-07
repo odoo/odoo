@@ -12047,7 +12047,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "when creating a new many2one on a x2many then discarding it immediately with ESCAPE, it should not crash",
         async function (assert) {
             patchSetTimeout();
