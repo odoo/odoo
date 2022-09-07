@@ -169,6 +169,20 @@ class User(models.Model):
         return super().SELF_WRITEABLE_FIELDS + HR_WRITABLE_FIELDS
 
     @api.model
+    def get_views(self, views, options=None):
+        # Requests the My Profile form view as last.
+        # Otherwise the fields of the 'search' view will take precedence
+        # and will omit the fields that are requested as SUPERUSER
+        # in `get_view()`.
+        profile_view = self.env.ref("hr.res_users_view_form_profile")
+        profile_form = profile_view and [profile_view.id, 'form']
+        if profile_form and profile_form in views:
+            views.remove(profile_form)
+            views.append(profile_form)
+        result = super().get_views(views, options)
+        return result
+
+    @api.model
     def get_view(self, view_id=None, view_type='form', **options):
         # When the front-end loads the views it gets the list of available fields
         # for the user (according to its access rights). Later, when the front-end wants to
