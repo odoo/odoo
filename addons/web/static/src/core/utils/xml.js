@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { nbsp } from "@web/core/utils/strings";
+
 /**
  * XML document to create new elements from. The fact that this is a "text/xml"
  * document ensures that tagNames and attribute names are case sensitive.
@@ -47,7 +49,7 @@ export class XMLParser {
      * @returns {Element}
      */
     parseXML(arch) {
-        const cleanedArch = arch.replace(/&amp;nbsp;/g, "");
+        const cleanedArch = arch.replace(/&amp;nbsp;/g, nbsp);
         const xml = parser.parseFromString(cleanedArch, "text/xml");
         if (hasParsingError(xml)) {
             throw new Error(
