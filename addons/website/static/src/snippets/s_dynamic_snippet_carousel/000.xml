@@ -11,7 +11,7 @@
         </a>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel">
-        <div t-att-id="uniqueId" class="carousel slide" t-att-data-bs-interval="interval">
+        <div t-att-id="uniqueId" class="carousel slide" t-att-data-bs-interval="interval" data-bs-ride="carousel">
             <!-- Content -->
             <t t-set="rowSize" t-value="chunkSize" />
             <t t-set="slideSize" t-value="rowSize * rowPerSlide" />
