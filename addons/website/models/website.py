@@ -1098,7 +1098,7 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
-        router = http.root.get_db_router(request.db)
+        router = self.env['ir.http'].routing_map()
         url_set = set()
 
         sitemap_endpoint_done = set()
