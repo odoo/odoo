@@ -14,9 +14,9 @@ import {
 
 addModelNamesToFetch([
     'mail.activity', 'mail.activity.type', 'mail.channel', 'mail.channel.member',
-    'mail.followers', 'mail.link.preview', 'mail.message', 'mail.message.subtype',
-    'mail.notification', 'mail.shortcode', 'mail.template', 'mail.tracking.value',
-    'res.users.settings', 'res.users.settings.volumes'
+    'mail.channel.rtc.session', 'mail.followers', 'mail.link.preview', 'mail.message',
+    'mail.message.subtype', 'mail.notification', 'mail.shortcode', 'mail.template',
+    'mail.tracking.value', 'res.users.settings', 'res.users.settings.volumes'
 ]);
 
 addFakeModel('res.fake', {
