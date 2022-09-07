@@ -117,6 +117,7 @@ class Sanitize {
             if (
                 node.nodeType === Node.TEXT_NODE &&
                 node.textContent.includes('\u200B') &&
+                node.parentElement.hasAttribute('oe-zws-empty-inline') &&
                 (
                     node.textContent.length > 1 ||
                     // There can be multiple ajacent text nodes, in which case
