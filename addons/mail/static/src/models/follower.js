@@ -162,8 +162,8 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsEditable() {
-            const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-            return this.messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
+            const currentPartner = this.messaging.currentPartner;
+            return currentPartner && currentPartner === this.partner ? this.hasDocumentReadAccess : this.hasDocumentWriteAccess;
         },
     },
     fields: {
@@ -181,6 +181,14 @@ registerModel({
         followerViews: many('FollowerView', {
             inverse: 'follower',
             isCausal: true,
+        }),
+        hasDocumentReadAccess: attr({
+            related: 'followedThread.hasReadAccess',
+            default: false,
+        }),
+        hasDocumentWriteAccess: attr({
+            related: 'followedThread.hasWriteAccess',
+            default: false,
         }),
         id: attr({
             identifying: true,
