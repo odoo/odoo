@@ -354,6 +354,20 @@ export function formatPercentage(value, options = {}) {
 }
 
 /**
+ * Returns a string representing the value of the python properties field.
+ *
+ * @param {string|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ */
+function formatProperties(value, field) {
+    if (!value || !value.length) {
+        return '';
+    }
+    return value.map(property => property['string']).join(', ');
+}
+
+/**
  * Returns a string representing the value of the reference field.
  *
  * @param {Object|false} value Object with keys "resId" and "displayName"
@@ -404,6 +418,8 @@ registry
     .add("many2many", formatX2many)
     .add("monetary", formatMonetary)
     .add("percentage", formatPercentage)
+    .add("properties", formatProperties)
+    .add("properties_definition", formatProperties)
     .add("reference", formatReference)
     .add("selection", formatSelection)
     .add("text", formatText);
