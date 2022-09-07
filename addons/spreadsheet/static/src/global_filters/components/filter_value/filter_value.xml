@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet_edition.FilterValue" owl="1">
+        <t t-set="filter" t-value="props.filter"/>
+        <t t-set="filterValue" t-value="getters.getGlobalFilterValue(filter.id)"/>
+        <div>
+            <input t-if="filter.type === 'text'"
+                type="text"
+                class="o_input"
+                t-att-placeholder="filter.label"
+                t-att-value="filterValue"
+                t-on-change="(e) => this.onTextInput(filter.id, e.target.value)"/>
+        </div>
+        <span t-if="filter.type === 'relation'" t-on-click.stop="">
+            <X2ManyTagSelector
+                placeholder="filter.label"
+                relatedModel="filter.modelName"
+                selectedValues="filterValue"
+                onValueChanged="(value) => this.onTagSelected(filter.id, value)"
+            />
+        </span>
+        <div class="d-flex align-items-center">
+            <DateFilterValue
+                t-if="filter.type === 'date' and filter.rangeType !== 'relative'"
+                period="filterValue &amp;&amp; filterValue.period"
+                yearOffset="filterValue &amp;&amp; filterValue.yearOffset"
+                type="filter.rangeType"
+                onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)" />
+            <select
+                t-if="filter.type === 'date' and filter.rangeType === 'relative'"
+                t-on-change="(e) => this.onDateInput(filter.id, e.target.value || undefined)"
+                class="o_input pe-3">
+                <option value=""/>
+                <t t-foreach="relativeDateRangesTypes" t-as="range" t-key="range.type">
+                    <option t-att-selected="range.type === filterValue" t-att-value="range.type">
+                        <t t-esc="range.description"/>
+                    </option>
+                </t>
+            </select>
+
+            <i  t-if="getters.isFilterActive(filter.id)"
+                class="fa fa-times btn btn-link text-muted o_side_panel_filter_icon"
+                title="Clear"
+                t-on-click="() => this.onClear(filter.id)"/>
+        </div>
+
+    </t>
+</templates>
