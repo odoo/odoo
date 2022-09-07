@@ -146,9 +146,9 @@ export class NewContentModal extends Component {
 
     createNewPage() {
         this.dialogs.add(AddPageDialog, {
-            addPage: async (name, addMenu) => {
-                const url = `/website/add/${encodeURIComponent(name)}`;
-                const data = await this.http.post(url, { 'add_menu': addMenu || '', csrf_token });
+            addPage: async (state) => {
+                const url = `/website/add/${encodeURIComponent(state.name)}`;
+                const data = await this.http.post(url, { 'add_menu': state.addMenu || '', csrf_token });
                 if (data.view_id) {
                     this.action.doAction({
                         'res_model': 'ir.ui.view',

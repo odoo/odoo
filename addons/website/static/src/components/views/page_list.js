@@ -36,12 +36,13 @@ export class PageListController extends listView.Controller {
     onClickCreate() {
         if (this.props.resModel === 'website.page') {
             return this.dialogService.add(AddPageDialog, {
-                addPage: async (name, addMenu) => {
+                selectWebsite: true,
+                addPage: async (state) => {
                     // TODO this is duplicated code from new_content.js, this
                     // should be shared somehow.
-                    // FIXME this always create on website 1 whatever we do.
-                    const url = `/website/add/${encodeURIComponent(name)}`;
-                    const data = await this.http.post(url, { 'add_menu': addMenu || '', csrf_token });
+                    const websiteId = parseInt(state.websiteId);
+                    const url = `/website/add/${encodeURIComponent(state.name)}`;
+                    const data = await this.http.post(url, { 'add_menu': state.addMenu || '', 'website_id': websiteId, csrf_token });
                     if (data.view_id) {
                         this.actionService.doAction({
                             'res_model': 'ir.ui.view',
@@ -51,7 +52,7 @@ export class PageListController extends listView.Controller {
                             'view_mode': 'form',
                         });
                     } else {
-                        this.website.goToWebsite({ path: data.url, edition: true });
+                        this.website.goToWebsite({ path: data.url, edition: true, websiteId });
                     }
                 },
             });
@@ -80,18 +81,18 @@ PageListController.template = `website.PageListView`;
 
 export class PageListRenderer extends listView.Renderer {
     /**
-     * The goal here is to tweak the renderer to display pages following some
+     * The goal here is to tweak the renderer to display records following some
      * rules:
      * - All websites (props.activeWebsite.id === 0):
-     *     -> Show all generic/specific pages.
+     *     -> Show all generic/specific records.
      * - A website is selected:
-     *     -> Display website-specific pages & generic ones (only those without
+     *     -> Display website-specific records & generic ones (only those without
      *        specific clones).
      */
-    pageFilter(record, records) {
+    recordFilter(record, records) {
         return !this.props.activeWebsite.id
             || this.props.activeWebsite.id === record.data.website_id[0]
-            || !record.data.website_id[0] && records.filter(rec => rec.data.url === record.data.url).length === 1;
+            || !record.data.website_id[0] && records.filter(rec => rec.data.website_url === record.data.website_url).length === 1;
     }
 }
 PageListRenderer.props = [
