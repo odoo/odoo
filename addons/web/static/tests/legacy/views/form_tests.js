@@ -10267,35 +10267,6 @@ QUnit.module('LegacyViews', {
         form.destroy();
     });
 
-    QUnit.test('reload a form view with a pie chart does not crash', async function (assert) {
-        assert.expect(3);
-
-        const form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: `<form>
-                      <widget name="pie_chart" title="qux by product" attrs="{'measure': 'qux', 'groupby': 'product_id'}"/>
-                  </form>`,
-            mockFetch(route) {
-                if (route.includes("/web/bundle/")) {
-                    assert.deepEqual(route, location.origin + "/web/bundle/web.assets_backend_legacy_lazy");
-                    return Promise.resolve(true);
-                }
-            }
-        });
-
-        assert.containsOnce(form, '.o_widget');
-
-        await form.reload();
-        await testUtils.nextTick();
-
-        assert.containsOnce(form, '.o_widget');
-
-        form.destroy();
-        delete widgetRegistry.map.test;
-    });
-
     QUnit.test('do not call mounted twice on children', async function (assert) {
         assert.expect(3);
 

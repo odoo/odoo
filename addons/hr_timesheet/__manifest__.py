@@ -49,10 +49,6 @@ up a management by affair.
     'assets': {
         'web.assets_backend': [
             'hr_timesheet/static/src/**/*',
-            ('remove', 'hr_timesheet/static/src/js/*_legacy.js'),
-        ],
-        "web.assets_backend_legacy_lazy": [
-            'hr_timesheet/static/src/js/*_legacy.js',
         ],
         'web.qunit_suite_tests': [
             'hr_timesheet/static/tests/**/*',
