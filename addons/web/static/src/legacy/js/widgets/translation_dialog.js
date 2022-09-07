@@ -14,29 +14,24 @@ odoo.define('web.TranslationDialog', function (require) {
          * @constructor
          * @param {Widget} parent
          * @param {Object} [options]
-         * @param {string} [options.domain] the domain needed to get the translation terms
          * @param {string} [options.fieldName] the name of the field currently translated (from the model of the form view)
-         * @param {string} [options.searchName] the name of the actual field that is the reference for translation (in the form of model,field)
+         * @param {integer} [options.resId] the ID of record currently translated
          * @param {string} [options.userLanguageValue] the value of the translation in the language of the user, as seen in the from view (might be empty)
          * @param {string} [options.dataPointID] the data point id of the record for which we do the translations
          * @param {boolean} [options.isComingFromTranslationAlert] the initiator of the dialog, might be a link on a field or the translation alert on top of the form
-         * @param {boolean} [options.isText] is the field a text field (multiline) or char (single line)
-         * @param {boolean} [options.showSrc] is the source of the translation should be rendered (for partial translations, i.e. XML content)
          *
          */
         init: function (parent, options) {
             options = options || {};
 
             this.fieldName = options.fieldName;
-            this.domain = options.domain;
-            this.searchName = options.searchName;
+            this.resId = options.resId;
             this.userLanguageValue = options.userLanguageValue;
-            this.domain.push(['name', "=", `${this.searchName}`]);
+            this.dataPointModel = options.dataPointModel;
             this.dataPointID = options.dataPointID;
             this.isComingFromTranslationAlert = options.isComingFromTranslationAlert;
             this.currentInterfaceLanguage = session.user_context.lang;
-            this.isText = options.isText;
-            this.showSrc = options.showSrc;
+            this.context = options.context;
 
             this._super(parent, _.extend({
                 size: 'large',
@@ -56,31 +51,35 @@ odoo.define('web.TranslationDialog', function (require) {
                 this._loadLanguages().then((l) => {
                     this.languages = l;
                     return this._loadTranslations().then((t) => {
-                        this.translations = t;
+                        [this.translations, this.context] = t;
+                        let id = 1;
+                        this.translations.forEach((t) => t['id'] = id++);
+                        this.isText = this.context.translation_type === 'text';
+                        this.showSource = this.context.translation_show_source;
                     });
                 }),
             ]).then(() => {
                 this.data = this.translations.map((term) => {
                     let relatedLanguage = this.languages.find((language) => language[0] === term.lang);
-                    if (!term.value && !this.showSrc) {
-                        term.value = term.src;
+                    if (!term.value && !this.showSource) {
+                        term.value = term.source;
                     }
                     return {
                         id: term.id,
                         lang: term.lang,
                         langName: relatedLanguage[1],
-                        source: term.src,
+                        source: term.source,
                         // we set the translation value coming from the database, except for the language
                         // the user is currently utilizing. Then we set the translation value coming
                         // from the value of the field in the form
                         value: (term.lang === this.currentInterfaceLanguage &&
-                            !this.showSrc &&
+                            !this.showSource &&
                             !this.isComingFromTranslationAlert) ?
                             this.userLanguageValue : term.value || ''
                     };
                 });
                 this.data.sort((left, right) =>
-                    (left.langName < right.langName || (left.langName === right.langName && left.source < right.source)) ? -1 : 1);
+                    left.langName.localeCompare(right.langName));
             });
         },
 
@@ -92,12 +91,11 @@ odoo.define('web.TranslationDialog', function (require) {
          * @private
          */
         _loadTranslations: function () {
-            const domain = [...this.domain, ['lang', 'in', this.languages.map(l => l[0])]];
             return this._rpc({
-                model: 'ir.translation',
-                method: 'search_read',
-                fields: ['lang', 'src', 'value'],
-                domain: domain,
+                model: this.dataPointModel,
+                method: 'get_field_translations',
+                args: [[this.resId], this.fieldName],
+                context: this.context,
             });
         },
         /**
@@ -137,16 +135,16 @@ odoo.define('web.TranslationDialog', function (require) {
             this.el.querySelectorAll('input[type=text],textarea').forEach((t) => {
                 var initialValue = this.data.find((d) => d.id == t.dataset.id);
                 if (initialValue.value !== t.value) {
-                    updatedTerm[t.dataset.id] = t.value;
+                    updatedTerm[t.dataset.id] = {lang: initialValue.lang, source: initialValue.source, value: t.value};
 
-                    if (initialValue.lang === this.currentInterfaceLanguage && !this.showSrc) {
+                    if (initialValue.lang === this.currentInterfaceLanguage && !this.showSource) {
                         // when the user has changed the term for the language he is
                         // using in the interface, this change should be reflected
                         // in the form view
                         // partial translations being handled server side are
                         // also ignored
                         var changes = {};
-                        changes[this.fieldName] = updatedTerm[initialValue.id];
+                        changes[this.fieldName] = t.value;
                         updateFormViewField = {
                             dataPointID: this.dataPointID,
                             changes: changes,
@@ -158,16 +156,23 @@ odoo.define('web.TranslationDialog', function (require) {
 
             // updatedTerm only contains the id and values of the terms that
             // have been updated by the user
-            var saveUpdatedTermsProms = Object.keys(updatedTerm).map((id) => {
-                var writeTranslation = {
-                    model: 'ir.translation',
-                    method: 'write',
-                    context: this.context,
-                    args: [[parseInt(id, 10)], { value: updatedTerm[id] }]
-                };
-                return this._rpc(writeTranslation);
-            });
-            return Promise.all(saveUpdatedTermsProms).then(() => {
+            const translations = {};
+            if (this.showSource) { // model terms translation
+                Object.entries(updatedTerm).forEach(([id, term]) => {
+                    if (!translations[term.lang]) {
+                       translations[term.lang] = {};
+                    }
+                    translations[term.lang][term.source] = term.value;
+                });
+            }
+            else { // model translation
+                Object.entries(updatedTerm).forEach(([id, term]) => translations[term.lang] = term.value);
+            }
+            return this._rpc({
+                model: this.dataPointModel,
+                method: 'update_field_translations',
+                args: [[this.resId], this.fieldName, translations],
+            }).then(() => {
                 // we might have to update the value of the field on the form
                 // view that opened the translation dialog
                 if (updateFormViewField) {

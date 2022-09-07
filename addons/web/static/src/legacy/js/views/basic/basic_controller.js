@@ -944,25 +944,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }
         var record = this.model.get(ev.data.id, { raw: true });
         var res_id = record.res_id || record.res_ids[0];
-        var result = await this._rpc({
-            route: '/web/dataset/call_button',
-            params: {
-                model: 'ir.translation',
-                method: 'translate_fields',
-                args: [record.model, res_id, ev.data.fieldName],
-                kwargs: { context: record.getContext() },
-            }
-        });
 
         this.translationDialog = new TranslationDialog(this, {
-            domain: result.domain,
-            searchName: result.context.search_default_name,
             fieldName: ev.data.fieldName,
+            resId: res_id,
             userLanguageValue: ev.target.value || '',
+            dataPointModel: record.model,
             dataPointID: record.id,
             isComingFromTranslationAlert: ev.data.isComingFromTranslationAlert,
-            isText: result.context.translation_type === 'text',
-            showSrc: result.context.translation_show_src,
+            context: record.getContext(),
         });
         return this.translationDialog.open();
     },
