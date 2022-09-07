@@ -182,6 +182,16 @@ registerModel({
         scrollRecomputeCount: attr({
             default: 0,
         }),
+        searchNoContentView: one('EmojiGridNoSearchContentView', {
+            compute() {
+                if (this.emojiPickerViewOwner.emojiSearchBarView.currentSearch !== "" && this.rows.length === 0) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'emojiGridViewOwner',
+            isCausal: true,
+        }),
         searchRowRegistry: one('EmojiGridViewRowRegistry', {
             default: {},
             inverse: 'emojiGridViewOwnerAsSearch',
