@@ -7114,6 +7114,60 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("execute ActionMenus actions", async function (assert) {
+        patchWithCleanup(actionService, {
+            start() {
+                return {
+                    doAction(id, { additionalContext, onClose }) {
+                        assert.step(JSON.stringify({ action_id: id, context: additionalContext }));
+                        onClose(); // simulate closing of target new action's dialog
+                    },
+                };
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            info: {
+                actionMenus: {
+                    action: [
+                        {
+                            id: 44,
+                            name: "Custom Action",
+                            type: "ir.actions.act_window",
+                            target: "new",
+                        },
+                    ],
+                    print: [],
+                },
+            },
+            actionMenus: {},
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
+        assert.containsN(target, ".o_data_row", 4);
+        // select all records
+        await click(target, "thead .o_list_record_selector input");
+        assert.containsN(target, ".o_list_record_selector input:checked", 5);
+        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Custom Action");
+
+        assert.verifySteps([
+            "get_views",
+            "web_search_read",
+            `{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}`,
+            "web_search_read",
+        ]);
+    });
+
     QUnit.test(
         "execute ActionMenus actions with correct params (single page)",
         async function (assert) {
