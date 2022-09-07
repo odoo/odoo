@@ -8,6 +8,11 @@ class TestWebsiteSaleDelivery(HttpCase):
     def setUp(self):
         super().setUp()
 
+        self.env['product.product'].create({
+            'name': 'Acoustic Bloc Screens',
+            'list_price': 2950.0,
+            'website_published': True,
+        })
         self.gift_card = self.env['gift.card'].create({
             'initial_amount': 10000,
             'code': '123456',
