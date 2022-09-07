@@ -1769,10 +1769,18 @@ class IrModelAccess(models.Model):
         self._cr.execute("""SELECT BOOL_OR(perm_{mode})
                               FROM ir_model_access a
                               JOIN ir_model m ON (m.id = a.model_id)
-                         LEFT JOIN res_groups_users_rel gu ON (gu.gid = a.group_id)
                              WHERE m.model = %s
-                               AND (a.group_id IS NULL OR gu.uid = %s)
-                               AND a.active IS TRUE""".format(mode=mode),
+                               AND a.active IS TRUE
+                               AND (
+                                    a.group_id IS NULL OR
+                                    -- use subselect fo force a better query plan. See #99695 --
+                                    a.group_id IN (
+                                        SELECT gu.gid
+                                          FROM res_groups_users_rel gu
+                                         WHERE gu.uid = %s
+                                    )
+                               )
+                              """.format(mode=mode),
                          (model, self._uid,))
         r = self._cr.fetchone()[0]
 
