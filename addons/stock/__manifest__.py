@@ -100,7 +100,6 @@
             'stock/static/src/legacy_web_report/report_backend.scss',
 
             'web/static/src/legacy/scss/views.scss',
-            'web/static/src/legacy/scss/graph_view.scss',
             'stock/static/src/scss/report_stock_forecasted.scss',
             'stock/static/src/scss/report_stock_reception.scss',
             'stock/static/src/scss/report_stock_rule.scss',
