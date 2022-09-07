@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.tools import unique
+from odoo.exceptions import UserError
 
 class LoyaltyProgram(models.Model):
     _inherit = 'loyalty.program'
@@ -12,6 +13,37 @@ class LoyaltyProgram(models.Model):
     pos_config_ids = fields.Many2many('pos.config', compute="_compute_pos_config_ids", store=True, readonly=False)
     pos_order_count = fields.Integer("PoS Order Count", compute='_compute_pos_order_count')
     pos_ok = fields.Boolean("Point of Sale", default=True)
+    pos_report_print_id = fields.Many2one('ir.actions.report', string="Print Report", domain=[('model', '=', 'loyalty.card')], compute='_compute_pos_report_print_id', inverse='_inverse_pos_report_print_id', readonly=False,
+        help="This is used to print the generated gift cards from PoS.")
+
+    @api.depends("communication_plan_ids.pos_report_print_id")
+    def _compute_pos_report_print_id(self):
+        for program in self:
+            program.pos_report_print_id = program.communication_plan_ids.pos_report_print_id[:1]
+
+    def _inverse_pos_report_print_id(self):
+        for program in self:
+            if program.program_type not in ("gift_card", "ewallet"):
+                continue
+
+            if program.pos_report_print_id:
+                if not program.mail_template_id:
+                    mail_template_label = program._fields.get('mail_template_id').get_description(self.env)['string']
+                    pos_report_print_label = program._fields.get('pos_report_print_id').get_description(self.env)['string']
+                    raise UserError(_("You must set '%s' before setting '%s'.", mail_template_label, pos_report_print_label))
+                else:
+                    if not program.communication_plan_ids:
+                        program.communication_plan_ids = self.env['loyalty.mail'].create({
+                            'program_id': program.id,
+                            'trigger': 'create',
+                            'mail_template_id': program.mail_template_id.id,
+                            'pos_report_print_id': program.pos_report_print_id.id,
+                        })
+                    else:
+                        program.communication_plan_ids.write({
+                            'trigger': 'create',
+                            'pos_report_print_id': program.pos_report_print_id.id,
+                        })
 
     @api.depends('pos_ok')
     def _compute_pos_config_ids(self):
