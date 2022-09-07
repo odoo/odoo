@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="origin.widget" owl="1">
+        <t t-if="origins">
+            <t t-foreach="origins" t-as="origin" t-key="origin.name">
+                <t t-if="origin.m_id and origin.m_name">
+                    <a
+                    class="o_form_uri"
+                    t-att-href="`#id=${origin.m_id}&amp;model=${origin.m_name}&amp;view_type=form`"
+                    >
+                        <t t-if="origin_last">
+                            <span t-out="origin.name"/>
+                        </t>
+                        <t t-else="">
+                            <span t-out="origin.name"/>, 
+                        </t>
+                    </a>
+                </t>
+                <t t-else="">
+                    <t t-if="origin_last">
+                            <span t-out="origin.name"/>
+                        </t>
+                    <t t-else="">
+                        <span t-out="origin.name"/>, 
+                    </t>
+                </t>
+            </t>
+        </t>
+    </t>
+</templates> 
