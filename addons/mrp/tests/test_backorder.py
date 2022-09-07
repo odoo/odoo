@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
-
+from odoo.tools.origin import get_names_str
 
 class TestMrpProductionBackorder(TestMrpCommon):
 
@@ -389,7 +389,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         action = (mo1 + mo2 + mo3).action_merge()
         mo = self.env[action['res_model']].browse(action['res_id'])
         # Check origin & initial quantity
-        self.assertEqual(mo.origin, expected_origin)
+        self.assertEqual(get_names_str(mo.origin), expected_origin)
         self.assertEqual(mo.product_qty, 10)
 
     def test_reservation_method_w_mo(self):

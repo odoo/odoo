@@ -9,7 +9,7 @@ from odoo import SUPERUSER_ID
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
-
+from odoo.tools.origin import create_origin, get_names_str
 
 @tagged('post_install', '-at_install')
 @freeze_time("2021-01-14 09:12:15")
@@ -76,7 +76,7 @@ class TestReorderingRule(TransactionCase):
         purchase_order.picking_type_id = warehouse_1.in_type_id
 
         # On the po generated, the source document should be the name of the reordering rule
-        self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
+        self.assertEqual(order_point.name, get_names_str(purchase_order.origin), 'Source document on purchase order should be the name of the reordering rule.')
         self.assertEqual(purchase_order.order_line.product_qty, 10)
         self.assertEqual(purchase_order.order_line.name, 'Product A')
 
@@ -491,7 +491,7 @@ class TestReorderingRule(TransactionCase):
         self.env["procurement.group"].run(
             [self.env["procurement.group"].Procurement(
                 product, 100, uom_unit,
-                warehouse.lot_stock_id, "Test default vendor", "/",
+                warehouse.lot_stock_id, "Test default vendor", create_origin(name="/"),
                 self.env.company,
                 {
                     "warehouse_id": warehouse,
@@ -515,7 +515,7 @@ class TestReorderingRule(TransactionCase):
         self.env["procurement.group"].run(
             [self.env["procurement.group"].Procurement(
                 product, 100, uom_unit,
-                warehouse.lot_stock_id, "Test default vendor", "/",
+                warehouse.lot_stock_id, "Test default vendor", create_origin(name="/"),
                 self.env.company,
                 {
                     "warehouse_id": warehouse,
@@ -597,7 +597,7 @@ class TestReorderingRule(TransactionCase):
                 product, 100, uom_unit,
                 customer.property_stock_customer,
                 "Test default vendor",
-                "/",
+                create_origin(name="/"),
                 self.env.company,
                 {
                     "warehouse_id": warehouse,

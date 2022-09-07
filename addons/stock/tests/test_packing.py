@@ -4,6 +4,7 @@
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_round
+from odoo.tools.origin import name_in_origin
 from odoo.exceptions import UserError
 
 
@@ -494,7 +495,7 @@ class TestPacking(TestPackingCommon):
         internal_transfer = self.env['stock.picking'].search([
             ('picking_type_id', '=', self.warehouse.int_type_id.id)
         ], order='id desc', limit=1)
-        self.assertEqual(internal_transfer.origin, receipt.name)
+        self.assertTrue(name_in_origin(internal_transfer.origin, receipt.name))
         self.assertEqual(
             len(internal_transfer.package_level_ids_details), 1)
         internal_package = internal_transfer.package_level_ids_details[0]
@@ -641,7 +642,7 @@ class TestPacking(TestPackingCommon):
         internal_transfer = self.env['stock.picking'].search([
             ('picking_type_id', '=', self.warehouse.int_type_id.id)
         ], order='id desc', limit=1)
-        self.assertEqual(internal_transfer.origin, receipt.name)
+        self.assertTrue(name_in_origin(internal_transfer.origin, receipt.name))
         self.assertEqual(
             len(internal_transfer.package_level_ids_details), 1)
         internal_package = internal_transfer.package_level_ids_details[0]

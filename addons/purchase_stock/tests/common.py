@@ -5,6 +5,7 @@ from odoo import fields
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo import tools
 from odoo.modules.module import get_module_resource
+from odoo.tools.origin import create_origin
 
 
 class PurchaseTestCommon(TestStockCommon):
@@ -19,7 +20,7 @@ class PurchaseTestCommon(TestStockCommon):
         }
         return ProcurementGroup.run([self.env['procurement.group'].Procurement(
             product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id,
-            product.name, '/', self.env.company, order_values)
+            product.name, create_origin(name="/"), self.env.company, order_values)
         ])
 
     @classmethod

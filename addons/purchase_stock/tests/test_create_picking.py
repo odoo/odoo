@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests import common
 from odoo.tests import Form
+from odoo.tools.origin import create_origin
 
 
 class TestCreatePicking(common.TestProductCommon):
@@ -529,7 +530,7 @@ class TestCreatePicking(common.TestProductCommon):
                 }
             return self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
                 product, product_qty, self.uom_unit, vendor.property_stock_customer,
-                product.name, '/', self.env.company, values)
+                product.name, create_origin(name="/"), self.env.company, values)
             ])
 
         # Prepare procurement that replicates a sale order.

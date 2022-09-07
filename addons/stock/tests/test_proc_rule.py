@@ -5,7 +5,7 @@ from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
-
+from odoo.tools.origin import create_origin
 
 class TestProcRule(TransactionCase):
 
@@ -288,7 +288,7 @@ class TestProcRule(TransactionCase):
                 product_a.uom_id,
                 final_location,
                 'wave_part_1',
-                'wave_part_1',
+                create_origin(name='wave_part_1'),
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
@@ -312,7 +312,7 @@ class TestProcRule(TransactionCase):
                 product_a.uom_id,
                 final_location,
                 'wave_part_2',
-                'wave_part_2',
+                create_origin(name='wave_part_2'),
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,

@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, time
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.tools.origin import create_origin
 from .common import PurchaseTestCommon
 from odoo.tests.common import Form
 
@@ -113,7 +114,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
         # Create procurement order of product_1
         self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
-            self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', self.env.company,
+            self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', create_origin(name="/"), self.env.company,
             {
                 'warehouse_id': self.warehouse_1,
                 'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
@@ -235,7 +236,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_1_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 5, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.env.company, order_1_values)
+            self.t_shirt.name, create_origin(name="/"), self.env.company, order_1_values)
         ])
         purchase_order = self.env['purchase.order.line'].search([('product_id', '=', self.t_shirt.id)], limit=1).order_id
         order_line_description = purchase_order.order_line.product_id.description_pickingin or ''
@@ -246,7 +247,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_2_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.env.company, order_2_values)
+            self.t_shirt.name, create_origin(name="/"), self.env.company, order_2_values)
         ])
         self.env['procurement.group'].run_scheduler()
         self.assertEqual(len(purchase_order.order_line), 1, 'line with same custom value should be merged')
@@ -257,7 +258,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_3_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.env.company, order_3_values)
+            self.t_shirt.name, create_origin(name="/"), self.env.company, order_3_values)
         ])
         self.assertEqual(len(purchase_order.order_line), 2, 'line with different custom value should not be merged')
         self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')

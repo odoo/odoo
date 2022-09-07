@@ -6,6 +6,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.tools.origin import get_names_str
 
 from odoo.tests import tagged
 from dateutil.relativedelta import relativedelta
@@ -203,7 +204,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_delivery = mo.picking_ids
         self.assertEqual(len(picking_delivery), 1)
         self.assertEqual(len(picking_delivery.move_ids), 2)
-        self.assertEqual(picking_delivery.origin, picking_receipt.name)
+        self.assertEqual(get_names_str(picking_delivery.origin), picking_receipt.name)
         self.assertEqual(picking_delivery.partner_id, picking_receipt.partner_id)
 
         # The picking should be a delivery order

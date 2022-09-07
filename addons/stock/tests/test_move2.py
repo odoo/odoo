@@ -8,6 +8,7 @@ from odoo.exceptions import UserError
 
 from odoo.tests import Form
 from odoo.tools import float_is_zero, float_compare
+from odoo.tools.origin import name_in_origin, get_names_str, create_origin
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -1719,7 +1720,7 @@ class TestSinglePicking(TestStockCommon):
             'picking_id': receipt.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'origin': 'MPS'
+            'origin': create_origin(name='MPS')
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1729,7 +1730,7 @@ class TestSinglePicking(TestStockCommon):
             'picking_id': receipt.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'origin': 'PO0001'
+            'origin': create_origin(name='PO0001')
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1739,12 +1740,12 @@ class TestSinglePicking(TestStockCommon):
             'picking_id': receipt.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'origin': 'MPS'
+            'origin': create_origin(name='MPS')
         })
         receipt.action_confirm()
         self.assertEqual(len(receipt.move_ids), 1, 'Moves were not merged')
-        self.assertEqual(receipt.move_ids.origin.count('MPS'), 1, 'Origin not merged together or duplicated')
-        self.assertEqual(receipt.move_ids.origin.count('PO0001'), 1, 'Origin not merged together or duplicated')
+        self.assertEqual(get_names_str(receipt.move_ids.origin).count('MPS'), 1, 'Origin not merged together or duplicated')
+        self.assertEqual(get_names_str(receipt.move_ids.origin).count('PO0001'), 1, 'Origin not merged together or duplicated')
 
     def test_merge_moves_3(self):
         """ Create 2 moves without initial_demand and already a
@@ -1764,7 +1765,7 @@ class TestSinglePicking(TestStockCommon):
             'picking_id': receipt.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'origin': 'MPS'
+            'origin': create_origin(name='MPS')
         })
         move_2 = self.MoveObj.create({
             'name': self.productB.name,
@@ -1774,7 +1775,7 @@ class TestSinglePicking(TestStockCommon):
             'picking_id': receipt.id,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
-            'origin': 'PO0001'
+            'origin': create_origin(name='PO0001')
         })
         move_1.quantity_done = 5
         move_2.quantity_done = 5
@@ -2559,7 +2560,7 @@ class TestRoutes(TestStockCommon):
             'product_uom_qty': 1.0,
             'warehouse_id': self.wh.id,
             'group_id': procurement_group1.id,
-            'origin': 'origin1',
+            'origin': create_origin(name='origin1'),
         })
 
         move2 = self.env['stock.move'].create({
@@ -2572,14 +2573,14 @@ class TestRoutes(TestStockCommon):
             'product_uom_qty': 1.0,
             'warehouse_id': self.wh.id,
             'group_id': procurement_group2.id,
-            'origin': 'origin2',
+            'origin': create_origin(name='origin2'),
         })
 
         # first out move, the "pick" picking should have a partner and an origin
         move1._action_confirm()
         picking_pick = move1.move_orig_ids.picking_id
         self.assertEqual(picking_pick.partner_id.id, procurement_group1.partner_id.id)
-        self.assertEqual(picking_pick.origin, move1.group_id.name)
+        self.assertTrue(name_in_origin(picking_pick.origin, move1.group_id.name))
 
         # second out move, the "pick" picking should have lost its partner and origin
         move2._action_confirm()
@@ -2614,7 +2615,7 @@ class TestRoutes(TestStockCommon):
         })
 
         replenish_wizard.launch_replenishment()
-        last_picking_id = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment')])[-1]
+        last_picking_id = self.env['stock.picking'].search([('origin', 'like', '%Manual Replenishment%')])[-1]
         self.assertTrue(last_picking_id, 'Picking not found')
         move_line = last_picking_id.move_ids.search([('product_id', '=', self.product1.id)])
         self.assertTrue(move_line,'The product is not in the picking')
@@ -2748,7 +2749,7 @@ class TestRoutes(TestStockCommon):
                 product_a.uom_id,
                 final_location,
                 'test_mtso_mto',
-                'test_mtso_mto',
+                create_origin(name='test_mtso_mto'),
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
@@ -2802,7 +2803,7 @@ class TestRoutes(TestStockCommon):
                 product_a.uom_id,
                 final_location,
                 'test_mtso_mts',
-                'test_mtso_mts',
+                create_origin(name='test_mtso_mts'),
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
@@ -2850,7 +2851,7 @@ class TestRoutes(TestStockCommon):
                 product_a.uom_id,
                 final_location,
                 'test_mtso_mts_1',
-                'test_mtso_mts_1',
+                create_origin(name='test_mtso_mts_1'),
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
@@ -2863,7 +2864,7 @@ class TestRoutes(TestStockCommon):
                 product_a.uom_id,
                 final_location,
                 'test_mtso_mts_2',
-                'test_mtso_mts_2',
+                create_origin(name='test_mtso_mts_2'),
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
@@ -2876,7 +2877,7 @@ class TestRoutes(TestStockCommon):
                 product_a.uom_id,
                 final_location,
                 'test_mtso_mts_3',
-                'test_mtso_mts_3',
+                create_origin(name='test_mtso_mts_3'),
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
@@ -3095,7 +3096,7 @@ class TestRoutes(TestStockCommon):
                 product_a.uom_id,
                 final_location,
                 'delay',
-                'delay',
+                create_origin(name='delay'),
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,

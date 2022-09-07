@@ -6,6 +6,7 @@ from odoo import fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
+from odoo.tools.origin import create_origin
 
 
 class TestProcurement(TestMrpCommon):
@@ -533,7 +534,7 @@ class TestProcurement(TestMrpCommon):
                 }
             return self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
                 product, product_qty, self.uom_unit, vendor.property_stock_customer,
-                product.name, '/', self.env.company, values)
+                product.name, create_origin(name="/"), self.env.company, values)
             ])
 
         picking_type_out = self.env.ref('stock.picking_type_out')

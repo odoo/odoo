@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.tools.origin import get_names_str
 
 
 class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
@@ -120,7 +121,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         # Change the purchased quantity to 2
         po.order_line.write({'product_qty': 2})
         # Check that two deliveries with 1 component for the subcontractor have been created
-        picking_deliveries = self.env['stock.picking'].search([('origin', '=', origin)])
+        picking_deliveries = self.env['stock.picking'].search([('origin', 'like', get_names_str(origin))])
         self.assertEqual(len(picking_deliveries), 2)
         self.assertEqual(picking_deliveries[0].picking_type_id, wh.subcontracting_resupply_type_id)
         self.assertEqual(picking_deliveries[0].partner_id, self.subcontractor_partner1)
