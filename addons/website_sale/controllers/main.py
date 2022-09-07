@@ -540,9 +540,9 @@ class WebsiteSale(http.Controller):
 
         image_res_id = int(image_res_id)
         if image_res_model == 'product.product':
-            request.env['product.product'].browse(image_res_id).image_1920 = False
+            request.env['product.product'].browse(image_res_id).write({'image_1920': False})
         elif image_res_model == 'product.template':
-            request.env['product.template'].browse(image_res_id).image_1920 = False
+            request.env['product.template'].browse(image_res_id).write({'image_1920': False})
         else:
             request.env['product.image'].browse(image_res_id).unlink()
 
