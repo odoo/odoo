@@ -120,7 +120,7 @@ registerModel({
                     if (
                         viewCategory.emojiGridRowView &&
                         rowIndex >= viewCategory.emojiGridRowView.index &&
-                        rowIndex <= viewCategory.endSectionIndex
+                        (viewCategory.emojiPickerViewOwnerAsLastCategory || rowIndex <= viewCategory.endSectionIndex)
                     ) {
                         this.emojiPickerViewOwner.update({ activeCategoryByGridViewScroll: viewCategory });
                         break;
