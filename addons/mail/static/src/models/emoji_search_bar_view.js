@@ -73,7 +73,7 @@ registerModel({
         }),
         placeholder: attr({
             compute() {
-                return (this.env._t("Search here to find an emoji"));
+                return this.env._t("Search an emoji");
             },
             required: true,
         }),
