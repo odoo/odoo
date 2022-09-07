@@ -5179,6 +5179,45 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody tr", 4, "should have 4 rows");
     });
 
+    QUnit.test("support row decoration (decoration-bf)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree decoration-bf="int_field > 5">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, "tbody tr.fw-bold", 3, "should have 3 columns with fw-bold class");
+
+        assert.containsN(target, "tbody tr", 4, "should have 4 rows");
+    });
+
+    QUnit.test("support row decoration (decoration-it)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree decoration-it="int_field > 5">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(
+            target,
+            "tbody tr.fst-italic",
+            3,
+            "should have 3 columns with fst-italic class"
+        );
+
+        assert.containsN(target, "tbody tr", 4, "should have 4 rows");
+    });
+
     QUnit.test("support field decoration", async function (assert) {
         await makeView({
             type: "list",
@@ -5196,6 +5235,44 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody td.text-danger", 3);
         assert.containsN(target, "tbody td.o_list_number", 4);
         assert.containsNone(target, "tbody td.o_list_number.text-danger");
+    });
+
+    QUnit.test("support field decoration (decoration-bf)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo" decoration-bf="int_field > 5"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, "tbody tr", 4);
+        assert.containsN(target, "tbody td.o_list_char", 4);
+        assert.containsN(target, "tbody td.fw-bold", 3);
+        assert.containsN(target, "tbody td.o_list_number", 4);
+        assert.containsNone(target, "tbody td.o_list_number.fw-bold");
+    });
+
+    QUnit.test("support field decoration (decoration-it)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo" decoration-it="int_field > 5"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, "tbody tr", 4);
+        assert.containsN(target, "tbody td.o_list_char", 4);
+        assert.containsN(target, "tbody td.fst-italic", 3);
+        assert.containsN(target, "tbody td.o_list_number", 4);
+        assert.containsNone(target, "tbody td.o_list_number.fst-italic");
     });
 
     QUnit.test(

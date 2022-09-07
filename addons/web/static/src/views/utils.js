@@ -120,12 +120,21 @@ export function getActiveActions(rootNode) {
     };
 }
 
+export function getClassNameFromDecoration(decoration) {
+    if (decoration === "bf") {
+        return "fw-bold";
+    } else if (decoration === "it") {
+        return "fst-italic";
+    }
+    return `text-${decoration}`;
+}
+
 export function getDecoration(rootNode) {
     const decorations = [];
     for (const name of rootNode.getAttributeNames()) {
         if (name.startsWith("decoration-")) {
             decorations.push({
-                class: name.replace("decoration", "text"),
+                class: getClassNameFromDecoration(name.replace("decoration-", "")),
                 condition: rootNode.getAttribute(name),
             });
         }

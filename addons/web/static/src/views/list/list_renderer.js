@@ -14,6 +14,7 @@ import { useSortable } from "@web/core/utils/sortable";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
+import { getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 
@@ -656,7 +657,7 @@ export class ListRenderer extends Component {
                 const { decorations } = record.activeFields[column.name];
                 for (const decoName in decorations) {
                     if (evaluateExpr(decorations[decoName], record.evalContext)) {
-                        classNames.push(`text-${decoName}`);
+                        classNames.push(getClassNameFromDecoration(decoName));
                     }
                 }
             }
