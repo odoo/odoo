@@ -69,7 +69,14 @@ class ResourceMixin(models.AbstractModel):
     def copy_data(self, default=None):
         if default is None:
             default = {}
-        resource = self.resource_id.copy()
+
+        resource_default = {}
+        if 'company_id' in default:
+            resource_default['company_id'] = default['company_id']
+        if 'resource_calendar_id' in default:
+            resource_default['calendar_id'] = default['resource_calendar_id']
+        resource = self.resource_id.copy(resource_default)
+
         default['resource_id'] = resource.id
         default['company_id'] = resource.company_id.id
         default['resource_calendar_id'] = resource.calendar_id.id

@@ -5,7 +5,7 @@ from collections import defaultdict
 from lxml import etree
 import re
 
-from odoo import api, Command, fields, models, _
+from odoo import api, Command, fields, models, _, _lt
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 
@@ -143,10 +143,9 @@ class AccountAnalyticLine(models.Model):
                 user_ids.append(user_id)
 
         # 2/ Search all employees related to user_ids and employee_ids, in the selected companies
-        Employee = self.env['hr.employee']
-        employees = Employee.sudo().search([
+        employees = self.env['hr.employee'].sudo().search([
             '&', '|', ('user_id', 'in', user_ids), ('id', 'in', employee_ids), ('company_id', 'in', self.env.companies.ids)
-        ]) or Employee
+        ])
 
         #                 ┌───── in search results = active/in companies ────────> was found with... ─── employee_id ───> (A) There is nothing to do, we will use this employee_id
         # 3/ Each employee                                                                          └──── user_id ──────> (B)** We'll need to select the right employee for this user
@@ -163,7 +162,7 @@ class AccountAnalyticLine(models.Model):
                 employee_id_per_company_per_user[employee.user_id.id][employee.company_id.id] = employee.id
 
         # 4/ Put valid employee_id in each vals
-        get_error_msg = lambda: _('Timesheets must be created with an active employee in the selected companies.')
+        error_msg = _lt('Timesheets must be created with an active employee in the selected companies.')
         for vals in vals_list:
             if not vals.get('project_id'):
                 continue
@@ -173,7 +172,7 @@ class AccountAnalyticLine(models.Model):
                     vals['user_id'] = valid_employee_per_id[employee_in_id].sudo().user_id.id   # (A) OK
                     continue
                 else:
-                    raise ValidationError(get_error_msg())                                      # (C) KO
+                    raise ValidationError(error_msg)                                      # (C) KO
             else:
                 user_id = vals.get('user_id', default_user_id)                                  # (B)...
 
@@ -189,7 +188,7 @@ class AccountAnalyticLine(models.Model):
                 vals['employee_id'] = employee_out_id
                 vals['user_id'] = user_id
             else:  # ...and raise an error if they fail
-                raise ValidationError(get_error_msg())
+                raise ValidationError(error_msg)
 
         # 5/ Finally, create the timesheets
         lines = super(AccountAnalyticLine, self).create(vals_list)
