@@ -3441,25 +3441,20 @@ class Properties(Field):
                         property_definition[value_key] = (property_value, display_name)
                     except AccessError:
                         # protect from access error message, show an empty name
-                        property_definition[value_key] = (property_value, _("No Access"))
+                        property_definition[value_key] = (property_value, None)
                     except MissingError:
                         property_definition[value_key] = None
 
                 elif property_type == 'many2many' and property_value and is_list_of(property_value, int):
-                    try:
-                        display_names = env[property_model].browse(property_value).mapped('display_name')
-                        property_definition[value_key] = [
-                            (record_id, display_name)
-                            for record_id, display_name, in zip(property_value, display_names)
-                        ]
-                    except AccessError:
-                        # protect from access error message, show an empty name
-                        property_definition[value_key] = [
-                            (res_id, _("No Access"))
-                            for res_id in property_value
-                        ]
-                    except MissingError:
-                        property_definition[value_key] = None
+                    property_definition[value_key] = []
+                    records = env[property_model].browse(property_value)
+                    for record in records:
+                        try:
+                            property_definition[value_key].append((record.id, record.display_name))
+                        except AccessError:
+                            property_definition[value_key].append((record.id, None))
+                        except MissingError:
+                            continue
 
     @classmethod
     def _remove_display_name(cls, values_list, value_key='value'):
@@ -3545,7 +3540,7 @@ class Properties(Field):
                 all_tags = {tag[0] for tag in property_definition.get('tags') or ()}
                 property_value = [tag for tag in property_value if tag in all_tags]
 
-            elif property_type == 'many2one' and property_value:
+            elif property_type == 'many2one' and property_value and res_model in env:
                 if not isinstance(property_value, int):
                     raise ValueError(f'Wrong many2one value: {property_value!r}.')
 
@@ -3553,7 +3548,7 @@ class Properties(Field):
                     # many2one might have been deleted
                     property_value = env[res_model].browse(property_value).exists().id
 
-            elif property_type == 'many2many' and property_value:
+            elif property_type == 'many2many' and property_value and res_model in env:
                 if not is_list_of(property_value, int):
                     raise ValueError(f'Wrong many2many value: {property_value!r}.')
 
