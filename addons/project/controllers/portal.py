@@ -248,6 +248,8 @@ class ProjectCustomerPortal(CustomerPortal):
             'project_accessible': project_accessible,
             'task_link_section': [],
         }
+        if project:
+            values['project_id'] = project.id
         return self._get_page_view_values(task, access_token, values, history, False, **kwargs)
 
     def _task_get_searchbar_sortings(self, milestones_allowed):
