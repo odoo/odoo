@@ -1,13 +1,10 @@
-import { OdooEditor } from '../../src/OdooEditor.js';
 import {
     BasicEditor,
     deleteBackward,
     deleteForward,
     insertText,
     triggerEvent,
-    redo,
     testEditor,
-    undo,
 } from '../utils.js';
 
 describe('Tabs', () => {
