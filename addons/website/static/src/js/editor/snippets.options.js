@@ -719,7 +719,16 @@ options.Class.include({
             case 'customizeWebsiteVariable': {
                 const ownerDocument = this.$target[0].ownerDocument;
                 const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
-                return weUtils.getCSSVariableValue(params.variable, style);
+                let finalValue = weUtils.getCSSVariableValue(params.variable, style);
+                if (!params.colorNames) {
+                    return finalValue;
+                }
+                let tempValue = finalValue;
+                while (tempValue) {
+                    finalValue = tempValue;
+                    tempValue = weUtils.getCSSVariableValue(tempValue.replaceAll("'", ''), style);
+                }
+                return finalValue;
             }
             case 'customizeWebsiteColor': {
                 const ownerDocument = this.$target[0].ownerDocument;
@@ -2389,12 +2398,12 @@ options.registry.HeaderNavbar = options.Class.extend({
     async updateUI() {
         await this._super(...arguments);
         // For all header templates except those in the following array, change
-        // the label of the option to "Mobile Alignment" (instead of
+        // the title of the option to "Mobile Alignment" (instead of
         // "Alignment") because it only impacts the mobile view.
         if (!["'default'", "'hamburger'", "'sidebar'", "'magazine'", "'hamburger-full'", "'slogan'"]
-            .includes(weUtils.getCSSVariableValue("header-template"))) {
-            const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
-            alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
+                .includes(weUtils.getCSSVariableValue("header-template"))) {
+            this.el.querySelector("[data-name='header_alignment_opt']").title =
+                _t("Mobile Alignment");
         }
     },
 
@@ -2551,12 +2560,21 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
         if (!transparent) {
             return;
         }
+        // TODO should be able to change both options at the same time, as the
+        // `params` list suggests.
         await new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
                 actionName: 'toggle_page_option',
                 params: [{name: 'header_color', value: ''}],
                 onSuccess: () => resolve(),
                 onFailure: reject,
+            });
+        });
+        await new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'toggle_page_option',
+                params: [{name: 'header_text_color', value: ''}],
+                onSuccess: () => resolve(),
             });
         });
     },
@@ -2590,11 +2608,13 @@ options.registry.topMenuColor = options.Class.extend({
      */
     async selectStyle(previewMode, widgetValue, params) {
         await this._super(...arguments);
-        const className = widgetValue ? (params.colorPrefix + widgetValue) : '';
+        if (widgetValue && !isCSSColor(widgetValue)) {
+            widgetValue = params.colorPrefix + widgetValue;
+        }
         await new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
                 actionName: 'toggle_page_option',
-                params: [{name: 'header_color', value: className}],
+                params: [{name: params.pageOptionName, value: widgetValue}],
                 onSuccess: resolve,
                 onFailure: reject,
             });

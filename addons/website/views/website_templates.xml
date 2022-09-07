@@ -191,12 +191,23 @@
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
         <t groups="website.group_website_restricted_editor">
-            <t t-foreach="['header_overlay', 'header_color', 'header_visible', 'footer_visible']" t-as="optionName">
+            <t t-foreach="['header_overlay', 'header_color', 'header_text_color', 'header_visible', 'footer_visible']" t-as="optionName">
                 <!-- Firefox autocomplete is too aggressive and works on hidden inputs,
                 so we need to disable it (https://bugzilla.mozilla.org/show_bug.cgi?id=520561) -->
                 <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" autocomplete="off" t-att-name="optionName" t-att-value="main_object[optionName]"/>
             </t>
         </t>
+
+        <t t-set="header_bg_color" t-value="'header_color' in main_object and main_object.header_color or ''"/>
+        <t t-set="header_bg_color_is_class" t-value="'bg-' in header_bg_color"/>
+        <t t-set="header_bg_color_class" t-value="header_bg_color_is_class and header_bg_color or ''"/>
+        <t t-set="header_bg_color_style" t-value="(not header_bg_color_is_class) and header_bg_color or ''"/>
+
+        <t t-set="header_text_color" t-value="'header_text_color' in main_object and main_object.header_text_color or ''"/>
+        <t t-set="header_text_color_is_class" t-value="'text-' in header_text_color"/>
+        <t t-set="header_text_color_class" t-value="header_text_color_is_class and header_text_color or ''"/>
+        <t t-set="header_text_color_style" t-value="(not header_text_color_is_class) and header_text_color or ''"/>
+
         <div groups="base.group_user" class="o_frontend_to_backend_nav position-fixed d-none">
             <svg class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
                  viewBox="-7 -7 24 24" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin">
@@ -219,7 +230,10 @@
         <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.header_overlay else ''}" separator=" "/>
     </xpath>
     <xpath expr="//header" position="attributes">
-        <attribute name="t-attf-class" add="#{main_object.header_color if 'header_color' in main_object else ''}" separator=" "/>
+        <attribute name="t-attf-class" add="#{header_bg_color_class}" separator=" "/>
+        <attribute name="t-attf-style" add="#{header_bg_color_style and ('background-color: %s;' % header_bg_color_style)}" separator=" "/>
+        <attribute name="t-attf-class" add="#{header_text_color_class}" separator=" "/>
+        <attribute name="t-attf-style" add="#{header_text_color_style and ('color: %s;' % header_text_color_style)}" separator=" "/>
     </xpath>
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'header_visible' in main_object and not main_object.header_visible else ''}" separator=" "/>
