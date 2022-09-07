@@ -130,6 +130,6 @@ class ResCompany(models.Model):
             'sale_onboarding_order_confirmation_state',
             'sale_onboarding_sample_quotation_state',
         ]
-        return self.get_and_update_onbarding_state('sale_quotation_onboarding_state', steps)
+        return self._get_and_update_onboarding_state('sale_quotation_onboarding_state', steps)
 
     _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]
