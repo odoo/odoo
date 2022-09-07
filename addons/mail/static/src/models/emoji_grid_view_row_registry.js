@@ -28,7 +28,6 @@ registerModel({
                     currentItems = [];
                     index++;
                 }
-                viewCategory.update({ endSectionIndex: index - 1 });
             }
             return value;
         },
