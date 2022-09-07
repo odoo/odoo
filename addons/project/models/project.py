@@ -2424,10 +2424,9 @@ class ProjectTags(models.Model):
     ]
 
     def _get_project_tags_domain(self, domain, project_id):
-        return AND([
-            domain,
-            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]
-        ])
+        tag_ids = list(self.with_user(SUPERUSER_ID)._search(
+            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]))
+        return AND([domain, [('id', 'in', tag_ids)]])
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
