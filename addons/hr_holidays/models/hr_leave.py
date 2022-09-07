@@ -1343,6 +1343,7 @@ class HolidaysRequest(models.Model):
 
         leave_sudo = self.sudo()
         leave_sudo.with_context(from_cancel_wizard=True).active = False
+        leave_sudo.meeting_id.active = False
         leave_sudo._remove_resource_leave()
 
     def action_documents(self):
