@@ -254,7 +254,10 @@ const UserValueWidget = Widget.extend({
     async willStart() {
         await this._super(...arguments);
         if (this.options.dataAttributes.img) {
-            this.imgEl = await _buildImgElement(this.options.dataAttributes.img);
+            this.illustrationEl = await _buildImgElement(this.options.dataAttributes.img);
+        } else if (this.options.dataAttributes.icon) {
+            this.illustrationEl = document.createElement('i');
+            this.illustrationEl.classList.add('fa', this.options.dataAttributes.icon);
         }
     },
     /**
@@ -266,8 +269,8 @@ const UserValueWidget = Widget.extend({
         _addTitleAndAllowedAttributes(el, this.title, this.options);
         this.containerEl = document.createElement('div');
 
-        if (this.imgEl) {
-            this.containerEl.appendChild(this.imgEl);
+        if (this.illustrationEl) {
+            this.containerEl.appendChild(this.illustrationEl);
         }
 
         el.appendChild(this.containerEl);
@@ -731,7 +734,7 @@ const ButtonUserValueWidget = UserValueWidget.extend({
      */
     _makeDescriptive() {
         const $el = this._super(...arguments);
-        if (this.imgEl) {
+        if (this.illustrationEl) {
             $el[0].classList.add('o_we_icon_button');
         }
         if (this.activeImgEl) {
@@ -791,8 +794,8 @@ const ButtonUserValueWidget = UserValueWidget.extend({
             }
             active = (this.getActiveValue(methodName) === value);
         }
-        if (this.imgEl && this.activeImgEl) {
-            this.imgEl.classList.toggle('d-none', active);
+        if (this.illustrationEl && this.activeImgEl) {
+            this.illustrationEl.classList.toggle('d-none', active);
             this.activeImgEl.classList.toggle('d-none', !active);
         }
         this.el.classList.toggle('active', active);
@@ -969,7 +972,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
 
         this.menuTogglerEl = document.createElement('we-toggler');
         this.menuTogglerEl.dataset.placeholderText = this.PLACEHOLDER_TEXT;
-        this.iconEl = this.imgEl || null;
+        this.iconEl = this.illustrationEl || null;
         const icon = this.el.dataset.icon;
         if (icon) {
             this.iconEl = document.createElement('i');
@@ -1033,8 +1036,12 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             const svgTag = activeWidget.el.querySelector('svg'); // useful to avoid searching text content in svg element
             const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.trim()));
             const imgSrc = activeWidget.el.dataset.img;
+            const icon = activeWidget.el.dataset.icon;
             if (value) {
                 textContent = value;
+            } else if (icon) {
+                this.menuTogglerItemEl = document.createElement('i');
+                this.menuTogglerItemEl.classList.add('fa', icon);
             } else if (imgSrc) {
                 this.menuTogglerItemEl = document.createElement('img');
                 this.menuTogglerItemEl.src = imgSrc;
