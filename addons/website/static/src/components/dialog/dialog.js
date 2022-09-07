@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import { useAutofocus } from '@web/core/utils/hooks';
+import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { Dialog } from '@web/core/dialog/dialog';
 import { Switch } from '@website/components/switch/switch';
+import {unslugHtmlDataObject} from '../../services/website_service';
 import { _t } from 'web.core';
 
-const { xml, useState, Component } = owl;
+const { xml, useState, Component, onWillStart } = owl;
 
 const NO_OP = () => {};
 
@@ -81,10 +82,21 @@ export class AddPageDialog extends Component {
         this.title = this.env._t("New Page");
         this.primaryTitle = this.env._t("Create");
         this.switchLabel = this.env._t("Add to menu");
+        this.website = useService('website');
+        this.orm = useService('orm');
 
         this.state = useState({
             addMenu: true,
             name: '',
+            websiteId: false,
+        });
+
+        onWillStart(async () => {
+            const [currentWebsite] = await Promise.all([
+                await this.orm.call('website', 'get_current_website'),
+                this.website.fetchWebsites(),
+            ]);
+            this.state.websiteId = unslugHtmlDataObject(currentWebsite).id;
         });
     }
 
@@ -93,9 +105,17 @@ export class AddPageDialog extends Component {
     }
 
     async addPage() {
-        await this.props.addPage(this.state.name, this.state.addMenu);
+        await this.props.addPage(this.state);
     }
 }
+AddPageDialog.props = {
+    close: Function,
+    addPage: Function,
+    selectWebsite: {
+        type: Boolean,
+        optional: true,
+    },
+};
 AddPageDialog.components = {
     Switch,
     WebsiteDialog,
@@ -113,6 +133,19 @@ AddPageDialog.template = xml`
         <div class="col-md-9">
             <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
         </div>
+        <t t-if="props.selectWebsite">
+            <label class="col-form-label col-md-3">Website</label>
+            <div class="col-md-9">
+                <select class="form-select" t-model="state.websiteId">
+                    <option t-foreach="website.websites"
+                        t-as="option"
+                        t-key="option.id"
+                        t-att-value="option.id"
+                        t-esc="option.name"
+                    />
+                </select>
+            </div>
+        </t>
         <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label="switchLabel" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
     </div>
 </WebsiteDialog>
