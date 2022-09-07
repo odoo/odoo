@@ -13,25 +13,38 @@ const QWeb = core.qweb;
 const _t = core._t;
 const _lt = core._lt;
 
-const BasicActivity = AbstractField.extend({
+// -----------------------------------------------------------------------------
+// Activities Widget for Kanban views ('kanban_activity' widget)
+// -----------------------------------------------------------------------------
+const KanbanActivity = AbstractField.extend({
+    template: 'mail.KanbanActivity',
     events: {
-        'click .o_edit_activity': '_onEditActivity',
         'change input.o_input_file': '_onFileChanged',
+        'click .o_activity_template_preview': '_onPreviewMailTemplate',
+        'click .o_activity_template_send': '_onSendMailTemplate',
+        'click .o_edit_activity': '_onEditActivity',
         'click .o_mark_as_done': '_onMarkActivityDone',
         'click .o_mark_as_done_upload_file': '_onMarkActivityDoneUploadFile',
-        'click .o_activity_template_preview': '_onPreviewMailTemplate',
         'click .o_schedule_activity': '_onScheduleActivity',
-        'click .o_activity_template_send': '_onSendMailTemplate',
-        'click .o_unlink_activity': '_onUnlinkActivity',
+        'show.bs.dropdown': '_onDropdownShow',
     },
-    init() {
-        this._super.apply(this, arguments);
-        this._draftFeedback = {};
+    fieldDependencies: {
+        activity_exception_decoration: { type: 'selection' },
+        activity_exception_icon: { type: 'char' },
+        activity_state: { type: 'selection' },
     },
 
-    //------------------------------------------------------------
-    // Public
-    //------------------------------------------------------------
+    /**
+     * @override
+     */
+    init(parent, name, record) {
+        this._super.apply(this, arguments);
+        this._draftFeedback = {};
+        this.selection = {};
+        for (const [key, value] of record.fields.activity_state.selection) {
+            this.selection[key] = value;
+        }
+    },
 
     /**
      * @param {integer} previousActivityTypeID
@@ -118,21 +131,6 @@ const BasicActivity = AbstractField.extend({
             this.trigger_up('reload', { keepChanges: true });
         }
     },
-    /**
-     * @private
-     * @param {integer} id
-     * @param {function} callback
-     * @return {Promise}
-     */
-    _openActivityForm(id, callback) {
-        const action = this._getActivityFormAction(id);
-        return this.do_action(action, { on_close: callback });
-    },
-
-    //------------------------------------------------------------
-    // Handlers
-    //------------------------------------------------------------
-
     /**
      * @private
      * @param {MouseEvent} ev
@@ -352,6 +350,15 @@ const BasicActivity = AbstractField.extend({
      * @param {MouseEvent} ev
      * @returns {Promise}
      */
+    _onScheduleActivity(ev) {
+        ev.preventDefault();
+        return this._openActivityForm(false, this._reload.bind(this));
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {Promise}
+     */
     async _onSendMailTemplate(ev) {
         ev.stopPropagation();
         ev.preventDefault();
@@ -365,71 +372,19 @@ const BasicActivity = AbstractField.extend({
     },
     /**
      * @private
-     * @param {MouseEvent} ev
-     * @returns {Promise}
+     * @param {integer} id
+     * @param {function} callback
+     * @return {Promise}
      */
-    _onScheduleActivity(ev) {
-        ev.preventDefault();
-        return this._openActivityForm(false, this._reload.bind(this));
+    _openActivityForm(id, callback) {
+        const action = this._getActivityFormAction(id);
+        return this.do_action(action, { on_close: callback });
     },
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     * @param {Object} options
-     * @returns {Promise}
-     */
-    async _onUnlinkActivity(ev, options) {
-        ev.preventDefault();
-        const activityID = $(ev.currentTarget).data('activity-id');
-        options = _.defaults(options || {}, {
-            model: 'mail.activity',
-            args: [[activityID]],
-        });
-        await this._rpc({
-            model: options.model,
-            method: 'unlink',
-            args: options.args,
-        });
-        this._reload.bind({ activity: true });
-    },
-});
-
-// -----------------------------------------------------------------------------
-// Activities Widget for Kanban views ('kanban_activity' widget)
-// -----------------------------------------------------------------------------
-const KanbanActivity = BasicActivity.extend({
-    template: 'mail.KanbanActivity',
-    events: _.extend({}, BasicActivity.prototype.events, {
-        'show.bs.dropdown': '_onDropdownShow',
-    }),
-    fieldDependencies: _.extend({}, BasicActivity.prototype.fieldDependencies, {
-        activity_exception_decoration: { type: 'selection' },
-        activity_exception_icon: { type: 'char' },
-        activity_state: { type: 'selection' },
-    }),
-
-    /**
-     * @override
-     */
-    init(parent, name, record) {
-        this._super.apply(this, arguments);
-        const selection = {};
-        _.each(record.fields.activity_state.selection, function (value) {
-            selection[value[0]] = value[1];
-        });
-        this.selection = selection;
-        this._setState(record);
-    },
-    //------------------------------------------------------------
-    // Private
-    //------------------------------------------------------------
-
     /**
      * @private
      */
     _reload() {
-        this.trigger_up('reload', { db_id: this.record_id, keepChanges: true });
+        this.trigger_up('reload', { db_id: this.record.id, keepChanges: true });
     },
     /**
      * @override
@@ -439,7 +394,7 @@ const KanbanActivity = BasicActivity.extend({
         // span classes need to be updated manually because the template cannot
         // be re-rendered eaasily (because of the dropdown state)
         const spanClasses = ['fa', 'fa-lg', 'fa-fw'];
-        spanClasses.push('o_activity_color_' + (this.activityState || 'default'));
+        spanClasses.push('o_activity_color_' + (this.record.data.activity_state || 'default'));
         if (this.recordData.activity_exception_decoration) {
             spanClasses.push('text-' + this.recordData.activity_exception_decoration);
             spanClasses.push(this.recordData.activity_exception_icon);
@@ -500,7 +455,6 @@ const KanbanActivity = BasicActivity.extend({
         }
         const sortedActivities = _.sortBy(activities, 'date_deadline');
         this.$('.o_activity').html(QWeb.render('mail.KanbanActivityDropdown', {
-            selection: this.selection,
             records: _.groupBy(sortedActivities, 'state'),
             session: session,
             widget: this,
@@ -519,23 +473,6 @@ const KanbanActivity = BasicActivity.extend({
                 });
             }
         }
-    },
-    /**
-     * @override
-     * @private
-     * @param {Object} record
-     */
-    _reset(record) {
-        this._super.apply(this, arguments);
-        this._setState(record);
-    },
-    /**
-     * @private
-     * @param {Object} record
-     */
-    _setState(record) {
-        this.record_id = record.id;
-        this.activityState = this.recordData.activity_state;
     },
 
     //------------------------------------------------------------
