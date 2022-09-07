@@ -260,11 +260,11 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             return !this.error? 'ReceiptScreen' : 'ProductScreen';
         }
         async _isOrderValid(isForceValidate) {
-            if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
+            if (this.currentOrder.get_orderlines().length === 0) {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Empty Order'),
                     body: this.env._t(
-                        'There must be at least one product in your order before it can be validated and invoiced.'
+                        'There must be at least one product in your order before it can be validated'
                     ),
                 });
                 return false;
