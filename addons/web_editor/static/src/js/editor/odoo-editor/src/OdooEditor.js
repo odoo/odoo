@@ -3115,11 +3115,27 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _onSelectionChange() {
+        const selection = this.document.getSelection();
+        // When CTRL+A in the editor, sometimes the browser use the editable
+        // element as an anchor & focus node. This is an issue for the commands
+        // and the toolbar so we need to fix the selection to be based on the
+        // editable children. Calling `getDeepRange` ensure the selection is
+        // limited to the editable.
+        if (
+            selection.anchorNode === this.editable &&
+            selection.focusNode === this.editable &&
+            selection.anchorOffset === 0 &&
+            selection.focusOffset === [...this.editable.childNodes].length
+        ) {
+            getDeepRange(this.editable, {select: true});
+            // The selection is changed in `getDeepRange` and will therefore
+            // re-trigger the _onSelectionChange.
+            return;
+        }
+
         // Compute the current selection on selectionchange but do not record it. Leave
         // that to the command execution or the 'input' event handler.
         this._computeHistorySelection();
-
-        const selection = this.document.getSelection();
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
