@@ -104,7 +104,7 @@
                 const value = event.record[fieldName];
                 const colorRecord = value[0];
                 const filter = this.loadParams.filters[fieldName];
-                const colorFilter = filter && filter.filters.map(f => f.value) || colorRecord;
+                const colorFilter = filter && filter.filters.map(f => f.value) || [colorRecord];
                 const everyoneFilter = filter && (filter.filters.find(f => f.value === "all") || {}).active || false;
                 let colorValue;
                 if (!everyoneFilter) {
