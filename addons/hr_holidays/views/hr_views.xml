@@ -190,11 +190,11 @@
                         <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}" role="img"
                              class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="leave_date_to"/>
-                        </span>
                         <span class="o_stat_text">
                             Off Till
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="leave_date_to"/>
                         </span>
                     </div>
                 </button>
@@ -256,13 +256,12 @@
                         <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}" role="img"
                              class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="leave_date_to"/>
-                        </span>
                         <span class="o_stat_text">
                             Off Till
                         </span>
-                        <t t-esc="hr_icon_display == 'presence_holiday_present'"/>
+                        <span class="o_stat_value">
+                            <field name="leave_date_to"/>
+                        </span>
                     </div>
                 </button>
             </xpath>
@@ -306,11 +305,11 @@
                              role="img" class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till"
                              title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="leave_date_to"/>
-                        </span>
                         <span class="o_stat_text">
                             Off Till
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="leave_date_to"/>
                         </span>
                     </div>
                 </button>
