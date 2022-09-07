@@ -19,14 +19,14 @@
                     </label>
                 </div>
                 <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
-                    <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Enable Push-to-talk" aria-label="Enable Push-to-talk">
+                    <label class="o_CallSettingsMenu_optionLabel o_CallSettingsMenu_pushToTalkOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Enable Push-to-talk" aria-label="Enable Push-to-talk">
                         <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="callSettingsMenu.onChangePushToTalk" t-att-checked="messaging.userSetting.usePushToTalk ? 'checked' : ''"/>
                         <span class="o_CallSettingsMenu_optionName ms-2 text-truncate">Enable Push-to-talk</span>
                     </label>
                 </div>
                 <t t-if="messaging.userSetting.usePushToTalk">
                     <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
-                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
+                        <label class="o_CallSettingsMenu_optionLabel o_CallSettingsMenu_pushToTalkKeyOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
                             <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Push-to-talk key</span>
                             <span class="o_CallSettingsMenu_optionPushToTalkGroup d-flex">
                                 <t t-if="messaging.userSetting.pushToTalkKey">
@@ -46,7 +46,7 @@
                     </div>
                     <div t-if="callSettingsMenu.userSetting.isRegisteringKey">Press a key to register it as the push-to-talk shortcut</div>
                     <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
-                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
+                        <label class="o_CallSettingsMenu_optionLabel o_CallSettingsMenu_pushToTalkDelayOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
                             <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Delay after releasing push-to-talk</span>
                             <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
                             <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="1" max="2000" step="1" t-att-value="messaging.userSetting.voiceActiveDuration" t-on-change="callSettingsMenu.onChangeDelay"/>
@@ -56,7 +56,7 @@
                 </t>
                 <t t-else="">
                     <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
-                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Voice detection threshold" aria-label="Voice detection threshold">
+                        <label class="o_CallSettingsMenu_optionLabel o_CallSettingsMenu_voiceThresholdOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Voice detection threshold" aria-label="Voice detection threshold">
                             <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Voice detection threshold</span>
                             <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
                                 <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="0.001" max="1" step="0.001" t-att-value="messaging.userSetting.voiceActivationThreshold" t-on-change="callSettingsMenu.onChangeThreshold"/>
@@ -68,14 +68,14 @@
             <div class="o_CallSettingsMenu_category d-flex flex-column px-3 overflow-auto">
                 <div class="o_CallSettingsMenu_categoryTitle py-2 fw-bolder text-700 text-truncate text-uppercase">Video Settings</div>
                 <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
-                    <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Show video participants only" aria-label="Show video participants only">
+                    <label class="o_CallSettingsMenu_optionLabel o_CallSettingsMenu_showOnlyVideoOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Show video participants only" aria-label="Show video participants only">
                         <input type="checkbox" aria-label="toggle push-to-talk" title="Show video participants only" t-on-change="callSettingsMenu.onChangeVideoFilterCheckbox" t-att-checked="callSettingsMenu.thread.channel.showOnlyVideo ? 'checked' : ''"/>
                         <span class="o_CallSettingsMenu_optionName ms-2 text-truncate">Show video participants only</span>
                     </label>
                 </div>
                 <t t-if="messaging.device.hasCanvasFilterSupport">
                     <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
-                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Blur video background" aria-label="Blur video background">
+                        <label class="o_CallSettingsMenu_optionLabel o_CallSettingsMenu_blurOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Blur video background" aria-label="Blur video background">
                             <input type="checkbox" aria-label="Blur video background" title="Blur video background" t-on-change="callSettingsMenu.onChangeBlur" t-att-checked="messaging.userSetting.useBlur ? 'checked' : ''"/>
                             <span class="o_CallSettingsMenu_optionName ms-2 text-truncate">Blur video background</span>
                         </label>
@@ -83,7 +83,7 @@
                 </t>
                 <t t-if="messaging.userSetting.useBlur">
                     <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
-                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Background blur intensity" aria-label="Background blur intensity">
+                        <label class="o_CallSettingsMenu_optionLabel o_CallSettingsMenu_backgroundBlurIntensityOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Background blur intensity" aria-label="Background blur intensity">
                             <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Background blur intensity</span>
                             <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
                                 <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="0" max="20" step="1" t-att-value="messaging.userSetting.backgroundBlurAmount" t-on-change="callSettingsMenu.onChangeBackgroundBlurAmount"/>
@@ -91,7 +91,7 @@
                         </label>
                     </div>
                     <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
-                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Edge blur intensity" aria-label="Edge blur intensity">
+                        <label class="o_CallSettingsMenu_optionLabel o_CallSettingsMenu_edgeBlurIntensityOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Edge blur intensity" aria-label="Edge blur intensity">
                             <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Edge blur intensity</span>
                             <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
                                 <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="0" max="20" step="1" t-att-value="messaging.userSetting.edgeBlurAmount" t-on-change="callSettingsMenu.onChangeEdgeBlurAmount"/>

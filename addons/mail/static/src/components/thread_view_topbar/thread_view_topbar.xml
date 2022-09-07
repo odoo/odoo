@@ -74,7 +74,7 @@
                         </button>
                     </t>
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and !threadViewTopbar.threadView.isCallSettingsMenuOpen">
-                        <button class="o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" title="Show Call Settings" t-on-click="threadViewTopbar.onClickShowCallSettingsMenu">
+                        <button class="o_ThreadViewTopbar_openCallSettingsButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" title="Show Call Settings" t-on-click="threadViewTopbar.onClickShowCallSettingsMenu">
                             <i class="fa fa-lg fa-gear text-700"/>
                         </button>
                     </t>
