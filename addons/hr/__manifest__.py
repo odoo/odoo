@@ -72,6 +72,9 @@
             'hr/static/tests/m2x_avatar_employee_tests.js',
             'hr/static/tests/standalone_m2o_avatar_employee_tests.js',
         ],
+        'web.assets_tests': [
+            'hr/static/tests/tours/hr_employee_flow.js',
+        ],
     },
     'license': 'LGPL-3',
 }
