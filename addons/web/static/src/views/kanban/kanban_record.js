@@ -26,7 +26,7 @@ const { COLORS } = ColorList;
 const formatters = registry.category("formatters");
 
 // These classes determine whether a click on a record should open it.
-const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action"].join(",");
+export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action"].join(",");
 const ALLOW_GLOBAL_CLICK = [".oe_kanban_global_click", ".oe_kanban_global_click_edit"].join(",");
 
 /**
