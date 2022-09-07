@@ -85,8 +85,7 @@ class ContractHistory(models.Model):
                                     WHEN state='draft' AND kanban_state='done' THEN 1
                                     ELSE 0 END) OVER w_partition AS is_under_contract
                 FROM   hr_contract AS contract
-                WHERE  contract.state <> 'cancel'
-                AND contract.active = true
+                WHERE  contract.active = true
                 WINDOW w_partition AS (
                     PARTITION BY contract.employee_id
                     ORDER BY
@@ -94,7 +93,8 @@ class ContractHistory(models.Model):
                             WHEN contract.state = 'open' THEN 0
                             WHEN contract.state = 'draft' THEN 1
                             WHEN contract.state = 'close' THEN 2
-                            ELSE 3 END,
+                            WHEN contract.state = 'cancel' THEN 3
+                            ELSE 4 END,
                         contract.date_start DESC
                     RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
                 )
@@ -120,8 +120,7 @@ class ContractHistory(models.Model):
 
         mapped_employee_contracts = defaultdict(lambda: self.env['hr.contract'])
         for contract in sorted_contracts:
-            if contract.state != 'cancel':
-                mapped_employee_contracts[contract.employee_id] |= contract
+            mapped_employee_contracts[contract.employee_id] |= contract
 
         for history in self:
             history.contract_ids = mapped_employee_contracts[history.employee_id]
