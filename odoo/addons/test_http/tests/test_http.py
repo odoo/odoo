@@ -428,12 +428,15 @@ class TestHttpMisc(TestHttpBase):
             ]
         }})
 
-        res = self.nodb_url_open('/jsonrpc', data=payload, headers=CT_JSON)
-        res.raise_for_status()
+        for method in (self.db_url_open, self.nodb_url_open):
+            with self.subTest(method=method.__name__):
 
-        res_rpc = res.json()
-        self.assertNotIn('error', res_rpc.keys(), res_rpc.get('error', {}).get('data', {}).get('message'))
-        self.assertIn(milky_way.name, res_rpc['result'], "QWeb template was correctly rendered")
+                res = method('/jsonrpc', data=payload, headers=CT_JSON)
+                res.raise_for_status()
+
+                res_rpc = res.json()
+                self.assertNotIn('error', res_rpc.keys(), res_rpc.get('error', {}).get('data', {}).get('message'))
+                self.assertIn(milky_way.name, res_rpc['result'], "QWeb template was correctly rendered")
 
 
 @tagged('post_install', '-at_install')
