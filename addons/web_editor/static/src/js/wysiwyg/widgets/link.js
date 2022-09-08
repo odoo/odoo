@@ -502,9 +502,13 @@ const Link = Widget.extend({
  */
 Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
 
-    if (startNode && !$(startNode).is('a')) {
-        $(startNode).wrap('<a href="#"/>');
-        return { link: startNode.parentElement, needLabel: false };
+    if (startNode) {
+        if ($(startNode).is('a')) {
+            return { link: startNode, needLabel: false };
+        } else {
+            $(startNode).wrap('<a href="#"/>');
+            return { link: startNode.parentElement, needLabel: false };
+        }
     }
 
     const doc = containerNode && containerNode.ownerDocument || document;
