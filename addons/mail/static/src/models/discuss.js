@@ -8,13 +8,6 @@ import { escape, sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'Discuss',
     recordMethods: {
-        clearIsAddingItem() {
-            this.update({
-                addingChannelValue: "",
-                isAddingChannel: false,
-                isAddingChat: false,
-            });
-        },
         /**
          * Close the discuss app. Should reset its internal state.
          */
@@ -36,8 +29,8 @@ registerModel({
             // Necessary in order to prevent AutocompleteSelect event's default
             // behaviour as html tags visible for a split second in text area
             ev.preventDefault();
-            const name = this.addingChannelValue;
-            this.clearIsAddingItem();
+            const name = this.discussView.addingChannelValue;
+            this.discussView.clearIsAddingItem();
             if (ui.item.create) {
                 const channel = await this.messaging.models['Thread'].performRpcCreateChannel({
                     name,
@@ -62,7 +55,7 @@ registerModel({
          * @param {function} res
          */
         async handleAddChannelAutocompleteSource(req, res) {
-            this.update({ addingChannelValue: req.term });
+            this.discussView.update({ addingChannelValue: req.term });
             const threads = await this.messaging.models['Thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
             const items = threads.map((thread) => {
                 const escapedName = escape(thread.name);
@@ -93,7 +86,7 @@ registerModel({
          */
         handleAddChatAutocompleteSelect(ev, ui) {
             this.messaging.openChat({ partnerId: ui.item.id });
-            this.clearIsAddingItem();
+            this.discussView.clearIsAddingItem();
         },
         /**
          * @param {Object} req
@@ -243,26 +236,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean}
-         */
-        _computeIsAddingChannel() {
-            if (!this.discussView) {
-                return false;
-            }
-            return this.isAddingChannel;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsAddingChat() {
-            if (!this.discussView) {
-                return false;
-            }
-            return this.isAddingChat;
-        },
-        /**
-         * @private
          * @returns {FieldCommand}
          */
         _computeMobileMessagingNavbarView() {
@@ -318,12 +291,6 @@ registerModel({
             compute: '_computeAddChatInputPlaceholder',
         }),
         /**
-         * Value that is used to create a channel from the sidebar.
-         */
-        addingChannelValue: attr({
-            default: "",
-        }),
-        /**
          * Discuss sidebar category for `channel` type channel threads.
          */
         categoryChannel: one('DiscussSidebarCategory', {
@@ -359,22 +326,6 @@ registerModel({
          */
         initActiveId: attr({
             default: 'mail.box_inbox',
-        }),
-        /**
-         * Determine whether current user is currently adding a channel from
-         * the sidebar.
-         */
-        isAddingChannel: attr({
-            compute: '_computeIsAddingChannel',
-            default: false,
-        }),
-        /**
-         * Determine whether current user is currently adding a chat from
-         * the sidebar.
-         */
-        isAddingChat: attr({
-            compute: '_computeIsAddingChat',
-            default: false,
         }),
         /**
          * Determines if the logic for opening a thread via the `initActiveId`

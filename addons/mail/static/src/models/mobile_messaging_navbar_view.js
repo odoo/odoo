@@ -27,10 +27,10 @@ registerModel({
                     this.discuss.update({ thread: clear() });
                 }
                 if (this.discuss.activeMobileNavbarTabId !== 'chat') {
-                    this.discuss.update({ isAddingChat: false });
+                    this.discuss.discussView.update({ isAddingChat: false });
                 }
                 if (this.discuss.activeMobileNavbarTabId !== 'channel') {
-                    this.discuss.update({ isAddingChannel: false });
+                    this.discuss.discussView.update({ isAddingChannel: false });
                 }
             }
             if (this.messagingMenu) {

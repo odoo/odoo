@@ -39,7 +39,7 @@ registerModel({
          */
         _computeIsHtml() {
             if (this.discussViewOwnerAsMobileAddItemHeader) {
-                return this.discussViewOwnerAsMobileAddItemHeader.discuss.isAddingChannel;
+                return this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel;
             }
             if (this.discussSidebarCategoryOwnerAsAddingItem) {
                 return this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel;
@@ -70,7 +70,7 @@ registerModel({
                 return this.chatWindowOwnerAsNewMessage.newMessageFormInputPlaceholder;
             }
             if (this.discussViewOwnerAsMobileAddItemHeader) {
-                if (this.discussViewOwnerAsMobileAddItemHeader.discuss.isAddingChannel) {
+                if (this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel) {
                     return this.discussViewOwnerAsMobileAddItemHeader.discuss.addChannelInputPlaceholder;
                 } else {
                     return this.discussViewOwnerAsMobileAddItemHeader.discuss.addChatInputPlaceholder;
