@@ -66,7 +66,7 @@
         ],
         'website.assets_editor': [
             'website_event/static/src/js/systray_items/*.js',
-            'website_event/static/src/js/components/navbar/navbar.js',
+            'website_event/static/src/js/services/website_custom_menus.js',
         ],
     },
     'license': 'LGPL-3',
