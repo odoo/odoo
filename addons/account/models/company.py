@@ -109,7 +109,8 @@ class ResCompany(models.Model):
     account_setup_coa_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding charts of account step", default='not_done')
     account_setup_taxes_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding Taxes step", default='not_done')
     account_onboarding_invoice_layout_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding invoice layout step", default='not_done')
-    account_onboarding_create_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding create invoice step", default='not_done')
+    account_onboarding_create_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding create invoice step", compute='_compute_account_onboarding_create_invoice_state')
+    account_onboarding_create_invoice_state_flag = fields.Boolean(default=False, store=True)
     account_onboarding_sale_tax_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sale tax step", default='not_done')
 
     # account dashboard onboarding
@@ -205,6 +206,16 @@ class ResCompany(models.Model):
             foreign_vat_fpos = self.env['account.fiscal.position'].search([('company_id', '=', record.id), ('foreign_vat', '!=', False)])
             record.account_enabled_tax_country_ids = foreign_vat_fpos.country_id + record.account_fiscal_country_id
 
+    def _compute_account_onboarding_create_invoice_state(self):
+        for record in self:
+            if not self.env.company.account_onboarding_create_invoice_state_flag:
+                if self.env['account.move'].search_count([('state', '=', 'posted'), ('company_id', '=', record.id), ('move_type', '=', 'out_invoice')], limit=1) > 0:
+                    record.account_onboarding_create_invoice_state = 'done'
+                    self.env.company.account_onboarding_create_invoice_state_flag = True
+                else:
+                    record.account_onboarding_create_invoice_state = 'not_done'
+            else:
+                record.account_onboarding_create_invoice_state = 'done'
     @api.depends('terms_type')
     def _compute_invoice_terms_html(self):
         for company in self.filtered(lambda company: is_html_empty(company.invoice_terms_html) and company.terms_type == 'html'):
@@ -521,8 +532,11 @@ class ResCompany(models.Model):
 
     @api.model
     def action_open_account_onboarding_create_invoice(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_create_invoice")
-        return action
+        self.env.company.write({
+            'account_onboarding_create_invoice_state_flag': True,
+            'account_onboarding_create_invoice_state': 'just_done',
+        })
+        return self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_create_invoice")
 
     @api.model
     def action_open_taxes_onboarding(self):
