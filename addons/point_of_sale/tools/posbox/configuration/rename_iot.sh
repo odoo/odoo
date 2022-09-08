@@ -2,15 +2,10 @@
 
 # Write the server configuration
 function connect () {
-	SERVER="${1}"
-	CURRENT_SERVER_FILE=/home/pi/odoo-remote-server.conf
-	TOKEN_FILE=/home/pi/token
-	TOKEN="${3}"
-	REBOOT="${4}"
 	HOSTS=/root_bypass_ramdisks/etc/hosts
 	HOST_FILE=/root_bypass_ramdisks/etc/hostname
 	HOSTNAME="$(hostname)"
-	IOT_NAME="${2}"
+	IOT_NAME="${1}"
 	IOT_NAME="${IOT_NAME//[^[:ascii:]]/}"
 	IOT_NAME="${IOT_NAME//[^a-zA-Z0-9-]/}"
 	if [ -z "$IOT_NAME" ]
@@ -19,11 +14,6 @@ function connect () {
 	fi
 	sudo mount -o remount,rw /
 	sudo mount -o remount,rw /root_bypass_ramdisks
-	if [ ! -z "${1}" ]
-	then
-		echo "${SERVER}" > ${CURRENT_SERVER_FILE}
-		echo "${TOKEN}" > ${TOKEN_FILE}
-	fi
 	if [ "${IOT_NAME}" != "${HOSTNAME}" ]
 	then
 		sudo sed -i "s/${HOSTNAME}/${IOT_NAME}/g" ${HOSTS}
@@ -39,10 +29,6 @@ function connect () {
 	fi
 	sudo mount -o remount,ro /
 	sudo mount -o remount,ro /root_bypass_ramdisks
-	if [ "$REBOOT" == 'reboot' ]
-	then
-		sudo service odoo restart
-	fi
 }
 
-connect "${1}" "${2}" "${3}" "${4}"
+connect "${1}"

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from traceback import format_exc
-
-from dbus.mainloop.glib import DBusGMainLoop
 import json
+import platform
 import logging
 import socket
 from threading import Thread
@@ -13,6 +12,12 @@ import urllib3
 from odoo.addons.hw_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
+
+try:
+    from dbus.mainloop.glib import DBusGMainLoop
+except ImportError:
+    DBusGMainLoop = None
+    _logger.error('Could not import library dbus')
 
 drivers = []
 interfaces = {}
@@ -72,7 +77,9 @@ class Manager(Thread):
         Thread that will load interfaces and drivers and contact the odoo server with the updates
         """
 
-        helpers.check_git_branch()
+        helpers.start_nginx_server()
+        if platform.system() == 'Linux':
+            helpers.check_git_branch()
         helpers.check_certificate()
 
         # We first add the IoT Box to the connected DB because IoT handlers cannot be downloaded if
@@ -93,16 +100,16 @@ class Manager(Thread):
         while 1:
             try:
                 if iot_devices != self.previous_iot_devices:
-                    self.send_alldevices()
                     self.previous_iot_devices = iot_devices.copy()
+                    self.send_alldevices()
                 time.sleep(3)
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running
                 _logger.error(format_exc())
 
-
 # Must be started from main thread
-DBusGMainLoop(set_as_default=True)
+if DBusGMainLoop:
+    DBusGMainLoop(set_as_default=True)
 
 manager = Manager()
 manager.daemon = True

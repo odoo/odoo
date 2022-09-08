@@ -26,15 +26,18 @@ server_clean:
 	rm -rf $(SERVER_DIRECTORY)/.cyg*
 
 allinone: server_clean
+# 	need to install requirements-local-proxy.txt for local proxy install
 	cp $(SERVER_DIRECTORY)/requirements.txt $(WINPY32_DIR)/
+	cp requirements-local-proxy.txt $(WINPY32_DIR)/
 	-(cd $(WINPY32_DIR) && ./python.exe -m pip install --upgrade pip)
-	-(cd $(WINPY32_DIR) && cat requirements.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC%%#*}" ; done)
-	-(cd $(WINPY32_DIR) && Scripts/pip3.exe freeze)
+	-(cd $(WINPY32_DIR) && cat requirements*.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC%%#*}" ; done)
+	-(cd $(WINPY32_DIR) && Scripts/pip3.exe list)
 	rm $(WINPY32_DIR)/requirements.txt
 	cp $(SERVER_DIRECTORY)/requirements.txt $(WINPY64_DIR)/
+	cp requirements-local-proxy.txt $(WINPY64_DIR)/
 	-(cd $(WINPY64_DIR) && ./python.exe -m pip install --upgrade pip)
-	-(cd $(WINPY64_DIR) && cat requirements.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC%%#*}" ; done)
-	-(cd $(WINPY64_DIR) && Scripts/pip3.exe freeze)
+	-(cd $(WINPY64_DIR) && cat requirements*.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC%%#*}" ; done)
+	-(cd $(WINPY64_DIR) && Scripts/pip3.exe list)
 	rm $(WINPY64_DIR)/requirements.txt
 	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_MAKENSIS))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && mkdir -p $(FILES_DIRECTORY))
