@@ -561,13 +561,13 @@
         <field name="dpi">96</field>
     </record>
 
-
     <record id="x_pos_report" model="ir.actions.report">
         <field name="name">X Report</field>
         <field name="model">pos.session</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">fg_custom.report_x_pos_report</field>
-        <field name="paperformat_id" ref="fg_custom.paperformat_pos_report"/>
+        <field name="report_file">fg_custom.report_x_pos_report</field>
+<!--        <field name="print_report_name">'XReport-%s' % object.name</field>-->
     </record>
 
 </odoo>

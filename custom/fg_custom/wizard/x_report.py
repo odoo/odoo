@@ -11,8 +11,8 @@ class XReport(models.TransientModel):
     _description = "X Report"
 
     user_id = fields.Many2one('res.users', string='Cashier User (Opened By)', required=True, default=lambda self: self.env.uid)
-    start_at = fields.Date(string='Date (Opening Date)', required=True, default=fields.Date.context_today)
-    session_id = fields.Many2one('pos.session', string='Session')
+    start_at = fields.Date(string='Date', required=True, default=fields.Date.context_today)
+    session_id = fields.Many2one('pos.session', string='Session', required=True)
 
     @api.onchange('start_at', 'user_id')
     def onchange_start_at(self):
@@ -24,6 +24,10 @@ class XReport(models.TransientModel):
             return {'domain': {'session_id': [('start_at', '>=', date_start), ('start_at', '<=', date_stop), ('state', '=', 'opened'), ('user_id', '=', self.user_id.id)]}}
 
     def action_print(self):
+        data = {'session_id': self.session_id.id}
+        return self.env.ref('fg_custom.x_pos_report').report_action(None, data=data)
+
+    def action_print_old(self):
         session_id = self.session_id
         start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference asc')
         end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference desc')
