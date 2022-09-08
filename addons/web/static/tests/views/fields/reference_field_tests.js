@@ -918,4 +918,55 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("model selector is displayed only when it should be", async function (assert) {
+        //The model selector should be only displayed if
+        //there is no hide_model=True options AND no model_field specified
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="reference" options="{'model_field': 'model_id'}" />
+                    </group>
+                    <group>
+                        <field name="reference" options="{'model_field': 'model_id', 'hide_model': True}" />
+                    </group>
+                    <group>
+                        <field name="reference" options="{'hide_model': True}" />
+                    </group>
+                    <group>
+                        <field name="reference" />
+                    </group>
+                </form>`,
+        });
+
+        await click(target, ".o_form_button_edit");
+
+        const groups = target.querySelectorAll(".o_group");
+
+        assert.containsNone(
+            groups[0],
+            "select",
+            "the selection list of the reference field should not exist when model_field is specified."
+        );
+        assert.containsNone(
+            groups[1],
+            "select",
+            "the selection list of the reference field should not exist when model_field is specified and hide_model=True."
+        );
+        assert.containsNone(
+            groups[2],
+            "select",
+            "the selection list of the reference field should not exist when hide_model=True."
+        );
+        assert.containsOnce(
+            groups[3],
+            "select",
+            "the selection list of the reference field should exist when hide_model=False and no model_field specified."
+        );
+    });
 });
