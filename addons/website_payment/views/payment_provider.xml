@@ -7,9 +7,9 @@
             <field name="model">payment.provider</field>
             <field name="inherit_id" ref="payment.payment_provider_form"/>
             <field name="arch" type="xml">
-                <field name='company_id' position='after'>
+                <group name="payment_state" position='inside'>
                     <field name="website_id" options="{'no_open': True, 'no_create_edit': True}" groups="website.group_multi_website"/>
-                </field>
+                </group>
             </field>
         </record>
 
