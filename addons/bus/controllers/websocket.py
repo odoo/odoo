@@ -42,7 +42,7 @@ class WebsocketController(Controller):
 
     @route('/websocket/update_bus_presence', type='http', auth='public', cors='*')
     def update_bus_presence(self, inactivity_period):
-        request.env['ir.websocket']._update_bus_presence(inactivity_period)
+        request.env['ir.websocket']._update_bus_presence(int(inactivity_period))
 
     @route('/bus/websocket_worker_bundle', type='http', auth='public', cors='*')
     def get_websocket_worker_bundle(self):
