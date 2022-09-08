@@ -1037,7 +1037,7 @@ class AccountEdiFormat(models.Model):
         else:
             return self._l10n_it_post_invoices_step_2(invoices)
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         # OVERRIDE
         self.ensure_one()
         edi_result = super()._post_invoice_edi(invoices)
