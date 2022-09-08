@@ -7,13 +7,20 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'DiscussView',
     recordMethods: {
+        clearIsAddingItem() {
+            this.update({
+                addingChannelValue: clear(),
+                isAddingChannel: clear(),
+                isAddingChat: clear(),
+            });
+        },
         /**
          * Handles click on the mobile "new channel" button.
          *
          * @param {MouseEvent} ev
          */
         onClickMobileNewChannelButton(ev) {
-            this.discuss.update({ isAddingChannel: true });
+            this.update({ isAddingChannel: true });
         },
         /**
          * Handles click on the mobile "new chat" button.
@@ -21,7 +28,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickMobileNewChatButton(ev) {
-            this.discuss.update({ isAddingChat: true });
+            this.update({ isAddingChat: true });
         },
         /**
          * Handles click on the "Start a meeting" button.
@@ -44,7 +51,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.discuss.clearIsAddingItem();
+            this.clearIsAddingItem();
         },
         /**
          * @param {KeyboardEvent} ev
@@ -74,7 +81,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (this.discuss.isAddingChannel) {
+            if (this.isAddingChannel) {
                 this.discuss.handleAddChannelAutocompleteSelect(ev, ui);
             } else {
                 this.discuss.handleAddChatAutocompleteSelect(ev, ui);
@@ -89,7 +96,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (this.discuss.isAddingChannel) {
+            if (this.isAddingChannel) {
                 this.discuss.handleAddChannelAutocompleteSource(req, res);
             } else {
                 this.discuss.handleAddChatAutocompleteSource(req, res);
@@ -102,7 +109,7 @@ registerModel({
         _computeMobileAddItemHeaderAutocompleteInputView() {
             if (
                 this.messaging.device.isSmall &&
-                (this.discuss.isAddingChannel || this.discuss.isAddingChat)
+                (this.isAddingChannel || this.isAddingChat)
             ) {
                 return {};
             }
@@ -124,6 +131,12 @@ registerModel({
          * The id of the action which opened discuss.
          */
         actionId: attr(),
+        /**
+         * Value that is used to create a channel from the sidebar.
+         */
+        addingChannelValue: attr({
+            default: "",
+        }),
         discuss: one('Discuss', {
             identifying: true,
             inverse: 'discussView',
@@ -137,6 +150,18 @@ registerModel({
             default: {},
             inverse: 'discussViewOwnerAsInbox',
             isCausal: true,
+        }),
+        /**
+         * Determines whether current user is adding a channel from the sidebar.
+         */
+        isAddingChannel: attr({
+            default: false,
+        }),
+        /**
+         * Determines whether current user is adding a chat from the sidebar.
+         */
+        isAddingChat: attr({
+            default: false,
         }),
         mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeMobileAddItemHeaderAutocompleteInputView',
