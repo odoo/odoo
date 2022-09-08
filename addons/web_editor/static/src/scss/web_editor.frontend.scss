@@ -71,9 +71,9 @@
 .o_grid_item {
     word-break: break-word;
 
-    > img {
-        width: 100%;
-        height: 100%;
+    &.o_grid_item_image > img:not([data-shape]) {
+        width: 100% !important;
+        height: 100% !important;
         object-fit: cover !important;
     }
 }
