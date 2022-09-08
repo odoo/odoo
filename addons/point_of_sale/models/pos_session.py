@@ -191,7 +191,7 @@ class PosSession(models.Model):
                                   "Cash Registers: %r", list(statement.name for statement in closed_statement_ids)))
 
     def _check_invoices_are_posted(self):
-        unposted_invoices = self.order_ids.account_move.filtered(lambda x: x.state != 'posted')
+        unposted_invoices = self.order_ids.sudo().with_company(self.company_id).account_move.filtered(lambda x: x.state != 'posted')
         if unposted_invoices:
             raise UserError(_('You cannot close the POS when invoices are not posted.\n'
                               'Invoices: %s') % str.join('\n',
