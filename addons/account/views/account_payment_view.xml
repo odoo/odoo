@@ -99,7 +99,7 @@
             <field name="arch" type="xml">
                 <search string="Payments">
                     <field name="name" string="Payment"
-                        filter_domain="['|', '|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('ref', 'ilike', self), ('amount', 'ilike', self)]"/>
+                        filter_domain="['|', '|', '|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('ref', 'ilike', self), ('amount_company_currency_signed' , 'ilike', self), ('amount', 'ilike', self)]"/>
                     <field name="partner_id" string="Customer/Vendor"/>
                     <field name="journal_id"/>
                     <field name="is_internal_transfer"/>
