@@ -14,6 +14,12 @@ registerModel({
                 isAddingChannel: false,
                 isAddingChat: false,
             });
+            this.categoryChannel.update({
+                isAddingItem: false,
+            });
+            this.categoryChat.update({
+                isAddingItem: false,
+            });
         },
         /**
          * Close the discuss app. Should reset its internal state.
