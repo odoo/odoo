@@ -156,7 +156,7 @@ class IrModel(models.Model):
         return [Command.create({'name': 'x_name', 'field_description': 'Name', 'ttype': 'char', 'copied': True})]
 
     name = fields.Char(string='Model Description', translate=True, required=True)
-    model = fields.Char(default='x_', required=True, index=True)
+    model = fields.Char(default='x_', required=True)
     order = fields.Char(string='Order', default='id', required=True,
                         help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"')
     info = fields.Text(string='Information')

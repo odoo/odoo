@@ -256,7 +256,7 @@ class Module(models.Model):
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
 
-    name = fields.Char('Technical Name', readonly=True, required=True, index=True)
+    name = fields.Char('Technical Name', readonly=True, required=True)
     category_id = fields.Many2one('ir.module.category', string='Category', readonly=True, index=True)
     shortdesc = fields.Char('Module Name', readonly=True, translate=True)
     summary = fields.Char('Summary', readonly=True, translate=True)

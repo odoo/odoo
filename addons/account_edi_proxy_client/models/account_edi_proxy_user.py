@@ -42,7 +42,7 @@ class AccountEdiProxyClientUser(models.Model):
     _description = 'Account EDI proxy user'
 
     active = fields.Boolean(default=True)
-    id_client = fields.Char(required=True, index=True)
+    id_client = fields.Char(required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)
     edi_format_id = fields.Many2one('account.edi.format', required=True)
