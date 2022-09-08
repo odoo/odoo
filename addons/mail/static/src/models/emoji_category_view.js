@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryView',
@@ -46,6 +47,15 @@ registerModel({
             compute() {
                 return Boolean(this.viewCategory.emojiPickerViewAsActive);
             },
+        }),
+        isDisabled: attr({
+            compute() {
+                if (!this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBarView) {
+                    return clear();
+                }
+                return Boolean(this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBarView.currentSearch !== "");
+            },
+            default: false,
         }),
         isHovered: attr({
             default: false,
