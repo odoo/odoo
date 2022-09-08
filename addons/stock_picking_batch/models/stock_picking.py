@@ -115,15 +115,27 @@ class StockPicking(models.Model):
     def action_confirm(self):
         res = super().action_confirm()
         for picking in self:
-            if picking.picking_type_id.auto_batch and not picking.immediate_transfer and not picking.batch_id and picking.move_ids and picking._is_auto_batchable():
-                picking._find_auto_batch()
+            picking._find_auto_batch()
         return res
 
     def _action_done(self):
         res = super()._action_done()
+        to_assign_ids = set()
+        if self and self.env.context.get('pickings_to_detach'):
+            self.env['stock.picking'].browse(self.env.context['pickings_to_detach']).batch_id = False
+            to_assign_ids.update(self.env.context['pickings_to_detach'])
+
         for picking in self:
-            if picking.batch_id and any(picking.state != 'done' for picking in picking.batch_id.picking_ids):
+            # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
+            if picking.batch_id and any(p.state != 'done' for p in picking.batch_id.picking_ids):
                 picking.batch_id = None
+            # If backorder were made, if auto-batch is enabled, seek a batch for each of them with the selected criterias.
+            to_assign_ids.update(picking.backorder_ids.ids)
+
+        # To avoid inconsistencies, all incorrect pickings must be removed before assigning backorder pickings
+        assignable_pickings = self.env['stock.picking'].browse(to_assign_ids)
+        for picking in assignable_pickings:
+            picking._find_auto_batch()
 
         return res
 
@@ -135,11 +147,16 @@ class StockPicking(models.Model):
         return res
 
     def _should_show_transfers(self):
-        if len(self.batch_id) == 1 and self == self.batch_id.picking_ids:
+        if len(self.batch_id) == 1 and len(self) == (len(self.batch_id.picking_ids) - len(self.env.context.get('pickings_to_detach', []))):
             return False
         return super()._should_show_transfers()
 
     def _find_auto_batch(self):
+        self.ensure_one()
+        # Check if auto_batch is enabled for this picking.
+        if not self.picking_type_id.auto_batch or self.immediate_transfer or self.batch_id or not self.move_ids or not self._is_auto_batchable():
+            return False
+
         # Try to find a compatible batch to insert the picking
         possible_batches = self.env['stock.picking.batch'].sudo().search(self._get_possible_batches_domain())
         for batch in possible_batches:
@@ -167,6 +184,8 @@ class StockPicking(models.Model):
     def _is_auto_batchable(self, picking=None):
         """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
         """
+        if self.state not in ('waiting', 'confirmed', 'assigned'):
+            return False
         res = True
         if not picking:
             picking = self.env['stock.picking']
