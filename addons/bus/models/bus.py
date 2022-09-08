@@ -6,9 +6,11 @@ import random
 import selectors
 import threading
 import time
+from psycopg2 import InterfaceError
 
 import odoo
 from odoo import api, fields, models
+from odoo.service.server import CommonServer
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import date_utils
 
@@ -150,7 +152,7 @@ class ImDispatch(threading.Thread):
             cr.commit()
             conn = cr._cnx
             sel.register(conn, selectors.EVENT_READ)
-            while True:
+            while not stop_event.is_set():
                 if sel.select(TIMEOUT):
                     conn.poll()
                     channels = []
@@ -165,14 +167,18 @@ class ImDispatch(threading.Thread):
                         websocket.trigger_notification_dispatching()
 
     def run(self):
-        while True:
+        while not stop_event.is_set():
             try:
                 self.loop()
-            except Exception:
+            except Exception as exc:
+                if isinstance(exc, InterfaceError) and stop_event.is_set():
+                    continue
                 _logger.exception("Bus.loop error, sleep and retry")
                 time.sleep(TIMEOUT)
 
 dispatch = None
+stop_event = threading.Event()
 if not odoo.multi_process or odoo.evented:
     # We only use the event dispatcher in threaded and gevent mode
     dispatch = ImDispatch()
+    CommonServer.on_stop(stop_event.set)
