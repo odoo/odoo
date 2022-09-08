@@ -1,7 +1,5 @@
 // Variables
 $o-cw-color-today-accent: #FC3D39;
-$o-cw-popup-avatar-size: 16px;
-$o-cw-filter-avatar-size: 20px;
 
 // Animations
 @keyframes backgroundfade {
@@ -708,8 +706,6 @@ $o-cw-filter-avatar-size: 20px;
                 overflow: hidden;
 
                 &.o_beside_avatar {
-                    width: $o-cw-filter-avatar-size;
-                    height: $o-cw-filter-avatar-size;
                     border-radius: 2px;
                     object-fit: cover;
                 }
@@ -725,8 +721,6 @@ $o-cw-filter-avatar-size: 20px;
 
 
             .o_cw_filter_avatar {
-                width: $o-cw-filter-avatar-size;
-                height: $o-cw-filter-avatar-size;
                 border-radius: 2px;
 
                 &.fa {
@@ -788,8 +782,8 @@ $o-cw-filter-avatar-size: 20px;
 
     .o_calendar_avatars img {
         margin-right: 0.4rem;
-        width: $o-cw-popup-avatar-size;
-        height: $o-cw-popup-avatar-size;
+        width: map-get($utilities-avatar-sizes, 'xs');
+        height: map-get($utilities-avatar-sizes, 'xs');
         border-radius: 100%;
     }
 

@@ -87,7 +87,7 @@
                 <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
                     <t t-if="_avatar">
                         <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
-                        <img t-att-src="avatar_source" t-attf-class="rounded-circle o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                        <img t-att-src="avatar_source" t-attf-class="avatar-size rounded-circle #{_avatar_class}" alt="" loading="eager"/>
                     </t>
                     <i t-if="_icon" t-attf-class="fa fa-1x fa-fw fa-user-circle-o #{_icon_class}"/>
                     <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>

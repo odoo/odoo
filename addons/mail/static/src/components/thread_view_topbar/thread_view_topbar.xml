@@ -87,7 +87,7 @@
                 <!-- FIXME: handle display on mobile -->
                 <t t-if="threadViewTopbar.threadView.threadViewer.discussPublicView and !messaging.device.isSmall">
                     <div class="o_ThreadViewTopbar_userInfo d-flex align-items-center">
-                        <img class="o_ThreadViewTopbar_avatar mx-1 rounded-circle o_object_fit_cover" t-att-src="threadViewTopbar.avatarUrl" alt="Avatar"/>
+                        <img class="o_ThreadViewTopbar_avatar avatar-size avatar-size-md mx-1 rounded-circle" t-att-src="threadViewTopbar.avatarUrl" alt="Avatar"/>
                         <t t-if="!threadViewTopbar.isEditingGuestName">
                             <span class="o_ThreadViewTopbar_userName o_ThreadViewTopbar_editableItem px-1 border fw-bold text-truncate" t-attf-class="{{ threadViewTopbar.isMouseOverUserName and messaging.isCurrentUserGuest ? 'o-userNameEditable bg-white' : 'border-light' }}" t-on-click="threadViewTopbar.onClickUserName" t-on-mouseenter="threadViewTopbar.onMouseEnterUserName" t-on-mouseleave="threadViewTopbar.onMouseLeaveUserName">
                                 <t t-esc="messaging.isCurrentUserGuest ? messaging.currentGuest.name : messaging.currentUser.nameOrDisplayName"/>

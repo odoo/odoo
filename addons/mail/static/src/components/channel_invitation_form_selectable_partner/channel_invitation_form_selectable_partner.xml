@@ -4,7 +4,7 @@
     <t t-name="mail.ChannelInvitationFormSelectablePartner" owl="1">
         <div class="o_ChannelInvitationFormSelectablePartner d-flex align-items-center px-3 py-1 btn-light" t-on-click="() => channelInvitationFormSelectablePartnerView.channelInvitationFormOwner.onClickSelectablePartner(channelInvitationFormSelectablePartnerView.partner)" t-att-data-partner-id="channelInvitationFormSelectablePartnerView.partner.id" t-attf-class="{{ className }}" t-ref="root">
             <div class="o_ChannelInvitationFormSelectablePartner_avatarContainer position-relative flex-shrink-0">
-                <img class="o_ChannelInvitationFormSelectablePartner_avatar w-100 h-100 rounded-circle" t-att-src="channelInvitationFormSelectablePartnerView.partner.avatarUrl" alt="Avatar"/>
+                <img class="o_ChannelInvitationFormSelectablePartner_avatar avatar-size avatar-size-xl rounded-circle" t-att-src="channelInvitationFormSelectablePartnerView.partner.avatarUrl" alt="Avatar"/>
                 <t t-if="channelInvitationFormSelectablePartnerView.personaImStatusIconView">
                     <PersonaImStatusIcon
                         className="'o_ChannelInvitationFormSelectablePartner_imStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-white'"

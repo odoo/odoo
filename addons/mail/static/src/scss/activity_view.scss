@@ -70,9 +70,8 @@
         cursor: pointer;
 
         .o_m2o_avatar > img, > img {
-            width: 32px;
-            height: 32px;
-            max-height: 32px;
+            --avatar-size: #{map-get($utilities-avatar-sizes, 'lg')};
+            max-height: var(--avatar-size);
             margin-right: 16px;
         }
 

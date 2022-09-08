@@ -100,10 +100,10 @@
                                         <div class="o_wvisitor_kanban_image me-3">
                                             <img t-if="record.partner_image.raw_value"
                                                 t-att-src="kanban_image('res.partner', 'avatar_128', record.partner_id.raw_value)"
-                                                width="54px" height="54px" alt="Visitor"/>
+                                                alt="Visitor" class="avatar-size"/>
                                             <img t-else=""
                                                 t-attf-src="/base/static/img/avatar_grey.png"
-                                                width="54px" height="54px" alt="Visitor"/>
+                                                alt="Visitor" class="avatar-size"/>
                                         </div>
                                         <div class="o_wvisitor_name d-flex flex-grow-1 flex-column my-0 my-lg-2">
                                             <div class="d-flex align-items-start">

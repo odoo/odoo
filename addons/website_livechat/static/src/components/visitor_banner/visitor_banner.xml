@@ -5,8 +5,8 @@
         <t t-if="visitor">
             <div class="o_VisitorBanner" t-attf-class="{{ className }}" t-ref="root">
                 <div class="o_VisitorBanner_sidebar">
-                    <div class="o_VisitorBanner_avatarContainer">
-                        <img class="o_VisitorBanner_avatar rounded-circle" t-att-src="visitor.avatarUrl" alt="Avatar"/>
+                    <div class="o_VisitorBanner_avatarContainer align-self-start">
+                        <img class="o_VisitorBanner_avatar avatar-size avatar-size-lg rounded-circle" t-att-src="visitor.avatarUrl" alt="Avatar"/>
                         <t t-if="visitor.is_connected">
                             <i class="o_VisitorBanner_onlineStatusIcon fa fa-circle" title="Online" role="img" aria-label="Visitor is online"/>
                         </t>

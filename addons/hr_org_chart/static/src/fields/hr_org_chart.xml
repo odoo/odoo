@@ -24,7 +24,7 @@
         <!-- NOTE: Since by the default on not squared images odoo add white borders,
             use bg-images to get a clean and centred images -->
         <a t-if="! is_self"
-            class="o_media_object d-block rounded-circle o_employee_redirect"
+            class="o_media_object o_employee_redirect avatar-size avatar-size-xl d-block rounded-circle"
             t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"
             t-att-alt="employee.name"
             t-att-data-employee-id="employee.id"
@@ -32,6 +32,7 @@
             t-on-click.prevent="() => this._onEmployeeRedirect(employee.id)"/>
         <div t-if="is_self"
             class="o_media_object d-block rounded-circle border border-info"
+            t-attf-class="{{ employee_type === 'self' ? 'avatar-size avatar-size-xxl' : 'avatar-size avatar-size-xl' }}"
             t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"/>
     </div>
 

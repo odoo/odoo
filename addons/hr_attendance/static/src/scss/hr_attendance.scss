@@ -20,6 +20,10 @@
 
         .o_hr_attendance_user_badge {
             @include o-position-absolute(auto, $border-width * -1, 100%, $border-width * -1); // Compensate card's border
+
+            .avatar {
+                --avatar-size: 80px;
+            }
         }
     }
 

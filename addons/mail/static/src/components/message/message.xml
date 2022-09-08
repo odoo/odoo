@@ -31,8 +31,8 @@
                 <div class="position-relative d-flex flex-shrink-0" t-att-class="{ 'flex-row-reverse': messageView.isInChatWindowAndIsAlignedRight }">
                     <div class="o_Message_sidebar d-flex flex-shrink-0" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed, 'justify-content-center': messageView.isInChatWindow }">
                         <t t-if="!messageView.isSquashed">
-                            <div class="o_Message_authorAvatarContainer o_Message_sidebarItem position-relative">
-                                <img class="o_Message_authorAvatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-class="{ 'cursor-pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.authorTitleText" t-att-alt="messageView.authorTitleText"/>
+                            <div class="o_Message_authorAvatarContainer o_Message_sidebarItem position-relative align-self-start">
+                                <img class="o_Message_authorAvatar avatar-size avatar-size-xl rounded-circle o_object_fit_cover" t-att-class="{ 'cursor-pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.authorTitleText" t-att-alt="messageView.authorTitleText"/>
                                 <t t-if="messageView.personaImStatusIconView">
                                     <PersonaImStatusIcon
                                         className="'o_Message_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-white'"

@@ -550,7 +550,7 @@
             data-bs-toggle="tooltip"
             data-trigger="hover"
             title="My profile">
-            <img class="o_forum_avatar rounded-circle me-1" t-att-src="website.image_url(user, 'avatar_128', '30x30')" alt="Avatar"/>
+            <img class="o_forum_avatar avatar-size avatar-size-md rounded-circle me-1" t-att-src="website.image_url(user, 'avatar_128', '30x30')" alt="Avatar"/>
             <div>
                 <h6 class="my-0" t-esc="user_id.name"/>
                 <small class="text-muted fw-bold"><t t-esc="user_id.karma"/>xp</small>
@@ -634,7 +634,7 @@
                     </span>
                     <span t-if="my" t-attf-class="w-100 w-md-auto mb-2 mb-md-0 border rounded ps-2 d-inline-flex align-items-center justify-content-between #{search and 'ms-md-2'}">
                         <div>
-                            <img t-if="uid" class="o_forum_avatar rounded-circle me-1" t-att-src="website.image_url(user, 'avatar_128', '16x16')" alt="Avatar"/>
+                            <img t-if="uid" class="o_forum_avatar avatar-size avatar-size-sm rounded-circle me-1" t-att-src="website.image_url(user, 'avatar_128', '16x16')" alt="Avatar"/>
                             <span t-if="my == 'favourites'"> My <b>Favourites</b></span>
                             <span t-elif="my == 'followed'"> I'm <b>Following</b></span>
                             <span t-elif="my == 'mine'"> My <b>Posts</b></span>
@@ -991,7 +991,7 @@
 <!-- Edition: post an answer -->
 <template id="post_answer">
     <div class="d-flex align-items-center mt-5 mb-2">
-        <img t-if="uid" t-attf-class="o_forum_avatar rounded-circle me-2" t-att-src="website.image_url(user, 'avatar_128', '24x24')" alt="Avatar"/>
+        <img t-if="uid" t-attf-class="o_forum_avatar avatar-size rounded-circle me-2" t-att-src="website.image_url(user, 'avatar_128', '24x24')" alt="Avatar"/>
         <h4 class="my-0">Your Answer</h4>
     </div>
     <t t-if="request.params.get('nocontent')">
@@ -1414,7 +1414,7 @@
     <t t-set="display_info" t-value="show_name or show_date or show_karma"/>
     <t t-if="allow_biography and object.can_display_biography" t-set="bio_popover_data">
         <div class="d-flex o_wforum_bio_popover_wrap">
-            <img class="o_forum_avatar_big flex-shrink-0 me-3" t-att-src="website.image_url(object.create_uid, 'avatar_128', '75x75')" alt="Avatar"/>
+            <img class="o_forum_avatar_big avatar-size flex-shrink-0 me-3" t-att-src="website.image_url(object.create_uid, 'avatar_128', '75x75')" alt="Avatar"/>
             <div>
                 <h5 class="o_wforum_bio_popover_name mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'/>
 
@@ -1435,7 +1435,7 @@
             <span t-if="object_validable" class="o_wforum_author_box_check rounded-circle bg-success position-absolute">
                 <i class="fa fa-check fa-fw small text-white"/>
             </span>
-            <img t-attf-class="rounded-circle o_forum_avatar #{not display_info and 'shadow'}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '40x40')" alt="Avatar"/>
+            <img t-attf-class="avatar-size avatar-size-md rounded-circle o_forum_avatar #{not display_info and 'shadow'}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '40x40')" alt="Avatar"/>
         </a>
 
         <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{compact and 'align-items-baseline ms-1' or 'flex-column justify-content-around ms-2'}">
@@ -1468,7 +1468,7 @@
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input name="post_id" t-att-value="object.id" type="hidden" class="mt8"/>
                     <div class="d-flex w-100">
-                        <img class="d-none d-md-inline-block rounded-circle o_forum_avatar me-3" t-att-src="website.image_url(user, 'avatar_128', '40x40')" alt="Avatar"/>
+                        <img class="avatar-size avatar-size-md d-none d-md-inline-block rounded-circle o_forum_avatar me-3" t-att-src="website.image_url(user, 'avatar_128', '40x40')" alt="Avatar"/>
                         <div class="w-100">
                             <textarea name="comment" class="form-control mb-2" placeholder="Comment this post..."/>
                             <div>
@@ -1624,7 +1624,7 @@
                                                 <div class="form-check">
                                                     <input type="checkbox" t-att-value="user.id" class="form-check-input" t-attf-id="user_#{user.id}"/>
                                                     <label class="form-check-label" t-attf-for="user_#{user.id}">
-                                                        <img class="d-inline img o_forum_avatar" t-att-src="website.image_url(user, 'avatar_128', '40x40')" alt="Avatar"/>
+                                                        <img class="avatar-size avatar-size-sm d-inline img o_forum_avatar" t-att-src="website.image_url(user, 'avatar_128', '40x40')" alt="Avatar"/>
                                                         <span t-esc="user.name" class="d-inline"/>
                                                     </label>
                                                 </div>

@@ -32,7 +32,7 @@
                     Oops! Something went wrong. Try to reload the page and log in.
                 </div>
                 <div class="d-flex">
-                    <img alt="Avatar" class="o_portal_chatter_avatar o_object_fit_cover align-self-start" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/avatar_128"
+                    <img alt="Avatar" class="o_portal_chatter_avatar avatar-size avatar-size-xl align-self-start" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/avatar_128"
                          t-if="!widget.options['is_user_public'] or !widget.options['token']"/>
                     <div class="flex-grow-1">
                         <div class="o_portal_chatter_composer_input">
@@ -80,7 +80,7 @@
         <div class="o_portal_chatter_messages">
             <t t-foreach="widget.get('messages') || []" t-as="message">
                 <div class="d-flex o_portal_chatter_message" t-att-id="'message-' + message.id">
-                    <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
+                    <img class="o_portal_chatter_avatar avatar-size avatar-size-xl" t-att-src="message.author_avatar_url" alt="avatar"/>
                     <div class="flex-grow-1">
                         <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
 

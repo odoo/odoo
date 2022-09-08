@@ -1032,8 +1032,8 @@
 
 <t t-name="web.Many2OneAvatar">
     <div class="o_m2o_avatar">
-        <img t-if="widget.value" t-att-src="url" t-att-alt="value"/>
-        <span t-elif="widget.mode === 'edit'" class="o_m2o_avatar_empty"></span>
+        <img t-if="widget.value" t-att-src="url" t-att-alt="value" class="avatar-size"/>
+        <span t-elif="widget.mode === 'edit'" class="o_m2o_avatar_empty avatar-size"></span>
         <span t-if="widget.mode === 'readonly'" t-esc="value"/>
     </div>
 </t>
@@ -1070,16 +1070,16 @@
 </t>
 <t t-name="FieldMany2ManyTagAvatar" t-extend="FieldMany2ManyTag">
     <t t-jquery="t[t-set='_badge_text']" t-operation="before">
-        <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
+        <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-data-id="el.id" class="avatar-size rounded-circle o_m2m_avatar"/></span>
     </t>
 </t>
 <t t-name="KanbanMany2ManyTagAvatar">
     <t t-set="visibleElements" t-value="elements.length === widget.visibleAvatarCount ? elements : elements.slice(0, widget.visibleAvatarCount - 1)"/>
     <t t-foreach="visibleElements" t-as="el" t-key="el_index">
-        <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-title="el.display_name" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
+        <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-title="el.display_name" t-att-data-id="el.id" class="avatar-size rounded-circle o_m2m_avatar"/></span>
     </t>
     <t t-if="elements.length > widget.visibleAvatarCount">
-        <span class="o_m2m_avatar_empty rounded-circle text-center fw-bold">
+        <span class="o_m2m_avatar_empty avatar-size rounded-circle text-center fw-bold">
             <span t-if="elements.length - widget.visibleAvatarCount + 1 > 9">9+</span>
             <span t-else="">+<t t-esc="elements.length - widget.visibleAvatarCount + 1"/></span>
         </span>
@@ -1092,17 +1092,17 @@
     <t t-else="">
         <t t-if="elements.length === 1">
             <div>
-                <img t-attf-src="/web/image/#{avatarModel}/#{elements[0].id}/#{avatarField}" t-att-data-id="elements[0].id" class="rounded-circle o_m2m_avatar"/>
+                <img t-attf-src="/web/image/#{avatarModel}/#{elements[0].id}/#{avatarField}" t-att-data-id="elements[0].id" class="rounded-circle o_m2m_avatar avatar-size"/>
                 <span t-esc="elements[0].display_name"/>
             </div>
         </t>
         <t t-else="">
             <t t-set="visibleElements" t-value="elements.length === widget.visibleAvatarCount ? elements : elements.slice(0, widget.visibleAvatarCount - 1)"/>
             <t t-foreach="visibleElements" t-as="el" t-key="el_index">
-                <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-title="el.display_name" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
+                <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-title="el.display_name" t-att-data-id="el.id" class="avatar-size rounded-circle o_m2m_avatar"/></span>
             </t>
             <t t-if="elements.length > widget.visibleAvatarCount">
-                <span class="o_m2m_avatar_empty rounded-circle text-center fw-bold">
+                <span class="o_m2m_avatar_empty avatar-size rounded-circle text-center fw-bold">
                     <span t-if="elements.length - widget.visibleAvatarCount + 1 > 9">9+</span>
                     <span t-else="">+<t t-esc="elements.length - widget.visibleAvatarCount + 1"/></span>
                 </span>

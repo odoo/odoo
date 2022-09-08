@@ -61,10 +61,10 @@
                 <t t-if="composerView.hasCurrentPartnerAvatar">
                     <div class="o_Composer_sidebarMain">
                         <t t-if="!messaging.currentGuest or composerView.composer.activeThread.model !== 'mail.channel'">
-                            <img class="o_Composer_currentPartnerAvatar mt-1 rounded-circle o_object_fit_cover" t-att-src="composerView.currentPartnerAvatar" alt="Avatar of user"/>
+                            <img class="o_Composer_currentPartnerAvatar avatar-size avatar-size-xl mt-1 rounded-circle" t-att-src="composerView.currentPartnerAvatar" alt="Avatar of user"/>
                         </t>
                         <t t-if="messaging.currentGuest and composerView.composer.activeThread.model === 'mail.channel'">
-                            <img class="o_Composer_currentPartnerAvatar mt-1 rounded-circle o_object_fit_cover" t-attf-src="/mail/channel/{{ composerView.composer.activeThread.id }}/guest/{{ messaging.currentGuest.id }}/avatar_128?unique={{ messaging.currentGuest.name }}" alt="Avatar of guest"/>
+                            <img class="o_Composer_currentPartnerAvatar avatar-size avatar-size-xl mt-1 rounded-circle" t-attf-src="/mail/channel/{{ composerView.composer.activeThread.id }}/guest/{{ messaging.currentGuest.id }}/avatar_128?unique={{ messaging.currentGuest.name }}" alt="Avatar of guest"/>
                         </t>
                     </div>
                 </t>

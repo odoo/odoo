@@ -6,7 +6,7 @@
             <div class="o_NotificationListItem o_NotificationRequest d-flex flex-shrink-0 align-items-center p-1 cursor-pointer" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
                 <div class="o_NotificationListItem_sidebar o_NotificationRequest_sidebar m-1">
                     <div class="o_NotificationListItem_imageContainer o_NotificationRequest_imageContainer o_NotificationRequest_sidebarItem position-relative">
-                        <img class="o_NotificationListItem_image o_NotificationRequest_image w-100 h-100 rounded-circle" t-att-src="messaging.partnerRoot.avatarUrl" alt="Avatar of OdooBot"/>
+                        <img class="o_NotificationListItem_image o_NotificationRequest_image avatar-size avatar-size-xl rounded-circle" t-att-src="messaging.partnerRoot.avatarUrl" alt="Avatar of OdooBot"/>
                         <PersonaImStatusIcon
                             t-if="notificationRequestView.personaImStatusIconView"
                             className="'o_NotificationListItem_personaImStatusIcon o_NotificationRequest_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"

@@ -20,7 +20,7 @@
                     <span class="text-truncate" t-esc="template.subject"/>
                     <div class="ms-auto">
                         <i class="o_mail_template_remove_favorite fa fa-trash ps-2 me-1" t-att-data-id="template.id" title="Remove from Templates"/>
-                        <img t-if="template.userId" t-attf-src="/web/image/res.users/#{template.userId}/avatar_128" t-att-title="template.userName"/>
+                        <img t-if="template.userId" t-attf-src="/web/image/res.users/#{template.userId}/avatar_128" t-att-title="template.userName" class="avatar-size"/>
                     </div>
                 </div>
             </div>

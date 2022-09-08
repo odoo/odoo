@@ -42,7 +42,7 @@
                     Speaking With
                     <div name="livechat_operator_id"
                         class="fw-bold float-end d-inline-block">
-                        <img class="oe_avatar rounded-circle" width="19" height="19"
+                        <img class="oe_avatar avatar-size avatar-size-sm me-1 rounded-circle"
                             t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
                             alt="Operator Avatar"/>
                         <field name="livechat_operator_name"/>
@@ -62,7 +62,7 @@
                 <div t-if="record.livechat_operator_id.raw_value" class="col-lg col-sm-4 col-6 py-0 my-2">
                     <div>
                         <img name="livechat_operator_id"
-                            class="oe_avatar rounded-circle" width="19" height="19"
+                            class="oe_avatar avatar-size avatar-size-sm me-1 rounded-circle"
                             t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/avatar_128"
                             alt="Operator Avatar"/>
                         <b><field name="livechat_operator_name"/></b>

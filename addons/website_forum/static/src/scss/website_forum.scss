@@ -28,11 +28,6 @@ $bronze: #eea91e;
             background-color: rgba(map-get($theme-colors, 'info'), 0.1);
             color: darken(map-get($theme-colors, 'info'), 15%)!important;
         }
-
-        img.o_forum_avatar {
-            width: 30px;
-            height: 30px;
-        }
     }
 
     // Single Post
@@ -52,13 +47,6 @@ $bronze: #eea91e;
             padding-left: 1em;
             border-left: .25em solid map-get($grays, '500');
             color: map-get($grays, '600');
-        }
-
-        #post_reply {
-            img.o_forum_avatar {
-                width: 24px;
-                height: 24px;
-            }
         }
     }
 
@@ -223,23 +211,9 @@ $bronze: #eea91e;
     overflow: hidden;
 }
 
-img.o_forum_avatar {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-}
-
 img.o_forum_avatar_big {
-    width: 75px;
-    height: 75px;
+    --avatar-size: 75px;
     object-fit: cover;
-}
-
-.o_wprofile_email_validation_container {
-    img.o_forum_avatar {
-        width: 16px;
-        height: 16px;
-    }
 }
 
 .o_wforum_bio_popover_wrap {

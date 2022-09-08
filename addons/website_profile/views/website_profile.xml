@@ -561,8 +561,7 @@
         <div class="card w-100 text-center mb-2 border-bottom-0 o_wprofile_pointer">
             <div class="card-body">
                 <div class="d-inline-block position-relative">
-                    <img class="rounded-circle img-fluid"
-                        style="width: 128px; height: 128px; object-fit: cover;"
+                    <img class="rounded-circle img-fluid avatar avatar-podium"
                          t-att-src="'/profile/avatar/%s?field=avatar_256%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
@@ -585,7 +584,7 @@
             <span t-esc="user['position']"/>
         </td>
         <td class="align-middle d-none d-sm-table-cell">
-            <img class="o_object_fit_cover rounded-circle o_wprofile_img_small" width="30" height="30" t-att-src="'/profile/avatar/%s?field=avatar_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
+            <img class="avatar-size avatar-size-md rounded-circle o_wprofile_img_small" t-att-src="'/profile/avatar/%s?field=avatar_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
         </td>
         <td class="align-middle w-md-75">
             <span class="fw-bold" t-esc="user['name']"/><br/>

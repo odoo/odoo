@@ -5,7 +5,7 @@
         <t t-if="followerView">
             <div class="o_Follower d-flex justify-content-between p-0" t-attf-class="{{ className }}" t-ref="root">
                 <a class="o_Follower_details d-flex align-items-center flex-grow-1 px-3 text-700" t-att-class="{ 'o-inactive fst-italic opacity-25': !followerView.follower.isActive }" href="#" role="menuitem" t-on-click="followerView.onClickDetails">
-                    <img class="o_Follower_avatar me-2 rounded-circle" t-att-src="followerView.follower.partner.avatarUrl" alt=""/>
+                    <img class="o_Follower_avatar avatar-size avatar-size-md me-2 rounded-circle" t-att-src="followerView.follower.partner.avatarUrl" alt=""/>
                     <span class="o_Follower_name flex-shrink text-truncate" t-esc="followerView.follower.partner.nameOrDisplayName"/>
                 </a>
                 <t t-if="followerView.follower.isEditable">

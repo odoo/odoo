@@ -149,7 +149,7 @@
                                     <em t-out="record.description.value"/>
                                     <div>
                                         <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner" t-key="owner">
-                                            <img class="oe_kanban_avatar o_image_24_cover rounded-circle" t-att-src="kanban_image('res.users', 'avatar_128', owner)" t-att-data-member_id="owner" alt="Owner"/>
+                                            <img class="oe_kanban_avatar avatar-size rounded-circle" t-att-src="kanban_image('res.users', 'avatar_128', owner)" t-att-data-member_id="owner" alt="Owner"/>
                                         </t>
                                     </div>
                                 </div>

@@ -40,6 +40,21 @@ $utilities-sizes: map-merge(
     )
 );
 
+$utilities-avatar-sizes: () !default;
+$utilities-avatar-sizes-values: 1em, 1.25em, 2em, 2.35em, 2.75em, 3.75em;
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+    $utilities-avatar-sizes: map-merge(
+        $utilities-avatar-sizes,
+        (
+            $breakpoint : nth(
+                $utilities-avatar-sizes-values,
+                index(map-keys($grid-breakpoints), $breakpoint)
+            )
+        )
+    );
+}
+
 $order-array: (
     first: -1,
     last: $grid-columns + 1,
@@ -174,6 +189,11 @@ $utilities: map-merge(
             class: min-w,
             property: min-width,
             values: 0,
+        ),
+        "avatar": (
+            css-var: true,
+            class: avatar-size,
+            values: $utilities-avatar-sizes,
         ),
     )
 );
