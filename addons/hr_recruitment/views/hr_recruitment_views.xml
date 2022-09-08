@@ -33,14 +33,16 @@
                 <field name="job_id"/>
                 <field name="name" readonly="1"/>
                 <field name="stage_id"/>
+                <field name="application_status" optional="show" attrs="{'invisible': [('application_status', '=', 'ongoing')]}"/>
+                <field name="refuse_reason_id" optional='hide'/>
                 <field name="priority" widget="priority" optional="show"/>
+                <field name="email_from" readonly="1" optional="hide"/>
                 <field name="partner_mobile" widget="phone" readonly="1" optional="show" class="text-end"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="interviewer_id" widget="many2one_avatar_user" optional="hide"/>
                 <field name="create_date" readonly="1" widget="date" optional="show"/>
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
-                <field name="email_from" readonly="1" optional="hide"/>
                 <field name="medium_id" optional="hide"/>
                 <field name="source_id" readonly="1" optional="hide"/>
                 <field name="salary_expected" optional="hide"/>
