@@ -141,26 +141,36 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
     const allBackgroundColor = [...columnEls].every(columnEl => columnEl.classList.contains('o_cc'));
 
     for (const columnEl of columnEls) {
+        // Finding out if the images are alone in their column.
+        let isImageColumn = _checkIfImageColumn(columnEl);
+        const imageEl = columnEl.querySelector('img');
+
+        // Placing the column.
         const style = window.getComputedStyle(columnEl);
         // Horizontal placement.
-        const columnLeft = columnEl.offsetLeft;
+        const columnLeft = isImageColumn ? imageEl.offsetLeft : columnEl.offsetLeft;
         // Getting the width of the column.
         const paddingLeft = parseFloat(style.paddingLeft);
-        const width = parseFloat(columnEl.scrollWidth) - (allBackgroundColor ? 0 : 2 * paddingLeft);
-        const columnSpan = Math.round((width + columnGap) / (columnSize + columnGap));
+        const width = isImageColumn ? parseFloat(imageEl.scrollWidth)
+            : parseFloat(columnEl.scrollWidth) - (allBackgroundColor ? 0 : 2 * paddingLeft);
+        let columnSpan = Math.round((width + columnGap) / (columnSize + columnGap));
+        if (columnSpan < 1) {
+            columnSpan = 1;
+        }
         const columnStart = Math.round(columnLeft / (columnSize + columnGap)) + 1;
         const columnEnd = columnStart + columnSpan;
 
         // Vertical placement.
-        const columnTop = columnEl.offsetTop;
+        const columnTop = isImageColumn ? imageEl.offsetTop : columnEl.offsetTop;
         // Getting the top and bottom paddings and computing the row offset.
         const paddingTop = parseFloat(style.paddingTop);
         const paddingBottom = parseFloat(style.paddingBottom);
         const rowOffsetTop = Math.floor((paddingTop + rowGap) / (rowSize + rowGap));
         // Getting the height of the column.
-        const height = parseFloat(columnEl.scrollHeight) - (allBackgroundColor ? 0 : paddingTop + paddingBottom);
+        const height = isImageColumn ? parseFloat(imageEl.scrollHeight)
+            : parseFloat(columnEl.scrollHeight) - (allBackgroundColor ? 0 : paddingTop + paddingBottom);
         const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
-        const rowStart = Math.round(columnTop / (rowSize + rowGap)) + 1 + (allBackgroundColor ? 0 : rowOffsetTop);
+        const rowStart = Math.round(columnTop / (rowSize + rowGap)) + 1 + (allBackgroundColor || isImageColumn ? 0 : rowOffsetTop);
         const rowEnd = rowStart + rowSpan;
 
         columnEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`;
@@ -183,6 +193,7 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
 
         maxRowEnd = Math.max(rowEnd, maxRowEnd);
         columnSpans.push(columnSpan);
+        imageColumns.push(isImageColumn);
     }
 
     // If all the columns have a background color, set their padding to the
@@ -196,14 +207,19 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         rowEl.style.setProperty('--grid-item-padding-x', paddingX);
     }
 
-    // Removing padding and offset classes.
     for (const [i, columnEl] of [...columnEls].entries()) {
+        // Removing padding and offset classes.
         const regex = /^(pt|pb|col-|offset-)/;
         const toRemove = [...columnEl.classList].filter(c => {
             return regex.test(c);
         });
         columnEl.classList.remove(...toRemove);
         columnEl.classList.add('col-lg-' + columnSpans[i]);
+
+        // If the column only has an image, convert it.
+        if (imageColumns[i]) {
+            _convertImageColumn(columnEl);
+        }
     }
 
     return maxRowEnd;
@@ -222,4 +238,43 @@ export function _reloadLazyImages(columnEl) {
         imageEl.src = '';
         imageEl.src = src;
     }
+}
+/**
+ * Checks whether the column only contains an image or not. An image is
+ * considered alone if the column only contains empty textnodes and line breaks
+ * in addition to the image.
+ *
+ * @private
+ * @param {Element} columnEl
+ * @returns {Boolean}
+ */
+export function _checkIfImageColumn(columnEl) {
+    let isImageColumn = false;
+    const imageEls = columnEl.querySelectorAll(':scope > img');
+    const columnChildrenEls = [...columnEl.children].filter(el => el.nodeName !== 'BR');
+    if (imageEls.length === 1 && columnChildrenEls.length === 1) {
+        // If there is only one image and if this image is the only "real"
+        // child of the column, we need to check if there is text in it.
+        const textNodeEls = [...columnEl.childNodes].filter(el => el.nodeType === Node.TEXT_NODE);
+        const areTextNodesEmpty = [...textNodeEls].every(textNodeEl => textNodeEl.nodeValue.trim() === '');
+        isImageColumn = areTextNodesEmpty;
+    }
+    return isImageColumn;
+}
+/**
+ * Removes the line breaks and textnodes of the column, adds the grid class and
+ * sets the image width to default so it can be displayed as expected. Also
+ * blocks the edition of the column.
+ *
+ * @private
+ * @param {Element} columnEl a column containing only an image.
+ */
+function _convertImageColumn(columnEl) {
+    columnEl.querySelectorAll('br').forEach(el => el.remove());
+    const textNodeEls = [...columnEl.childNodes].filter(el => el.nodeType === Node.TEXT_NODE);
+    textNodeEls.forEach(el => el.remove());
+    const imageEl = columnEl.querySelector('img');
+    columnEl.classList.add('o_grid_item_image');
+    columnEl.contentEditable = false;
+    imageEl.style.removeProperty('width');
 }
