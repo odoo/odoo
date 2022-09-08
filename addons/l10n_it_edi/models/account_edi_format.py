@@ -310,7 +310,7 @@ class AccountEdiFormat(models.Model):
             res['success'] = True
         return {invoice: res}
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         # OVERRIDE
         self.ensure_one()
         edi_result = super()._post_invoice_edi(invoices)
