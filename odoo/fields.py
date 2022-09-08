@@ -3207,24 +3207,7 @@ class Properties(Field):
         if not value:
             return None
 
-        if isinstance(value, str):
-            # assume already JSONified
-            if not isinstance(json.loads(value), dict):
-                raise ValueError(f"Wrong property value {value!r}")
-            return value
-
-        if isinstance(value, dict):
-            return json.dumps(value)
-
-        if not isinstance(value, list):
-            raise ValueError(f"Wrong property type {type(value)!r}")
-
-        # Convert the list with all definitions into a simple dict
-        # {name: value} to store the strict minimum on the child
-        self._remove_display_name(value)
-        value = self._list_to_dict(value)
-
-        # the JSON value is sent as a string
+        value = self.convert_to_cache(value, record, validate=validate)
         return json.dumps(value)
 
     def convert_to_cache(self, value, record, validate=True):
