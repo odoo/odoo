@@ -262,7 +262,13 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
-            line.qty_to_invoice = mapping.get(line.id, 0.0)
+            qty_to_invoice = mapping.get(line.id, 0.0)
+            if qty_to_invoice:
+                line.qty_to_invoice = qty_to_invoice
+            else:
+                prev_inv_status = line.invoice_status
+                line.qty_to_invoice = qty_to_invoice
+                line.invoice_status = prev_inv_status
 
     def _get_action_per_item(self):
         """ Get action per Sales Order Item
