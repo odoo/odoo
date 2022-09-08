@@ -3271,22 +3271,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🦰",
-        "emoticons": [],
-        "keywords": [
-            "adult",
-            "gender-neutral",
-            "person",
-            "red hair",
-            "unspecified gender"
-        ],
-        "name": "person: red hair",
-        "shortcodes": [
-            ":person:_red_hair:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👩‍🦱",
         "emoticons": [],
         "keywords": [
@@ -3297,22 +3281,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman: curly hair",
         "shortcodes": [
             ":woman:_curly_hair:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🦱",
-        "emoticons": [],
-        "keywords": [
-            "adult",
-            "curly hair",
-            "gender-neutral",
-            "person",
-            "unspecified gender"
-        ],
-        "name": "person: curly hair",
-        "shortcodes": [
-            ":person:_curly_hair:"
         ]
     },
     {
@@ -3331,22 +3299,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🦳",
-        "emoticons": [],
-        "keywords": [
-            "adult",
-            "gender-neutral",
-            "person",
-            "unspecified gender",
-            "white hair"
-        ],
-        "name": "person: white hair",
-        "shortcodes": [
-            ":person:_white_hair:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👩‍🦲",
         "emoticons": [],
         "keywords": [
@@ -3357,22 +3309,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman: bald",
         "shortcodes": [
             ":woman:_bald:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🦲",
-        "emoticons": [],
-        "keywords": [
-            "adult",
-            "bald",
-            "gender-neutral",
-            "person",
-            "unspecified gender"
-        ],
-        "name": "person: bald",
-        "shortcodes": [
-            ":person:_bald:"
         ]
     },
     {
@@ -3918,24 +3854,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍⚕️",
-        "emoticons": [],
-        "keywords": [
-            "doctor",
-            "health worker",
-            "healthcare",
-            "nurse",
-            "therapist",
-            "care",
-            "health"
-        ],
-        "name": "health worker",
-        "shortcodes": [
-            ":health_worker:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍⚕️",
         "emoticons": [],
         "keywords": [
@@ -3972,19 +3890,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🎓",
-        "emoticons": [],
-        "keywords": [
-            "graduate",
-            "student"
-        ],
-        "name": "student",
-        "shortcodes": [
-            ":student:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍🎓",
         "emoticons": [],
         "keywords": [
@@ -4009,21 +3914,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman student",
         "shortcodes": [
             ":woman_student:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🏫",
-        "emoticons": [],
-        "keywords": [
-            "instructor",
-            "professor",
-            "teacher",
-            "lecturer"
-        ],
-        "name": "teacher",
-        "shortcodes": [
-            ":teacher:"
         ]
     },
     {
@@ -4058,21 +3948,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍⚖️",
-        "emoticons": [],
-        "keywords": [
-            "judge",
-            "justice",
-            "scales",
-            "law"
-        ],
-        "name": "judge",
-        "shortcodes": [
-            ":judge:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍⚖️",
         "emoticons": [],
         "keywords": [
@@ -4099,20 +3974,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman judge",
         "shortcodes": [
             ":woman_judge:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🌾",
-        "emoticons": [],
-        "keywords": [
-            "farmer",
-            "gardener",
-            "rancher"
-        ],
-        "name": "farmer",
-        "shortcodes": [
-            ":farmer:"
         ]
     },
     {
@@ -4147,19 +4008,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🍳",
-        "emoticons": [],
-        "keywords": [
-            "chef",
-            "cook"
-        ],
-        "name": "cook",
-        "shortcodes": [
-            ":cook:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍🍳",
         "emoticons": [],
         "keywords": [
@@ -4184,22 +4032,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman cook",
         "shortcodes": [
             ":woman_cook:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🔧",
-        "emoticons": [],
-        "keywords": [
-            "electrician",
-            "mechanic",
-            "plumber",
-            "tradesperson",
-            "tradie"
-        ],
-        "name": "mechanic",
-        "shortcodes": [
-            ":mechanic:"
         ]
     },
     {
@@ -4236,21 +4068,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🏭",
-        "emoticons": [],
-        "keywords": [
-            "assembly",
-            "factory",
-            "industrial",
-            "worker"
-        ],
-        "name": "factory worker",
-        "shortcodes": [
-            ":factory_worker:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍🏭",
         "emoticons": [],
         "keywords": [
@@ -4279,22 +4096,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman factory worker",
         "shortcodes": [
             ":woman_factory_worker:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍💼",
-        "emoticons": [],
-        "keywords": [
-            "architect",
-            "business",
-            "manager",
-            "office worker",
-            "white-collar"
-        ],
-        "name": "office worker",
-        "shortcodes": [
-            ":office_worker:"
         ]
     },
     {
@@ -4339,22 +4140,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🔬",
-        "emoticons": [],
-        "keywords": [
-            "biologist",
-            "chemist",
-            "engineer",
-            "physicist",
-            "scientist"
-        ],
-        "name": "scientist",
-        "shortcodes": [
-            ":scientist:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍🔬",
         "emoticons": [],
         "keywords": [
@@ -4389,22 +4174,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍💻",
-        "emoticons": [],
-        "keywords": [
-            "coder",
-            "developer",
-            "inventor",
-            "software",
-            "technologist"
-        ],
-        "name": "technologist",
-        "shortcodes": [
-            ":technologist:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍💻",
         "emoticons": [],
         "keywords": [
@@ -4435,22 +4204,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman technologist",
         "shortcodes": [
             ":woman_technologist:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🎤",
-        "emoticons": [],
-        "keywords": [
-            "actor",
-            "entertainer",
-            "rock",
-            "singer",
-            "star"
-        ],
-        "name": "singer",
-        "shortcodes": [
-            ":singer:"
         ]
     },
     {
@@ -4495,19 +4248,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🎨",
-        "emoticons": [],
-        "keywords": [
-            "artist",
-            "palette"
-        ],
-        "name": "artist",
-        "shortcodes": [
-            ":artist:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍🎨",
         "emoticons": [],
         "keywords": [
@@ -4534,19 +4274,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman artist",
         "shortcodes": [
             ":woman_artist:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍✈️",
-        "emoticons": [],
-        "keywords": [
-            "pilot",
-            "plane"
-        ],
-        "name": "pilot",
-        "shortcodes": [
-            ":pilot:"
         ]
     },
     {
@@ -4579,19 +4306,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🚀",
-        "emoticons": [],
-        "keywords": [
-            "astronaut",
-            "rocket"
-        ],
-        "name": "astronaut",
-        "shortcodes": [
-            ":astronaut:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍🚀",
         "emoticons": [],
         "keywords": [
@@ -4616,24 +4330,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman astronaut",
         "shortcodes": [
             ":woman_astronaut:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🚒",
-        "emoticons": [],
-        "keywords": [
-            "firefighter",
-            "firetruck",
-            "engine",
-            "fire",
-            "truck",
-            "fire engine",
-            "fire truck"
-        ],
-        "name": "firefighter",
-        "shortcodes": [
-            ":firefighter:"
         ]
     },
     {
@@ -5654,22 +5350,6 @@ export const emojisData = JSON.parse(`[
     },
     {
         "category": "People & Body",
-        "codepoints": "🧑‍🦯",
-        "emoticons": [],
-        "keywords": [
-            "accessibility",
-            "blind",
-            "person with guide cane",
-            "person with long mobility cane",
-            "person with white cane"
-        ],
-        "name": "person with white cane",
-        "shortcodes": [
-            ":person_with_white_cane:"
-        ]
-    },
-    {
-        "category": "People & Body",
         "codepoints": "👨‍🦯",
         "emoticons": [],
         "keywords": [
@@ -5698,22 +5378,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman with white cane",
         "shortcodes": [
             ":woman_with_white_cane:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🦼",
-        "emoticons": [],
-        "keywords": [
-            "person in motorised wheelchair",
-            "accessibility",
-            "person in motorized wheelchair",
-            "wheelchair",
-            "person in powered wheelchair"
-        ],
-        "name": "person in motorized wheelchair",
-        "shortcodes": [
-            ":person_in_motorized_wheelchair:"
         ]
     },
     {
@@ -5748,20 +5412,6 @@ export const emojisData = JSON.parse(`[
         "name": "woman in motorized wheelchair",
         "shortcodes": [
             ":woman_in_motorized_wheelchair:"
-        ]
-    },
-    {
-        "category": "People & Body",
-        "codepoints": "🧑‍🦽",
-        "emoticons": [],
-        "keywords": [
-            "accessibility",
-            "person in manual wheelchair",
-            "wheelchair"
-        ],
-        "name": "person in manual wheelchair",
-        "shortcodes": [
-            ":person_in_manual_wheelchair:"
         ]
     },
     {
