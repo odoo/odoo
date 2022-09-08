@@ -4,7 +4,6 @@ import {AddPageDialog} from "../dialog/dialog";
 import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {useService} from "@web/core/utils/hooks";
-import { csrf_token } from 'web.core';
 
 const {onWillStart, useState} = owl;
 
@@ -16,7 +15,6 @@ export class PageListController extends listView.Controller {
     setup() {
         super.setup();
         this.website = useService('website');
-        this.http = useService('http');
 
         this.websiteSelection = [{id: 0, name: this.env._t("All Websites")}];
 
@@ -35,27 +33,7 @@ export class PageListController extends listView.Controller {
      */
     onClickCreate() {
         if (this.props.resModel === 'website.page') {
-            return this.dialogService.add(AddPageDialog, {
-                selectWebsite: true,
-                addPage: async (state) => {
-                    // TODO this is duplicated code from new_content.js, this
-                    // should be shared somehow.
-                    const websiteId = parseInt(state.websiteId);
-                    const url = `/website/add/${encodeURIComponent(state.name)}`;
-                    const data = await this.http.post(url, { 'add_menu': state.addMenu || '', 'website_id': websiteId, csrf_token });
-                    if (data.view_id) {
-                        this.actionService.doAction({
-                            'res_model': 'ir.ui.view',
-                            'res_id': data.view_id,
-                            'views': [[false, 'form']],
-                            'type': 'ir.actions.act_window',
-                            'view_mode': 'form',
-                        });
-                    } else {
-                        this.website.goToWebsite({ path: data.url, edition: true, websiteId });
-                    }
-                },
-            });
+            return this.dialogService.add(AddPageDialog, {selectWebsite: true});
         }
         const action = this.props.context.create_action;
         if (action) {
