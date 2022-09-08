@@ -12,6 +12,7 @@ This is a bridge module that adds multi-website support for payment acquirers.
         'website',
         'payment',
         'portal',
+        'account_payment',
     ],
     'data': [
         'data/mail_templates.xml',
