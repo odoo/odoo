@@ -4631,7 +4631,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.hasClass(list.$el, 'o_view_sample_data');
+        assert.hasClass(list.$el, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_list_table');
         assert.containsN(list, '.o_data_row', 10);
         assert.containsOnce(list, '.o_nocontent_help .hello');
@@ -4669,14 +4669,14 @@ QUnit.module('LegacyViews', {
         // reload with another domain -> should no longer display the sample records
         await list.reload({ domain: Domain.FALSE_DOMAIN });
 
-        assert.doesNotHaveClass(list.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(list.$el, 'o_legacy_view_sample_data');
         assert.containsNone(list, '.o_list_table');
         assert.containsOnce(list, '.o_nocontent_help .hello');
 
         // reload with another domain matching records
         await list.reload({ domain: Domain.TRUE_DOMAIN });
 
-        assert.doesNotHaveClass(list.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(list.$el, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_list_table');
         assert.containsN(list, '.o_data_row', 4);
         assert.containsNone(list, '.o_nocontent_help .hello');
@@ -4706,7 +4706,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.hasClass(list.$el, 'o_view_sample_data');
+        assert.hasClass(list.$el, 'o_legacy_view_sample_data');
         assert.ok(list.$('.o_data_row').length > 0);
         assert.hasClass(list.el.querySelector('.o_data_row'), 'o_sample_data_disabled');
         assert.containsN(list, 'th', 2, "should have 2 th, 1 for selector and 1 for foo");
@@ -4715,7 +4715,7 @@ QUnit.module('LegacyViews', {
         await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
         await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
 
-        assert.hasClass(list.$el, 'o_view_sample_data');
+        assert.hasClass(list.$el, 'o_legacy_view_sample_data');
         assert.ok(list.$('.o_data_row').length > 0);
         assert.hasClass(list.el.querySelector('.o_data_row'), 'o_sample_data_disabled');
         assert.containsN(list, 'th', 3);
@@ -4804,14 +4804,14 @@ QUnit.module('LegacyViews', {
 
         assert.containsOnce(list, '.o_list_table');
         assert.containsN(list, '.o_data_row', 4);
-        assert.doesNotHaveClass(list.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(list.$el, 'o_legacy_view_sample_data');
 
         // reload with another domain matching no record (should not display the sample records)
         await list.reload({ domain: Domain.FALSE_DOMAIN });
 
         assert.containsOnce(list, '.o_list_table');
         assert.containsNone(list, '.o_data_row');
-        assert.doesNotHaveClass(list.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(list.$el, 'o_legacy_view_sample_data');
 
         list.destroy();
     });
@@ -4832,7 +4832,7 @@ QUnit.module('LegacyViews', {
             domain: Domain.FALSE_DOMAIN,
         });
 
-        assert.hasClass(list, 'o_view_sample_data');
+        assert.hasClass(list, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_list_table');
         assert.containsN(list, '.o_data_row', 10);
 
@@ -4866,7 +4866,7 @@ QUnit.module('LegacyViews', {
         });
 
         // Initial state: all records displayed
-        assert.doesNotHaveClass(list, 'o_view_sample_data');
+        assert.doesNotHaveClass(list, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_list_table');
         assert.containsN(list, '.o_data_row', 4);
         assert.containsNone(list, '.o_nocontent_help');
@@ -4878,7 +4878,7 @@ QUnit.module('LegacyViews', {
         await testUtils.dom.click($('.modal-footer .btn-primary'));
 
         // Final state: no more sample data, but nocontent helper displayed
-        assert.doesNotHaveClass(list, 'o_view_sample_data');
+        assert.doesNotHaveClass(list, 'o_legacy_view_sample_data');
         assert.containsNone(list, '.o_list_table');
         assert.containsOnce(list, '.o_nocontent_help');
 
@@ -4907,7 +4907,7 @@ QUnit.module('LegacyViews', {
         });
 
         // Initial state: sample data and nocontent helper displayed
-        assert.hasClass(list, 'o_view_sample_data');
+        assert.hasClass(list, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_list_table');
         assert.containsN(list, '.o_data_row', 10);
         assert.containsOnce(list, '.o_nocontent_help');
@@ -4915,14 +4915,14 @@ QUnit.module('LegacyViews', {
         // Start creating a record
         await testUtils.dom.click(list.el.querySelector('.btn.o_list_button_add'));
 
-        assert.doesNotHaveClass(list, 'o_view_sample_data');
+        assert.doesNotHaveClass(list, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_data_row');
 
         // Discard temporary record
         await testUtils.dom.click(list.el.querySelector('.btn.o_list_button_discard'));
 
         // Final state: table should be displayed with no data at all
-        assert.doesNotHaveClass(list, 'o_view_sample_data');
+        assert.doesNotHaveClass(list, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_list_table');
         assert.containsNone(list, '.o_data_row');
         assert.containsNone(list, '.o_nocontent_help');
@@ -4953,7 +4953,7 @@ QUnit.module('LegacyViews', {
         });
 
         // Initial state: sample data and nocontent helper displayed
-        assert.hasClass(list, 'o_view_sample_data');
+        assert.hasClass(list, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_list_table');
         assert.containsN(list, '.o_data_row', 10);
         assert.containsOnce(list, '.o_nocontent_help');
@@ -4961,13 +4961,13 @@ QUnit.module('LegacyViews', {
         // Start creating a record
         await testUtils.dom.click(list.el.querySelector('.btn.o_list_button_add'));
 
-        assert.doesNotHaveClass(list, 'o_view_sample_data');
+        assert.doesNotHaveClass(list, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_data_row');
 
         // Save temporary record
         await testUtils.dom.click(list.el.querySelector('.btn.o_list_button_save'));
 
-        assert.doesNotHaveClass(list, 'o_view_sample_data');
+        assert.doesNotHaveClass(list, 'o_legacy_view_sample_data');
         assert.containsOnce(list, '.o_list_table');
         assert.containsOnce(list, '.o_data_row');
         assert.containsNone(list, '.o_nocontent_help');
@@ -4979,7 +4979,7 @@ QUnit.module('LegacyViews', {
         await testUtils.dom.click($('.modal-footer .btn-primary'));
 
         // Final state: there should be no table, but the no content helper
-        assert.doesNotHaveClass(list, 'o_view_sample_data');
+        assert.doesNotHaveClass(list, 'o_legacy_view_sample_data');
         assert.containsNone(list, '.o_list_table');
         assert.containsOnce(list, '.o_nocontent_help');
         list.destroy();

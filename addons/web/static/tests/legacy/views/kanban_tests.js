@@ -4923,13 +4923,13 @@ QUnit.module('LegacyViews', {
 
         assert.containsN(kanban, '.o_kanban_group', 2,
             "there should be two columns");
-        assert.hasClass(kanban.$el, 'o_view_sample_data');
+        assert.hasClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsOnce(kanban, '.o_view_nocontent');
         assert.containsN(kanban, '.o_kanban_record', 16,
             "there should be 8 sample records by column");
 
         await testUtils.dom.click(kanban.$('.o_kanban_quick_add:first'));
-        assert.doesNotHaveClass(kanban.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsNone(kanban, '.o_kanban_record');
         assert.containsNone(kanban, '.o_view_nocontent');
         assert.containsOnce(kanban.$('.o_kanban_group:first'), '.o_kanban_quick_create');
@@ -4937,7 +4937,7 @@ QUnit.module('LegacyViews', {
         await testUtils.fields.editInput(kanban.$('.o_kanban_quick_create .o_input'), 'twilight sparkle');
         await testUtils.dom.click(kanban.$('.o_kanban_quick_create button.o_kanban_add'));
 
-        assert.doesNotHaveClass(kanban.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsOnce(kanban.$('.o_kanban_group:first'), '.o_kanban_record');
         assert.containsNone(kanban, '.o_view_nocontent');
 
@@ -4982,19 +4982,19 @@ QUnit.module('LegacyViews', {
 
         assert.containsN(kanban, '.o_kanban_group', 2,
             "there should be two columns");
-        assert.hasClass(kanban.$el, 'o_view_sample_data');
+        assert.hasClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsOnce(kanban, '.o_view_nocontent');
         assert.containsN(kanban, '.o_kanban_record', 16,
             "there should be 8 sample records by column");
 
         await testUtils.dom.click(kanban.$('.o_kanban_quick_add:first'));
-        assert.doesNotHaveClass(kanban.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsNone(kanban, '.o_kanban_record');
         assert.containsNone(kanban, '.o_view_nocontent');
         assert.containsOnce(kanban.$('.o_kanban_group:first'), '.o_kanban_quick_create');
 
         await testUtils.dom.click(kanban.$('.o_legacy_kanban_view'));
-        assert.doesNotHaveClass(kanban.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsNone(kanban, '.o_kanban_quick_create');
         assert.containsNone(kanban, '.o_kanban_record');
         assert.containsOnce(kanban, '.o_view_nocontent');
@@ -5074,13 +5074,13 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.hasClass(kanban.$el, 'o_view_sample_data');
+        assert.hasClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 10,
             "there should be 10 sample records");
         assert.containsOnce(kanban, '.o_view_nocontent');
 
         await kanban.reload({ domain: [['id', '<', 0]]});
-        assert.doesNotHaveClass(kanban.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsNone(kanban, '.o_kanban_record:not(.o_kanban_ghost)');
         assert.containsOnce(kanban, '.o_view_nocontent');
 
@@ -5123,7 +5123,7 @@ QUnit.module('LegacyViews', {
         });
 
         assert.containsN(kanban, '.o_kanban_group', 2, "there should be 2 'real' columns");
-        assert.hasClass(kanban.$el, 'o_view_sample_data');
+        assert.hasClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.ok(kanban.$('.o_kanban_record').length >= 1, "there should be sample records");
         assert.ok(kanban.$('.o_field_many2manytags .o_tag').length >= 1, "there should be tags");
 
@@ -5165,7 +5165,7 @@ QUnit.module('LegacyViews', {
         const columns = kanban.el.querySelectorAll('.o_kanban_group');
 
         assert.ok(columns.length >= 1, "there should be at least 1 sample column");
-        assert.hasClass(kanban.$el, 'o_view_sample_data');
+        assert.hasClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsN(kanban, '.o_kanban_record', 16);
 
         const kanbanText = kanban.el.innerText;
@@ -5200,12 +5200,12 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.doesNotHaveClass(kanban.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
         assert.containsNone(kanban, '.o_view_nocontent');
 
         await kanban.reload({ domain: [['id', '<', 0]]});
-        assert.doesNotHaveClass(kanban.$el, 'o_view_sample_data');
+        assert.doesNotHaveClass(kanban.$el, 'o_legacy_view_sample_data');
         assert.containsNone(kanban, '.o_kanban_record:not(.o_kanban_ghost)');
 
         kanban.destroy();
@@ -5244,7 +5244,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.hasClass(kanban, 'o_legacy_view_sample_data');
         assert.containsN(kanban, '.o_kanban_group', 2);
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
 
@@ -5252,7 +5252,7 @@ QUnit.module('LegacyViews', {
         await testUtils.fields.editInput(kanban.el.querySelector('.o_kanban_header input'), "Yoohoo");
         await testUtils.dom.click(kanban.el.querySelector('.btn.o_kanban_add'));
 
-        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.hasClass(kanban, 'o_legacy_view_sample_data');
         assert.containsN(kanban, '.o_kanban_group', 3);
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
 
@@ -5289,7 +5289,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.hasClass(kanban, 'o_legacy_view_sample_data');
         assert.containsOnce(kanban, '.o_kanban_group');
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
 
@@ -5331,7 +5331,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.hasClass(kanban, 'o_legacy_view_sample_data');
         assert.containsOnce(kanban, '.o_kanban_group');
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
 
@@ -5389,7 +5389,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.hasClass(kanban, 'o_legacy_view_sample_data');
         assert.containsOnce(kanban, '.o_kanban_group');
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
 
@@ -5438,7 +5438,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.hasClass(kanban, 'o_legacy_view_sample_data');
         assert.containsN(kanban, '.o_kanban_group', 2);
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
 
@@ -5447,7 +5447,7 @@ QUnit.module('LegacyViews', {
         await testUtils.fields.editInput(kanban.el.querySelector('.o_kanban_header input'), "Yoohoo");
         await testUtils.dom.click(kanban.el.querySelector('.btn.o_kanban_add'));
 
-        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.hasClass(kanban, 'o_legacy_view_sample_data');
         assert.containsN(kanban, '.o_kanban_group', 3);
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
 
@@ -5457,7 +5457,7 @@ QUnit.module('LegacyViews', {
         await testUtils.dom.click(newColumn.querySelector('.dropdown-item.o_column_delete'));
         await testUtils.dom.click(document.querySelector('.modal .btn-primary'));
 
-        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.hasClass(kanban, 'o_legacy_view_sample_data');
         assert.containsN(kanban, '.o_kanban_group', 2);
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
 
