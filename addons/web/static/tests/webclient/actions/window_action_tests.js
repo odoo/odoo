@@ -1580,6 +1580,40 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("pivot view with default favorite and context.active_id", async function (assert) {
+        // note: we use a pivot view because we need a owl view
+        assert.expect(4);
+
+        serverData.views["partner,false,pivot"] = "<pivot/>";
+        serverData.actions[3].views = [[false, "pivot"]];
+        serverData.actions[3].context = { active_id: 4, active_ids: [4], active_model: "whatever" };
+        serverData.models.partner.filters = [
+            {
+                name: "favorite filter",
+                id: 5,
+                context: "{}",
+                sort: "[]",
+                domain: '[("bar", "=", 1)]',
+                is_default: true,
+            },
+        ];
+        registry.category("services").add("user", makeFakeUserService());
+        const mockRPC = (route, args) => {
+            if (args.method === "read_group") {
+                assert.deepEqual(args.kwargs.domain, [["bar", "=", 1]]);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+
+        assert.containsOnce(target, ".o_pivot_view");
+        assert.containsOnce(target, ".o_searchview .o_searchview_facet");
+        assert.strictEqual(
+            target.querySelector(".o_facet_value").innerText,
+            "favorite filter"
+        );
+    });
+
     QUnit.test(
         "search menus are still available when switching between actions",
         async function (assert) {
