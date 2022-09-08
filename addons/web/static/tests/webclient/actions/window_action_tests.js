@@ -1632,6 +1632,33 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("action with default favorite and context.active_id", async function (assert) {
+        assert.expect(4);
+
+        serverData.actions[3].context = { active_id: 4, active_ids: [4], active_model: "whatever" };
+        serverData.models.partner.filters = [
+            {
+                name: "favorite filter",
+                id: 5,
+                context: "{}",
+                sort: "[]",
+                domain: '[("bar", "=", 1)]',
+                is_default: true,
+            },
+        ];
+        const mockRPC = (route, args) => {
+            if (args.method === "web_search_read") {
+                assert.deepEqual(args.kwargs.domain, [["bar", "=", 1]]);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+
+        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_searchview .o_searchview_facet");
+        assert.strictEqual(target.querySelector(".o_facet_value").innerText, "favorite filter");
+    });
+
     QUnit.test(
         "search menus are still available when switching between actions",
         async function (assert) {
