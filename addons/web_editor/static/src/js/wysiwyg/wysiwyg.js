@@ -1982,7 +1982,7 @@ const Wysiwyg = Widget.extend({
                 callback: () => this.odooEditor.execCommand('columnize', 2, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
-                    const row = closestElement(anchor, '.o_text_columns .row', true);
+                    const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 2;
                 },
             },
@@ -1995,7 +1995,7 @@ const Wysiwyg = Widget.extend({
                 callback: () => this.odooEditor.execCommand('columnize', 3, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
-                    const row = closestElement(anchor, '.o_text_columns .row', true);
+                    const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 3;
                 },
             },
@@ -2008,7 +2008,7 @@ const Wysiwyg = Widget.extend({
                 callback: () => this.odooEditor.execCommand('columnize', 4, editorOptions.insertParagraphAfterColumns),
                 isDisabled: () => {
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
-                    const row = closestElement(anchor, '.o_text_columns .row', true);
+                    const row = closestElement(anchor, '.o_text_columns .row');
                     return row && row.childElementCount === 4;
                 },
             },
@@ -2021,7 +2021,7 @@ const Wysiwyg = Widget.extend({
                 callback: () => this.odooEditor.execCommand('columnize', 0),
                 isDisabled: () => {
                     const anchor = this.odooEditor.document.getSelection().anchorNode;
-                    const row = closestElement(anchor, '.o_text_columns .row', true);
+                    const row = closestElement(anchor, '.o_text_columns .row');
                     return !row;
                 },
             },

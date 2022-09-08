@@ -941,7 +941,7 @@ export const editorCommands = {
     columnize: (editor, numberOfColumns, addParagraphAfter=true) => {
         const sel = editor.document.getSelection();
         const anchor = sel.anchorNode;
-        const hasColumns = !!closestElement(anchor, '.o_text_columns', true);
+        const hasColumns = !!closestElement(anchor, '.o_text_columns');
         if (!numberOfColumns && hasColumns) {
             // Remove columns.
             const restore = preserveCursor(editor.document);

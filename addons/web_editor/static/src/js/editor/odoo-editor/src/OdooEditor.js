@@ -3024,7 +3024,7 @@ export class OdooEditor extends EventTarget {
         } else if (ev.key === 'Tab') {
             // Tab
             const sel = this.document.getSelection();
-            const closestTag = (closestElement(sel.anchorNode, 'li, table', true) || {}).tagName;
+            const closestTag = (closestElement(sel.anchorNode, 'li, table') || {}).tagName;
 
             if (closestTag === 'LI') {
                 this._applyCommand('indentList', ev.shiftKey ? 'outdent' : 'indent');
@@ -3659,11 +3659,11 @@ export class OdooEditor extends EventTarget {
             this._handleSelectionInTable(ev);
         }
         if (!this._rowUi.classList.contains('o_open') && !this._columnUi.classList.contains('o_open')) {
-            const column = closestElement(ev.target, 'td', true);
+            const column = closestElement(ev.target, 'td');
             if (this._isResizingTable || !column || !ev.target || ev.target.nodeType !== Node.ELEMENT_NODE) {
                 this._toggleTableUi(false, false);
             } else {
-                const row = closestElement(column, 'tr', true);
+                const row = closestElement(column, 'tr');
                 const isFirstColumn = column === row.querySelector('td');
                 const table = column && closestElement(column, 'table');
                 const isFirstRow = table && row === table.querySelector('tr');
