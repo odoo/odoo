@@ -9,7 +9,7 @@
             <xpath expr="//form" position="attributes">
                 <attribute name="disable_autofocus">true</attribute>
             </xpath>
-            <field name="deposit_taxes_id" position="after">
+            <field name="advance_payment_method" position="after">
                 <field name="invoicing_timesheet_enabled" invisible="1"/>
                 <label for="date_start_invoice_timesheet" string="Timesheets Period" attrs="{'invisible': [ '|', ('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
                 <div class="o_row" attrs="{'invisible': [ '|',('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}">
