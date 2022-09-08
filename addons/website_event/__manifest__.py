@@ -59,10 +59,10 @@
             'website_event/static/src/js/website_geolocation.js',
             'website_event/static/src/js/website_event.js',
             'website_event/static/src/js/website_event_ticket_details.js',
-            'website_event/static/src/js/website_event_set_customize_options.js',
         ],
         'website.assets_editor': [
             'website_event/static/src/js/website_event.editor.js',
+            'website_event/static/src/js/website_event_set_customize_options.js',
         ],
     },
     'license': 'LGPL-3',
