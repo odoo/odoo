@@ -10,6 +10,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
+from odoo.tools.sql import create_index
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -94,7 +95,7 @@ class SaleOrder(models.Model):
              "this date rather than product lead times.")
     date_order = fields.Datetime(
         string="Order Date",
-        required=True, readonly=False, index=True, copy=False,
+        required=True, readonly=False, copy=False,
         states=READONLY_FIELD_STATES,
         help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.",
         default=fields.Datetime.now)
@@ -284,6 +285,10 @@ class SaleOrder(models.Model):
         string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
+
+
+    def init(self):
+        create_index(self._cr, 'sale_order_date_order_id_idx', 'sale_order', ["date_order desc", "id desc"])
 
     #=== COMPUTE METHODS ===#
 
