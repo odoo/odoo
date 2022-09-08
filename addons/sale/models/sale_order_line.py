@@ -412,7 +412,7 @@ class SaleOrderLine(models.Model):
             self.product_packaging_id = False
         # suggest biggest suitable packaging
         if self.product_id and self.product_uom_qty and self.product_uom:
-            self.product_packaging_id = self.product_id.packaging_ids.filtered('sales')._find_suitable_product_packaging(self.product_uom_qty, self.product_uom)
+            self.product_packaging_id = self.product_id.packaging_ids.filtered('sales')._find_suitable_product_packaging(self.product_uom_qty, self.product_uom) or self.product_packaging_id
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):

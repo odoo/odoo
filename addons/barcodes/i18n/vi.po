@@ -56,7 +56,7 @@ msgstr ""
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr "Thêm một quy tắc mã vạch mới"
+msgstr "Thêm một định nghĩa mã vạch mới"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -95,13 +95,13 @@ msgstr "Barcode sự kiện Mixin"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "Phép đặt tên Mã vạch"
+msgstr "Phép đặt Mã vạch"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Phép đặt tên Mã vạch"
+msgstr "Nguyên tắc đặt tên mã vạch"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -112,7 +112,7 @@ msgstr "Mẫu Mã vạch"
 #: model:ir.model,name:barcodes.model_barcode_rule
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr "Quy tắc Mã vạch"
+msgstr "Quy tắc mã vạch"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
@@ -128,7 +128,7 @@ msgstr "Công ty"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
 msgid "Created by"
-msgstr "Được tạo bởi"
+msgstr "Tạo bởi"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
@@ -191,7 +191,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối"
+msgstr "Sửa lần cuối vào"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -203,7 +203,7 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
@@ -213,7 +213,7 @@ msgstr "Không bao giờ"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
-msgstr "Phép đặt tên Mã vạch"
+msgstr "Định nghĩa"
 
 #. module: barcodes
 #. openerp-web
@@ -266,7 +266,7 @@ msgstr "Chọn"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "Trình tự"
+msgstr "Quy tắc mã"
 
 #. module: barcodes
 #. openerp-web
@@ -328,13 +328,12 @@ msgstr ""
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr ""
-"Quy tắc này sẽ chỉ áp dụng nếu mã vạch được mã hóa bằng mã hóa được chỉ định"
+msgstr "Quy tắc này sẽ chỉ áp dụng nếu mã vạch chỉ định mã hóa"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
 msgid "Type"
-msgstr "Kiểu"
+msgstr "Loại"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv

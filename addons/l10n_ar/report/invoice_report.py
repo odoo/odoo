@@ -6,7 +6,7 @@ class AccountInvoiceReport(models.Model):
 
     _inherit = 'account.invoice.report'
 
-    l10n_ar_state_id = fields.Many2one('res.country.state', 'Fed. State', readonly=True)
+    l10n_ar_state_id = fields.Many2one('res.country.state', 'State', readonly=True)
     date = fields.Date(readonly=True, string="Accounting Date")
 
     _depends = {

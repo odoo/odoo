@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet
-#
+# 
 # Translators:
 # sao sang <saosangmo@yahoo.com>, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
@@ -12,7 +12,7 @@
 # Uyen Vo <uyen@trobz.com>, 2021
 # Martin Trigaux, 2021
 # Vo Thanh Thuy, 2022
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
@@ -53,27 +53,32 @@ msgstr "<b class=\"tip_title\">Mẹo: Ghi lại bảng chấm công nhanh hơn</
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for employee:</em>"
-msgstr "<em class=\"font-weight-normal text-muted\">Chấm công cho nhân viên:</em>"
+msgstr ""
+"<em class=\"font-weight-normal text-muted\">Bảng chấm công của nhân "
+"viên:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for project:</em>"
-msgstr "<em class=\"font-weight-normal text-muted\">Chấm công cho dự án:</em>"
+msgstr ""
+"<em class=\"font-weight-normal text-muted\">Bảng chấm công của dự án:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for task:</em>"
-msgstr "<em class=\"font-weight-normal text-muted\">Chấm công cho nhiệm vụ:</em>"
+msgstr ""
+"<em class=\"font-weight-normal text-muted\">Bảng chấm công cho nhiệm "
+"vụ:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets on </em>"
-msgstr "<em class=\"font-weight-normal text-muted\">Chấm công vào </em>"
+msgstr "<em class=\"font-weight-normal text-muted\">Bảng chấm công </em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Ngày\" title=\"Ngày\"/>"
+msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Ngày\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -96,7 +101,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "<span class=\"o_stat_text\">Recorded</span>"
-msgstr "<span class=\"o_stat_text\">Được ghi nhận</span>"
+msgstr "<span class=\"o_stat_text\">Đã ghi</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
@@ -118,8 +123,8 @@ msgid ""
 "<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Sub-tasks Hours Spent</span>\n"
 "                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Sub-tasks Days Spent</span>"
 msgstr ""
-"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Số ngày đã dùng cho Nhiệm vụ con</span>\n"
-"                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Số ngày đã dùng cho Nhiệm vụ con</span>"
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Số giờ nhiệm vụ phụ đã dùng</span>\n"
+"                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Số ngày nhiệm vụ phụ đã dùng</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -194,7 +199,7 @@ msgstr "<strong>Tiến trình:</strong>"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Active Analytic Account"
-msgstr "tài khoản quản trị được kích hoạt"
+msgstr "Tài khoản phân tích đang hoạt động"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -211,12 +216,12 @@ msgstr "Tất cả"
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
-msgstr "Tất cả Bảng chấm công"
+msgstr "Tất cả bảng chấm công"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
 msgid "Allow timesheets"
-msgstr "Cho phép Chấm công"
+msgstr "Cho phép bảng chấm công"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/__init__.py:0
@@ -227,17 +232,17 @@ msgstr "Phân tích"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__analytic_account_id
 msgid "Analytic Account"
-msgstr "Tài khoản quản trị"
+msgstr "Tài khoản phân tích"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 msgid "Analytic Entry"
-msgstr "Bút toán quản trị"
+msgstr "Bút toán phân tích"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Phát sinh KT Quản trị"
+msgstr "Dòng phân tích"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
@@ -245,13 +250,13 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
-"Tài khoản quản trị mà dự án này được liên kết để quản lý tài chính. Sử dụng"
-" tài khoản quản trị để ghi lại chi phí và doanh thu cho dự án của bạn."
+"Tài khoản phân tích mà dự án này được liên kết để quản lý tài chính. Sử dụng"
+" tài khoản phân tích để ghi lại chi phí và doanh thu cho dự án của bạn."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Apple App Store"
-msgstr "Kho Ứng dụng Apple"
+msgstr "Apple App Store"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
@@ -261,12 +266,12 @@ msgstr "Cài đặt ứng dụng"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr "Chấm công liên qua"
+msgstr "Bảng chấm công liên quan"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
 msgid "Awesome Timesheet"
-msgstr "Bảng chấm công tuyệt vời"
+msgstr "Bảng chấm công hiệu quả"
 
 #. module: hr_timesheet
 #: model:project.task.type,legend_blocked:hr_timesheet.internal_project_default_stage
@@ -276,17 +281,17 @@ msgstr "Đã chặn"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
 msgid "By Employee"
-msgstr "Theo Nhân viên"
+msgstr "Theo nhân viên"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
 msgid "By Project"
-msgstr "Theo Dự án"
+msgstr "Theo dự án"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
 msgid "By Task"
-msgstr "Theo Nhiệm vụ"
+msgstr "Theo nhiệm vụ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -301,7 +306,7 @@ msgstr "Công ty"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
@@ -311,7 +316,7 @@ msgstr "Cấu hình"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task_create_timesheet
 msgid "Create Timesheet from task"
-msgstr "Tạo chấm công từ nhiệm vụ"
+msgstr "Tạo bảng chấm công từ nhiệm vụ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet__create_uid
@@ -343,7 +348,7 @@ msgstr "Ngày"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Days Spent"
-msgstr "Số ngày đã dùng"
+msgstr "Ngày đã dùng"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -353,7 +358,7 @@ msgstr "Số ngày ghi lại trong nhiệm vụ phụ:"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr "Giá trị dự án mặc định cho bảng chấm công được tạo từ kiểu nghỉ."
+msgstr "Giá trị dự án mặc định cho bảng chấm công được tạo từ loại nghỉ phép."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
@@ -396,14 +401,14 @@ msgstr "Tên hiển thị"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__progress
 msgid "Display progress of current task."
-msgstr "Hiển thị tiến độ của nhiệm vụ hiện tại."
+msgstr "Hiển thị tiến độ của công việc hiện tại."
 
 #. module: hr_timesheet
 #. openerp-web
 #: code:addons/hr_timesheet/static/src/js/timesheet_config_form_view.js:0
 #, python-format
 msgid "Download our App"
-msgstr "Tải App của chúng tôi"
+msgstr "Tải về ứng dụng của chúng tôi"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
@@ -414,12 +419,12 @@ msgstr "Thời lượng"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Duration (Days)"
-msgstr "Thời lượng (ngày)"
+msgstr "Khoảng thời gian (ngày)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Duration (Hours)"
-msgstr "Thời lượng (Giờ)"
+msgstr "Khoảng thời gian (giờ)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_effective
@@ -428,7 +433,7 @@ msgstr "Thời lượng (Giờ)"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Effective Hours"
-msgstr "Số giờ Hiệu quả"
+msgstr "Giờ hiệu quả"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -450,38 +455,38 @@ msgstr "Nhắc nhở nhân viên"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__allow_timesheets
 msgid "Enable timesheeting on the project."
-msgstr "Kích hoạt bảng chấm công cho dự án."
+msgstr "Bật bảng chấm công cho dự án."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr "Tính đơn vị theo Ngày"
+msgstr "Mã hóa đơn vị theo ngày"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
 msgid "Encoding Unit"
-msgstr "Đơn vị tính"
+msgstr "Đơn vị tính giờ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
 msgid "Encoding Uom"
-msgstr "Đơn vị tính"
+msgstr "Đơn vị tính giờ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets upon time off validation"
-msgstr "Tạo bảng chấm công khi xác nhận nghỉ"
+msgstr "Tạo bảng chấm công khi xác nhận nghỉ phép"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Google Chrome Store"
-msgstr "Kho Google Chrome"
+msgstr "Google Chrome Store"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Google Play Store"
-msgstr "Kho Google Play"
+msgstr "Google Play Store"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -511,7 +516,7 @@ msgstr "Giờ"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Hours Spent"
-msgstr "Số giờ Đã sử dụng"
+msgstr "Số giờ đã dùng"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -580,7 +585,7 @@ msgstr "Là dự án nội bộ"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối"
+msgstr "Sửa lần cuối vào"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet__write_uid
@@ -590,7 +595,7 @@ msgstr "Cập nhật lần cuối bởi"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -608,7 +613,7 @@ msgstr "Tuần trước"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Last year"
-msgstr "Năm trước"
+msgstr "Năm ngoái"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -648,7 +653,7 @@ msgstr "Nhiệm vụ của đội"
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_user
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "My Timesheets"
-msgstr "Bảng chấm công của Tôi"
+msgstr "Bảng chấm công của tôi"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -673,12 +678,12 @@ msgstr "Không tìm thấy hoạt động. Hãy tạo hoạt động mới!"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "None"
-msgstr "Không dùng"
+msgstr "Không"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 msgid "Overtime"
-msgstr "Làm ngoài giờ"
+msgstr "Quá giờ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
@@ -688,7 +693,7 @@ msgstr "Đối tác"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
 msgid "Planned Hours"
-msgstr "Số giờ Theo Kế hoạch"
+msgstr "Số giờ dự kiến"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -701,7 +706,7 @@ msgstr "Đơn vị tính của sản phẩm"
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
 #, python-format
 msgid "Progress"
-msgstr "Tiến độ"
+msgstr "Tiến trình"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -735,7 +740,7 @@ msgstr "Sẵn sàng"
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 msgid "Record a new activity"
-msgstr "Ghi lại một hoạt động mới"
+msgstr "Ghi nhận hoạt động mới"
 
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
@@ -803,44 +808,44 @@ msgstr "Lưu thời gian"
 #: code:addons/hr_timesheet/static/src/xml/qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Awesome Timesheet app:"
-msgstr "Quét mã QR này để có app Awesome Timesheet:"
+msgstr "Quét mã QR để tải ứng dụng Bảng chấm công hiệu quả:"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in All"
-msgstr "Tìm trong Tất cả"
+msgstr "Tìm tất cả"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Description"
-msgstr "Tìm trong Mô tả"
+msgstr "Tìm kiếm trong mô tả"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Employee"
-msgstr "Tìm trong Nhân viên"
+msgstr "Tìm kiếm trong nhân viên"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr "Tìm trong dự án"
+msgstr "Tìm kiếm trong dự án"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Task"
-msgstr "Tìm trong Nhiệm vụ"
+msgstr "Tìm kiếm trong nhiệm vụ"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "See timesheet entries"
-msgstr "Xem các bản ghi chấm công"
+msgstr "Xem mục nhập bảng chấm công"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -855,24 +860,24 @@ msgstr "Gửi email nhắc nhở định kỳ cho người dùng bảng chấm c
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
 msgid "Settings"
-msgstr "Thiết lập"
+msgstr "Cài đặt"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sub-tasks Hours Spent"
-msgstr "Số giờ đã dành cho nhiệm vụ con"
+msgstr "Số giờ nhiệm vụ phụ đã dùng"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Planned Days"
-msgstr "Số ngày đã dành cho nhiệm vụ con"
+msgstr "Số ngày nhiệm vụ phụ dự kiến"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Planned Hours"
-msgstr "Giờ dự kiến cho nhiệm vụ phụ"
+msgstr "Số giờ nhiệm vụ phụ dự kiến"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -890,12 +895,12 @@ msgstr "Nhiệm vụ"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_create_timesheet__task_id
 msgid "Task for which we are creating a sales order"
-msgstr "Nhiệm vụ mà chúng ta sẽ tạo đơn bán cho nó"
+msgstr "Nhiệm vụ mà chúng tôi đang tạo đơn bán hàng"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr "Chấm công của nhiệm vụ"
+msgstr "Bảng chấm công của nhiệm vụ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_project_task_timesheet
@@ -905,14 +910,14 @@ msgstr "Nhiệm vụ:"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr "Phân tích Nhiệm vụ"
+msgstr "Phân tích nhiệm vụ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_project_task_user_view_search
 msgid "Tasks in Overtime"
-msgstr "Nhiệm vụ làm Ngoài giờ"
+msgstr "Nhiệm vụ trong quá giờ"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/res_company.py:0
@@ -923,12 +928,12 @@ msgstr "Dự án nội bộ của một công ty phải nằm trong công ty đ�
 #. module: hr_timesheet
 #: model:ir.model.constraint,message:hr_timesheet.constraint_project_task_create_timesheet_time_positive
 msgid "The timesheet's time must be positive"
-msgstr "Số giờ chấm công phải là số dương"
+msgstr "Thời gian của bảng chấm công phải là số dương"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr "Không có bảng chấm công nào."
+msgstr "Hiện không có bảng chấm công."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -989,8 +994,8 @@ msgid ""
 "This task must be part of a project because there are some timesheets linked"
 " to it."
 msgstr ""
-"Nhiệm vụ này phải là một phần của một dự án bởi vì có các bản ghi chấm công "
-"liên kết đến nó."
+"Nhiệm vụ này phải là một phần của dự án vì có bảng chấm công liên kết với "
+"nhiệm vụ."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -1005,8 +1010,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
-"Đơn vị này dùng đo thời gian cho dự án và các công việc.\n"
-"Nếu bạn dùng thời gian biểu kết hợp với dự án, đừng quên thiết lập đúng đơn vị đo cho nhân viên của bạn."
+"Mục này sẽ đặt đơn vị được sử dụng trong dự án và nhiệm vụ.\n"
+"Nếu bạn sử dụng bảng chấm công liên kết với dự án, đừng quên cài đặt đúng đơn vị cho nhân viên của bạn."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__timesheet_encode_uom_id
@@ -1016,8 +1021,8 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
-"Đây sẽ được dùng làm đơn vị tính thời gian khi chấm công. Đây đơn giản là công cụ\n"
-"        để hỗ trợ việc ghi nhận. Tất cả các báo cáo sẽ vẫn được tính giờ (giá trị mặc định)."
+"Việc này sẽ đặt đơn vị tính sử dụng để tính giờ bảng chấm công. Việc này sẽ cung cấp công cụ \n"
+"        và hướng dẫn trợ giúp tính giờ. Tất cả báo cáo sẽ vẫn được tính theo giờ (giá trị mặc định)."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -1033,23 +1038,23 @@ msgstr "Thời gian"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
-msgstr "Ghi nhận thời gian"
+msgstr "Tính thời gian"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Off"
-msgstr "Thời gian nghỉ"
+msgstr "Nghỉ phép"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Time Spent (Days)"
-msgstr "Thời gian đã sử dụng (Ngày)"
+msgstr "Thời gian dùng (Ngày)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Time Spent (Hours)"
-msgstr "Thời gian đã sử dụng (Giờ)"
+msgstr "Thời gian dùng (giờ)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1086,12 +1091,12 @@ msgstr "Bảng chấm công"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
-msgstr "Hoạt động chấm công"
+msgstr "Hoạt động bảng chấm công"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Chi phí cho Bảng chấm công"
+msgstr "Chi phí bảng chấm công"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
@@ -1100,7 +1105,7 @@ msgstr "Chi phí cho Bảng chấm công"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr "Chi phí theo chấm công"
+msgstr "Chi phí bảng chấm công"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_count
@@ -1111,7 +1116,7 @@ msgstr "Đếm bảng chấm công"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Đơn vị tính cho Bảng chấm công"
+msgstr "Đơn vị tính bảng chấm công"
 
 #. module: hr_timesheet
 #: model:ir.actions.report,name:hr_timesheet.timesheet_report
@@ -1121,12 +1126,12 @@ msgstr "Đơn vị tính cho Bảng chấm công"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_project
 msgid "Timesheet Entries"
-msgstr "Chi tiết Bảng chấm công"
+msgstr "Mục nhập bảng chấm công"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Date"
-msgstr "Chấm công theo Ngày"
+msgstr "Bảng chấm công theo ngày"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -1152,7 +1157,7 @@ msgstr "Chấm công theo Ngày"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #, python-format
 msgid "Timesheets"
-msgstr "Chấm công"
+msgstr "Bảng chấm công"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1177,7 +1182,7 @@ msgstr "Bảng chấm công theo nhiệm vụ"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr "Bảng chấm công có thể được ghi nhận ở nhiệm vụ này."
+msgstr "Bảng chấm công được ghi nhận ở nhiệm vụ này."
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
@@ -1199,19 +1204,19 @@ msgstr "Tổng"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Days"
-msgstr "Tổng số ngày"
+msgstr "Tổng ngày"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Hours"
-msgstr "Tổng số giờ"
+msgstr "Tổng giờ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr "Tổng số giờ chấm công"
+msgstr "Tổng thời gian bảng chấm công"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
@@ -1228,8 +1233,8 @@ msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
 msgstr ""
-"Tổng thời gian còn lại, có thể được dự kiến lại một cách định kỳ bởi người "
-"được phân công nhiệm vụ."
+"Tổng thời gian còn lại, có thể được ước tính lại định kỳ bởi người được phân"
+" công nhiệm vụ."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1281,7 +1286,7 @@ msgstr "Người dùng: tất cả bảng chấm công"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "User: own timesheets only"
-msgstr "Người dùng: chỉ bảng chấm công của chính mình"
+msgstr "Người dùng: chỉ sở hữu bảng chấm công"
 
 #. module: hr_timesheet
 #. openerp-web
@@ -1301,14 +1306,14 @@ msgid ""
 "Widget used in the webclient when this unit is the one used to encode "
 "timesheets."
 msgstr ""
-"Widget được sử dụng trong webclient khi đơn vị này là đơn vị được sử dụng để"
-" mã hóa bảng chấm công."
+"Tiện ích được sử dụng cho trang web khách hàng khi đơn vị này được sử dụng "
+"để tính thời gian bảng chấm công."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "You cannot access timesheets that are not yours."
-msgstr "Bạn không thể truy cập bảng chấm công mà không phải của bạn."
+msgstr "Bạn không thể truy cập bảng chấm công của người khác."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -1338,14 +1343,14 @@ msgid ""
 "to timesheet on the project."
 msgstr ""
 "Bạn không thể tạo nhật ký bảng chấm công cho dự án này vì nó được liên kết "
-"với tài khoản quản trị không hoạt động. Hãy thay đổi tài khoản này, hoặc "
+"với tài khoản phân tích không hoạt động. Hãy thay đổi tài khoản này, hoặc "
 "kích hoạt lại tài khoản hiện tại để tạo bảng chấm công cho dự án."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "You cannot use timesheets without an analytic account."
-msgstr "Bạn không thể sử dụng bảng chấm công mà không có tài khoản quản trị."
+msgstr "Bạn không thể sử dụng bảng chấm công mà không có tài khoản phân tích."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/res_company.py:0

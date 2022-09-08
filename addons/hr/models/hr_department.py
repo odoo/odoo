@@ -20,7 +20,7 @@ class Department(models.Model):
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
     manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
-    total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee', compute_sudo=True)
+    total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee')
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
     note = fields.Text('Note')
     color = fields.Integer('Color Index')

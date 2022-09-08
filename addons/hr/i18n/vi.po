@@ -34,7 +34,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
 msgid "# emails to send"
-msgstr "SL email chờ gửi"
+msgstr "# email cần gửi"
 
 #. module: hr
 #: code:addons/hr/models/hr_job.py:0
@@ -50,7 +50,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Print Badge - %s' % (object.name).replace('/', '')"
-msgstr "'In Thẻ - %s' % (object.name).replace('/', '')"
+msgstr "'In thẻ nhân viên - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -61,7 +61,7 @@ msgstr "'In Thẻ - %s' % (object.name).replace('/', '')"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr "12 ngày/năm, bao gồm <br/>6 ngày tự chọn."
+msgstr "12 ngày / năm, bao gồm <br>6 ngày do bạn tự chọn."
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -70,13 +70,13 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Chúc mừng!</b> Cho phép tôi gợi ý cho bạn thiết lập một <a href=\"%s\">kế"
-" hoạch nhập môn</a> chứ?"
+"<b>Chúc mừng bạn!</b> Tôi gợi ý cho bạn thiết lập <a href=\"%s\">một kế "
+"hoạch làm quen được không?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Quản lý\" title=\"Quản lý\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Quản lý\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -96,7 +96,7 @@ msgid ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
 "                                                </span>"
 msgstr ""
-"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Hiện diện\" name=\"presence_present\">\n"
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Có mặt\" name=\"presence_present\">\n"
 "                                                </span>"
 
 #. module: hr
@@ -106,7 +106,7 @@ msgid ""
 "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
 "                                                </span>"
 msgstr ""
-"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"Chờ xác định\" title=\"Chờ xác định\" name=\"presence_to_define\">\n"
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"Cần xác định\" name=\"presence_to_define\">\n"
 "                                                </span>"
 
 #. module: hr
@@ -116,7 +116,7 @@ msgid ""
 "<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
 "                                                </span>"
 msgstr ""
-"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Vắng mặt\" title=\"Vắng mặt\" name=\"presence_absent\">\n"
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Vắng mặt\" name=\"presence_absent\">\n"
 "                                                </span>"
 
 #. module: hr
@@ -126,7 +126,7 @@ msgid ""
 "<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
 "                                                </span>"
 msgstr ""
-"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Có mặt nhưng không trực tuyến\" title=\"Có mặt nhưng không trực tuyến\" name=\"presence_absent_active\">\n"
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Có mặt nhưng không hoạt động\" name=\"presence_absent_active\">\n"
 "                                                </span>"
 
 #. module: hr
@@ -143,12 +143,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">IP Addresses (comma-separated)</span>"
-msgstr "<span class=\"ml8 mr-2\">Địa chỉ IP (cách nhau bởi dấu phẩy)</span>"
+msgstr "<span class=\"ml8 mr-2\">Địa chỉ IP (phân cách bằng dấu phẩy)</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
-msgstr "<span class=\"ml8 mr-2\">Số email gửi đi tối thiểu</span>"
+msgstr "<span class=\"ml8 mr-2\">Số lượng email tối thiểu cần gửi </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -168,7 +168,7 @@ msgstr "<span class=\"o_form_label o_hr_form_label\">Thông tin cá nhân</span>
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Presence Control</span>"
-msgstr "<span class=\"o_form_label\">Kiểm soát Hiện diện</span>"
+msgstr "<span class=\"o_form_label\">Quản lý đi làm</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -178,7 +178,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                                        Không Kết nối\n"
+"                                        Không kết nối\n"
 "                                    </span>"
 
 #. module: hr
@@ -189,13 +189,13 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                                    Không Kết nối\n"
+"                                    Không kết nối\n"
 "                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "<span class=\"o_stat_text\">Connected Since</span>"
-msgstr "<span class=\"o_stat_text\">Từ khi Kết nối</span>"
+msgstr "<span class=\"o_stat_text\">Kết nối từ</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -205,7 +205,7 @@ msgstr "<span class=\"o_stat_text\">Nhân viên</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span class=\"o_stat_text\">Present Since</span>"
-msgstr "<span class=\"o_stat_text\">Từ khi Có mặt</span>"
+msgstr "<span class=\"o_stat_text\">Có mặt từ</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -226,14 +226,13 @@ msgstr "<strong><span>Báo cáo</span></strong>"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A full-time position <br>Attractive salary package."
-msgstr "Một vị trí toàn thời gian <br>Gói lương hấp dẫn."
+msgstr "Vị trí toàn thời gian <br>Mức thù lao hấp dẫn."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
 msgstr ""
-"Một người dùng không thể liên kết đến nhiều nhân viên trong cùng một công "
-"ty."
+"Một người dùng không thể kết nối với nhiều nhân viên trong cùng một công ty."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
@@ -261,7 +260,7 @@ msgstr "Đạt được mục tiêu kinh doanh hằng tháng"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
 msgid "Action Needed"
-msgstr "Cần có Hành động"
+msgstr "Cần tác vụ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -271,7 +270,7 @@ msgstr "Cần có Hành động"
 #: model:ir.model.fields,field_description:hr.field_hr_plan__active
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Đang hoạt động"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
@@ -279,7 +278,7 @@ msgstr "Có hiệu lực"
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Activities"
-msgstr "Hoạt động"
+msgstr "Các hoạt động"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
@@ -289,27 +288,27 @@ msgstr "Hoạt động"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Trang trí cho Hoạt động ngoại lệ"
+msgstr "Thể hiện hoạt động ngoại lệ "
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan
 msgid "Activity Planning"
-msgstr "Kế hoạch Hành động"
+msgstr "Kế hoạch hoạt động"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
 msgid "Activity State"
-msgstr "Trạng thái Hoạt động"
+msgstr "Trạng thái hoạt động"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__activity_type_id
 msgid "Activity Type"
-msgstr "Kiểu Hoạt động"
+msgstr "Kiểu hoạt động"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Biểu tượng Kiểu Hoạt động"
+msgstr "Biểu tượng kiểu hoạt động"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
@@ -371,28 +370,28 @@ msgstr "Địa chỉ"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Administrative Work"
-msgstr "Công việc Quản trị"
+msgstr "Công việc quản trị"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Administrator"
-msgstr "Quản trị viên"
+msgstr "Người quản trị"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
 msgid "Advanced Presence Control"
-msgstr "Kiểm soát Hiện diện Nâng cao"
+msgstr "Quản lý có mặt nâng cao"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Advanced presence of employees"
-msgstr "Hiện diện nhân viên nâng cao"
+msgstr "Quản lý có mặt nâng cao"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
-msgstr "An ninh về Bí danh Liên hệ"
+msgstr "Bảo mật bí danh liên hệ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__lang
@@ -407,12 +406,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update their own data"
-msgstr "Cho phép nhân viên cập nhật hồ sơ của chính mình"
+msgstr "Cho phép nhân viên cập nhật dữ liệu của chính họ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update their own data."
-msgstr "Cho phép nhân viên cập nhật hồ sơ của chính mình."
+msgstr "Cho phép nhân viên cập nhật dữ liệu của chính họ."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -437,7 +436,7 @@ msgstr "Lưu trữ"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
 msgid "Archive Private Address"
-msgstr "Lưu trữ Địa chỉ Riêng tư"
+msgstr "Lưu trữ địa chỉ cá nhân"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -449,7 +448,7 @@ msgstr "Lưu trữ Địa chỉ Riêng tư"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Archived"
-msgstr "Đã lưu trữ"
+msgstr "Đã lưu"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -468,22 +467,20 @@ msgid ""
 "                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
-"Là một nhân viên của công ty, bạn sẽ <b>hợp tác với các phòng ban để sáng\n"
-"                        tạo và triển khai các sản phẩm đột phá.</b> Hãy tới làm việc tại một công ty đang ngày càng mở rộng, \n"
-"                        mang lại nhiều lợi ích cùng với cơ hội phát triển và học hỏi\n"
-"                        bên cạnh các nhà lãnh đạo tài ba. Chúng tôi đang tìm kiếm cá nhân nổi trội và có kinh nghiệm\n"
-"                        để bổ sung vào đội ngũ công ty. \n"
-"                        <br/><br/>\n"
-"                        Vị trí này đòi hỏi bạn phải <b>sáng tạo, quy củ</b> và có tư duy\n"
-"                        đột phá. Chúng tôi mong muốn tìm được ứng viên có tính chủ động  và tinh thần \"hoàn thành công việc\"\n"
-"                        cao. Để thành công, bạn phải có kỹ năng giải quyết vấn đề sắc sảo. "
+"Là một nhân viên của công ty, bạn sẽ <b>hợp tác với các phòng ban để tạo ra và triển khai\n"
+"                                các sản phẩm đột phá.</b> Hãy làm việc tại một công ty đang ngày càng lớn mạnh, mang lại nhiều lợi ích và cơ hội\n"
+"                                phát triển và học hỏi bên cạnh các nhà lãnh đạo xuất sắc. Chúng tôi hiện đang tìm kiếm cá nhân nổi trội và có kinh nghiệm để bổ sung vào đội ngũ công ty.\n"
+"                                <br><br>\n"
+"                                Vị trí này đòi hỏi bạn phải <b>sáng tạo và quy củ</b> và có tư duy đột phá.\n"
+"                                Chúng tôi mong muốn tìm được ứng viên có tính chủ động và tinh thần hoàn thành công việc cao. Để thành công,\n"
+"                                bạn phải có kỹ năng giải quyết vấn đề sắc sảo."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng đính kèm"
+msgstr "Số tệp đính kèm"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -503,12 +500,12 @@ msgstr "Nhân viên đã xác thực"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr "Tư động Đăng ký Phòng/Ban"
+msgstr "Bộ phận đăng ký tự động"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr "Tự động đăng ký nhân viên của các phòng ban đó vào kênh."
+msgstr "Tự động đăng ký thành viên của các bộ phận đó vào kênh."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -537,31 +534,31 @@ msgstr "Ảnh đại diện"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
 msgid "Avatar 1024"
-msgstr "Ảnh đại diện 1024px"
+msgstr "Hình đại diện 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
 msgid "Avatar 128"
-msgstr "Ảnh đại diện 128px"
+msgstr "Hình đại diện 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
 msgid "Avatar 256"
-msgstr "Ảnh đại diện 256px"
+msgstr "Hình đại diện 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
-msgstr "Ảnh đại diện 512px"
+msgstr "Hình đại diện 512"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Away"
-msgstr "Vắng"
+msgstr "Vắng mặt"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__bachelor
@@ -577,18 +574,18 @@ msgstr "Cử nhân"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Bachelor Degree or Higher"
-msgstr "Tốt nghiệp Đại học hoặc Cao hơn"
+msgstr "Đại học hoặc hơn"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
 #: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
-msgstr "Mã số Thẻ"
+msgstr "Mã số thẻ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
-msgstr "Số Tài khoản Ngân hàng"
+msgstr "Số tài khoản ngân hàng"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -598,7 +595,7 @@ msgstr "Cơ bản"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
 msgid "Based on IP Address"
-msgstr "Dựa trên Địa chỉ IP"
+msgstr "Dựa trên địa chỉ IP"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_attendance
@@ -608,7 +605,7 @@ msgstr "Dựa trên điểm danh"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
 msgid "Based on number of emails sent"
-msgstr "Dựa trên số lượng email gửi đi"
+msgstr "Dựa trên số email đã gửi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
@@ -618,12 +615,12 @@ msgstr "Dựa trên trạng thái người dùng trong hệ thống"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_base
 msgid "Basic Employee"
-msgstr "Người dùng cơ bản"
+msgstr "Nhân viên cơ bản"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__can_edit
 msgid "Can Edit"
-msgstr "Có thể Sửa"
+msgstr "Có thể sửa"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.plan_wizard
@@ -634,12 +631,12 @@ msgstr "Hủy"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 #: model:ir.model.fields,field_description:hr.field_res_users__certificate
 msgid "Certificate Level"
-msgstr "Cấp độ Chứng chỉ"
+msgstr "Cấp độ chứng chỉ"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.res_users_action_my
 msgid "Change my Preferences"
-msgstr "Thay đổi Thiết lập của tôi"
+msgstr "Thay đổi tùy chọn của tôi"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -652,12 +649,12 @@ msgstr "Chat"
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
 msgid "Chief Executive Officer"
-msgstr "Tổng giám đốc Điều hành"
+msgstr "Tổng giám đốc điều hành"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr "Tổng giám đốc Kỹ thuật"
+msgstr "Tổng giám đốc kỹ thuật"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -668,7 +665,7 @@ msgstr "Phòng ban cấp dưới"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship"
-msgstr "Cư dân"
+msgstr "Quốc tịch"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -688,7 +685,7 @@ msgstr "Người huấn luyện"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
-msgstr "Người huấn luyện nhân viên %s chưa được thiết lập."
+msgstr "Chưa đặt người huấn luyện cho nhân viên %s."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
@@ -720,17 +717,17 @@ msgstr "Công ty"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr "Quốc gia Công ty"
+msgstr "Quốc gia công ty"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Company Logo"
-msgstr "Logo Công ty"
+msgstr "Logo công ty"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
-msgstr "Khung giờ Làm việc Mặc định"
+msgstr "Giờ làm việc công ty"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_id
@@ -745,7 +742,7 @@ msgstr "Tên đầy đủ"
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -800,7 +797,7 @@ msgstr "Ngày tạo"
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
-msgstr "Thêm phòng ban mới"
+msgstr "tạo phòng ban mới"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -831,7 +828,7 @@ msgstr "Tạo nhân viên"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
 msgid "Created by"
-msgstr "Được tạo bởi"
+msgstr "Tạo bởi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_date
@@ -850,7 +847,7 @@ msgstr "Thời điểm tạo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
 msgid "Current Number of Employees"
-msgstr "Số Nhân viên hiện tại"
+msgstr "Số nhân viên hiện tại"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -861,7 +858,7 @@ msgstr "Số Nhân viên hiện tại"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Customer Relationship"
-msgstr "Quan hệ Khách hàng"
+msgstr "Quan hệ khách hàng"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
@@ -878,7 +875,7 @@ msgstr "Không thể xóa lý do nghỉ việc mặc định."
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr "Định nghĩa lịch hoạt động cho nguồn lực"
+msgstr "Xác định lịch trình của nguồn lực "
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -897,7 +894,7 @@ msgstr "Phòng/Ban"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
 msgid "Department Name"
-msgstr "Tên Phòng/Ban"
+msgstr "Tên phòng/ban"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
@@ -917,7 +914,7 @@ msgstr "Nghỉ việc"
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
 msgid "Departure Date"
-msgstr "Thời gian nghỉ việc"
+msgstr "Ngày nghỉ việc"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_reason
@@ -935,13 +932,13 @@ msgstr "Lý do nghỉ việc"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr "Đồ thuật nghỉ việc"
+msgstr "Hướng dẫn tính năng nghỉ việc"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Dependant"
-msgstr "Người Phụ thuộc"
+msgstr "Phụ thuộc"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
@@ -952,7 +949,7 @@ msgstr "Cấp dưới trực tiếp"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_employee
 msgid "Directory"
-msgstr "Danh bạ Nhân viên"
+msgstr "Thư mục"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -968,12 +965,12 @@ msgstr "Huỷ bỏ"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Discover our products."
-msgstr "Khám phá sản phẩm của chúng tôi."
+msgstr "Khám phá sản phẩm của chúng tôi. "
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
 msgid "Discussion Channel"
-msgstr "Kênh Thảo luận"
+msgstr "Kênh thảo luận"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -993,7 +990,7 @@ msgstr "Tên hiển thị"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
 msgid "Divorced"
-msgstr "Đã ly hôn"
+msgstr "Ly hôn"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
@@ -1021,10 +1018,10 @@ msgid ""
 "                        sports sessions, team building events, monthly drink, and much more"
 msgstr ""
 "Mỗi nhân viên có cơ hội nhìn thấy tầm ảnh hưởng của công việc của mình.\n"
-"                Bạn có thể đóng góp thực sự cho sự thành công của công ty.\n"
-"                <br/>\n"
-"                Khá nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như\n"
-"                buổi tập thể thao hàng tuần, sự kiện kết nối đội ngũ, đồ uống hàng tháng và hơn thế nữa"
+"                        Bạn có thể thực sự đóng góp cho thành công của công ty.\n"
+"                        <br>\n"
+"                        Khá nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như buổi tập\n"
+"                        thể thao hàng tuần, sự kiện kết nối đội ngũ, đồ uống hàng tháng, và hơn thế nữa"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1035,13 +1032,13 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Eat &amp; Drink"
-msgstr "Ăn &amp; Uống"
+msgstr "Ăn uống"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Education"
-msgstr "Học vấn"
+msgstr "Trình độ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1052,7 +1049,7 @@ msgstr "Email"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
-msgstr "Bí danh Email"
+msgstr "Bí danh email"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1091,47 +1088,47 @@ msgstr "Nhân viên"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr "Nhóm Nhân viên"
+msgstr "Danh mục nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_count
 msgid "Employee Count"
-msgstr "SL Nhân viên"
+msgstr "Số nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
 msgid "Employee Editing"
-msgstr "Sửa đổi thông tin Nhân viên"
+msgstr "Chỉnh sửa nhân viên"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Employee Image"
-msgstr "Hình Nhân viên"
+msgstr "Hình nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_lang
 msgid "Employee Lang"
-msgstr "Ngôn ngữ Nhân viên"
+msgstr "Ngôn ngữ nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Employee Name"
-msgstr "Tên Nhân viên"
+msgstr "Tên nhân viên"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.model.fields,field_description:hr.field_res_users__category_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
-msgstr "Thẻ Nhân viên"
+msgstr "Từ khóa nhân sự"
 
 #. module: hr
 #. openerp-web
 #: code:addons/hr/static/src/js/hr_employee.js:0
 #, python-format
 msgid "Employee Termination"
-msgstr "Chấm dứt Hợp đồng"
+msgstr "Chấm dứt hợp đồng"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
@@ -1139,35 +1136,35 @@ msgstr "Chấm dứt Hợp đồng"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_type
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_type
 msgid "Employee Type"
-msgstr "Kiểu Nhân viên"
+msgstr "Kiểu nhân viên"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Employee Update Rights"
-msgstr "Quyền Cập nhật Nhân viên"
+msgstr "Quyền cập nhật nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
 msgid "Employee bank salary account"
-msgstr "Tài khoản ngân hàng để trả lương nhân viên"
+msgstr "TK ngân hàng trả lương cho nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
 msgid "Employee's Bank Account Number"
-msgstr "Số tài khoản Ngân hàng của Nhân viên"
+msgstr "STK ngân hàng của nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
-msgstr "Quốc gia của Nhân viên"
+msgstr "Quốc gia của nhân viên"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
-msgstr "Tên Nhân viên"
+msgstr "Tên nhân viên"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -1202,22 +1199,22 @@ msgstr "Nhân viên"
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
 msgid "Employees Count"
-msgstr "Số Nhân viên"
+msgstr "Số nhân viên"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr "Cơ cấu Nhân viên"
+msgstr "Cơ cấu nhân viên"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
-msgstr "Thẻ Nhân viên"
+msgstr "Thẻ nhân viên"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Enrich employee profiles with skills and resumes"
-msgstr "Làm phong phú hồ sơ nhân viên với kỹ năng và các đặc điểm chính"
+msgstr "Thêm kỹ năng và sơ yếu lí lịch để hồ sơ nhân viên chi tiết hơn"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
@@ -1226,8 +1223,8 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
-"Nhập vào đây địa chỉ riêng của nhân viên, chứ không phải địa chỉ liên hệ với"
-" công ty của bạn."
+"Nhập vào đây địa chỉ riêng của nhân viên, không phải địa chỉ liên kết với "
+"công ty."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1249,7 +1246,8 @@ msgstr "Nhân viên mới dự kiến"
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "Số lượng nhân viên dự kiến cho chức vụ này sau khi tuyển dụng."
+msgstr ""
+"Số lượng nhân viên dự kiến cho vị trí công việc này sau khi tuyển dụng."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1276,7 +1274,7 @@ msgstr "Nữ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 #: model:ir.model.fields,field_description:hr.field_res_users__study_field
 msgid "Field of Study"
-msgstr "Lĩnh vực Nghiên cứu"
+msgstr "Lĩnh vực nghiên cứu"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
@@ -1295,12 +1293,12 @@ msgstr "Người theo dõi"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Người theo dõi (Các đối tác)"
+msgstr "Người theo dõi (Đối tác)"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Biểu tượng Font-Awesome (vd: fa-tasks)"
+msgstr "Biểu tượng Font awesome v.d: fa-tasks"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
@@ -1350,7 +1348,7 @@ msgstr "Kinh nghiệm với Google Adwords"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
 msgid "Graduate"
-msgstr "Tốt nghiệp"
+msgstr "Cử nhân"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1374,7 +1372,7 @@ msgstr "Nhóm theo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr "Phòng Nhân sự"
+msgstr "Phòng nhân sự"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
@@ -1387,7 +1385,7 @@ msgstr "Quản lý nhân sự: kiểm tra tính hợp lệ của giấy phép la
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
-msgstr "Thiết lập Nhân lực"
+msgstr "Cài đặt nhân sự"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
@@ -1416,14 +1414,14 @@ msgstr "Nhân viên được tuyển"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance"
-msgstr "Khoảng cách từ Nhà đến Nơi làm việc"
+msgstr "Khoảng cách từ nhà đến công ty"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 msgid "Hr Icon Display"
-msgstr "Kiểu hiển thị Biểu tượng HR"
+msgstr "Hiển thị icon nhân sự"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1431,7 +1429,7 @@ msgstr "Kiểu hiển thị Biểu tượng HR"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr "Trạng thái Hiện diện Nhân sự"
+msgstr "Trạng thái có mặt nhân sự"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1461,7 +1459,7 @@ msgstr "ID"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
 msgid "ID Card Copy"
-msgstr "Bản sao Căn cước công dân"
+msgstr "Bản sao căn cước công dân"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
@@ -1483,7 +1481,7 @@ msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 #: model:ir.model.fields,field_description:hr.field_res_users__identification_id
 msgid "Identification No"
-msgstr "Số CMND/CCCD"
+msgstr "Số căn cước công dân"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
@@ -1493,14 +1491,14 @@ msgstr "Số CMND/CCCD"
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Nếu được đánh dấu, các thông điệp mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự chú ý của bạn. "
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu được đánh dấu, một số thông điệp đã có lỗi gửi đi."
+msgstr "Nếu đánh dấu, một số tin nhắn bị lỗi khi gửi. "
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -1508,8 +1506,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Nếu bạn thiết lập trường này về giá trị False (bỏ hiệu lực), nó sẽ cho phép "
-"bạn ẩn thông tin này đi mà không cần xóa nó."
+"Nếu trường hoạt động được đặt là Sai, bạn sẽ được phép ẩn hồ sơ nguồn lực mà"
+" không cần xóa bỏ. "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1521,36 +1519,36 @@ msgstr "Hình ảnh"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
 msgid "Image 1024"
-msgstr "Hình ảnh 1024px"
+msgstr "Ảnh 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
 msgid "Image 128"
-msgstr "Hình ảnh 128px"
+msgstr "Ảnh 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
 msgid "Image 256"
-msgstr "Hình ảnh 256px"
+msgstr "Ảnh 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
 msgid "Image 512"
-msgstr "Hình ảnh 512px"
+msgstr "Ảnh 512"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "Import Template for Employees"
-msgstr "Mẫu nhập dữ liệu Nhân viên"
+msgstr "Nhập mẫu nhân viên"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
-msgstr "Không tuyển dụng"
+msgstr "Theo vị trí"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -1562,12 +1560,12 @@ msgstr "Đang tuyển dụng"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
 msgid "Is Follower"
-msgstr "Là Người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
 msgid "Is System"
-msgstr "Là Hệ thống"
+msgstr "Là hệ thống"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1580,7 +1578,7 @@ msgstr "Chức vụ"
 #: model:ir.model.fields,field_description:hr.field_hr_job__description
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Description"
-msgstr "Mô tả Công việc"
+msgstr "Mô tả công việc"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
@@ -1592,13 +1590,13 @@ msgstr "Mô tả Công việc"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job Position"
-msgstr "Chức vụ"
+msgstr "Vị trí công việc"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
-msgstr "Chức vụ"
+msgstr "Vị trí công việc"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -1608,13 +1606,13 @@ msgstr "Chức vụ"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 msgid "Job Title"
-msgstr "Chức danh Công việc"
+msgstr "Chức danh"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
-msgstr "Chức vụ"
+msgstr "Công việc"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
@@ -1633,7 +1631,7 @@ msgstr "Ngôn ngữ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity
 #: model:ir.model.fields,field_description:hr.field_res_users__last_activity
 msgid "Last Activity"
-msgstr "Hoạt động gần nhất"
+msgstr "Hoạt động cuối"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity_time
@@ -1641,7 +1639,7 @@ msgstr "Hoạt động gần nhất"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
 #: model:ir.model.fields,field_description:hr.field_res_users__last_activity_time
 msgid "Last Activity Time"
-msgstr "Thời gian Hoạt động gần nhất"
+msgstr "Giờ hoạt động cuối"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -1656,7 +1654,7 @@ msgstr "Thời gian Hoạt động gần nhất"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard____last_update
 #: model:ir.model.fields,field_description:hr.field_hr_work_location____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối"
+msgstr "Sửa lần cuối vào"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
@@ -1686,7 +1684,7 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1698,7 +1696,7 @@ msgstr "Hoạt động trễ"
 #: model_terms:ir.ui.view,arch_db:hr.plan_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Launch Plan"
-msgstr "Khởi động Kế hoạch"
+msgstr "Bắt đầu kế hoạch"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1714,12 +1712,12 @@ msgstr "Dẫn dắt toàn bộ chu trình kinh doanh"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
 msgid "Legal Cohabitant"
-msgstr "Hôn nhân Đồng giới hợp pháp"
+msgstr "Sống chung hợp pháp"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
-msgstr "Hãy tạo một chức vụ."
+msgstr "Hãy tạo một vị trí công việc."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -1738,7 +1736,7 @@ msgstr "Số địa điểm"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Đính kèm chính"
+msgstr "Tệp đính kèm chính"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
@@ -1755,13 +1753,13 @@ msgstr "Nam"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Manager"
-msgstr "Quản lý"
+msgstr "Người quản lý"
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "Manager of employee %s is not set."
-msgstr "Người quản lý của nhân viên %s thì chưa được thiết lập."
+msgstr "Chưa đặt người quản lý cho nhân viên %s."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -1769,12 +1767,12 @@ msgstr "Người quản lý của nhân viên %s thì chưa được thiết l�
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Marital Status"
-msgstr "Tình trạng Hôn nhân"
+msgstr "Tình trạng hôn nhân"
 
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr "Quản lý Marketing và Cộng đồng"
+msgstr "Quản lý tiếp thị và cộng đồng"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
@@ -1812,14 +1810,14 @@ msgstr "Menu"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr "Thông báo gửi đi gặp lỗi"
+msgstr "Gửi tin nhắn bị lỗi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
 msgid "Messages"
-msgstr "Thông điệp"
+msgstr "Tin nhắn"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1830,19 +1828,19 @@ msgstr "Thông điệp"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Must Have"
-msgstr "Buộc phải có"
+msgstr "Yêu cầu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót Hoạt động"
+msgstr "Hạn chót hoạt động"
 
 #. module: hr
 #. openerp-web
 #: code:addons/hr/static/src/xml/hr_templates.xml:0
 #, python-format
 msgid "My Profile"
-msgstr "Hồ sơ Cá nhân"
+msgstr "Hồ sơ cá nhân"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
@@ -1871,22 +1869,22 @@ msgstr "Thương thảo và lập hợp đồng"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Sự kiện Lịch Hoạt động kế tiếp"
+msgstr "Sự kiện lịch hoạt động kế tiếp"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót lần Hành động kế tiếp"
+msgstr "Hạn chót hoạt động kế tiếp"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 msgid "Next Activity Summary"
-msgstr "Tóm tắt Hoạt động tiếp theo"
+msgstr "Tóm tắt hoạt động kế tiếp"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr "Kiểu Hoạt động kế tiếp"
+msgstr "Kiểu hoạt động kế tiếp"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1915,7 +1913,7 @@ msgstr ""
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "No specific user given on activity %s."
-msgstr "Không tìm thấy người dùng chịu trách nhiệm cho hoạt động %s."
+msgstr "Không có người dùng được chỉ định cho hoạt động %s."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1934,13 +1932,13 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_job__state__open
 msgid "Not Recruiting"
-msgstr "Không tuyển dụng"
+msgstr "Không đang tuyển"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not available"
-msgstr "Không khả dụng"
+msgstr "Không sẵn sàng"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -1958,7 +1956,7 @@ msgstr "Ghi chú"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng Hành động"
+msgstr "Số tác vụ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
@@ -1969,35 +1967,36 @@ msgstr "Số lượng con"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr "Số lượng nhân viên hiện có của chức vụ này."
+msgstr "Số lượng nhân viên hiện có của vị trí công việc này."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of errors"
-msgstr "Số lượng lỗi"
+msgstr "Số lỗi"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
 msgstr ""
-"Số lượng nhân viên đã thuê cho chức vụ này trong suốt giai đoạn tuyển dụng."
+"Số lượng nhân viên đã thuê cho vị trí công việc này trong suốt giai đoạn "
+"tuyển dụng."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Số thông điệp cần có hành động"
+msgstr "Số tin nhắn cần xử lý"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số tin gửi đi bị lỗi"
+msgstr "Số tin nhắn gửi đi bị lỗi"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -2009,7 +2008,7 @@ msgstr "Số lượng nhân viên mới mà bạn dự kiến tuyển dụng."
 #: model:ir.model.fields,help:hr.field_hr_employee__message_unread_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Số thông điệp chưa đọc"
+msgstr "Số tin nhắn chưa đọc"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
@@ -2018,9 +2017,9 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
-"Cấu trúc phòng ban của phần mềm được sử dụng để quản lý tất cả các tài liệu\n"
-"                    liên quan đến nhân viên theo phòng ban: chi tiêu, chấm công,\n"
-"                    nghỉ, tuyển dụng, v.v."
+"Cấu trúc phòng ban của Odoo được sử dụng để quản lý tất cả tài liệu\n"
+"                    liên quan tới nhân viên theo phòng ban: chi phí, bảng chấm công,\n"
+"                    nghỉ phép, tuyển dụng, v.v."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -2029,9 +2028,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
-"Cấu trúc phòng ban của phần mềm được sử dụng để quản lý tất cả các tài liệu\n"
-"                liên quan đến nhân viên theo phòng ban: chi tiêu, chấm công,\n"
-"                nghỉ, tuyển dụng, v.v."
+"Cấu trúc phòng ban của Odoo được sử dụng để quản lý tất cả tài liệu\n"
+"                    liên quan tới nhân viên theo phòng ban: chi phí, bảng chấm công,\n"
+"                    nghỉ phép, tuyển dụng, v.v."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -2075,20 +2074,20 @@ msgid ""
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
-"PIN được dùng để Đăng nhập/Đăng xuất ở Chế độ Ki-Ốt của ứng dụng Điểm danh "
+"PIN được dùng để Đăng nhập/Đăng xuất ở chế độ ki-ốt của ứng dụng Điểm danh "
 "(nếu bật trong Cấu hình) và để thay đổi thu ngân trong ứng dụng Điểm bán "
 "hàng."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
-msgstr "Phòng/Ban cấp trên"
+msgstr "Phòng ban cấp trên"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
 msgid "Partner-related data of the user"
-msgstr "Đối tác liên quan (related) đến tài khoản người dùng"
+msgstr "Dữ liệu liên quan tới đối tác của người dùng"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2099,13 +2098,13 @@ msgstr "Đối tác liên quan (related) đến tài khoản người dùng"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Passion for software products"
-msgstr "Say mê các sản phẩm phần mềm"
+msgstr "Yêu thích các sản phẩm phần mềm"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
 #: model:ir.model.fields,field_description:hr.field_res_users__passport_id
 msgid "Passport No"
-msgstr "Số Hộ chiếu"
+msgstr "Số hộ chiếu"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2132,7 +2131,7 @@ msgstr "Kỹ năng viết tiếng Anh xuất sắc"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perks"
-msgstr "Quyền lợi"
+msgstr "Quyền lợi thêm"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2161,22 +2160,22 @@ msgstr "Nơi sinh"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 msgid "Plan"
-msgstr "Kế hoạch"
+msgstr "Lập kế hoạch"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Plan Name"
-msgstr "Tên Kế hoạch"
+msgstr "Tên kế hoạch"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
 msgid "Plan Wizard"
-msgstr "Đồ thuật lập kế hoạch"
+msgstr "Hướng dẫn kế hoạch"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_activity_type
 msgid "Plan activity type"
-msgstr "Kiểu hoạt động kế hoạch"
+msgstr "Kế hoạch kiểu hoạt động"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_plan_action
@@ -2189,7 +2188,7 @@ msgstr "Kế hoạch"
 #: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
 #: model:ir.ui.menu,name:hr.menu_config_plan_types
 msgid "Planning Types"
-msgstr "Kiểu Kế hoạch"
+msgstr "Kiểu kế hoạch"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
@@ -2205,7 +2204,7 @@ msgstr "Kế hoạch"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Play any sport with colleagues, <br>the bill is covered."
-msgstr "Các hoạt động thể thao với đồng nghiệp, <br/>được trả phí."
+msgstr "Các hoạt động thể thao với đồng nghiệp <br>được trả phí. "
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
@@ -2216,20 +2215,20 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Cho sách cho phép post các thông điệp lên tài liệu sử dụng.\n"
-"- mọi người: mọi người có thể post\n"
-"- đối tác: chỉ các đối tác đã xác thực\n"
-"- người theo dõi: chỉ những người ở trong danh sách dõi theo của tài liệu hoặc thành viên của các kênh sau đây\n"
+"Chính sách cho phép đăng tin nhắn lên tài liệu sử dụng cổng email.\n"
+"- mọi người: Mọi người có thể đăng\n"
+"- đối tác: Chỉ các đối tác đã xác thực\n"
+"- người theo dõi: Chỉ những người ở trong danh sách dõi theo của tài liệu hoặc thành viên của các kênh sau đây\n"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence of employees"
-msgstr "Hiện diện nhân viên"
+msgstr "Sự có mặt của nhân viên"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence reporting screen, email and IP address control."
-msgstr "Màn hình báo cáo hiện diện, kiểm soát với email và địa chỉ IP."
+msgstr "Màn hình báo cáo có mặt, quản lý email và địa chỉ IP."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
@@ -2246,71 +2245,71 @@ msgstr "Có mặt"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
 msgid "Present but not active"
-msgstr "Hiện diện, nhưng không trực tuyến"
+msgstr "Có mặt nhưng không hoạt động"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Print Badge"
-msgstr "In Thẻ"
+msgstr "In thẻ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Private Address"
-msgstr "Địa chỉ Cá nhân"
+msgstr "Địa chỉ cá nhân"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
 msgid "Private City"
-msgstr "Thành phố Cá nhân"
+msgstr "Thành phố cá nhân"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Contact"
-msgstr "Liên hệ riêng tư"
+msgstr "Liên lạc cá nhân"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
 msgid "Private Country"
-msgstr "Quốc gia Cá nhân"
+msgstr "Quốc gia cá nhân"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
 #: model:ir.model.fields,field_description:hr.field_res_users__private_email
 msgid "Private Email"
-msgstr "Email Cá nhân"
+msgstr "Email cá nhân"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr "Thông tin Riêng tư"
+msgstr "Thông tin cá nhân"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
 msgid "Private Phone"
-msgstr "Điện thoại Cá nhân"
+msgstr "Điện thoại cá nhân"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
-msgstr "Bang Cá nhân"
+msgstr "Bang cá nhân"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
-msgstr "Phố Cá nhân"
+msgstr "Phố cá nhân"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
-msgstr "Phố Cá nhân 2"
+msgstr "Phố cá nhân 2"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
-msgstr "Mã ZIP Cá nhân"
+msgstr "Zip cá nhân"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -2331,7 +2330,7 @@ msgstr "Đáp ứng được nhu cầu khách hàng"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr "Bạn Đã sẵn sàng Để tuyển dụng một cách hiệu quả chưa?"
+msgstr "Bạn đã sẵn sàng quản lý tuyển dụng hiệu quả hơn chưa?"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2342,7 +2341,7 @@ msgstr "Bạn Đã sẵn sàng Để tuyển dụng một cách hiệu quả ch�
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr "Trách nhiệm và thử thách trong môi trường công ty phát triển nhanh"
+msgstr "Trách nhiệm và thử thách trong môi trường công ty phát triển nhanh "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
@@ -2364,7 +2363,7 @@ msgstr "Tuyển dụng đang thực hiện"
 #: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
 #, python-format
 msgid "Register Departure"
-msgstr "Phiếu nghỉ việc"
+msgstr "Ghi nhận nghỉ việc"
 
 #. module: hr
 #: code:addons/hr/models/res_partner.py:0
@@ -2375,12 +2374,12 @@ msgstr "Nhân viên liên quan"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
-msgstr "Người dùng liên kết"
+msgstr "Người dùng liên quan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
 msgid "Related employee"
-msgstr "Nhân viên liên kết"
+msgstr "Nhân viên liên quan"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee_ids
@@ -2391,7 +2390,7 @@ msgstr "Nhân viên liên quan dựa trên địa chỉ cá nhân"
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Người dùng liên quan đến nguồn lực để quản lý sự truy cập."
+msgstr "Người dùng liên quan đến nguồn lực để quản lý truy cập."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -2407,7 +2406,7 @@ msgstr "Yêu cầu"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
-msgstr "Đã từ chức/nghỉ việc"
+msgstr "Đã từ chức"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -2420,7 +2419,7 @@ msgstr "Nguồn lực"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_calendar_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
 msgid "Resource Calendar"
-msgstr "Lịch Nguồn lực"
+msgstr "Lịch nguồn lực"
 
 #. module: hr
 #: model:ir.model,name:hr.model_resource_resource
@@ -2436,17 +2435,17 @@ msgstr "Nguồn lực"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Responsibilities"
-msgstr "Chịu trách nhiệm"
+msgstr "Trách nhiệm"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
 msgid "Responsible"
-msgstr "Người phụ trách"
+msgstr "Phụ trách"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
 msgid "Responsible User"
-msgstr "Người chịu trách nhiệm"
+msgstr "Người phụ trách"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_retired
@@ -2456,18 +2455,18 @@ msgstr "Về hưu"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
 msgid "SIN No"
-msgstr "Số Bảo hiểm Xã hội"
+msgstr "Số bảo hiểm xã hội"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 msgid "SSN No"
-msgstr "Số An sinh Xã hội"
+msgstr "Số an sinh xã hội"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
-msgstr "Ấn định (thời gian)"
+msgstr "Lịch trình"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
@@ -2484,8 +2483,8 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
-"Chọn một \"Nhân viên\" mà sẽ phụ trách đào tạo, hướng dẫn nhân viên này.\n"
-"\"Người huấn luyện\" mặc định sẽ không có quyền và trách nhiệm cụ thể nào."
+"Chọn \"Nhân viên\" là người huấn luyện cho nhân viên này.\n"
+"Theo mặc định, \"Huấn luyện viên\" không có quyền hay trách nhiệm cụ thể nào."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
@@ -2496,21 +2495,19 @@ msgstr "Trình tự"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
-msgstr ""
-"Thiết lập lịch làm việc mặc định của công ty để quản lý giờ làm việc của "
-"nhân viên"
+msgstr "Đặt lịch trình công ty mặc định để quản lý giờ làm việc của nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
-msgstr "Thiết lập quy trình tuyển dụng mở hay đóng cho chức vụ này."
+msgstr "Thiết lập quy trình tuyển dụng mở hay đóng cho vị trí công việc này."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
 msgid "Settings"
-msgstr "Thiết lập"
+msgstr "Cài đặt "
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
@@ -2520,24 +2517,22 @@ msgstr "Độc thân"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
-msgstr "Quản lý Kỹ năng"
+msgstr "Quản lý kỹ năng"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sinid
 msgid "Social Insurance Number"
-msgstr "Số Bảo hiểm Xã hội"
+msgstr "Số bảo hiểm xã hội"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__ssnid
 msgid "Social Security Number"
-msgstr "Số An sinh Xã hội"
+msgstr "Số an sinh xã hội"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
 msgid "Specific responsible of activity if not linked to the employee."
-msgstr ""
-"Tài khoản người dùng chịu trách nhiệm cho hoạt động thì chưa liên kết với "
-"nhân viên này."
+msgstr "Trách nhiệm cụ thể của hoạt động nếu không liên kết với nhân viên."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2554,23 +2549,23 @@ msgstr "Thể thao"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 #: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr "Ngày sinh Vợ/Chồng"
+msgstr "Ngày sinh vợ/chồng"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 #: model:ir.model.fields,field_description:hr.field_res_users__spouse_complete_name
 msgid "Spouse Complete Name"
-msgstr "Tên đầy đủ Vợ/Chồng"
+msgstr "Tên đầy đủ vợ/chồng"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
-msgstr "Khởi động Tuyển dụng"
+msgstr "Khởi động tuyển dụng"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Fed. State"
-msgstr "Bang / Tỉnh"
+msgid "State"
+msgstr "Trạng thái"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
@@ -2578,7 +2573,7 @@ msgstr "Bang / Tỉnh"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
-msgstr "Tình trạng"
+msgstr "Trạng thái"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_state
@@ -2589,9 +2584,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Trạng thái dựa trên hoạt động\n"
-"Quá hạn: Ngày đến hạn đã trôi qua\n"
-"Hôm nay: Hôm nay là ngày phải thực hiện\n"
-"Đã hoạch định: Các hoạt động trong tương lai."
+"Quá hạn: Đã quá hạn chót\n"
+"Hôm nay: Hôm nay là ngày hoạt động\n"
+"Kế hoạch: Các hoạt động trong tương lai."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -2601,12 +2596,12 @@ msgstr "Dừng tuyển dụng"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Street 2..."
-msgstr "Địa chỉ dòng 2..."
+msgstr "Phố 2..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Street..."
-msgstr "Địa chỉ..."
+msgstr "Phố..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2629,24 +2624,24 @@ msgstr "Học sinh"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
 msgid "Summary"
-msgstr "Tóm tắt"
+msgstr "Tổng kết"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
 msgid "Tag Name"
-msgstr "Tên Từ khóa"
+msgstr "Tên thẻ"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
 msgid "Tag name already exists !"
-msgstr "Tên từ khóa đã tồn tại!"
+msgstr "Tên thẻ đã tồn tại!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Tags"
-msgstr "Từ khóa"
+msgstr "Thẻ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2665,8 +2660,8 @@ msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
-"Mã số thẻ phải là duy nhất, mã này đã được cấp phát cho một nhân viên khác "
-"rồi."
+"Mã số thẻ nhân viên phải là duy nhất, mã này đã được cấp phát cho một nhân "
+"viên khác."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
@@ -2687,7 +2682,7 @@ msgstr "Mã PIN phải là một dãy số."
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
 #: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
 msgid "The employee address has a company linked"
-msgstr "Địa chỉ nhân viên có liên kết đến một công ty"
+msgstr "Địa chỉ nhân viên được liên kết với một công ty"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__employee_type
@@ -2701,8 +2696,8 @@ msgid ""
 "History."
 msgstr ""
 "Loại nhân viên. Mặc dù mục đích chính có vẻ như là để phân loại nhân viên, "
-"trường này cũng có tác động tới Lịch sử Hợp đồng. Chỉ có loại nhân viên được"
-" cho là đã ký hợp đồng và sẽ có Lịch sử Hợp đồng."
+"trường này cũng có tác động tới Lịch sử hợp đồng. Chỉ có loại nhân viên được"
+" cho là đã ký hợp đồng và sẽ có Lịch sử hợp đồng."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -2716,18 +2711,20 @@ msgid ""
 "The fields \"%s\" you try to read is not available on the public employee "
 "profile."
 msgstr ""
-"(Các) trường \"%s\" mà bạn đang cố đọc ở hồ sơ công cộng của nhân viên thì "
-"không khả dụng."
+"Trường \"%s\" mà bạn đang muốn xem không khả dụng cho hồ sơ nhân viên công "
+"cộng."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
 msgid "The name of the job position must be unique per department in company!"
-msgstr "Tên của chức vụ phải là duy nhất đối với mỗi phòng ban trong công ty!"
+msgstr ""
+"Tên của vị trí công việc phải là duy nhất đối với mỗi phòng ban trong công "
+"ty!"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
-msgstr "Người dùng sẽ phê chuẩn tài liệu mà được tạo bởi nhân viên."
+msgstr "Người dùng sẽ có thể phê duyệt tài liệu do nhân viên tạo ra."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -2735,8 +2732,7 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
-"Người có thể thiết lập cấu hình của chức năng HR, cũng như là các báo cáo "
-"thống kê."
+"Người dùng có quyền truy cập cấu hình nhân sự cũng như báo cáo thống kê."
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -2751,7 +2747,7 @@ msgstr "Giấy phép lao động của %(employee)s hết hạn vào %(date)s."
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr "Trường này được sử dụng để xác định múi giờ mà nguồn lực sử dụng."
+msgstr "Trường này được sử dụng để xác định múi giờ mà nguồn lực sẽ làm việc."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -2765,7 +2761,7 @@ msgstr "Múi giờ"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__to_define
 msgid "To Define"
-msgstr "Chờ xác định"
+msgstr "Cần xác định"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -2783,7 +2779,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
 msgid "To define"
-msgstr "Chờ xác định"
+msgstr "Cần xác định"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2793,12 +2789,12 @@ msgstr "Hoạt động hôm nay"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__total_employee
 msgid "Total Employee"
-msgstr "Tổng số Nhân viên"
+msgstr "Tổng số nhân viên"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
-msgstr "Tổng số Nhân viên dự kiến"
+msgstr "Tổng số nhân viên dự kiến"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -2822,7 +2818,7 @@ msgstr "Đào tạo"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
+msgstr "Kiểu  hoạt động ngoại lệ trên hồ sơ."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
@@ -2839,14 +2835,14 @@ msgstr "Chưa xác định"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
-msgstr "Tin chưa đọc"
+msgstr "Tin nhắn chưa đọc"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Bộ đếm Thông điệp chưa đọc"
+msgstr "Bộ đếm tin nhắn chưa đọc"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
@@ -2860,29 +2856,25 @@ msgstr "Người dùng"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User linked to employee %s is required."
-msgstr ""
-"Yêu cầu bắt buộc phải có tài khoản người dùng liên kết với nhân viên %s."
+msgstr "Yêu cầu có người dùng được liên kết với nhân viên %s."
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User of coach of employee %s is not set."
-msgstr ""
-"Người dùng liên kết với người huấn luyện của nhân viên %s chưa được thiết "
-"lập."
+msgstr "Chưa đặt người dùng cho huấn luyện viên của nhân viên %s."
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User of manager of employee %s is not set."
-msgstr ""
-"Người dùng liên kết với người quản lý của nhân viên %s chưa được thiết lập."
+msgstr "Chưa đặt người dùng cho quản lý của nhân viên %s."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
-msgstr "Liên hệ của người dùng"
+msgstr "Đối tác của người dùng"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -2892,7 +2884,7 @@ msgstr "Người dùng"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr "Dự báo Nhân viên:"
+msgstr "Cần tuyển:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
@@ -2915,13 +2907,13 @@ msgstr "Giấy phép lao động hợp lệ tại Bỉ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expire Date"
-msgstr "Ngày hết Hạn Visa"
+msgstr "Ngày hết hạn thị thực"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_no
 msgid "Visa No"
-msgstr "Số Visa"
+msgstr "Số thị thực"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -2938,7 +2930,7 @@ msgstr "Cảnh báo"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What We Offer"
-msgstr "Ưu đãi của Công ty"
+msgstr "Ưu đãi của công ty"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2954,7 +2946,7 @@ msgstr "Những điều tuyệt vời của công việc này"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
 msgid "Widower"
-msgstr "Goá"
+msgstr "Góa phụ"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -2964,9 +2956,9 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
-"Chỉ cần liếc nhanh trên màn hình nhân viên của phần mềm, bạn\n"
-"có thể dễ dàng tìm thấy tất cả thông tin bạn cần cho mỗi người;\n"
-"dữ liệu liên lạc, chức vụ, tính khả dụng, v.v."
+"Chỉ cần nhìn lướt qua màn hình nhân viên Odoo, bạn đã\n"
+"               có thể dễ dàng tìm thấy thông tin bạn cần của mỗi người;\n"
+"               dữ liệu liên hệ, vị trí công việc, lịch trống, v.v."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -2975,9 +2967,9 @@ msgid ""
 "               can easily find all the information you need for each person;\n"
 "               contact data, job position, availability, etc."
 msgstr ""
-"Chỉ cần liếc nhanh trên màn hình nhân viên của phần mềm, bạn\n"
-"có thể dễ dàng tìm thấy tất cả thông tin bạn cần cho mỗi người;\n"
-"dữ liệu liên lạc, chức vụ, tính khả dụng, v.v."
+"Chỉ cần nhìn lướt qua màn hình nhân viên Odoo, bạn đã\n"
+"               có thể dễ dàng tìm thấy thông tin bạn cần của mỗi người;\n"
+"               dữ liệu liên hệ, vị trí công việc, lịch trống, v.v."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -2986,7 +2978,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__address_id
 #: model:ir.model.fields,field_description:hr.field_res_users__address_id
 msgid "Work Address"
-msgstr "Địa chỉ làm việc"
+msgstr "Địa chỉ công việc"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
@@ -2994,14 +2986,14 @@ msgstr "Địa chỉ làm việc"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_email
 #: model:ir.model.fields,field_description:hr.field_res_users__work_email
 msgid "Work Email"
-msgstr "Email Công việc"
+msgstr "Email công việc"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr "Thông tin Công việc"
+msgstr "Thông tin công việc"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_work_location
@@ -3027,12 +3019,12 @@ msgstr "Địa điểm làm việc"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Work Mobile"
-msgstr "Số Di động Công việc"
+msgstr "Số di động làm việc"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr "Tổ chức Công việc"
+msgstr "Tổ chức công việc"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_work_permit
@@ -3044,18 +3036,18 @@ msgstr "Giấy phép LĐ"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
 msgid "Work Permit Expiration Date"
-msgstr "Ngày hết hạn giấy phép LĐ"
+msgstr "Ngày hết hạn giấy phép lao động"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
 #: model:ir.model.fields,field_description:hr.field_res_users__permit_no
 msgid "Work Permit No"
-msgstr "Số Giấy phép LĐ"
+msgstr "Số giấy phép LĐ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
 msgid "Work Permit Scheduled Activity"
-msgstr "Hoạt động có Kế hoạch về GP Lao động"
+msgstr "Hoạt động có kế hoạch về GP lao động"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
@@ -3068,7 +3060,7 @@ msgstr "Điện thoại công ty"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
 msgid "Working Hours"
-msgstr "Lịch làm việc"
+msgstr "Giờ làm việc"
 
 #. module: hr
 #: code:addons/hr/models/res_users.py:0
@@ -3077,8 +3069,8 @@ msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
 msgstr ""
-"Bạn chỉ được phép cập nhật các tùy chọn cá nhân của bạn. Vui lòng liên hệ "
-"với một cán bộ Nhân sự để cập nhật các thông tin khác."
+"Bạn chỉ được phép cập nhật tùy chọn của mình. Vui lòng liên hệ nhân viên "
+"phòng nhân sự để cập nhật các thông tin khác."
 
 #. module: hr
 #. openerp-web
@@ -3086,13 +3078,13 @@ msgstr ""
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
 msgstr ""
-"Bạn chỉ có thể chat với các nhân viên mà có thiết lập tài khoản người dùng."
+"Bạn chỉ có thể trò chuyện với nhân viên có tài khoản người dùng chuyên dụng."
 
 #. module: hr
 #: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr "Bạn không thể tạo phòng ban đệ quy."
+msgstr "Bạn không thể tạo phòng ban lặp lại."
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -3109,7 +3101,7 @@ msgstr "Bạn nên chọn ít nhất một tùy chọn Quản lý có mặt nân
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "ZIP"
-msgstr "Mã bưu chính"
+msgstr "ZIP"
 
 #. module: hr
 #: code:addons/hr/models/mail_alias.py:0
@@ -3125,25 +3117,25 @@ msgstr "phòng/ban"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "e.g. John Doe"
-msgstr "vd: John Doe"
+msgstr "VD: John Doe"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "e.g. Onboarding"
-msgstr "vd: Hội nhập"
+msgstr "VD: Làm quen công ty"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr "vd: Quản lý Bán hàng"
+msgstr "VD: Quản lý kinh doanh"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan
 msgid "plan"
-msgstr "Kế hoạch"
+msgstr "kế hoạch"
 
 #. module: hr
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"
-msgstr "được giới hạn cho nhân viên"
+msgstr "giới hạn cho nhân viên"

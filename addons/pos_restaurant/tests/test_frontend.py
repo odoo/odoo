@@ -191,3 +191,7 @@ class TestFrontend(odoo.tests.HttpCase):
         self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)
         self.assertTrue(order3.is_tipped and order3.tip_amount == 1.50)
         self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
+
+    def test_06_split_bill_screen(self):
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour2', login="admin")

@@ -13,17 +13,14 @@ class PriceRule(models.Model):
 
     @api.depends('variable', 'operator', 'max_value', 'list_base_price', 'list_price', 'variable_factor')
     def _compute_name(self):
-        fields_get = self.fields_get()
-        variable_selection = dict(fields_get['variable']['selection'])
-        variable_factor_selection = dict(fields_get['variable_factor']['selection'])
         for rule in self:
-            name = _('if %s %s %.02f then') % (variable_selection.get(rule.variable), rule.operator, rule.max_value)
+            name = 'if %s %s %.02f then' % (rule.variable, rule.operator, rule.max_value)
             if rule.list_base_price and not rule.list_price:
-                name = _('%s fixed price %.02f') % (name, rule.list_base_price)
+                name = '%s fixed price %.02f' % (name, rule.list_base_price)
             elif rule.list_price and not rule.list_base_price:
-                name = _('%s %.02f times %s') % (name, rule.list_price, variable_factor_selection.get(rule.variable_factor))
+                name = '%s %.02f times %s' % (name, rule.list_price, rule.variable_factor)
             else:
-                name = _('%s fixed price %.02f plus %.02f times %s') % (name, rule.list_base_price, rule.list_price, variable_factor_selection.get(rule.variable_factor))
+                name = '%s fixed price %.02f plus %.02f times %s' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
             rule.name = name
 
     name = fields.Char(compute='_compute_name')

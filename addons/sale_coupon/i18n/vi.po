@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_coupon
-#
+# 
 # Translators:
 # Martin Trigaux, 2021
 # thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Vo Thanh Thuy, 2021
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_view_coupon_program_kanban
 msgid "<strong>Sales</strong>"
-msgstr "<strong>Bán</strong>"
+msgstr "<strong>Bán hàng</strong>"
 
 #. module: sale_coupon
 #: model:mail.template,body_html:sale_coupon.mail_template_sale_coupon
@@ -211,7 +211,7 @@ msgstr "Một phiếu giảm giá đã được áp dụng cho cùng một phầ
 #, python-format
 msgid ""
 "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr "Giá trị tối thiểu %(amount)s %(currency)s nên mua để nhận phần thưởng"
+msgstr "Nên mua tối thiểu %(amount)s %(currency)s để nhận được phần thưởng"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
@@ -221,17 +221,17 @@ msgstr "Phiếu giảm giá đã áp dụng"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__no_code_promo_program_ids
 msgid "Applied Immediate Promo Programs"
-msgstr "Chương trình khuyến mãi ngay lập tức được áp dụng"
+msgstr "Đã áp dụng chương trình khuyến mãi tức thời "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__code_promo_program_id
 msgid "Applied Promo Program"
-msgstr "Chương trình khuyến mãi áp dụng"
+msgstr "Đã áp dụng chương trình khuyến mãi"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_order__promo_code
 msgid "Applied program code"
-msgstr "Mã chương trình áp dụng"
+msgstr "Đã áp dụng mã chương trình"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
@@ -249,7 +249,7 @@ msgstr "Áp dụng phiếu giảm giá"
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
 msgstr ""
-"Ít nhất một trong những điều kiện bắt buộc không đáp ứng được để nhận phần "
+"Không đáp ứng được ít nhất một trong những điều kiện bắt buộc để nhận phần "
 "thưởng!"
 
 #. module: sale_coupon
@@ -282,7 +282,7 @@ msgstr "Chương trình phiếu giảm giá"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_uid
 msgid "Created by"
-msgstr "Được tạo bởi"
+msgstr "Tạo bởi"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_date
@@ -338,43 +338,43 @@ msgstr "ID"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__is_reward_line
 msgid "Is a program reward line"
-msgstr "Là một phần thưởng chương trình"
+msgstr "Là dòng phần thưởng chương trình"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối"
+msgstr "Sửa lần cuối vào"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật gần đây bởi"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật gần đây vào"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__generated_coupon_ids
 msgid "Offered Coupons"
-msgstr "Phiếu giảm giá được đề nghị"
+msgstr "Phiếu giảm giá được tặng"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__order_count
 msgid "Order Count"
-msgstr "SL Đơn bán"
+msgstr "Số đơn hàng"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__order_id
 msgid "Order Reference"
-msgstr "Mã Đơn bán"
+msgstr "Mã đơn hàng"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code %s has been expired."
-msgstr "Mã giảm giá %s này đã hết hạn."
+msgstr "Mã khuyến mãi %s này đã hết hạn."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
@@ -403,7 +403,7 @@ msgstr "Chương trình khuyến mãi"
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promotionals codes are not cumulative."
-msgstr "Mã khuyến mại không được lặp lại."
+msgstr "Mã khuyến mại không được cộng dồn. "
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -424,7 +424,7 @@ msgstr "Bán hàng"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_apply_code
 msgid "Sales Coupon Apply Code"
-msgstr "Mã giảm giá bán hàng áp dụng"
+msgstr "Mã áp dụng phiếu giảm giá "
 
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_order_action
@@ -435,13 +435,13 @@ msgstr "Đơn bán hàng"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Chi tiết Đơn bán"
+msgstr "Dòng đơn bán hàng"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Sales Orders"
-msgstr "Đơn bán"
+msgstr "Đơn bán hàng"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -470,12 +470,13 @@ msgid ""
 "The reward products should be in the sales order lines to apply the "
 "discount."
 msgstr ""
-"Các sản phẩm thưởng nên có trong các dòng đặt hàng để áp dụng giảm giá."
+"Các sản phẩm thưởng nên có trong các dòng đơn bán hàng để áp dụng chiết "
+"khấu. "
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
 msgid "The sales order from which coupon is generated"
-msgstr "Đơn bán hàng được tạo ra từ phiếu giảm giá"
+msgstr "Đơn bán hàng mà phiếu giảm giá được tạo"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__sales_order_id
@@ -497,7 +498,7 @@ msgstr "Phiếu giảm giá chưa tới ngày sử dụng. Bắt đầu sử d�
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "Used in"
-msgstr "Dùng trong"
+msgstr "Đã dùng trong"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -505,7 +506,7 @@ msgid ""
 "When clicked, the content of the order will be checked to detect (and apply)"
 " possible promotion programs."
 msgstr ""
-"Khi bấm, thông tin đơn hàng sẽ được kiệm tra để phát hiện (và áp dụng) các "
+"Khi bấm, thông tin đơn hàng sẽ được kiểm tra để phát hiện (và áp dụng) các "
 "chương trình khuyến mãi đủ điều kiện."
 
 #. module: sale_coupon
@@ -517,7 +518,7 @@ msgid ""
 " T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
 msgstr ""
 "Bạn không có số lượng sản phẩm cần thiết trên đơn đặt hàng của bạn. Tất cả "
-"các sản phẩm nên được ghi lại trên đơn đặt hàng. (Ví dụ: Bạn cần có 3 áo "
+"các sản phẩm nên được ghi lại trên đơn bán hàng. (Ví dụ: Bạn cần có 3 áo "
 "phông trong đơn đặt hàng nếu chương trình khuyến mãi là 'Mua 2, tặng 1')."
 
 #. module: sale_coupon
@@ -555,4 +556,4 @@ msgstr "[Bán hàng] Phiếu giảm giá: Gửi bằng email"
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "limited to "
-msgstr "giới hạn tới "
+msgstr "giới hạn cho"

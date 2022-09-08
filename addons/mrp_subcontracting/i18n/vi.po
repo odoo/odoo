@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
-#
+# 
 # Translators:
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
@@ -29,30 +29,30 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
 msgid "BOM Structure Report"
-msgstr "Báo cáo Cấu trúc BOM"
+msgstr "Báo cáo cấu trúc BOM"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
 msgid "Bill of Material"
-msgstr "Định mức Nguyên vật liệu"
+msgstr "Định mức vật liệu"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__type
 msgid "BoM Type"
-msgstr "Kiểu BoM"
+msgstr "Kiểu BOM"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
 msgid "Can be Subcontracted"
-msgstr "Có thể thuê gia công"
+msgstr "Can be Subcontracted"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
 msgstr ""
-"Chọn một nhà thầu phụ nếu bạn muốn thuê gia công "
-"ngoài cho sản phẩm này"
+"Chọn một nhà cung cấp cho loại hợp đồng gia công ngoài nếu bạn muốn gia công"
+" ngoài sản phẩm này"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -62,7 +62,7 @@ msgstr "Công ty"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
 msgid "Consumed"
-msgstr "Đã tiêu thụ"
+msgstr "Đã sử dụng"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_partner
@@ -77,7 +77,7 @@ msgstr "Tiếp tục"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
 msgid "Detail Component"
-msgstr "Thành phần Chi tiết"
+msgstr "Detail Component"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
@@ -107,7 +107,7 @@ msgstr "Ẩn"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr "Là Hợp đồng Thầu Phụ"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -148,12 +148,12 @@ msgstr "Sản phẩm"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Chuyển sản phẩm (Chi tiết phiếu kho)"
+msgstr "Dịch chuyển sản phẩm (Dòng dịch chuyển kho)"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production
 msgid "Production Order"
-msgstr "Lệnh Sản xuất"
+msgstr "Đơn sản xuất "
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
@@ -164,12 +164,12 @@ msgstr "Số lượng"
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Raw Materials for %s"
-msgstr "Nguyên liệu cho %s"
+msgstr "Nguyên liệu thô cho %s"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
 msgid "Record Production"
-msgstr "Ghi nhận Sản xuất"
+msgstr "Ghi nhận sản xuất"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
@@ -179,7 +179,7 @@ msgstr "Ghi nhận thành phần"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Register components for subcontracted product"
-msgstr "Đăng ký thành phần cho sản phẩm thuê gia công"
+msgstr "Đăng ký thành phần cho sản phẩm gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
@@ -192,24 +192,24 @@ msgstr "Giữ trước"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
-msgstr "Trung gian thuê gia công"
+msgstr "Trung gian gia công ngoài"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.location.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr "Thuê ngoài gia công theo đơn"
+msgstr "Trung gian gia công ngoài trên Đơn hàng"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr "Trung gian thuê gia công"
+msgstr "Trung gian gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply subcontractors with components"
-msgstr "Trung gian thuê gia công với các thành phần"
+msgstr "Trung gian gia công ngoài với các thành phần"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
@@ -226,12 +226,12 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence subcontracting"
-msgstr "Thứ tự thuê gia công"
+msgstr "Thứ tự gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
-msgstr "Hiển thị các thông tin chi tiết của thuê gia công"
+msgstr "Hiển thị các thông tin chi tiết của gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
@@ -241,37 +241,37 @@ msgstr "Hoạt động kho"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
 msgid "Stock Rule"
-msgstr "Tuyến cung ứng"
+msgstr "Quy tắc kho"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Subcontract"
-msgstr "Thuê gia công"
+msgstr "Subcontract"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
 msgid "Subcontract Location"
-msgstr "Địa điểm Thuê gia công"
+msgstr "Subcontract Location"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
-msgstr "Được thuê gia công"
+msgstr "Đã đi gia công"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
 #, python-format
 msgid "Subcontracting"
-msgstr "Thuê gia công"
+msgstr "Gia công ngoài"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/res_company.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 #, python-format
 msgid "Subcontracting Location"
-msgstr "Địa điểm Thuê gia công"
+msgstr "Địa điểm gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
@@ -281,17 +281,17 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
-msgstr "Thuê gia công theo qui tắc MTO"
+msgstr "Gia công ngoài theo qui tắc MTO"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
 msgid "Subcontracting MTS Rule"
-msgstr "Thuê gia công theo qui tắc MTS"
+msgstr "Gia công ngoài theo qui tắc MTS"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
 msgid "Subcontracting Operation Type"
-msgstr "Kiểu công đoạn Thuê gia công"
+msgstr "Kiểu công đoạn Gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
@@ -319,13 +319,13 @@ msgstr "Nhà thầu phụ"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
-msgstr "Địa điểm thuê gia công"
+msgstr "Địa điểm gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
 msgid "Subcontractors"
-msgstr "Thuê gia công"
+msgstr "Gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
@@ -335,7 +335,7 @@ msgstr "Bảng giá nhà cung cấp"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
 msgid "The move is a subcontract receipt"
-msgstr "Dịch chuyển là một nhập hàng thuê gia công"
+msgstr "Dịch chuyển là một nhập hàng gia công ngoài"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -345,7 +345,7 @@ msgid ""
 "to this contact during a subcontracting process."
 msgstr ""
 "Địa điểm kho được sử dụng như là điểm đi và về khi gửi đi cho danh mục này "
-"trong lúc xử lý thuê gia công"
+"trong lúc xử lý gia công ngoài"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
@@ -357,12 +357,12 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "To subcontract, use a planned transfer."
-msgstr "Để thuê gia công, dùng một kế hoạch dịch chuyển"
+msgstr "Để gia công ngoài, dùng một kế hoạch dịch chuyển"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
 msgid "Total Consumed"
-msgstr "Tổng đã tiêu thụ"
+msgstr "Total Consumed"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
@@ -372,7 +372,7 @@ msgstr "Điều chuyển"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
 msgid "Warehouse"
-msgstr "Kho"
+msgstr "Nhà kho"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
@@ -395,13 +395,13 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for %s"
-msgstr "Bạn phải nhập một số serial cho %s"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
 msgid "You must enter a serial number for each line of %s"
-msgstr "Bạn phải nhập một số serial cho từng dòng của %s"
+msgstr "You must enter a serial number for each line of %s"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0

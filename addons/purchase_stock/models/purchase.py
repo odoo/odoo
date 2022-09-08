@@ -179,7 +179,7 @@ class PurchaseOrder(models.Model):
         filtered_documents = {}
         for (parent, responsible), rendering_context in documents.items():
             if parent._name == 'stock.picking':
-                if parent.state == 'cancel':
+                if parent.state in ['cancel', 'done']:
                     continue
             filtered_documents[(parent, responsible)] = rendering_context
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
@@ -307,7 +307,7 @@ class PurchaseOrderLine(models.Model):
                 # the PO. Therefore, we can skip them since they will be handled later on.
                 for move in line._get_po_line_moves():
                     if move.state == 'done':
-                        if move.location_dest_id.usage == "supplier":
+                        if move._is_purchase_return():
                             if move.to_refund:
                                 total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
@@ -316,17 +316,6 @@ class PurchaseOrderLine(models.Model):
                             # receive the product physically in our stock. To avoid counting the
                             # quantity twice, we do nothing.
                             pass
-                        elif (
-                            move.location_dest_id.usage == "internal"
-                            and move.location_id.usage != "supplier"
-                            and move.warehouse_id
-                            and move.location_dest_id
-                            not in self.env["stock.location"].search(
-                                [("id", "child_of", move.warehouse_id.view_location_id.id)]
-                            )
-                        ):
-                            if move.to_refund:
-                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line._track_qty_received(total)

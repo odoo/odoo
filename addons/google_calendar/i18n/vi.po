@@ -29,13 +29,13 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
-msgstr "%(id)s và %(length)s đang theo dõi"
+msgstr ""
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Days"
-msgstr "%(reminder_type)s - %(duration)s Ngày"
+msgstr "%(reminder_type)s - %(duration)s Ngày "
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -60,14 +60,14 @@ msgstr "&nbsp;Google"
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
-msgstr "(Không có tiêu đề)"
+msgstr "(Không tiêu đề)"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__active
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__active
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__active
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Đang hoạt động"
 
 #. module: google_calendar
 #. openerp-web
@@ -77,8 +77,8 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
-"Người quản trị hệ thống của bạn cần phải cấu hình Đồng bộ Google trước khi "
-"bạn có thể sử dụng nó!"
+"Người quản trị cần phải đặt cấu hình đồng bộ hóa Google trước khi bạn có thể"
+" sử dụng!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_credentials.py:0
@@ -108,13 +108,13 @@ msgstr "Thông tin người tham dự lịch"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr "Sự kiện Lịch"
+msgstr "Sự kiện lịch"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "ID Lịch"
+msgstr "ID lịch"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -144,7 +144,7 @@ msgstr "Client_key"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập Cấu hình"
+msgstr "Thiết lập cấu hình"
 
 #. module: google_calendar
 #. openerp-web
@@ -188,17 +188,17 @@ msgstr "Xoá"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
 msgid "Delete from Odoo"
-msgstr "Xóa khỏi hệ thống"
+msgstr "Xóa khỏi Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr "Xóa khỏi cả 2"
+msgstr "Xóa khỏi cả hai "
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr "Xóa khỏi tài khoản Lịch Google hiện hành"
+msgstr "Xóa khỏi tài khoản Google Calendar hiện tại "
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
@@ -232,7 +232,7 @@ msgstr "Tài khoản lịch Google"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Google Calendar"
-msgstr "Lịch Google"
+msgstr "Google Calendar"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_credentials
@@ -243,7 +243,7 @@ msgstr "Dữ liệu tài khoản Google Calendar"
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
-msgstr "Đặt lại Tài khoản Lịch Google"
+msgstr "Đặt lại tài khoản Google Calendar"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
@@ -261,7 +261,7 @@ msgstr "ID Google Calendar"
 #: model:ir.cron,cron_name:google_calendar.ir_cron_sync_all_cals
 #: model:ir.cron,name:google_calendar.ir_cron_sync_all_cals
 msgid "Google Calendar: synchronization"
-msgstr "Lịch Google: đồng bộ"
+msgstr "Google Calendar: đồng bộ hóa"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__synchronization_stopped
@@ -287,8 +287,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Nếu trường Hiệu lực được thiết lập là false, thông tin báo động sự kiện có "
-"thể được ẩn đi mà không cần xoá nó."
+"Nếu trường đang hoạt động bị đặt là sai, bạn sẽ có thể ẩn thông tin cảnh báo"
+" sự kiện mà không cần xóa sự kiện. "
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
@@ -304,7 +304,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset____last_update
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối"
+msgstr "Sửa lần cuối vào"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
@@ -316,12 +316,12 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_date
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối"
+msgstr "Cập nhật lần cuối vào"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
-msgstr "Để nguyên, không động vào"
+msgstr "Giữ nguyên"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
@@ -334,12 +334,12 @@ msgstr "Cần đồng bộ"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_sync_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
 msgid "Next Sync Token"
-msgstr "Token đồng bộ kế tiếp"
+msgstr "Mã token lần đồng bộ kế tiếp"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
 msgid "Next Synchronization"
-msgstr "Lần đồng bộ kế tiếp"
+msgstr "Đồng bộ kế tiếp"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -358,17 +358,17 @@ msgstr "Chuyển hướng"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_rtoken
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
-msgstr "Token làm tươi"
+msgstr "Làm mới token"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Reset Account"
-msgstr "Đặt lại Tài khoản"
+msgstr "Đặt lại tài khoản"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Reset Google Calendar Account"
-msgstr "Đặt lại Tài khoản Lịch Google"
+msgstr "Đặt lại tài khoản Google Calendar"
 
 #. module: google_calendar
 #. openerp-web
@@ -380,17 +380,17 @@ msgstr "Thành công"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
-msgstr "Đồng bộ một bản ghi với Lịch Google"
+msgstr "Đồng bộ hóa hồ sơ với Google Calendar"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
 msgid "Synchronize all existing events"
-msgstr "Đồng bộ tất cả các sự kiện"
+msgstr "Đồng bộ hóa tất cả sự kiện hiện có"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr "Chỉ đồng bộ sự kiện mới"
+msgstr "Đồng bộ hóa chỉ sự kiện mới"
 
 #. module: google_calendar
 #. openerp-web
@@ -400,14 +400,14 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
-"Đồng bộ Google cần phải được cấu hình trước khi bạn có thể sử dụng nó. Bạn "
-"có muốn cấu hình luôn không?"
+"Đồng bộ hóa Google cần phải được định cấu hình trước khi bạn có thể sử dụng,"
+" bạn có muốn thực hiện bây giờ không? "
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
-msgstr "Tài khoản cho dịch vụ Lịch Google chưa được cấu hình."
+msgstr "Tài khoản cho dịch vụ Google Calendar chưa được định cấu hình. "
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -434,13 +434,13 @@ msgstr "Người dùng đã có tài khoản google"
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "Cái này chỉ ảnh hưởng đến các sự kiện mà người dùng là chủ"
+msgstr "Việc này sẽ chỉ ảnh hưởng sự kiện mà người dùng là chủ sở hữu"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token_validity
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
-msgstr "Tính hợp lệ Token"
+msgstr "Tính hợp lệ token"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__user_id
@@ -452,7 +452,7 @@ msgstr "Người dùng"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
-msgstr "Token người dùng"
+msgstr "Mã token người dùng"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -481,8 +481,7 @@ msgstr ""
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
-"Bạn sẽ được chuyển đến Google để xác thực cho Google quyền truy cập đến lịch"
-" của bạn!"
+"Bạn sẽ được chuyển hướng tới Google để cấp quyền truy cập tới lịch của bạn!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0

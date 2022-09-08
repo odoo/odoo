@@ -11,6 +11,7 @@
 # Linkup <link-up@naver.com>, 2021
 # Seongseok Shin <shinss61@hotmail.com>, 2021
 # Heesoo Choi, 2021
+# Sarah Park, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Heesoo Choi, 2021\n"
+"Last-Translator: Sarah Park, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -844,12 +845,12 @@ msgstr "공급업체 가격표를 정의하십시오."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "부피 측정 단위를 선택하세요"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "무게 측정 단위를 선택하세요"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -1639,6 +1640,14 @@ msgstr "다음 활동 요약"
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
 msgstr "다음 활동 유형"
+
+#. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2605,6 +2614,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "품목 양식이 보관되어 있어서 조합할 수 없습니다."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -3167,6 +3182,12 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr "'계정'의 십진 정밀도를 회사 주요 통화의 반올림 계수보다 큰 것으로 정의할 수 없습니다"
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

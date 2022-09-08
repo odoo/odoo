@@ -24,13 +24,11 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
             'acc_number': 'SA4420000001234567891234',
             'partner_id': cls.company_data['company'].partner_id.id,
         })
-        # Make sure EUR is activated
-        currency_eur = cls.env.ref('base.EUR')
-        currency_eur.active = True
+
         cls.sepa_qr_invoice = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
-            'currency_id': currency_eur.id,
+            'currency_id': cls.env.ref('base.EUR').id,
             'partner_bank_id': cls.acc_sepa_iban.id,
             'company_id': cls.company_data['company'].id,
             'invoice_line_ids': [

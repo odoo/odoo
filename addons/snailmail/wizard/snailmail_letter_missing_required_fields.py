@@ -12,7 +12,7 @@ class SnailmailLetterMissingRequiredFields(models.TransientModel):
     street2 = fields.Char('Street2')
     zip = fields.Char('Zip')
     city = fields.Char('City')
-    state_id = fields.Many2one("res.country.state", string='Fed. State')
+    state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
 
     @api.model

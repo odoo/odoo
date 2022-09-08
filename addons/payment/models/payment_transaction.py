@@ -118,7 +118,7 @@ class PaymentTransaction(models.Model):
     partner_address = fields.Char(string="Address")
     partner_zip = fields.Char(string="Zip")
     partner_city = fields.Char(string="City")
-    partner_state_id = fields.Many2one(string="Fed. State", comodel_name='res.country.state')
+    partner_state_id = fields.Many2one(string="State", comodel_name='res.country.state')
     partner_country_id = fields.Many2one(string="Country", comodel_name='res.country')
     partner_phone = fields.Char(string="Phone")
 

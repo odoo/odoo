@@ -129,7 +129,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'name': 'On Site Assistance',
                 'product_id': self.product_2.id,
                 'product_uom_qty': 30,
-                'product_uom': self.product_uom_hour.id,
+                'product_uom': self.product_uom_unit.id,
                 'price_unit': 38.25,
             })],
         })

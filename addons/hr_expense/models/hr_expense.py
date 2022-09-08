@@ -244,7 +244,7 @@ class HrExpense(models.Model):
         for expense in self.filtered('product_id'):
             expense = expense.with_company(expense.company_id)
             expense.name = expense.name or expense.product_id.display_name
-            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount) or (expense.attachment_number and expense.unit_amount and not expense.product_id.standard_price):
                 expense.unit_amount = expense.product_id.price_compute('standard_price')[expense.product_id.id]
             expense.product_uom_id = expense.product_id.uom_id
             expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.price_include and tax.company_id == expense.company_id)  # taxes only from the same company
@@ -699,6 +699,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             ('user_id.email', 'ilike', email_address)
         ], limit=1)
 
+        if not employee:
+            return super().message_new(msg_dict, custom_values=custom_values)
+
         expense_description = msg_dict.get('subject', '')
 
         if employee.user_id:
@@ -761,15 +764,16 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         symbols_pattern = '|'.join(symbols)
         price_pattern = "((%s)?\s?%s\s?(%s)?)" % (symbols_pattern, float_pattern, symbols_pattern)
         matches = re.findall(price_pattern, expense_description)
+        currency = currencies and currencies[0]
         if matches:
             match = max(matches, key=lambda match: len([group for group in match if group])) # get the longuest match. e.g. "2 chairs 120$" -> the price is 120$, not 2
             full_str = match[0]
             currency_str = match[1] or match[3]
             price = match[2].replace(',', '.')
 
-            if currency_str:
-                currency = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])[0]
-                currency = currency or currencies[0]
+            if currency_str and currencies:
+                currencies = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])
+                currency = (currencies and currencies[0]) or currency
             expense_description = expense_description.replace(full_str, ' ') # remove price from description
             expense_description = re.sub(' +', ' ', expense_description.strip())
 

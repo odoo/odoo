@@ -112,7 +112,8 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         res = super()._query(with_clause, fields, groupby, from_clause)
-        for key in fields:
+        sale_fields = self._select_additional_fields(fields)
+        for key in sale_fields:
             fields[key] = ', NULL as %s' % (key)
         current = '(SELECT %s FROM %s WHERE %s GROUP BY %s)' % \
                   (self._select_pos(fields), self._from_pos(), self._where_pos(), self._group_by_pos())

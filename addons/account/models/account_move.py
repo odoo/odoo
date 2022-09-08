@@ -267,6 +267,7 @@ class AccountMove(models.Model):
         comodel_name='account.move',
         string="Cash Basis Origin",
         readonly=1,
+        index=True,
         help="The journal entry from which this tax cash basis journal entry has been created.")
     tax_cash_basis_created_move_ids = fields.One2many(
         string="Cash Basis Entries",
@@ -1516,7 +1517,15 @@ class AccountMove(models.Model):
             if new_pmt_state == 'paid' and move.move_type in ('in_invoice', 'out_invoice', 'entry'):
                 reverse_type = move.move_type == 'in_invoice' and 'in_refund' or move.move_type == 'out_invoice' and 'out_refund' or 'entry'
                 reverse_moves = self.env['account.move'].search([('reversed_entry_id', '=', move.id), ('state', '=', 'posted'), ('move_type', '=', reverse_type)])
-                caba_moves = self.env['account.move'].search([('tax_cash_basis_origin_move_id', 'in', move.ids + reverse_moves.ids), ('state', '=', 'posted')])
+                if self.env.company.tax_exigibility:
+                    domain = [
+                        ('tax_cash_basis_origin_move_id', 'in', move.ids + reverse_moves.ids),
+                        ('state', '=', 'posted'),
+                        ('move_type', '=', 'entry')
+                    ]
+                    caba_moves = self.env['account.move'].search(domain)
+                else:
+                    caba_moves = self.env['account.move']
 
                 # We only set 'reversed' state in cas of 1 to 1 full reconciliation with a reverse entry; otherwise, we use the regular 'paid' state
                 # We ignore potentials cash basis moves reconciled because the transition account of the tax is reconcilable

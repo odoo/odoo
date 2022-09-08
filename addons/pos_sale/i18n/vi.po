@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_sale
-#
+# 
 # Translators:
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Vo Thanh Thuy, 2022
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
@@ -82,7 +82,7 @@ msgstr "Không thể truy cập màn hình quản lý đơn hàng nếu ngoại 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
 msgid "Currency Rate"
-msgstr "Tỷ giá"
+msgstr "Tỷ giá tiền tệ"
 
 #. module: pos_sale
 #. openerp-web
@@ -146,7 +146,7 @@ msgstr "Từ"
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
 msgid "Invoiced"
-msgstr "Đã xuất hoá đơn"
+msgstr "Đã xuất hóa đơn"
 
 #. module: pos_sale
 #. openerp-web
@@ -220,12 +220,12 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
-msgstr "Mở các Phiên PoS"
+msgstr "Mở các phiên POS"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
 msgid "Open Sessions"
-msgstr "Mở các Phiên"
+msgstr "Mở các phiên"
 
 #. module: pos_sale
 #. openerp-web
@@ -256,7 +256,7 @@ msgstr "Phần trăm là %s"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Cấu hình Điểm bán lẻ"
+msgstr "Cấu hình điểm bán hàng"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
@@ -266,17 +266,17 @@ msgstr "Dòng đơn hàng điểm bán hàng"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Đơn Bán Điểm bán lẻ"
+msgstr "Đơn hàng POS"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Phiên Điểm bán lẻ"
+msgstr "Phiên bán hàng"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
 msgid "Point of Sales"
-msgstr "Điểm bán lẻ"
+msgstr "Điểm bán hàng"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
@@ -352,7 +352,7 @@ msgstr "Bán hàng"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr "Báo cáo phân tích hoạt động kinh doanh"
+msgstr "Báo cáo phân tích bán hàng"
 
 #. module: pos_sale
 #. openerp-web
@@ -373,7 +373,7 @@ msgstr "Dòng đơn bán hàng"
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
 msgid "Sales Team"
-msgstr "Đội ngũ bán hàng"
+msgstr "Đội kinh doanh"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
@@ -385,14 +385,14 @@ msgstr "Bán hàng được báo cáo cho đội kinh doanh sau"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "Salesman"
-msgstr "Nhân viên Kinh doanh"
+msgstr "Nhân viên bán hàng"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
 #, python-format
 msgid "Salesperson"
-msgstr "Nhân viên Kinh doanh"
+msgstr "Nhân viên bán hàng"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
@@ -402,12 +402,12 @@ msgstr "Phiên đang chạy"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
 msgid "Session Sale Amount"
-msgstr "Doanh số Phiên"
+msgstr "Doanh số phiên"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
 msgid "Sessions Running"
-msgstr "Phiên đang Hoạt động"
+msgstr "Phiên đang hoạt động"
 
 #. module: pos_sale
 #. openerp-web
@@ -446,7 +446,7 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "State"
-msgstr "Trạng thái"
+msgstr "Bang"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -458,7 +458,7 @@ msgstr "Trạng thái"
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr "Tỷ giá tiền tệ của loại tiền tệ đang dùng tại ngày đặt hàng"
+msgstr "Tỉ giá của tiền tệ với tiền tệ của giá áp dụng vào ngày đặt đơn hàng "
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id

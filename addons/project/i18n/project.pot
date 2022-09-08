@@ -424,14 +424,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\" style=\"opacity: 0.7;\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_read_only text-dark\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only text-dark\">Create tasks by sending an email to </span>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Collaborators\n"
 "                                </span>"
@@ -474,6 +466,14 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
 
 #. module: project
@@ -833,12 +833,6 @@ msgid "Archived"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Archived tasks cannot be recurring. Please unarchive the task first."
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
 msgstr ""
@@ -869,6 +863,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
+msgid " assignee"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
+msgid " assignees"
 msgstr ""
 
 #. module: project
@@ -1072,26 +1076,6 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_7
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__day
-msgid "By Day"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__month
-msgid "By Month"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__year
-msgid "By Year"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__quarter
-msgid "By quarter"
 msgstr ""
 
 #. module: project
@@ -1551,6 +1535,26 @@ msgid ""
 "                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
+#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
+msgid ""
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+"\n"
+"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"\n"
+"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
 
 #. module: project
@@ -2325,29 +2329,10 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_list.js:0
-#, python-format
-msgid ""
-"It seems that some tasks are part of a recurrence. At least one of them must"
-" be kept as a model to create the next occurences."
-msgstr ""
-
-#. module: project
-#. openerp-web
 #: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that this task is part of a recurrence."
-msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_form.js:0
-#: code:addons/project/static/src/js/project_list.js:0
-#, python-format
-msgid ""
-"It seems that this task is part of a recurrence. You must keep it as a model"
-" to create the next occurences."
 msgstr ""
 
 #. module: project
@@ -2864,6 +2849,13 @@ msgid "Next Activities"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -3199,26 +3191,6 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project__privacy_visibility
-#: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
-msgid ""
-"People to whom this project and its tasks will be visible.\n"
-"\n"
-"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
-"\n"
-"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"\n"
-"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-"\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
-"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
-"\n"
-"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
 
 #. module: project
@@ -4587,7 +4559,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.viindoo.com>"
+"<jobs@example.odoo.com>"
 msgstr ""
 
 #. module: project
@@ -5206,16 +5178,6 @@ msgstr ""
 msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
-msgid "assignee"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
-msgid "assignees"
 msgstr ""
 
 #. module: project

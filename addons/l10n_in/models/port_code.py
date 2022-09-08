@@ -12,7 +12,7 @@ class L10nInPortCode(models.Model):
 
     code = fields.Char(string="Port Code", required=True)
     name = fields.Char(string="Port", required=True)
-    state_id = fields.Many2one('res.country.state', string="Fed. State")
+    state_id = fields.Many2one('res.country.state', string="State")
 
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The Port Code must be unique!')

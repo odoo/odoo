@@ -41,8 +41,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
-"<strong>Một yêu cầu đặt lại mật khẩu cho người dùng này vừa được tạo và gửi "
-"đến người dùng qua email chứa liên kết (link) sau:</strong>"
+"<strong>Đặt lại mật khẩu đã được yêu cầu cho người dùng này. Một email có "
+"chứa liên kết sau đã được gửi:</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -50,8 +50,7 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"<strong>Một thư mời chứa liên kết đăng ký nhận tin sau đây đã được "
-"gửi</strong>"
+"<strong>Một thư mời chứa liên kết đăng ký sau đây đã được gửi:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -653,14 +652,14 @@ msgstr "Đã có tài khoản rồi?"
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
-"Một email chứa các thông tin chứng thực để đặt lại mật khẩu của bạn đã được "
-"gửi."
+"Một email chứa các thông tin đăng nhập để đặt lại mật khẩu của bạn đã được "
+"gửi"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "Một ai đó đã đăng ký tài khoản và sử dụng email này rồi."
+msgstr "Một người dùng khác đã đăng ký sử dụng địa chỉ email này."
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
@@ -686,12 +685,12 @@ msgstr "Quyền đăng ký: Người dùng chưa đăng ký"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
-msgstr "Chứng thực hỏng"
+msgstr "Chứng thực thất bại."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr "Quay lại Đăng nhập"
+msgstr "Quay lại đăng nhập"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -707,7 +706,7 @@ msgstr "Đóng"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập Cấu hình"
+msgstr "Cài đặt cấu hình"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -722,7 +721,7 @@ msgstr "Xác nhận mật khẩu"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
 msgid "Confirmed"
-msgstr "Đã xác nhận"
+msgstr "Đã được xác nhận"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -744,12 +743,12 @@ msgstr "Không thể đặt lại mật khẩu của bạn"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr "Tài khoản Khách hàng"
+msgstr "Tài khoản khách hàng"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr "Quyền Truy cập Mặc định"
+msgstr "Quyền truy cập mặc định"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -765,7 +764,7 @@ msgstr "Cho phép đặt lại mật khẩu từ trang Đăng nhập"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Đăng ký miễn phí"
+msgstr "Đăng ký tự do"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -781,7 +780,7 @@ msgstr "Token đăng ký không hợp lệ"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "Cho phép khách hàng của bạn đăng nhập để xem các tài liệu của họ"
+msgstr "Cho phép khách hàng đăng nhập để xem tài liệu của họ"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
@@ -792,7 +791,7 @@ msgstr "Chưa bao giờ kết nối"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "No login provided."
-msgstr "Không có thông tin đăng nhập được cung cấp"
+msgstr "Không có thông tin đăng nhập được cung cấp."
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
@@ -807,12 +806,12 @@ msgstr "Mật khẩu"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr "Đặt lại Mật khẩu"
+msgstr "Đặt lại mật khẩu"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Quên mật khẩu"
+msgstr "Đặt lại mật khẩu"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -845,7 +844,7 @@ msgstr "Gửi hướng dẫn đặt lại mật khẩu"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Gửi một Thư mời (email)"
+msgstr "Gửi một thư mời"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -868,25 +867,25 @@ msgstr "Token đăng ký"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "Kiểu Token Đăng ký"
+msgstr "Kiểu Token đăng ký"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr "Token Đăng ký hợp lệ"
+msgstr "Token đăng ký hợp lệ"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
-msgstr "URL Đăng ký"
+msgstr "URL đăng ký"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr "Đăng ký thì không cho phép với người chưa được mời"
+msgstr "Người dùng không được mời không thể đăng ký"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
@@ -904,35 +903,35 @@ msgstr "Token đăng ký '%s' không hợp lệ"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr "Đăng ký: người dùng mẫu không hợp lệ"
+msgstr "Đăng ký: mẫu người dùng không hợp lệ"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr "Đăng ký: không thấy có tên đăng nhập đối với người dùng mới"
+msgstr "Đăng ký: không có thông tin đăng nhập cho người dùng mới"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr "Đăng ký: không có tên hoặc đối tác để tạo người dùng mới"
+msgstr "Đăng ký: không có tên hoặc đối tác được cung cấp cho người dùng mới"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
-msgstr "Tình trạng"
+msgstr "Trạng thái"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr "Mẫu người dùng sử dụng khi đăng ký"
+msgstr "Mẫu người dùng được sử dụng cho người dùng mới được tạo qua đăng ký"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr "Mẫu chưa được nhập liệu đúng."
+msgstr "Biểu mẫu chưa được điền đúng cách."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -947,9 +946,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"Để gửi lời mời trong chế độ B2B, hãy mở liên hệ hoặc chọn một số người trong"
-" giao diện danh sách và nhấp vào tùy chọn 'Cấp quyền Truy cập Portal' trong "
-"menu thả xuống * Hành động *."
+"Để gửi lời mời trong chế độ B2B, hãy mở một liên hệ hoặc chọn một số liên hệ"
+" trong chế độ xem danh sách và nhấp vào tùy chọn 'Quản lý truy cập cổng "
+"thông tin' trong menu thả xuống *Tác vụ*."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -978,12 +977,12 @@ msgstr "Bạn không thể thực hiện tác vụ này cho người dùng đã 
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Email của bạn"
+msgstr "Email"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Họ và tên"
+msgstr "Tên"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

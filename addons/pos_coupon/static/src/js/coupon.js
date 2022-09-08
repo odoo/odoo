@@ -273,8 +273,8 @@ odoo.define('pos_coupon.pos', function (require) {
             return this;
         },
         init_from_JSON: function (json) {
-            this.bookedCouponCodes = this.bookedCouponCodes ? this.order.bookedCouponCodes : {};
-            this.activePromoProgramIds = this.activePromoProgramIds ? this.order.activePromoProgramIds : [];
+            this.bookedCouponCodes = json.bookedCouponCodes ? json.bookedCouponCodes : {};
+            this.activePromoProgramIds = json.activePromoProgramIds ? json.activePromoProgramIds : [];
             _order_super.init_from_JSON.apply(this, arguments);
         },
         export_as_JSON: function () {
@@ -338,6 +338,10 @@ odoo.define('pos_coupon.pos', function (require) {
                 .apply(this, arguments)
                 .filter((line) => !line.is_program_reward);
             return regularLines[regularLines.length - 1];
+        },
+        set_pricelist: function (pricelist) {
+            _order_super.set_pricelist.apply(this, arguments);
+            this.trigger('update-rewards');
         },
 
         // NEW METHODS
@@ -1148,9 +1152,10 @@ odoo.define('pos_coupon.pos', function (require) {
                 this.program_id = json.program_id;
                 this.coupon_id = json.coupon_id;
                 if (this.coupon_id && this.coupon_id[1]) {
-                    this.order.bookedCouponCodes[this.coupon_id[1]] = new CouponCode(this.coupon_id[1], this.coupon_id[0], this.program_id[0]);
-                } else if (json.program_id && json.program_id[0]) {
-                    this.order.activePromoProgramIds.push(json.program_id[0]);
+                    this.order.bookedCouponCodes[this.coupon_id[1]] = new CouponCode(this.coupon_id[1], this.coupon_id[0], this.program_id);
+                    this.coupon_id = json.coupon_id[0];
+                } else if (json.program_id && this.order.activePromoProgramIds.length === 0) {
+                    this.order.activePromoProgramIds.push(json.program_id);
                 }
             }
             _orderline_super.init_from_JSON.apply(this, [json]);

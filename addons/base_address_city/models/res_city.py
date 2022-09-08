@@ -13,7 +13,7 @@ class City(models.Model):
     zipcode = fields.Char("Zip")
     country_id = fields.Many2one('res.country', string='Country', required=True)
     state_id = fields.Many2one(
-        'res.country.state', 'Fed. State', domain="[('country_id', '=', country_id)]")
+        'res.country.state', 'State', domain="[('country_id', '=', country_id)]")
 
     def name_get(self):
         res = []

@@ -204,7 +204,7 @@ class Lead(models.Model):
     zip = fields.Char('Zip', change_default=True, compute='_compute_partner_address_values', readonly=False, store=True)
     city = fields.Char('City', compute='_compute_partner_address_values', readonly=False, store=True)
     state_id = fields.Many2one(
-        "res.country.state", string='Fed. State',
+        "res.country.state", string='State',
         compute='_compute_partner_address_values', readonly=False, store=True,
         domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one(
