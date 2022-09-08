@@ -14,7 +14,7 @@
             <group name="payment_followup" position="inside">
                 <field name="journal_id"
                     context="{'default_type': 'bank'}"
-                    attrs="{'required': [('state', '!=', 'disabled'), ('code', 'not in', ['none', 'transfer'])]}"/>
+                    attrs="{'required': [('state', '!=', 'disabled'), ('code', 'not in', ['none', 'custom'])]}"/>
             </group>
         </field>
     </record>

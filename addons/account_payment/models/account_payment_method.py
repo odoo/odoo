@@ -11,7 +11,7 @@ class AccountPaymentMethod(models.Model):
     def _get_payment_method_information(self):
         res = super()._get_payment_method_information()
         for code, _desc in self.env['payment.provider']._fields['code'].selection:
-            if code in ('none', 'transfer'):
+            if code in ('none', 'custom'):
                 continue
             res[code] = {
                 'mode': 'unique',
