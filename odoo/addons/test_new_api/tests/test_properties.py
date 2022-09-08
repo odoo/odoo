@@ -1186,6 +1186,28 @@ class PropertiesCase(TransactionCase):
             message.attributes,
             [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
 
+        # re-write the same parent again and check that value are not reset
+        message.discussion = message.discussion
+        self.assertEqual(
+            message.attributes,
+            [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
+
+        # trigger a other onchange after setting the properties
+        # and check that it does not impact the properties
+        message.discussion.attributes_definition = []
+        message_form = Form(message)
+        message.attributes = [{
+            'name': 'new_property',
+            'type': 'char',
+            'value': 'test value',
+            'definition_changed': True,
+        }]
+        message_form.body = "a" * 42
+        message = message_form.save()
+        self.assertEqual(
+            message.attributes,
+            [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
+
     @mute_logger('odoo.fields')
     def test_properties_field_definition_update(self):
         """Test the definition update from the child."""
