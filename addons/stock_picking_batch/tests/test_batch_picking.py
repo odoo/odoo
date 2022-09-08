@@ -29,10 +29,12 @@ class TestBatchPicking(TransactionCase):
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
 
+        cls.client_1 = cls.env['res.partner'].create({'name': 'Client 1'})
         cls.picking_client_1 = cls.env['stock.picking'].create({
             'location_id': cls.stock_location.id,
             'location_dest_id': cls.customer_location.id,
             'picking_type_id': cls.picking_type_out,
+            'partner_id': cls.client_1.id,
             'company_id': cls.env.company.id,
         })
 
@@ -46,10 +48,12 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': cls.customer_location.id,
         })
 
+        cls.client_2 = cls.env['res.partner'].create({'name': 'Client 2'})
         cls.picking_client_2 = cls.env['stock.picking'].create({
             'location_id': cls.stock_location.id,
             'location_dest_id': cls.customer_location.id,
             'picking_type_id': cls.picking_type_out,
+            'partner_id': cls.client_2.id,
             'company_id': cls.env.company.id,
         })
 
@@ -315,7 +319,8 @@ class TestBatchPicking(TransactionCase):
         self.assertTrue(back_order_wizard_dict)
         self.assertEqual(back_order_wizard_dict.get('res_model'), 'stock.backorder.confirmation')
         back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
-        self.assertEqual(len(back_order_wizard.pick_ids), 2)
+        # Empty pickings are excluded from the validation process, to be removed from the batch afterwards.
+        self.assertEqual(len(back_order_wizard.pick_ids), 1)
         back_order_wizard.process()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
