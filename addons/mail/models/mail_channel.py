@@ -801,12 +801,21 @@ class Channel(models.Model):
         channel_infos = []
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel()
         channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
-        all_needed_members_domain = expression.OR([
-            [('channel_id.channel_type', '!=', 'channel')],
-            [('rtc_inviting_session_id', '!=', False)],
-            [('partner_id', '=', self.env.user.partner_id.id)] if self.env.user and self.env.user.partner_id else expression.FALSE_LEAF,
-        ])
-        all_needed_members = self.env['mail.channel.partner'].search(expression.AND([[('channel_id', 'in', self.ids)], all_needed_members_domain]))
+        self.flush()
+        self.env.cr.execute("""
+                 SELECT mail_channel_partner.id
+                   FROM mail_channel_partner
+              LEFT JOIN mail_channel
+                     ON mail_channel.id = mail_channel_partner.channel_id
+                    AND mail_channel.channel_type != 'channel'
+                  WHERE mail_channel_partner.channel_id in %(channel_ids)s
+                    AND (
+                        mail_channel.id IS NOT NULL
+                     OR mail_channel_partner.rtc_inviting_session_id IS NOT NULL
+                     OR mail_channel_partner.partner_id = %(current_partner_id)s
+                    )
+        """, {'channel_ids': tuple(self.ids), 'current_partner_id': self.env.user.partner_id.id})
+        all_needed_members = self.env['mail.channel.partner'].browse([m['id'] for m in self.env.cr.dictfetchall()])
         partner_format_by_partner = all_needed_members.partner_id.mail_partner_format()
         members_by_channel = defaultdict(lambda: self.env['mail.channel.partner'])
         invited_members_by_channel = defaultdict(lambda: self.env['mail.channel.partner'])
