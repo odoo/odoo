@@ -104,18 +104,23 @@ let PaymentStripe = PaymentInterface.extend({
         } else {
             line.set_payment_status('waitingCapture');
             let processPayment = await this.terminal.processPayment(collectPaymentMethod.paymentIntent);
+            line.transaction_id = collectPaymentMethod.paymentIntent.id;
             if (processPayment.error) {
                 this._showError(processPayment.error.message, processPayment.error.code);
                 line.set_payment_status('retry');
                 return false;
             } else if (processPayment.paymentIntent) {
                 line.set_payment_status('waitingCapture');
-                let capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+                await this.captureAfterPayment(processPayment, line);
                 line.set_payment_status('done');
-                line.transaction_id = (capturePayment.id);
                 return true;
             }
         }
+    },
+
+    captureAfterPayment: async function (processPayment, line) {
+        let capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+        line.transaction_id = capturePayment.id;
     },
 
     capturePayment: function (paymentIntentId) {
