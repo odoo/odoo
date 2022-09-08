@@ -125,7 +125,7 @@
             <field name="name">sale.service.form.view.inherit</field>
             <field name="model">project.task</field>
             <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
-            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position='inside'>
                     <field name="allow_billable" invisible="1"/>
@@ -136,7 +136,7 @@
         <record id="project_task_view_form_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">project.task.form.inherit.timesheet</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
             <field name="groups_id" eval="[(6,0, (ref('hr_timesheet.group_hr_timesheet_user'),))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
@@ -195,7 +195,7 @@
         <record id="view_task_form2_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">view.task.form2.inherit</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id']" position="attributes">
                     <attribute name="context">{'with_remaining_hours': True, 'with_price_unit': True}</attribute>

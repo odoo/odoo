@@ -4,7 +4,7 @@
     <record id="project_sharing_inherit_project_task_view_form" model="ir.ui.view">
         <field name="name">project.task.form.inherit.timesheet</field>
         <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
                 <attribute name="decoration-muted">timesheet_invoice_id != False</attribute>
