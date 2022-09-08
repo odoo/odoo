@@ -40,7 +40,8 @@ class IapAccount(models.Model):
                 # Flush the pending operations to avoid a deadlock.
                 self.flush()
                 IapAccount = self.with_env(self.env(cr=cr))
-                IapAccount.search(domain + [('account_token', '=', False)]).unlink()
+                # Need to use sudo because regular users do not have delete right
+                IapAccount.search(domain + [('account_token', '=', False)]).sudo().unlink()
                 accounts = accounts - accounts_without_token
         if not accounts:
             with self.pool.cursor() as cr:
