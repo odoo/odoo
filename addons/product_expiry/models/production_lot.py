@@ -42,9 +42,8 @@ class StockProductionLot(models.Model):
         if product:
             for field in mapped_fields:
                 duration = getattr(product, mapped_fields[field])
-                if duration:
-                    date = datetime.datetime.now() + datetime.timedelta(days=duration)
-                    res[field] = fields.Datetime.to_string(date)
+                date = datetime.datetime.now() + datetime.timedelta(days=duration)
+                res[field] = fields.Datetime.to_string(date)
         return res
 
     # Assign dates according to products data
