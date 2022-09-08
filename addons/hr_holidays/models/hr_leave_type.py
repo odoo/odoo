@@ -34,24 +34,6 @@ class HolidaysType(models.Model):
     sequence = fields.Integer(default=100,
                               help='The type with the smallest sequence is the default value in time off request')
     create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True)
-    color_name = fields.Selection([
-        ('red', 'Red'),
-        ('blue', 'Blue'),
-        ('lightgreen', 'Light Green'),
-        ('lightblue', 'Light Blue'),
-        ('lightyellow', 'Light Yellow'),
-        ('magenta', 'Magenta'),
-        ('lightcyan', 'Light Cyan'),
-        ('black', 'Black'),
-        ('lightpink', 'Light Pink'),
-        ('brown', 'Brown'),
-        ('violet', 'Violet'),
-        ('lightcoral', 'Light Coral'),
-        ('lightsalmon', 'Light Salmon'),
-        ('lavender', 'Lavender'),
-        ('wheat', 'Wheat'),
-        ('ivory', 'Ivory')], string='Color in Report', required=True, default='red',
-         help='This color will be used in the time off summary located in Reporting > Time off by Department.')
     color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time off type.")
     icon_id = fields.Many2one('ir.attachment', string='Cover Image', domain="[('res_model', '=', 'hr.leave.type'), ('res_field', '=', 'icon_id')]")
     active = fields.Boolean('Active', default=True,
