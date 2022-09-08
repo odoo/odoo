@@ -251,10 +251,15 @@ class IrAttachment(models.Model):
                 self._file_delete(fname)
 
     def _get_datas_related_values(self, data, mimetype):
+        checksum = self._compute_checksum(data)
+        try:
+            index_content = self._index(data, mimetype, checksum=checksum)
+        except TypeError:
+            index_content = self._index(data, mimetype)
         values = {
             'file_size': len(data),
-            'checksum': self._compute_checksum(data),
-            'index_content': self._index(data, mimetype),
+            'checksum': checksum,
+            'index_content': index_content,
             'store_fname': False,
             'db_datas': data,
         }
@@ -360,7 +365,7 @@ class IrAttachment(models.Model):
         return values
 
     @api.model
-    def _index(self, bin_data, file_type):
+    def _index(self, bin_data, file_type, checksum=None):
         """ compute the index content of the given binary data.
             This is a python implementation of the unix command 'strings'.
             :param bin_data : datas in binary form
@@ -652,7 +657,7 @@ class IrAttachment(models.Model):
                 ))
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
-            # We can group the values by model, res_id to make only one query when 
+            # We can group the values by model, res_id to make only one query when
             # creating multiple attachments on a single record.
             record_tuple = (values.get('res_model'), values.get('res_id'))
             record_tuple_set.add(record_tuple)
