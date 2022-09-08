@@ -7,6 +7,7 @@ from functools import lru_cache
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import frozendict, formatLang, format_date
+from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
 INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
@@ -54,7 +55,6 @@ class AccountMoveLine(models.Model):
     parent_state = fields.Selection(related='move_id.state', store=True)
     date = fields.Date(
         related='move_id.date', store=True,
-        index=True,
         copy=False,
         group_operator='min',
     )
@@ -1188,11 +1188,9 @@ class AccountMoveLine(models.Model):
             same way when we search on partner_id, with the addition of being optimal when having a query that will
             search on partner_id and ref at the same time (which is the case when we open the bank reconciliation widget)
         """
-        cr = self._cr
-        cr.execute('DROP INDEX IF EXISTS account_move_line_partner_id_index')
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_partner_id_ref_idx',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
+        create_index(self._cr, 'account_move_line_partner_id_ref_idx', 'account_move_line', ["partner_id", "ref"])
+        create_index(self._cr, 'account_move_line_date_name_id_idx', 'account_move_line', ["date desc", "move_name desc", "id"])
+
 
     def _sanitize_vals(self, vals):
         if 'debit' in vals or 'credit' in vals:
