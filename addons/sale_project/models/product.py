@@ -63,13 +63,13 @@ class ProductTemplate(models.Model):
                         "Invoice ordered quantities as soon as this service is sold. "
                         "Create a task in an existing project to track the time spent."
                     )
-                elif record.service_tracking == 'task_in_project':
+                elif record.service_tracking == 'project_only':
                     record.product_tooltip = _(
                         "Invoice ordered quantities as soon as this service is sold. "
                         "Create a project for the order with a task for each sales order line "
                         "to track the time spent."
                     )
-                elif record.service_tracking == 'project_only':
+                elif record.service_tracking == 'task_in_project':
                     record.product_tooltip = _(
                         "Invoice ordered quantities as soon as this service is sold. "
                         "Create an empty project for the order to track the time spent."
@@ -84,13 +84,13 @@ class ProductTemplate(models.Model):
                         "Invoice your milestones when they are reached. "
                         "Create a task in an existing project to track the time spent."
                     )
-                elif record.service_tracking == 'task_in_project':
+                elif record.service_tracking == 'project_only':
                     record.product_tooltip = _(
                         "Invoice your milestones when they are reached. "
                         "Create a project for the order with a task for each sales order line "
                         "to track the time spent."
                     )
-                elif record.service_tracking == 'project_only':
+                elif record.service_tracking == 'task_in_project':
                     record.product_tooltip = _(
                         "Invoice your milestones when they are reached. "
                         "Create an empty project for the order to track the time spent."
@@ -105,13 +105,13 @@ class ProductTemplate(models.Model):
                         "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
                         "Create a task in an existing project to track the time spent."
                     )
-                elif record.service_tracking == 'task_in_project':
+                elif record.service_tracking == 'project_only':
                     record.product_tooltip = _(
                         "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
                         "Create a project for the order with a task for each sales order line "
                         "to track the time spent."
                     )
-                elif record.service_tracking == 'project_only':
+                elif record.service_tracking == 'task_in_project':
                     record.product_tooltip = _(
                         "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
                         "Create an empty project for the order to track the time spent."
