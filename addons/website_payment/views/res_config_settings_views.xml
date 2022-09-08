@@ -20,15 +20,15 @@
                                     <field name="acquirers_state" invisible="1"/>
                                     <field name="is_stripe_supported_country" invisible="1"/>
                                     <button attrs="{'invisible': [('is_stripe_supported_country', '=', False)]}"
-                                            name="action_activate_stripe" type="object" string="Activate Stripe" class="btn-primary"/>
-                                    <div attrs="{'invisible': [('is_stripe_supported_country', '=', True)]}" data-bs-toggle="tooltip" title="Stripe Connect is not available in your country, please use another payment provider.">
+                                            name="action_activate_stripe" type="object" string="Activate Stripe" class="btn-primary col-auto"/>
+                                    <div attrs="{'invisible': [('is_stripe_supported_country', '=', True)]}" class="col-auto" data-bs-toggle="tooltip" title="Stripe Connect is not available in your country, please use another payment provider.">
                                         <button string="Activate Stripe" class="btn-primary pe-none" disabled=""
                                                 style="pointer-events: none;"/>
                                     </div>
                                     <button type="action" name="%(payment.action_payment_acquirer)d" string="View Alternatives" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
                                 <div class="row mt8 ms-4" attrs="{'invisible': [('acquirers_state', '!=', 'other_than_paypal')]}">
-                                    <button name="action_configure_first_provider" type="object" class="btn-primary col-auto"><field name="first_provider_label" nolabel="1"/></button>
+                                    <button name="action_configure_first_provider" type="object" class="btn-primary col-auto"><field name="first_provider_label" nolabel="1" class="oe_inline"/></button>
                                     <button type="action" name="%(payment.action_payment_acquirer)d" string="View other providers " class="btn-link col-auto" icon="fa-arrow-right"/>
                                 </div>
                             </div>
