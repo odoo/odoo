@@ -660,13 +660,13 @@ class PosOrder(models.Model):
 
     def _apply_invoice_payments(self):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).property_account_receivable_id
-        payment_moves = self.payment_ids._create_payment_moves()
+        payment_moves = self.payment_ids.sudo().with_company(self.company_id)._create_payment_moves()
         invoice_receivable = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account)
         # Reconcile the invoice to the created payment moves.
         # But not when the invoice's total amount is zero because it's already reconciled.
         if not invoice_receivable.reconciled and receivable_account.reconcile:
             payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account)
-            (invoice_receivable | payment_receivables).reconcile()
+            (invoice_receivable | payment_receivables).sudo().with_company(self.company_id).reconcile()
 
     @api.model
     def create_from_ui(self, orders, draft=False):
