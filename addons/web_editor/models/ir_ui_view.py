@@ -207,6 +207,9 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_get_inherited_children(self, view):
+        if self._context.get('no_primary_children', False):
+            original_hierarchy = self._context.get('__views_get_original_hierarchy', [])
+            return view.inherit_children_ids.filtered(lambda extension: extension.mode != 'primary' or extension.id in original_hierarchy)
         return view.inherit_children_ids
 
     @api.model
@@ -225,7 +228,7 @@ class IrUiView(models.Model):
     @api.model
     def _views_get(self, view_id, get_children=True, bundles=False, root=True, visited=None):
         """ For a given view ``view_id``, should return:
-                * the view itself
+                * the view itself (starting from its top most parent)
                 * all views inheriting from it, enabled or not
                   - but not the optional children of a non-enabled child
                 * all views called from it (via t-call)
@@ -239,7 +242,9 @@ class IrUiView(models.Model):
 
         if visited is None:
             visited = []
+        original_hierarchy = self._context.get('__views_get_original_hierarchy', [])
         while root and view.inherit_id:
+            original_hierarchy.append(view.id)
             view = view.inherit_id
 
         views_to_return = view
