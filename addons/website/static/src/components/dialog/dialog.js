@@ -4,7 +4,7 @@ import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { Dialog } from '@web/core/dialog/dialog';
 import { Switch } from '@website/components/switch/switch';
 import {unslugHtmlDataObject} from '../../services/website_service';
-import { _t } from 'web.core';
+import {csrf_token, _t} from 'web.core';
 
 const { xml, useState, Component, onWillStart } = owl;
 
@@ -84,6 +84,7 @@ export class AddPageDialog extends Component {
         this.switchLabel = this.env._t("Add to menu");
         this.website = useService('website');
         this.orm = useService('orm');
+        this.http = useService('http');
 
         this.state = useState({
             addMenu: true,
@@ -105,16 +106,41 @@ export class AddPageDialog extends Component {
     }
 
     async addPage() {
-        await this.props.addPage(this.state);
+        const params = {'add_menu': this.state.addMenu || '', csrf_token};
+        const url = `/website/add/${encodeURIComponent(this.state.name)}`;
+        const websiteId = parseInt(this.state.websiteId);
+        if (this.props.selectWebsite) {
+            params['website_id'] = websiteId;
+        }
+        const data = await this.http.post(url, params);
+        if (data.view_id) {
+            this.action.doAction({
+                'res_model': 'ir.ui.view',
+                'res_id': data.view_id,
+                'views': [[false, 'form']],
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+            });
+        } else {
+            this.website.goToWebsite({path: data.url, edition: true, ...(this.props.selectWebsite && {websiteId})});
+        }
+        this.props.onAddPage(this.state);
     }
 }
 AddPageDialog.props = {
     close: Function,
-    addPage: Function,
+    onAddPage: {
+        type: Function,
+        optional: true,
+    },
     selectWebsite: {
         type: Boolean,
         optional: true,
     },
+};
+AddPageDialog.defaultProps = {
+    onAddPage: NO_OP,
+    selectWebsite: false,
 };
 AddPageDialog.components = {
     Switch,
