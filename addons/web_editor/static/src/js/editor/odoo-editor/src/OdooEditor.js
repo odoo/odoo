@@ -3116,6 +3116,13 @@ export class OdooEditor extends EventTarget {
      */
     _onSelectionChange() {
         const selection = this.document.getSelection();
+        if (
+            !this.editable.contains(selection.anchorNode) &&
+            !this.editable.contains(selection.focusNode)
+        ) {
+            // Do not affect selection outside of the editable.
+            return;
+        }
         // When CTRL+A in the editor, sometimes the browser use the editable
         // element as an anchor & focus node. This is an issue for the commands
         // and the toolbar so we need to fix the selection to be based on the
