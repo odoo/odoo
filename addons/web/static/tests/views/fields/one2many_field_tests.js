@@ -24,7 +24,6 @@ import {
     triggerEvents,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import BasicModel from "web.BasicModel";
 import { browser } from "@web/core/browser/browser";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -38,14 +37,6 @@ import { session } from "@web/session";
 
 let serverData;
 let target;
-
-function patchSetTimeout() {
-    patchWithCleanup(browser, {
-        setTimeout(fn) {
-            window.setTimeout(fn, 0);
-        },
-    });
-}
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -356,9 +347,6 @@ QUnit.module("Fields", (hooks) => {
         // In that case, a domain evaluation on that field followed by name_search
         // shouldn't send virtual_ids to the server.
 
-        patchWithCleanup(AutoComplete, {
-            delay: 0,
-        });
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
@@ -6616,7 +6604,11 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(36);
 
         // this is a way to avoid the debounce of triggerAction
-        patchSetTimeout();
+        patchWithCleanup(browser, {
+            setTimeout(fn) {
+                Promise.resolve().then(fn);
+            },
+        });
 
         serverData.models.partner.records[0].p = [4];
 
@@ -7833,7 +7825,9 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "one2many field: change value before pending onchange returns",
         async function (assert) {
-            patchSetTimeout();
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
 
             serverData.models.partner.onchanges = {
                 int_field: function () {},
@@ -9401,7 +9395,9 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("create and edit on m2o in o2m, and press ESCAPE", async function (assert) {
-        patchSetTimeout();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
 
         serverData.views = {
             "partner,false,form": `
@@ -12050,7 +12046,9 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "when creating a new many2one on a x2many then discarding it immediately with ESCAPE, it should not crash",
         async function (assert) {
-            patchSetTimeout();
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+            });
 
             serverData.models.partner.records[0].turtles = [];
             serverData.views = {
