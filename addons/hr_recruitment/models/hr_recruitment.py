@@ -194,6 +194,11 @@ class Applicant(models.Model):
         'res.users', string='Interviewer', index=True, tracking=True,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     linkedin_profile = fields.Char('LinkedIn Profile')
+    application_status = fields.Selection([
+        ('ongoing', 'Ongoing'),
+        ('hired', 'Hired'),
+        ('refused', 'Refused'),
+    ], compute="_compute_application_status")
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
@@ -280,6 +285,16 @@ class Applicant(models.Model):
                 applicant.meeting_display_text = _('Next Meeting')
             else:
                 applicant.meeting_display_text = _('Last Meeting')
+
+    @api.depends('refuse_reason_id', 'date_closed')
+    def _compute_application_status(self):
+        for applicant in self:
+            if applicant.refuse_reason_id:
+                applicant.application_status = 'refused'
+            elif applicant.date_closed:
+                applicant.application_status = 'hired'
+            else:
+                applicant.application_status = 'ongoing'
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment']._read_group(
@@ -433,7 +448,7 @@ class Applicant(models.Model):
             <p>%(para_1)s<br/>%(para_2)s</p>"""
 
         if alias_id and alias_id.alias_domain and alias_id.alias_name:
-            email = alias_id.display_name 
+            email = alias_id.display_name
             email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
             nocontent_values['email_link'] = email_link
             nocontent_body += """<p class="o_copy_paste_email">%(email_link)s</p>"""
@@ -508,7 +523,7 @@ class Applicant(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Job Applications'),
             'res_model': self._name,
-            'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
+            'view_mode': 'tree,kanban,form,pivot,graph,calendar,activity',
             'domain': [('id', 'in', ids)],
             'context': {
                 'active_test': False
