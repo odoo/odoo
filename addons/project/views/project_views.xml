@@ -684,6 +684,7 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="status_with_color" options="{'color_field': 'last_update_color', 'hide_label': True}"/>
                     <field name="stage_id" options="{'no_open': True}" optional="show"/>
+                    <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </tree>
             </field>
         </record>
