@@ -115,6 +115,9 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
      *        startEvents is received again)
      * @param {jQuery|DOMElement} [options.$endTarget=$startTarget]
      *        the element(s) on which the endEvents are listened
+     * @param {boolean} [options.enableInModal]
+     *        when it is true, it means that the 'scroll' event must be
+     *        triggered when scrolling a modal.
      */
     init: function (parent, updateCallback, startEvents, $startTarget, options) {
         mixins.ParentedMixin.init.call(this);
@@ -126,7 +129,8 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         // Initialize the animation startEvents, startTarget, endEvents, endTarget and callbacks
         this._updateCallback = updateCallback;
         this.startEvents = startEvents || 'scroll';
-        const mainScrollingElement = $().getScrollingElement()[0];
+        const modalEl = options.enableInModal ? parent.target.closest('.modal') : null;
+        const mainScrollingElement = modalEl ? modalEl : $().getScrollingElement()[0];
         const mainScrollingTarget = mainScrollingElement === document.documentElement ? window : mainScrollingElement;
         this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? mainScrollingTarget : window);
         if (options.getStateCallback) {
@@ -400,6 +404,7 @@ var Animation = publicWidget.Widget.extend({
                 endEvents: desc.endEvents || undefined,
                 $endTarget: _findTarget(desc.endTarget),
                 maxFPS: self.maxFPS,
+                enableInModal: desc.enableInModal || undefined,
             });
 
             // Return the DOM element matching the selector in the form
@@ -510,6 +515,7 @@ registry.Parallax = Animation.extend({
     effects: [{
         startEvents: 'scroll',
         update: '_onWindowScroll',
+        enableInModal: true,
     }],
 
     /**
@@ -518,6 +524,13 @@ registry.Parallax = Animation.extend({
     start: function () {
         this._rebuild();
         $(window).on('resize.animation_parallax', _.debounce(this._rebuild.bind(this), 500));
+        this.modalEl = this.$target[0].closest('.modal');
+        if (this.modalEl) {
+            $(this.modalEl).on('shown.bs.modal.animation_parallax', () => {
+                this._rebuild();
+                this.modalEl.dispatchEvent(new Event('scroll'));
+            });
+        }
         return this._super.apply(this, arguments);
     },
     /**
@@ -526,6 +539,9 @@ registry.Parallax = Animation.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(window).off('.animation_parallax');
+        if (this.modalEl) {
+            $(this.modalEl).off('.animation_parallax');
+        }
     },
 
     //--------------------------------------------------------------------------
