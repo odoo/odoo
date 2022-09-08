@@ -336,7 +336,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'color': 8,
         })
         self.env['event.event'].search(
-            [('name', 'like', '%Online Reveal%')]
+            [('name', 'like', 'Online Reveal')]
         ).write(
             {'name': 'Do not click on me'}
         )
