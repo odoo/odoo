@@ -18,7 +18,7 @@ class DecimalPrecision(models.Model):
     _name = 'decimal.precision'
     _description = 'Decimal Precision'
 
-    name = fields.Char('Usage', index=True, required=True)
+    name = fields.Char('Usage', required=True)
     digits = fields.Integer('Digits', required=True, default=2)
 
     _sql_constraints = [

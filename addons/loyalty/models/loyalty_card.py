@@ -31,7 +31,7 @@ class LoyaltyCard(models.Model):
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     points_display = fields.Char(compute='_compute_points_display')
 
-    code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True, index=True)
+    code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True)
     expiration_date = fields.Date()
 
     use_count = fields.Integer(compute='_compute_use_count')
