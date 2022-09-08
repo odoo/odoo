@@ -3355,6 +3355,8 @@ class Properties(Field):
                     property_definition.pop('value', None)
                 container[self.definition_record_field] = properties_definition
 
+                _logger.info('Properties field: User #%i changed definition of %r', records.env.user.id, container)
+
         return super().write(records, value)
 
     def _compute(self, records):
