@@ -1541,9 +1541,10 @@ class Binary(http.Controller):
                     'res_id': int(id)
                 })
                 attachment._post_add_create()
-            except Exception:
+            except Exception as e:
                 args.append({'error': _("Something horrible happened")})
-                _logger.exception("Fail to upload attachment %s" % ufile.filename)
+                error_msg = getattr(e, "message", repr(e))
+                _logger.exception("Fail to upload attachment %s. Error: %s" % (ufile.filename, error_msg))
             else:
                 args.append({
                     'filename': clean(filename),
