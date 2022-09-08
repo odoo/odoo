@@ -30,7 +30,7 @@ var PieChart = Widget.extend({
         var modifiers = node.attrs.modifiers;
         var domain = record.domain.concat(
             Domain.prototype.stringToArray(modifiers.domain || '[]'));
-        var arch = qweb.render('web.PieChart', {
+        var arch = qweb.render('web.LegacyPieChart', {
             modifiers: modifiers,
             title: node.attrs.title || modifiers.title || modifiers.measure,
         });
