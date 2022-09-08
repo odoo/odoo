@@ -230,6 +230,10 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
         }
         return super.set_quantity(...arguments);
     }
+    //to override
+    ignoreLoyaltyPoints() {
+        return false;
+    }
 }
 Registries.Model.extend(Orderline, PosLoyaltyOrderline);
 
@@ -753,8 +757,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 let orderedProductPaid = 0;
                 for (const line of orderLines) {
 
-                    if ((!line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.get_product().id))) ||
-                        (line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.reward_product_id)))) {
+                    if (((!line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.get_product().id))) ||
+                        (line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.reward_product_id)))) &&
+                        !line.ignoreLoyaltyPoints()){
                         // We only count reward products from the same program to avoid unwanted feedback loops
                         if (line.reward_product_id) {
                             const reward = this.pos.reward_by_id[line.reward_id];
@@ -781,7 +786,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                         splitPoints.push(...Array.apply(null, Array(totalProductQty)).map((_) => {return {points: rule.reward_point_amount}}));
                     } else if (rule.reward_point_mode === 'money') {
                         for (const line of orderLines) {
-                            if (line.is_reward_line || !(rule.valid_product_ids.has(line.get_product().id)) || line.get_quantity() <= 0) {
+                            if (line.is_reward_line || !(rule.valid_product_ids.has(line.get_product().id)) || line.get_quantity() <= 0
+                                || line.ignoreLoyaltyPoints()) {
                                 continue;
                             }
                             const pointsPerUnit = round_precision(rule.reward_point_amount * line.get_price_with_tax() / line.get_quantity(), 0.01);
