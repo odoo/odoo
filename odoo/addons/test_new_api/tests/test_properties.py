@@ -128,6 +128,7 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(self.message_3.read(['attributes'])[0]['attributes'], expected)
         self.assertEqual(self.message_3.attributes, expected)
 
+    @mute_logger('odoo.fields')
     def test_properties_field_write_batch(self):
         """Test the behavior of the write called in batch.
 
@@ -186,6 +187,7 @@ class PropertiesCase(TransactionCase):
             # 2 more queries for message 2 to verify his partner existence / name_get
             (self.message_1 | self.message_2).read(['attributes'])
 
+    @mute_logger('odoo.fields')
     def test_properties_field_delete(self):
         """Test to delete a property using the flag "definition_deleted"."""
         self.message_1.attributes = [{
@@ -215,6 +217,7 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(len(self.message_1.attributes), 1)
         self.assertEqual(self.message_1.attributes[0]['value'], 'purple')
 
+    @mute_logger('odoo.fields')
     def test_properties_field_create_batch(self):
         # first create to cache the access rights
         self.env['test_new_api.message'].create({'name': 'test'})
@@ -507,7 +510,7 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(properties[1]['value'], (self.partner_2.id, self.partner_2.display_name))
         self.assertEqual(properties[1]['comodel'], 'test_new_api.partner')
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_many2one_unlink(self):
         """Test the case where we unlink the many2one record."""
         self.message_2.attributes = [{
@@ -800,7 +803,7 @@ class PropertiesCase(TransactionCase):
                 },
             ]
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_many2many_basic(self):
         """Test the basic operation on a many2many properties (read, write...).
 
@@ -1016,6 +1019,7 @@ class PropertiesCase(TransactionCase):
                 {'name': 'state', 'type': 'datetime'},
             ]
 
+    @mute_logger('odoo.fields')
     def test_properties_field_onchange(self):
         """If we change the definition record, the onchange of the properties field must be triggered."""
         message_form = Form(self.env['test_new_api.message'])
@@ -1169,6 +1173,7 @@ class PropertiesCase(TransactionCase):
             message.attributes,
             [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
 
+    @mute_logger('odoo.fields')
     def test_properties_field_definition_update(self):
         """Test the definition update from the child."""
         self.discussion_1.attributes_definition = []
@@ -1220,6 +1225,7 @@ class PropertiesCase(TransactionCase):
         }
         self.assertEqual(expected_properties, sql_properties)
 
+    @mute_logger('odoo.fields')
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""
         MultiTag = type(self.env['test_new_api.multi.tag'])
