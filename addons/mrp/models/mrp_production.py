@@ -817,10 +817,11 @@ class MrpProduction(models.Model):
                 vals['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
         productions = super().create(vals_list)
         for production in productions:
-            # Trigger move_raw creation when importing a file
+            # Trigger SM/WO creation when importing a file
             if 'import_file' in self.env.context:
                 production._onchange_move_raw()
                 production._onchange_move_finished()
+                production._onchange_workorder_ids()
         return productions
 
     @api.ondelete(at_uninstall=False)
