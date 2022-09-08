@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="payment_form" position="inside">
-                <field name="so_reference_type" attrs="{'invisible': [('code', '!=', 'transfer')]}"/>
+                <field name="so_reference_type" attrs="{'invisible': [('code', '!=', 'custom')]}"/>
             </group>
         </field>
     </record>
