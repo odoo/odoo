@@ -75,7 +75,7 @@ class Paymentprovider(models.Model):
 
     @api.model
     def _setup_payment_method(self, code):
-        if code not in ('none', 'transfer') and not self._get_provider_payment_method(code):
+        if code not in ('none', 'custom') and not self._get_provider_payment_method(code):
             providers_description = dict(self._fields['code']._description_selection(self.env))
             self.env['account.payment.method'].create({
                 'name': providers_description[code],

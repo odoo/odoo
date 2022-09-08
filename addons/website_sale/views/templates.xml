@@ -1958,7 +1958,7 @@
                         <span t-esc="payment_tx_id.state_message"/>
                     </t>
                 </div>
-                <t t-if="payment_tx_id.provider_code == 'transfer'">
+                <t t-if="payment_tx_id.provider_code == 'custom'">
                     <div t-if="order.reference" class="card-body">
                         <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
