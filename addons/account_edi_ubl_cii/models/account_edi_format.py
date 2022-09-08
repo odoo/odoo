@@ -102,7 +102,7 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
 
         if self.code not in FORMAT_CODES:
-            return super()._post_invoice_edi(invoices)
+            return super()._post_invoice_edi(invoices, test_mode=test_mode)
 
         res = {}
         for invoice in invoices:
