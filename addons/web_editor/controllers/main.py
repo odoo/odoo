@@ -380,7 +380,7 @@ class Web_Editor(http.Controller):
             dict: views, scss, js
         """
         # Related views must be fetched if the user wants the views and/or the style
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
+        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
         scss_files_data_by_bundle = []
