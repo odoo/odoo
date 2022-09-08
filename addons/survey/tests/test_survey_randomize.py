@@ -55,7 +55,7 @@ class TestSurveyRandomize(TransactionCase):
     def _add_questions(self, question_and_pages, page, count):
         for i in range(count):
             question_and_pages |= self.env['survey.question'].sudo().create({
-                'title': page.title + ' Q' + str(i + 1),
+                'title': f'{page.title} Q{i + 1}',
                 'sequence': page.sequence + (i + 1)
             })
 

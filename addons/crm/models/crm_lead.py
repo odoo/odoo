@@ -1781,7 +1781,7 @@ class Lead(models.Model):
             # search through the existing partners based on the lead's partner or contact name
             # to be aligned with _create_customer, search on lead's name as last possibility
             for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
-                partner = self.env['res.partner'].search([('name', 'ilike', '%' + customer_potential_name + '%')], limit=1)
+                partner = self.env['res.partner'].search([('name', 'ilike', customer_potential_name)], limit=1)
                 if partner:
                     break
 

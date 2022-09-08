@@ -363,9 +363,9 @@ class Event(models.Model):
             # add_menu=False, ispage=False -> simply create a new ir.ui.view with name
             # and template
             page_result = self.env['website'].sudo().new_page(
-                name=name + ' ' + self.name, template=xml_id,
+                name=f'{name} {self.name}', template=xml_id,
                 add_menu=False, ispage=False)
-            url = "/event/" + slug(self) + "/page" + page_result['url']  # url contains starting "/"
+            url = f"/event/{slug(self)}/page{page_result['url']}"  # url contains starting "/"
             view_id = page_result['view_id']
 
         website_menu = self.env['website.menu'].sudo().create({
@@ -411,7 +411,7 @@ class Event(models.Model):
         params = {
             'action': 'TEMPLATE',
             'text': self.name,
-            'dates': url_date_start + '/' + url_date_stop,
+            'dates': f'{url_date_start}/{url_date_stop}',
             'ctz': self.date_tz,
             'details': self.name,
         }
@@ -419,7 +419,7 @@ class Event(models.Model):
             params.update(location=self.address_inline)
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
-        iCal_url = '/event/%d/ics?%s' % (self.id, encoded_params)
+        iCal_url = f'/event/{self.id:d}/ics?{encoded_params}'
         return {'google_url': google_url, 'iCal_url': iCal_url}
 
     def _default_website_meta(self):

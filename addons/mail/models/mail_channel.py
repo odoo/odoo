@@ -1183,7 +1183,7 @@ class Channel(models.Model):
             `content` is HTML, dynamic parts should be escaped by the caller.
         """
         self.env['bus.bus']._sendone(partner_to, 'mail.channel/transient_message', {
-            'body': "<span class='o_mail_notification'>" + content + "</span>",
+            'body': f"<span class='o_mail_notification'>{content}</span>",
             'model': self._name,
             'res_id': self.id,
         })
