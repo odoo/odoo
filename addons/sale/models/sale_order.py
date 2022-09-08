@@ -286,6 +286,8 @@ class SaleOrder(models.Model):
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
+        # Avoid access error on fiscal position when reading a sale order with company != user.company_ids
+        compute_sudo=True,
         help="Technical field to filter the available taxes depending on the fiscal country and fiscal position.")
     tax_totals_json = fields.Char(compute='_compute_tax_totals_json')
     terms_type = fields.Selection(related='company_id.terms_type')
