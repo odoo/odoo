@@ -43,9 +43,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="o.move_id._get_reconciled_invoices_partials()[0]" t-as="rec">
+                        <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
+                        <t t-set="invoices" t-value="{partial[2].move_id for partial in partials}"/>
+                        <t t-foreach="invoices" t-as="inv">
                             <!-- MOVE -->
-                            <t t-set="inv" t-value="rec[2].move_id"/>
                             <t t-if="inv.move_type != 'entry'">
                                 <tr>
                                     <td><span t-field="inv.invoice_date"/></td>
