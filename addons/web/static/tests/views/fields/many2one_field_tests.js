@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -207,9 +206,6 @@ QUnit.module("Fields", (hooks) => {
 
         setupViewRegistries();
 
-        patchWithCleanup(AutoComplete, {
-            delay: 0,
-        });
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
