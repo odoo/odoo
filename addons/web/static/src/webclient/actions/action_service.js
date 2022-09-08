@@ -445,8 +445,8 @@ function makeActionManager(env) {
             }
         }
 
-        if (context.active_id || context.active_ids || context.search_disable_custom_filters) {
-            viewProps.activateFavorite = false; // not sure --> check logic
+        if (context.search_disable_custom_filters) {
+            viewProps.activateFavorite = false;
         }
 
         // view specific
