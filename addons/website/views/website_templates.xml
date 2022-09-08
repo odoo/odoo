@@ -140,7 +140,10 @@
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
-        <attribute name="t-cache">no_footer,no_copyright,website</attribute>
+        <!-- Add the main object as a cache key so that the footer_visible page
+        option is properly reflected across pages. Controllers and other objects
+        do not have any page option (yet) so they can share the same cache -->
+        <attribute name="t-cache" add="website,main_object._name == 'website.page' and main_object"/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
