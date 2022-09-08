@@ -98,7 +98,7 @@ class AccountEdiFormat(models.Model):
             return super()._is_enabled_by_default_on_journal(journal)
         return self.code == 'facturx_1_0_05'
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         # EXTENDS account_edi
         self.ensure_one()
 
