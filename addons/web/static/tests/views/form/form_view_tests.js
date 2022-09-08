@@ -60,7 +60,12 @@ QUnit.module("Views", (hooks) => {
                         foo: { string: "Foo", type: "char", default: "My little Foo Value" },
                         bar: { string: "Bar", type: "boolean" },
                         int_field: { string: "int_field", type: "integer", sortable: true },
-                        qux: { string: "Qux", type: "float", digits: [16, 1] },
+                        qux: {
+                            string: "Qux",
+                            type: "float",
+                            digits: [16, 1],
+                            group_operator: "sum",
+                        },
                         p: { string: "one2many field", type: "one2many", relation: "partner" },
                         trululu: { string: "Trululu", type: "many2one", relation: "partner" },
                         timmy: { string: "pokemon", type: "many2many", relation: "partner_type" },
@@ -11037,14 +11042,14 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".o_widget .o_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
+            ".o_widget_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
         );
 
         await click(target.querySelector(".o_pager_next"));
 
         assert.containsOnce(
             target,
-            ".o_widget .o_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
+            ".o_widget_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
         );
     });
 
