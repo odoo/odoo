@@ -60,6 +60,10 @@ class PosPaymentMethod(models.Model):
         _logger.error("Unexpected stripe_connection_token response: %s", resp.status_code)
         raise UserError(_("Unexpected error between us and Stripe."))
 
+    def _stripe_calculate_amount(self, amount):
+        currency = self.journal_id.currency_id or self.company_id.currency_id
+        return int(amount/currency.rounding)
+
     def stripe_payment_intent(self, amount):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Do not have access to fetch token from Stripe"))
@@ -72,7 +76,7 @@ class PosPaymentMethod(models.Model):
         try:
             data = werkzeug.urls.url_encode({
                 "currency": currency.name,
-                "amount": int(amount/currency.rounding),
+                "amount": self._stripe_calculate_amount(amount),
                 "payment_method_types[]": "card_present",
                 "capture_method": "manual",
             })
@@ -88,15 +92,28 @@ class PosPaymentMethod(models.Model):
         raise UserError(_("Unexpected error between us and Stripe."))
 
     @api.model
-    def stripe_capture_payment(self, paymentIntentId):
+    def stripe_capture_payment(self, paymentIntentId, amount=None):
+        """Captures the payment identified by paymentIntentId.
+
+        :param paymentIntentId: the id of the payment to capture
+        :param amount: without this parameter the entire authorized
+                       amount is captured. Specifying a larger amount allows
+                       overcapturing to support tips.
+        """
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Do not have access to fetch token from Stripe"))
 
         endpoint = ('https://api.stripe.com/v1/payment_intents/%s/capture') % \
             (werkzeug.urls.url_quote(paymentIntentId))
 
+        data = None
+        if amount is not None:
+            data = {
+                "amount_to_capture": self._stripe_calculate_amount(amount),
+            }
+
         try:
-            resp = requests.post(endpoint, auth=(self.sudo()._get_stripe_secret_key(), ''), timeout=TIMEOUT)
+            resp = requests.post(endpoint, data=data, auth=(self.sudo()._get_stripe_secret_key(), ''), timeout=TIMEOUT)
         except requests.exceptions.RequestException:
             _logger.exception("Failed to call stripe_capture_payment endpoint")
             raise UserError(_("There are some issues between us and Stripe, try again later."))
