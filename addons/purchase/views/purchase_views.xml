@@ -372,7 +372,7 @@
                                 <group name="other_info">
                                     <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="origin" widget="origin_widget"/>
+                                    <field name="origin" readonly="1" widget="origin_widget"/>
                                 </group>
                                 <group name="invoice_info">
                                     <field name="invoice_status" attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'to approve', 'cancel'))]}"/>
@@ -402,7 +402,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
                     <field name="product_id"/>
-                    <field name="origin" widget="origin_widget"/>
+                    <field name="origin" readonly="1" widget="origin_widget"/>
                     <filter name="my_purchases" string="My Purchases" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
@@ -543,7 +543,7 @@
                     <field name="company_id" readonly="1" options="{'no_create': True}"
                         groups="base.group_multi_company" optional="show"/>
                     <field name="user_id" optional="show"/>
-                    <field name="origin" optional="show" widget="origin_widget"/>
+                    <field name="origin" readonly="1" optional="show" widget="origin_widget"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
@@ -580,7 +580,7 @@
                     <field name="date_order" attrs="{'invisible': ['|', '|', ('state', '=', 'purchase'), ('state', '=', 'done'), ('state', '=', 'cancel')]}"
                         invisible="not context.get('quotation_only', False)" widget="remaining_days" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
-                    <field name="origin" optional="show" widget="origin_widget"/>
+                    <field name="origin" readonly="1" optional="show" widget="origin_widget"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="state in ['purchase', 'done']"/>
                     <field name="currency_id" invisible="1"/>
@@ -612,7 +612,7 @@
                     <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
-                    <field name="origin" optional="show" widget="origin_widget"/>
+                    <field name="origin" readonly="1" optional="show" widget="origin_widget"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1"/>
                     <field name="currency_id" invisible="1"/>

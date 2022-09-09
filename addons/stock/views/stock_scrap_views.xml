@@ -62,7 +62,7 @@
                                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                                 <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1"/>
                                 <field name="scrap_location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" force_save="1"/>
-                                <field name="origin" widget="origin_widget"/>
+                                <field name="origin" readonly="1" widget="origin_widget"/>
                                 <field name="date_done" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
