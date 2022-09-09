@@ -29,9 +29,6 @@ class ResConfigSettings(models.TransientModel):
         readonly=False)
     website_homepage_url = fields.Char(
         related='website_id.homepage_url', readonly=False)
-    website_country_group_ids = fields.Many2many(
-        related='website_id.country_group_ids',
-        readonly=False)
     website_company_id = fields.Many2one(
         related='website_id.company_id',
         string='Website Company',
