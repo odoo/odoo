@@ -13,7 +13,7 @@ class WebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_js(self):
         # webclient desktop test suite
-        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800)
+        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, failure_message=' tests failed.')
 
     def test_check_suite(self):
         # verify no js test is using `QUnit.only` as it forbid any other test to be executed
@@ -45,4 +45,4 @@ class MobileWebSuite(odoo.tests.HttpCase):
 
     def test_mobile_js(self):
         # webclient mobile test suite
-        self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800)
+        self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800, failure_message=' tests failed.')
