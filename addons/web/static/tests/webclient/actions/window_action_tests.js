@@ -2393,37 +2393,4 @@ QUnit.module("ActionManager", (hooks) => {
         // mode is "edit" because target="new"
         assert.containsOnce(target, ".o_form_view .o_form_editable");
     });
-
-    QUnit.test("action group_by of type string", async function (assert) {
-        serverData.models.partner.records = [];
-        serverData.views["partner,false,list"] = `
-            <tree sample="1">
-                <field name="name"/>
-            </tree>    
-        `;
-        serverData.views["partner,false,form"] = `
-            <form>
-                <field name="name"/>
-            </form>
-        `;
-        registry.category("services").add("user", makeFakeUserService());
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, {
-            name: "Partner",
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [
-                [false, "list"],
-                [false, "form"],
-            ],
-        });
-
-        assert.containsOnce(target, ".o_list_view .o_content.o_view_sample_data");
-
-        await click(target.querySelector(".o_list_view .o_list_button_add"));
-
-        await click(target.querySelector(".o_form_view .breadcrumb-item a"));
-
-        assert.containsOnce(target, ".o_list_view .o_content.o_view_sample_data");
-    });
 });

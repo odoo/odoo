@@ -111,7 +111,7 @@ export function useModel(ModelClass, params, options = {}) {
             ? globalState.useSampleModel
             : component.props.useSampleModel
     );
-    model.useSampleModel = useSampleModel;
+    model.useSampleModel = !options.ignoreUseSampleModel ? useSampleModel : false;
     const orm = model.orm;
     let sampleORM = globalState.sampleORM;
     const user = useService("user");
@@ -153,16 +153,15 @@ export function useModel(ModelClass, params, options = {}) {
         started = true;
     });
     onWillUpdateProps((nextProps) => {
-        useSampleModel = false;
+        if (!options.ignoreUseSampleModel) {
+            useSampleModel = false;
+        }
         load(nextProps);
     });
 
     useSetupView({
         getGlobalState() {
-            return {
-                sampleORM,
-                useSampleModel: model.useSampleModel,
-            };
+            return { sampleORM, useSampleModel };
         },
     });
 
