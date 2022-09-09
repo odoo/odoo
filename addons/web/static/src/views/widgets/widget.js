@@ -32,7 +32,7 @@ export class Widget extends Component {
         };
     }
     get widgetProps() {
-        const { record, node: rawNode, readonly } = this.props;
+        const { node: rawNode } = this.props;
         const node = rawNode ? decodeObjectForTemplate(rawNode) : {};
         let propsFromAttrs = {};
         if (node.attrs) {
@@ -44,8 +44,12 @@ export class Widget extends Component {
                 },
             });
         }
-        // TODO WOWL remove "node" once there are no more legacy widgets.
-        return { readonly, node, ...propsFromAttrs, record };
+        const props = { ...this.props };
+        delete props.class;
+        delete props.name;
+        delete props.node;
+
+        return { ...propsFromAttrs, ...props };
     }
 }
 Widget.template = xml/*xml*/ `
