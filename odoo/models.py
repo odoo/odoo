@@ -6390,14 +6390,14 @@ class BaseModel(metaclass=MetaModel):
 
             # process what to compute
             for field, records, create in tocompute:
-                records -= self.env.protected(field)
-                if not records:
-                    continue
                 if field.compute and field.store:
                     if field.recursive:
                         recursively_marked = self.env.not_to_compute(field, records)
                     self.env.add_to_compute(field, records)
                 else:
+                    records -= self.env.protected(field)
+                    if not records:
+                        continue
                     # Don't force the recomputation of compute fields which are
                     # not stored as this is not really necessary.
                     if field.recursive:
