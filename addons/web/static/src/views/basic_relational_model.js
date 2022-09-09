@@ -503,7 +503,7 @@ export class Record extends DataPoint {
                 viewType: this.__viewType,
             });
         } else {
-            await this.model.__bm__.reload(this.__bm_handle__, {
+            this.__bm_handle__ = await this.model.__bm__.reload(this.__bm_handle__, {
                 viewType: this.__viewType,
             });
         }

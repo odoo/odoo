@@ -110,6 +110,7 @@ export class SettingsFormController extends formView.Controller {
             clickParams: {
                 name: "cancel",
                 type: "object",
+                special: "cancel",
             },
             getResParams: () =>
                 pick(this.model.root, "context", "evalContext", "resModel", "resId", "resIds"),

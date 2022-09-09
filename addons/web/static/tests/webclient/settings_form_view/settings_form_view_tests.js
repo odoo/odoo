@@ -685,7 +685,7 @@ QUnit.module("SettingsFormView", (hooks) => {
     QUnit.test(
         "clicking on any button in setting should show discard warning if setting form is dirty",
         async function (assert) {
-            assert.expect(12);
+            assert.expect(11);
 
             serverData.actions = {
                 1: {
@@ -733,10 +733,6 @@ QUnit.module("SettingsFormView", (hooks) => {
                 if (route === "/web/dataset/call_button") {
                     if (args.method === "execute") {
                         assert.ok("execute method called");
-                        return true;
-                    }
-                    if (args.method === "cancel") {
-                        assert.ok("cancel method called");
                         return true;
                     }
                 }
@@ -1253,7 +1249,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
     QUnit.test("Discard button clean the settings view", async function (assert) {
-        assert.expect(5);
+        assert.expect(10);
 
         serverData.actions = {
             1: {
@@ -1291,21 +1287,18 @@ QUnit.module("SettingsFormView", (hooks) => {
         };
 
         const mockRPC = (route, args) => {
-            if (route === "/web/dataset/call_button" && args.method === "cancel") {
-                assert.step("cancel");
-                return Promise.resolve({
-                    name: "Settings view",
-                    res_model: "res.config.settings",
-                    type: "ir.actions.act_window",
-                    target: "inline",
-                    views: [[false, "form"]],
-                });
-            }
+            assert.step(args.method || route);
         };
 
         const webClient = await createWebClient({ serverData, mockRPC });
 
         await doAction(webClient, 1);
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "get_views",
+            "onchange",
+        ]);
         assert.containsNone(
             target,
             ".o_field_boolean input:checked",
@@ -1322,8 +1315,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ".o_field_boolean input:checked",
             "checkbox should not be checked"
         );
-
-        assert.verifySteps(["cancel"]);
+        assert.verifySteps(["onchange"]);
     });
 
     QUnit.test("Settings Radio widget: show and search", async function (assert) {
