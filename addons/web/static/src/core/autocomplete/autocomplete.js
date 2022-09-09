@@ -124,6 +124,10 @@ export class AutoComplete extends Component {
             return;
         }
 
+        if (this.props.resetOnSelect) {
+            this.inputRef.el.value = "";
+        }
+
         this.forceValFromProp = true;
         this.props.onSelect(option, {
             ...params,
@@ -295,6 +299,7 @@ Object.assign(AutoComplete, {
         },
         placeholder: { type: String, optional: true },
         autoSelect: { type: Boolean, optional: true },
+        resetOnSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onChange: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
