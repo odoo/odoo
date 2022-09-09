@@ -1097,6 +1097,7 @@ actual arch.
 
         root_info = {
             'view_type': root.tag,
+            'transfer_modifiers': self._postprocess_view_should_transfer_node_to_modifiers(root.tag),
             'mobile': options.get('mobile'),
         }
 
@@ -1118,8 +1119,9 @@ actual arch.
                     # the node has been removed, stop processing here
                     continue
 
-            transfer_node_to_modifiers(node, node_info['modifiers'], self._context)
-            transfer_modifiers_to_node(node_info['modifiers'], node)
+            if node_info['transfer_modifiers']:
+                transfer_node_to_modifiers(node, node_info['modifiers'], self._context)
+                transfer_modifiers_to_node(node_info['modifiers'], node)
 
             # if present, iterate on node_info['children'] instead of node
             for child in reversed(node_info.get('children', node)):
@@ -1129,6 +1131,11 @@ actual arch.
         root.set('model_access_rights', model._name)
 
         return name_manager
+
+    def _postprocess_view_should_transfer_node_to_modifiers(self, view_type):
+        if view_type in ('kanban', 'tree', 'form', 'search'):
+            return True
+        return False
 
     def _postprocess_on_change(self, arch, model):
         """ Add attribute on_change="1" on fields that are dependencies of
@@ -1231,7 +1238,7 @@ actual arch.
             name_manager.has_field(node, node.get('name'), attrs)
 
             field_info = name_manager.field_info.get(node.get('name'))
-            if field_info:
+            if node_info['transfer_modifiers'] and field_info:
                 transfer_field_to_modifiers(field_info, node_info['modifiers'])
 
     def _postprocess_tag_form(self, node, name_manager, node_info):
