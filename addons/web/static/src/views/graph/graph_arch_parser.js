@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { evaluateExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { archParseBoolean } from "@web/views/utils";
@@ -51,10 +50,8 @@ export class GraphArchParser extends XMLParser {
                         }
                         archInfo.fieldAttrs[fieldName].string = string;
                     }
-                    const isInvisible = Boolean(
-                        evaluateExpr(node.getAttribute("invisible") || "0")
-                    );
-                    if (isInvisible) {
+                    const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+                    if (modifiers.invisible === true) {
                         if (!archInfo.fieldAttrs[fieldName]) {
                             archInfo.fieldAttrs[fieldName] = {};
                         }

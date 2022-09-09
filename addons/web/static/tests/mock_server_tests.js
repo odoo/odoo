@@ -1238,18 +1238,6 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(mockServer.models.bar.records[0].one2many_field, []);
     });
     QUnit.test("List View: invisible on processed Arch", async function (assert) {
-        /**
-         * Note that, the server have two different responses for invisible:
-         * - if the invisible is in the arch (invisible=1), the parsed arch will contain:
-         *      --"invisible=1" on the arch;
-         *      -- "column_invisible: 1" on the modifiers.
-         * - if there is a group in the arch (groups=no_group), and that the user don't have access to the group, the parsed arch will contain:
-         *      -- "invisible=1" on the arch;
-         *      -- "column_invisible: 1" on the modifiers;
-         *      -- "invisible: 1" on the modifiers.
-         * As it's possible (on the groups case) to have an invisible: 1 on the modifiers, on the mock_server we set it all the time.
-         */
-
         data.views = {
             "bar,10001,list": `
                 <tree>
@@ -1260,7 +1248,7 @@ QUnit.module("MockServer", (hooks) => {
             "bar,10001,search": `<search></search>`,
         };
         const expectedList = `<tree>
-                    <field name="bool" invisible="1" modifiers="{&quot;invisible&quot;:true,&quot;column_invisible&quot;:true}"/>
+                    <field name="bool" modifiers="{&quot;column_invisible&quot;:true}"/>
                     <field name="foo"/>
                 </tree>`;
         const mockServer = new MockServer(data);

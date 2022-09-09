@@ -236,7 +236,7 @@ export class MockServer {
             const isGroupby = node.tagName === "groupby";
             if (isField) {
                 const fieldName = node.getAttribute("name");
-                fieldNodes[fieldName] = node;
+                fieldNodes[fieldName] = { node, isInvisible: node.getAttribute("invisible") };
                 // 'transfer_field_to_modifiers' simulation
                 const field = fields[fieldName];
                 if (!field) {
@@ -267,16 +267,18 @@ export class MockServer {
                 });
             } else if (isGroupby && !isNodeProcessed(node)) {
                 const groupbyName = node.getAttribute("name");
-                fieldNodes[groupbyName] = node;
+                fieldNodes[groupbyName] = { node };
                 groupbyNodes[groupbyName] = node;
             }
             // 'transfer_node_to_modifiers' simulation
             let attrs = node.getAttribute("attrs");
+            node.removeAttribute("attrs");
             if (attrs) {
                 attrs = evaluateExpr(attrs);
                 Object.assign(modifiers, attrs);
             }
             const states = node.getAttribute("states");
+            node.removeAttribute("states");
             if (states) {
                 if (!modifiers.invisible) {
                     modifiers.invisible = [];
@@ -286,12 +288,12 @@ export class MockServer {
             const inListHeader = inTreeView && node.closest("header");
             modifiersNames.forEach((attr) => {
                 const mod = node.getAttribute(attr);
+                node.removeAttribute(attr);
                 if (mod) {
                     const v = evaluateExpr(mod, context) ? true : false;
                     if (inTreeView && !inListHeader && attr === "invisible") {
                         modifiers.column_invisible = v;
-                    }
-                    if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
+                    } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
                         modifiers[attr] = v;
                     }
                 }
@@ -314,7 +316,7 @@ export class MockServer {
             return !isField;
         });
         let relModel, relFields;
-        Object.entries(fieldNodes).forEach(([name, node]) => {
+        Object.entries(fieldNodes).forEach(([name, { node, isInvisible }]) => {
             const field = fields[name];
             if (field.type === "many2one" || field.type === "many2many") {
                 const canCreate = node.getAttribute("can_create");
@@ -326,12 +328,7 @@ export class MockServer {
                 relModel = field.relation;
                 relatedModels.add(relModel);
                 // inline subviews: in forms if field is visible and has no widget (1st level only)
-                if (
-                    inFormView &&
-                    level === 0 &&
-                    !node.getAttribute("widget") &&
-                    !node.getAttribute("invisible")
-                ) {
+                if (inFormView && level === 0 && !node.getAttribute("widget") && !isInvisible) {
                     const inlineViewTypes = Array.from(node.children).map((c) => c.tagName);
                     const missingViewtypes = [];
                     const mode = node.getAttribute("mode") || "kanban,tree";
