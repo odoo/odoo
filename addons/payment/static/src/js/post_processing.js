@@ -113,8 +113,8 @@ odoo.define('payment.post_processing', function (require) {
             * transactions should always prevail on others, regardless of their number or state.
             */
             if (render_values['tx_done'].length === 1 &&
-                render_values['tx_done'][0].is_processed) {
-                    window.location = render_values['tx_done'][0].return_url;
+                render_values['tx_done'][0].is_post_processed) {
+                    window.location = render_values['tx_done'][0].landing_route;
                     return;
             }
             // If there are multiple transactions monitored, display them all to the customer. If
