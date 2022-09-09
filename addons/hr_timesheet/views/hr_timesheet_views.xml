@@ -25,7 +25,7 @@
                 <tree editable="bottom" string="Timesheet Activities" sample="1">
                     <field name="date"/>
                     <field name="employee_id" invisible="1"/>
-                    <field name="project_id" required="1" options="{'no_create_edit': True}"/>
+                    <field name="project_id" required="1" options="{'no_create_edit': True, 'no_open': 1}"/>
                     <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}"/>
                     <field name="name" optional="show" required="0"/>
                     <field name="tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" optional="hide"/>

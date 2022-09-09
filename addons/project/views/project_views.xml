@@ -1185,7 +1185,7 @@
                                     <field name="child_text" invisible="1"/>
                                     <field name="allow_subtasks" invisible="1"/>
                                     <field name="name" widget="name_with_subtask_count"/>
-                                    <field name="display_project_id" string="Project" optional="hide"/>
+                                    <field name="display_project_id" string="Project" optional="hide" options="{'no_open': 1}"/>
                                     <field name="milestone_id"
                                         optional="hide"
                                         context="{'default_project_id': display_project_id or project_id}"
@@ -1220,7 +1220,7 @@
                                     <field name="allow_subtasks" invisible="1"/>
                                     <field name="name" widget="name_with_subtask_count"/>
                                     <field name="id" optional="hide"/>
-                                    <field name="project_id" optional="hide" />
+                                    <field name="project_id" optional="hide" options="{'no_open': 1}" />
                                     <field name="milestone_id"
                                         optional="hide"
                                         context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id}"
@@ -1485,7 +1485,7 @@
                     <field name="child_text" invisible="1"/>
                     <field name="allow_subtasks" invisible="1"/>
                     <field name="name" widget="name_with_subtask_count"/>
-                    <field name="project_id" widget="project_private_task" optional="show" readonly="1"/>
+                    <field name="project_id" widget="project_private_task" optional="show" readonly="1" options="{'no_open': 1}"/>
                     <field name="milestone_id" attrs="{'invisible': [('allow_milestones', '=', False)]}" context="{'default_project_id': project_id}" groups="project.group_project_milestone"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
@@ -1517,7 +1517,7 @@
                 <tree string="Next Activities" decoration-danger="not is_closed and activity_date_deadline &lt; current_date" default_order="activity_date_deadline" multi_edit="1">
                     <field name="is_closed"/>
                     <field name="name"/>
-                    <field name="project_id"/>
+                    <field name="project_id" options="{'no_open': 1}"/>
                     <field name="activity_date_deadline"/>
                     <field name="activity_type_id"/>
                     <field name="activity_summary"/>
