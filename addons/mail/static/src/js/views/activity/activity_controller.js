@@ -4,11 +4,9 @@ import '@mail/js/activity';
 
 import BasicController from 'web.BasicController';
 import core from 'web.core';
-import field_registry from 'web.field_registry';
 import { sprintf } from '@web/core/utils/strings';
 import ViewDialogs from 'web.view_dialogs';
 
-var KanbanActivity = field_registry.get('kanban_activity');
 var _t = core._t;
 
 var ActivityController = BasicController.extend({
@@ -57,7 +55,6 @@ var ActivityController = BasicController.extend({
      * @private
      */
     _onScheduleActivity: function () {
-        var self = this;
         var state = this.model.get(this.handle);
         new ViewDialogs.SelectCreateDialog(this, {
             res_model: state.model,
@@ -67,10 +64,11 @@ var ActivityController = BasicController.extend({
             no_create: !this.activeActions.create,
             disable_multiple_selection: true,
             context: state.context,
-            on_selected: function (record) {
-                var fakeRecord = state.getKanbanActivityData({}, record[0].id);
-                var widget = new KanbanActivity(self, 'activity_ids', fakeRecord, {});
-                widget.scheduleActivity();
+            on_selected: async records => {
+                const messaging = await owl.Component.env.services.messaging.get();
+                const thread = messaging.models['Thread'].insert({ id: records[0].id, model: this.model.modelName });
+                await messaging.openActivityForm({ thread });
+                this.trigger_up('reload');
             },
         }).open();
     },

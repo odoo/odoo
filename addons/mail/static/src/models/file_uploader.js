@@ -94,6 +94,7 @@ registerModel({
          * @returns {Promise}
          */
         async _performUpload({ files }) {
+            const webRecord = this.activityListViewItemOwner && this.activityListViewItemOwner.webRecord;
             const composer = this.composerView && this.composerView.composer; // save before async
             const thread = this.thread; // save before async
             const chatter = (
@@ -101,7 +102,10 @@ registerModel({
                 (this.attachmentBoxView && this.attachmentBoxView.chatter) ||
                 (this.activityView && this.activityView.activityBoxView.chatter)
             ); // save before async
-            const activity = this.activityView && this.activityView.activity; // save before async
+            const activity = (
+                this.activityView && this.activityView.activity ||
+                this.activityListViewItemOwner && this.activityListViewItemOwner.activity
+            ); // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
                 uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
@@ -145,6 +149,9 @@ registerModel({
                     }
                 }
             }
+            if (webRecord) {
+                webRecord.model.load({ resId: thread.id });
+            }
             if (chatter && chatter.exists() && chatter.hasParentReloadOnAttachmentsChanged) {
                 chatter.reloadParentView();
             }
@@ -154,6 +161,10 @@ registerModel({
         },
     },
     fields: {
+        activityListViewItemOwner: one('ActivityListViewItem', {
+            identifying: true,
+            inverse: 'fileUploader',
+        }),
         activityView: one('ActivityView', {
             identifying: true,
             inverse: 'fileUploader',
@@ -188,6 +199,9 @@ registerModel({
             compute() {
                 if (this.activityView) {
                     return this.activityView.activity.thread;
+                }
+                if (this.activityListViewItemOwner) {
+                    return this.activityListViewItemOwner.activity.thread;
                 }
                 if (this.attachmentBoxView) {
                     return this.attachmentBoxView.chatter.thread;

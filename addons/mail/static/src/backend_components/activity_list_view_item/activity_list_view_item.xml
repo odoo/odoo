@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityListViewItem" owl="1">
+        <div class="o_ActivityListViewItem d-flex flex-column border-bottom px-3 py-2">
+            <div class="d-flex align-items-baseline">
+                <i class="fa small me-2" t-attf-class="{{ activityListViewItem.activity.icon }}" role="img"/>
+                <t t-if="activityListViewItem.activity.summary">
+                    <b class="text-900 me-2" t-esc="activityListViewItem.activity.summary"/>
+                </t>
+                <t t-if="!activityListViewItem.activity.summary and activityListViewItem.activity.type">
+                    <b class="text-900 me-2" t-esc="activityListViewItem.activity.type.displayName"/>
+                </t>
+                <button t-if="activityListViewItem.activity.chaining_type === 'suggest' and activityListViewItem.activity.canWrite" class="btn btn-sm btn-link" t-on-click="activityListViewItem.onClickEditActivityButton">
+                    <i class="fa fa-pencil"/>
+                </button>
+                <div class="flex-grow-1"/>
+                <t t-if="activityListViewItem.activity.canWrite" class="flex-grow-1 text-end">
+                    <a t-if="activityListViewItem.fileUploader" class="fa fa-upload" title="Upload file" role="img" t-on-click="activityListViewItem.onClickUploadDocument"/>
+                    <a t-else="" class="o_ActivityListViewItem_markAsDone fa fa-check-circle" t-on-click="activityListViewItem.onClickMarkAsDone" title="Mark as done" role="img" aria-label="Mark as done" t-ref="markDoneButton"/>
+                    <!-- TODO sign override to change the button -->
+                    <!-- TODO approvals override to change stuff -->
+                </t>
+            </div>
+            <div t-if="activityListViewItem.activity.state !== 'today'" class="d-flex align-items-baseline">
+                <i class="fa fa-clock-o me-2 text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                <small t-if="!activityListViewItem.activity.isCurrentPartnerAssignee and activityListViewItem.activity.assignee" class="me-1"><span t-esc="activityListViewItem.activity.assignee.displayName"/> -</small>
+                <small t-att-title="activityListViewItem.activity.dateDeadline" t-esc="activityListViewItem.delayLabel"/>
+            </div>
+            <!-- TODO handle "mail_template_ids" -->
+        </div>
+    </t>
+</templates>

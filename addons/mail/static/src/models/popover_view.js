@@ -42,13 +42,34 @@ registerModel({
             if (this.component.root.el.contains(ev.target)) {
                 return;
             }
+            if (this.activityListView) {
+                for (const activityListViewItem of this.activityListView.activityListViewItems) {
+                    if (activityListViewItem.markDonePopoverView && activityListViewItem.markDonePopoverView.contains(ev.target)) {
+                        return;
+                    }
+                }
+            }
             this.delete();
         },
     },
     fields: {
+        activityButtonViewOwnerAsActivityList: one('ActivityButtonView', {
+            identifying: true,
+            inverse: 'activityListPopoverView',
+        }),
+        activityListView: one('ActivityListView', {
+            compute() {
+                return this.activityButtonViewOwnerAsActivityList ? {} : clear();
+            },
+            inverse: 'popoverViewOwner',
+        }),
+        activityListViewItemOwnerAsMarkDone: one('ActivityListViewItem', {
+            identifying: true,
+            inverse: 'markDonePopoverView',
+        }),
         activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
             compute() {
-                if (this.activityViewOwnerAsMarkDone) {
+                if (this.activityViewOwnerAsMarkDone || this.activityListViewItemOwnerAsMarkDone) {
                     return {};
                 }
                 return clear();
@@ -64,6 +85,9 @@ registerModel({
          */
         anchorRef: attr({
             compute() {
+                if (this.activityListViewItemOwnerAsMarkDone) {
+                    return this.activityListViewItemOwnerAsMarkDone.markDoneButtonRef;
+                }
                 if (this.activityViewOwnerAsMarkDone) {
                     return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
                 }
@@ -78,6 +102,9 @@ registerModel({
                 }
                 if (this.composerViewOwnerAsEmoji) {
                     return this.composerViewOwnerAsEmoji.buttonEmojisRef;
+                }
+                if (this.activityButtonViewOwnerAsActivityList) {
+                    return this.activityButtonViewOwnerAsActivityList.buttonRef;
                 }
                 if (this.messageActionViewOwnerAsReaction) {
                     return this.messageActionViewOwnerAsReaction.actionRef;
@@ -158,6 +185,9 @@ registerModel({
                 if (this.emojiPickerView) {
                     return this.emojiPickerView;
                 }
+                if (this.activityButtonViewOwnerAsActivityList) {
+                    return this.activityListView;
+                }
                 if (this.messageNotificationPopoverContentView) {
                     return this.messageNotificationPopoverContentView;
                 }
@@ -200,6 +230,9 @@ registerModel({
                 }
                 if (this.emojiPickerView) {
                     return 'EmojiPickerView';
+                }
+                if (this.activityButtonViewOwnerAsActivityList) {
+                    return 'ActivityListView';
                 }
                 if (this.messageNotificationPopoverContentView) {
                     return 'MessageNotificationPopoverContent';
@@ -259,6 +292,9 @@ registerModel({
          */
         position: attr({
             compute() {
+                if (this.activityListViewItemOwnerAsMarkDone) {
+                    return 'right';
+                }
                 if (this.activityViewOwnerAsMarkDone) {
                     return 'right';
                 }
@@ -273,6 +309,9 @@ registerModel({
                 }
                 if (this.composerViewOwnerAsEmoji) {
                     return 'top';
+                }
+                if (this.activityButtonViewOwnerAsActivityList) {
+                    return 'bottom-start';
                 }
                 if (this.messageActionViewOwnerAsReaction) {
                     return 'top';

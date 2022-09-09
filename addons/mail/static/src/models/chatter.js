@@ -71,26 +71,11 @@ registerModel({
          *
          * @param {MouseEvent} ev
          */
-        onClickScheduleActivity(ev) {
-            const action = {
-                type: 'ir.actions.act_window',
-                name: this.env._t("Schedule Activity"),
-                res_model: 'mail.activity',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: {
-                    default_res_id: this.thread.id,
-                    default_res_model: this.thread.model,
-                },
-                res_id: false,
-            };
-            return this.env.services.action.doAction(
-                action,
-                {
-                    onClose: () => this.reloadParentView(),
-                }
-            );
+        async onClickScheduleActivity(ev) {
+            await this.messaging.openActivityForm({ thread: this.thread });
+            if (this.exists()) {
+                this.reloadParentView();
+            }
         },
         /**
          * Handles click on "send message" button.

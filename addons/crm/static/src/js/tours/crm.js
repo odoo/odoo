@@ -45,12 +45,12 @@ tour.register('crm_tour', {
     position: "right",
     run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
+    trigger: ".o_kanban_record:not(.o_updating) .o_ActivityButtonView",
     extra_trigger: ".o_opportunity_kanban",
     content: Markup(_t("Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to keep track of everything you have to do!</i>")),
     position: "bottom",
 }, {
-    trigger: ".o_schedule_activity",
+    trigger: ".o_ActivityListView_addActivityButton",
     extra_trigger: ".o_opportunity_kanban",
     content: Markup(_t("Let's <b>Schedule an Activity.</b>")),
     position: "bottom",

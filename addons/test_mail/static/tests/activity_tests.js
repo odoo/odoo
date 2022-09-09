@@ -387,7 +387,7 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
     var $modal = $('.modal-lg');
     assert.strictEqual($modal.find('.o_data_row').length, 3, "all mail.test.activity should be available to select");
     // select a record to schedule an activity for it (this triggers a do_action)
-    testUtils.dom.click($modal.find('.o_data_row:last'));
+    await testUtils.dom.click($modal.find('.o_data_row:last'));
     assert.verifySteps(['doAction']);
 });
 
