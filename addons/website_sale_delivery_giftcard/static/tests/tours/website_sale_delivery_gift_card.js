@@ -34,17 +34,17 @@ tour.register('shop_sale_giftcard_delivery', {
         },
         {
             content: "click on 'Pay with gift card'",
-            trigger: '.show_coupon',
+            trigger: '.js_show_gift_card',
             run: 'click'
         },
         {
             content: "Enter gift card code",
-            trigger: "form[name='coupon_code'] input[name='promo']",
+            trigger: "input[name='gift_card_code']",
             run: 'text 123456'
         },
         {
             content: "click on 'Pay'",
-            trigger: "a[role='button'].a-submit:contains(Apply)",
+            trigger: "button[type='submit'].a-submit:contains(Pay)",
             run: 'click'
         },
         {
@@ -55,6 +55,7 @@ tour.register('shop_sale_giftcard_delivery', {
         {
             content: "check if total price is correct",
             trigger: "tr#order_total span.oe_currency_value:contains(0.00)",
+            extra_trigger: 'button[name="o_payment_submit_button"]',
             run: () => {} // this is a check
         },
     ]
