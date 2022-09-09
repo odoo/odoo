@@ -69,3 +69,12 @@ $oi-sizes: (
 .oi-pulse {
     animation: fa-spin 1s infinite steps(8);
 }
+
+.o_barcode {
+    -webkit-mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
+    mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
+    background-color: $o-brand-primary;
+    width: 26px;
+    margin-left: 10px;
+    border: 0;
+}
