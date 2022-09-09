@@ -37,13 +37,14 @@ const KanbanActivity = AbstractField.extend({
     /**
      * @override
      */
-    init(parent, name, record) {
+    init(parent, name, record, options = {}) {
         this._super.apply(this, arguments);
         this._draftFeedback = {};
         this.selection = {};
         for (const [key, value] of record.fields.activity_state.selection) {
             this.selection[key] = value;
         }
+        this.defaultActivityType = options.activityType;
     },
 
     /**
@@ -60,6 +61,13 @@ const KanbanActivity = AbstractField.extend({
     //------------------------------------------------------------
 
     _getActivityFormAction(id) {
+        const context = {
+            default_res_id: this.res_id,
+            default_res_model: this.model,
+        };
+        if (this.defaultActivityType !== undefined) {
+            context.default_activity_type_id = this.defaultActivityType;
+        }
         return {
             type: 'ir.actions.act_window',
             name: _t("Schedule Activity"),
@@ -67,10 +75,7 @@ const KanbanActivity = AbstractField.extend({
             view_mode: 'form',
             views: [[false, 'form']],
             target: 'new',
-            context: {
-                default_res_id: this.res_id,
-                default_res_model: this.model,
-            },
+            context,
             res_id: id || false,
         };
     },

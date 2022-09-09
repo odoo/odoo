@@ -7,19 +7,6 @@ import field_registry from 'web.field_registry';
 const KanbanActivity = field_registry.get('kanban_activity');
 
 const ActivityCell = KanbanActivity.extend({
-    init(parent, name, record, options) {
-        this._super.apply(this, arguments);
-        this.activityType = options && options.activityType;
-    },
-    /**
-     * @private
-     * @override
-     */
-    _getActivityFormAction(id) {
-        const action = this._super.apply(this, arguments);
-        action.context['default_activity_type_id'] = this.activityType;
-        return action;
-    },
     /**
      * @override
      * @private
