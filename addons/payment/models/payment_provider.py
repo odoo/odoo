@@ -64,11 +64,15 @@ class PaymentProvider(models.Model):
     redirect_form_view_id = fields.Many2one(
         string="Redirect Form Template", comodel_name='ir.ui.view',
         help="The template rendering a form submitted to redirect the user when making a payment",
-        domain=[('type', '=', 'qweb')])
+        domain=[('type', '=', 'qweb')],
+        ondelete='restrict',
+    )
     inline_form_view_id = fields.Many2one(
         string="Inline Form Template", comodel_name='ir.ui.view',
         help="The template rendering the inline payment form when making a direct payment",
-        domain=[('type', '=', 'qweb')])
+        domain=[('type', '=', 'qweb')],
+        ondelete='restrict',
+    )
     token_inline_form_view_id = fields.Many2one(
         string="Token Inline Form Template",
         comodel_name='ir.ui.view',
