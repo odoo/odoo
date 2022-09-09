@@ -309,7 +309,6 @@ class MailComposer(models.TransientModel):
                         batch_mails_sudo += self.env['mail.mail'].sudo().create(mail_values)
                     else:
                         post_params = dict(
-                            message_type=wizard.message_type,
                             subtype_id=subtype_id,
                             email_layout_xmlid=wizard.email_layout_xmlid,
                             email_add_signature=not bool(wizard.template_id) and wizard.email_add_signature,
@@ -399,6 +398,7 @@ class MailComposer(models.TransientModel):
                 'reply_to_force_new': self.reply_to_force_new,
                 'mail_server_id': self.mail_server_id.id,
                 'mail_activity_type_id': self.mail_activity_type_id.id,
+                'message_type': 'email' if mass_mail_mode else self.message_type,
             }
 
             # mass mailing: rendering override wizard static values
