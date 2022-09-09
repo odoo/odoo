@@ -139,6 +139,7 @@
             catch (e) {
                 console.error(e);
             }
+            throw error;
         }
     }
 
@@ -1567,7 +1568,7 @@
                     this.bdom = node.renderFn();
                 }
                 catch (e) {
-                    handleError({ node, error: e });
+                    node.app.handleError({ node, error: e });
                 }
                 root.setCounter(root.counter - 1);
             }
@@ -1630,7 +1631,7 @@
             }
             catch (e) {
                 this.locked = false;
-                handleError({ fiber: current || this, error: e });
+                node.app.handleError({ fiber: current || this, error: e });
             }
         }
         setCounter(newValue) {
@@ -1684,7 +1685,7 @@
                 }
             }
             catch (e) {
-                handleError({ fiber: current, error: e });
+                this.node.app.handleError({ fiber: current, error: e });
             }
         }
     }
@@ -2278,7 +2279,7 @@
                 await Promise.all(this.willStart.map((f) => f.call(component)));
             }
             catch (e) {
-                handleError({ node: this, error: e });
+                this.app.handleError({ node: this, error: e });
                 return;
             }
             if (this.status === 0 /* NEW */ && this.fiber === fiber) {
@@ -2353,7 +2354,7 @@
                     }
                 }
                 catch (e) {
-                    handleError({ error: e, node: this });
+                    this.app.handleError({ error: e, node: this });
                 }
             }
             this.status = 2 /* DESTROYED */;
@@ -5537,10 +5538,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
                     nodeErrorHandlers.set(node, handlers);
                 }
                 handlers.unshift((e) => {
-                    if (isResolved) {
-                        console.error(e);
-                    }
-                    else {
+                    if (!isResolved) {
                         reject(e);
                     }
                     throw e;
@@ -5603,6 +5601,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
                 parentFiber.childrenMap[key] = node;
                 return node;
             };
+        }
+        handleError(...args) {
+            return handleError(...args);
         }
     }
     App.validateTarget = validateTarget;
@@ -5787,9 +5788,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-19';
-    __info__.date = '2022-09-06T10:14:11.747Z';
-    __info__.hash = 'd0d7482';
+    __info__.version = '2.0.0-beta-20';
+    __info__.date = '2022-09-09T07:39:56.389Z';
+    __info__.hash = 'b51756f';
     __info__.url = 'https://github.com/odoo/owl';
 
 
