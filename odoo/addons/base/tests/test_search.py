@@ -207,3 +207,29 @@ class test_search(TransactionCase):
 
         self.assertEqual(3, Partner.search_count([], limit=3))
         self.assertEqual(3, Partner.search([], count=True, limit=3))
+
+    def test_22_seach_m2o_nulls(self):
+        Country = self.env['res.country']
+        Currency = self.env['res.currency']
+
+        x = Currency.create({'name': 'C1', 'symbol': 'C1'})
+
+        ids = Country.concat(
+            Country.create({'name': 'A', 'currency_id': x.id}),
+            Country.create({'name': 'B', 'currency_id': False}),
+        ).ids
+
+        self.patch_order('res.currency', 'id')
+        b1 = Country.search([('id', 'in', ids)], order='currency_id, id')
+        b1_rev = Country.search([('id', 'in', ids)], order='currency_id DESC, id DESC')
+        self.assertEqual(b1.ids, list(reversed(b1_rev.ids)))
+
+        # There is only one Currency record linked from the Country records
+        # thus changing the _order of Currency does not change the order
+        # of that unique record. We expect thus the order of the Countries
+        # to be the same
+        self.patch_order('res.currency', 'name DESC, id')
+        b2 = Country.search([('id', 'in', ids)], order='currency_id, id')
+        b2_rev = Country.search([('id', 'in', ids)], order='currency_id DESC, id DESC')
+        self.assertEqual(b1.ids, b2.ids)
+        self.assertEqual(b2.ids, list(reversed(b2_rev.ids)))

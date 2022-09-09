@@ -4813,9 +4813,12 @@ class BaseModel(metaclass=MetaModel):
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
+        # but we still want to differentiate null left joins vs null values
         dest_alias = query.left_join(alias, order_field, dest_model._table, 'id', order_field)
-        return dest_model._generate_order_by_inner(dest_alias, m2o_order, query,
+        res = ['"%s"."id" %s NULL' % (dest_alias, 'IS NOT' if reverse_direction else 'IS')]
+        res += dest_model._generate_order_by_inner(dest_alias, m2o_order, query,
                                                    reverse_direction, seen)
+        return res
 
     @api.model
     def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False, seen=None):
