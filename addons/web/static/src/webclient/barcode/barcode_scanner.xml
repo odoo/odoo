@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BarcodeDialog" owl="1">
+        <Dialog title="'Barcode Scanner'" onClosed="props.onClose" fullscreen="true">
+            <div class="p-0 d-flex justify-content-center flex-column">
+                <video t-ref="videoPreview" autoplay="true" playsinline="true" class="" style="max-width: 100%; max-height: 100%;"/>
+            </div>
+            <t t-set-slot="buttons">
+                <button class="btn btn-secondary" t-on-click="props.onClose">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
