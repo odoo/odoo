@@ -872,7 +872,7 @@ class SaleOrder(models.Model):
     def _action_cancel(self):
         inv = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
         inv.button_cancel()
-        return self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel', 'show_update_pricelist': False})
 
     def _show_cancel_wizard(self):
         for order in self:

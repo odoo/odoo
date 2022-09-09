@@ -109,13 +109,15 @@ class Sanitize {
                 node = nodeP;
             }
 
-            const anchor = this.root.ownerDocument.getSelection().anchorNode;
+            const sel = this.root.ownerDocument.getSelection();
+            const anchor = sel && this.root.ownerDocument.getSelection().anchorNode;
             const anchorEl = anchor && closestElement(anchor);
             // Remove zero-width spaces added by `fillEmpty` when there is
             // content and the selection is not next to it.
             if (
                 node.nodeType === Node.TEXT_NODE &&
                 node.textContent.includes('\u200B') &&
+                node.parentElement.hasAttribute('oe-zws-empty-inline') &&
                 (
                     node.textContent.length > 1 ||
                     // There can be multiple ajacent text nodes, in which case

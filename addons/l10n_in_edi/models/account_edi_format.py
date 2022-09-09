@@ -403,20 +403,28 @@ class AccountEdiFormat(models.Model):
             })
         if saler_buyer.get("buyer_details") != saler_buyer.get("ship_to_details"):
             json_payload.update({
-                "ShipDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("ship_to_details"))
+                "ShipDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("ship_to_details"), is_overseas=is_overseas)
             })
         if is_overseas:
             json_payload.update({
                 "ExpDtls": {
-                    "ShipBNo": invoice.l10n_in_shipping_bill_number or "",
-                    "ShipBDt": invoice.l10n_in_shipping_bill_date
-                       and invoice.l10n_in_shipping_bill_date.strftime("%d/%m/%Y") or "",
-                    "Port": invoice.l10n_in_shipping_port_code_id.code or "",
                     "RefClm": tax_details_by_code.get("igst") and "Y" or "N",
                     "ForCur": invoice.currency_id.name,
                     "CntCode": saler_buyer.get("buyer_details").country_id.code or "",
                 }
             })
+            if invoice.l10n_in_shipping_bill_number:
+                json_payload["ExpDtls"].update({
+                    "ShipBNo": invoice.l10n_in_shipping_bill_number,
+                })
+            if invoice.l10n_in_shipping_bill_date:
+                json_payload["ExpDtls"].update({
+                    "ShipBDt": invoice.l10n_in_shipping_bill_date.strftime("%d/%m/%Y"),
+                })
+            if invoice.l10n_in_shipping_port_code_id:
+                json_payload["ExpDtls"].update({
+                    "Port": invoice.l10n_in_shipping_port_code_id.code
+                })
         return json_payload
 
     @api.model

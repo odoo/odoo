@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgstr "生成任务"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr "待开发票销售订单"
+msgstr "待开结算单销售订单"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -57,7 +58,7 @@ msgstr "待开发票销售订单"
 msgid ""
 "Invoice as soon as this service is sold, and create a task in an existing "
 "project to track the time spent."
-msgstr "销售出此服务后立即开具发票，并在现有项目中创建任务以跟踪花费的时间。"
+msgstr "销售出此服务后立即开具结算单，并在现有项目中创建任务以跟踪花费的时间。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -80,7 +81,7 @@ msgstr "销售出此服务后立即为订购数量开票，并为订单创建一
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr "销售此服务后立即为订购数量开具发票。"
+msgstr "销售此服务后立即为订购数量开具结算单。"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -111,7 +112,7 @@ msgstr "项目数量"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
 msgid "Number of invoices"
-msgstr "发票数量"
+msgstr "结算单数量"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -217,7 +218,7 @@ msgstr "销售订单项目"
 msgid ""
 "Sales Order Item to which the time spent on this task will be added, in "
 "order to be invoiced to your customer."
-msgstr "将添加在此任务上花费的时间的销售订单项目，以便向您的客户开具发票。"
+msgstr "将添加在此任务上花费的时间的销售订单项目，以便向您的客户开具结算单。"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -256,7 +257,7 @@ msgstr "任务关联的销售订单。"
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr "在发票中搜索"
+msgstr "在结算单中搜索"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -358,7 +359,7 @@ msgstr "产品模板%s不应具有项目模板，因为它将在全局项目中�
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "There is nothing to invoice in this project."
-msgstr "在这个项目中没有任何发票。"
+msgstr "在这个项目中没有任何结算单。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -379,7 +380,7 @@ msgstr "开结算单"
 msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
-msgstr "您不能将订单项 %(order_id)s - %(product_id)s链接到这个任务，因为它是重新开票的费用。"
+msgstr "您不能将订单项 %(order_id)s - %(product_id)s链接到这个任务，因为它是重新结算的费用。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0

@@ -105,6 +105,12 @@ const LinkPopoverWidget = Widget.extend({
                 this.$target.popover('show');
             }
         });
+        this.$target.on('href_changed.link_popover', (e) => {
+            // Do not change shown/hidden state.
+            if (popoverShown) {
+                this._loadAsyncLinkPreview();
+            }
+        });
         const onClickDocument = (e) => {
             if (popoverShown) {
                 const hierarchy = [e.target, ...ancestors(e.target)];
@@ -160,6 +166,11 @@ const LinkPopoverWidget = Widget.extend({
      */
     async _loadAsyncLinkPreview() {
         let url;
+        if (this.target.href === '') {
+            this._resetPreview('');
+            this.$previewFaviconFa.removeClass('fa-globe').addClass('fa-question-circle-o');
+            return;
+        }
         try {
             url = new URL(this.target.href); // relative to absolute
         } catch (e) {
@@ -221,8 +232,8 @@ const LinkPopoverWidget = Widget.extend({
      */
     _resetPreview(url) {
         this.$previewFaviconImg.addClass('d-none');
-        this.$previewFaviconFa.removeClass('d-none').addClass('fa-globe');
-        this.$urlLink.text(url).attr('href', url);
+        this.$previewFaviconFa.removeClass('d-none fa-question-circle-o fa-envelope-o fa-phone').addClass('fa-globe');
+        this.$urlLink.text(url || _t('No URL specified')).attr('href', url || null);
         this.$fullUrl.text(url).addClass('d-none').removeClass('o_we_webkit_box');
     },
 
@@ -254,7 +265,7 @@ const LinkPopoverWidget = Widget.extend({
      */
     _onRemoveLinkClick(ev) {
         ev.preventDefault();
-        this.options.wysiwyg.odooEditor.execCommand('unlink');
+        this.options.wysiwyg.removeLink();
         ev.stopImmediatePropagation();
     },
 });
