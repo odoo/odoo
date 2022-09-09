@@ -24,7 +24,7 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
     }
     if (reminderOn) {
         steps = steps.concat([{
-            content: "Check Favorite is on",
+            content: `Check Favorite for "${talkName}" was On`,
             trigger: 'div.o_wetrack_js_reminder i.fa-bell',
             extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Favorite On")',
             run: function () {}, // it's a check
@@ -32,7 +32,7 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
     }
     else {
         steps = steps.concat([{
-            content: "Check Favorite is Off",
+            content: `Check Favorite for "${talkName}" was Off`,
             trigger: 'span.o_wetrack_js_reminder_text:contains("Set Favorite")',
             run: function () {}, // it's a check
         }]);
@@ -42,9 +42,10 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
                 trigger: 'span.o_wetrack_js_reminder_text',
                 run: 'click',
             }, {
-                content: "Check Favorite is On",
+                content: `Check Favorite for "${talkName}" is Now On`,
                 trigger: 'div.o_wetrack_js_reminder i.fa-bell',
                 extra_trigger: 'span.o_wetrack_js_reminder_text:contains("Favorite On")',
+                timeout: 30000,
                 run: function () {}, // it's a check
             }]);
         }
