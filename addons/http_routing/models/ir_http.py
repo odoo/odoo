@@ -210,6 +210,8 @@ def is_multilang_url(local_url, lang_url_codes=None):
            either `multilang` specified to True or if not specified, with `type='http'`.
         2. If not matching 1., everything not under /static/ or /web/ will be translatable
     '''
+    if not local_url:
+        return False
     if not lang_url_codes:
         lang_url_codes = [url_code for _, url_code, *_ in request.env['res.lang'].get_available()]
     spath = local_url.split('/')
