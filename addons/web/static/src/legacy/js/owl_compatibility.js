@@ -542,15 +542,17 @@ odoo.define('web.OwlCompatibility', function (require) {
                 throw new Error("ComponentWrapper must be used with a legacy Widget as parent");
             }
             this.setParent(parent);
+            const _env = props.env;
+            delete props.env;
             this.props = props;
 
             this.Component = Component;
 
-            const env = owl.Component.env;
+            const env = _env || owl.Component.env;
             const appConfig = {
                 env,
                 templates,
-                dev: env.isDebug(),
+                dev: "isDebug" in env ? env.isDebug() : env.debug,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: env._t,
             };
