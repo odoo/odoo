@@ -25,7 +25,10 @@ const TableOfContent = publicWidget.Widget.extend({
         if (indexCallback >= 0) {
             extraMenuUpdateCallbacks.splice(indexCallback, 1);
         }
-        this._scrollingElement.scrollspy('dispose');
+        const scrollSpyInstance = ScrollSpy.getInstance(this._scrollingElement);
+        if (scrollSpyInstance) {
+            scrollSpyInstance.dispose();
+        }
         this.$target.css('top', '');
         this.$target.find('.s_table_of_content_navbar').css('top', '');
         this._super(...arguments);
