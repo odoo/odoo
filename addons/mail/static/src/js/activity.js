@@ -45,6 +45,7 @@ const KanbanActivity = AbstractField.extend({
             this.selection[key] = value;
         }
         this.defaultActivityType = options.activityType;
+        this.isActivityViewCell = options.isActivityViewCell;
     },
 
     /**
@@ -398,18 +399,38 @@ const KanbanActivity = AbstractField.extend({
      * @private
      */
     _render() {
-        // span classes need to be updated manually because the template cannot
-        // be re-rendered eaasily (because of the dropdown state)
-        const spanClasses = ['fa', 'fa-lg', 'fa-fw'];
-        spanClasses.push('o_activity_color_' + (this.record.data.activity_state || 'default'));
-        if (this.recordData.activity_exception_decoration) {
-            spanClasses.push('text-' + this.recordData.activity_exception_decoration);
-            spanClasses.push(this.recordData.activity_exception_icon);
+        if (this.isActivityViewCell) {
+            // replace clock by closest deadline
+            const $date = $('<div class="o_closest_deadline">');
+            const date = moment(this.record.data.closest_deadline).toDate();
+            // To remove year only if current year
+            if (moment().year() === moment(date).year()) {
+                $date.text(date.toLocaleDateString(moment().locale(), {
+                    day: 'numeric', month: 'short'
+                }));
+            } else {
+                $date.text(moment(date).format('ll'));
+            }
+            this.$('a').html($date);
+            if (this.record.data.activity_ids.res_ids.length > 1) {
+                this.$('a').append($('<span>', {
+                    class: 'badge bg-light rounded-pill border-0 ' + this.record.data.activity_state,
+                    text: this.record.data.activity_ids.res_ids.length,
+                }));
+            }
         } else {
-            spanClasses.push('fa-clock-o');
+            // span classes need to be updated manually because the template cannot
+            // be re-rendered eaasily (because of the dropdown state)
+            const spanClasses = ['fa', 'fa-lg', 'fa-fw'];
+            spanClasses.push('o_activity_color_' + (this.record.data.activity_state || 'default'));
+            if (this.recordData.activity_exception_decoration) {
+                spanClasses.push('text-' + this.recordData.activity_exception_decoration);
+                spanClasses.push(this.recordData.activity_exception_icon);
+            } else {
+                spanClasses.push('fa-clock-o');
+            }
+            this.$('.o_activity_btn > span').removeClass().addClass(spanClasses.join(' '));
         }
-        this.$('.o_activity_btn > span').removeClass().addClass(spanClasses.join(' '));
-
         if (this.$el.hasClass('show')) {
             // note: this part of the rendering might be asynchronous
             this._renderDropdown();
