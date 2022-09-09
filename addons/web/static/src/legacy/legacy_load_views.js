@@ -64,6 +64,7 @@ export function processArch(arch, viewType, resModel, models) {
             const fieldName = node.getAttribute("name");
             viewFields[fieldName] = viewFields[fieldName] || {
                 ...models[resModel][fieldName],
+                string: node.getAttribute("string") || models[resModel][fieldName].string,
                 views: {},
             };
             // extract subviews
