@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { browser } from "@web/core/browser/browser";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import {
     click,
@@ -1587,8 +1588,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField supports 'create' props to be a Boolean", async (assert) => {
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
         await makeView({
             type: "form",
@@ -1630,8 +1631,8 @@ QUnit.module("Fields", (hooks) => {
         serverData.views = {
             "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
         };
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
         await makeView({
             type: "form",
@@ -1662,8 +1663,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with option 'no_create' set to true", async (assert) => {
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
         await makeView({
             type: "form",
@@ -1678,8 +1679,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with attribute 'can_create' set to false", async (assert) => {
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
         await makeView({
             type: "form",
