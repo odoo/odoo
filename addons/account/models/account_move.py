@@ -315,6 +315,7 @@ class AccountMove(models.Model):
              "A Company bank account if this is a Customer Invoice or Vendor Credit Note, "
              "otherwise a Partner bank account number.",
         check_company=True,
+        tracking=True,
     )
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',
@@ -334,6 +335,7 @@ class AccountMove(models.Model):
         index='trigram',
         copy=False,
         help="The payment reference to set on journal items.",
+        tracking=True,
     )
     display_qr_code = fields.Boolean(
         string="Display QR-code",
