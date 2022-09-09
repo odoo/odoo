@@ -48,7 +48,7 @@ class HrAttendance(models.Model):
 
     def _get_employee_calendar(self):
         self.ensure_one()
-        return self.employee_id.resource_calendar_id
+        return self.employee_id.resource_calendar_id or self.employee_id.company_id.resource_calendar_id
 
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
@@ -174,11 +174,12 @@ class HrAttendance(models.Model):
             stop = pytz.utc.localize(max(attendance_dates, key=itemgetter(0))[0] + timedelta(hours=24))
 
             # Retrieve expected attendance intervals
-            expected_attendances = emp.resource_calendar_id._attendance_intervals_batch(
+            calendar = emp.resource_calendar_id or emp.company_id.resource_calendar_id
+            expected_attendances = calendar._attendance_intervals_batch(
                 start, stop, emp.resource_id
             )[emp.resource_id.id]
             # Substract Global Leaves and Employee's Leaves
-            leave_intervals = emp.resource_calendar_id._leave_intervals_batch(start, stop, emp.resource_id, domain=[])
+            leave_intervals = calendar._leave_intervals_batch(start, stop, emp.resource_id, domain=[])
             expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
 
             # working_times = {date: [(start, stop)]}

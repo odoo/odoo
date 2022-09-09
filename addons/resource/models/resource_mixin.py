@@ -177,7 +177,7 @@ class ResourceMixin(models.AbstractModel):
             containing at least an attendance.
         """
         resource = self.resource_id
-        calendar = calendar or self.resource_calendar_id
+        calendar = calendar or self.resource_calendar_id or self.company_id.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:

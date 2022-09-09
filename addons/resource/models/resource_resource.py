@@ -40,7 +40,7 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
-        required=True, domain="[('company_id', '=', company_id)]")
+        domain="[('company_id', '=', company_id)]")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
@@ -118,10 +118,11 @@ class ResourceResource(models.Model):
                 start + relativedelta(hour=0, minute=0, second=0),
                 end + relativedelta(days=1, hour=0, minute=0, second=0),
             ]
-            calendar_start = resource.calendar_id._get_closest_work_time(start, resource=resource, search_range=search_range,
+            calendar = resource.calendar_id or resource.company_id.resource_calendar_id or self.env.company.resource_calendar_id
+            calendar_start = calendar._get_closest_work_time(start, resource=resource, search_range=search_range,
                                                                          compute_leaves=compute_leaves)
             search_range[0] = start
-            calendar_end = resource.calendar_id._get_closest_work_time(end if end > start else start, match_end=True,
+            calendar_end = calendar._get_closest_work_time(max(start, end), match_end=True,
                                                                        resource=resource, search_range=search_range,
                                                                        compute_leaves=compute_leaves)
             result[resource] = (
@@ -140,7 +141,7 @@ class ResourceResource(models.Model):
         resource_mapping = {}
         calendar_mapping = defaultdict(lambda: self.env['resource.resource'])
         for resource in self:
-            calendar_mapping[resource.calendar_id] |= resource
+            calendar_mapping[resource.calendar_id or resource.company_id.resource_calendar_id] |= resource
 
         for calendar, resources in calendar_mapping.items():
             resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
