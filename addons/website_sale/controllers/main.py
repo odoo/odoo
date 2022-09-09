@@ -233,87 +233,13 @@ class WebsiteSale(http.Controller):
             'display_currency': pricelist.currency_id,
         }
 
-    @http.route([
-        '/shop',
-        '/shop/page/<int:page>',
-        '/shop/category/<model("product.public.category"):category>',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_shop)
-    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
-        add_qty = int(post.get('add_qty', 1))
-        try:
-            min_price = float(min_price)
-        except ValueError:
-            min_price = 0
-        try:
-            max_price = float(max_price)
-        except ValueError:
-            max_price = 0
-
-        Category = request.env['product.public.category']
-        if category:
-            category = Category.search([('id', '=', int(category))], limit=1)
-            if not category or not category.can_access_from_current_website():
-                raise NotFound()
-        else:
-            category = Category
-
-        website = request.env['website'].get_current_website()
-        if ppg:
-            try:
-                ppg = int(ppg)
-                post['ppg'] = ppg
-            except ValueError:
-                ppg = False
-        if not ppg:
-            ppg = website.shop_ppg or 20
-
-        ppr = website.shop_ppr or 4
-
-        attrib_list = request.httprequest.args.getlist('attrib')
-        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
-        attributes_ids = {v[0] for v in attrib_values}
-        attrib_set = {v[1] for v in attrib_values}
-
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, min_price=min_price, max_price=max_price, order=post.get('order'))
-
-        now = datetime.timestamp(datetime.now())
-        pricelist = request.env['product.pricelist'].browse(request.session.get('website_sale_current_pl'))
-        if not pricelist or request.session.get('website_sale_pricelist_time', 0) < now - 60*60: # test: 1 hour in session
-            pricelist = website.get_current_pricelist()
-            request.session['website_sale_pricelist_time'] = now
-            request.session['website_sale_current_pl'] = pricelist.id
-
-        request.update_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
-
-        filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
-        if filter_by_price_enabled:
-            company_currency = website.company_id.currency_id
-            conversion_rate = request.env['res.currency']._get_conversion_rate(
-                company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
-        else:
-            conversion_rate = 1
-
-        url = "/shop"
-        if search:
-            post["search"] = search
-        if attrib_list:
-            post['attrib'] = attrib_list
-
-        options = self._get_search_options(
-            category=category,
-            attrib_values=attrib_values,
-            pricelist=pricelist,
-            min_price=min_price,
-            max_price=max_price,
-            conversion_rate=conversion_rate,
-            **post
-        )
+    def _shop_lookup_products(self, attrib_set, options, post, search, website):
         # No limit because attributes are obtained from complete product list
         product_count, details, fuzzy_search_term = website._search_with_fuzzy("products_only", search,
-            limit=None, order=self._get_search_order(post), options=options)
-        search_product = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
-
+                                                                               limit=None,
+                                                                               order=self._get_search_order(post),
+                                                                               options=options)
+        search_result = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
         if attrib_set:
             # Attributes value per attribute
             attribute_values = request.env['product.attribute.value'].browse(attrib_set)
@@ -359,7 +285,96 @@ class WebsiteSale(http.Controller):
                 possible_attrib_values_list = [request.env['product.attribute.value'].browse([v.id for v in values]) for
                                                values in cartesian_product(*values_per_attribute.values())]
 
-            search_product = search_product.filtered(lambda tmpl: filter_template(tmpl, possible_attrib_values_list))
+            search_result = search_result.filtered(lambda tmpl: filter_template(tmpl, possible_attrib_values_list))
+        return fuzzy_search_term, product_count, search_result
+
+    def _shop_get_query_url_kwargs(self, category, search, min_price, max_price, attrib=None, order=None, **post):
+        return {
+            'category': category,
+            'search': search,
+            'attrib': attrib,
+            'min_price': min_price,
+            'max_price': max_price,
+            'order': order,
+        }
+
+    @http.route([
+        '/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>',
+    ], type='http', auth="public", website=True, sitemap=sitemap_shop)
+    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
+        add_qty = int(post.get('add_qty', 1))
+        try:
+            min_price = float(min_price)
+        except ValueError:
+            min_price = 0
+        try:
+            max_price = float(max_price)
+        except ValueError:
+            max_price = 0
+
+        Category = request.env['product.public.category']
+        if category:
+            category = Category.search([('id', '=', int(category))], limit=1)
+            if not category or not category.can_access_from_current_website():
+                raise NotFound()
+        else:
+            category = Category
+
+        website = request.env['website'].get_current_website()
+        if ppg:
+            try:
+                ppg = int(ppg)
+                post['ppg'] = ppg
+            except ValueError:
+                ppg = False
+        if not ppg:
+            ppg = website.shop_ppg or 20
+
+        ppr = website.shop_ppr or 4
+
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
+        attributes_ids = {v[0] for v in attrib_values}
+        attrib_set = {v[1] for v in attrib_values}
+
+        keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
+
+        now = datetime.timestamp(datetime.now())
+        pricelist = request.env['product.pricelist'].browse(request.session.get('website_sale_current_pl'))
+        if not pricelist or request.session.get('website_sale_pricelist_time', 0) < now - 60*60: # test: 1 hour in session
+            pricelist = website.get_current_pricelist()
+            request.session['website_sale_pricelist_time'] = now
+            request.session['website_sale_current_pl'] = pricelist.id
+
+        request.update_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
+
+        filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
+        if filter_by_price_enabled:
+            company_currency = website.company_id.currency_id
+            conversion_rate = request.env['res.currency']._get_conversion_rate(
+                company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
+        else:
+            conversion_rate = 1
+
+        url = "/shop"
+        if search:
+            post["search"] = search
+        if attrib_list:
+            post['attrib'] = attrib_list
+
+        options = self._get_search_options(
+            category=category,
+            attrib_values=attrib_values,
+            pricelist=pricelist,
+            min_price=min_price,
+            max_price=max_price,
+            conversion_rate=conversion_rate,
+            **post
+        )
+        fuzzy_search_term, product_count, search_product = self._shop_lookup_products(attrib_set, options, post, search, website)
 
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
@@ -614,6 +629,15 @@ class WebsiteSale(http.Controller):
         product = request.env['product.product'].browse(product_id)
         return product._is_add_to_cart_allowed()
 
+    def _product_get_query_url_kwargs(self, category, search, min_price, max_price, attrib=None, **kwargs):
+        return {
+            'category': category,
+            'search': search,
+            'attrib': attrib,
+            'min_price': min_price,
+            'max_price': max_price,
+        }
+
     def _prepare_product_values(self, product, category, search, **kwargs):
         ProductCategory = request.env['product.public.category']
 
@@ -626,11 +650,13 @@ class WebsiteSale(http.Controller):
 
         keep = QueryURL(
             '/shop',
-            category=category and category.id,
-            search=search,
-            attrib=attrib_list,
-            min_price=request.params.get('min_price'),
-            max_price=request.params.get('max_price'),
+            **self._product_get_query_url_kwargs(
+                category=category and category.id,
+                search=search,
+                min_price=request.params.get('min_price'),
+                max_price=request.params.get('max_price'),
+                **kwargs,
+            ),
         )
 
         # Needed to trigger the recently viewed product rpc
