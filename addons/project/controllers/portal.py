@@ -356,7 +356,7 @@ class ProjectCustomerPortal(CustomerPortal):
             domain = []
         if not su and Task.check_access_rights('read'):
             domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
-        Task = Task.sudo()
+        Task_sudo = Task.sudo()
 
         # default sort by value
         if not sortby or (sortby == 'milestone' and not milestones_allowed):
@@ -381,7 +381,7 @@ class ProjectCustomerPortal(CustomerPortal):
         order = self._task_get_order(order, groupby)
 
         def get_grouped_tasks(pager_offset):
-            tasks = Task.search(domain, order=order, limit=self._items_per_page, offset=pager_offset)
+            tasks = Task_sudo.search(domain, order=order, limit=self._items_per_page, offset=pager_offset)
             request.session['my_project_tasks_history' if url.startswith('/my/projects') else 'my_tasks_history'] = tasks.ids[:100]
 
             tasks_project_allow_milestone = tasks.filtered(lambda t: t.allow_milestones)
@@ -391,7 +391,7 @@ class ProjectCustomerPortal(CustomerPortal):
             group = groupby_mapping.get(groupby)
             if group:
                 if group == 'milestone_id':
-                    grouped_tasks = [Task.concat(*g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(group))]
+                    grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(group))]
 
                     if not grouped_tasks:
                         grouped_tasks = [tasks_no_milestone]
@@ -402,11 +402,11 @@ class ProjectCustomerPortal(CustomerPortal):
                             grouped_tasks[len(grouped_tasks) - 1] |= tasks_no_milestone
 
                 else:
-                    grouped_tasks = [Task.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
+                    grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
             else:
                 grouped_tasks = [tasks]
 
-            task_states = dict(Task._fields['kanban_state']._description_selection(request.env))
+            task_states = dict(Task_sudo._fields['kanban_state']._description_selection(request.env))
             if sortby == 'status':
                 if groupby == 'none' and grouped_tasks:
                     grouped_tasks[0] = grouped_tasks[0].sorted(lambda tasks: task_states.get(tasks.kanban_state))
@@ -425,7 +425,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'pager': {
                 "url": url,
                 "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search},
-                "total": Task.search_count(domain),
+                "total": Task_sudo.search_count(domain),
                 "page": page,
                 "step": self._items_per_page
             },
