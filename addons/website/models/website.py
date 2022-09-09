@@ -1169,7 +1169,6 @@ class Website(models.Model):
             :rtype: list({name: str, url: str})
         """
         router = http.root.get_db_router(request.db)
-        # Force enumeration to be performed as public user
         url_set = set()
 
         sitemap_endpoint_done = set()
