@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
@@ -14,7 +15,6 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { editSearch, validateSearch } from "@web/../tests/search/helpers";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
@@ -1837,8 +1837,8 @@ QUnit.module("Fields", (hooks) => {
             "partner_type,false,search": `<search />`,
         };
 
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
 
         patchWithCleanup(Many2XAutocomplete.defaultProps, {
@@ -1900,8 +1900,8 @@ QUnit.module("Fields", (hooks) => {
 
         registry.category("services").add("company", companyService, { force: true });
 
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
 
         await makeView({
@@ -1956,8 +1956,8 @@ QUnit.module("Fields", (hooks) => {
 
         registry.category("services").add("company", companyService, { force: true });
 
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
 
         await makeView({
@@ -2017,8 +2017,8 @@ QUnit.module("Fields", (hooks) => {
             });
             registry.category("services").add("company", companyService, { force: true });
 
-            patchWithCleanup(AutoComplete, {
-                timeout: 0,
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => Promise.resolve().then(fn),
             });
 
             await makeView({
