@@ -2,4 +2,15 @@
     <div t-name="SearchView.addtogooglespreadsheet">
         <a class="add_to_spreadsheet dropdown-item">Add to Google Spreadsheet</a>
     </div>
+
+    <div t-name="GoogleSpreadsheet.FormulaDialog">
+        <p>To insert this data inside of a Google Sheet:</p>
+        <ul>
+            <li>Duplicate the <a t-att-href="url" target="_blank">Spreadsheet Template</a></li>
+            <li>Setup your Odoo credentials in the sheet via the <code>Odoo &gt; Settings</code> menu</li>
+            <li>Paste the following formula in your spreadsheet:<br/>
+                <code><t t-esc="formula"/></code>
+            </li>
+        </ul>
+    </div>
 </template>
