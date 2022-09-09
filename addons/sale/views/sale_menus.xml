@@ -9,136 +9,138 @@
 
         <menuitem id="sale_order_menu"
             name="Orders"
-            sequence="2">
+            sequence="10">
 
             <menuitem id="menu_sale_quotations"
                 action="action_quotations_with_onboarding"
                 groups="sales_team.group_sale_salesman"
-                sequence="1"/>
+                sequence="10"/>
 
             <menuitem id="menu_sale_order"
                 name="Orders"
                 action="action_orders"
                 groups="sales_team.group_sale_salesman"
-                sequence="2"/>
+                sequence="20"/>
 
             <menuitem id="report_sales_team"
                 name="Sales Teams"
                 action="sales_team.crm_team_action_sales"
                 groups="sales_team.group_sale_manager"
-                sequence="3"/>
+                sequence="30"/>
 
             <menuitem id="res_partner_menu"
                 action="account.res_partner_action_customer"
                 groups="sales_team.group_sale_salesman"
-                sequence="4"/>
+                sequence="40"/>
 
         </menuitem>
 
         <menuitem id="menu_sale_invoicing"
             name="To Invoice"
             groups="sales_team.group_sale_salesman"
-            sequence="3">
+            sequence="20">
 
             <menuitem id="menu_sale_order_invoice"
                 action="action_orders_to_invoice"
-                sequence="2"/>
+                sequence="10"/>
 
             <menuitem id="menu_sale_order_upselling"
                 action="action_orders_upselling"
-                sequence="5"/>
+                sequence="20"/>
 
         </menuitem>
 
         <menuitem id="product_menu_catalog"
             name="Products"
             groups="sales_team.group_sale_salesman"
-            sequence="4">
+            sequence="30">
 
             <menuitem id="menu_product_template_action"
                 action="product_template_action"
-                sequence="1"/>
+                sequence="10"/>
             <menuitem id="menu_products"
                 action="product.product_normal_action_sell"
                 groups="product.group_product_variant"
-                sequence="2"/>
+                sequence="20"/>
             <menuitem id="menu_product_pricelist_main"
                 name="Pricelists"
                 action="product.product_pricelist_action2"
                 groups="product.group_product_pricelist"
-                sequence="3"/>
+                sequence="30"/>
 
         </menuitem>
 
         <menuitem id="menu_sale_report"
             name="Reporting"
             groups="sales_team.group_sale_manager"
-            sequence="5">
+            sequence="40">
 
             <menuitem id="menu_report_product_all"
                 name="Sales"
                 action="action_order_report_all"
-                sequence="1"/>
+                sequence="10"/>
 
         </menuitem>
 
         <menuitem id="menu_sale_config"
             name="Configuration"
             groups="sales_team.group_sale_manager"
-            sequence="35">
+            sequence="50">
 
             <menuitem id="menu_sale_general_settings"
                 name="Settings"
-                sequence="0"
+                sequence="10"
                 action="action_sale_config_settings"
                 groups="base.group_system"/>
 
             <menuitem id="sales_team_config"
                 name="Sales Teams"
                 action="sales_team.crm_team_action_config"
-                sequence="2"/>
+                sequence="20"/>
 
             <menuitem id="menu_sales_config"
-                sequence="4"
+                sequence="30"
                 name="Sales Orders">
 
                 <menuitem id="menu_tag_config"
                     name="Tags"
                     action="sales_team.sales_team_crm_tag_action"
-                    sequence="2"/>
+                    sequence="10"/>
 
             </menuitem>
 
             <menuitem id="prod_config_main"
                 name="Products"
-                sequence="5">
+                sequence="40">
 
                 <menuitem id="menu_product_attribute_action"
                     action="product.attribute_action"
                     groups="product.group_product_variant"
-                    sequence="1"/>
+                    sequence="10"/>
 
             </menuitem>
 
             <menuitem id="next_id_16"
                 name="Units of Measure"
                 groups="uom.group_uom"
-                sequence="6">
+                sequence="50">
 
                 <menuitem id="menu_product_uom_form_action"
                     action="uom.product_uom_form_action"
                     groups="base.group_no_one"
-                    sequence="7"/>
+                    sequence="10"/>
 
                 <menuitem id="menu_product_uom_categ_form_action"
                     action="uom.product_uom_categ_form_action"
-                    sequence="8"/>
+                    sequence="20"/>
 
             </menuitem>
 
             <menuitem id="sale_menu_config_activity_type"
                 action="mail_activity_type_action_config_sale"
-                groups="base.group_no_one"/>
+                groups="base.group_no_one"
+                sequence="60"
+                />
         </menuitem>
     </menuitem>
 
