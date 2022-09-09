@@ -37,43 +37,26 @@ const KanbanActivity = AbstractField.extend({
     /**
      * @override
      */
-    init(parent, name, record) {
+    init(parent, name, record, options = {}) {
         this._super.apply(this, arguments);
         this._draftFeedback = {};
         this.selection = {};
         for (const [key, value] of record.fields.activity_state.selection) {
             this.selection[key] = value;
         }
+        this.defaultActivityType = options.activityType;
+        this.isActivityViewCell = options.isActivityViewCell;
     },
-
-    /**
-     * @param {integer} previousActivityTypeID
-     * @return {Promise}
-     */
-    scheduleActivity() {
-        const callback = this._reload.bind(this, { activity: true, thread: true });
-        return this._openActivityForm(false, callback);
+    async willStart() {
+        await this._super();
+        await owl.Component.env.services.messaging.modelManager.messagingCreatedPromise;
+        this.messaging = owl.Component.env.services.messaging.modelManager.messaging;
     },
 
     //------------------------------------------------------------
     // Private
     //------------------------------------------------------------
 
-    _getActivityFormAction(id) {
-        return {
-            type: 'ir.actions.act_window',
-            name: _t("Schedule Activity"),
-            res_model: 'mail.activity',
-            view_mode: 'form',
-            views: [[false, 'form']],
-            target: 'new',
-            context: {
-                default_res_id: this.res_id,
-                default_res_model: this.model,
-            },
-            res_id: id || false,
-        };
-    },
     /**
      * Send a feedback and reload page in order to mark activity as done
      *
@@ -99,7 +82,7 @@ const KanbanActivity = AbstractField.extend({
             },
             context: this.record.getContext(),
         });
-        this._reload({ activity: true, thread: true });
+        this._reload();
     },
     /**
      * Send a feedback and proposes to schedule next activity
@@ -136,10 +119,17 @@ const KanbanActivity = AbstractField.extend({
      * @param {MouseEvent} ev
      * @returns {Promise}
      */
-    _onEditActivity(ev) {
+    async _onEditActivity(ev) {
         ev.preventDefault();
-        const activityID = $(ev.currentTarget).data('activity-id');
-        return this._openActivityForm(activityID, this._reload.bind(this, { activity: true, thread: true }));
+        const activityId = $(ev.currentTarget).data('activity-id');
+        const thread = this.messaging.models['Thread'].insert({ id: this.res_id, model: this.model });
+        const activity = this.messaging.models['Activity'].insert({ id: activityId, thread });
+        await this.messaging.openActivityForm({
+            activity,
+            defaultActivityTypeId: this.defaultActivityType,
+            thread,
+        });
+        this._reload();
     },
     /**
      * @private
@@ -353,9 +343,14 @@ const KanbanActivity = AbstractField.extend({
      * @param {MouseEvent} ev
      * @returns {Promise}
      */
-    _onScheduleActivity(ev) {
+    async _onScheduleActivity(ev) {
         ev.preventDefault();
-        return this._openActivityForm(false, this._reload.bind(this));
+        const thread = this.messaging.models['Thread'].insert({ id: this.res_id, model: this.model });
+        await this.messaging.openActivityForm({
+            defaultActivityTypeId: this.defaultActivityType,
+            thread,
+        });
+        this._reload();
     },
     /**
      * @private
@@ -371,17 +366,7 @@ const KanbanActivity = AbstractField.extend({
             method: 'activity_send_mail',
             args: [[this.res_id], templateID],
         });
-        this._reload({ activity: true, thread: true, followers: true });
-    },
-    /**
-     * @private
-     * @param {integer} id
-     * @param {function} callback
-     * @return {Promise}
-     */
-    _openActivityForm(id, callback) {
-        const action = this._getActivityFormAction(id);
-        return this.do_action(action, { on_close: callback });
+        this._reload();
     },
     /**
      * @private
@@ -394,18 +379,38 @@ const KanbanActivity = AbstractField.extend({
      * @private
      */
     _render() {
-        // span classes need to be updated manually because the template cannot
-        // be re-rendered eaasily (because of the dropdown state)
-        const spanClasses = ['fa', 'fa-lg', 'fa-fw'];
-        spanClasses.push('o_activity_color_' + (this.record.data.activity_state || 'default'));
-        if (this.recordData.activity_exception_decoration) {
-            spanClasses.push('text-' + this.recordData.activity_exception_decoration);
-            spanClasses.push(this.recordData.activity_exception_icon);
+        if (this.isActivityViewCell) {
+            // replace clock by closest deadline
+            const $date = $('<div class="o_closest_deadline">');
+            const date = moment(this.record.data.closest_deadline).toDate();
+            // To remove year only if current year
+            if (moment().year() === moment(date).year()) {
+                $date.text(date.toLocaleDateString(moment().locale(), {
+                    day: 'numeric', month: 'short'
+                }));
+            } else {
+                $date.text(moment(date).format('ll'));
+            }
+            this.$('a').html($date);
+            if (this.record.data.activity_ids.res_ids.length > 1) {
+                this.$('a').append($('<span>', {
+                    class: 'badge bg-light rounded-pill border-0 ' + this.record.data.activity_state,
+                    text: this.record.data.activity_ids.res_ids.length,
+                }));
+            }
         } else {
-            spanClasses.push('fa-clock-o');
+            // span classes need to be updated manually because the template cannot
+            // be re-rendered eaasily (because of the dropdown state)
+            const spanClasses = ['fa', 'fa-lg', 'fa-fw'];
+            spanClasses.push('o_activity_color_' + (this.record.data.activity_state || 'default'));
+            if (this.recordData.activity_exception_decoration) {
+                spanClasses.push('text-' + this.recordData.activity_exception_decoration);
+                spanClasses.push(this.recordData.activity_exception_icon);
+            } else {
+                spanClasses.push('fa-clock-o');
+            }
+            this.$('.o_activity_btn > span').removeClass().addClass(spanClasses.join(' '));
         }
-        this.$('.o_activity_btn > span').removeClass().addClass(spanClasses.join(' '));
-
         if (this.$el.hasClass('show')) {
             // note: this part of the rendering might be asynchronous
             this._renderDropdown();

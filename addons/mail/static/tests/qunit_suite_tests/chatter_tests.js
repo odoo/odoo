@@ -34,8 +34,8 @@ QUnit.test('list activity widget with no activity', async function (assert) {
         views: [[false, 'list']],
     });
 
-    assert.containsOnce(document.body, '.o_mail_activity .o_activity_color_default');
-    assert.strictEqual(document.querySelector('.o_activity_summary').innerText, '');
+    assert.containsOnce(document.body, '.o_ActivityButtonView_icon.text-muted');
+    assert.strictEqual(document.querySelector('.o_ListFieldActivityView_summary').innerText, '');
 
     assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
@@ -83,12 +83,12 @@ QUnit.test('list activity widget with activities', async function (assert) {
     });
 
     const firstRow = document.querySelector('.o_data_row');
-    assert.containsOnce(firstRow, '.o_mail_activity .o_activity_color_today.fa-phone');
-    assert.strictEqual(firstRow.querySelector('.o_activity_summary').innerText, 'Call with Al');
+    assert.containsOnce(firstRow, '.o_ActivityButtonView_icon.text-warning.fa-phone');
+    assert.strictEqual(firstRow.querySelector('.o_ListFieldActivityView_summary').innerText, 'Call with Al');
 
     const secondRow = document.querySelectorAll('.o_data_row')[1];
-    assert.containsOnce(secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
-    assert.strictEqual(secondRow.querySelector('.o_activity_summary').innerText, 'Type 2');
+    assert.containsOnce(secondRow, '.o_ActivityButtonView_icon.text-success.fa-clock-o');
+    assert.strictEqual(secondRow.querySelector('.o_ListFieldActivityView_summary').innerText, 'Type 2');
 
     assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
@@ -127,8 +127,8 @@ QUnit.test('list activity widget with exception', async function (assert) {
         views: [[false, 'list']],
     });
 
-    assert.containsOnce(document.body, '.o_activity_color_today.text-warning.fa-warning');
-    assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Warning');
+    assert.containsOnce(document.body, '.o_ActivityButtonView_icon.text-warning.fa-warning');
+    assert.strictEqual(document.querySelector('.o_ListFieldActivityView_summary').innerText, 'Warning');
 
     assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
 });
@@ -168,7 +168,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
     const views = {
         'res.users,false,list': '<list><field name="activity_ids" widget="list_activity"/></list>',
     };
-    const { openView } = await start({
+    const { click, openView } = await start({
         mockRPC: function (route, args) {
             if (
                 args.method !== 'get_views' &&
@@ -197,7 +197,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
             this.props.selectRecord = (...args) => {
                 assert.step(`select_record ${JSON.stringify(args)}`);
                 return selectRecord(...args);
-            }
+            };
         }
     });
 
@@ -206,29 +206,21 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         views: [[false, 'list']],
     });
 
-    assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Call with Al');
+    assert.strictEqual(document.querySelector('.o_ListFieldActivityView_summary').innerText, 'Call with Al');
 
-    // click on the first record to open it, to ensure that the 'switch_view'
-    // assertion is relevant (it won't be opened as there is no action manager,
-    // but we'll log the 'switch_view' event)
-    await testUtils.dom.click(document.querySelector('.o_data_cell'));
+    await click('.o_ActivityButtonView'); // open the popover
+    await click('.o_ActivityListViewItem_markAsDone'); // mark the first activity as done
+    await click('.o_ActivityMarkDonePopoverContent_doneButton'); // confirm
 
-    // from this point, no 'switch_view' event should be triggered, as we
-    // interact with the activity widget
-    assert.step('open dropdown');
-    await testUtils.dom.click(document.querySelector('.o_activity_btn span')); // open the popover
-    await testUtils.dom.click(document.querySelector('.o_mark_as_done')); // mark the first activity as done
-    await testUtils.dom.click(document.querySelector('.o_activity_popover_done')); // confirm
-
-    assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Meet FP');
+    assert.strictEqual(document.querySelector('.o_ListFieldActivityView_summary').innerText, 'Meet FP');
 
     assert.verifySteps([
         'web_search_read',
-        'select_record [2,{"activeIds":[2]}]',
-        'open dropdown',
         'activity_format',
         'action_feedback',
-        'read',
+        '/mail/thread/messages',
+        '/mail/thread/data',
+        'web_search_read',
     ]);
 });
 
@@ -285,108 +277,6 @@ QUnit.test('list activity exception widget with activity', async function (asser
     assert.containsN(document.body, '.o_data_row', 2, "should have two records");
     assert.containsNone(document.querySelectorAll('.o_data_row .o_activity_exception_cell')[0], '.o_ActivityException', "there is no any exception activity on record");
     assert.containsOnce(document.querySelectorAll('.o_data_row .o_activity_exception_cell')[1], '.o_ActivityException', "there is an exception on a record");
-});
-
-QUnit.test('list activity widget: done the activity with "ENTER" keyboard shortcut', async function (assert) {
-    assert.expect(1);
-
-    const pyEnv = await startServer();
-    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create({});
-    const mailActivityId1 = pyEnv['mail.activity'].create([
-        {
-            display_name: "Call with Al",
-            date_deadline: moment().format("YYYY-MM-DD"), // now
-            can_write: true,
-            state: "today",
-            user_id: pyEnv.currentUserId,
-            create_uid: pyEnv.currentUserId,
-            activity_type_id: mailActivityTypeId1,
-        }
-    ]);
-    pyEnv['res.users'].write([pyEnv.currentUserId], {
-        activity_ids: [mailActivityId1],
-        activity_state: 'today',
-        activity_summary: 'Call with Al',
-        activity_type_id: mailActivityTypeId1,
-    });
-    const views = {
-        'res.users,false,list':
-            `<list>
-                <field name="activity_ids" widget="list_activity"/>
-            </list>`,
-    };
-    const { openView } = await start({
-        serverData: { views },
-    });
-    await openView({
-        res_model: 'res.users',
-        views: [[false, 'list']],
-    });
-
-    await testUtils.dom.click(document.querySelector('.o_activity_btn span'));
-    await testUtils.dom.click(document.querySelector('.o_mark_as_done'));
-    pyEnv['res.users'].write([pyEnv.currentUserId], {
-        activity_state: '',
-    });
-    await testUtils.dom.triggerEvent(
-        document.querySelector('.o_activity_popover_done'),
-        'keydown',
-        { key: 'Enter' },
-    );
-
-    assert.containsOnce(document.body, '.o_mail_activity .o_activity_color_default');
-});
-
-QUnit.test('list activity widget: done and schedule the next activity with "ENTER" keyboard shortcut', async function (assert) {
-    assert.expect(1);
-
-    const pyEnv = await startServer();
-    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create({});
-    const mailActivityId1 = pyEnv['mail.activity'].create([
-        {
-            display_name: "Call with Al",
-            date_deadline: moment().format("YYYY-MM-DD"), // now
-            can_write: true,
-            state: "today",
-            user_id: pyEnv.currentUserId,
-            create_uid: pyEnv.currentUserId,
-            activity_type_id: mailActivityTypeId1,
-        }
-    ]);
-    pyEnv['res.users'].write([pyEnv.currentUserId], {
-        activity_ids: [mailActivityId1],
-        activity_state: 'today',
-        activity_summary: 'Call with Al',
-        activity_type_id: mailActivityTypeId1,
-    });
-
-    const views = {
-        'res.users,false,list':
-            `<list>
-                <field name="activity_ids" widget="list_activity"/>
-            </list>`,
-    };
-    const { env, openView } = await start({
-        serverData: { views },
-    });
-    await openView({
-        res_model: 'res.users',
-        views: [[false, 'list']],
-    });
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            assert.strictEqual(action.name, "Schedule an Activity", 'should do a do_action with correct parameters');
-            return this._super(...arguments);
-        }
-    });
-
-    await testUtils.dom.click(document.querySelector('.o_activity_btn span'));
-    await testUtils.dom.click(document.querySelector('.o_mark_as_done'));
-    await testUtils.dom.triggerEvent(
-        document.querySelector('.o_activity_popover_done_next'),
-        'keydown',
-        { key: 'Enter' },
-    );
 });
 
 QUnit.module('FieldMany2ManyTagsEmail');

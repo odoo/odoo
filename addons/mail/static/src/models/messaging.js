@@ -94,6 +94,42 @@ addRecordMethods('Messaging', {
         return this.env.services.notification.add(message, options);
     },
     /**
+     * Opens the activity form view for creating an activity on the given
+     * thread (if no activity is specified) or to update an existing
+     * activity (if specified).
+     *
+     * @param {Object} param0
+     * @param {Activity} [param0.activity]
+     * @param {integer} [param0.defaultActivityTypeId]
+     * @param {Thread} [param0.thread]
+     * @returns {Promise} resolved when the form is closed
+     */
+    async openActivityForm({ activity, defaultActivityTypeId, thread }) {
+        const targetThread = activity && activity.thread || thread;
+        const context = {
+            default_res_id: targetThread.id,
+            default_res_model: targetThread.model,
+        };
+        if (defaultActivityTypeId !== undefined) {
+            context.default_activity_type_id = defaultActivityTypeId;
+        }
+        const action = {
+            type: 'ir.actions.act_window',
+            name: this.env._t("Schedule Activity"),
+            res_model: 'mail.activity',
+            view_mode: 'form',
+            views: [[false, 'form']],
+            target: 'new',
+            context,
+            res_id: activity ? activity.id : false,
+        };
+        return new Promise(resolve => {
+            this.env.services.action.doAction(action, {
+                onClose: resolve,
+            });
+        });
+    },
+    /**
      * Opens a chat with the provided person and returns it.
      *
      * If a chat is not appropriate, a notification is displayed instead.

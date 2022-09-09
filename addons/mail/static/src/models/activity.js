@@ -70,7 +70,7 @@ registerModel({
             if ('mail_template_ids' in data) {
                 data2.mailTemplates = insert(data.mail_template_ids);
             }
-            if ('res_id' in data && 'res_model' in data) {
+            if (data.res_id && data.res_model) {
                 data2.thread = insert({
                     id: data.res_id,
                     model: data.res_model,
@@ -121,28 +121,11 @@ registerModel({
          *
          * @return {Promise} promise that is fulfilled when the form has been closed
          */
-        edit() {
-            const action = {
-                type: 'ir.actions.act_window',
-                name: this.env._t("Schedule Activity"),
-                res_model: 'mail.activity',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: {
-                    default_res_id: this.thread.id,
-                    default_res_model: this.thread.model,
-                },
-                res_id: this.id,
-            };
-            return new Promise(resolve => {
-                this.env.services.action.doAction(action, {
-                    onClose: () => {
-                        resolve();
-                        this.fetchAndUpdate();
-                    },
-                })
-            });
+        async edit() {
+            await this.messaging.openActivityForm({ activity: this });
+            if (this.exists()) {
+                this.fetchAndUpdate();
+            }
         },
         async fetchAndUpdate() {
             const [data] = await this.messaging.rpc({
@@ -151,7 +134,7 @@ registerModel({
                 args: [this.id],
             }, { shadow: true }).catch(e => {
                 const errorName = e.message && e.message.data && e.message.data.name;
-                if (errorName === 'odoo.exceptions.MissingError') {
+                if ([errorName, e.exceptionName].includes('odoo.exceptions.MissingError')) {
                     return [];
                 } else {
                     throw e;

@@ -11,7 +11,7 @@
                         <button type="button" class="o_ActivityMarkDonePopoverContent_doneScheduleNextButton btn btn-sm btn-primary" t-on-click="activityMarkDonePopoverContentView.onClickDoneAndScheduleNext">
                             Done &amp; Schedule Next
                         </button>
-                        <t t-if="activityMarkDonePopoverContentView.activityViewOwner.activity.chaining_type === 'suggest'">
+                        <t t-if="activityMarkDonePopoverContentView.activity.chaining_type === 'suggest'">
                             <button type="button" class="o_ActivityMarkDonePopoverContent_doneButton btn btn-sm btn-primary mx-2" t-on-click="activityMarkDonePopoverContentView.onClickDone">
                                 Done
                             </button>
