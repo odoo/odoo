@@ -201,6 +201,7 @@ export class OdooEditor extends EventTarget {
                 showEmptyElementHint: true,
                 defaultLinkAttributes: {},
                 plugins: [],
+                getUnremovableElements: () => [],
                 getReadOnlyAreas: () => [],
                 getContentEditableAreas: () => [],
                 getPowerboxElement: () => {
@@ -1658,6 +1659,9 @@ export class OdooEditor extends EventTarget {
         }
         for (const node of this.options.getReadOnlyAreas()) {
             node.setAttribute('contenteditable', false);
+        }
+        for (const element of this.options.getUnremovableElements()) {
+            element.classList.add("oe_unremovable");
         }
         this.observerActive('_activateContenteditable');
     }
