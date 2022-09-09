@@ -769,3 +769,51 @@ class TestReorderingRule(TransactionCase):
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 4},
             {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 4},
         ])
+
+    def test_decrease_qty_multi_step_receipt02(self):
+        """
+        Two-steps receipt. An orderpoint generates a move from Input to Stock
+        with 4 x Product01 and a purchase order to fulfill the need of that SM.
+        Then, the user increases and decreases the qty on the PO. The existing
+        SMs should be updated.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        input_location_id = warehouse.wh_input_stock_loc_id.id
+        stock_location_id = warehouse.lot_stock_id.id
+        supplier_location_id = self.ref('stock.stock_location_suppliers')
+
+        self.product_01.description = False
+
+        op = self.env['stock.warehouse.orderpoint'].create({
+            'name': self.product_01.name,
+            'location_id': stock_location_id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 4,
+            'product_max_qty': 4,
+            'trigger': 'manual',
+        })
+        op.action_replenish()
+
+        purchase = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)], order="id desc", limit=1)
+        with Form(purchase) as form:
+            with form.order_line.edit(0) as line:
+                line.product_qty = 10
+        purchase.button_confirm()
+
+        moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
+        self.assertRecordValues(moves, [
+            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 6},
+            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 10},
+            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 4},
+        ])
+
+        with Form(purchase) as form:
+            with form.order_line.edit(0) as line:
+                line.product_qty = 1
+
+        moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
+        self.assertRecordValues(moves, [
+            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
+            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 1},
+        ])
