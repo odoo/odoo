@@ -104,9 +104,26 @@ odoo.define('payment.post_processing', function (require) {
                 }
                 return nbTx;
             }
-            // if there's only one tx to manage
+                       
+            /*
+            * When the server sends the list of monitored transactions, it tries to post-process 
+            * all the successful ones. If it succeeds or if the post-process has already been made, 
+            * the transaction is removed from the list of monitored transactions and won't be 
+            * included in the next response. We assume that successful and post-process 
+            * transactions should always prevail on others, regardless of their number or state.
+            */
+            if (render_values['tx_done'].length === 1 &&
+                render_values['tx_done'][0].is_processed) {
+                    window.location = render_values['tx_done'][0].return_url;
+                    return;
+            }
+            // If there are multiple transactions monitored, display them all to the customer. If
+            // there is only one transaction monitored, redirect directly the customer to the
+            // landing route.
             if(countTxInState(['tx_done', 'tx_error', 'tx_pending', 'tx_authorized']) === 1) {
-                var tx = render_values['tx_done'][0] || render_values['tx_authorized'][0] || render_values['tx_error'][0];
+                // We don't want to redirect customers to the landing page when they have a pending
+                // transaction. The successful transactions are dealt with before.
+                var tx = render_values['tx_authorized'][0] || render_values['tx_error'][0];
                 if (tx) {
                     window.location = tx.landing_route;
                     return;
