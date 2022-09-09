@@ -66,7 +66,9 @@ class WebsiteSlides(WebsiteProfile):
 
     def _set_viewed_slide(self, slide, quiz_attempts_inc=False):
         if not slide.channel_id.is_member:
-            viewed_slides = request.session.setdefault('viewed_slides', set())
+            # set(...) ensures backward compatibility for sessions created earlier using a list.
+            # TODO: remove for v16.1.
+            viewed_slides = set(request.session.setdefault('viewed_slides', set()))
             if slide.id not in viewed_slides:
                 if tools.sql.increment_fields_skiplock(slide, 'public_views', 'total_views'):
                     viewed_slides.add(slide.id)
