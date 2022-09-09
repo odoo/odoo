@@ -11,6 +11,8 @@ var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 
+var Dialog = require('web.Dialog');
+
 var AddToGoogleSpreadsheetMenu = Widget.extend({
     events: _.extend({}, Widget.prototype.events, {
         'click .add_to_spreadsheet': '_onAddToSpreadsheetClick',
@@ -62,9 +64,19 @@ var AddToGoogleSpreadsheetMenu = Widget.extend({
         var domain = searchQuery.domain;
         var groupBys = pyUtils.eval('groupbys', searchQuery.groupBys).join(" ");
         var ds = new data.DataSet(this, 'google.drive.config');
+        this.dialog = null;
+        var self = this;
 
         ds.call('set_spreadsheet', [modelName, Domain.prototype.arrayToString(domain), groupBys, list_view_id])
             .then(function (res) {
+                if (res.deprecated) {
+                    self.dialog = new Dialog(this, {
+                        title: _('Google Spreadsheet'),
+                        $content: QWeb.render('GoogleSpreadsheet.FormulaDialog', {url: res.url, formula: res.formula}),
+                    })
+                    self.dialog.open();
+                    return;
+                }
                 if (res.url){
                     window.open(res.url, '_blank');
                 }
