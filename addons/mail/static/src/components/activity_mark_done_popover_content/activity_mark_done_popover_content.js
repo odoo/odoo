@@ -26,8 +26,8 @@ export class ActivityMarkDonePopoverContent extends LegacyComponent {
 
     _mounted() {
         this._feedbackTextareaRef.el.focus();
-        if (this.activityMarkDonePopoverContentView.activityViewOwner.activity.feedbackBackup) {
-            this._feedbackTextareaRef.el.value = this.activityMarkDonePopoverContentView.activityViewOwner.activity.feedbackBackup;
+        if (this.activityMarkDonePopoverContentView.activity.feedbackBackup) {
+            this._feedbackTextareaRef.el.value = this.activityMarkDonePopoverContentView.activity.feedbackBackup;
         }
     }
 

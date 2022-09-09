@@ -61,8 +61,8 @@
     <t t-set="isCellHidden" t-value="activeFilter.resIds.length and !activeFilter.resIds.includes(resId) and activeFilter.activityTypeId === type[0]"/>
     <td t-if="activityGroup.state and !isCellHidden" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
         t-attf-class="o_activity_summary_cell {{activityGroup.state}} {{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state.value : '' }}">
-        <ActivityCellAdapter Component="widgetComponents.ActivityCell"
-            widgetArgs="['activity_ids', props.getKanbanActivityData(activityGroup, resId), { activityType: type[0] }]"/>
+        <ActivityCellAdapter Component="widgetComponents.KanbanActivity"
+            widgetArgs="['activity_ids', props.getKanbanActivityData(activityGroup, resId), { activityType: type[0], isActivityViewCell: true }]"/>
     </td>
     <td t-else="" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
         class="o_activity_summary_cell o_activity_empty_cell"

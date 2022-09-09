@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import ActivityCell from '@mail/js/views/activity/activity_cell';
 import ActivityRecord from '@mail/js/views/activity/activity_record';
 
 import AbstractRendererOwl from 'web.AbstractRendererOwl';
-import core  from 'web.core';
+import core from 'web.core';
+import field_registry from 'web.field_registry';
 import KanbanColumnProgressBar from 'web.KanbanColumnProgressBar';
 import { ComponentAdapter } from 'web.OwlCompatibility';
 import QWeb from 'web.QWeb';
@@ -13,6 +13,7 @@ import utils from 'web.utils';
 
 const { useState } = owl;
 const _t = core._t;
+const KanbanActivity = field_registry.get('kanban_activity');
 
 /**
  * Owl Component Adapter for ActivityRecord which is KanbanRecord (Odoo Widget)
@@ -31,8 +32,8 @@ class ActivityRecordAdapter extends ComponentAdapter {
 }
 
 /**
- * Owl Component Adapter for ActivityCell which is KanbanActivity (AbstractField)
- * TODO: Remove this adapter when ActivityCell is a Component
+ * Owl Component Adapter for KanbanActivity.
+ * TODO: Remove this adapter when KanbanActivity is a Component.
  */
 class ActivityCellAdapter extends ComponentAdapter {
     renderWidget() {
@@ -93,7 +94,7 @@ class ActivityRenderer extends AbstractRendererOwl {
         });
         this.widgetComponents = {
             ActivityRecord,
-            ActivityCell,
+            KanbanActivity,
             KanbanColumnProgressBar,
         };
     }
