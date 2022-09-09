@@ -2464,6 +2464,7 @@ export class OdooEditor extends EventTarget {
                             match.length,
                         );
                     }
+                    selection.collapseToEnd();
                 }
                 this.historyStep();
             } else if (ev.inputType === 'insertLineBreak') {
