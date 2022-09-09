@@ -633,9 +633,92 @@ class Meeting(models.Model):
         ]
         return attendee_commands
 
+<<<<<<< HEAD
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
+||||||| parent of 3cd4fa4c4a46... temp
+    def get_interval(self, interval, tz=None):
+        """ Format and localize some dates to be used in email templates
+            :param string interval: Among 'day', 'month', 'dayname' and 'time' indicating the desired formatting
+            :param string tz: Timezone indicator (optional)
+            :return unicode: Formatted date or time (as unicode string, to prevent jinja2 crash)
+        """
+        self.ensure_one()
+        date = fields.Datetime.from_string(self.start)
+
+        if tz:
+            timezone = pytz.timezone(tz or 'UTC')
+            date = date.replace(tzinfo=pytz.timezone('UTC')).astimezone(timezone)
+
+        if interval == 'day':
+            # Day number (1-31)
+            result = str(date.day)
+
+        elif interval == 'month':
+            # Localized month name and year
+            result = babel.dates.format_date(date=date, format='MMMM y', locale=get_lang(self.env).code)
+
+        elif interval == 'dayname':
+            # Localized day name
+            result = babel.dates.format_date(date=date, format='EEEE', locale=get_lang(self.env).code)
+
+        elif interval == 'time':
+            # Localized time
+            # FIXME: formats are specifically encoded to bytes, maybe use babel?
+            dummy, format_time = self._get_date_formats()
+            result = tools.ustr(date.strftime(format_time + " %Z"))
+
+        return result
+
+    def get_display_time_tz(self, tz=False):
+        """ get the display_time of the meeting, forcing the timezone. This method is called from email template, to not use sudo(). """
+        self.ensure_one()
+        if tz:
+            self = self.with_context(tz=tz)
+        return self._get_display_time(self.start, self.stop, self.duration, self.allday)
+=======
+    def get_interval(self, interval, tz=None):
+        """ Format and localize some dates to be used in email templates
+            :param string interval: Among 'day', 'month', 'dayname' and 'time' indicating the desired formatting
+            :param string tz: Timezone indicator (optional)
+            :return unicode: Formatted date or time (as unicode string, to prevent jinja2 crash)
+        """
+        self.ensure_one()
+        date = fields.Datetime.from_string(self.start)
+        result = ''
+
+        if tz:
+            timezone = pytz.timezone(tz or 'UTC')
+            date = date.replace(tzinfo=pytz.timezone('UTC')).astimezone(timezone)
+
+        if interval == 'day':
+            # Day number (1-31)
+            result = str(date.day)
+
+        elif interval == 'month':
+            # Localized month name and year
+            result = babel.dates.format_date(date=date, format='MMMM y', locale=get_lang(self.env).code)
+
+        elif interval == 'dayname':
+            # Localized day name
+            result = babel.dates.format_date(date=date, format='EEEE', locale=get_lang(self.env).code)
+
+        elif interval == 'time':
+            # Localized time
+            # FIXME: formats are specifically encoded to bytes, maybe use babel?
+            dummy, format_time = self._get_date_formats()
+            result = tools.ustr(date.strftime(format_time + " %Z"))
+
+        return result
+
+    def get_display_time_tz(self, tz=False):
+        """ get the display_time of the meeting, forcing the timezone. This method is called from email template, to not use sudo(). """
+        self.ensure_one()
+        if tz:
+            self = self.with_context(tz=tz)
+        return self._get_display_time(self.start, self.stop, self.duration, self.allday)
+>>>>>>> 3cd4fa4c4a46... temp
 
     def action_open_calendar_event(self):
         if self.res_model and self.res_id:
