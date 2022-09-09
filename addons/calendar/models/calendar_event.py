@@ -516,6 +516,7 @@ class Meeting(models.Model):
         """
         self.ensure_one()
         date = fields.Datetime.from_string(self.start)
+        result = ''
 
         if tz:
             timezone = pytz.timezone(tz or 'UTC')
