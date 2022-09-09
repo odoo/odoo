@@ -69,14 +69,12 @@ function getAfterEvent({ messagingBus }) {
      * @returns {Promise}
      */
     return async function afterEvent({ eventName, func, message, predicate, timeoutDelay = 5000 }) {
+        const error = new Error(message || `Timeout: the event ${eventName} was not triggered.`);
         // Set up the timeout to reject if the event is not triggered.
         let timeoutNoEvent;
         const timeoutProm = new Promise((resolve, reject) => {
             timeoutNoEvent = setTimeout(() => {
-                let error = message
-                    ? new Error(message)
-                    : new Error(`Timeout: the event ${eventName} was not triggered.`);
-                console.error(error);
+                console.warn(error);
                 reject(error);
             }, timeoutDelay);
         });
@@ -92,9 +90,12 @@ function getAfterEvent({ messagingBus }) {
         // promise has been registered to not miss any potential event.
         const funcRes = func();
         // Make them race (first to resolve/reject wins).
-        await Promise.race([eventProm, timeoutProm]);
-        clearTimeout(timeoutNoEvent);
-        messagingBus.removeEventListener(eventName, eventHandler);
+        await Promise.race([eventProm, timeoutProm]).finally(() => {
+            // Execute clean up regardless of whether the promise is
+            // rejected or not.
+            clearTimeout(timeoutNoEvent);
+            messagingBus.removeEventListener(eventName, eventHandler);
+        });
         // If the event is triggered before the end of the async function,
         // ensure the function finishes its job before returning.
         return await funcRes;

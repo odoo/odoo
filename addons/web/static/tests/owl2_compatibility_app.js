@@ -54,7 +54,7 @@
                 if (runningSchedulers.length) {
                     error = stopError;
                 }
-                console.error(
+                console.warn(
                     error,
                     runningSchedulers.map((s) => [...s.tasks].map((f) => [f, f.node.status])),
                     runningSchedulers
