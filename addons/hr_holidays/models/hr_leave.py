@@ -509,7 +509,7 @@ class HolidaysRequest(models.Model):
     def _compute_number_of_days(self):
         for holiday in self:
             if holiday.date_from and holiday.date_to:
-                holiday.number_of_days = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['days']
+                holiday.number_of_days = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id)['days']
             else:
                 holiday.number_of_days = 0
 
@@ -562,7 +562,7 @@ class HolidaysRequest(models.Model):
                                 - calendar._leave_intervals_batch(start_dt, end_dt, None)[False]  # Substract Global Leaves
                     number_of_hours = sum((stop - start).total_seconds() / 3600 for start, stop, dummy in intervals)
                 else:
-                    number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
+                    number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id)['hours']
                 holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY))
             else:
                 holiday.number_of_hours_display = 0
@@ -735,22 +735,21 @@ class HolidaysRequest(models.Model):
             if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
                 raise ValidationError(_("This modification is not allowed in the current state."))
 
-    def _get_number_of_days_batch(self, date_from, date_to, employee_ids):
+    def _get_number_of_days_batch(self, date_from, date_to, employees):
         """ Returns a float equals to the timedelta between two dates given as string."""
-        employee = self.env['hr.employee'].browse(employee_ids)
         # We force the company in the domain as we are more than likely in a compute_sudo
         domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
 
-        result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)
+        result = employees._get_work_days_data_batch(date_from, date_to, domain=domain)
         for employee_id in result:
             if self.request_unit_half and result[employee_id]['hours'] > 0:
                 result[employee_id]['days'] = 0.5
         return result
 
-    def _get_number_of_days(self, date_from, date_to, employee_id):
+    def _get_number_of_days(self, date_from, date_to, employee):
         """ Returns a float equals to the timedelta between two dates given as string."""
-        if employee_id:
-            return self._get_number_of_days_batch(date_from, date_to, employee_id)[employee_id]
+        if employee.resource_calendar_id:
+            return self._get_number_of_days_batch(date_from, date_to, employee)[employee.id]
 
         today_hours = self.env.company.resource_calendar_id.get_work_hours_count(
             datetime.combine(date_from.date(), time.min),
@@ -938,7 +937,7 @@ class HolidaysRequest(models.Model):
         if self._context.get('leave_compute_date_from_to') and employees:
             employee_leave_date_duration = defaultdict(dict)
             for (date_from, date_to), employee_ids in leave_date_employees.items():
-                employee_leave_date_duration[(date_from, date_to)] = self._get_number_of_days_batch(date_from, date_to, employee_ids)
+                employee_leave_date_duration[(date_from, date_to)] = self._get_number_of_days_batch(date_from, date_to, self.env['hr.employee'].browse(employee_ids))
             for values in vals_list:
                 employee_id = values.get('employee_id')
                 if employee_id and values.get('date_from') and values.get('date_to'):
