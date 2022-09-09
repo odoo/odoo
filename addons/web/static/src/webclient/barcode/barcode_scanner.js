@@ -1,6 +1,7 @@
 /** @odoo-module **/
 /* global BarcodeDetector */
 
+import { browser } from "@web/core/browser/browser";
 import Dialog from "web.OwlDialog";
 import { delay } from "web.concurrency";
 import { loadJS, templates } from "@web/core/assets";
@@ -160,7 +161,7 @@ class BarcodeDialog extends Component {
             };
 
             try {
-                this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                this.stream = await browser.navigator.mediaDevices.getUserMedia(constraints);
             } catch (err) {
                 const errors = {
                     NotFoundError: _t("No device can be found."),
@@ -249,7 +250,7 @@ Object.assign(BarcodeDialog, {
  * @returns {boolean}
  */
 export function isBarcodeScannerSupported() {
-    return navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+    return browser.navigator.mediaDevices && browser.navigator.mediaDevices.getUserMedia;
 }
 
 /**

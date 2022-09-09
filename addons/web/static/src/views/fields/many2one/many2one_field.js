@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
@@ -7,6 +8,8 @@ import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks"
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
 
 const { Component, onWillUpdateProps, useState } = owl;
 
@@ -40,6 +43,7 @@ export class Many2OneField extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
         this.autocompleteContainerRef = useChildRef();
         this.addDialog = useOwnedDialogs();
 
@@ -168,6 +172,54 @@ export class Many2OneField extends Component {
     onExternalBtnClick() {
         this.openDialog(this.resId);
     }
+    async onBarcodeBtnClick() {
+        const barcode = await BarcodeScanner.scanBarcode();
+        if (barcode) {
+            await this.onBarcodeScanned(barcode);
+            if ("vibrate" in browser.navigator) {
+                browser.navigator.vibrate(100);
+            }
+        } else {
+            this.notification.add(this.env._t("Please, scan again !"), {
+                type: "warning",
+            });
+        }
+    }
+    async search(barcode) {
+        const results = await this.orm.call(this.relation, "name_search", [], {
+            name: barcode,
+            args: this.getDomain(),
+            operator: "ilike",
+            limit: 2, // If one result we set directly and if more than one we use normal flow so no need to search more
+            context: this.context,
+        });
+        return results.map((result) => {
+            const [id, displayName] = result;
+            return {
+                id,
+                name: displayName,
+            };
+        });
+    }
+    async onBarcodeScanned(barcode) {
+        const results = await this.search(barcode);
+        const records = results.filter((r) => !!r.id);
+        if (records.length === 1) {
+            this.update([{ id: records[0].id, name: records[0].name }]);
+        } else {
+            const searchInput = this.autocompleteContainerRef.el.querySelector("input");
+            searchInput.value = barcode;
+            searchInput.dispatchEvent(new Event("input"));
+            if (this.env.isSmall) {
+                searchInput.click();
+            }
+        }
+    }
+    get hasBarcodeButton() {
+        const canScanBarcode = this.props.canScanBarcode;
+        const supported = BarcodeScanner.isBarcodeScannerSupported();
+        return canScanBarcode && isMobileOS() && supported && !this.hasExternalButton;
+    }
 }
 
 Many2OneField.SEARCH_MORE_LIMIT = 320;
@@ -188,6 +240,7 @@ Many2OneField.props = {
     searchLimit: { type: Number, optional: true },
     relation: { type: String, optional: true },
     string: { type: String, optional: true },
+    canScanBarcode: { type: Boolean, optional: true },
 };
 Many2OneField.defaultProps = {
     canOpen: true,
@@ -198,6 +251,7 @@ Many2OneField.defaultProps = {
     createNameField: "name",
     searchLimit: 7,
     string: "",
+    canScanBarcode: false,
 };
 
 Many2OneField.displayName = _lt("Many2one");
@@ -210,6 +264,7 @@ Many2OneField.extractProps = ({ attrs, field }) => {
     const canWrite = attrs.can_write && Boolean(JSON.parse(attrs.can_write));
     const noQuickCreate = Boolean(attrs.options.no_quick_create);
     const noCreateEdit = Boolean(attrs.options.no_create_edit);
+    const canScanBarcode = Boolean(attrs.options.can_scan_barcode);
 
     return {
         placeholder: attrs.placeholder,
@@ -221,6 +276,7 @@ Many2OneField.extractProps = ({ attrs, field }) => {
         relation: field.relation,
         string: attrs.string || field.string,
         createNameField: attrs.options.create_name_field,
+        canScanBarcode: canScanBarcode,
     };
 };
 
