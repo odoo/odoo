@@ -278,6 +278,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             bindLinkTool: true,
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
+            getUnremovableElements: this._getUnremovableElements.bind(this),
             ...this.props.wysiwygOptions,
         };
     }
@@ -357,6 +358,9 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     }
     _getReadOnlyAreas() {
         return [];
+    }
+    _getUnremovableElements () {
+        return this.$editable[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
     }
     /**
      * This method provides support for the legacy event system.
