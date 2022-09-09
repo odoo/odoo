@@ -128,13 +128,13 @@
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                 <field name="date_begin" readonly="1" widget="date"/>
                 <field name="date_end" readonly="1" widget="date"/>
-                <field name="stage_id" readonly="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                 <field name="seats_expected" string="Expected Attendees" sum="Total" readonly="1"/>
                 <field name="seats_used" sum="Total" readonly="1"/>
                 <field name="seats_max" string="Maximum Seats" sum="Total" readonly="1" optional="hide"/>
                 <field name="seats_reserved" sum="Total" readonly="1" optional="hide"/>
                 <field name="seats_unconfirmed" string="Unconfirmed Seats" sum="Total" readonly="1" optional="hide"/>
+                <field name="stage_id" readonly="1"/>
                 <field name="message_needaction" invisible="1" readonly="1"/>
                 <field name="activity_exception_decoration" widget="activity_exception" readonly="1"/>
             </tree>
