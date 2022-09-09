@@ -39,10 +39,8 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { DynamicRecordList } from "@web/views/relational_model";
 import AbstractField from "web.AbstractField";
 import legacyFieldRegistry from "web.field_registry";
-import Widget from "web.Widget";
-import widgetRegistry from "web.widget_registry";
 
-const { Component, xml } = owl;
+const { Component, onWillStart, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -7916,42 +7914,6 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["resequence", "resequence"], "should have resequenced twice");
     });
 
-    QUnit.test("basic support for widgets", async (assert) => {
-        // This test could be removed as soon as we drop the support of legacy widgets (see test
-        // below, which is a duplicate of this one, but with an Owl Component instead).
-        widgetRegistry.add(
-            "test",
-            Widget.extend({
-                init(_parent, dataPoint) {
-                    this._super(...arguments);
-                    this.data = dataPoint.data;
-                },
-                start() {
-                    this.el.innerText = JSON.stringify(this.data);
-                },
-            })
-        );
-
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                "<div>" +
-                '<t t-esc="record.foo.value"/>' +
-                '<field name="foo" blip="1"/>' +
-                '<widget name="test"/>' +
-                "</div>" +
-                "</t></templates></kanban>",
-        });
-
-        assert.strictEqual(
-            getCard(2).querySelector(".o_legacy_widget").innerText,
-            '{"foo":"gnap","id":3}'
-        );
-    });
-
     QUnit.test("basic support for widgets (being Owl Components)", async (assert) => {
         class MyComponent extends Component {
             get value() {
@@ -9353,18 +9315,15 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("asynchronous rendering of a widget", async (assert) => {
         const widgetDef = makeDeferred();
-        widgetRegistry.add(
-            "asyncwidget",
-            Widget.extend({
-                async willStart() {
-                    await Promise.all([this._super(...arguments), widgetDef]);
-                },
-                async start() {
-                    this.el.innerText = "LOADED";
-                    return this._super(...arguments);
-                },
-            })
-        );
+        class AsyncWidget extends Component {
+            setup() {
+                onWillStart(async () => {
+                    await widgetDef;
+                });
+            }
+        }
+        AsyncWidget.template = xml`<div>LOADED</div>`;
+        viewWidgetRegistry.add("asyncwidget", AsyncWidget);
 
         const makeViewProm = makeView({
             type: "kanban",
@@ -10081,22 +10040,15 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.test("kanban widget supports options parameters", async (assert) => {
-        widgetRegistry.add(
-            "widget_test_option",
-            Widget.extend({
-                init(_parent, _state, options) {
-                    this._super(...arguments);
-                    this.title = options.attrs.title;
-                },
-                async start() {
-                    this.$el.append(
-                        $("<div>", { text: this.title, class: "o-test-widget-option" })
-                    );
-                    return this._super(...arguments);
-                },
-            })
-        );
+    QUnit.test("kanban widget can extract props from attrs", async (assert) => {
+        class TestWidget extends Component {}
+        TestWidget.template = xml`<div class="o-test-widget-option" t-esc="props.title"/>`;
+        TestWidget.extractProps = ({ attrs }) => {
+            return {
+                title: attrs.title,
+            };
+        };
+        viewWidgetRegistry.add("widget_test_option", TestWidget);
 
         await makeView({
             arch: `
