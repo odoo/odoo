@@ -30,7 +30,7 @@
         <field name="name">loyalty.card.view.tree</field>
         <field name="model">loyalty.card</field>
         <field name="arch" type="xml">
-            <tree string="Coupons" create="false" edit="false" delete="false">
+            <tree string="Coupons" create="false" edit="false" delete="false" js_class="loyalty_card_list_view">
                 <field name="code"/>
                 <field name="create_date" optional="hide"/>
                 <field name="points_display" string="Balance"/>
