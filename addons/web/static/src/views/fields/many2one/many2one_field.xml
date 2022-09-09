@@ -67,6 +67,17 @@
                         t-on-click="onExternalBtnClick"
                     />
                 </t>
+                <button
+                    t-if="hasBarcodeButton"
+                    t-on-click="onBarcodeBtnClick"
+                    type="button"
+                    class="btn o_barcode"
+                    tabindex="-1"
+                    draggable="false"
+                    aria-label="Scan barcode"
+                    title="Scan barcode"
+                    data-tooltip="Scan barcode"
+                />
             </div>
             <div class="o_field_many2one_extra">
                 <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
