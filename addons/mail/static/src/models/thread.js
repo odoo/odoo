@@ -1088,6 +1088,20 @@ registerModel({
         activities: many('Activity', {
             inverse: 'thread',
         }),
+        activity_state: attr({
+            compute() {
+                if (this.overdueActivities.length > 0) {
+                    return 'overdue';
+                }
+                if (this.todayActivities.length > 0) {
+                    return 'today';
+                }
+                if (this.futureActivities.length > 0) {
+                    return 'planned';
+                }
+                return clear();
+            },
+        }),
         allAttachments: many('Attachment', {
             compute() {
                 const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
