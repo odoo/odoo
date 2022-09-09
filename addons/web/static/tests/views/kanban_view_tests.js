@@ -6272,7 +6272,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
-        "nocontent helper for grouped kanban with no records with no group_create",
+        "nocontent helper for grouped kanban (on m2o field) with no records with no group_create",
         async (assert) => {
             serverData.models.partner.records = [];
 
@@ -6302,6 +6302,35 @@ QUnit.module("Views", (hooks) => {
                 ".o_column_quick_create",
                 "there should not be a column quick create"
             );
+        }
+    );
+
+    QUnit.test(
+        "nocontent helper for grouped kanban (on date field) with no records with no group_create",
+        async (assert) => {
+            serverData.models.partner.records = [];
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban group_create="false">
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div><field name="foo"/></div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                groupBy: ["date"],
+                noContentHelp: "No content helper",
+            });
+
+            assert.containsNone(target, ".o_kanban_group");
+            assert.containsNone(target, ".o_kanban_record");
+            assert.containsOnce(target, ".o_view_nocontent");
+            assert.containsNone(target, ".o_column_quick_create");
+            assert.containsNone(target, ".o_kanban_example_background");
         }
     );
 
