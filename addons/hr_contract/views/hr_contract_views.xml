@@ -23,14 +23,11 @@
                         <field name="calendar_mismatch" invisible="1"/>
                         <label for="resource_calendar_id"/>
                         <div class="d-flex align-items-center">
-                            <field name="resource_calendar_id" required="1"/>
+                            <field name="resource_calendar_id"/>
                             <widget name="contract_warning_tooltip"
                                 attrs="{'invisible': [('calendar_mismatch', '=', False)]}"/>
                         </div>
                     </xpath>
-                    <field name="resource_calendar_id" position="attributes">
-                        <attribute name="attrs">{'readonly': [('contract_warning', '=', False)]}</attribute>
-                    </field>
                 </data>
             </field>
         </record>

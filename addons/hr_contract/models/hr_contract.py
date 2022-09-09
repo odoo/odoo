@@ -254,7 +254,11 @@ class Contract(models.Model):
 
         calendar = vals.get('resource_calendar_id')
         if calendar:
-            self.filtered(lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done')).mapped('employee_id').write({'resource_calendar_id': calendar})
+            self.filtered(
+                lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done')
+            ).mapped('employee_id').filtered(
+                lambda e: e.resource_calendar_id
+            ).write({'resource_calendar_id': calendar})
 
         if 'state' in vals and 'kanban_state' not in vals:
             self.write({'kanban_state': 'normal'})

@@ -520,6 +520,8 @@ class MrpWorkorder(models.Model):
         best_finished_date = datetime.max
         vals = {}
         for workcenter in workcenters:
+            if not workcenter.resource_calendar_id:
+                raise UserError(_('There is no defined calendar on workcenter %s.', workcenter.name))
             # Compute theoretical duration
             if self.workcenter_id == workcenter:
                 duration_expected = self.duration_expected
