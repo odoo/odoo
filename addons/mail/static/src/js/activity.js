@@ -60,25 +60,6 @@ const KanbanActivity = AbstractField.extend({
     // Private
     //------------------------------------------------------------
 
-    _getActivityFormAction(id) {
-        const context = {
-            default_res_id: this.res_id,
-            default_res_model: this.model,
-        };
-        if (this.defaultActivityType !== undefined) {
-            context.default_activity_type_id = this.defaultActivityType;
-        }
-        return {
-            type: 'ir.actions.act_window',
-            name: _t("Schedule Activity"),
-            res_model: 'mail.activity',
-            view_mode: 'form',
-            views: [[false, 'form']],
-            target: 'new',
-            context,
-            res_id: id || false,
-        };
-    },
     /**
      * Send a feedback and reload page in order to mark activity as done
      *
@@ -385,8 +366,26 @@ const KanbanActivity = AbstractField.extend({
      * @return {Promise}
      */
     _openActivityForm(id, callback) {
-        const action = this._getActivityFormAction(id);
-        return this.do_action(action, { on_close: callback });
+        const context = {
+            default_res_id: this.res_id,
+            default_res_model: this.model,
+        };
+        if (this.defaultActivityType !== undefined) {
+            context.default_activity_type_id = this.defaultActivityType;
+        }
+        return this.do_action(
+            {
+                type: 'ir.actions.act_window',
+                name: _t("Schedule Activity"),
+                res_model: 'mail.activity',
+                view_mode: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context,
+                res_id: id || false,
+            },
+            { on_close: callback },
+        );
     },
     /**
      * @private
