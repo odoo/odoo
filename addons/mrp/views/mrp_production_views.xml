@@ -197,8 +197,8 @@
                             <field name="forecasted_issue" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
-                             <label for="bom_id" name="bom_label"/>
-                            <div class='o_row d-flex' name="bom_div">
+                            <label for="bom_id" name="bom_label"/>
+                            <div class='o_row' name="bom_div">
                                 <field name="bom_id"
                                     context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </div>
