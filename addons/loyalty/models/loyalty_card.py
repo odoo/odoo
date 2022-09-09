@@ -160,3 +160,10 @@ class LoyaltyCard(models.Model):
             points_changes = {coupon: {'old': points_before[coupon], 'new': coupon.points} for coupon in self}
             self._send_points_reach_communication(points_changes)
         return res
+
+    @api.onchange('expiration_date')
+    def onchange_valid_until(self):
+        if self.expiration_date and self.program_id.date_to and self.expiration_date > self.program_id.date_to:
+            return {'warning': {'message': _("You might want to reconsider the inputted date because it's already in the future.")}}
+        elif self.expiration_date and self.expiration_date < fields.Date.today():
+            return {'warning': {'message': _("You might want to reconsider the inputted date because it's already in the past.")}}

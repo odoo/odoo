@@ -73,3 +73,10 @@ class LoyaltyGenerateWizard(models.TransientModel):
                 coupon_create_vals.append(wizard._get_coupon_values(partner))
         self.env['loyalty.card'].create(coupon_create_vals)
         return True
+
+    @api.onchange('valid_until')
+    def onchange_valid_until(self):
+        if self.valid_until and self.program_id.date_to and self.valid_until > self.program_id.date_to:
+            return {'warning': {'message': _("You might want to reconsider the inputted date because it's already in the future.")}}
+        elif self.valid_until and self.valid_until < fields.Date.today():
+            return {'warning': {'message': _("You might want to reconsider the inputted date because it's already in the past.")}}

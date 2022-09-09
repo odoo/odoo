@@ -545,3 +545,8 @@ class LoyaltyProgram(models.Model):
                 })]
             },
         }
+
+    @api.onchange('date_to')
+    def onchange_validity(self):
+        if self.date_to and self.date_to < fields.Date.today():
+            return {'warning': {'message': _("You might want to reconsider the inputted date because it's already in the past.")}}
