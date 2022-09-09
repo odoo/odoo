@@ -83,6 +83,11 @@ def MockRequest(
     else:
         match.side_effect = NotFound
 
+    def update_context(**overrides):
+        request.context = dict(request.context, **overrides)
+
+    request.update_context = update_context
+
     with contextlib.ExitStack() as s:
         odoo.http._request_stack.push(request)
         s.callback(odoo.http._request_stack.pop)
