@@ -20,11 +20,8 @@ import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
 /**
  * @typedef {Object} ViewDescription
  * @property {string} arch
- * @property {Object} fields
- * @property {string} model
- * @property {string} [name] is returned by the server ("default" or real name)
- * @property {string} type
- * @property {number} [viewId]
+ * @property {number|false} id
+ * @property {number|null} [custom_view_id]
  * @property {Object} [actionMenus] // for views other than search
  * @property {IrFilter[]} [irFilters] // for search view
  */
