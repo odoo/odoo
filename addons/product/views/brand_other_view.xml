@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_brand_form_view" model="ir.ui.view">
+        <field name="name">partner.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="brand_id" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_brand_form_view" model="ir.ui.view">
+        <field name="name">purchase.order.form.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='products']/field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                <field name="brand_id" optinal="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_brand_form_view" model="ir.ui.view">
+        <field name="name">sale.order.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='order_lines']/field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                <field name="brand_id" optinal="show" />
+                <button type="object" name="open_brand_view" icon="fa-external-link" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
