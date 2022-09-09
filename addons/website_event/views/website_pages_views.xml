@@ -14,15 +14,25 @@
             <attribute name="action">open_website_url</attribute>
         </xpath>
 
+        <field name="address_id" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+        <field name="date_end" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+        <field name="seats_used" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+
         <field name="name" position="after">
             <field name="website_url"/>
         </field>
-        <xpath expr="//tree">
+        <field name="stage_id" position="before">
             <field name="is_seo_optimized"/>
             <field name="is_published"/>
 
             <field name="website_id" position="move"/>
-        </xpath>
+        </field>
     </field>
 </record>
 

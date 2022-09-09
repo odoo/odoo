@@ -16,6 +16,16 @@
 
         <field name="is_published" position="replace"/>
 
+        <field name="default_code" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+        <field name="product_tag_ids" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+        <field name="standard_price" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+
         <field name="name" position="after">
             <field name="website_url"/>
         </field>
