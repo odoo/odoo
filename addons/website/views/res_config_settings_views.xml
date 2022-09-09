@@ -47,10 +47,6 @@
                                         <label class="col-lg-3" string="Homepage URL" for="website_homepage_url"/>
                                         <field name="website_homepage_url" placeholder="/" title="Main page of your website served to visitors"/>
                                     </div>
-                                    <div class="row mt8" groups="base.group_no_one">
-                                        <label class="col-lg-3" string="Country Groups" for="website_country_group_ids"/>
-                                        <field name="website_country_group_ids" widget="many2many_tags" title="Once the selection of available websites by domain is done, you can filter by country group. You can have 2 websites with same domain AND a condition on country group to select which website to use."/>
-                                    </div>
                                     <div class="row mt8">
                                         <label class="col-lg-3" string="Languages" for="language_ids"/>
                                         <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('website_id', '!=', False)]}" title="Languages available on your website"/>

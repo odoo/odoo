@@ -73,8 +73,6 @@ class Website(models.Model):
     name = fields.Char('Website Name', required=True)
     sequence = fields.Integer(default=10)
     domain = fields.Char('Website Domain', help='E.g. https://www.mydomain.com')
-    country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
-                                         string='Country Groups', help='Used when multiple websites have the same domain.')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
     language_ids = fields.Many2many(
         'res.lang', 'website_lang_rel', 'website_id', 'lang_id', string="Languages",
@@ -151,6 +149,10 @@ class Website(models.Model):
         ('b2b', 'On invitation'),
         ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b')
+
+    _sql_constraints = [
+        ('domain_unique', 'unique(domain)', 'Website Domain should be unique.'),
+    ]
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
@@ -977,40 +979,26 @@ class Website(models.Model):
         # The format of `httprequest.host` is `domain:port`
         domain_name = request and request.httprequest.host or ''
 
-        country = request and request.geoip.get('country_code')
-        country_id = False
-        if country:
-            country_id = self.env['res.country'].search([('code', '=', country)], limit=1).id
-
-        website_id = self._get_current_website_id(domain_name, country_id, fallback=fallback)
+        website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
-    @tools.cache('domain_name', 'country_id', 'fallback')
+    @tools.cache('domain_name', 'fallback')
     @api.model
-    def _get_current_website_id(self, domain_name, country_id, fallback=True):
+    def _get_current_website_id(self, domain_name, fallback=True):
         """Get the current website id.
 
-        First find all the websites for which the configured `domain` (after
+        First find the website for which the configured `domain` (after
         ignoring a potential scheme) is equal to the given
-        `domain_name`. If there is only one result, return it immediately.
+        `domain_name`. If a match is found, return it immediately.
 
-        If there are no website found for the given `domain_name`, either
+        If there is no website found for the given `domain_name`, either
         fallback to the first found website (no matter its `domain`) or return
         False depending on the `fallback` parameter.
-
-        If there are multiple websites for the same `domain_name`, we need to
-        filter them out by country. We return the first found website matching
-        the given `country_id`. If no found website matching `domain_name`
-        corresponds to the given `country_id`, the first found website for
-        `domain_name` will be returned (no matter its country).
 
         :param domain_name: the domain for which we want the website.
             In regard to the `url_parse` method, only the `netloc` part should
             be given here, no `scheme`.
         :type domain_name: string
-
-        :param country_id: id of the country for which we want the website
-        :type country_id: int
 
         :param fallback: if True and no website is found for the specificed
             `domain_name`, return the first website (without filtering them)
@@ -1028,19 +1016,17 @@ class Website(models.Model):
         def _filter_domain(website, domain_name, ignore_port=False):
             """Ignore `scheme` from the `domain`, just match the `netloc` which
             is host:port in the version of `url_parse` we use."""
-            # Here we add http:// to the domain if it's not set because
-            # `url_parse` expects it to be set to correctly return the `netloc`.
             website_domain = urls.url_parse(website.domain or '').netloc
             if ignore_port:
                 website_domain = _remove_port(website_domain)
                 domain_name = _remove_port(domain_name)
             return website_domain.lower() == (domain_name or '').lower()
 
-        # Sort on country_group_ids so that we fall back on a generic website:
-        # websites with empty country_group_ids will be first.
-        found_websites = self.search([('domain', 'ilike', _remove_port(domain_name))]).sorted('country_group_ids')
+        found_websites = self.search([('domain', 'ilike', _remove_port(domain_name))])
         # Filter for the exact domain (to filter out potential subdomains) due
         # to the use of ilike.
+        # `domain_name` could be an empty string, in that case multiple website
+        # without a domain will be returned
         websites = found_websites.filtered(lambda w: _filter_domain(w, domain_name))
         # If there is no domain matching for the given port, ignore the port.
         websites = websites or found_websites.filtered(lambda w: _filter_domain(w, domain_name, ignore_port=True))
@@ -1049,11 +1035,8 @@ class Website(models.Model):
             if not fallback:
                 return False
             return self.search([], limit=1).id
-        elif len(websites) == 1:
-            return websites.id
-        else:  # > 1 website with the same domain
-            country_specific_websites = websites.filtered(lambda website: country_id in website.country_group_ids.mapped('country_ids').ids)
-            return country_specific_websites[0].id if country_specific_websites else websites[0].id
+
+        return websites[0].id
 
     def _force(self):
         self._force_website(self.id)
