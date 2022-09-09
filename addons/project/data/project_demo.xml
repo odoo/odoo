@@ -138,6 +138,25 @@
             <field name="privacy_visibility">employees</field>
         </record>
 
+        <record id="project_project_4" model="project.project">
+            <field name="date_start" eval="(DateTime.today() + relativedelta(months=-1)).strftime('%Y-%m-%d 10:00:00')"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-5)).strftime('%Y-%m-%d 17:00:00')"/>
+            <field name="name">Home Make Over</field>
+            <field name="color">4</field>
+            <field name="active">False</field>
+            <field name="description">Interior designing and refurnishing.</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="type_ids" eval="[
+                Command.link(ref('project_stage_0')),
+                Command.link(ref('project_stage_1')),
+                Command.link(ref('project_stage_2')),
+                Command.link(ref('project_stage_3')),
+            ]"/>
+            <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="tag_ids" eval="[Command.link(ref('project_tags_04')), Command.link(ref('project_tags_02'))]"/>
+            <field name="stage_id" ref="project.project_project_stage_2"/>
+        </record>
+
         <!-- Personal Stages: Mitchell Admin-->
         <record id="project_personal_stage_admin_0" model="project.task.type">
             <field name="sequence">1</field>
@@ -586,6 +605,29 @@
             <field name="user_id" ref="base.user_demo"/>
         </record>
 
+        <!-- Archive Tasks -->
+        <record id="project_1_task_9_archive_1" model="project.task">
+            <field name="name">Kitchen Assembly</field>
+            <field name="active">False</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project_project_4"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+        </record>
+        <record id="project_task_furniture" model="project.task">
+            <field name="name">Furniture Delivery</field>
+            <field name="active">False</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project_project_4"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+        </record>
+         <record id="project_task_ceiling" model="project.task">
+            <field name="name">Ceiling fan</field>
+            <field name="active">False</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project_project_4"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+        </record>
+
         <!-- Project 1 Recurring tasks and subtasks -->
         <record id="project_task_recurrence_1" model="project.task.recurrence">
             <field name="recurrence_left">3</field>
@@ -672,6 +714,25 @@
             <field name="parent_id" ref="project.project_1_task_12"/>
             <field name="name">Minutes</field>
             <field name="stage_id" ref="project_stage_1"/>
+        </record>
+        <record id="project_1_task_16" model="project.task">
+            <field name="planned_hours" eval="24.0"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="name">Chair Cabinet</field>
+            <field name="stage_id" ref="project_stage_2"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project.project_1_task_2'))]"/>
+            <field name="date_deadline" eval="DateTime.now() + relativedelta(days=6)"/>
+            <field name="color">9</field>
+        </record>
+        <record id="project_1_task_17" model="project.task">
+            <field name="name">Plywood requirement</field>
+            <field name="sequence">40</field>
+            <field name="planned_hours">2.0</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="parent_id" ref="project.project_1_task_16"/>
+            <field name="stage_id" ref="project_stage_2"/>
         </record>
 
         <function model="project.task.recurrence" name="_cron_create_recurring_tasks"/>
