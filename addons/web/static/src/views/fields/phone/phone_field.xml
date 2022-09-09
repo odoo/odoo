@@ -3,7 +3,7 @@
 
     <t t-name="web.PhoneField" owl="1">
         <t t-if="props.readonly">
-            <a class="o_form_uri o_phone_link" t-att-href="'tel:'+props.value" t-esc="props.value"/>
+            <a t-if="props.value" class="o_form_uri o_phone_link" t-att-href="'tel:'+props.value" t-esc="props.value"/>
         </t>
         <t t-else="">
             <input
