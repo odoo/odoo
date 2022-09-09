@@ -2252,6 +2252,10 @@ export class OdooEditor extends EventTarget {
         } else {
             this._columnUi.style.visibility = 'hidden';
         }
+        if (row || column) {
+            const table = closestElement(row || column, 'table');
+            table && table.addEventListener('mouseleave', () => this._toggleTableUi(), { once: true });
+        }
     }
     /**
      * Position the table row/column tools (depending on whether a row or a cell
