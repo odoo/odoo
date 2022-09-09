@@ -8,8 +8,8 @@
                 <field name="program_type" invisible="1"/> 
                 <field name="user_has_debug" invisible="1"/>
                 <sheet>
-                    <group>
-                        <group attrs="{'invisible': [('program_type', '!=', 'promo_code')]}">
+                    <group attrs="{'invisible': [('program_type', '!=', 'promo_code')]}">
+                        <group>
                             <field name="code" attrs="{'required': [('program_type', '=', 'promo_code')]}"/>
                         </group>
                     </group>
