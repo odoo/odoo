@@ -198,6 +198,7 @@ class LoyaltyProgram(models.Model):
                     'reward_point_amount': 1,
                     'reward_point_mode': 'order',
                     'minimum_amount': 50,
+                    'minimum_qty': 0,
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'required_points': 1,
@@ -215,6 +216,7 @@ class LoyaltyProgram(models.Model):
                     'reward_point_mode': 'money',
                     'reward_point_split': True,
                     'product_ids': self.env.ref('loyalty.gift_card_product_50', raise_if_not_found=False),
+                    'minimum_qty': 0,
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'reward_type': 'discount',
@@ -271,6 +273,7 @@ class LoyaltyProgram(models.Model):
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'mode': 'with_code',
                     'code': 'PROMO_CODE_' + str(uuid4())[:4], # We should try not to trigger any unicity constraint
+                    'minimum_qty': 0,
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'discount_applicability': 'specific',
@@ -288,6 +291,7 @@ class LoyaltyProgram(models.Model):
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_mode': 'unit',
                     'product_ids': first_sale_product,
+                    'minimum_qty': 2,
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'reward_type': 'product',
@@ -303,6 +307,7 @@ class LoyaltyProgram(models.Model):
                 'portal_point_name': _('Coupon point(s)'),
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'minimum_amount': 100,
+                    'minimum_qty': 0,
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'reward_type': 'discount',
@@ -352,6 +357,12 @@ class LoyaltyProgram(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id("loyalty.loyalty_card_action")
         action['name'] = self._program_items_name()[self.program_type]
         action['display_name'] = action['name']
+        action['context'] = {
+            'create': False,
+            'program_type': self.program_type,
+            'program_item_name': self._program_items_name()[self.program_type],
+            'default_program_id': self.id,
+        }
         return action
 
     @api.ondelete(at_uninstall=False)

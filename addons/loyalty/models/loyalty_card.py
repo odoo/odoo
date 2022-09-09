@@ -23,6 +23,7 @@ class LoyaltyCard(models.Model):
         return [(card.id, f'{card.program_id.name}: {card.code}') for card in self]
 
     program_id = fields.Many2one('loyalty.program', ondelete='restrict', default=lambda self: self.env.context.get('active_id', None))
+    program_type = fields.Selection(related='program_id.program_type')
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
     # Reserved for this partner if non-empty
