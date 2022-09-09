@@ -948,44 +948,59 @@ class Picking(models.Model):
                         for pl in package_level_ids:
                             pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
-    def do_unreserve(self):
-        self.move_ids._do_unreserve()
-        self.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
+    def _get_lot_move_lines_for_sanity_check(self, none_done_picking_ids, separate_pickings=True):
+        """ Get all move_lines with tracked products that need to be checked over in the sanity check.
+            :param none_done_picking_ids: Set of all pickings ids that have no qty_done set on any move_line.
+            :param separate_pickings: Indicates if pickings should be checked independently for lot/serial numbers or not.
+        """
+        def get_relevant_move_line_ids(none_done_picking_ids, picking):
+            # Get all move_lines if picking has no qty_done set, otherwise only get the move_lines with some qty_done set.
+            if picking.id in none_done_picking_ids:
+                return picking.move_line_ids.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none').ids
+            else:
+                return get_line_with_done_qty_ids(picking.move_line_ids)
 
-    def button_validate(self):
-        # Clean-up the context key at validation to avoid forcing the creation of immediate
-        # transfers.
-        ctx = dict(self.env.context)
-        ctx.pop('default_immediate_transfer', None)
-        self = self.with_context(ctx)
+        def get_line_with_done_qty_ids(move_lines):
+            # Get only move_lines that has some qty_done set.
+            return move_lines.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none' and float_compare(ml.qty_done, 0, precision_rounding=ml.product_uom_id.rounding)).ids
 
-        # Sanity checks.
-        pickings_without_moves = self.browse()
-        pickings_without_quantities = self.browse()
+        if separate_pickings:
+            # If pickings are checked independently, get full/partial move_lines depending if each picking has no qty_done set.
+            lines_to_check_ids = [line_id for picking in self for line_id in get_relevant_move_line_ids(none_done_picking_ids, picking)]
+        else:
+            # If pickings are checked as one (like in a batch), then get only the move_lines with qty_done across all pickings if there is at least one.
+            if any(picking.id not in none_done_picking_ids for picking in self):
+                lines_to_check_ids = get_line_with_done_qty_ids(self.move_line_ids)
+            else:
+                lines_to_check_ids = self.move_line_ids.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none').ids
+
+        return self.env['stock.move.line'].browse(lines_to_check_ids)
+
+    def _sanity_check(self, separate_pickings=True):
+        """ Sanity check for `button_validate()`
+            :param separate_pickings: Indicates if pickings should be checked independently for lot/serial numbers or not.
+        """
         pickings_without_lots = self.browse()
         products_without_lots = self.env['product.product']
+        pickings_without_moves = self.filtered(lambda p: not p.move_ids and not p.move_line_ids)
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
+        no_quantities_done_ids = set()
+        no_reserved_quantities_ids = set()
         for picking in self:
-            if not picking.move_ids and not picking.move_line_ids:
-                pickings_without_moves |= picking
+            if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
+                no_quantities_done_ids.add(picking.id)
+            if all(float_is_zero(move_line.reserved_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in picking.move_line_ids):
+                no_reserved_quantities_ids.add(picking.id)
+        pickings_without_quantities = self.filtered(lambda p: p.id in no_quantities_done_ids and p.id in no_reserved_quantities_ids)
 
-            picking.message_subscribe([self.env.user.partner_id.id])
-            picking_type = picking.picking_type_id
-            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
-            no_reserved_quantities = all(float_is_zero(move_line.reserved_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in picking.move_line_ids)
-            if no_reserved_quantities and no_quantities_done:
-                pickings_without_quantities |= picking
-
-            if picking_type.use_create_lots or picking_type.use_existing_lots:
-                lines_to_check = picking.move_line_ids
-                if not no_quantities_done:
-                    lines_to_check = lines_to_check.filtered(lambda line: float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding))
-                for line in lines_to_check:
-                    product = line.product_id
-                    if product and product.tracking != 'none':
-                        if not line.lot_name and not line.lot_id:
-                            pickings_without_lots |= picking
-                            products_without_lots |= product
+        pickings_using_lots = self.filtered(lambda p: p.picking_type_id.use_create_lots or p.picking_type_id.use_existing_lots)
+        if pickings_using_lots:
+            lines_to_check = pickings_using_lots._get_lot_move_lines_for_sanity_check(no_quantities_done_ids, separate_pickings)
+            for line in lines_to_check:
+                if not line.lot_name and not line.lot_id:
+                    pickings_without_lots |= line.picking_id
+                    products_without_lots |= line.product_id
 
         if not self._should_show_transfers():
             if pickings_without_moves:
@@ -1004,6 +1019,23 @@ class Picking(models.Model):
                 message += _('\n\nTransfers %s: You need to supply a Lot/Serial number for products %s.') % (', '.join(pickings_without_lots.mapped('name')), ', '.join(products_without_lots.mapped('display_name')))
             if message:
                 raise UserError(message.lstrip())
+
+    def do_unreserve(self):
+        self.move_ids._do_unreserve()
+        self.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
+
+    def button_validate(self):
+        # Clean-up the context key at validation to avoid forcing the creation of immediate
+        # transfers.
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
+
+        # Sanity checks.
+        if not self.env.context.get('skip_sanity_check', False):
+            self._sanity_check()
+
+        self.message_subscribe([self.env.user.partner_id.id])
 
         # Run the pre-validation wizards. Processing a pre-validation wizard should work on the
         # moves and/or the context and never call `_action_done`.
