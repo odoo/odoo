@@ -719,7 +719,16 @@ options.Class.include({
             case 'customizeWebsiteVariable': {
                 const ownerDocument = this.$target[0].ownerDocument;
                 const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
-                return weUtils.getCSSVariableValue(params.variable, style);
+                let finalValue = weUtils.getCSSVariableValue(params.variable, style);
+                if (!params.colorNames) {
+                    return finalValue;
+                }
+                let tempValue = finalValue;
+                while (tempValue) {
+                    finalValue = tempValue;
+                    tempValue = weUtils.getCSSVariableValue(tempValue.replaceAll("'", ''), style);
+                }
+                return finalValue;
             }
             case 'customizeWebsiteColor': {
                 const ownerDocument = this.$target[0].ownerDocument;
