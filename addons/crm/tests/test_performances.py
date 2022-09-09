@@ -8,7 +8,7 @@ from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('lead_assign', 'crm_performance')
+@tagged('lead_assign', 'crm_performance', 'post_install', '-at_install')
 class TestLeadAssignPerf(TestLeadAssignCommon):
     """ Test performances of lead assignment feature added in saas-14.2
 
@@ -47,9 +47,11 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # commit probability and related fields
         leads.flush()
 
+        # multi: 1444, sometimes 1447 or 1451
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=1448):  # 1445 generally, +1/+3 nighty
-                self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+            with self.profile(collectors=['sql']):
+                with self.assertQueryCount(user_sales_manager=1444):  # crm 1368
+                    self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -92,7 +94,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         leads.flush()
 
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=675):  # 669-674 generally, +1 nightly
+            with self.assertQueryCount(user_sales_manager=675):  # crm 675
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -173,8 +175,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # commit probability and related fields
         leads.flush()
 
+        # randomness: at least 6 queries
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=6923):  # 6909-6913 generally
+            with self.assertQueryCount(user_sales_manager=6930):  # crm 6863 - com 6925
                 self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
         # teams assign

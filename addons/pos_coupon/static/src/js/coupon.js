@@ -1110,20 +1110,23 @@ odoo.define('pos_coupon.pos', function (require) {
                 .join(',');
         },
         _createDiscountRewards: function (program, coupon_id, amountsToDiscount) {
-            const discountRewards = Object.entries(amountsToDiscount).map(([tax_keys, amount]) => {
+            const rewards = [];
+            const totalAmountsToDiscount = Object.values(amountsToDiscount).reduce((a, b) => a + b, 0);
+            for (let [tax_keys, amount] of Object.entries(amountsToDiscount)) {
                 let discountAmount = (amount * program.discount_percentage) / 100.0;
-                discountAmount = Math.min(discountAmount, program.discount_max_amount || Infinity);
-                return new Reward({
+                let maxDiscount = amount / totalAmountsToDiscount * (program.discount_max_amount || Infinity);
+                discountAmount = Math.min(discountAmount, maxDiscount);
+                rewards.push(new Reward({
                     product: this.pos.db.get_product_by_id(program.discount_line_product_id[0]),
                     unit_price: -discountAmount,
                     quantity: 1,
                     program: program,
                     tax_ids: tax_keys !== '' ? tax_keys.split(',').map((val) => parseInt(val, 10)) : [],
                     coupon_id: coupon_id,
-                });
-            });
-            return [discountRewards, discountRewards.length > 0 ? null : 'No items to discount.'];
-        },
+                }));
+            }
+            return [rewards, rewards.length > 0 ? null : 'No items to discount.'];
+        }
     });
 
     var _orderline_super = models.Orderline.prototype;

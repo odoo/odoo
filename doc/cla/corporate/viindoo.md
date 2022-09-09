@@ -13,7 +13,6 @@ Leo Tran leo.tran@viindoo.com https://github.com/leotranviindoo
 List of contributors:
 
 David Tran david.tran@tvtmarine.com https://github.com/davidtranhp
-Ngoc Trinh Anh ngoc.trinh@tvtmarine.com https://github.com/ngoctrinh-viindoo
 Roy Le roy.le@viindoo.com https://github.com/royleviindoo
 Nguyen Viet Phuong nguyenvietphuong1010@gmail.com https://github.com/vietphuong10
 La Van Thuat lathuat1997@gmail.com https://github.com/lathuat1997
@@ -62,3 +61,17 @@ Nguyen Thi Minh Thuy minhthuy2814@gmail.com https://github.com/minhthuy145
 Kieu Dang Khiem kdkhiem@gmail.com https://github.com/dangkhiem91
 Truong Thi Tuoi truongphiet77@gmail.com https://github.com/tuoi1501
 Duong Duc Quy quyduong251325@gmail.com https://github.com/quyduong141
+Ngo Thanh Binh binhhp1702@gmail.com https://github.com/binh1702
+Tong Duc Anh tongducanh2000@gmail.com https://github.com/tongducanh
+Nguyen Duc Truong ndtruong.dev@gmail.com https://github.com/NDTruong-F
+Tran Anh Quy tquy446@gmail.com https://github.com/AnhQuy123
+Nguyen Ngoc Kim Cuong diamondnguyenkc@gmail.com https://github.com/diamondnguyenkc 
+Le Duc Anh  leducanh2010vnnd@gmail.com https://github.com/lebeo2010vnnd
+Nguyen Tuan Anh tuananh25102k@gmail.com https://github.com/nguyentuananh25102000
+Ninh Duc Hieu duchieulp@gmail.com https://github.com/Hieu-Bom
+Cao Dinh Trung caodinhtrung2k@gmail.com https://github.com/CaoTrungCa
+Trinh Ngoc Hung ngochung207@gmail.com https://github.com/ngochung207
+Ninh Van Chuong chuongnv.nd@gmail.com https://github.com/NinhVanChuong
+Dinh Cong Hieu dinhconghieu.hy@gmail.com https://github.com/DINHCONGHIEU
+Pham Thu Ha phamthuha0970@gmail.com  https://github.com/phamthuha0970
+Do Trung Duc dotrungduc.it@gmail.com https://github.com/dotrungduc201291

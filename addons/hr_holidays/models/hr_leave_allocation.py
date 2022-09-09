@@ -330,10 +330,14 @@ class HolidaysAllocation(models.Model):
         first_day_this_year = fields.Date.today() + relativedelta(month=1, day=1)
         for allocation in self:
             current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
+            lastcall = current_level._get_previous_date(first_day_this_year)
             nextcall = current_level._get_next_date(first_day_this_year)
+            if lastcall == first_day_this_year:
+                lastcall = current_level._get_previous_date(first_day_this_year - relativedelta(days=1))
+                nextcall = first_day_this_year
             if current_level and current_level.action_with_unused_accruals == 'lost':
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
-                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': first_day_this_year, 'nextcall': nextcall})
+                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
@@ -372,12 +376,19 @@ class HolidaysAllocation(models.Model):
         self.ensure_one()
         if level.is_based_on_worked_time:
             start_dt = datetime.combine(start_date, datetime.min.time())
-            end_dt = datetime.combine(end_date, datetime.max.time())
+            end_dt = datetime.combine(end_date, datetime.min.time())
             worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
                 [self.employee_id.id]['hours']
+            if start_period != start_date or end_period != end_date:
+                start_dt = datetime.combine(start_period, datetime.min.time())
+                end_dt = datetime.combine(end_period, datetime.min.time())
+                planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
+                    [self.employee_id.id]['hours']
+            else:
+                planned_worked = worked
             left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
                 domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
-            work_entry_prorata = worked / (left + worked) if worked else 0
+            work_entry_prorata = worked / (left + planned_worked) if (left + planned_worked) else 0
             added_value = work_entry_prorata * level.added_value
         else:
             added_value = level.added_value
@@ -385,7 +396,7 @@ class HolidaysAllocation(models.Model):
         if level.added_value_type == 'hours':
             added_value = added_value / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
         period_prorata = 1
-        if start_period != start_date or end_period != end_date:
+        if (start_period != start_date or end_period != end_date) and not level.is_based_on_worked_time:
             period_days = (end_period - start_period)
             call_days = (end_date - start_date)
             period_prorata = min(1, call_days / period_days) if period_days else 1
@@ -423,15 +434,6 @@ class HolidaysAllocation(models.Model):
                 # this is used to prorate the first number of days given to the employee
                 period_start = current_level._get_previous_date(allocation.lastcall)
                 period_end = current_level._get_next_date(allocation.lastcall)
-                # If accruals are lost at the beginning of year, skip accrual until beginning of this year
-                if current_level.action_with_unused_accruals == 'lost':
-                    this_year_first_day = today + relativedelta(day=1, month=1)
-                    if period_end < this_year_first_day:
-                        allocation.lastcall = allocation.nextcall
-                        allocation.nextcall = nextcall
-                        continue
-                    else:
-                        period_start = max(period_start, this_year_first_day)
                 # Also prorate this accrual in the event that we are passing from one level to another
                 if current_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
                     next_level = level_ids[current_level_idx + 1]

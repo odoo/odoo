@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2022-08-24 01:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
 "Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
@@ -55,7 +55,7 @@ msgstr "% de felicidad"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "%s and %s are typing..."
-msgstr "%s y %s están escribiendo.."
+msgstr "%s y %s están escribiendo..."
 
 #. module: im_livechat
 #. openerp-web
@@ -101,12 +101,12 @@ msgid ""
 "ratings\" role=\"img\" aria-label=\"Happy face\"/>"
 msgstr ""
 "<i class=\"fa fa-smile-o text-success\" title=\"Porcentaje de calificaciones"
-" felices\" role=\"img\" aria-label=\"Cara feliz\"/>"
+" felices\" role=\"img\" aria-label=\"Happy face\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
-msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Usuario\" title=\"Usuario\"/>"
+msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"Usuario\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -407,7 +407,7 @@ msgstr "Conversación con %s"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
 msgid "Conversations handled"
-msgstr "Conversaciones manejadas"
+msgstr "Conversaciones gestionadas"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -479,7 +479,7 @@ msgstr "Calificación de clientes"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
 msgid "Day Number"
-msgstr "Numero de día"
+msgstr "Número de día"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__day_number
@@ -648,9 +648,21 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
+#, python-format
+msgid "Have a Question? Chat with us."
+msgstr "¿Tiene alguna pregunta? Chatee con nosotros."
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Header Background Color"
 msgstr "Color del fondo del encabezado"
+
+#. module: im_livechat
+#: model:im_livechat.channel,default_message:im_livechat.im_livechat_channel_data
+msgid "Hello, how may I help you?"
+msgstr "Hola, ¿cómo puedo ayudarle?"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -1002,7 +1014,7 @@ msgstr "¡No hay datos aún!"
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "No history found"
-msgstr "No se encontró ningún historialq"
+msgstr "No se encontró ningún historial"
 
 #. module: im_livechat
 #. openerp-web
@@ -1030,7 +1042,7 @@ msgstr "Numero de participantes diferentes"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Number of message in the conversation"
-msgstr "Número de mensaje en la conversación"
+msgstr "Número de mensajes en la conversación"
 
 #. module: im_livechat
 #. openerp-web
@@ -1105,7 +1117,7 @@ msgid ""
 msgstr ""
 "Operadores\n"
 "                                            <br/>\n"
-"                                            <i class=\"fa fa-comments\" role=\"img\" aria-label=\"Comentarios\" title=\"Comentarios\"/>"
+"                                            <i class=\"fa fa-comments\" role=\"img\" aria-label=\"Comments\" title=\"Comentarios\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1132,7 +1144,7 @@ msgstr "Archivo PDF"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr "Porcentaje de valoraciones positivas"
+msgstr "Porcentaje de calificaciones positivas"
 
 #. module: im_livechat
 #. openerp-web
@@ -1204,7 +1216,7 @@ msgstr "Calificación de la última imagen"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_value
 msgid "Rating Last Value"
-msgstr "Calificar último valor"
+msgstr "Último valor de calificación"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
@@ -1286,7 +1298,7 @@ msgstr "Responder"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
 msgid "Report"
-msgstr "Reportar"
+msgstr "Reporte"
 
 #. module: im_livechat
 #. openerp-web
@@ -1401,7 +1413,7 @@ msgstr "Estadísticas de sesión"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "Session expired... Please refresh and try again."
-msgstr "Sesión expirada... Actualice la página y vuelva a intentarlo."
+msgstr "La sesión expiró... Actualice la página y vuelva a intentarlo."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_unrated
@@ -1783,13 +1795,13 @@ msgid ""
 "                visitors to talk in real time with your operators."
 msgstr ""
 "Puede crear canales para cada sitio web en el que desee\n"
-"                integrar el widget de Chat en vivo del sitio web, permitiendo a los visitantes\n"
+"                integrar el widget de Chat en vivo del sitio web, lo que permite a los visitantes\n"
 "                de su sitio web hablar en tiempo real con sus operadores."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
 msgid "Your chatter history is empty"
-msgstr "Su historial de conversaciones está vacío"
+msgstr "Su historial de chatter está vacío"
 
 #. module: im_livechat
 #. openerp-web
@@ -1810,7 +1822,7 @@ msgstr "Reducir"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "e.g. /contactus"
-msgstr "ej. /contactus"
+msgstr "Por ejemplo, /contactus"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1820,7 +1832,7 @@ msgstr "Por ejemplo, Hola, ¿cómo podemos ayudarle?"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
-msgstr "ej. SuSitioWeb.com"
+msgstr "Por ejemplo, SuSitioWeb.com"
 
 #. module: im_livechat
 #. openerp-web

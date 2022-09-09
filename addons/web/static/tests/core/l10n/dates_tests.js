@@ -94,6 +94,16 @@ QUnit.module(
             unpatch(localization, "dateformat");
         });
 
+        QUnit.test("formatDate: input timezone does not matter", async (assert) => {
+            patchWithCleanup(localization, defaultLocalization);
+            const utcDate = DateTime.utc(2009, 5, 4, 0, 0, 0);
+            const localDate = DateTime.local(2009, 5, 4, 0, 0, 0);
+            assert.equal(utcDate.zone.name, "UTC");
+            assert.strictEqual(formatDate(utcDate), "05/04/2009");
+            assert.equal(localDate.zone.name, "Europe/Brussels");
+            assert.strictEqual(formatDate(localDate), "05/04/2009");
+        });
+
         QUnit.test("formatDate (with different timezone offset)", async (assert) => {
             patch(localization, "dateformat", { dateFormat: "MM/dd/yyyy" });
 

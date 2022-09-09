@@ -21,6 +21,10 @@
                         <ram:SellerAssignedID
                             t-if="line.product_id and line.product_id.default_code"
                             t-esc="line.product_id.default_code"/>
+                        <!-- TODO:
+                        <ram:Name t-esc="line.product_id.name or line.name"/>
+                        <ram:Description t-esc="line.name" t-if="line.name != line.product_id.name"/>
+                        -->
                         <ram:Name t-esc="line.name"/>
                     </ram:SpecifiedTradeProduct>
 
@@ -82,6 +86,16 @@
                     <ram:ID t-esc="SpecifiedLegalOrganization"/>
                 </ram:SpecifiedLegalOrganization>
 
+                <ram:DefinedTradeContact>
+                    <ram:PersonName t-esc="partner.name"/>
+                    <ram:TelephoneUniversalCommunication t-if="partner.phone or partner.mobile">
+                        <ram:CompleteNumber t-esc="partner.phone or partner.mobile"/>
+                    </ram:TelephoneUniversalCommunication>
+                    <ram:EmailURIUniversalCommunication t-if="partner.email">
+                        <ram:URIID schemeID='SMTP' t-esc="partner.email"/>
+                    </ram:EmailURIUniversalCommunication>
+                </ram:DefinedTradeContact>
+
                 <!-- Address. -->
                 <ram:PostalTradeAddress>
                     <ram:PostcodeCode t-if="partner.zip" t-esc="partner.zip"/>
@@ -105,7 +119,7 @@
                 -->
                 <rsm:ExchangedDocumentContext>
                     <ram:GuidelineSpecifiedDocumentContextParameter>
-                        <ram:ID>urn:cen.eu:en16931:2017</ram:ID>
+                        <ram:ID>urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended</ram:ID>
                     </ram:GuidelineSpecifiedDocumentContextParameter>
                 </rsm:ExchangedDocumentContext>
 

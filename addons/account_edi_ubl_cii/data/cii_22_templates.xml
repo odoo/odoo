@@ -93,6 +93,17 @@
                     <ram:ID t-att-schemeID="str('0002')"
                             t-out="specified_legal_organization_val"/>
                 </ram:SpecifiedLegalOrganization>
+
+                <ram:DefinedTradeContact t-if="not hide_dtc">
+                    <ram:PersonName t-esc="partner.name"/>
+                    <ram:TelephoneUniversalCommunication t-if="partner.phone or partner.mobile">
+                        <ram:CompleteNumber t-esc="partner.phone or partner.mobile"/>
+                    </ram:TelephoneUniversalCommunication>
+                    <ram:EmailURIUniversalCommunication t-if="partner.email">
+                        <ram:URIID schemeID='SMTP' t-esc="partner.email"/>
+                    </ram:EmailURIUniversalCommunication>
+                </ram:DefinedTradeContact>
+
                 <!-- Address. -->
                 <t t-call="account_edi_ubl_cii.account_invoice_address_facturx_export_22"/>
             </t>
@@ -197,6 +208,7 @@
                             <t t-call="account_edi_ubl_cii.account_invoice_partner_facturx_export_22">
                                 <t t-set="partner"
                                    t-value="ship_to_trade_party"/>
+                                <t t-set="hide_dtc" t-value="document_context_id == 'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2'"/>
                             </t>
                         </ram:ShipToTradeParty>
 

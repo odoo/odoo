@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # marcescu, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -379,9 +380,20 @@ msgstr ""
 "configurarlo desde el panel de configuración."
 
 #. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "This module will stop working after the 3rd October 2022 due to"
+msgstr ""
+"Este módulo dejará de funcionar después del 3 de octubre de 2022 debido a"
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
 msgstr "URI"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "changes in Google Authentication API"
+msgstr "cambios en la API de autenticación de Google"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form

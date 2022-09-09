@@ -1042,7 +1042,12 @@ const Wysiwyg = Widget.extend({
                     if ($node.hasClass('o_editable_date_field_format_changed')) {
                         $nodes.addClass('o_editable_date_field_format_changed');
                     }
-                    $nodes.html($node.html());
+                    const html = $node.html();
+                    for (const node of $nodes) {
+                        if (node.innerHTML !== html) {
+                            node.innerHTML = html;
+                        }
+                    }
                     this._observeOdooFieldChanges();
                 });
                 observer.observe(field, observerOptions);
@@ -1086,6 +1091,16 @@ const Wysiwyg = Widget.extend({
             return;
         }
         if (this.snippetsMenu && !options.forceDialog) {
+            if (options.link && options.link.querySelector(mediaSelector) &&
+                    !options.link.textContent.trim() && wysiwygUtils.isImg(this.lastElement)) {
+                // If the link contains a media without text, the link is
+                // editable in the media options instead.
+                this.snippetsMenu._mutex.exec(() => {
+                    // Wait for the editor panel to be fully updated.
+                    core.bus.trigger('activate_image_link_tool');
+                });
+                return;
+            }
             if (options.forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
                 if (!this.linkTools || ![options.link, ...wysiwygUtils.ancestors(options.link)].includes(this.linkTools.$link[0])) {
@@ -1166,6 +1181,19 @@ const Wysiwyg = Widget.extend({
                     restoreSelection();
                 }
             });
+        }
+    },
+    /**
+     * Removes the current Link.
+     */
+    removeLink() {
+        if (this.snippetsMenu && wysiwygUtils.isImg(this.lastElement)) {
+            this.snippetsMenu._mutex.exec(() => {
+                // Wait for the editor panel to be fully updated.
+                core.bus.trigger('deactivate_image_link_tool');
+            });
+        } else {
+            this.odooEditor.execCommand('unlink');
         }
     },
     /**
@@ -1299,9 +1327,15 @@ const Wysiwyg = Widget.extend({
     },
     _configureToolbar: function (options) {
         const $toolbar = this.toolbar.$el;
+        // Prevent selection loss when interacting with the toolbar buttons.
         $toolbar.find('.btn-group').on('mousedown', e => {
-            // Do not prevent events on popovers.
-            if (!e.target.closest('.dropdown-menu')) {
+            if (
+                // Prevent when clicking on btn-group but not on dropdown items.
+                !e.target.closest('.dropdown-menu') ||
+                // Unless they have a data-call in which case there is an editor
+                // command that is bound to it so we need to preventDefault.
+                e.target.closest('.btn') && e.target.closest('.btn').getAttribute('data-call')
+            ) {
                 e.preventDefault();
             }
         });
@@ -1315,7 +1349,7 @@ const Wysiwyg = Widget.extend({
                     break;
                 case 'media-insert':
                 case 'media-replace':
-                    this.openMediaDialog();
+                    this.openMediaDialog({ node: this.lastMediaClicked });
                     break;
                 case 'media-description':
                     new weWidgets.AltDialog(this, {}, this.lastMediaClicked).open();
@@ -1646,7 +1680,7 @@ const Wysiwyg = Widget.extend({
         this.toolbar.$el.find('#mediaParagraphDropdownButton').attr('id', 'paragraphDropdownButton');
         // Hide the create-link button if the selection spans several blocks.
         const selection = this.odooEditor.document.getSelection();
-        const range = selection.rangeCount && selection.getRangeAt(0);
+        const range = selection && selection.rangeCount && selection.getRangeAt(0);
         const $rangeContainer = range && $(range.commonAncestorContainer);
         const spansBlocks = range && !!$rangeContainer.contents().filter((i, node) => isBlock(node)).length;
         this.toolbar.$el.find('#create-link').toggleClass('d-none', !range || spansBlocks);

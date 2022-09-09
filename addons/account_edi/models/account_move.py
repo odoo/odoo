@@ -617,6 +617,9 @@ class AccountMove(models.Model):
     # Business operations
     ####################################################
 
+    def button_process_edi_web_services(self):
+        self.action_process_edi_web_services(with_commit=False)
+
     def action_process_edi_web_services(self, with_commit=True):
         docs = self.edi_document_ids.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
         docs._process_documents_web_services(with_commit=with_commit)

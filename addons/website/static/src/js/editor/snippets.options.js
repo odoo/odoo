@@ -2051,7 +2051,7 @@ options.registry.HeaderNavbar = options.Class.extend({
     async _computeWidgetVisibility(widgetName, params) {
         switch (widgetName) {
             case 'option_logo_height_scrolled': {
-                return !this.$('.navbar-brand').hasClass('d-none');
+                return !!this.$('.navbar-brand').length;
             }
             case 'no_hamburger_opt': {
                 return !weUtils.getCSSVariableValue('header-template').includes('hamburger');

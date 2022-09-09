@@ -373,6 +373,7 @@ class WebsiteSale(http.Controller):
         values = {
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
+            'order': post.get('order', ''),
             'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
@@ -700,6 +701,13 @@ class WebsiteSale(http.Controller):
         # data: values after preprocess
         error = dict()
         error_message = []
+
+        # prevent name change if invoices exist
+        if data.get('partner_id'):
+            partner = request.env['res.partner'].browse(int(data['partner_id']))
+            if partner.exists() and not partner.sudo().can_edit_vat() and 'name' in data and (data['name'] or False) != (partner.name or False):
+                error['name'] = 'error'
+                error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
 
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]

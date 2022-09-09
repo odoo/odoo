@@ -316,17 +316,22 @@ class HolidaysType(models.Model):
                                 else:
                                     leave_duration = leave.number_of_hours_display
                                     leave_unit = 'hours'
-                                for available_allocation in sorted_available_allocations:
-                                    virtual_remaining_leaves = (available_allocation.number_of_days if leave_unit == 'days' else available_allocation.number_of_hours_display) - allocations_days_consumed[employee_id][holiday_status_id][available_allocation]['virtual_leaves_taken']
-                                    max_leaves = min(virtual_remaining_leaves, leave_duration)
-                                    days_consumed[available_allocation]['virtual_leaves_taken'] += max_leaves
+                                if holiday_status_id.requires_allocation != 'no':
+                                    for available_allocation in sorted_available_allocations:
+                                        virtual_remaining_leaves = (available_allocation.number_of_days if leave_unit == 'days' else available_allocation.number_of_hours_display) - allocations_days_consumed[employee_id][holiday_status_id][available_allocation]['virtual_leaves_taken']
+                                        max_leaves = min(virtual_remaining_leaves, leave_duration)
+                                        days_consumed[available_allocation]['virtual_leaves_taken'] += max_leaves
+                                        if leave.state == 'validate':
+                                            days_consumed[available_allocation]['leaves_taken'] += max_leaves
+                                        leave_duration -= max_leaves
+                                    if leave_duration > 0:
+                                        # There are not enough allocation for the number of leaves
+                                        days_consumed[False]['virtual_remaining_leaves'] -= leave_duration
+                                        return allocations_days_consumed
+                                else:
+                                    days_consumed[False]['virtual_leaves_taken'] += leave_duration
                                     if leave.state == 'validate':
-                                        days_consumed[available_allocation]['leaves_taken'] += max_leaves
-                                    leave_duration -= max_leaves
-                                if leave_duration > 0:
-                                    # There are not enough allocation for the number of leaves
-                                    days_consumed[False]['virtual_remaining_leaves'] -= leave_duration
-                                    return allocations_days_consumed
+                                        days_consumed[False]['leaves_taken'] += leave_duration
 
         # Future available leaves
         for employee_id, allocation_intervals_by_status in allocation_employees.items():
@@ -362,7 +367,7 @@ class HolidaysType(models.Model):
                         if quantity_available <= remaining_days_allocation:
                             search_date = future_allocation_interval[1].date() + timedelta(days=1)
                         days_consumed['virtual_remaining_leaves'] += min(quantity_available, remaining_days_allocation)
-                        days_consumed['max_leaves'] = allocation.number_of_days if allocation.type_request_unit == 'day' else allocation.number_of_hours_display
+                        days_consumed['max_leaves'] = allocation.number_of_days if allocation.type_request_unit in ['day', 'half_day'] else allocation.number_of_hours_display
                         days_consumed['remaining_leaves'] = days_consumed['max_leaves'] - days_consumed['leaves_taken']
                         if remaining_days_allocation >= quantity_available:
                             break

@@ -1013,3 +1013,11 @@ Remote-MTA: 10.245.192.40
 
 
 --_av-UfLe6y6qxNo54-urtAxbJQ--"""
+
+MAIL_FORWARDED = """X-Original-To: lucie@petitebedaine.fr
+Delivered-To: raoul@grosbedon.fr
+Delivered-To: lucie@petitebedaine.fr
+To: lucie@petitebedaine.fr
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+
+SSBhbSB0aGUgQmF0TWFuCg=="""

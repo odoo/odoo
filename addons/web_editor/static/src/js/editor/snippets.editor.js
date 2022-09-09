@@ -1472,6 +1472,8 @@ var SnippetsMenu = Widget.extend({
                 const target = selection.getRangeAt(0).startContainer.parentElement;
                 this._activateSnippet($(target));
             }
+
+            this._updateInvisibleDOM();
         }, 500);
         this.options.wysiwyg.odooEditor.addEventListener('historyUndo', refreshSnippetEditors);
         this.options.wysiwyg.odooEditor.addEventListener('historyRedo', refreshSnippetEditors);
@@ -2172,6 +2174,22 @@ var SnippetsMenu = Widget.extend({
         var self = this;
         var $html = $(html);
         var $scroll = $html.siblings('#o_scroll');
+
+        // TODO remove me in master: this is a hack that moves the logo options
+        // (type, height, height scrolled) into the navbar section. Before that
+        // these options were not displayed if the logo type was "text".
+        const $logoTypeSelector = $html.find('[data-js="HeaderNavbar"] [data-name="option_header_brand_none"]').parent();
+        if ($logoTypeSelector.length) {
+            $logoTypeSelector[0].dataset.dependencies = "";
+
+            const $logoHeightOptions = $html.find('[data-customize-website-variable][data-variable="logo-height"], [data-customize-website-variable][data-variable="fixed-logo-height"]');
+            $logoHeightOptions.closest('[data-selector]')
+                .find('[data-name="option_header_brand_none"]').parent().remove();
+            for (const el of $logoHeightOptions) {
+                el.setAttribute('string', '⌙ ' + el.getAttribute('string'));
+            }
+            $logoHeightOptions.insertAfter($logoTypeSelector);
+        }
 
         this.templateOptions = [];
         var selectors = [];

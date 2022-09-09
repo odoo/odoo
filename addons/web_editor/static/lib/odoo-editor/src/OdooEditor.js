@@ -492,7 +492,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     observerFlush() {
-        this.observerApply(this.observer.takeRecords());
+        this.observerApply(this.filterMutationRecords(this.observer.takeRecords()));
     }
     observerActive(label) {
         this._observerUnactiveLabels.delete(label);
@@ -1782,6 +1782,7 @@ export class OdooEditor extends EventTarget {
         this.commandbarTablePicker = new TablePicker({
             document: this.document,
             floating: true,
+            getContextFromParentRect: this.options.getContextFromParentRect,
         });
 
         document.body.appendChild(this.commandbarTablePicker.el);
@@ -2556,11 +2557,27 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _onSelectionChange() {
+        const selection = this.document.getSelection();
+        // When CTRL+A in the editor, sometimes the browser use the editable
+        // element as an anchor & focus node. This is an issue for the commands
+        // and the toolbar so we need to fix the selection to be based on the
+        // editable children. Calling `getDeepRange` ensure the selection is
+        // limited to the editable.
+        if (selection.anchorNode === this.editable && selection.focusNode === this.editable) {
+            getDeepRange(
+                this.editable,
+                {
+                    correctTripleClick: true,
+                    select: true,
+                });
+            // The selection is changed in `getDeepRange` and will therefore
+            // re-trigger the _onSelectionChange.
+            return;
+        }
         // Compute the current selection on selectionchange but do not record it. Leave
         // that to the command execution or the 'input' event handler.
         this._computeHistorySelection();
 
-        const selection = this.document.getSelection();
         this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
 
         if (this._currentMouseState === 'mouseup') {
@@ -2686,8 +2703,6 @@ export class OdooEditor extends EventTarget {
     }
 
     cleanForSave(element = this.editable) {
-        sanitize(element);
-
         this._pluginCall('cleanForSave', [element]);
         // Clean the remaining ZeroWidthspaces added by the `fillEmpty` function
         // ( contain "oe-zws-empty-inline" attr)
@@ -2708,6 +2723,8 @@ export class OdooEditor extends EventTarget {
                 emptyElement.removeAttribute('oe-zws-empty-inline');
             }
         }
+        sanitize(element);
+
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             if (!el.hasAttribute('oe-keep-contenteditable')) {

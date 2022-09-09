@@ -105,7 +105,7 @@
                             <t t-foreach="env.pos.pricelists" t-as="pricelist"
                                t-key="pricelist.id">
                                 <option t-att-value="pricelist.id"
-                                        t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : false) : false">
+                                        t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : undefined) : pricelist.id === env.pos.default_pricelist.id ? true : undefined">
                                     <t t-esc="pricelist.display_name" />
                                 </option>
                             </t>

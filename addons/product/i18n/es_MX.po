@@ -1688,6 +1688,16 @@ msgid "Next Activity Type"
 msgstr "Siguiente tipo de actividad"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"No hay producto para imprimir, si el producto está archivado primero quítelo"
+" del archivo para imprimir una etiqueta."
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "No se encontró una lista de precios para el proveedor"
@@ -3280,6 +3290,12 @@ msgid ""
 msgstr ""
 "No puede definir una precisión decimal de las cuentas que sea mayor que el "
 "factor de redondeo de la moneda actual de la compañía."
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr "No puede borrar la categoría de producto %s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

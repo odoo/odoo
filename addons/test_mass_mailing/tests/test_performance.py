@@ -7,6 +7,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMassMailPerformanceBase(TransactionCase):
 
     def setUp(self):
@@ -36,7 +37,7 @@ class TestMassMailPerformanceBase(TransactionCase):
         self.patch(self.env.registry, 'ready', True)
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMassMailPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
@@ -60,15 +61,15 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +101 compared to local (1568)
-        with self.assertQueryCount(__system__=1670, marketing=1671):
+        # runbot needs +151 compared to local
+        with self.assertQueryCount(__system__=1671, marketing=1672):  # tmm 1520/1521
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
         self.assertEqual(mailing.delivered, 50)
 
 
-@tagged('mail_performance')
+@tagged('mail_performance', 'post_install', '-at_install')
 class TestMassMailBlPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
@@ -100,8 +101,8 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +125 compared to local (1834)
-        with self.assertQueryCount(__system__=1960, marketing=1961):
+        # runbot needs +175 compared to local
+        with self.assertQueryCount(__system__=1961, marketing=1962):  # tmm 1786/1787
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)

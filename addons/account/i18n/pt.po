@@ -22,11 +22,11 @@
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2021
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
 # João Carvalho <jpldcarvalho+github@gmail.com>, 2021
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
 # luisfreitasarxi, 2022
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2022
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
+"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1730,7 +1730,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued %s entry as of %s"
-msgstr ""
+msgstr "Lançamento de Acréscimo de %s à data de %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -4016,7 +4016,7 @@ msgstr "Conecte com suas contas bancárias em segundos."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr "Considere respostas como um novo registro"
+msgstr "Considere respostas como um novo registo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
@@ -4101,7 +4101,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Entries"
-msgstr "Registro de Contrapartida"
+msgstr "Registo de Contrapartida"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4173,7 +4173,7 @@ msgstr "Criar Lançamentos Automáticos para os Itens do Diário selecionados"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Create Entry"
-msgstr "Criar Registro"
+msgstr "Criar Registo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -5664,7 +5664,7 @@ msgstr "Lançamentos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__entries_count
 msgid "Entries Count"
-msgstr "Número de Registros"
+msgstr "Número de Registos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal__sort_selection
@@ -8528,7 +8528,7 @@ msgstr "Erro de Envio de Mensagem"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
 msgid "Message Record Name"
-msgstr "Nome do Registro da Mensagem"
+msgstr "Nome do Registo da Mensagem"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -12150,6 +12150,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Estados baseados nas atividades\n"
+"Vencida: Ultrapassada a data planeada\n"
+"Hoje: Data da atividade é a de hoje\n"
+"Planeada: Atividades futuras."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
@@ -14071,6 +14075,8 @@ msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
 msgstr ""
+"Não parece haver nada a faturar para a ordem selecionada. No entanto pode "
+"usar o campo \"valor\" para criar um acréscimo de proveitos."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0

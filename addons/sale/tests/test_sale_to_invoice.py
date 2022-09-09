@@ -4,6 +4,7 @@
 from odoo.tools import float_is_zero
 from .common import TestSaleCommon
 from odoo.tests import Form, tagged
+from odoo import Command, fields
 
 
 @tagged('-at_install', 'post_install')
@@ -458,3 +459,41 @@ class TestSaleToInvoice(TestSaleCommon):
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
         self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_so.id}])
+
+    def test_partial_invoicing_interaction_with_invoicing_switch_threshold(self):
+        """ Let's say you partially invoice a SO, let's call the resuling invoice 'A'. Now if you change the
+            'Invoicing Switch Threshold' such that the invoice date of 'A' is before the new threshold,
+            the SO should still take invoice 'A' into account.
+        """
+        if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
+            self.skipTest("This test requires the installation of the account_account module")
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 20,
+                }),
+            ],
+        })
+        line = sale_order.order_line[0]
+
+        sale_order.action_confirm()
+
+        line.qty_delivered = 10
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(line.qty_invoiced, 10)
+
+        self.env['res.config.settings'].create({
+            'invoicing_switch_threshold': fields.Date.add(invoice.invoice_date, days=30),
+        }).execute()
+
+        invoice.invalidate_cache(fnames=['payment_state'])
+
+        self.assertEqual(line.qty_invoiced, 10)
+        line.qty_delivered = 15
+        self.assertEqual(line.qty_invoiced, 10)
