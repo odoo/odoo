@@ -12,7 +12,8 @@
                 <AutoComplete
                     value="''"
                     sources="autocompleteSources"
-                    onSelect.bind="(event) => this.onOptionSelected(event.value)"/>
+                    onSelect.bind="({value}) => this.onOptionSelected(value)"
+                    resetOnSelect="true"/>
                 <a role="button" class="o_dropdown_button" draggable="false" />
             </div>
         </div>
