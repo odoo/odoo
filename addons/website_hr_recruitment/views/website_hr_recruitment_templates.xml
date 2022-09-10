@@ -184,7 +184,7 @@
                                         <div class="col-sm">
                                             <input id="recruitment3" type="tel"
                                                 class="form-control s_website_form_input"
-                                                name="partner_phone" required=""
+                                                name="partner_mobile" required=""
                                                 data-fill-with="phone"/>
                                         </div>
                                     </div>
@@ -258,14 +258,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 s_website_form_submit mt64" data-name="Submit Button">
+                                <div class="col-12 s_website_form_submit mb64" data-name="Submit Button">
                                     <div style="width: 200px" class="s_website_form_label"/>
                                     <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">I'm feeling lucky</a>
                                     <span id="s_website_form_result"></span>
                                 </div>
                             </section>
-                            <section class="col-4">
-                                <a role="button" t-attf-href="/jobs/detail/#{job.id}" class="btn btn-primary btn-lg mb16">
+                            <section class="col-3 ms-5">
+                                <a role="button" t-attf-href="/jobs/detail/#{job.id}" class="btn btn-outline-primary btn-lg mb16 o_apply_description_link">
                                     <i class="fa fa-arrow-left"></i> Job Description
                                 </a>
                                 <div t-if="job.name" class="d-flex flex-column align-items-baseline">
@@ -287,7 +287,7 @@
                                     <span class="text-muted small">Employment Type</span>
                                     <h6 t-field="job.contract_type_id"/>
                                 </div>
-                                <hr t-if="job.job_details" class="w-50" style="margin: 1rem auto"/>
+                                <hr t-if="job.job_details" class="w-50 my-3"/>
                                 <span t-esc="job.job_details"/>
                             </section>
                         </form>
