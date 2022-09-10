@@ -48,16 +48,18 @@
     filter: invert(1);
 }
 
-.o_small_font {
-    font-size: 0.8rem;
+.o_apply_description_link:hover {
+    filter: brightness(90%);
+    background-color: #fff;
+    color: #35979c;
+}
+
+.o_resume_input {
+    border-color: #35979c;
 }
 
 .o_resume_input::file-selector-button {
-    color: #fff;
-    background-color: #35979c;
-}
-
-.o_resume_input:hover::file-selector-button,
-.o_resume_input:focus::file-selector-button {
-    background-color: #2e8286!important;
+    color: #35979c;
+    border-color: #35979c;
+    background-color: #fff;
 }
