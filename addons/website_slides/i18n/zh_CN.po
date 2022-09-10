@@ -3,11 +3,11 @@
 # 	* website_slides
 # 
 # Translators:
-# Martin Trigaux, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # xu aaron, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -207,12 +207,12 @@ msgstr ""
 "                        你好<br/><br/>\n"
 "                       <t t-out=\"user.name or ''\">Mitchell Admin</t>与您分享了<t t-out=\"object.slide_type or ''\">文件</t> <strong t-out=\"object.name or ''\">树木</strong>!\n"
 "                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.网络site_url + '?fullscreen=1') if ctx.get('fullscreen') else object.网络site_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/网络/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.网络site_url + '?fullscreen=1') if ctx.get('fullscreen') else object.网络site_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">查看<strong t-out=\"object.name or ''\">树形</strong></a>\n"
+"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">查看<strong t-out=\"object.name or ''\">树形</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br/>\n"
@@ -316,9 +316,7 @@ msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"创建日期\"/>"
 msgid ""
 "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Duration\" role=\"img\" "
 "title=\"Duration\"/>"
-msgstr ""
-"<i class=\"fa fa-clock-o mr-2\" aria-label=\"Duration\" role=\"img\" "
-"title=\"Duration\"/>"
+msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"时长\" role=\"img\" title=\"时长\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -514,9 +512,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-question mr-2\" aria-label=\"Number of Questions\" "
 "role=\"img\" title=\"Number of Questions\"/>"
-msgstr ""
-"<i class=\"fa fa-question mr-2\" aria-label=\"Number of Questions\" "
-"role=\"img\" title=\"Number of Questions\"/>"
+msgstr "<i class=\"fa fa-question mr-2\" aria-label=\"问题数\" role=\"img\" title=\"问题数\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -582,17 +578,13 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
 "title=\"Dislikes\"/>"
-msgstr ""
-"<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
-"title=\"Dislikes\"/>"
+msgstr "<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"差评\" title=\"差评\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Likes\" title=\"Likes\"/>"
-msgstr ""
-"<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Likes\" "
-"title=\"Likes\"/>"
+msgstr "<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"点赞\" title=\"点赞\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -822,7 +814,7 @@ msgid ""
 "                                            <i class=\"fa fa-arrows-alt\"/>\n"
 "                                        </span>"
 msgstr ""
-"<span id=\"fullscreen\" class=\"ml-1 ml-sm-2\" title=\"View fullscreen\" aria-label=\"Fullscreen\" role=\"button\">\n"
+"<span id=\"fullscreen\" class=\"ml-1 ml-sm-2\" title=\"View fullscreen\" aria-label=\"全屏\" role=\"button\">\n"
 "                                            <i class=\"fa fa-arrows-alt\"/>\n"
 "                                        </span>"
 
@@ -3761,7 +3753,7 @@ msgstr "通知"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction_counter
 msgid "Number of Actions"
-msgstr "动作个数"
+msgstr "动作数量"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_document
@@ -3924,14 +3916,14 @@ msgstr "请"
 #: code:addons/website_slides/static/src/js/slides_course_join.js:0
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to join this course"
-msgstr "请 <a href=\"/网络/login?redirect=%s\">登录</a> 参加此课程"
+msgstr "请 <a href=\"/web/login?redirect=%s\">登录</a> 参加此课程"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to vote this lesson"
-msgstr "请 <a href=\"/网络/login?redirect=%s\">登录</a> 投票这一课"
+msgstr "请 <a href=\"/web/login?redirect=%s\">登录</a> 投票这一课"
 
 #. module: website_slides
 #. openerp-web
@@ -4004,7 +3996,7 @@ msgstr "技术支持"
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_12
 #, python-format
 msgid "Presentation"
-msgstr "演示"
+msgstr "简报"
 
 #. module: website_slides
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
@@ -4768,7 +4760,7 @@ msgstr "从客户开始 - 找出他们想要的东西并将其给他们。"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Start your online course today!"
-msgstr "今天就开始你的在线课程!"
+msgstr "今天就开始你的线上课程!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form

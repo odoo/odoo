@@ -1413,7 +1413,7 @@ msgstr "Destinataires en copie carbone (Cc)"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
 msgid "Carbon copy recipients"
-msgstr ""
+msgstr "Destinataires en copie carbone"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
@@ -3369,6 +3369,10 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"Si cette option est définie, le gestionnaire de file d'attente enverra "
+"l'email après la date. Si cette option n'est pas définie, l'e-mail sera "
+"envoyée dès que possible. Sauf si un fuseau horaire est spécifié, il est "
+"considéré comme étant dans le fuseau horaire UTC."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -5459,7 +5463,7 @@ msgstr "Accès au portail révoqué"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_post
 msgid "Post on Multiple Documents"
-msgstr ""
+msgstr "Poster sur plusieurs documents"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
@@ -6302,7 +6306,7 @@ msgstr "Envoyer un message"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
 msgid "Sender address"
-msgstr ""
+msgstr "Adresse de l'expéditeur"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_from
@@ -6340,6 +6344,7 @@ msgstr "Action du serveur"
 #: model:ir.model.fields,help:mail.field_mail_channel__active
 msgid "Set active to false to hide the channel without removing it."
 msgstr ""
+"Mettre le champs actif à faux pour masquer le canal sans le supprimer."
 
 #. module: mail
 #. openerp-web
@@ -6920,7 +6925,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
 msgid "The queue manager will send the email after the date"
-msgstr ""
+msgstr "Le gestionnaire de file d'attente enverra l'email après la date"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -7626,7 +7631,7 @@ msgstr "Type de Vue"
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "Visualiser l'image"
 
 #. module: mail
 #. openerp-web
@@ -7749,7 +7754,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "AAAA-MM-JJ HH:MM:SS"
 
 #. module: mail
 #. openerp-web

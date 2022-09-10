@@ -9,6 +9,8 @@
 # Paul Andrawes, 2021
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Samer Ali, 2022
+# Jinjiu Liu, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
@@ -161,7 +163,7 @@ msgstr "'عدد الصفحات'"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'إيصال التوصيل - %s - %s' % (object.partner_id.name أو '', object.name) "
+"'إيصال التوصيل - %s - %s' % (object.partner_id.name or '', object.name) "
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -1426,7 +1428,7 @@ msgstr "تحقق من وجود الطرود المستهدفة في بنود ا�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr ""
+msgstr "تحقق من وجود عملية على النقل"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -9474,4 +9476,5 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} أمر توصيل (المرجع {{ object.name أو 'n/a' }}) "
+"{{ object.company_id.name }} أمر توصيل (المرجع {{ object.name or 'غير "
+"متاح'}}) "

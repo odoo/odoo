@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
@@ -34,7 +34,7 @@ msgstr "Mot de passe Utilisateur de l'API"
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "Impossible d'établir la connexion à l'API."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
@@ -91,6 +91,8 @@ msgid ""
 "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
 "%(data)s"
 msgstr ""
+"Données reçues avec une signature non valide. attendu: %(exp)s; reçu: %(rec)s; Les données: \n"
+"%(data)s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
@@ -141,7 +143,7 @@ msgstr ""
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
 msgid "The communication with the API failed."
-msgstr ""
+msgstr "La communication avec l'API a échoué."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
