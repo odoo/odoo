@@ -110,8 +110,8 @@
 # jb78180 <jblum66@gmail.com>, 2022
 # Christophe Klopfert, 2022
 # Benjamin Stienon <tsb@odoo.com>, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Thomas Charpentier, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -119,7 +119,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Thomas Charpentier, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -222,7 +222,7 @@ msgstr "%(action)s pour le journal %(journal)s "
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr ""
+msgstr "%(amount)s dû(s) le %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -298,7 +298,7 @@ msgstr "%s n'est pas un champ enregistré"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "(including this document) "
-msgstr ""
+msgstr "(y compris ce document)"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -638,6 +638,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                            Holes in the sequence"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                            Trous dans la séquence"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -787,6 +789,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont"
+" spécifiques à l'entreprise.\" aria-label=\"Les valeurs définies ici sont "
+"spécifiques à l'entreprise.\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1446,7 +1451,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A second payment has been created: %s"
-msgstr ""
+msgstr "Un deuxième paiement a été créé : %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -5561,7 +5566,7 @@ msgstr "Digest"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Digitalization"
-msgstr ""
+msgstr "Digitalisation"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5569,6 +5574,8 @@ msgid ""
 "Digitalize your scanned or PDF documents with OCR and Artificial "
 "Intelligence"
 msgstr ""
+"Numérisez vos documents scannés ou PDF avec l'OCR et l'intelligence "
+"artificielle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6108,6 +6115,8 @@ msgid ""
 "Error when reading the original PDF for: %r.\n"
 "Please make sure the file is valid."
 msgstr ""
+"Erreur lors de la lecture du PDF d'origine pour : %r.\n"
+"Veuillez vous assurer que le fichier est valide."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -11086,12 +11095,14 @@ msgid ""
 "QR-code report URL to use to generate the QR-code to scan with a banking app"
 " to perform this payment."
 msgstr ""
+"URL du rapport QR-code à utiliser pour générer le QR-code à scanner avec une"
+" application bancaire pour effectuer ce paiement."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "QR-codes can only be generated for invoice entries."
-msgstr ""
+msgstr "Les codes QR ne peuvent être générés que pour les entrées de facture."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
@@ -14163,6 +14174,8 @@ msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
 "detected as eligible: "
 msgstr ""
+"L'erreur suivante a empêché la génération du code QR '%s' bien qu'il ait été"
+" détecté comme éligible :"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -14220,6 +14233,8 @@ msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
 "                                            data without breaking the hash chain for subsequent parts."
 msgstr ""
+"La chaîne de hachage est conforme : il n'est pas possible de modifier les\n"
+"données sans casser la chaîne de hachage pour les parties suivantes."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14399,6 +14414,7 @@ msgstr ""
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
 msgstr ""
+"Le partenaire ne peut pas être supprimé car il est utilisé dans Comptabilité"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -16286,6 +16302,8 @@ msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
 msgstr ""
+"Vous ne pouvez pas fournir de devise étrangère sans spécifier un montant "
+"dans le champ 'Montant en devise'."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0

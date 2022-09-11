@@ -3,8 +3,8 @@
 # 	* auth_totp_mail_enforce
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2022-02-14 08:09+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +69,7 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"   Estimado/a <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"   Apreciable <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
 "    <p>Alguien está intentando iniciar sesión con su cuenta desde un dispositivo nuevo.</p>\n"
 "    <ul>\n"
 "        <t t-set=\"not_available\">N/A</t>\n"
@@ -93,7 +93,7 @@ msgstr ""
 "    </p>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px;\">\n"
-"        También le recomendamos activar la verificación de dos pasos con una aplicación de autenticación para ayudarle a asuegurar su cuenta.\n"
+"        También le recomendamos activar la autenticación de dos factores con una aplicación de autenticación para ayudarle a asegurar su cuenta.\n"
 "    </p>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
@@ -164,13 +164,13 @@ msgid ""
 "                                method."
 msgstr ""
 "Imponga la verificación de dos pasos por correo electrónico para empleados o todos los usuarios\n"
-"(incluyendo los usuarios del portal) si no activaron el método de verificación\n"
-"de dos pasos."
+"(incluyendo los usuarios del portal) si no activaron el método de autenticación\n"
+"de dos factores."
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr "Establecer la autenticación en dos pasos"
+msgstr "Establecer la autenticación de dos factores"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__id
@@ -235,7 +235,7 @@ msgstr "Cantidad límite de registros de TOTP"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr "Política de cumplimiento de verificación de dos pasos"
+msgstr "Política de cumplimiento de autenticación de dos factores"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__user_id
@@ -251,7 +251,7 @@ msgstr "Usuarios"
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr "La verificación falló, por favor revise el código de 6 dígitos"
+msgstr "La autenticación falló, revise el código de 6 dígitos"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -259,22 +259,23 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
-"Le recomendamos activar la verificación de dos pasos con la aplicación de verificación para mantener su cuenta segura.\n"
+"Le recomendamos activar la autenticación de dos factores con la aplicación de verificación para mantener su cuenta segura.\n"
 "<br/>"
 
 #. module: auth_totp_mail_enforce
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
-msgstr "Se alcanzó el límite de correos de verificación enviados a su cuenta."
+msgstr ""
+"Se alcanzó el límite de correos de autenticación enviados a su cuenta."
 
 #. module: auth_totp_mail_enforce
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr "Se alcanzó el límite de códigos de verificación para su cuenta."
+msgstr "Se alcanzó el límite de códigos de autenticación para su cuenta."
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr "Su código de verificación de dos pasos"
+msgstr "Su código de autenticación de dos pasos"

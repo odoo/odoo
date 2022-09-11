@@ -71,8 +71,8 @@
 # Jonathan Castillo <jcs@odoo.com>, 2022
 # Eloïse Stilmant <est@odoo.com>, 2022
 # Merlin Guillaume (megu), 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -80,7 +80,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-02 08:11+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -812,7 +812,7 @@ msgstr "Ajouter un émoticône"
 #: code:addons/mail/static/src/models/suggested_recipient_info.js:0
 #, python-format
 msgid "Add as recipient and follower (reason: %s)"
-msgstr ""
+msgstr "Ajouter comme destinataire et abonné (raison : %s)"
 
 #. module: mail
 #. openerp-web
@@ -1419,7 +1419,7 @@ msgstr "Destinataires en copie carbone (Cc)"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
 msgid "Carbon copy recipients"
-msgstr ""
+msgstr "Destinataires en copie carbone"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
@@ -2778,7 +2778,7 @@ msgstr ""
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s"
-msgstr ""
+msgstr "Echec de rendu du modèle : %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -3085,6 +3085,8 @@ msgid ""
 "Group authorization and group auto-subscription are only supported on "
 "channels."
 msgstr ""
+"L'autorisation de groupe et l'abonnement automatique de groupe ne sont pris "
+"en charge que sur les canaux."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -3377,6 +3379,10 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"Si cette option est définie, le gestionnaire de file d'attente enverra "
+"l'email après la date. Si cette option n'est pas définie, l'e-mail sera "
+"envoyée dès que possible. Sauf si un fuseau horaire est spécifié, il est "
+"considéré comme étant dans le fuseau horaire UTC."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -3595,7 +3601,7 @@ msgstr "Lien d'invitation"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__invitation_url
 msgid "Invitation URL"
-msgstr ""
+msgstr "Url d'invitation"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -3915,7 +3921,7 @@ msgstr "Quitter ce canal"
 #: code:addons/mail/static/src/models/channel_invitation_form.js:0
 #, python-format
 msgid "Link copied!"
-msgstr ""
+msgstr "Lien copié !"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
@@ -4736,7 +4742,7 @@ msgstr "Aucune erreur"
 #: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #, python-format
 msgid "No Followers"
-msgstr ""
+msgstr "Aucun abonné"
 
 #. module: mail
 #. openerp-web
@@ -5109,6 +5115,8 @@ msgid ""
 "Only users belonging to the \"%(group)s\" group can modify translation "
 "related to dynamic templates.%(xtra)s"
 msgstr ""
+"Seuls les utilisateurs appartenant au groupe \"%(group)s\" peuvent modifier "
+"la traduction liée aux modèles dynamiques. %(xtra)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -5489,7 +5497,7 @@ msgstr "Accès au portail révoqué"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_post
 msgid "Post on Multiple Documents"
-msgstr ""
+msgstr "Poster sur plusieurs documents"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
@@ -6336,7 +6344,7 @@ msgstr "Envoyer un message"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
 msgid "Sender address"
-msgstr ""
+msgstr "Adresse de l'expéditeur"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_from
@@ -6379,6 +6387,7 @@ msgstr "Action du serveur"
 #: model:ir.model.fields,help:mail.field_mail_channel__active
 msgid "Set active to false to hide the channel without removing it."
 msgstr ""
+"Mettre le champs actif à faux pour masquer le canal sans le supprimer."
 
 #. module: mail
 #. openerp-web
@@ -6878,7 +6887,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
-msgstr ""
+msgstr "L'utilisateur actuel peut modifier le modèle."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -6968,7 +6977,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
 msgid "The queue manager will send the email after the date"
-msgstr ""
+msgstr "Le gestionnaire de file d'attente enverra l'email après la date"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -7672,7 +7681,7 @@ msgstr "Type de Vue"
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "Visualiser l'image"
 
 #. module: mail
 #. openerp-web
@@ -7805,7 +7814,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "AAAA-MM-JJ HH:MM:SS"
 
 #. module: mail
 #. openerp-web

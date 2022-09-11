@@ -5,6 +5,7 @@
 # Translators:
 # Grégory Schreiner <gregory@mokatourisme.fr>, 2022
 # Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2022-05-30 13:24+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,18 +25,18 @@ msgstr ""
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #, python-format
 msgid "A coupon is needed for coupon programs."
-msgstr ""
+msgstr "Un coupon est nécessaire pour les programmes de coupons."
 
 #. module: website_sale_loyalty
 #: code:addons/website_sale_loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "A coupon with the same code was found."
-msgstr ""
+msgstr "Un coupon avec le même code a été trouvé."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Claim"
-msgstr ""
+msgstr "Obtenir"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
@@ -55,12 +56,14 @@ msgstr "Coupon"
 #. module: website_sale_loyalty
 #: model:ir.ui.menu,name:website_sale_loyalty.menu_promotion_type_config
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Coupons & Fidélité"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_coupon_share
 msgid "Create links that apply a coupon and redirect to a specific page"
 msgstr ""
+"Créez des liens qui appliquent un coupon et redirigent vers une page "
+"spécifique"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__create_uid
@@ -135,7 +138,7 @@ msgstr "Mis à jour le"
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr ""
+msgstr "Coupon de fidélité"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_loyalty_program
@@ -160,7 +163,7 @@ msgstr "Payer"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Pay with eWallet"
-msgstr ""
+msgstr "Payer avec un eWallet"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_id
@@ -181,7 +184,7 @@ msgstr "Code promo"
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #, python-format
 msgid "Provide either a coupon or a program."
-msgstr ""
+msgstr "Fournissez un coupon ou un programme."
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__redirect
@@ -211,7 +214,7 @@ msgstr "Partager"
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #, python-format
 msgid "Share Coupon"
-msgstr ""
+msgstr "Partager un coupon"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__share_link
@@ -221,7 +224,7 @@ msgstr "Partager le lien"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
 msgid "Share Loyalty Card"
-msgstr ""
+msgstr "Partager une carte de fidélité"
 
 #. module: website_sale_loyalty
 #: code:addons/website_sale_loyalty/controllers/main.py:0
@@ -230,6 +233,8 @@ msgid ""
 "The coupon will be automatically applied when you add something in your "
 "cart."
 msgstr ""
+"Le coupon sera automatiquement appliqué lorsque vous ajouterez quelque chose"
+" dans votre panier."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.layout
@@ -240,13 +245,13 @@ msgstr "Le code promo suivant a été appliqué a votre commande :"
 #: code:addons/website_sale_loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "The promo code must be unique."
-msgstr ""
+msgstr "Le code promotionnel doit être unique."
 
 #. module: website_sale_loyalty
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #, python-format
 msgid "The shared website should correspond to the website of the program."
-msgstr ""
+msgstr "Le site Web partagé doit correspondre au site web du programme."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
@@ -267,6 +272,8 @@ msgid ""
 "You can share this promotion with your customers.\n"
 "                            It will be applied at checkout when the customer uses this link."
 msgstr ""
+"Vous pouvez partager cette promotion avec vos clients.\n"
+"Elle sera appliqué à la caisse lorsque le client utilisera ce lien."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
@@ -276,7 +283,7 @@ msgstr "Vous avez"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "You have successfully applied the following code:"
-msgstr ""
+msgstr "Vous avez appliqué le code suivant avec succès :"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.sale_coupon_result
@@ -286,4 +293,4 @@ msgstr "code..."
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "in your ewallet"
-msgstr ""
+msgstr "dans votre ewallet"

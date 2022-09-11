@@ -3,64 +3,59 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# e2f <projects@e2f.com>, 2018
+# Florian Hatat, 2018
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2022-02-22 14:45+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
-
-#. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
-msgid ""
-"A relative or absolute URL pointing to a square image of your brand or "
-"product. As defined in your Stripe profile. See: "
-"https://stripe.com/docs/checkout"
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Connect Stripe"
 msgstr ""
-"Une URL absolue ou relative pointant vers une image carrée de votre marque "
-"ou produit. Comme définie dans votre profil Stripe. Consultez "
-"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
-msgid "Checkout Image URL"
-msgstr "URL de l'image de paiement"
-
-#. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
-msgid "Close"
-msgstr "Fermer"
+msgid "Could not establish the connection to the API."
+msgstr "Impossible d'établir la connexion à l'API."
 
 #. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
-#, python-format
-msgid "Error"
-msgstr "Erreur"
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Generate your webhook"
+msgstr ""
 
 #. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:0
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Get your Secret and Publishable keys"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid ""
+"If a webhook is enabled on your Stripe account, this signing secret must be "
+"set to authenticate the messages sent from Stripe to Odoo."
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
-msgid "Just one more second, We are redirecting you to Stripe..."
+msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_stripe
@@ -69,9 +64,14 @@ msgid "Payment Acquirer"
 msgstr "Intermédiaire de Paiement"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
-msgid "Payment Method ID"
-msgstr ""
+#: model:ir.actions.act_window,name:payment_stripe.action_payment_acquirer_onboarding
+msgid "Payment Acquirers"
+msgstr "Intermédiaires de paiement"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Méthodes de paiements"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -84,27 +84,40 @@ msgid "Payment Transaction"
 msgstr "Transaction"
 
 #. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:0
-#, python-format
-msgid "Payment error"
-msgstr "Échec du paiement"
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
-#, python-format
-msgid ""
-"Perhaps the problem can be solved by double-checking your credit card "
-"details, or contacting your bank?"
-msgstr ""
-"Vérifiez les informations de votre carte bancaire ou contactez votre banque."
-
-#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Fournisseur"
 
 #. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
+msgid "Publishable Key"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid intent status: %s"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing intent status."
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing merchant reference"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
+msgid "Secret Key"
+msgstr "Clé secrète"
+
+#. module: payment_stripe
+#: model:account.payment.method,name:payment_stripe.payment_method_stripe
 #: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
 msgid "Stripe"
 msgstr "Stripe"
@@ -112,62 +125,91 @@ msgstr "Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
+msgstr "ID d'intention de paiement Stripe"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+msgid "Stripe Payment Method ID"
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
-msgid "Stripe Publishable Key"
-msgstr "Clé publique Stripe"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
-msgid "Stripe Secret Key"
-msgstr "Clé secrète Stripe"
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
-msgid "Stripe gave us the following info about the problem: '%s'"
+msgid "Stripe Proxy error: %(error)s"
 msgstr ""
-"Stripe nous a transmis les informations suivantes concernant le problème : "
-"%s"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
-msgid "Stripe: %s orders found for reference %s"
-msgstr "Stripe : %s commandes trouvées pour la référence %s"
+msgid "Stripe Proxy: An error occurred when communicating with the proxy."
+msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
-msgid "Stripe: no order found for reference %s"
-msgstr "Stripe : aucune commande trouvée pour la référence %s"
+msgid "Stripe Proxy: Could not establish the connection."
+msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid ""
-"Unable to convert Stripe customer for SCA compatibility. Is there at least "
-"one card for this customer in the Stripe backend?"
+"The communication with the API failed.\n"
+"Stripe gave us the following info about the problem:\n"
+"'%s'"
 msgstr ""
 
 #. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/js/payment_form.js:0
-#, python-format
-msgid "Unable to save card"
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
+msgid "The key solely used to identify the account with Stripe"
 msgstr ""
 
 #. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
-msgid "We are not able to add your payment method at the moment. "
+msgid "The transaction is not linked to a token."
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
-msgid "We're sorry to report that the transaction has failed."
-msgstr "Nous sommes désolés de vous informer que la transaction a échoué."
+msgid "Unable to convert payment token to new API."
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid "Webhook Signing Secret"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "You Stripe Webhook was successfully set up!"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot set the acquirer to Test Mode while it is linked with your Stripe"
+" account."
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Your Stripe Webhook is already set up."
+msgstr ""
