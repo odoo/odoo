@@ -10,7 +10,9 @@
 # Istvan <leki69@gmail.com>, 2019
 # Martin Trigaux, 2020
 # Ákos Nagy <akos.nagy@oregional.hu>, 2020
-# Tamás Németh <ntomasz81@gmail.com>, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2022
+# sixsix six, 2022
+# Tamás Dombos, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2021\n"
+"Last-Translator: Tamás Dombos, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,7 +211,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-envelope\"/> Email"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\"/>E-mail"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -289,7 +291,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "<i class=\"fa fa-graduation-cap mr-1\"/>All courses"
-msgstr ""
+msgstr "<i class=\"fa fa-graduation-cap mr-1\"/>Minden kurzus"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -457,6 +459,8 @@ msgid ""
 "<span class=\"form-text text-muted d-block w-100\">Send presentation through"
 " email</span>"
 msgstr ""
+"<span class=\"form-text text-muted d-block w-100\">Prezentáció küldése "
+"e-mailben</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
@@ -480,7 +484,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Courses</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kurzusok</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training
@@ -535,9 +539,10 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
-msgstr ""
+msgstr "<strong>Köszönjük!</strong>A levél elküldésre került."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_1
@@ -701,7 +706,7 @@ msgstr "Haladó"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "All Courses"
-msgstr ""
+msgstr "Minden kurzus"
 
 #. module: website_slides
 #. openerp-web
@@ -730,7 +735,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_preview
 msgid "Allow Preview"
-msgstr ""
+msgstr "Előnézet engedélyezése"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1121,13 +1126,13 @@ msgstr ""
 #: model:gamification.badge,description:website_slides.badge_data_course
 #: model:gamification.challenge,name:website_slides.badge_data_course_challenge
 msgid "Complete a course"
-msgstr ""
+msgstr "Fejezz be egy kurzust"
 
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_profile
 #: model:gamification.challenge,name:website_slides.badge_data_profile_challenge
 msgid "Complete your profile"
-msgstr ""
+msgstr "Egészítse ki profilját"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__completed
@@ -1137,7 +1142,7 @@ msgstr "Elkészült"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "Completed Courses"
-msgstr ""
+msgstr "Teljesített kurzusok"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completion
@@ -1259,7 +1264,7 @@ msgstr "Folytatás"
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "Copy Link"
-msgstr ""
+msgstr "Hivatkozás másolása"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -1352,7 +1357,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Courses"
-msgstr ""
+msgstr "Kurzusok"
 
 #. module: website_slides
 #. openerp-web
@@ -2155,7 +2160,7 @@ msgstr "Követő"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "Tag"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_published
@@ -2229,7 +2234,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_slides.badge_data_profile_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_profile_goal
 msgid "Know yourself"
-msgstr ""
+msgstr "Ismerd meg önmagad"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.slide_channel_demo_3_furn0
@@ -2312,12 +2317,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
 msgid "Latest achievements"
-msgstr ""
+msgstr "Legújabb eredmények"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "Leaderboard"
-msgstr ""
+msgstr "Ranglista"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.slide_channel_demo_1_gard1
@@ -2513,17 +2518,17 @@ msgstr "Legtöbb szavazatot kapott"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Most popular courses"
-msgstr ""
+msgstr "Legnépszerűbb kurzusok"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "My Courses"
-msgstr ""
+msgstr "Kurzusaim"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "My courses"
-msgstr ""
+msgstr "Kurzusaim"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__name
@@ -2549,7 +2554,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "New Certification"
-msgstr ""
+msgstr "Új tanúsítvány"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
@@ -2571,7 +2576,7 @@ msgstr "Legújabb"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Newest courses"
-msgstr ""
+msgstr "Legújabb kurzusok"
 
 #. module: website_slides
 #. openerp-web
@@ -2583,7 +2588,7 @@ msgstr "Következő"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Next rank:"
-msgstr ""
+msgstr "Következő rang:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -2638,7 +2643,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "No leaderboard currently :("
-msgstr ""
+msgstr "Nincs elérhető ranglista :("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -3017,7 +3022,7 @@ msgstr ""
 #. module: website_slides
 #: model:gamification.badge,description:website_slides.badge_data_karma
 msgid "Reach 2000 XP"
-msgstr ""
+msgstr "Érj el 2000 XP-t"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -3043,7 +3048,7 @@ msgstr "Címzettek"
 #: model:gamification.badge,description:website_slides.badge_data_register
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
 msgid "Register to the platform"
-msgstr ""
+msgstr "Regisztrálás a platformra"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -3155,7 +3160,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Search courses"
-msgstr ""
+msgstr "Kurzusok keresése"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -3198,6 +3203,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
 msgid "Security Token"
 msgstr "Biztonsági token"
+
+#. module: website_slides
+#: code:addons/website_slides/models/res_users.py:0
+#, python-format
+msgid "See our eLearning"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -3273,7 +3284,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "Share by mail"
-msgstr ""
+msgstr "Megosztás levélben"
 
 #. module: website_slides
 #. openerp-web
@@ -3889,7 +3900,7 @@ msgstr "Nézet"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "View all"
-msgstr ""
+msgstr "Mind megtekintése"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -4251,7 +4262,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr ""
+msgstr "elérte"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
@@ -4269,7 +4280,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "by email."
-msgstr ""
+msgstr "e-mailben"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -4327,7 +4338,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 msgid "steps"
-msgstr ""
+msgstr "lépés"
 
 #. module: website_slides
 #. openerp-web
