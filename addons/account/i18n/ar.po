@@ -6629,6 +6629,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"يجب أن يكون لتوزيع الإشعارات الدائنة أو الفواتير بند توزيع ضريبي واحد على "
+"الأقل. "
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -9784,6 +9786,12 @@ msgstr "نماذج التسوية"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
 msgstr "أجزاء التسوية"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15003,3 +15011,13 @@ msgstr "with a pdf of an invoice as attachment."
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "← عدد"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""
+"يتطلب الافتراضي التحليلي حساباً تحليلياً أو علامة تصنيف تحليلية تُستخدَم "
+"للتوزيع التحليلي. "
