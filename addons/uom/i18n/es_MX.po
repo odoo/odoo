@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2022-06-17 09:55+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgstr "Archivado"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "Proporción mayor"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
@@ -148,6 +149,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Qué tan grande o pequeña es esta unidad comparada con la unidad de medida de referencia de esta categoría:\n"
+"1 * (unidad de referencia) = razón * (esta unidad)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -197,7 +200,7 @@ msgstr "Categorías de UdM de producto"
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 msgid "Ratio"
-msgstr ""
+msgstr "Razón"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
@@ -207,7 +210,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr ""
+msgstr "UdM de referencia"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -222,7 +225,7 @@ msgstr ""
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr ""
+msgstr "Buscar categoría de la UdM"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -241,6 +244,13 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Algunos campos críticos se modificaron en %s.\n"
+"Tome en cuenta que este cambio no modificará la información existente.\n"
+"\n"
+"Ya que las unidades de medida impactan a todo el sistema, esto puede traer problemas críticos,\n"
+"p. ej. modificar el redondeo podría alterar el balance de su inventario.\n"
+"\n"
+"Por eso, cambiar las unidades de medida neutrales en una base de datos funcional no está recomendado."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -345,12 +355,18 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Las unidades de medida pertenecientes a la misma categoría se pueden\n"
+"convertir entre sí. Por ejemplo,  la categoría\n"
+"<i>'Tiempo'</i>, tendrá las siguientes unidades de medida: \n"
+"horas, días."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
+"La categoría %s de UdM debería tener al menos una unidad de medida de "
+"referencia"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -396,6 +412,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Debe definir una razón de conversión entre varias unidades de\n"
+"medida dentro de la misma categoría."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
@@ -485,4 +503,4 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr ""
+msgstr "yd"

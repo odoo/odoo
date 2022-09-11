@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,13 +12,19 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2022-06-17 09:57+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: website_slides_survey
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#, python-format
+msgid "- %s (Courses - %s)"
+msgstr "- %s (Cours - %s)"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
@@ -413,9 +420,11 @@ msgstr "Certification de test"
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #, python-format
 msgid ""
-"The Certification '%(certification_name)s' cannot be deleted because it is "
-"still being used by the Course(s) '%(courses_names)s'"
+"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
+"%s"
 msgstr ""
+"Toute enquête répertoriée ci-dessous est actuellement utilisée comme certification de cours et ne peut pas être supprimée :\n"
+"%s"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
@@ -469,6 +478,8 @@ msgid ""
 "You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
 "                            <br/>Follow the links to reach new heights and skill up!"
 msgstr ""
+"Vous pouvez obtenir des badges en passant des certifications. Voici une liste de tous les badges de certification disponibles.\n"
+"<br/>Suivez les liens pour atteindre de nouveaux sommets et améliorer vos compétences !"
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
