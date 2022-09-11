@@ -79,14 +79,14 @@
 # Gwladys Jouble <g.jouble@vieconnect.io>, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
-# sakodoo <sak@odoo.com>, 2021
+# SAKodoo <sak@odoo.com>, 2021
 # Geoffrey_GMF <gmf@odoo.com>, 2022
 # Antoine Dupuis (andu), 2022
 # Khadija Mbazaa <khadija.mbazaa@gmail.com>, 2022
 # Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2022
 # Florent de Labarre <florent@iguanayachts.com>, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Thomas Charpentier, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -94,7 +94,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Thomas Charpentier, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3878,6 +3878,24 @@ msgid ""
 "* create the data of the document types that exists for the specific country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"Fonctionnel\n"
+"----------\n"
+"\n"
+"Dans certains pays d'Amérique latine, dont l'Argentine et le Chili, certaines transactions comptables telles que les factures et les factures des fournisseurs sont classées selon des types de documents définis par les autorités fiscales gouvernementales (en Argentine, le cas AFIP, au Chili, le cas SII).\n"
+"\n"
+"Ce module est destiné à être étendu par des localisations afin de gérer ces types de documents et est une information essentielle qui doit être affichée dans les rapports imprimés et qui doit être facilement identifiée, dans l'ensemble des factures ainsi que des mouvements de compte.\n"
+"\n"
+"Chaque type de document a ses propres règles et numéro de séquence, ce dernier est intégré au numéro de facture et à la séquence du journal afin d'être facile pour l'utilisateur de la localisation. Afin de prendre en charge ou non ce type de document, un journal a une nouvelle option qui permet d'utiliser ou non le document..\n"
+"\n"
+"Technique\n"
+"---------\n"
+"\n"
+"Si votre localisation a besoin de cette logique, vous devrez alors ajouter ce module en tant que dépendance et dans votre module de localisation étendre :\n"
+"\n"
+"* étendre la méthode _localization_use_documents() de l'entreprise.\n"
+"* créer les données des types de documents qui existent pour le pays spécifique. Le type de document a un champ de pays\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -16009,7 +16027,7 @@ msgstr "Historique du Parc Automobile"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fleet
 msgid "Fleet from documents"
-msgstr ""
+msgstr "Parc Automobile à partir des documents"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__float
