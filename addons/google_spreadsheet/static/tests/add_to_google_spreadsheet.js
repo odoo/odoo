@@ -6,6 +6,7 @@ import { AddToGoogleSpreadsheet } from "../src/add_to_google_spreadsheet/add_to_
 
 AddToGoogleSpreadsheet.shouldBeDisplayed = (env) => true;
 import { ormService } from "@web/core/orm_service";
+import { dialogService } from "@web/core/dialog/dialog_service";
 import * as LegacyFavoriteMenu from "web.FavoriteMenu"
 import { makeTestEnv } from "../../../web/static/tests/helpers/mock_env";
 import { makeMockServer } from "../../../web/static/tests/helpers/mock_server";
@@ -43,7 +44,7 @@ QUnit.module(
                 View: ListView,
                 model: "foo",
                 data: this.data,
-                services: {orm: ormService},
+                services: { dialog: dialogService },
                 arch: '<tree><field name="foo"/></tree>',
             });
             await testUtils.dom.click(list.$(".o_favorite_menu button"));
@@ -71,7 +72,7 @@ QUnit.module(
                 View: ListView,
                 model: "foo",
                 data: this.data,
-                services: {orm: env.services.orm},
+                services: {orm: env.services.orm, dialog: dialogService },
                 arch: '<tree><field name="foo"/></tree>',
             });
             await testUtils.dom.click(list.$(".o_favorite_menu button"))
