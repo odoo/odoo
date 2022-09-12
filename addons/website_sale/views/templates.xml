@@ -1101,6 +1101,15 @@
         </xpath>
     </template>
 
+    <template id="website_sale.tax_indication" active="False">
+        <span groups="account.group_show_line_subtotals_tax_excluded" class="h6 text-muted">
+            VAT Excluded
+        </span>
+        <span groups="account.group_show_line_subtotals_tax_included" class="h6 text-muted">
+            VAT Included
+        </span>
+    </template>
+
     <template id="product_price">
         <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}">
             <h3 class="css_editable_mode_hidden">
@@ -1111,6 +1120,7 @@
                     t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     itemprop="listPrice"
                 />
+                <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="product.compare_list_price">
                     <span t-field="product.compare_list_price"
                         groups="website_sale.group_product_price_comparison"
@@ -1126,6 +1136,7 @@
                        "widget": "monetary",
                        "display_currency": product.currency_id,
                 }'/>
+                <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="product.compare_list_price">
                     <span t-field="product.compare_list_price"
                         groups="website_sale.group_product_price_comparison"
