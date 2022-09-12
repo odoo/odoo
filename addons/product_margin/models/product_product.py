@@ -105,13 +105,13 @@ class ProductProduct(models.Model):
         payment_states = ()
         if invoice_state == 'paid':
             states = ('posted',)
-            payment_states = ('in_payment', 'paid',)
+            payment_states = ('in_payment', 'paid', 'reversed')
         elif invoice_state == 'open_paid':
             states = ('posted',)
-            payment_states = ('not_paid', 'in_payment', 'paid')
+            payment_states = ('not_paid', 'in_payment', 'paid', 'reversed', 'partial')
         elif invoice_state == 'draft_open_paid':
             states = ('posted', 'draft')
-            payment_states = ('not_paid', 'in_payment', 'paid')
+            payment_states = ('not_paid', 'in_payment', 'paid', 'reversed', 'partial')
         if "force_company" in self.env.context:
             company_id = self.env.context['force_company']
         else:
