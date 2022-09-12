@@ -2,13 +2,13 @@
 
 <templates>
     <t t-name="website_sale_autocomplete.AutocompleteDropDown">
-        <div t-attf-class="dropdown-menu w-100 #{results.length ? 'show' : ''}">
+        <div t-attf-class="dropdown-menu position-relative #{results.length ? 'show' : ''}">
             <a class="dropdown-item js_autocomplete_result"
                t-foreach="results" t-as="result"
                t-att-data-google-place-id="result['google_place_id']">
                 <t t-out="result['formatted_address']"/>
             </a>
-            <img class="float-end pe-1" src="/website_sale_autocomplete/static/src/img/powered_by_google_on_white.png" alt="Powered by Google"/>
+            <img class="ms-auto pe-1" src="/website_sale_autocomplete/static/src/img/powered_by_google_on_white.png" alt="Powered by Google"/>
         </div>
     </t>
 </templates>
