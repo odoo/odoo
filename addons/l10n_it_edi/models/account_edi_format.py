@@ -301,7 +301,7 @@ class AccountEdiFormat(models.Model):
     def _post_invoice_edi(self, invoices, test_mode=False):
         # OVERRIDE
         self.ensure_one()
-        edi_result = super()._post_invoice_edi(invoices)
+        edi_result = super()._post_invoice_edi(invoices, test_mode=test_mode)
         if self.code != 'fattura_pa':
             return edi_result
 
