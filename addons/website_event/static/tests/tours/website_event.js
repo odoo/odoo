@@ -7,7 +7,7 @@ odoo.define("website_event.tour", function (require) {
     const wTourUtils = require('website.tour_utils');
 
 
-    wTourUtils.registerEditionTour("website_event_tour", {
+    wTourUtils.registerWebsitePreviewTour("website_event_tour", {
         test: true,
         url: "/",
     }, [{

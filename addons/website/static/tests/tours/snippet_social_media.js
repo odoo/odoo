@@ -29,7 +29,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
     }];
 };
 
-wTourUtils.registerEditionTour('snippet_social_media', {
+wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     test: true,
     url: '/',
     edition: true,

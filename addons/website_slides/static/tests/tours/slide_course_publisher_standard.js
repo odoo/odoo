@@ -10,7 +10,7 @@ import wTourUtils from 'website.tour_utils';
  * they create some lessons in it;
  * they publish it;
  */
-wTourUtils.registerEditionTour('course_publisher_standard', {
+wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     url: '/slides',
     test: true,
 }, [{

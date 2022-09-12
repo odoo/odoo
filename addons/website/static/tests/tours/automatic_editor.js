@@ -3,7 +3,7 @@ odoo.define('website.tour.automatic_editor', function (require) {
 
 const wTourUtils = require("website.tour_utils");
 
-wTourUtils.registerEditionTour('automatic_editor_on_new_website', {
+wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     test: true,
     url: '/',
 },

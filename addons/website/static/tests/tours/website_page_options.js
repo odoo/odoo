@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('website_page_options', {
+wTourUtils.registerWebsitePreviewTour('website_page_options', {
     test: true,
     url: '/',
     edition: true,

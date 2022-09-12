@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('website_gray_color_palette', {
+wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     test: true,
     url: '/',
     edition: true,

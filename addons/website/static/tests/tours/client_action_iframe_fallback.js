@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
+import wTourUtils from 'website.tour_utils';
 
-tour.register('client_action_iframe_fallback', {
+wTourUtils.registerWebsitePreviewTour('client_action_iframe_fallback', {
     test: true,
-    url: '/@/',
+    url: '/',
 },
 [
     {

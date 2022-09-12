@@ -85,7 +85,7 @@ odoo.define('website.tour.form_editor', function (require) {
         return addField(`data-existing-field="${name}"`, name, type, label, required, display);
     };
 
-    wTourUtils.registerEditionTour("website_form_editor_tour", {
+    wTourUtils.registerWebsitePreviewTour("website_form_editor_tour", {
         url: '/',
         edition: true,
         test: true,
@@ -390,7 +390,7 @@ odoo.define('website.tour.form_editor', function (require) {
         ];
     }
 
-    wTourUtils.registerEditionTour('website_form_contactus_edition_with_email', {
+    wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_with_email', {
         url: '/contactus',
         edition: true,
         test: true,
@@ -401,7 +401,7 @@ odoo.define('website.tour.form_editor', function (require) {
             run: 'text test@test.test',
         },
     ]));
-    wTourUtils.registerEditionTour('website_form_contactus_edition_no_email', {
+    wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
         url: '/contactus',
         edition: true,
         test: true,

@@ -60,7 +60,7 @@ const setupSteps = [{
 
 const formatErrorMsg = "format is not supported. Try with: .gif, .jpe, .jpeg, .jpg, .png, .svg";
 
-wTourUtils.registerEditionTour('test_image_upload_progress', {
+wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     url: '/test_image_progress',
     test: true,
     edition: true,
@@ -202,7 +202,7 @@ wTourUtils.registerEditionTour('test_image_upload_progress', {
 ]);
 
 
-wTourUtils.registerEditionTour('test_image_upload_progress_unsplash', {
+wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     url: '/test_image_progress',
     test: true,
     edition: true,

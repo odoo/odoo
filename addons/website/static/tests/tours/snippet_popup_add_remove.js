@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('snippet_popup_add_remove', {
+wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
     test: true,
     url: '/',
     edition: true,

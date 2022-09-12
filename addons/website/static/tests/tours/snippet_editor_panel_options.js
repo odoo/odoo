@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('snippet_editor_panel_options', {
+wTourUtils.registerWebsitePreviewTour('snippet_editor_panel_options', {
     test: true,
     url: '/',
     edition: true,

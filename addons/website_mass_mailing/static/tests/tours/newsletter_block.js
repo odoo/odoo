@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('newsletter_block_edition', {
+wTourUtils.registerWebsitePreviewTour('newsletter_block_edition', {
     test: true,
     url: '/',
     edition: true,
