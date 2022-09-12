@@ -2570,6 +2570,38 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("add record in a one2many non editable list with context", async function (assert) {
+        assert.expect(1);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="turtles" context="{'abc': int_field}">
+                        <tree><field name="display_name"/></tree>
+                        <form><field name="display_name"/></form>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange" && args.model === "turtle") {
+                    // done by the X2ManyFieldDialog
+                    assert.deepEqual(args.kwargs.context, {
+                        abc: 2,
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
+                }
+            },
+        });
+
+        await editInput(target, ".o_field_widget[name=int_field] input", "2");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+    });
+
     QUnit.test(
         "edition of one2many field, with onchange and not inline sub view",
         async function (assert) {
