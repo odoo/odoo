@@ -217,11 +217,11 @@
                 <button name="action_draft" states="cancel" type="object" string="Set to Quotation" data-hotkey="w"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             </header>
-            <field name="partner_credit_warning"
-                   class="alert alert-warning mb-0"
-                   role="alert"
-                   attrs="{'invisible': [('partner_credit_warning', '=', '')]}"
-                   groups="account.group_account_invoice,account.group_account_readonly"/>
+            <div groups="account.group_account_invoice,account.group_account_readonly"
+                 class="alert alert-warning mb-0" role="alert"
+                 attrs="{'invisible': [('partner_credit_warning', '=', '')]}">
+                <field name="partner_credit_warning"/>
+            </div>
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="action_view_invoice"
