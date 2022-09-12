@@ -24,8 +24,8 @@
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
                         <h2 attrs="{'invisible': [('has_accounting_entries','!=',False)]}">Fiscal Localization</h2>
-                        <div class="row mt16 o_settings_container" name="fiscal_localization_setting_container">
-                            <div class="col-12 o_setting_box" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
+                        <div class="row mt16 o_settings_container" name="fiscal_localization_setting_container" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
+                            <div class="col-12 o_setting_box">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <span class="o_form_label">Fiscal Localization</span>
