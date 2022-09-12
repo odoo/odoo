@@ -114,7 +114,12 @@ export class EditMenuDialog extends Component {
         this.state = useState({ rootMenu: {} });
 
         onWillStart(async () => {
-            const menu = await this.orm.call('website.menu', 'get_tree', [this.website.currentWebsite.id, this.props.rootID]);
+            const menu = await this.orm.call(
+                'website.menu',
+                'get_tree',
+                [this.website.currentWebsite.id, this.props.rootID],
+                { context: { lang: this.website.currentWebsite.metadata.lang } }
+            );
             this.state.rootMenu = menu;
             this.map = new Map();
             this.populate(this.map, this.state.rootMenu);
@@ -221,7 +226,8 @@ export class EditMenuDialog extends Component {
                 'data': data,
                 'to_delete': this.toDelete,
             }
-        ]);
+        ],
+        { context: { lang: this.website.currentWebsite.metadata.lang } });
         if (this.props.save) {
             this.props.save();
         } else {

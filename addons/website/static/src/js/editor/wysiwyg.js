@@ -271,6 +271,9 @@ snippetsEditor.SnippetsMenu.include({
      */
     start() {
         const _super = this._super(...arguments);
+        if (this.options.enableTranslation) {
+            return _super;
+        }
         if (this.$body[0].ownerDocument !== this.ownerDocument) {
             this.$body.on('click.snippets_menu', '*', this._onClick);
         }
