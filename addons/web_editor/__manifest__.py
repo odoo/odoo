@@ -139,6 +139,7 @@ Odoo Web Editor widget.
 
         'web._assets_primary_variables': [
             'web_editor/static/src/scss/web_editor.variables.scss',
+            'web_editor/static/src/scss/wysiwyg.variables.scss',
         ],
         'web._assets_secondary_variables': [
             'web_editor/static/src/scss/secondary_variables.scss',

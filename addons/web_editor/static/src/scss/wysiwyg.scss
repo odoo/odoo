@@ -1,19 +1,6 @@
 $o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
 $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
-// Floating Toolbar Variables
-$o-we-toolbar-entries-gap: $o-we-sidebar-content-field-control-item-spacing * .7;
-$o-we-toolbar-entries-border-width: 1px;
-$o-we-toolbar-entries-padding: $o-we-sidebar-content-padding-base * .7;
-
-$o-we-toolbar-bg: #FFF;
-$o-we-toolbar-bg-active: rgba($o-we-fg-light, .2);
-$o-we-toolbar-border: $o-we-fg-light;
-$o-we-toolbar-color-text: $o-we-bg-light;
-$o-we-toolbar-color-accent: #018597;
-$o-we-toolbar-color-clickable: $o-we-bg-lightest;
-$o-we-toolbar-color-clickable-active: $o-we-bg-darkest;
-
 // Use css variables to control the default style of the editor so that an
 // external assets bundle can influence it without duplicating the css.
 :root {
