@@ -61,7 +61,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         }),
     ]);
 
-    wTourUtils.registerEditionTour('website_hr_recruitment_tour_edit_form', {
+    wTourUtils.registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
         test: true,
         url: '/jobs',
     }, [{

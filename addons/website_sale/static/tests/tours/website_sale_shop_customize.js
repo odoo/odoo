@@ -3,7 +3,7 @@
 import tourUtils from 'website_sale.tour_utils';
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('shop_customize', {
+wTourUtils.registerWebsitePreviewTour('shop_customize', {
     url: '/shop',
     edition: true,
     test: true,

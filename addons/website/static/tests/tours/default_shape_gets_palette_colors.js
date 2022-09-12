@@ -3,7 +3,7 @@ odoo.define("website.tour.default_shape_gets_palette_colors", function (require)
 
 const wTourUtils = require('website.tour_utils');
 
-wTourUtils.registerEditionTour("default_shape_gets_palette_colors", {
+wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {
     test: true,
     url: '/',
     edition: true,

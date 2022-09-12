@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('website_sale_tour_backend', {
+wTourUtils.registerWebsitePreviewTour('website_sale_tour_backend', {
     test: true,
     url: '/shop/cart',
     edition: true,

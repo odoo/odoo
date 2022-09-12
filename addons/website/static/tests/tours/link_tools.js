@@ -7,7 +7,7 @@ const clickOnImgStep = {
     trigger: 'iframe #wrap .s_text_image img',
 };
 
-wTourUtils.registerEditionTour('link_tools', {
+wTourUtils.registerWebsitePreviewTour('link_tools', {
     test: true,
     url: '/',
     edition: true,

@@ -3,7 +3,7 @@
 import tourUtils from 'website_sale.tour_utils';
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('shop_list_view_b2c', {
+wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
     test: true,
     url: '/shop?search=Test Product',
 },

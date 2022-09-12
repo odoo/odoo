@@ -10,7 +10,7 @@ var domReady = new Promise(function (resolve) {
 });
 var ready = Promise.all([domReady, session.is_bound, ajax.loadXML()]);
 
-wTourUtils.registerEditionTour('rte_translator', {
+wTourUtils.registerWebsitePreviewTour('rte_translator', {
     test: true,
     url: '/',
     wait_for: ready,

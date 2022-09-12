@@ -12,7 +12,7 @@ import wTourUtils from 'website.tour_utils';
  * See "Fullscreen#_onWebEditorClick" for more information.
  *
  */
- wTourUtils.registerEditionTour('full_screen_web_editor', {
+ wTourUtils.registerWebsitePreviewTour('full_screen_web_editor', {
     url: '/slides',
     test: true,
 }, [{

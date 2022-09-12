@@ -10,7 +10,7 @@ function editAddToCartSnippet() {
     ]
 }
 
-wTourUtils.registerEditionTour('add_to_cart_snippet_tour', {
+wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         url: '/',
         edition: true,
         test: true,

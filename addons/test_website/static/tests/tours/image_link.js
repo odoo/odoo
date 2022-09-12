@@ -18,7 +18,7 @@ const selectImageSteps = [{
     trigger: "iframe #wrapwrap .s_text_image img",
 }];
 
-wTourUtils.registerEditionTour('test_image_link', {
+wTourUtils.registerWebsitePreviewTour('test_image_link', {
     test: true,
     url: '/',
     edition: true,
