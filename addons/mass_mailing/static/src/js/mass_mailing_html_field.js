@@ -98,7 +98,7 @@ export class MassMailingHtmlField extends HtmlField {
         await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
         const inlineHtml = $editable.html();
         $editorEnable.addClass('editor_enable');
-        $editable.html(initialHtml);
+        this.wysiwyg.odooEditor.resetContent(initialHtml);
 
         const fieldName = this.props.inlineField;
         this.wysiwyg.softUpdate = true;
@@ -501,7 +501,7 @@ export class MassMailingHtmlField extends HtmlField {
         $newWrapperContent.append($contents);
         this._switchImages(themeParams, $newWrapperContent);
         old_layout && old_layout.remove();
-        this.wysiwyg.$editable.empty().append($newLayout);
+        this.wysiwyg.odooEditor.resetContent($newLayout[0].outerHTML);
 
         $newWrapperContent.find('*').addBack()
             .contents()
