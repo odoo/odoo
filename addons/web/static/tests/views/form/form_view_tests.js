@@ -9495,7 +9495,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            ".o_list_renderer thead tr th:not(.o_list_record_remove_header)",
+            ".o_list_renderer thead tr th:not(.o_list_actions_header)",
             "there should be only one column"
         );
     });
@@ -9520,7 +9520,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            ".o_list_renderer thead tr th:not(.o_list_record_remove_header)",
+            ".o_list_renderer thead tr th:not(.o_list_actions_header)",
             "there should be only one column"
         );
     });

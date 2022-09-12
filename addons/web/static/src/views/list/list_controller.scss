@@ -1,32 +1,52 @@
 .o_list_renderer {
-    position: relative;
-    height: 100%;
+    --ListRenderer-table-padding-h: #{$table-cell-padding-x-sm};
+
+    --ListRenderer-thead-padding-v: #{$table-cell-padding-y * 1.25};
+    --ListRenderer-thead-bg-color: #{$gray-200};
+    --ListRenderer-thead-border-end-color: #{$border-color};
+
+    .o_list_view &  {
+        --ListRenderer-table-padding-h: #{$o-horizontal-padding};
+    }
 
     .o_list_table {
-        position: relative;
-        cursor: pointer;
         background-color: $o-view-background-color;
-        margin-bottom: 0px;
 
-        // Don't understand why but without those, the list view appears broken
-        // in both form views and standalone list views.
-        border-collapse: initial;
-        border-spacing: 0;
+        > thead, > tbody, > tfoot {
+            > tr > :first-child {
+                padding-left: var(--ListRenderer-table-padding-h);
+            }
 
-        thead {
-            color: $o-main-headings-color;
-            border-bottom: 1px solid #cacaca;
-            > tr > th:not(.o_list_record_selector) {
-                border-left: 1px solid #dfdfdf;
-                @include o-text-overflow(table-cell);
-                &:not(.o_column_sortable):hover {
-                    cursor: default;
-                }
-                &.o_list_number_th {
-                    text-align: right;
-                }
+            > tr > :last-child {
+                padding-right: var(--ListRenderer-table-padding-h);
+            }
+
+            > tr > :empty {
+                padding: 0;
             }
         }
+
+        thead, tfoot {
+            tr > :not(:empty) {
+                padding-top: var(--ListRenderer-thead-padding-v);
+                padding-bottom: var(--ListRenderer-thead-padding-v);
+            }
+        }
+
+        thead {
+            background-color: var(--ListRenderer-thead-bg-color);
+            color: $headings-color;
+
+            th:not(.o_list_record_selector) {
+                border-left: $border-width solid var(--ListRenderer-thead-border-end-color);
+            }
+        }
+
+        // Override BS default
+        > :not(:first-child) {
+            border-top-width: 0;
+        }
+
         tbody > tr > td:not(.o_list_record_selector) {
             &:not(.o_handle_cell):not(.o_list_button):not(.o_state_selection_cell) {
                 @include o-text-overflow(table-cell);
@@ -68,68 +88,32 @@
         }
 
         tfoot {
-            cursor: default;
+            // cursor: default;
             color: $o-list-footer-color;
             background-color: $o-list-footer-bg-color;
             font-weight: $o-list-footer-font-weight;
-            border-top: 2px solid #cacaca;
-            border-bottom: 1px solid #cacaca;
+            border-top: 1px solid $table-border-color;
+            border-bottom: 1px solid $table-border-color;
+
 
             > tr > td {
                 @include o-text-overflow(table-cell);
             }
-            .o_list_number {
-                text-align: right;
-            }
         }
 
         .o_column_sortable:not(.o_handle_cell) {
-            position: relative;
             user-select: none;  // Prevent unwanted selection while sorting
-
-            &::after {
-                font-family: FontAwesome;
-                content: "\f0d7";
-                opacity: 0;
-            }
-            &:not(:empty)::after {
-                margin-left: 6px;
-            }
-            &.o-sort-up {
-                cursor: n-resize;
-                &::after {
-                    content: "\f0d7";
-                }
-            }
-            &.o-sort-down {
-                cursor: s-resize;
-                &::after {
-                    content: "\f0d8";
-                }
-            }
-            &:hover::after {
-                opacity: 0.3;
-            }
-            &.o-sort-up, &.o-sort-down {
-                color: $headings-color;
-                &::after {
-                    opacity: 1;
-                }
-            }
         }
 
-        .o_list_record_selector {
-            width: 40px;
-            padding-left: $o-horizontal-padding;
-            .o-checkbox {
-                margin-bottom: $form-check-margin-bottom;
-            }
-            .form-check-label {
-                cursor: pointer;
-            }
-        }
         .o_list_record_remove, .o_handle_cell {
             width: 1px;  // to prevent the column to expand
+        }
+
+
+        .o_list_table_ungrouped {
+            .o_list_controller {
+                max-width: 35px !important;
+            }
         }
 
         .o_list_record_remove button {
@@ -138,6 +122,42 @@
             border-style: none;
             display: table-cell;
             cursor: pointer;
+        }
+
+        tbody tr {
+            outline-offset: -1px;
+
+            &:hover {
+                outline: 1px solid $gray-400;
+            }
+
+            &.table-info {
+                outline-color: $info;
+            }
+
+            &.o_selected_row {
+                th:focus-within, td:focus-within {
+                    --table-accent-bg: none;
+
+                    background-color: $o-view-background-color;
+                    outline-offset: -1px;
+                    outline: 1px solid $primary;
+                }
+            }
+        }
+
+        .o_keyboard_navigation {
+            tr:hover {
+                outline-color: transparent;
+            }
+
+            th:focus-within, td:focus-within {
+                --table-accent-bg: none;
+
+                background-color: $o-view-background-color;
+                outline-offset: -1px;
+                outline: 1px solid $primary;
+            }
         }
 
         // Grouped list views
@@ -185,16 +205,7 @@
             border-top: none;  // Override bootstrap for grouped list views
         }
 
-        &, &.table-striped {
-            tr:focus-within {
-                background-color: lighten($o-form-lightsecondary, 10%);
-            }
-        }
-        thead th:focus-within,
-        tbody.o_keyboard_navigation td:focus-within {
-            background-color: $o-form-lightsecondary;
-            outline: none;
-        }
+
 
         .o_data_cell.o_text_overflow,
         .o_data_cell.o_invisible_modifier {
@@ -216,16 +227,10 @@
         }
 
         span.o_resize {
-            bottom: 0;
             cursor: col-resize;
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 10px;
-            z-index: 1; // must be over the sort caret (::after pseudo-element)
         }
 
-        .o_list_record_remove_header {
+        .o_list_actions_header {
             width: 32px;
         }
 
@@ -270,10 +275,7 @@
         }
 
         .o_data_row.o_selected_row > .o_data_cell {
-            position: relative; // for o_field_translate
-            &:not(.o_handle_cell) {
-                background-color: white;
-            }
+
             > .o_field_widget:not(.o_readonly_modifier):not(.o_invisible_modifier) {
                 width: 100%;
                 .o_input {
@@ -301,6 +303,9 @@
                 &.o_field_many2manytags > .o_field_many2one {
                     // reduce basis to prevent many2one input from going to the next line to often
                     flex-basis: 40px;
+                }
+                .o_field_many2one_avatar {
+                    display: flex;
                 }
                 &.o_field_badge {
                     width: auto; // override width: 100% to keep the optimal badge width
@@ -344,42 +349,4 @@
             }
         }
     }
-
-    // Optional fields
-    &.o_list_optional_columns {
-        th:last-child {
-            padding-right: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size})); // matches the .oi-fw width calculation
-        }
-    }
-
-    .o_optional_columns_dropdown,.o_optional_columns {
-        @include o-position-absolute($top: 0, $right: 0);
-    }
-
-    .o_optional_columns_dropdown {
-        .dropdown-toggle {
-            padding: calc(#{$table-cell-padding-y-sm} + #{$table-border-width}) 0 calc(#{$table-cell-padding-y-sm} + #{2 * $table-border-width}) 0; // matches the .table header-cell top/bottom box-size
-            z-index: 1; // must be over the resize handle
-            background: none;
-            color: inherit;
-            border: none;
-        }
-    }
-
-    .o_optional_columns {
-        .o_optional_columns_dropdown {
-            margin-top: 30px;
-            user-select: none;
-            .dropdown-item {
-                label {
-                    padding-left: 10px;
-                }
-            }
-        }
-    }
-}
-
-.o_list_view.o_view_controller > .o_content > .table-responsive {
-    // in main list views, let .o_content scroll
-    overflow: visible;
 }

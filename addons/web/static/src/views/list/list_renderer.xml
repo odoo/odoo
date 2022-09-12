@@ -3,7 +3,7 @@
 
     <t t-name="web.ListRenderer" owl="1">
         <div
-            class="o_list_renderer o_renderer"
+            class="o_list_renderer o_renderer position-relative"
             t-att-class="{'table-responsive': showTable}"
             t-attf-class="{{ props.archInfo.className or '' }}"
             tabindex="-1"
@@ -12,22 +12,59 @@
             <t t-if="showNoContentHelper" t-call="web.ActionHelper">
                 <t t-set="noContentHelp" t-value="props.noContentHelp"/>
             </t>
-            <table t-if="showTable" t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}" t-ref="table">
+            <table t-if="showTable" t-attf-class="o_list_table table table-sm position-relative mb-0  {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
                 <thead>
                     <tr>
-                        <th t-if="hasSelectors" class="o_list_record_selector" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
-                            <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="selectAll" onChange.bind="toggleSelection"/>
+                        <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
+                            <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="selectAll" className="'d-flex'" onChange.bind="toggleSelection"/>
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
-                            <th t-if="column.type === 'field'" t-att-data-name="column.name" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"  t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false" t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false">
+                            <th t-if="column.type === 'field'"
+                                t-att-data-name="column.name"
+                                t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
+                                t-on-mouseenter="ev => this.onHoverSortColumn(ev, column)"
+                                t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
+                                t-on-click="() => this.onClickSortColumn(column)"
+                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"  t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false" t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
-                                    <t t-esc="column.label"/>
-                                    <span t-if="!isEmpty" class="o_resize" t-on-click.stop.prevent="" t-on-mousedown.stop.prevent="onStartResize"/>
+                                <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
+                                    <div t-att-class="{'d-flex': true, 'flex-row-reverse': isNumeric}">
+                                        <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'text-end' : ''"
+                                              t-esc="column.label"/>
+                                        <i t-if="!props.list.isGrouped"
+                                           t-att-class="getSortableIconClass(column)"/>
+                                    </div>
+                                    <span t-if="!isEmpty"
+                                          class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-index-1"
+                                          t-on-click.stop.prevent=""
+                                          t-on-mousedown.stop.prevent="onStartResize"/>
                                 </t>
                             </th>
                             <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
                         </t>
-                        <th t-if="props.activeActions and props.activeActions.onDelete" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_record_remove_header" style="width: 32px; min-width: 32px"/>
+                        <th t-if="displayOptionalFields or (props.activeActions and props.activeActions.onDelete)" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header" style="width: 32px; min-width: 32px">
+                            <Dropdown t-if="displayOptionalFields"
+                                class="'o_optional_columns_dropdown text-center border-top-0'"
+                                togglerClass="'btn p-0'"
+                                position="'bottom-end'">
+                                <t t-set-slot="toggler">
+                                    <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                                </t>
+
+                                <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
+                                    <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
+                                        <CheckBox
+                                            onChange="() => this.toggleOptionalField(field.name)"
+                                            value="field.value"
+                                            name="field.name"
+                                        >
+                                            <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                                        </CheckBox>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
@@ -35,12 +72,12 @@
                         <t t-set="list" t-value="props.list"/>
                     </t>
                 </tbody>
-                <tfoot t-on-click="() => props.list.unselectRecord(true)" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
+                <tfoot t-on-click="() => props.list.unselectRecord(true)" class="cursor-default" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
                         <td t-if="hasSelectors"/>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <t t-set="aggregate" t-value="aggregates[column.name]"/>
-                            <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
+                            <td t-if="aggregate" class="o_list_number text-end" t-att-data-tooltip="aggregate.help">
                                 <t t-esc="aggregate.value"/>
                             </td>
                             <td t-else=""/>
@@ -48,22 +85,6 @@
                         <td t-if="props.activeActions and props.activeActions.onDelete"/>
                     </tr>
                 </tfoot>
-                <Dropdown t-if="displayOptionalFields" class="'o_optional_columns_dropdown border-top-0'" position="'bottom-end'">
-                    <t t-set-slot="toggler">
-                        <i class="oi oi-fw oi-settings-adjust o_optional_columns_dropdown_toggle"/>
-                    </t>
-                    <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
-                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
-                            <CheckBox
-                                onChange="() => this.toggleOptionalField(field.name)"
-                                value="field.value"
-                                name="field.name"
-                            >
-                                <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
-                            </CheckBox>
-                        </DropdownItem>
-                    </t>
-                </Dropdown>
             </table>
         </div>
     </t>
@@ -105,7 +126,7 @@
             </tr>
             <t t-if="!props.list.isGrouped">
                 <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
-                    <td t-att-colspan="nbCols">&#8203;</td>
+                    <td t-att-colspan="props.list.editedRecord ? nbCols : nbCols + 1">&#8203;</td>
                 </tr>
             </t>
         </t>
@@ -137,11 +158,15 @@
     </t>
 
     <t t-name="web.ListRenderer.GroupRow" owl="1">
-        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}}"
+        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer"
             t-on-click="() => this.toggleGroup(group)"
         >
-            <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" tabindex="-1" class="o_group_name" t-att-colspan="getGroupNameCellColSpan(group)">
-                <span t-attf-class="fa {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }}"
+            <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)"
+                tabindex="-1"
+                t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-900' : 'text-700'}}"
+                t-att-colspan="getGroupNameCellColSpan(group)">
+
+                <span t-attf-class="fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }}"
                     t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
                 <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
                 <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
@@ -191,7 +216,14 @@
             </td>
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-name="column.name" t-att-colspan="column.colspan"  t-att-class="getCellClass(column, record)" t-att-data-tooltip="getCellTitle(column, record)" data-tooltip-delay="1000" t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
+                        class="o_data_cell cursor-pointer"
+                        t-att-class="getCellClass(column, record)"
+                        t-att-name="column.name"
+                        t-att-colspan="column.colspan"
+                        t-att-data-tooltip="getCellTitle(column, record)"
+                        data-tooltip-delay="1000"
+                        t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
                         <t t-if="!evalModifier(column.modifiers.invisible, record)">
                             <t t-if="canUseFormatter(column, record)" t-esc="getFormattedValue(column, record)"/>
                             <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/>
@@ -218,10 +250,10 @@
             </t>
 
             <t t-set="activeActions" t-value="props.activeActions" />
-            <t t-if="activeActions">
+            <t t-if="displayOptionalFields or activeActions">
                 <t t-set="canDelete" t-value="activeActions.canDelete" />
                 <t t-set="canUnlink" t-value="activeActions.canUnlink" />
-                <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="'canUnlink' in activeActions ? canUnlink : canDelete" class="o_list_record_remove" t-on-click.stop="() => this.onDeleteRecord(record)" tabindex="-1">
+                <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="'canUnlink' in activeActions ? canUnlink : canDelete" class="o_list_record_remove text-center" t-on-click.stop="() => this.onDeleteRecord(record)" tabindex="-1">
                     <button class="fa"
                         t-att-class="{ 'fa-trash-o': 'canUnlink' in activeActions ? false : canDelete, 'fa-times': 'canUnlink' in activeActions ? canUnlink : false }"
                         name="delete"
@@ -229,6 +261,7 @@
                         tabindex="-1"
                     />
                 </td>
+                <td t-elif="displayOptionalFields" tabindex="-1"/>
             </t>
         </tr>
     </t>
