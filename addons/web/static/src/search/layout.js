@@ -15,14 +15,6 @@ export function extractLayoutComponents(params) {
 export class Layout extends Component {
     setup() {
         this.components = extractLayoutComponents(this.env.config);
-        const display = this.props.display;
-        if (display.controlPanel && this.env.inDialog) {
-            display.controlPanel = Object.assign({}, display.controlPanel, {
-                "top-left": false,
-                "bottom-left-buttons": false,
-            });
-        }
-        this.display = display;
     }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };
@@ -30,6 +22,20 @@ export class Layout extends Component {
         delete slots["layout-buttons"];
         delete slots.default;
         return slots;
+    }
+    get display() {
+        const { controlPanel } = this.props.display;
+        if (!controlPanel || !this.env.inDialog) {
+            return this.props.display;
+        }
+        return {
+            ...this.props.display,
+            controlPanel: {
+                ...controlPanel,
+                "top-left": false,
+                "bottom-left-buttons": false,
+            },
+        };
     }
 }
 

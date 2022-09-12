@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { getFixture, mount } from "@web/../tests/helpers/utils";
+import { getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
@@ -254,5 +254,49 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_toy_banner");
         assert.notOk(target.querySelector(".o_toy_banner").closest(".o_content"));
         assert.ok(target.querySelector(".o_toy_content").closest(".o_content"));
+    });
+
+    QUnit.test("Simple rendering: with dynamically displayed search", async (assert) => {
+        let displayControlPanelTopRight = true;
+        class ToyComponent extends Component {
+            get display() {
+                return {
+                    ...this.props.display,
+                    controlPanel: {
+                        ...this.props.display.controlPanel,
+                        "top-right": displayControlPanelTopRight,
+                    },
+                };
+            }
+        }
+        ToyComponent.template = xml`
+            <Layout display="display">
+                <t t-set-slot="control-panel-top-right">
+                    <div class="toy_search_bar" />
+                </t>
+                <div class="toy_content" />
+            </Layout>`;
+        ToyComponent.components = { Layout };
+
+        const comp = await makeWithSearch({
+            serverData,
+            Component: ToyComponent,
+            resModel: "foo",
+            searchViewId: false,
+        });
+
+        assert.containsOnce(target, ".o_control_panel .o_cp_top_right .toy_search_bar");
+        assert.containsOnce(target, ".o_component_with_search_panel .o_search_panel");
+        assert.containsNone(target, ".o_cp_searchview");
+        assert.containsOnce(target, ".o_content > .toy_content");
+
+        displayControlPanelTopRight = false;
+        comp.render();
+        await nextTick();
+
+        assert.containsNone(target, ".o_control_panel .o_cp_top_right .toy_search_bar");
+        assert.containsOnce(target, ".o_component_with_search_panel .o_search_panel");
+        assert.containsNone(target, ".o_cp_searchview");
+        assert.containsOnce(target, ".o_content > .toy_content");
     });
 });
