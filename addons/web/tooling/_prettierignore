@@ -40,6 +40,13 @@ addons/web/static/tests/**/legacy/*
 web_enterprise/static/tests/**/legacy/*
 web_studio/static/tests/**/legacy/*
 
+# base_import
+# whitelist new code
+!addons/base_import
+!addons/base_import/**/*
+# blacklist legacy
+addons/base_import/static/src/legacy/**/*
+
 # web_dashboard
 # whitelist new code
 !web_dashboard
