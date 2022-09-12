@@ -21,8 +21,14 @@ class StockMove(models.Model):
     purchase_line_id = fields.Many2one('purchase.order.line',
         'Purchase Order Line', ondelete='set null', index='btree_not_null', readonly=True)
     created_purchase_line_id = fields.Many2one('purchase.order.line',
+<<<<<<< HEAD
         'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False,
         index='btree_not_null')
+||||||| parent of 0dad63dcaae3... temp
+        'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False)
+=======
+        'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False, index=True)
+>>>>>>> 0dad63dcaae3... temp
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
