@@ -76,7 +76,6 @@ Featuring
             'website_slides/static/src/slide_category_list_renderer.js',
             'website_slides/static/src/scss/slide_views.scss',
             'website_slides/static/src/js/slide_category_one2many.js',
-            'website_slides/static/src/js/rating_field_backend.js',
             'website_slides/static/src/js/components/**/*.js',
         ],
         'web.assets_frontend': [
