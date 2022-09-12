@@ -765,6 +765,44 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("add record in a many2many non editable list with context", async function (assert) {
+        assert.expect(1);
+
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,search": '<search><field name="display_name"/></search>',
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="timmy" context="{'abc': int_field}">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "web_search_read") {
+                    // done by the SelectCreateDialog
+                    assert.deepEqual(args.kwargs.context, {
+                        abc: 2,
+                        bin_size: true, // not sure it should be there, but was in legacy
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
+                }
+            },
+        });
+
+        await editInput(target, ".o_field_widget[name=int_field] input", "2");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+    });
+
     QUnit.test("many2many list (editable): edition", async function (assert) {
         assert.expect(31);
 
