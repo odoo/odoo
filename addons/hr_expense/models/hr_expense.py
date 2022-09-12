@@ -848,8 +848,12 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def _default_bank_journal_id(self):
+        company_journal_id = self.env.company.company_expense_journal_id
+        if company_journal_id:
+            return company_journal_id
         default_company_id = self.default_get(['company_id'])['company_id']
-        return self.env['account.journal'].search([('type', 'in', ['cash', 'bank']), ('company_id', '=', default_company_id)], limit=1)
+        journal = self.env['account.journal'].search([('type', 'in', ['cash', 'bank']), ('company_id', '=', default_company_id)], limit=1)
+        return journal
 
     name = fields.Char('Expense Report Summary', required=True, tracking=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', copy=False)
