@@ -33,6 +33,46 @@ class ViewCase(common.TransactionCase):
         super(ViewCase, self).setUp()
         self.View = self.env['ir.ui.view']
 
+    def assertValid(self, arch, name='valid view', inherit_id=False):
+        return self.View.create({
+            'name': name,
+            'model': 'ir.ui.view',
+            'inherit_id': inherit_id,
+            'arch': arch,
+        })
+
+    def assertInvalid(self, arch, expected_message=None, name='invalid view', inherit_id=False):
+        with mute_logger('odoo.addons.base.models.ir_ui_view'):
+            with self.assertRaises(ValidationError) as catcher:
+                with self.cr.savepoint():
+                    self.View.create({
+                        'name': name,
+                        'model': 'ir.ui.view',
+                        'inherit_id': inherit_id,
+                        'arch': arch,
+                    })
+        message = str(catcher.exception.args[0])
+        self.assertEqual(catcher.exception.context['name'], name)
+        if expected_message:
+            self.assertIn(expected_message, message)
+        else:
+            _logger.warning(message)
+
+    def assertWarning(self, arch, expected_message=None, name='invalid view'):
+        with self.assertLogs('odoo.addons.base.models.ir_ui_view', level="WARNING") as log_catcher:
+            self.View.create({
+                'name': name,
+                'model': 'ir.ui.view',
+                'arch': arch,
+            })
+        self.assertEqual(len(log_catcher.output), 1, "Exactly one warning should be logged")
+        message = log_catcher.output[0]
+        self.assertIn('View error context', message)
+        self.assertIn("'name': '%s'" % name, message)
+        if expected_message:
+            self.assertIn(expected_message, message)
+
+
 class TestNodeLocator(common.TransactionCase):
     """
     The node locator returns None when it can not find a node, and the first
@@ -3165,45 +3205,6 @@ class TestViews(ViewCase):
             0,
             "The view test_views_test_view_ref should not be in the views of the many2many field groups_id"
         )
-
-    def assertValid(self, arch, name='valid view', inherit_id=False):
-        return self.View.create({
-            'name': name,
-            'model': 'ir.ui.view',
-            'inherit_id': inherit_id,
-            'arch': arch,
-        })
-
-    def assertInvalid(self, arch, expected_message=None, name='invalid view', inherit_id=False):
-        with mute_logger('odoo.addons.base.models.ir_ui_view'):
-            with self.assertRaises(ValidationError) as catcher:
-                with self.cr.savepoint():
-                    self.View.create({
-                        'name': name,
-                        'model': 'ir.ui.view',
-                        'inherit_id': inherit_id,
-                        'arch': arch,
-                    })
-        message = str(catcher.exception.args[0])
-        self.assertEqual(catcher.exception.context['name'], name)
-        if expected_message:
-            self.assertIn(expected_message, message)
-        else:
-            _logger.warning(message)
-
-    def assertWarning(self, arch, expected_message=None, name='invalid view'):
-        with self.assertLogs('odoo.addons.base.models.ir_ui_view', level="WARNING") as log_catcher:
-            self.View.create({
-                'name': name,
-                'model': 'ir.ui.view',
-                'arch': arch,
-            })
-        self.assertEqual(len(log_catcher.output), 1, "Exactly one warning should be logged")
-        message = log_catcher.output[0]
-        self.assertIn('View error context', message)
-        self.assertIn("'name': '%s'" % name, message)
-        if expected_message:
-            self.assertIn(expected_message, message)
 
 
 class TestViewTranslations(common.TransactionCase):
