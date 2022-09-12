@@ -109,7 +109,7 @@ class FieldAdapter extends ComponentAdapter {
             const proms = [];
             for (const fieldName in payload.changes) {
                 let value = payload.changes[fieldName];
-                const fieldType = record.fields[name].type;
+                const fieldType = record.fields[fieldName].type;
                 if (fieldType === "many2one" && value) {
                     value = [value.id, value.display_name];
                 } else if (fieldType === "one2many" || fieldType === "many2many") {
