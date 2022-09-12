@@ -53,7 +53,8 @@ registry.category('website_custom_menus').add('website.menu_edit_menu', {
     Component: EditMenuDialog,
     isDisplayed: (env) => !!env.services.website.currentWebsite
         && env.services.website.isDesigner
-        && !env.services.ui.isSmall,
+        && !env.services.ui.isSmall
+        && !env.services.website.currentWebsite.metadata.translatable,
 });
 registry.category('website_custom_menus').add('website.menu_optimize_seo', {
     Component: OptimizeSEODialog,
