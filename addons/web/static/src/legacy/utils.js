@@ -157,7 +157,7 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
             if (params && params.kwargs) {
                 params.kwargs.context = Object.assign(
                     params.kwargs.context || {},
-                    legacyEnv.session.user_context
+                    legacyEnv.session.user_context //WOWL this shouldn't be : legacyEnv.session.userContext ??
                 );
             }
             const jsonrpc = wowlEnv.services.rpc(route, params, {

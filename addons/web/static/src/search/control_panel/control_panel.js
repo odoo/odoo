@@ -24,6 +24,7 @@ export class ControlPanel extends Component {
         this.pagerProps = this.env.config.pagerProps
             ? useState(this.env.config.pagerProps)
             : undefined;
+        this.breadcrumbs = useState(this.env.config.breadcrumbs);
     }
 
     /**

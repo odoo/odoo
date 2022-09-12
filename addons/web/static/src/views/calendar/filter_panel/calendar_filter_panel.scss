@@ -1,0 +1,90 @@
+
+// $o-calendar-filter-panel-avatar-size: 20px;
+
+// .o-calendar-filter-panel--section {
+//   font-size: 0.9em;
+//   padding: 2em 0 1em;
+
+//   .o-calendar-filter-panel--section-header {
+//     .o-calendar-filter-panel--section-toggler {
+//       font-size: 0.7em;
+//       @include o-hover-opacity();
+//     }
+  
+//     &.o-calendar-filter-panel--section-collapsed .o-calendar-filter-panel--section-toggler {
+//       opacity: 1;
+//     }
+//   }
+
+//   .o-calendar-filter-panel--section-input > .o_field_widget {
+//     width: 100%;
+//   }
+// }
+
+// .o-calendar-filter-panel--section-filter,
+// .o-calendar-filter-panel--filter {
+//   cursor: pointer;
+//   overflow: hidden;
+
+//   input {
+//     z-index: -1;
+//     opacity: 0;
+//   }
+
+//   .o-calendar-filter-panel--filter-input {
+//     @include size(1.3em);
+//     border-width: 2px;
+//     border-style: solid;
+//     border-radius: 1px;
+//     overflow: hidden;
+//   }
+
+//   @for $i from 1 through length($o-colors-complete) {
+//     $color: nth($o-colors-complete, $i);
+
+//     &.o-calendar-filter-panel--filter-color-#{$i - 1} .o-calendar-filter-panel--filter-input {
+//       border-color: $color;
+//       background: $color;
+//       color: color-yiq($color);
+//     }
+//   }
+
+//   &.o-calendar-filter-panel--filter-with-avatar .o-calendar-filter-panel--filter-input {
+//     @include size($o-calendar-filter-panel-avatar-size);
+//     border-radius: 2px;
+//   }
+
+//   input:not(:checked) + label .o-calendar-filter-panel--filter-input {
+//     background: transparent !important;
+
+//     i.fa {
+//       visibility: hidden;
+//     }
+//   }
+
+//   .o-calendar-filter-panel--filter-avatar {
+//     @include size($o-calendar-filter-panel-avatar-size);
+//     border-radius: 2px;
+
+//     &.fa {
+//       padding: 4px 3px;
+//     }
+//   }
+
+//   .o-calendar-filter-panel--filter-title {
+//     line-height: $o-line-height-base;
+//     flex-grow: 1;
+//   }
+
+//   .o-calendar-filter-panel--filter-remove {
+//     @include o-position-absolute(0, 0, 0);
+//     transform: translateX(100%);
+//     transition: transform 0.2s;
+//   }
+
+//   &:hover {
+//     .o-calendar-filter-panel--filter-remove {
+//       transform: translateX(0%);
+//     }
+//   }
+// }

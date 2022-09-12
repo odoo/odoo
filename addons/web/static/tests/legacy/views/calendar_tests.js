@@ -3,6 +3,7 @@ odoo.define('web.calendar_tests', function (require) {
 
 const AbstractField = require('web.AbstractField');
 const BasicModel = require('web.BasicModel');
+const FormView = require('web.FormView');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
 var Dialog = require('web.Dialog');
@@ -13,6 +14,8 @@ var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
 const Widget = require('web.Widget');
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
 
 const { getFixture, patchWithCleanup } = require("@web/../tests/helpers/utils");
 
@@ -46,6 +49,10 @@ QUnit.module('LegacyViews', {
         patchWithCleanup(session, {
             uid: -1
         });
+        registry.category("views").remove("calendar"); // remove new calendar from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("calendar", CalendarView); // add legacy calendar -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
         this.data = {
             event: {
                 fields: {
