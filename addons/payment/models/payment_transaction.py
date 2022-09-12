@@ -500,7 +500,7 @@ class PaymentTransaction(models.Model):
         self._ensure_provider_is_not_disabled()
         self._log_sent_message()
 
-    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None):
         """ Request the provider handling the transaction to refund it.
 
         For a provider to support refunds, it must override this method and request a refund
@@ -509,19 +509,15 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one()
 
         :param float amount_to_refund: The amount to be refunded
-        :param bool create_refund_transaction: Whether a refund transaction should be created
-        :return: The refund transaction if any
+        :return: The refund transaction created to process the refund request.
         :rtype: recordset of `payment.transaction`
         """
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
 
-        if create_refund_transaction:
-            refund_tx = self._create_refund_transaction(amount_to_refund=amount_to_refund)
-            refund_tx._log_sent_message()
-            return refund_tx
-        else:
-            return self.env['payment.transaction']
+        refund_tx = self._create_refund_transaction(amount_to_refund=amount_to_refund)
+        refund_tx._log_sent_message()
+        return refund_tx
 
     def _create_refund_transaction(self, amount_to_refund=None, **custom_create_values):
         """ Create a new transaction with operation 'refund' and link it to the current transaction.

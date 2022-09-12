@@ -79,21 +79,18 @@ class PaymentTransaction(models.Model):
         notification_data = {'reference': self.reference, 'simulated_state': simulated_state}
         self._handle_notification_data('demo', notification_data)
 
-    def _send_refund_request(self, create_refund_transaction=True, **kwargs):
+    def _send_refund_request(self, **kwargs):
         """ Override of payment to simulate a refund.
 
         Note: self.ensure_one()
 
-        :param bool create_refund_transaction: Whether a refund transaction should be created.
         :param dict kwargs: The keyword arguments.
-        :return: The refund transaction if any
+        :return: The refund transaction created to process the refund request.
         :rtype: recordset of `payment.transaction`
         """
+        refund_tx = super()._send_refund_request(**kwargs)
         if self.provider_code != 'demo':
-            return super()._send_refund_request(
-                create_refund_transaction=create_refund_transaction, **kwargs
-            )
-        refund_tx = super()._send_refund_request(create_refund_transaction=True, **kwargs)
+            return refund_tx
 
         notification_data = {'reference': refund_tx.reference, 'simulated_state': 'done'}
         refund_tx._handle_notification_data('demo', notification_data)
