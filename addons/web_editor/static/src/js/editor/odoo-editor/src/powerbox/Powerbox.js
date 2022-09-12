@@ -26,14 +26,13 @@ function cycle(num, max) {
 export class Powerbox {
     constructor({
         categories, commands, commandFilters, editable, getContextFromParentRect,
-        onOpen, onShow, onStop, beforeCommand, afterCommand
+        onShow, onStop, beforeCommand, afterCommand
     } = {}) {
         this.categories = categories;
         this.commands = commands;
         this.commandFilters = commandFilters || [];
         this.editable = editable;
         this.getContextFromParentRect = getContextFromParentRect;
-        this.onOpen = onOpen;
         this.onShow = onShow;
         this.onStop = onStop;
         this.beforeCommand = beforeCommand;
@@ -102,9 +101,6 @@ export class Powerbox {
             priority: category.priority || 0,
         }));
         const order = (a, b) => b.priority - a.priority || a.name.localeCompare(b.name);
-        if (this.onOpen) {
-            this.onOpen();
-        }
         // Remove duplicate category names, keeping only last declared version,
         // and order them.
         categories = [...categories].reverse().filter((category, index, cats) => (
