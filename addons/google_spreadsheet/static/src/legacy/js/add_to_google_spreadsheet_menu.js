@@ -1,12 +1,12 @@
 odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
     "use strict";
 
-    const Dialog = require('web.OwlDialog');
     const Domain = require('web.Domain');
     const FavoriteMenu = require('web.FavoriteMenu');
 
+    const Dialog = require('web.Dialog');
     const { Component } = owl;
-    const { useState } = owl.hooks;
+    const { qweb } = require('web.core');
 
     /**
      * 'Add to Google spreadsheet' menu
@@ -16,15 +16,6 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
      * This component is only available in actions of type 'ir.actions.act_window'.
      */
     class AddToGoogleSpreadsheetMenu extends Component {
-        setup() {
-            super.setup();
-
-            this.state = useState({
-                showDialog: false,
-                url: false,
-                formula: false,
-            });
-        }
 
         //---------------------------------------------------------------------
         // Handlers
@@ -40,18 +31,22 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
             const domain = Domain.prototype.arrayToString(searchQuery.domain);
             const groupBys = searchQuery.groupBy.join(" ");
             const listViewId = listView ? listView.viewID : false;
-            const result = await this.rpc({
+            const result = await this.env.services.rpc({
                 model: 'google.drive.config',
                 method: 'set_spreadsheet',
                 args: [modelName, domain, groupBys, listViewId],
             });
 
+
             if (result.deprecated) {
-                this.state.url = result.url;
-                this.state.formula = result.formula;
-                this.state.showDialog = true;
-                this.state.open = false;
-                return;
+                return new Dialog(this, {
+                    size: 'large',
+                    $content: qweb.render('google_spreadsheet.FormulaDialog', {
+                        url: result.url,
+                        formula: result.formula,
+                    }),
+                    title: 'Google Spreadsheet',
+                }).open();
             }
             if (result.url) {
                 // According to MDN doc, one should not use _blank as title.
