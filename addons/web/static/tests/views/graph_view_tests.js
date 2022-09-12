@@ -143,7 +143,7 @@ function getYAxeLabel(graph) {
     return getChart(graph).config.options.scales.yAxes[0].scaleLabel.labelString;
 }
 
-async function clickOnDataset(graph) {
+export async function clickOnDataset(graph) {
     const chart = getChart(graph);
     const meta = chart.getDatasetMeta(0);
     const rectangle = chart.canvas.getBoundingClientRect();
