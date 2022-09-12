@@ -125,6 +125,7 @@ export const websiteService = {
                         // denominator of editable pages.
                         editable: !!document.getElementById('wrapwrap'),
                         viewXmlid: viewXmlid,
+                        lang: document.documentElement.getAttribute('lang').replace('-', '_'),
                     };
                 }
                 contentWindow = document.defaultView;
