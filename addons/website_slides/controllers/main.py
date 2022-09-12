@@ -665,7 +665,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
     def slide_channel_join(self, channel_id):
         if request.website.is_public_user():
-            return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
+            return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() in ('b2c', 'b2c_email_activate')}
         success = request.env['slide.channel'].browse(channel_id).action_add_member()
         if not success:
             return {'error': 'join_done'}
@@ -774,7 +774,7 @@ class WebsiteSlides(WebsiteProfile):
 
         values['channel'] = slide.channel_id
         values = self._prepare_additional_channel_values(values, **kwargs)
-        values['signup_allowed'] = request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
+        values['signup_allowed'] = request.env['res.users'].sudo()._get_signup_invitation_scope() in ('b2c', 'b2c_email_activate')
 
         if kwargs.get('fullscreen') == '1':
             values.update(self._slide_channel_prepare_review_values(slide.channel_id))
@@ -875,7 +875,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/slide/like', type='json', auth="public", website=True)
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
-            return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
+            return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() in ('b2c', 'b2c_email_activate')}
         # check slide access
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):

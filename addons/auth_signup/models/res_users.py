@@ -145,7 +145,9 @@ class ResUsers(models.Model):
         # create a copy of the template user (attached to a specific partner_id if given)
         # if b2c_email_activate_enabled, make the user inactive
         b2c_email_activate_enabled = self._get_signup_invitation_scope() == 'b2c_email_activate'
-        values['active'] = not b2c_email_activate_enabled
+        # In case the user is signing up using token, values['active'] would be set to True in the above signup method
+        # So the user will always be active when there is a token
+        values['active'] = values.get('active', None) or not b2c_email_activate_enabled
         try:
             with self.env.cr.savepoint():
                 return template_user.with_context(no_reset_password=True).copy(values)

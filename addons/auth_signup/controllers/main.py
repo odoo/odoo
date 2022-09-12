@@ -49,7 +49,7 @@ class AuthSignupHome(Home):
 
                     # new user created with b2c_email_activate_enabled, still inactive
                     if not qcontext.get('token'):
-                        User =  User.with_context(active_test=False)
+                        User = User.with_context(active_test=False)
 
                     user_sudo = User.sudo().search(
                         User._get_login_domain(qcontext.get('login')), order=User._get_login_order(), limit=1
