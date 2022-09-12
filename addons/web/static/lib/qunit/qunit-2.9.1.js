@@ -3555,6 +3555,10 @@
   	test.queue();
   }
 
+  function skipWOWL(testName) {
+	skip(testName);
+  }
+
   // Will be exposed as QUnit.only
   function only(testName, callback) {
   	if (focused$1) {
@@ -4281,6 +4285,8 @@
   	skip: skip,
 
   	only: only,
+
+	skipWOWL: skipWOWL,
 
   	start: function start(count) {
   		var globalStartAlreadyCalled = globalStartCalled;
