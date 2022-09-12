@@ -90,7 +90,7 @@ function updateAndCheckCustomGradient({updateStep, checkGradient}) {
     return steps;
 }
 
-wTourUtils.registerEditionTour('snippet_background_edition', {
+wTourUtils.registerWebsitePreviewTour('snippet_background_edition', {
     url: '/',
     edition: true,
     test: true,

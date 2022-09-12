@@ -24,7 +24,7 @@ const clickEditLink = [{
     in_modal: false,
 }];
 
-wTourUtils.registerEditionTour('edit_link_popover', {
+wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     test: true,
     url: '/',
     edition: true,

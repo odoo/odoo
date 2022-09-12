@@ -3,7 +3,7 @@ odoo.define("website.tour.restricted_editor", function (require) {
 
 var wTourUtils = require("website.tour_utils");
 
-wTourUtils.registerEditionTour("restricted_editor", {
+wTourUtils.registerWebsitePreviewTour("restricted_editor", {
     test: true,
     url: "/",
 }, [{

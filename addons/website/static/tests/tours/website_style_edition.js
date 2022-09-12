@@ -5,7 +5,7 @@ const wTourUtils = require("website.tour_utils");
 
 const TARGET_FONT_SIZE = 30;
 
-wTourUtils.registerEditionTour("website_style_edition", {
+wTourUtils.registerWebsitePreviewTour("website_style_edition", {
     test: true,
     url: '/',
     edition: true,

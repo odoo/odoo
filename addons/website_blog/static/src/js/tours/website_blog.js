@@ -5,7 +5,7 @@ odoo.define("website_blog.tour", function (require) {
     const {Markup} = require('web.utils');
     const wTourUtils = require('website.tour_utils');
 
-    wTourUtils.registerEditionTour("blog", {
+    wTourUtils.registerWebsitePreviewTour("blog", {
         url: "/",
     }, [{
         trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > a",

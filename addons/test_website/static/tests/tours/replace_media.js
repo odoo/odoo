@@ -9,7 +9,7 @@ const VIDEO_URL = 'https://www.youtube.com/watch?v=Dpq87YCHmJc';
 /**
  * The purpose of this tour is to check the media replacement flow.
  */
-wTourUtils.registerEditionTour('test_replace_media', {
+wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     url: '/',
     test: true,
 }, [
