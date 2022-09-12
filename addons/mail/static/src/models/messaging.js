@@ -260,9 +260,9 @@ registerPatch({
          */
         _onChangeRingingThreads() {
             if (this.ringingThreads && this.ringingThreads.length > 0) {
-                this.soundEffects.incomingCall.play({ loop: true });
+                this.audioRegistry.incomingCall.play({ loop: true });
             } else {
-                this.soundEffects.incomingCall.stop();
+                this.audioRegistry.incomingCall.stop();
             }
         },
     },
@@ -278,6 +278,11 @@ registerPatch({
         }),
         allPersonas: many('Persona', {
             inverse: 'messagingAsAnyPersona',
+        }),
+        audioRegistry: one('AudioRegistry', {
+            default: {},
+            isCausal: true,
+            readonly: true,
         }),
         callInviteRequestPopups: many('CallInviteRequestPopup', {
             compute() {
@@ -399,11 +404,6 @@ registerPatch({
             inverse: 'messagingAsRingingThread',
         }),
         rtc: one('Rtc', {
-            default: {},
-            isCausal: true,
-            readonly: true,
-        }),
-        soundEffects: one('SoundEffects', {
             default: {},
             isCausal: true,
             readonly: true,

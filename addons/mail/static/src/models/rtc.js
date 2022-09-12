@@ -35,7 +35,7 @@ registerModel({
     recordMethods: {
         async deafen() {
             await this._setDeafState(true);
-            this.messaging.soundEffects.deafen.play();
+            this.messaging.audioRegistry.deafen.play();
         },
         /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
@@ -118,7 +118,7 @@ registerModel({
         },
         async mute() {
             await this._setMuteState(true);
-            this.messaging.soundEffects.mute.play();
+            this.messaging.audioRegistry.mute.play();
         },
         /**
          * @param {number[]} targetToken
@@ -230,7 +230,7 @@ registerModel({
         },
         async undeafen() {
             await this._setDeafState(false);
-            this.messaging.soundEffects.undeafen.play();
+            this.messaging.audioRegistry.undeafen.play();
         },
         async unmute() {
             if (this.audioTrack) {
@@ -239,7 +239,7 @@ registerModel({
                 // if we don't have an audioTrack, we try to request it again
                 await this.updateLocalAudioTrack(true);
             }
-            this.messaging.soundEffects.unmute.play();
+            this.messaging.audioRegistry.unmute.play();
         },
         /**
          * @param {Boolean} audio
@@ -930,7 +930,7 @@ registerModel({
                     });
                 }
                 if (type === 'display') {
-                    this.messaging.soundEffects.screenSharing.play();
+                    this.messaging.audioRegistry.screenSharing.play();
                 }
                 stopVideo();
                 return;
@@ -946,7 +946,7 @@ registerModel({
                 }
                 if (type === 'display') {
                     sourceWebMediaStream = await browser.navigator.mediaDevices.getDisplayMedia({ video: this.videoConfig });
-                    this.messaging.soundEffects.screenSharing.play();
+                    this.messaging.audioRegistry.screenSharing.play();
                 }
             } catch (_e) {
                 this.messaging.notify({
@@ -1063,7 +1063,7 @@ registerModel({
             }
             this.messaging.browser.clearTimeout(this.pushToTalkTimeout);
             if (!this.currentRtcSession.isTalking) {
-                this.messaging.soundEffects.pushToTalkOn.play();
+                this.messaging.audioRegistry.pushToTalkOn.play();
                 this._setSoundBroadcast(true);
             }
         },
@@ -1082,7 +1082,7 @@ registerModel({
                 return;
             }
             if (!this.currentRtcSession.isMute) {
-                this.messaging.soundEffects.pushToTalkOff.play();
+                this.messaging.audioRegistry.pushToTalkOff.play();
             }
             this.update({
                 pushToTalkTimeout: this.messaging.browser.setTimeout(

@@ -435,7 +435,7 @@ registerModel({
         endCall() {
             if (this.rtc) {
                 this.rtc.reset();
-                this.messaging.soundEffects.channelLeave.play();
+                this.messaging.audioRegistry.channelLeave.play();
             }
             this.update({
                 rtc: clear(),
@@ -609,7 +609,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.messaging.soundEffects.channelJoin.play();
+            this.messaging.audioRegistry.channelJoin.play();
         },
         /**
          * Notifies the server and does the cleanup of the current call.
@@ -627,10 +627,10 @@ registerModel({
             if (this.rtc) {
                 const newCount = this.rtcSessions.length;
                 if (newCount > oldCount) {
-                    this.messaging.soundEffects.channelJoin.play();
+                    this.messaging.audioRegistry.channelJoin.play();
                 }
                 if (newCount < oldCount) {
-                    this.messaging.soundEffects.memberLeave.play();
+                    this.messaging.audioRegistry.memberLeave.play();
                 }
             }
             this.rtc && this.rtc.filterCallees(this.rtcSessions);
