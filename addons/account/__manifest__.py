@@ -109,8 +109,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            ('after', 'web/static/tests/legacy/views/kanban_tests.js', 'account/static/tests/account_payment_field_tests.js'),
-            ('after', 'web/static/tests/legacy/views/kanban_tests.js', 'account/static/tests/section_and_note_tests.js'),
+            'account/static/tests/*.js',
         ],
         'web.assets_qweb': [
             'account/static/src/xml/**/*',
