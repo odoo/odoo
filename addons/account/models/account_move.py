@@ -1794,7 +1794,7 @@ class AccountMove(models.Model):
                            move.move_type == 'out_invoice' and \
                            move.company_id.account_use_credit_limit
             if show_warning:
-                updated_credit = move.partner_id.credit + move.amount_total_signed
+                updated_credit = move.partner_id.commercial_partner_id.credit + move.amount_total_signed
                 move.partner_credit_warning = self._build_credit_warning_message(move, updated_credit)
 
     def _build_credit_warning_message(self, record, updated_credit):
@@ -1805,13 +1805,13 @@ class AccountMove(models.Model):
             :param updated_credit (float):  The partner's updated credit limit including the current record.
             :return (str):                  The warning message to be showed.
         '''
-        credit_limit = record.partner_id.credit_limit
-        if (not credit_limit) or updated_credit <= credit_limit:
+        partner_id = record.partner_id.commercial_partner_id
+        if not partner_id.credit_limit or updated_credit <= partner_id.credit_limit:
             return ''
         msg = _('%s has reached its Credit Limit of : %s\nTotal amount due ',
-                record.partner_id.name,
-                formatLang(self.env, credit_limit, currency_obj=record.company_id.currency_id))
-        if updated_credit > record.partner_id.credit:
+                partner_id.name,
+                formatLang(self.env, partner_id.credit_limit, currency_obj=record.company_id.currency_id))
+        if updated_credit > partner_id.credit:
             msg += _('(including this document) ')
         msg += ': %s' % formatLang(self.env, updated_credit, currency_obj=record.company_id.currency_id)
         return msg
