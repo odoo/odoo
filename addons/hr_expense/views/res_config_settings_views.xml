@@ -61,19 +61,31 @@
                                 </div>   
                             </div>
                         </div>
-                        <h2>Default Expense Journal</h2>
+                        <h2>Default Journals</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane"></div>
                                 <div class="o_setting_right_pane">
-                                    <span class="o_form_label">Expense Journal</span>
+                                    <span class="o_form_label">Employee Expense Journal</span>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Default accounting journal for expenses paid by employees.
                                     </div>
                                     <div class="row mt8">
-                                        <label for="expense_journal_id" class="col-lg-2 o_light_label" string="Journal"/>
                                         <field name="expense_journal_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"></div>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Company Expense Journal</span>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Default accounting journal for expenses paid by the company.
+                                    </div>
+                                    <div class="row mt8">
+                                        <field name="company_expense_journal_id"/>
                                     </div>
                                 </div>
                             </div>
