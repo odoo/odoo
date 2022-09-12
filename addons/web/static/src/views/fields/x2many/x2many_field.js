@@ -215,9 +215,7 @@ export class X2ManyField extends Component {
     async onAdd({ context, editable } = {}) {
         const record = this.props.record;
         const domain = record.getFieldDomain(this.props.name).toList();
-        if (context) {
-            context = makeContext([record.getFieldContext(this.props.name), context]);
-        }
+        context = makeContext([record.getFieldContext(this.props.name), context]);
         if (this.isMany2Many) {
             return this.selectCreate({ domain, context });
         }
