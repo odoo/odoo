@@ -224,6 +224,21 @@ export function setupQUnit() {
      * browser_js is closed as soon as an error is logged.
      */
     let errorMessages = [];
+    async function logErrors() {
+        const messages = errorMessages.slice();
+        errorMessages = [];
+        const infos = await Promise.all(messages);
+        console.error(infos.map((info) => info.error || info).join("\n"));
+        // Only log the source of the errors in "info" log level to allow matching the same
+        // error with its log message, as source contains asset file name which changes
+        console.info(
+            infos
+                .map((info) =>
+                    info.source ? `${info.error}\n${info.source.replace(/^/gm, "\t")}\n` : info
+                )
+                .join("\n")
+        );
+    }
 
     /**
      * Waits for the module system to end processing the JS modules, so that we can
@@ -292,8 +307,7 @@ export function setupQUnit() {
         if (!result.failed && allModulesLoaded) {
             console.log("test successful");
         } else {
-            console.error((await Promise.all(errorMessages)).join("\n"));
-            errorMessages = [];
+            logErrors();
         }
     });
 
@@ -302,9 +316,7 @@ export function setupQUnit() {
      */
     QUnit.moduleDone(async (result) => {
         if (errorMessages.length > 0) {
-            const messages = errorMessages.slice();
-            errorMessages = [];
-            console.error((await Promise.all(messages)).join("\n"));
+            logErrors();
         }
         if (!result.failed) {
             console.log('"' + result.name + '"', "passed", result.total, "tests.");
@@ -338,8 +350,10 @@ export function setupQUnit() {
                 if (result.actual !== null) {
                     info += `\n\tactual: "${result.actual}"`;
                 }
-                info += `\n${result.source.replace(/^/gm, "\t")}\n`;
-                return info;
+                return {
+                    error: info,
+                    source: result.source,
+                };
             })
         );
     });
