@@ -7,6 +7,10 @@ import { Domain } from "@web/core/domain";
 
 const { Component } = owl;
 const favoriteMenuRegistry = registry.category("favoriteMenu");
+import { Dialog } from '@web/core/dialog/dialog';
+
+export class GoogleSpreadsheetDialog extends Dialog {}
+GoogleSpreadsheetDialog.bodyTemplate = 'google_spreadsheet.FormulaDialogOwl';
 
 /**
  * 'Add to Google spreadsheet' menu item
@@ -18,7 +22,7 @@ const favoriteMenuRegistry = registry.category("favoriteMenu");
  */
 export class AddToGoogleSpreadsheet extends Component {
     setup() {
-        this.orm = useService("orm");
+        this.dialog = useService("dialog");
     }
 
     //---------------------------------------------------------------------
@@ -30,12 +34,19 @@ export class AddToGoogleSpreadsheet extends Component {
         const viewId = view ? view.id : false;
         const domainAsString = (new Domain(domain)).toString();
 
-        const result = await this.orm.call(
+        const result = await this.env.services.orm.call(
             "google.drive.config",
             "set_spreadsheet",
             [resModel, domainAsString, groupBy, viewId]
         );
 
+        if (result.deprecated) {
+            this.dialog.add(GoogleSpreadsheetDialog, {
+                url: result.url,
+                formula: result.formula,
+            });
+            return;
+        }
         if (result.url) {
             // According to MDN doc, one should not use _blank as title.
             // todo: find a good name for the new window

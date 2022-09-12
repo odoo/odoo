@@ -5,7 +5,10 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
     const { DropdownItem } = require('@web/core/dropdown/dropdown_item');
     const FavoriteMenu = require('web.FavoriteMenu');
 
+    const Dialog = require('web.Dialog');
     const { Component } = owl;
+
+    const { qweb } = require('web.core');
 
     /**
      * 'Add to Google spreadsheet' menu
@@ -15,7 +18,6 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
      * This component is only available in actions of type 'ir.actions.act_window'.
      */
     class AddToGoogleSpreadsheetMenu extends Component {
-
         //---------------------------------------------------------------------
         // Handlers
         //---------------------------------------------------------------------
@@ -35,6 +37,17 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
                 method: 'set_spreadsheet',
                 args: [modelName, domain, groupBys, listViewId],
             });
+
+            if (result.deprecated) {
+                return new Dialog(this, {
+                    size: 'large',
+                    $content: qweb.render('google_spreadsheet.FormulaDialog', {
+                        url: result.url,
+                        formula: result.formula,
+                    }),
+                    title: 'Google Spreadsheet',
+                }).open();
+            }
             if (result.url) {
                 // According to MDN doc, one should not use _blank as title.
                 // todo: find a good name for the new window
