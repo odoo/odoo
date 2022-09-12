@@ -167,7 +167,7 @@ msgstr "Số lượng đính kèm"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__open
 msgid "Bid Selection"
-msgstr "Chọn Thầu"
+msgstr "Thẩm định"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
@@ -234,7 +234,7 @@ msgstr "Xác nhận"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__in_progress
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Confirmed"
-msgstr "Đã được xác nhận"
+msgstr "Đã xác nhận"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
@@ -286,7 +286,7 @@ msgstr "Tiền tệ"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
 msgid "Custom Description"
-msgstr "Mô tả tùy chỉnh"
+msgstr "Mô tả"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -296,12 +296,12 @@ msgstr "Dữ liệu cho YCBG mới"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__schedule_date
 msgid "Delivery Date"
-msgstr "Ngày Giao"
+msgstr "Ngày giao"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__description
 msgid "Description"
-msgstr "Miêu tả"
+msgstr "Mô tả"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
@@ -332,8 +332,8 @@ msgstr "Dự thảo"
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
-"Một số ví dụ về Yêu cầu mua hàng chính là các hồ sơ mời thầu (tender) hoặc "
-"các đơn đặt hàng tổng quát (blanket orders)"
+"Một số ví dụ về thỏa ước mua hàng là các hồ sơ mời thầu hoặc "
+"các đơn hàng tổng quát"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -357,6 +357,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negotiated prices."
 msgstr ""
+"Cho đơn mua tổng quát, bạn có thể ghi lại thỏa ước cho một chu kỳ cố định\n"
+"            (vd: 1 năm , 1 quý) khi bạn đặt hàng theo thỏa ước bạn có thể hưởng \n"
+"            ưu đãi từ giá đã thỏa thuận trước đó."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -410,9 +413,9 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
-"Trong các hồ sơ mời thầu (call for tenders), bạn có thể ghi nhận các sản phẩm bạn cần mua\n"
-"            và tạo ra các RFQ gửi đến các nhà cung cấp. Một khi bản chào thầu đã được\n"
-"            đăng ký, bạn có thể xem xét và so sách chúng cũng như có thể xác nhận\n"
+"Trong hồ sơ mời thầu, bạn có thể ghi nhận các sản phẩm bạn cần mua\n"
+"            và tạo ra các YCBG gửi đến các nhà cung cấp. Một khi bản chào thầu đã được\n"
+"            đăng ký, bạn có thể xem xét và so sánh chúng cũng như có thể xác nhận\n"
 "            một vài hạng mục và huỷ bỏ/từ chối các hạng mục còn lại."
 
 #. module: purchase_requisition
@@ -697,7 +700,7 @@ msgstr "RFQ/Đơn mua"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Reference"
-msgstr "Mã phiếu"
+msgstr "Số Tham chiếu"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
