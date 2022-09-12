@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.CallSettingsMenu" owl="1">
-        <div class="o_CallSettingsMenu" t-attf-class="{{ className }}" t-ref="root">
-            <div class="o_CallSettingsMenu_category d-flex flex-column overflow-auto">
-                <div class="o_CallSettingsMenu_categoryTitle fw-bolder text-700 text-truncate text-uppercase">Voice Settings</div>
+        <div class="o_CallSettingsMenu py-2 user-select-none" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_CallSettingsMenu_category d-flex flex-column px-3 overflow-auto">
+                <div class="o_CallSettingsMenu_categoryTitle py-2 fw-bolder text-700 text-truncate text-uppercase">Voice Settings</div>
                 <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
                     <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Input device" aria-label="Input device">
                         <span class="o_CallSettingsMenuoptionName me-2 text-truncate">Input device</span>
@@ -65,8 +65,8 @@
                     </div>
                 </t>
             </div>
-            <div class="o_CallSettingsMenu_category d-flex flex-column overflow-auto">
-                <div class="o_CallSettingsMenu_categoryTitle fw-bolder text-700 text-truncate text-uppercase">Video Settings</div>
+            <div class="o_CallSettingsMenu_category d-flex flex-column px-3 overflow-auto">
+                <div class="o_CallSettingsMenu_categoryTitle py-2 fw-bolder text-700 text-truncate text-uppercase">Video Settings</div>
                 <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
                     <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Show video participants only" aria-label="Show video participants only">
                         <input type="checkbox" aria-label="toggle push-to-talk" title="Show video participants only" t-on-change="callSettingsMenu.onChangeVideoFilterCheckbox" t-att-checked="callSettingsMenu.thread.channel.showOnlyVideo ? 'checked' : ''"/>
