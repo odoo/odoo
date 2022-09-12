@@ -99,13 +99,13 @@ class ContractHistory(models.Model):
                     RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
                 )
             )
-            SELECT     employee.id AS id,
-                       employee.id AS employee_id,
-                       employee.active AS active_employee,
-                       contract.id AS contract_id,
-                       contract_information.is_under_contract::bool AS is_under_contract,
-                       employee.first_contract_date AS date_hired,
-                       %s
+            SELECT DISTINCT employee.id AS id,
+                            employee.id AS employee_id,
+                            employee.active AS active_employee,
+                            contract.id AS contract_id,
+                            contract_information.is_under_contract::bool AS is_under_contract,
+                            employee.first_contract_date AS date_hired,
+                            %s
             FROM       hr_contract AS contract
             INNER JOIN contract_information ON contract.id = contract_information.id
             RIGHT JOIN hr_employee AS employee
