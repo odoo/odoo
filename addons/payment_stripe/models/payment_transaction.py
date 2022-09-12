@@ -262,25 +262,18 @@ class PaymentTransaction(models.Model):
             )
         return payment_intent_payload
 
-    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None):
         """ Override of payment to send a refund request to Stripe.
 
         Note: self.ensure_one()
 
         :param float amount_to_refund: The amount to refund.
-        :param bool create_refund_transaction: Whether a refund transaction should be created or
-                                               not.
-        :return: The refund transaction, if any.
+        :return: The refund transaction created to process the refund request.
         :rtype: recordset of `payment.transaction`
         """
+        refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
         if self.provider_code != 'stripe':
-            return super()._send_refund_request(
-                amount_to_refund=amount_to_refund,
-                create_refund_transaction=create_refund_transaction,
-            )
-        refund_tx = super()._send_refund_request(
-            amount_to_refund=amount_to_refund, create_refund_transaction=True
-        )
+            return refund_tx
 
         # Make the refund request to stripe.
         data = self.provider_id._stripe_make_request(
