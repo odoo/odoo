@@ -18,7 +18,7 @@ registerModel({
                 return clear();
             },
         }),
-        callParticipantCards: many('CallParticipantCard', {
+        callParticipantCardViews: many('CallParticipantCardView', {
             inverse: 'channelMember',
             isCausal: true,
         }),

@@ -4,7 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('attachment_box_tests.js');
+QUnit.module('attachment_box_view_tests.js');
 
 QUnit.test('base empty rendering', async function (assert) {
     assert.expect(4);
@@ -26,12 +26,12 @@ QUnit.test('base empty rendering', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView`).length,
         1,
         "should have an attachment box"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView_buttonAdd`).length,
         1,
         "should have a button add"
     );
@@ -40,7 +40,7 @@ QUnit.test('base empty rendering', async function (assert) {
         "should have a file uploader"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView .o_AttachmentCardView`).length,
         0,
         "should not have any attachment"
     );
@@ -80,12 +80,12 @@ QUnit.test('base non-empty rendering', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView`).length,
         1,
         "should have an attachment box"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        document.querySelectorAll(`.o_AttachmentBoxView_buttonAdd`).length,
         1,
         "should have a button add"
     );
@@ -94,7 +94,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
         "should have a file uploader"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_attachmentBox_attachmentList`).length,
+        document.querySelectorAll(`.o_attachmentBoxView_attachmentListView`).length,
         1,
         "should have an attachment list"
     );
@@ -136,8 +136,8 @@ QUnit.test('view attachments', async function (assert) {
     const firstAttachment = messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 });
 
     await click(`
-        .o_AttachmentCard[data-id="${firstAttachment.localId}"]
-        .o_AttachmentCard_image
+        .o_AttachmentCardView[data-id="${firstAttachment.localId}"]
+        .o_AttachmentCardView_image
     `);
     assert.containsOnce(
         document.body,
@@ -207,32 +207,32 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     });
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard',
+        '.o_AttachmentCardView',
         "should have an attachment",
     );
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard_asideItemUnlink',
+        '.o_AttachmentCardView_asideItemUnlink',
         "attachment should have a delete button"
     );
 
-    await click('.o_AttachmentCard_asideItemUnlink');
+    await click('.o_AttachmentCardView_asideItemUnlink');
     assert.containsOnce(
         document.body,
-        '.o_AttachmentDeleteConfirm',
+        '.o_AttachmentDeleteConfirmView',
         "A confirmation dialog should have been opened"
     );
     assert.strictEqual(
-        document.querySelector('.o_AttachmentDeleteConfirm_mainText').textContent,
+        document.querySelector('.o_AttachmentDeleteConfirmView_mainText').textContent,
         `Do you really want to delete "Blah.txt"?`,
         "Confirmation dialog should contain the attachment delete confirmation text"
     );
 
     // Confirm the deletion
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
-        '.o_AttachmentCard',
+        '.o_AttachmentCardView',
         "should no longer have an attachment",
     );
 });

@@ -6,7 +6,7 @@ import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component } = owl;
 
-export class ActivityMenuContainer extends Component {
+export class ActivityMenuViewContainer extends Component {
 
     /**
      * @override
@@ -20,9 +20,9 @@ export class ActivityMenuContainer extends Component {
     }
 
 }
-ActivityMenuContainer.props = {};
+ActivityMenuViewContainer.props = {};
 
-Object.assign(ActivityMenuContainer, {
+Object.assign(ActivityMenuViewContainer, {
     components: { ActivityMenuView: getMessagingComponent('ActivityMenuView') },
-    template: 'mail.ActivityMenuContainer',
+    template: 'mail.ActivityMenuViewContainer',
 });

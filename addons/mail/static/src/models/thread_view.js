@@ -212,7 +212,7 @@ registerModel({
         /**
          * Model for the component with the controls for RTC related settings.
          */
-        callSettingsMenu: one('CallSettingsMenu', {
+        callSettingsMenuView: one('CallSettingsMenuView', {
             compute() {
                 if (this.isCallSettingsMenuOpen) {
                     return {};

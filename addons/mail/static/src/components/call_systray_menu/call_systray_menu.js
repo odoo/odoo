@@ -4,20 +4,20 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class CallSystrayMenu extends Component {
+export class CallSystrayMenuView extends Component {
 
     /**
-     * @returns {CallSystrayMenu}
+     * @returns {CallSystrayMenuView}
      */
-    get callSystrayMenu() {
+    get callSystrayMenuView() {
         return this.props.record;
     }
 
 }
 
-Object.assign(CallSystrayMenu, {
+Object.assign(CallSystrayMenuView, {
     props: { record: Object },
-    template: 'mail.CallSystrayMenu',
+    template: 'mail.CallSystrayMenuView',
 });
 
-registerMessagingComponent(CallSystrayMenu);
+registerMessagingComponent(CallSystrayMenuView);

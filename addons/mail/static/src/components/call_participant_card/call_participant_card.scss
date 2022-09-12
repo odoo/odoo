@@ -2,11 +2,11 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_CallParticipantCard {
+.o_CallParticipantCardView {
     aspect-ratio: 16/9;
 }
 
-.o_CallParticipantCard_avatarImage {
+.o_CallParticipantCardView_avatarImage {
     max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
     max-width: #{"min(100%, 100px)"};
     aspect-ratio: 1;
@@ -17,7 +17,7 @@
     }
 
     &.o-isInvitation:not(:hover) {
-        animation: o_CallParticipantCard_avatarImag_borderPulse 3s linear infinite;
+        animation: o_CallParticipantCardView_avatarImag_borderPulse 3s linear infinite;
     }
 
     &.o-isInvitation:hover {
@@ -25,7 +25,7 @@
     }
 }
 
-@keyframes o_CallParticipantCard_avatarImag_borderPulse {
+@keyframes o_CallParticipantCardView_avatarImag_borderPulse {
     0% { border: solid white }
     20% { border: solid $gray-600 }
     35% { border: solid $gray-100 }
@@ -34,12 +34,12 @@
     85% { border: solid $gray-700 }
 }
 
-.o_CallParticipantCard_overlay {
+.o_CallParticipantCardView_overlay {
     pointer-events: none;
     margin: Min(5%, map-get($spacers, 2));
 }
 
-.o_CallParticipantCard_overlayBottom {
+.o_CallParticipantCardView_overlayBottom {
     max-width: 50%;
 }
 
@@ -47,16 +47,16 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_CallParticipantCard {
+.o_CallParticipantCardView {
     &.o-isTalking {
         box-shadow: inset 0 0 0 map-get($spacers, 1) darken($o-enterprise-primary-color, 5%);
     }
 }
 
-.o_CallParticipantCard_liveIndicator {
+.o_CallParticipantCardView_liveIndicator {
     user-select: none;
 }
 
-.o_CallParticipantCard_avatarFrame:not(.o-isMinimized) {
-    background-color: var(--CallParticipantCard_avatarFrame-background-color, #{$o-gray-700});
+.o_CallParticipantCardView_avatarFrame:not(.o-isMinimized) {
+    background-color: var(--CallParticipantCardView_avatarFrame-background-color, #{$o-gray-700});
 }

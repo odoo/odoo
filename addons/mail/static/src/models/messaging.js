@@ -301,12 +301,12 @@ registerPatch({
         allPersonas: many('Persona', {
             inverse: 'messagingAsAnyPersona',
         }),
-        callInviteRequestPopups: many('CallInviteRequestPopup', {
+        callInviteRequestPopupViews: many('CallInviteRequestPopupView', {
             compute() {
                 if (this.ringingThreads.length === 0) {
                     return clear();
                 }
-                return this.ringingThreads.map(thread => thread.callInviteRequestPopup);
+                return this.ringingThreads.map(thread => thread.callInviteRequestPopupView);
             },
             isCausal: true,
         }),

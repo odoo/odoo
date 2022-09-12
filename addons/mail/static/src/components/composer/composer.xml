@@ -125,11 +125,11 @@
                         <t t-if="composerView.threadTextualTypingStatusView">
                             <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus small'" record="composerView.threadTextualTypingStatusView"/>
                         </t>
-                        <AttachmentList
-                            t-if="composerView.attachmentList"
-                            className="'o_Composer_attachmentList flex-grow-1'"
+                        <AttachmentListView
+                            t-if="composerView.attachmentListView"
+                            className="'o_Composer_attachmentListView flex-grow-1'"
                             classNameObj="{ 'o-composer-is-compact': composerView.isCompact, 'overflow-auto': !composerView.isCompact }"
-                            record="composerView.attachmentList"
+                            record="composerView.attachmentListView"
                         />
                         <t t-if="!composerView.isCompact">
                             <t t-call="mail.Composer.actionButtons"/>

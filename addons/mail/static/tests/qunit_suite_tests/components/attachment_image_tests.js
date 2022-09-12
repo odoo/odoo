@@ -4,7 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('attachment_image_tests.js');
+QUnit.module('attachment_image_view_tests.js');
 
 QUnit.test('auto layout with image', async function (assert) {
     assert.expect(3);
@@ -31,17 +31,17 @@ QUnit.test('auto layout with image', async function (assert) {
     });
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentImage img`).length,
+        document.querySelectorAll(`.o_AttachmentImageView img`).length,
         1,
         "attachment should have an image part"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentImage_imageOverlay`).length,
+        document.querySelectorAll(`.o_AttachmentImageView_imageOverlay`).length,
         1,
         "attachment should have an image overlay part"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentImage_aside`).length,
+        document.querySelectorAll(`.o_AttachmentImageView_aside`).length,
         0,
         "attachment should not have an aside element"
     );

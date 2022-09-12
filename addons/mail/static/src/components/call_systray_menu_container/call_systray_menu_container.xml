@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.CallSystrayMenuContainer" owl="1">
-        <div class="CallSystrayMenuContainer">
+    <t t-name="mail.CallSystrayMenuViewContainer" owl="1">
+        <div class="CallSystrayMenuViewContainer">
             <t t-if="messaging">
-                <CallSystrayMenu record="messaging.rtc.callSystrayMenu"/>
+                <CallSystrayMenuView record="messaging.rtc.callSystrayMenuView"/>
             </t>
         </div>
     </t>

@@ -7,7 +7,7 @@ import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('activity_tests.js');
+QUnit.module('activity_view_tests.js');
 
 QUnit.test('activity simplest layout', async function (assert) {
     assert.expect(12);
@@ -25,62 +25,62 @@ QUnit.test('activity simplest layout', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_sidebar').length,
+        document.querySelectorAll('.o_ActivityView_sidebar').length,
         1,
         "should have activity sidebar"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_core').length,
+        document.querySelectorAll('.o_ActivityView_core').length,
         1,
         "should have activity core"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_user').length,
+        document.querySelectorAll('.o_ActivityView_user').length,
         1,
         "should have activity user"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_info').length,
+        document.querySelectorAll('.o_ActivityView_info').length,
         1,
         "should have activity info"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_note').length,
+        document.querySelectorAll('.o_ActivityView_note').length,
         0,
         "should not have activity note"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('.o_ActivityView_details').length,
         0,
         "should not have activity details"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_mailTemplates').length,
+        document.querySelectorAll('.o_ActivityView_mailTemplates').length,
         0,
         "should not have activity mail templates"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_editButton').length,
+        document.querySelectorAll('.o_ActivityView_editButton').length,
         0,
         "should not have activity Edit button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_cancelButton').length,
+        document.querySelectorAll('.o_ActivityView_cancelButton').length,
         0,
         "should not have activity Cancel button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_markDoneButton').length,
+        document.querySelectorAll('.o_ActivityView_markDoneButton').length,
         0,
         "should not have activity Mark as Done button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_uploadButton').length,
+        document.querySelectorAll('.o_ActivityView_uploadButton').length,
         0,
         "should not have activity Upload button"
     );
@@ -103,17 +103,17 @@ QUnit.test('activity with note layout', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_note').length,
+        document.querySelectorAll('.o_ActivityView_note').length,
         1,
         "should have activity note"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_note').textContent,
+        document.querySelector('.o_ActivityView_note').textContent,
         "There is no good or bad note",
         "activity note should be 'There is no good or bad note'"
     );
@@ -140,21 +140,21 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('.o_ActivityView_dueDateText').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('text-success'),
+        document.querySelector('.o_ActivityView_dueDateText').classList.contains('text-success'),
         "activity delay should have the right color modifier class (text-success)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('.o_ActivityView_dueDateText').textContent,
         "Due in 5 days:",
         "activity delay should have 'Due in 5 days:' as label"
     );
@@ -181,21 +181,21 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('.o_ActivityView_dueDateText').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('text-success'),
+        document.querySelector('.o_ActivityView_dueDateText').classList.contains('text-success'),
         "activity delay should have the right color modifier class (text-success)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('.o_ActivityView_dueDateText').textContent,
         'Tomorrow:',
         "activity delay should have 'Tomorrow:' as label"
     );
@@ -219,21 +219,21 @@ QUnit.test('activity info layout when planned today', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('.o_ActivityView_dueDateText').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('text-warning'),
+        document.querySelector('.o_ActivityView_dueDateText').classList.contains('text-warning'),
         "activity delay should have the right color modifier class (text-warning)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('.o_ActivityView_dueDateText').textContent,
         "Today:",
         "activity delay should have 'Today:' as label"
     );
@@ -260,21 +260,21 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('.o_ActivityView_dueDateText').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('text-danger'),
+        document.querySelector('.o_ActivityView_dueDateText').classList.contains('text-danger'),
         "activity delay should have the right color modifier class (text-danger)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('.o_ActivityView_dueDateText').textContent,
         "Yesterday:",
         "activity delay should have 'Yesterday:' as label"
     );
@@ -301,21 +301,21 @@ QUnit.test('activity info layout when planned before yesterday', async function 
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
+        document.querySelectorAll('.o_ActivityView_dueDateText').length,
         1,
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('text-danger'),
+        document.querySelector('.o_ActivityView_dueDateText').classList.contains('text-danger'),
         "activity delay should have the right color modifier class (text-danger)"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_dueDateText').textContent,
+        document.querySelector('.o_ActivityView_dueDateText').textContent,
         "5 days overdue:",
         "activity delay should have '5 days overdue:' as label"
     );
@@ -338,22 +338,22 @@ QUnit.test('activity with a summary layout', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_summary').length,
+        document.querySelectorAll('.o_ActivityView_summary').length,
         1,
         "should have activity summary"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_type').length,
+        document.querySelectorAll('.o_ActivityView_type').length,
         0,
         "should not have the activity type as summary"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_summary').textContent.trim(),
+        document.querySelector('.o_ActivityView_summary').textContent.trim(),
         "“test summary”",
         "should have the specific activity summary in activity summary"
     );
@@ -376,27 +376,27 @@ QUnit.test('activity without summary layout', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_type').length,
+        document.querySelectorAll('.o_ActivityView_type').length,
         1,
         "activity details should have an activity type section"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_type').textContent.trim(),
+        document.querySelector('.o_ActivityView_type').textContent.trim(),
         "Email",
         "activity details should have the activity type display name in type section"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_summary.o_Activity_type').length,
+        document.querySelectorAll('.o_ActivityView_summary.o_ActivityView_type').length,
         1,
         "should have activity type as summary"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_summary:not(.o_Activity_type)').length,
+        document.querySelectorAll('.o_ActivityView_summary:not(.o_ActivityView_type)').length,
         0,
         "should not have a specific summary"
     );
@@ -425,31 +425,31 @@ QUnit.test('activity details toggle', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('.o_ActivityView_details').length,
         0,
         "activity details should not be visible by default"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsButton').length,
+        document.querySelectorAll('.o_ActivityView_detailsButton').length,
         1,
         "activity should have a details button"
     );
 
-    await click('.o_Activity_detailsButton');
+    await click('.o_ActivityView_detailsButton');
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('.o_ActivityView_details').length,
         1,
         "activity details should be visible after clicking on details button"
     );
 
-    await click('.o_Activity_detailsButton');
+    await click('.o_ActivityView_detailsButton');
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('.o_ActivityView_details').length,
         0,
         "activity details should no longer be visible after clicking again on details button"
     );
@@ -482,59 +482,59 @@ QUnit.test('activity details layout', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_userAvatar').length,
+        document.querySelectorAll('.o_ActivityView_userAvatar').length,
         1,
         "should have activity user avatar"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsButton').length,
+        document.querySelectorAll('.o_ActivityView_detailsButton').length,
         1,
         "activity should have a details button"
     );
 
-    await click('.o_Activity_detailsButton');
+    await click('.o_ActivityView_detailsButton');
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details').length,
+        document.querySelectorAll('.o_ActivityView_details').length,
         1,
         "activity details should be visible after clicking on details button"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_details .o_Activity_type').length,
+        document.querySelectorAll('.o_ActivityView_details .o_ActivityView_type').length,
         1,
         "activity details should have type"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_details .o_Activity_type').textContent,
+        document.querySelector('.o_ActivityView_details .o_ActivityView_type').textContent,
         "Email",
         "activity details type should be 'Email'"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsCreation').length,
+        document.querySelectorAll('.o_ActivityView_detailsCreation').length,
         1,
         "activity details should have creation date "
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsCreator').length,
+        document.querySelectorAll('.o_ActivityView_detailsCreator').length,
         1,
         "activity details should have creator"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsAssignation').length,
+        document.querySelectorAll('.o_ActivityView_detailsAssignation').length,
         1,
         "activity details should have assignation information"
     );
     assert.strictEqual(
-        document.querySelector('.o_Activity_detailsAssignation').textContent.indexOf('Pauvre pomme'),
+        document.querySelector('.o_ActivityView_detailsAssignation').textContent.indexOf('Pauvre pomme'),
         0,
         "activity details assignation information should contain creator display name"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsAssignationUserAvatar').length,
+        document.querySelectorAll('.o_ActivityView_detailsAssignationUserAvatar').length,
         1,
         "activity details should have user avatar"
     );
@@ -560,22 +560,22 @@ QUnit.test('activity with mail template layout', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_sidebar').length,
+        document.querySelectorAll('.o_ActivityView_sidebar').length,
         1,
         "should have activity sidebar"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_mailTemplates').length,
+        document.querySelectorAll('.o_ActivityView_mailTemplates').length,
         1,
         "should have activity mail templates"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_mailTemplate').length,
+        document.querySelectorAll('.o_ActivityView_mailTemplate').length,
         1,
         "should have activity mail template"
     );
@@ -655,7 +655,7 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         },
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
@@ -703,7 +703,7 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
@@ -740,12 +740,12 @@ QUnit.test('activity upload document is available', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_uploadButton').length,
+        document.querySelectorAll('.o_ActivityView_uploadButton').length,
         1,
         "should have activity upload button"
     );
@@ -775,26 +775,26 @@ QUnit.test('activity click on mark as done', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_markDoneButton').length,
+        document.querySelectorAll('.o_ActivityView_markDoneButton').length,
         1,
         "should have activity Mark as Done button"
     );
 
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
     assert.strictEqual(
-        document.querySelectorAll('.o_ActivityMarkDonePopoverContent').length,
+        document.querySelectorAll('.o_ActivityMarkDonePopoverContentView').length,
         1,
         "should have opened the mark done popover"
     );
 
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
     assert.strictEqual(
-        document.querySelectorAll('.o_ActivityMarkDonePopoverContent').length,
+        document.querySelectorAll('.o_ActivityMarkDonePopoverContentView').length,
         0,
         "should have closed the mark done popover"
     );
@@ -821,18 +821,18 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
     });
     assert.containsOnce(
         document.body,
-        '.o_Activity',
+        '.o_ActivityView',
         "should have activity component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_markDoneButton',
+        '.o_ActivityView_markDoneButton',
         "should have activity Mark as Done button"
     );
 
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
     assert.strictEqual(
-        document.querySelector('.o_ActivityMarkDonePopoverContent_feedback'),
+        document.querySelector('.o_ActivityMarkDonePopoverContentView_feedback'),
         document.activeElement,
         "the popover textarea should have the focus"
     );
@@ -890,17 +890,17 @@ QUnit.test('activity click on edit', async function (assert) {
         },
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_editButton').length,
+        document.querySelectorAll('.o_ActivityView_editButton').length,
         1,
         "should have activity edit button"
     );
 
-    await click('.o_Activity_editButton');
+    await click('.o_ActivityView_editButton');
     assert.verifySteps(
         ['do_action'],
         "should have called 'schedule activity' action correctly"
@@ -958,43 +958,43 @@ QUnit.test('activity edition', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_Activity',
+        '.o_ActivityView',
         "should have activity component"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_editButton',
+        '.o_ActivityView_editButton',
         "should have activity edit button"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_icon',
+        '.o_ActivityView_icon',
         "should have activity icon"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_icon.fa-times',
+        '.o_ActivityView_icon.fa-times',
         "should have initial activity icon"
     );
     assert.containsNone(
         document.body,
-        '.o_Activity_icon.fa-check',
+        '.o_ActivityView_icon.fa-check',
         "should not have new activity icon when not edited yet"
     );
 
-    await click('.o_Activity_editButton');
+    await click('.o_ActivityView_editButton');
     assert.verifySteps(
         ['do_action'],
         "should have called 'schedule activity' action correctly"
     );
     assert.containsNone(
         document.body,
-        '.o_Activity_icon.fa-times',
+        '.o_ActivityView_icon.fa-times',
         "should no more have initial activity icon once edited"
     );
     assert.containsOnce(
         document.body,
-        '.o_Activity_icon.fa-check',
+        '.o_ActivityView_icon.fa-check',
         "should now have new activity icon once edited"
     );
 });
@@ -1026,30 +1026,30 @@ QUnit.test('activity click on cancel', async function (assert) {
         views: [[false, 'form']],
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         1,
         "should have activity component"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity_cancelButton').length,
+        document.querySelectorAll('.o_ActivityView_cancelButton').length,
         1,
         "should have activity cancel button"
     );
 
-    await click('.o_Activity_cancelButton');
+    await click('.o_ActivityView_cancelButton');
     assert.verifySteps(
         ['unlink'],
         "should have called unlink rpc after clicking on cancel"
     );
     assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
+        document.querySelectorAll('.o_ActivityView').length,
         0,
         "should no longer display activity after clicking on cancel"
     );
 });
 
 QUnit.test('activity mark done popover close on ESCAPE', async function (assert) {
-    // This test is not in activity_mark_done_popover_tests.js as it requires the activity mark done
+    // This test is not in activity_mark_done_popover_view_tests.js as it requires the activity mark done
     // component to have a parent in order to allow testing interactions the popover.
     assert.expect(2);
     const pyEnv = await startServer();
@@ -1069,26 +1069,26 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
         views: [[false, 'form']],
     });
 
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "Popover component should be present"
     );
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ActivityMarkDonePopoverContent`).dispatchEvent(ev);
+        document.querySelector(`.o_ActivityMarkDonePopoverContentView`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "ESCAPE pressed should have closed the mark done popover"
     );
 });
 
 QUnit.test('activity mark done popover click on discard', async function (assert) {
-    // This test is not in activity_mark_done_popover_tests.js as it requires the activity mark done
+    // This test is not in activity_mark_done_popover_view_tests.js as it requires the activity mark done
     // component to have a parent in order to allow testing interactions the popover.
     assert.expect(3);
 
@@ -1109,21 +1109,21 @@ QUnit.test('activity mark done popover click on discard', async function (assert
         views: [[false, 'form']],
     });
 
-    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityView_markDoneButton');
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "Popover component should be present"
     );
     assert.containsOnce(
         document.body,
-        '.o_ActivityMarkDonePopoverContent_discardButton',
+        '.o_ActivityMarkDonePopoverContentView_discardButton',
         "Popover component should contain the discard button"
     );
-    await click('.o_ActivityMarkDonePopoverContent_discardButton');
+    await click('.o_ActivityMarkDonePopoverContentView_discardButton');
     assert.containsNone(
         document.body,
-        '.o_ActivityMarkDonePopoverContent',
+        '.o_ActivityMarkDonePopoverContentView',
         "Discard button clicked should have closed the mark done popover"
     );
 });
@@ -1170,16 +1170,16 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
     });
     assert.containsOnce(
         document.body,
-        '.o_Activity_note',
+        '.o_ActivityView_note',
         "activity should have a note"
     );
     assert.containsOnce(
-        document.querySelector('.o_Activity_note'),
+        document.querySelector('.o_ActivityView_note'),
         'a',
         "activity note should have a link"
     );
 
-    document.querySelector(`.o_Activity_note a`).click();
+    document.querySelector(`.o_ActivityView_note a`).click();
     assert.verifySteps(
         ['do-action:openFormView_some.model_250'],
         "should have open form view on related record after click on link"
@@ -1219,12 +1219,12 @@ QUnit.test('button related to file uploading is replaced when updating activity 
     });
     assert.containsOnce(
         document.body,
-        '.o_Activity_markDoneButton',
+        '.o_ActivityView_markDoneButton',
         "should have a mark done button when changing activity type from 'Upload Document' to 'Email'"
     );
     assert.containsNone(
         document.body,
-        '.o_Activity_uploadButton',
+        '.o_ActivityView_uploadButton',
         "should not have an upload button after changing the activity type from 'Upload Document' to 'Email'"
     );
 });

@@ -12,19 +12,19 @@ registerModel({
          * @param {Event} ev
          */
         onChangeVolume(ev) {
-            this.callParticipantCard.rtcSession && this.callParticipantCard.rtcSession.setVolume(parseFloat(ev.target.value));
+            this.callParticipantCardView.rtcSession && this.callParticipantCardView.rtcSession.setVolume(parseFloat(ev.target.value));
         },
     },
     fields: {
-        callParticipantCard: one('CallParticipantCard', {
-            related: 'popoverViewOwner.callParticipantCardOwner',
+        callParticipantCardView: one('CallParticipantCardView', {
+            related: 'popoverViewOwner.callParticipantCardViewOwner',
         }),
         /**
          * Determines whether or not we show the connection info.
          */
         hasConnectionInfo: attr({
             compute() {
-                return Boolean(this.callParticipantCard.rtcSession && this.env.debug && this.callParticipantCard.channelMember.channel.thread.rtc);
+                return Boolean(this.callParticipantCardView.rtcSession && this.env.debug && this.callParticipantCardView.channelMember.channel.thread.rtc);
             },
         }),
         /**
@@ -32,14 +32,14 @@ registerModel({
          */
         inboundConnectionTypeText: attr({
             compute() {
-                if (!this.callParticipantCard.rtcSession || !this.callParticipantCard.rtcSession.remoteCandidateType) {
-                    return sprintf(this.env._t('From %s: no connection'), this.callParticipantCard.channelMember.persona.name);
+                if (!this.callParticipantCardView.rtcSession || !this.callParticipantCardView.rtcSession.remoteCandidateType) {
+                    return sprintf(this.env._t('From %s: no connection'), this.callParticipantCardView.channelMember.persona.name);
                 }
                 return sprintf(
                     this.env._t('From %(name)s: %(candidateType)s (%(protocol)s)'), {
-                        candidateType: this.callParticipantCard.rtcSession.remoteCandidateType,
-                        name: this.callParticipantCard.channelMember.persona.name,
-                        protocol: this.messaging.rtc.protocolsByCandidateTypes[this.callParticipantCard.rtcSession.remoteCandidateType],
+                        candidateType: this.callParticipantCardView.rtcSession.remoteCandidateType,
+                        name: this.callParticipantCardView.channelMember.persona.name,
+                        protocol: this.messaging.rtc.protocolsByCandidateTypes[this.callParticipantCardView.rtcSession.remoteCandidateType],
                     },
                 );
             },
@@ -49,14 +49,14 @@ registerModel({
          */
         outboundConnectionTypeText: attr({
             compute() {
-                if (!this.callParticipantCard.rtcSession || !this.callParticipantCard.rtcSession.localCandidateType) {
-                    return sprintf(this.env._t('To %s: no connection'), this.callParticipantCard.channelMember.persona.name);
+                if (!this.callParticipantCardView.rtcSession || !this.callParticipantCardView.rtcSession.localCandidateType) {
+                    return sprintf(this.env._t('To %s: no connection'), this.callParticipantCardView.channelMember.persona.name);
                 }
                 return sprintf(
                     this.env._t('To %(name)s: %(candidateType)s (%(protocol)s)'), {
-                        candidateType: this.callParticipantCard.rtcSession.localCandidateType,
-                        name: this.callParticipantCard.channelMember.persona.name,
-                        protocol: this.messaging.rtc.protocolsByCandidateTypes[this.callParticipantCard.rtcSession.localCandidateType],
+                        candidateType: this.callParticipantCardView.rtcSession.localCandidateType,
+                        name: this.callParticipantCardView.channelMember.persona.name,
+                        protocol: this.messaging.rtc.protocolsByCandidateTypes[this.callParticipantCardView.rtcSession.localCandidateType],
                     },
                 );
             },

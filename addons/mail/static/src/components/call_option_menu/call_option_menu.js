@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class CallOptionMenu extends Component {
+export class CallOptionMenuView extends Component {
 
     /**
      * @override
@@ -16,17 +16,17 @@ export class CallOptionMenu extends Component {
     }
 
     /**
-     * @returns {CallOptionMenu}
+     * @returns {CallOptionMenuView}
      */
-    get callOptionMenu() {
+    get callOptionMenuView() {
         return this.props.record;
     }
 
 }
 
-Object.assign(CallOptionMenu, {
+Object.assign(CallOptionMenuView, {
     props: { record: Object },
-    template: 'mail.CallOptionMenu',
+    template: 'mail.CallOptionMenuView',
 });
 
-registerMessagingComponent(CallOptionMenu);
+registerMessagingComponent(CallOptionMenuView);

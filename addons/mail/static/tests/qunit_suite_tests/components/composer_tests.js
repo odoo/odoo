@@ -928,11 +928,11 @@ QUnit.test('composer: add an attachment', async function (assert) {
         inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
     );
     assert.ok(
-        document.querySelector('.o_Composer_attachmentList'),
+        document.querySelector('.o_Composer_attachmentListView'),
         "should have an attachment list"
     );
     assert.ok(
-        document.querySelector(`.o_Composer .o_AttachmentCard`),
+        document.querySelector(`.o_Composer .o_AttachmentCardView`),
         "should have an attachment"
     );
 });
@@ -966,7 +966,7 @@ QUnit.test('composer: drop attachments', async function (assert) {
         "should have a drop zone"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`).length,
         0,
         "should have no attachment before files are dropped"
     );
@@ -975,7 +975,7 @@ QUnit.test('composer: drop attachments', async function (assert) {
         dropFiles(document.querySelector('.o_Composer_dropZone'), files)
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`).length,
         2,
         "should have 2 attachments in the composer after files dropped"
     );
@@ -994,7 +994,7 @@ QUnit.test('composer: drop attachments', async function (assert) {
         )
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`).length,
         3,
         "should have 3 attachments in the box after files dropped"
     );
@@ -1019,7 +1019,7 @@ QUnit.test('composer: paste attachments', async function (assert) {
         })
     ];
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`).length,
         0,
         "should not have any attachment in the composer before paste"
     );
@@ -1028,7 +1028,7 @@ QUnit.test('composer: paste attachments', async function (assert) {
         pasteFiles(document.querySelector('.o_ComposerTextInput'), files)
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`).length,
         1,
         "should have 1 attachment in the composer after paste"
     );
@@ -1267,12 +1267,12 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard',
+        '.o_AttachmentCardView',
         "should have an attachment after a file has been input"
     );
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard.o-isUploading',
+        '.o_AttachmentCardView.o-isUploading',
         "attachment displayed is being uploaded"
     );
     assert.containsOnce(
@@ -1289,12 +1289,12 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     await afterNextRender(() => attachmentUploadedPromise.resolve());
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard',
+        '.o_AttachmentCardView',
         "should have only one attachment"
     );
     assert.containsNone(
         document.body,
-        '.o_AttachmentCard.o-isUploading',
+        '.o_AttachmentCardView.o-isUploading',
         "attachment displayed should be uploaded"
     );
     assert.containsOnce(
@@ -1334,20 +1334,20 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
     }));
     assert.containsOnce(
         document.body,
-        '.o_Composer_attachmentList',
+        '.o_Composer_attachmentListView',
         "should have an attachment list"
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_Composer .o_AttachmentCardView',
         "should have only one attachment"
     );
 
-    const attachmentLocalId = document.querySelector('.o_AttachmentCard').dataset.id;
+    const attachmentLocalId = document.querySelector('.o_AttachmentCardView').dataset.id;
     await afterNextRender(() => afterEvent({
         eventName: 'o-attachment-deleted',
         func() {
-            document.querySelector('.o_AttachmentCard_asideItemUnlink').click();
+            document.querySelector('.o_AttachmentCardView_asideItemUnlink').click();
         },
         message: "should wait until attachment is deleted",
         predicate: ({ attachment }) => {
@@ -1357,7 +1357,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
 
     assert.containsNone(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_Composer .o_AttachmentCardView',
         "should not have any attachment left after unlinking the only one"
     );
 });
@@ -1389,24 +1389,24 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer_attachmentList',
+        '.o_Composer_attachmentListView',
         "should have an attachment list"
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_Composer .o_AttachmentCardView',
         "should have only one attachment"
     );
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard.o-isUploading',
+        '.o_AttachmentCardView.o-isUploading',
         "should have an uploading attachment"
     );
 
-    await click('.o_AttachmentCard_asideItemUnlink');
+    await click('.o_AttachmentCardView_asideItemUnlink');
     assert.containsNone(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_Composer .o_AttachmentCardView',
         "should not have any attachment left after unlinking uploading one"
     );
 });
@@ -1438,15 +1438,15 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
     );
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard',
+        '.o_AttachmentCardView',
         "should contain an attachment"
     );
-    const attachmentLocalId = document.querySelector('.o_AttachmentCard').dataset.id;
+    const attachmentLocalId = document.querySelector('.o_AttachmentCardView').dataset.id;
 
     await afterEvent({
         eventName: 'o-attachment-upload-abort',
         func: () => {
-            document.querySelector('.o_AttachmentCard_asideItemUnlink').click();
+            document.querySelector('.o_AttachmentCardView_asideItemUnlink').click();
         },
         message: "attachment upload request should have been aborted",
         predicate: ({ attachment }) => {
@@ -1564,8 +1564,8 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     await afterNextRender(() => {
             Array.from(document.querySelectorAll('div'))
             .find(el => el.textContent === 'text2.txt')
-            .closest('.o_AttachmentCard')
-            .querySelector('.o_AttachmentCard_asideItemUnlink')
+            .closest('.o_AttachmentCardView')
+            .querySelector('.o_AttachmentCardView_asideItemUnlink')
             .click();
         }
     );
@@ -1573,7 +1573,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     await afterNextRender(() => uploadPromise.resolve());
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard:contains("text1.txt")',
+        '.o_AttachmentCardView:contains("text1.txt")',
         "should only have the first attachment after cancelling the second attachment"
     );
 });

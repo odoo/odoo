@@ -22,7 +22,7 @@ export class MrpDocumentsKanbanRecord extends KanbanRecord {
             return;
         } else if (ev.target.closest(".o_kanban_previewer")) {
             this.messaging.get().then((messaging) => {
-                const attachmentList = messaging.models["AttachmentList"].insert({
+                const attachmentListView = messaging.models["AttachmentListView"].insert({
                     selectedAttachment: messaging.models["Attachment"].insert({
                         id: this.props.record.data.ir_attachment_id[0],
                         filename: this.props.record.data.name,
@@ -31,7 +31,7 @@ export class MrpDocumentsKanbanRecord extends KanbanRecord {
                     }),
                 });
                 this.dialog = messaging.models["Dialog"].insert({
-                    attachmentListOwnerAsAttachmentView: attachmentList,
+                    attachmentListViewOwnerAsAttachmentView: attachmentListView,
                 });
             });
             return;

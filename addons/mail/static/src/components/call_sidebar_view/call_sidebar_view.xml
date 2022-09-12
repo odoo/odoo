@@ -5,9 +5,9 @@
     <t t-if="callSidebarView">
         <div class="o_CallSidebarView d-flex align-items-center h-100 flex-column">
             <t t-foreach="callSidebarView.sidebarTiles" t-as="tile" t-key="tile.localId">
-                <CallParticipantCard
-                    className="'o_CallSidebarView_participantCard w-100'"
-                    record="tile.participantCard"
+                <CallParticipantCardView
+                    className="'o_CallSidebarView_participantCardView w-100'"
+                    record="tile.participantCardView"
                 />
             </t>
         </div>

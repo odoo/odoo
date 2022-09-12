@@ -6,14 +6,14 @@ import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'CallParticipantCard',
+    name: 'CallParticipantCardView',
     identifyingMode: 'xor',
     recordMethods: {
         /**
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
-            if (isEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor')) {
+            if (isEventHandled(ev, 'CallParticipantCardView.clickVolumeAnchor')) {
                 return;
             }
             if (this.rtcSession) {
@@ -43,7 +43,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickVolumeAnchor(ev) {
-            markEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor');
+            markEventHandled(ev, 'CallParticipantCardView.clickVolumeAnchor');
             this.update({ callParticipantCardPopoverView: this.callParticipantCardPopoverView ? clear() : {} });
         },
         /**
@@ -62,7 +62,7 @@ registerModel({
     },
     fields: {
         callParticipantCardPopoverView: one('PopoverView', {
-            inverse: 'callParticipantCardOwner',
+            inverse: 'callParticipantCardViewOwner',
         }),
         channelMember: one('ChannelMember', {
             compute() {
@@ -71,11 +71,11 @@ registerModel({
                 }
                 return this.mainViewTileOwner.channelMember;
             },
-            inverse: 'callParticipantCards',
+            inverse: 'callParticipantCardViews',
         }),
         mainViewTileOwner: one('CallMainViewTile', {
             identifying: true,
-            inverse: 'participantCard',
+            inverse: 'participantCardView',
         }),
         /**
          * Determines if this card has to be displayed in a minimized form.
@@ -105,15 +105,15 @@ registerModel({
                 }
                 return this.mainViewTileOwner.callMainViewOwner.callView;
             },
-            inverse: 'participantCards',
+            inverse: 'participantCardViews',
         }),
         rtcSession: one('RtcSession', {
             related: 'channelMember.rtcSession',
-            inverse: 'callParticipantCards',
+            inverse: 'callParticipantCardViews',
         }),
         sidebarViewTileOwner: one('CallSidebarViewTile', {
             identifying: true,
-            inverse: 'participantCard',
+            inverse: 'participantCardView',
         }),
         callParticipantVideoView: one('CallParticipantVideoView', {
             compute() {
@@ -122,7 +122,7 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'callParticipantCardOwner',
+            inverse: 'callParticipantCardViewOwner',
         }),
         volumeMenuAnchorRef: attr(),
     },

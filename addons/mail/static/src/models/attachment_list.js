@@ -5,7 +5,7 @@ import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'AttachmentList',
+    name: 'AttachmentListView',
     identifyingMode: 'xor',
     recordMethods: {
         /**
@@ -31,28 +31,28 @@ registerModel({
          */
         attachmentBoxViewOwner: one('AttachmentBoxView', {
             identifying: true,
-            inverse: 'attachmentList',
+            inverse: 'attachmentListView',
         }),
         /**
-         * States the attachment cards that are displaying this nonImageAttachments.
+         * States the attachment cards views that are displaying this nonImageAttachments.
          */
-        attachmentCards: many('AttachmentCard', {
+        attachmentCardViews: many('AttachmentCardView', {
             compute() {
                 return this.nonImageAttachments.map(attachment => ({ attachment }));
             },
-            inverse: 'attachmentList',
+            inverse: 'attachmentListView',
         }),
         /**
-         * States the attachment images that are displaying this imageAttachments.
+         * States the attachment image views that are displaying this imageAttachments.
          */
-        attachmentImages: many('AttachmentImage', {
+        attachmentImageViews: many('AttachmentImageView', {
             compute() {
                 return this.imageAttachments.map(attachment => ({ attachment }));
             },
-            inverse: 'attachmentList',
+            inverse: 'attachmentListView',
         }),
         attachmentListViewDialog: one('Dialog', {
-            inverse: 'attachmentListOwnerAsAttachmentView',
+            inverse: 'attachmentListViewOwnerAsAttachmentView',
         }),
         /**
          * States the attachments to be displayed by this attachment list.
@@ -70,14 +70,14 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'attachmentLists',
+            inverse: 'attachmentListViews',
         }),
         /**
          * Link with a composer view to handle attachments.
          */
         composerViewOwner: one('ComposerView', {
             identifying: true,
-            inverse: 'attachmentList',
+            inverse: 'attachmentListView',
         }),
         /**
          * States the attachment that are an image.
@@ -158,7 +158,7 @@ registerModel({
          */
         messageViewOwner: one('MessageView', {
             identifying: true,
-            inverse: 'attachmentList',
+            inverse: 'attachmentListView',
         }),
         /**
          * States the attachment that are not an image.

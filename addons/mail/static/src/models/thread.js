@@ -1780,7 +1780,7 @@ registerModel({
         rtc: one('Rtc', {
             inverse: 'channel',
         }),
-        callInviteRequestPopup: one('CallInviteRequestPopup', {
+        callInviteRequestPopupView: one('CallInviteRequestPopupView', {
             compute() {
                 if (this.rtcInvitingSession) {
                     return {};

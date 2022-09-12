@@ -60,10 +60,10 @@ registerModel({
          * Display the next attachment in the list of attachments.
          */
         next() {
-            if (!this.dialogOwner || !this.dialogOwner.attachmentListOwnerAsAttachmentView) {
+            if (!this.dialogOwner || !this.dialogOwner.attachmentListViewOwnerAsAttachmentView) {
                 return;
             }
-            this.dialogOwner.attachmentListOwnerAsAttachmentView.selectNextAttachment();
+            this.dialogOwner.attachmentListViewOwnerAsAttachmentView.selectNextAttachment();
         },
         /**
          * Called when clicking on mask of attachment viewer.
@@ -289,10 +289,10 @@ registerModel({
          * Display the previous attachment in the list of attachments.
          */
         previous() {
-            if (!this.dialogOwner || !this.dialogOwner.attachmentListOwnerAsAttachmentView) {
+            if (!this.dialogOwner || !this.dialogOwner.attachmentListViewOwnerAsAttachmentView) {
                 return;
             }
-            this.dialogOwner.attachmentListOwnerAsAttachmentView.selectPreviousAttachment();
+            this.dialogOwner.attachmentListViewOwnerAsAttachmentView.selectPreviousAttachment();
         },
         /**
          * Prompt the browser print of this attachment.
@@ -414,14 +414,14 @@ registerModel({
         angle: attr({
             default: 0,
         }),
-        attachmentList: one('AttachmentList', {
-            related: 'dialogOwner.attachmentListOwnerAsAttachmentView',
+        attachmentListView: one('AttachmentListView', {
+            related: 'dialogOwner.attachmentListViewOwnerAsAttachmentView',
         }),
         attachmentViewerViewable: one("AttachmentViewerViewable", {
             compute() {
-                if (this.attachmentList) {
+                if (this.attachmentListView) {
                     return {
-                        attachmentOwner: this.attachmentList.selectedAttachment,
+                        attachmentOwner: this.attachmentListView.selectedAttachment,
                     };
                 }
                 return clear();
@@ -429,8 +429,8 @@ registerModel({
         }),
         attachmentViewerViewables: many("AttachmentViewerViewable", {
             compute() {
-                if (this.attachmentList) {
-                    return this.attachmentList.viewableAttachments.map(attachment => {
+                if (this.attachmentListView) {
+                    return this.attachmentListView.viewableAttachments.map(attachment => {
                         return { attachmentOwner: attachment };
                     });
                 }

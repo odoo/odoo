@@ -4,7 +4,7 @@ import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('attachment_list_tests.js');
+QUnit.module('attachment_list_view_tests.js');
 
 QUnit.test('simplest layout', async function (assert) {
     assert.expect(8);
@@ -32,11 +32,11 @@ QUnit.test('simplest layout', async function (assert) {
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelectorAll('.o_AttachmentList').length,
+        document.querySelectorAll('.o_AttachmentListView').length,
         1,
         "should have attachment list component in DOM"
     );
-    const attachmentEl = document.querySelector('.o_AttachmentList .o_AttachmentCard');
+    const attachmentEl = document.querySelector('.o_AttachmentListView .o_AttachmentCardView');
     assert.strictEqual(
         attachmentEl.dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: messageAttachmentId }).localId,
@@ -49,11 +49,11 @@ QUnit.test('simplest layout', async function (assert) {
     );
 
     assert.strictEqual(
-        attachmentEl.querySelectorAll(`:scope .o_AttachmentCard_image`).length,
+        attachmentEl.querySelectorAll(`:scope .o_AttachmentCardView_image`).length,
         1,
         "attachment should have an image part"
     );
-    const attachmentImage = document.querySelector(`.o_AttachmentCard_image`);
+    const attachmentImage = document.querySelector(`.o_AttachmentCardView_image`);
     assert.ok(
         attachmentImage.classList.contains('o_image'),
         "attachment should have o_image classname (required for mimetype.scss style)"
@@ -64,12 +64,12 @@ QUnit.test('simplest layout', async function (assert) {
         "attachment should have data-mimetype set (required for mimetype.scss style)"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentList_details`).length,
+        document.querySelectorAll(`.o_AttachmentListView_details`).length,
         0,
         "attachment should not have a details part"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentList_aside`).length,
+        document.querySelectorAll(`.o_AttachmentListView_aside`).length,
         0,
         "attachment should not have an aside part"
     );
@@ -109,38 +109,38 @@ QUnit.test('simplest layout + editable', async function (assert) {
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelectorAll('.o_AttachmentList').length,
+        document.querySelectorAll('.o_AttachmentListView').length,
         1,
         "should have attachment component in DOM"
     );
 
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentCard_image`).length,
+        document.querySelectorAll(`.o_AttachmentCardView_image`).length,
         1,
         "attachment should have an image part"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentCard_details`).length,
+        document.querySelectorAll(`.o_AttachmentCardView_details`).length,
         1,
         "attachment should not have a details part"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentCard_aside`).length,
+        document.querySelectorAll(`.o_AttachmentCardView_aside`).length,
         1,
         "attachment should have an aside part"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentCard_asideItem`).length,
+        document.querySelectorAll(`.o_AttachmentCardView_asideItem`).length,
         2,
         "attachment should have two aside item"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentCard_asideItemUnlink`).length,
+        document.querySelectorAll(`.o_AttachmentCardView_asideItemUnlink`).length,
         1,
         "attachment should have a delete button"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentCard_asideItemDownload`).length,
+        document.querySelectorAll(`.o_AttachmentCardView_asideItemDownload`).length,
         1,
         "attachment should have a download button"
     );
@@ -172,12 +172,12 @@ QUnit.test('layout with card details and filename and extension', async function
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentCard_details`).length,
+        document.querySelectorAll(`.o_AttachmentCardView_details`).length,
         1,
         "attachment should have a details part"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentCard_extension`).length,
+        document.querySelectorAll(`.o_AttachmentCardView_extension`).length,
         1,
         "attachment should have its extension shown"
     );
@@ -210,10 +210,10 @@ QUnit.test('view attachment', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_AttachmentImage img',
+        '.o_AttachmentImageView img',
         "attachment should have an image part"
     );
-    await click('.o_AttachmentImage');
+    await click('.o_AttachmentImageView');
     assert.containsOnce(
         document.body,
         '.o_Dialog',
@@ -253,11 +253,11 @@ QUnit.test('close attachment viewer', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_AttachmentImage img',
+        '.o_AttachmentImageView img',
         "attachment should have an image part"
     );
 
-    await click('.o_AttachmentImage');
+    await click('.o_AttachmentImageView');
     assert.containsOnce(
         document.body,
         '.o_AttachmentViewer',
@@ -302,12 +302,12 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     });
     await openDiscuss();
 
-    await click('.o_AttachmentCard_asideItemUnlink');
+    await click('.o_AttachmentCardView_asideItemUnlink');
 
     await afterNextRender(() => {
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmView_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmView_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmView_confirmButton').click();
     });
     assert.verifySteps(
         ['attachment_unlink'],
@@ -348,7 +348,7 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
         },
     });
     await openDiscuss();
-    await click('.o_AttachmentImage');
+    await click('.o_AttachmentImageView');
     const imageEl = document.querySelector('.o_AttachmentViewer_viewImage');
     await click('.o_AttachmentViewer_headerItemButtonClose');
     // Simulate image becoming loaded.
@@ -389,7 +389,7 @@ QUnit.test('plain text file is viewable', async function (assert) {
     await openDiscuss();
 
     assert.hasClass(
-        document.querySelector('.o_AttachmentCard'),
+        document.querySelector('.o_AttachmentCardView'),
         'o-viewable',
         "should be viewable",
     );
@@ -420,7 +420,7 @@ QUnit.test('HTML file is viewable', async function (assert) {
     });
     await openDiscuss();
     assert.hasClass(
-        document.querySelector('.o_AttachmentCard'),
+        document.querySelector('.o_AttachmentCardView'),
         'o-viewable',
         "should be viewable",
     );
@@ -451,7 +451,7 @@ QUnit.test('ODT file is not viewable', async function (assert) {
     });
     await openDiscuss();
     assert.doesNotHaveClass(
-        document.querySelector('.o_AttachmentCard'),
+        document.querySelector('.o_AttachmentCardView'),
         'o-viewable',
         "should not be viewable",
     );
@@ -482,7 +482,7 @@ QUnit.test('DOCX file is not viewable', async function (assert) {
     });
     await openDiscuss();
     assert.doesNotHaveClass(
-        document.querySelector('.o_AttachmentCard'),
+        document.querySelector('.o_AttachmentCardView'),
         'o-viewable',
         "should not be viewable",
     );

@@ -7,7 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
-    name: 'CallSystrayMenu',
+    name: 'CallSystrayMenuView',
     fields: {
         buttonTitle: attr({
             compute() {
@@ -23,7 +23,7 @@ registerModel({
         }),
         rtc: one('Rtc', {
             identifying: true,
-            inverse: 'callSystrayMenu',
+            inverse: 'callSystrayMenuView',
         }),
     },
 });

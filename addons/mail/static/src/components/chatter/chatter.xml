@@ -26,14 +26,14 @@
                 </div>
                 <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
                     <t t-if="chatter.attachmentBoxView">
-                        <AttachmentBox
-                            className="'o_Chatter_attachmentBox'"
+                        <AttachmentBoxView
+                            className="'o_Chatter_attachmentBoxView'"
                             record="chatter.attachmentBoxView"
                         />
                     </t>
                     <t t-if="chatter.activityBoxView">
-                        <ActivityBox
-                            className="'o_Chatter_activityBox'"
+                        <ActivityBoxView
+                            className="'o_Chatter_activityBoxView'"
                             record="chatter.activityBoxView"
                         />
                     </t>

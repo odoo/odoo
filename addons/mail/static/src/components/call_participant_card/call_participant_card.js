@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class CallParticipantCard extends Component {
+export class CallParticipantCardView extends Component {
 
     /**
      * @override
@@ -22,15 +22,15 @@ export class CallParticipantCard extends Component {
     /**
      * @returns {Thread|undefined}
      */
-    get callParticipantCard() {
+    get callParticipantCardView() {
         return this.props.record;
     }
 
 }
 
-Object.assign(CallParticipantCard, {
+Object.assign(CallParticipantCardView, {
     props: { record: Object },
-    template: 'mail.CallParticipantCard',
+    template: 'mail.CallParticipantCardView',
 });
 
-registerMessagingComponent(CallParticipantCard);
+registerMessagingComponent(CallParticipantCardView);

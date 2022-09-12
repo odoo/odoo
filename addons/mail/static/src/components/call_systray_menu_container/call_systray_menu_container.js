@@ -2,12 +2,12 @@
 
 import { useModels } from '@mail/component_hooks/use_models';
 // ensure components are registered beforehand.
-import '@mail/components/call_systray_menu/call_systray_menu';
+import '@mail/components/call_systray_menu_view/call_systray_menu_view';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component } = owl;
 
-export class CallSystrayMenuContainer extends Component {
+export class CallSystrayMenuViewContainer extends Component {
 
     /**
      * @override
@@ -22,9 +22,9 @@ export class CallSystrayMenuContainer extends Component {
     }
 
 }
-CallSystrayMenuContainer.props = {};
+CallSystrayMenuViewContainer.props = {};
 
-Object.assign(CallSystrayMenuContainer, {
-    components: { CallSystrayMenu: getMessagingComponent('CallSystrayMenu') },
-    template: 'mail.CallSystrayMenuContainer',
+Object.assign(CallSystrayMenuViewContainer, {
+    components: { CallSystrayMenuView: getMessagingComponent('CallSystrayMenuView') },
+    template: 'mail.CallSystrayMenuViewContainer',
 });

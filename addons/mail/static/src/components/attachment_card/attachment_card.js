@@ -4,20 +4,20 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class AttachmentCard extends Component {
+export class AttachmentCardView extends Component {
 
     /**
-     * @returns {AttachmentCard}
+     * @returns {AttachmentCardView}
      */
-    get attachmentCard() {
+    get attachmentCardView() {
         return this.props.record;
     }
 
 }
 
-Object.assign(AttachmentCard, {
+Object.assign(AttachmentCardView, {
     props: { record: Object },
-    template: 'mail.AttachmentCard',
+    template: 'mail.AttachmentCardView',
 });
 
-registerMessagingComponent(AttachmentCard);
+registerMessagingComponent(AttachmentCardView);

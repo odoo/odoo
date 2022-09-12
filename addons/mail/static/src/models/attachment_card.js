@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'AttachmentCard',
+    name: 'AttachmentCardView',
     recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.
@@ -13,7 +13,7 @@ registerModel({
             if (!this.attachment || !this.attachment.isViewable) {
                 return;
             }
-            this.attachmentList.update({
+            this.attachmentListView.update({
                 attachmentListViewDialog: {},
                 selectedAttachment: this.attachment,
             });
@@ -28,7 +28,7 @@ registerModel({
             if (!this.attachment) {
                 return;
             }
-            if (this.attachmentList.composerViewOwner) {
+            if (this.attachmentListView.composerViewOwner) {
                 this.attachment.remove();
             } else {
                 this.update({ attachmentDeleteConfirmDialog: {} });
@@ -43,18 +43,18 @@ registerModel({
             identifying: true,
         }),
         attachmentDeleteConfirmDialog: one('Dialog', {
-            inverse: 'attachmentCardOwnerAsAttachmentDeleteConfirm',
+            inverse: 'attachmentCardViewOwnerAsAttachmentDeleteConfirm',
         }),
         /**
-         * States the attachmentList displaying this card.
+         * States the attachmentListView displaying this card.
          */
-        attachmentList: one('AttachmentList', {
+        attachmentListView: one('AttachmentListView', {
             identifying: true,
-            inverse: 'attachmentCards',
+            inverse: 'attachmentCardViews',
         }),
         hasMultipleActions: attr({
             compute() {
-                return this.attachment.isDeletable && !this.attachmentList.composerViewOwner;
+                return this.attachment.isDeletable && !this.attachmentListView.composerViewOwner;
             },
         }),
     },

@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'CallOptionMenu',
+    name: 'CallOptionMenuView',
     recordMethods: {
         /**
          * Creates and download a file that contains the logs of the current RTC call.

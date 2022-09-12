@@ -13,7 +13,7 @@ registerModel({
         channelMember: one('ChannelMember', {
             identifying: true,
         }),
-        participantCard: one('CallParticipantCard', {
+        participantCardView: one('CallParticipantCardView', {
             default: {},
             inverse: 'sidebarViewTileOwner',
         }),

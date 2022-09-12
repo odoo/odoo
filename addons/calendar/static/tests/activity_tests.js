@@ -4,7 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('calendar', () => {
 QUnit.module('components', () => {
-QUnit.module('activity_tests.js');
+QUnit.module('activity_view_tests.js');
 
 QUnit.test('activity click on Reschedule', async function (assert) {
     assert.expect(1);
@@ -37,7 +37,7 @@ QUnit.test('activity click on Reschedule', async function (assert) {
         },
     );
 
-    await click('.o_Activity_editButton');
+    await click('.o_ActivityView_editButton');
     assert.containsOnce(
         document.body,
         '.o_calendar_view',

@@ -44,7 +44,7 @@ registerModel({
              * The download is allowed when there are views that display the video stream.
              */
             compute() {
-                return Boolean(this.rtcSession.callParticipantCards && this.rtcSession.callParticipantCards.length > 0);
+                return Boolean(this.rtcSession.callParticipantCardViews && this.rtcSession.callParticipantCardViews.length > 0);
             },
         }),
         /**

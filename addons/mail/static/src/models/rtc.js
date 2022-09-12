@@ -1250,7 +1250,7 @@ registerModel({
         recoveryDelay: attr({
             default: 3000,
         }),
-        callSystrayMenu: one('CallSystrayMenu', {
+        callSystrayMenuView: one('CallSystrayMenuView', {
             default: {},
             inverse: 'rtc',
         }),

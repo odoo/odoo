@@ -80,7 +80,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseleave(ev) {
-            if (ev.relatedTarget && ev.relatedTarget.closest('.o_CallActionList_popover')) {
+            if (ev.relatedTarget && ev.relatedTarget.closest('.o_CallActionListView_popover')) {
                 // the overlay should not be hidden when the cursor leaves to enter the controller popover
                 return;
             }

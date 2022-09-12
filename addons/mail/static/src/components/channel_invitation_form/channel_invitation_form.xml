@@ -11,7 +11,7 @@
                     </div>
                     <div class="d-flex flex-column flex-grow-1 mx-0 py-2 overflow-auto">
                         <t t-foreach="channelInvitationForm.selectablePartnerViews" t-as="selectablePartnerView" t-key="selectablePartnerView.localId">
-                            <ChannelInvitationFormSelectablePartner record="selectablePartnerView"/>
+                            <ChannelInvitationFormSelectablePartnerView record="selectablePartnerView"/>
                         </t>
                         <t t-if="channelInvitationForm.selectablePartners.length === 0">
                             <div class="mx-3">No user found that is not already a member of this channel.</div>

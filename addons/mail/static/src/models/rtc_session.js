@@ -336,10 +336,10 @@ registerModel({
             inverse: 'rtcInvitingSession',
         }),
         /**
-         * The participant cards of this session,
+         * The participant card views of this session,
          * this is used to know how many views are displaying this session.
          */
-        callParticipantCards: many('CallParticipantCard', {
+        callParticipantCardViews: many('CallParticipantCardView', {
             inverse: 'rtcSession',
         }),
         /**

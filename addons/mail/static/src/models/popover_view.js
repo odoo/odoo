@@ -80,8 +80,8 @@ registerModel({
                 if (this.callActionListViewOwnerAsMoreMenu) {
                     return this.callActionListViewOwnerAsMoreMenu.moreButtonRef;
                 }
-                if (this.callParticipantCardOwner) {
-                    return this.callParticipantCardOwner.volumeMenuAnchorRef;
+                if (this.callParticipantCardViewOwner) {
+                    return this.callParticipantCardViewOwner.volumeMenuAnchorRef;
                 }
                 if (this.threadViewTopbarOwnerAsInvite) {
                     return this.threadViewTopbarOwnerAsInvite.inviteButtonRef;
@@ -106,7 +106,7 @@ registerModel({
             identifying: true,
             inverse: 'moreMenuPopoverView',
         }),
-        callOptionMenuView: one('CallOptionMenu', {
+        callOptionMenuView: one('CallOptionMenuView', {
             compute() {
                 if (this.callActionListViewOwnerAsMoreMenu) {
                     return {};
@@ -115,13 +115,13 @@ registerModel({
             },
             inverse: 'popoverViewOwner',
         }),
-        callParticipantCardOwner: one('CallParticipantCard', {
+        callParticipantCardViewOwner: one('CallParticipantCardView', {
             identifying: true,
             inverse: 'callParticipantCardPopoverView',
         }),
         callParticipantCardPopoverContentView: one('CallParticipantCardPopoverContentView', {
             compute() {
-                if (this.callParticipantCardOwner) {
+                if (this.callParticipantCardViewOwner) {
                     return {};
                 }
                 return clear();
@@ -203,10 +203,10 @@ registerModel({
         contentComponentName: attr({
             compute() {
                 if (this.activityMarkDonePopoverContentView) {
-                    return 'ActivityMarkDonePopoverContent';
+                    return 'ActivityMarkDonePopoverContentView';
                 }
                 if (this.callOptionMenuView) {
-                    return 'CallOptionMenu';
+                    return 'CallOptionMenuView';
                 }
                 if (this.callParticipantCardPopoverContentView) {
                     return 'CallParticipantCardPopoverContentView';
@@ -284,7 +284,7 @@ registerModel({
                 if (this.callActionListViewOwnerAsMoreMenu) {
                     return 'top';
                 }
-                if (this.callParticipantCardOwner) {
+                if (this.callParticipantCardViewOwner) {
                     return 'bottom';
                 }
                 if (this.threadViewTopbarOwnerAsInvite) {

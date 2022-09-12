@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, onMounted } = owl;
 
-export class ActivityMarkDonePopoverContent extends Component {
+export class ActivityMarkDonePopoverContentView extends Component {
 
     /**
      * @override
@@ -25,9 +25,9 @@ export class ActivityMarkDonePopoverContent extends Component {
 
 }
 
-Object.assign(ActivityMarkDonePopoverContent, {
+Object.assign(ActivityMarkDonePopoverContentView, {
     props: { record: Object },
-    template: 'mail.ActivityMarkDonePopoverContent',
+    template: 'mail.ActivityMarkDonePopoverContentView',
 });
 
-registerMessagingComponent(ActivityMarkDonePopoverContent);
+registerMessagingComponent(ActivityMarkDonePopoverContentView);

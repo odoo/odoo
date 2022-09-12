@@ -4,11 +4,11 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class CallSettingsMenuDevice extends Component {}
+export class CallSettingsMenuDeviceView extends Component {}
 
-Object.assign(CallSettingsMenuDevice, {
+Object.assign(CallSettingsMenuDeviceView, {
     props: { device: Object },
-    template: 'mail.CallSettingsMenuDevice',
+    template: 'mail.CallSettingsMenuDeviceView',
 });
 
-registerMessagingComponent(CallSettingsMenuDevice);
+registerMessagingComponent(CallSettingsMenuDeviceView);

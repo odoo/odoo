@@ -7,7 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 import { attr, one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'CallSettingsMenu',
+    name: 'CallSettingsMenuView',
     identifyingMode: 'xor',
     lifecycleHooks: {
         async _created() {
@@ -114,7 +114,7 @@ registerModel({
         }),
         chatWindowOwner: one('ChatWindow', {
             identifying: true,
-            inverse: 'callSettingsMenu',
+            inverse: 'callSettingsMenuView',
         }),
         thread: one('Thread', {
             compute() {
@@ -129,7 +129,7 @@ registerModel({
         }),
         threadViewOwner: one('ThreadView', {
             identifying: true,
-            inverse: 'callSettingsMenu',
+            inverse: 'callSettingsMenuView',
         }),
         userDevices: attr({
             default: [],

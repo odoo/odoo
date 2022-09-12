@@ -31,11 +31,11 @@ registerModel({
     fields: {
         attachment: one('Attachment', {
             compute() {
-                if (this.dialogOwner && this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm) {
-                    return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachment;
+                if (this.dialogOwner && this.dialogOwner.attachmentCardViewOwnerAsAttachmentDeleteConfirm) {
+                    return this.dialogOwner.attachmentCardViewOwnerAsAttachmentDeleteConfirm.attachment;
                 }
-                if (this.dialogOwner && this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm) {
-                    return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachment;
+                if (this.dialogOwner && this.dialogOwner.attachmentImageViewOwnerAsAttachmentDeleteConfirm) {
+                    return this.dialogOwner.attachmentImageViewOwnerAsAttachmentDeleteConfirm.attachment;
                 }
                 return clear();
             },
@@ -49,18 +49,18 @@ registerModel({
         chatter: one('Chatter', {
             compute() {
                 if (
-                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm &&
-                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner &&
-                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter
+                    this.dialogOwner.attachmentCardViewOwnerAsAttachmentDeleteConfirm &&
+                    this.dialogOwner.attachmentCardViewOwnerAsAttachmentDeleteConfirm.attachmentListView.attachmentBoxViewOwner &&
+                    this.dialogOwner.attachmentCardViewOwnerAsAttachmentDeleteConfirm.attachmentListView.attachmentBoxViewOwner.chatter
                 ) {
-                    return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter;
+                    return this.dialogOwner.attachmentCardViewOwnerAsAttachmentDeleteConfirm.attachmentListView.attachmentBoxViewOwner.chatter;
                 }
                 if (
-                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm &&
-                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner &&
-                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter
+                    this.dialogOwner.attachmentImageViewOwnerAsAttachmentDeleteConfirm &&
+                    this.dialogOwner.attachmentImageViewOwnerAsAttachmentDeleteConfirm.attachmentListView.attachmentBoxViewOwner &&
+                    this.dialogOwner.attachmentImageViewOwnerAsAttachmentDeleteConfirm.attachmentListView.attachmentBoxViewOwner.chatter
                 ) {
-                    return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter;
+                    return this.dialogOwner.attachmentImageViewOwnerAsAttachmentDeleteConfirm.attachmentListView.attachmentBoxViewOwner.chatter;
                 }
                 return clear();
             },

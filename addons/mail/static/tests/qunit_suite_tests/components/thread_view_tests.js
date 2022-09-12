@@ -798,10 +798,10 @@ QUnit.test("delete all attachments of message without content should no longer d
         "there should be 1 message displayed initially"
     );
 
-    await click(`.o_AttachmentCard[data-id="${
+    await click(`.o_AttachmentCardView[data-id="${
         messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 }).localId
-    }"] .o_AttachmentCard_asideItemUnlink`);
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    }"] .o_AttachmentCardView_asideItemUnlink`);
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -848,10 +848,10 @@ QUnit.test('delete all attachments of a message with some text content should st
         "there should be 1 message displayed initially"
     );
 
-    await click(`.o_AttachmentCard[data-id="${
+    await click(`.o_AttachmentCardView[data-id="${
         messaging.models['Attachment'].findFromIdentifyingData({ id: irAttachmentId1 }).localId
-    }"] .o_AttachmentCard_asideItemUnlink`);
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    }"] .o_AttachmentCardView_asideItemUnlink`);
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsOnce(
         document.body,
         '.o_Message',

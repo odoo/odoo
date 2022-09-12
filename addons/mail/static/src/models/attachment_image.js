@@ -6,7 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'AttachmentImage',
+    name: 'AttachmentImageView',
     recordMethods: {
         /**
          * Called when clicking on download icon.
@@ -14,7 +14,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickDownload(ev) {
-            markEventHandled(ev, 'AttachmentImage.onClickDownload');
+            markEventHandled(ev, 'AttachmentImageView.onClickDownload');
             if (!this.exists()) {
                 return;
             }
@@ -26,16 +26,16 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickImage(ev) {
-            if (isEventHandled(ev, 'AttachmentImage.onClickDownload')) {
+            if (isEventHandled(ev, 'AttachmentImageView.onClickDownload')) {
                 return;
             }
-            if (isEventHandled(ev, 'AttachmentImage.onClickUnlink')) {
+            if (isEventHandled(ev, 'AttachmentImageView.onClickUnlink')) {
                 return;
             }
             if (!this.attachment || !this.attachment.isViewable) {
                 return;
             }
-            this.attachmentList.update({
+            this.attachmentListView.update({
                 attachmentListViewDialog: {},
                 selectedAttachment: this.attachment,
             });
@@ -46,11 +46,11 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickUnlink(ev) {
-            markEventHandled(ev, 'AttachmentImage.onClickUnlink');
+            markEventHandled(ev, 'AttachmentImageView.onClickUnlink');
             if (!this.exists()) {
                 return;
             }
-            if (this.attachmentList.composerViewOwner) {
+            if (this.attachmentListView.composerViewOwner) {
                 this.attachment.remove();
             } else {
                 this.update({ attachmentDeleteConfirmDialog: {} });
@@ -65,24 +65,24 @@ registerModel({
             identifying: true,
         }),
         attachmentDeleteConfirmDialog: one('Dialog', {
-            inverse: 'attachmentImageOwnerAsAttachmentDeleteConfirm',
+            inverse: 'attachmentImageViewOwnerAsAttachmentDeleteConfirm',
         }),
         /**
-         * States the attachmentList displaying this attachment image.
+         * States the attachmentListView displaying this attachment image.
          */
-        attachmentList: one('AttachmentList', {
+        attachmentListView: one('AttachmentListView', {
             identifying: true,
-            inverse: 'attachmentImages',
+            inverse: 'attachmentImageViews',
         }),
         /**
          * Determines whether `this` should display a download button.
          */
         hasDownloadButton: attr({
             compute() {
-                if (!this.attachment || !this.attachmentList) {
+                if (!this.attachment || !this.attachmentListView) {
                     return clear();
                 }
-                return !this.attachmentList.composerViewOwner && !this.attachment.isUploading;
+                return !this.attachmentListView.composerViewOwner && !this.attachment.isUploading;
             },
             default: false,
         }),
@@ -91,16 +91,16 @@ registerModel({
          */
         height: attr({
             compute() {
-                if (!this.attachmentList) {
+                if (!this.attachmentListView) {
                     return clear();
                 }
-                if (this.attachmentList.composerViewOwner) {
+                if (this.attachmentListView.composerViewOwner) {
                     return 50;
                 }
-                if (this.attachmentList.attachmentBoxViewOwner) {
+                if (this.attachmentListView.attachmentBoxViewOwner) {
                     return 160;
                 }
-                if (this.attachmentList.messageViewOwner) {
+                if (this.attachmentListView.messageViewOwner) {
                     return 300;
                 }
             },

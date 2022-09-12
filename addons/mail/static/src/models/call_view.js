@@ -21,7 +21,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onRtcSettingsDialogClosed(ev) {
-            this.messaging.userSetting.callSettingsMenu.toggle();
+            this.messaging.userSetting.callSettingsMenuView.toggle();
         },
         async activateFullScreen() {
             const el = document.body;
@@ -182,10 +182,10 @@ registerModel({
             },
         }),
         /**
-         * All the participant cards of the call viewer (main card and tile cards).
-         * this is a technical inverse to distinguish from the other relation 'tileParticipantCards'.
+         * All the participant card views of the call viewer (main card and tile cards).
+         * this is a technical inverse to distinguish from the other relation 'tileParticipantCardViews'.
          */
-        participantCards: many('CallParticipantCard', {
+        participantCardViews: many('CallParticipantCardView', {
             inverse: 'callView',
             isCausal: true,
         }),

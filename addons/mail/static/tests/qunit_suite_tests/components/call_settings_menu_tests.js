@@ -40,19 +40,19 @@ QUnit.test('Renders the call settings', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu',
+        '.o_CallSettingsMenuView',
         "Should have a call settings menu"
     );
     assert.containsN(
         document.body,
-        '.o_CallSettingsMenu_option',
+        '.o_CallSettingsMenuView_option',
         5,
         "Should have five options",
     );
 
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_optionDeviceSelect',
+        '.o_CallSettingsMenuView_optionDeviceSelect',
         "should have an audio device selection",
     );
     assert.containsOnce(
@@ -67,22 +67,22 @@ QUnit.test('Renders the call settings', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_pushToTalkOption',
+        '.o_CallSettingsMenuView_pushToTalkOption',
         "should have an option to toggle push-to-talk",
     );
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_voiceThresholdOption',
+        '.o_CallSettingsMenuView_voiceThresholdOption',
         "should have an option to set the voice detection threshold",
     );
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_showOnlyVideoOption',
+        '.o_CallSettingsMenuView_showOnlyVideoOption',
         "should have an option to filter participants who have no video",
     );
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_blurOption',
+        '.o_CallSettingsMenuView_blurOption',
         "should have an option to toggle the background blur feature",
     );
 });
@@ -110,21 +110,21 @@ QUnit.test('activate push to talk', async function (assert) {
     });
     await openDiscuss();
     await click('.o_ThreadViewTopbar_openCallSettingsButton');
-    await click('.o_CallSettingsMenu_pushToTalkOption');
+    await click('.o_CallSettingsMenuView_pushToTalkOption');
 
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_pushToTalkKeyOption',
+        '.o_CallSettingsMenuView_pushToTalkKeyOption',
         "should have an option set the push to talk shortcut key",
     );
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_pushToTalkDelayOption',
+        '.o_CallSettingsMenuView_pushToTalkDelayOption',
         "should have an option to set the push-to-talk delay",
     );
     assert.containsNone(
         document.body,
-        '.o_CallSettingsMenu_voiceThresholdOption',
+        '.o_CallSettingsMenuView_voiceThresholdOption',
         "should not have an option to set the voice detection threshold",
     );
 });
@@ -152,16 +152,16 @@ QUnit.test('activate blur', async function (assert) {
     });
     await openDiscuss();
     await click('.o_ThreadViewTopbar_openCallSettingsButton');
-    await click('.o_CallSettingsMenu_blurOption');
+    await click('.o_CallSettingsMenuView_blurOption');
 
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_backgroundBlurIntensityOption',
+        '.o_CallSettingsMenuView_backgroundBlurIntensityOption',
         "should have an option set the background blur intensity",
     );
     assert.containsOnce(
         document.body,
-        '.o_CallSettingsMenu_edgeBlurIntensityOption',
+        '.o_CallSettingsMenuView_edgeBlurIntensityOption',
         "should have an option to set the edge blur intensity",
     );
 });

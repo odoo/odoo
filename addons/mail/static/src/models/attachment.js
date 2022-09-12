@@ -107,7 +107,7 @@ registerModel({
         /**
          * States the attachment lists that are displaying this attachment.
          */
-        attachmentLists: many('AttachmentList', {
+        attachmentListViews: many('AttachmentListView', {
             inverse: 'attachments',
         }),
         attachmentViewerViewable: one('AttachmentViewerViewable', {

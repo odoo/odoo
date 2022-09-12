@@ -2471,12 +2471,12 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     await afterNextRender(() => channels[0].click());
     // Check attachment is reloaded
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`).length,
         1,
         "should have 1 attachment in the composer"
     );
     assert.strictEqual(
-        document.querySelector(`.o_Composer .o_AttachmentCard`).dataset.id,
+        document.querySelector(`.o_Composer .o_AttachmentCardView`).dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: 1 }).localId,
         "should have correct 1st attachment in the composer"
     );
@@ -2485,22 +2485,22 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     await afterNextRender(() => channels[1].click());
     // Check attachments are reloaded
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`).length,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`).length,
         3,
         "should have 3 attachments in the composer"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[0].dataset.id,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`)[0].dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: 2 }).localId,
         "should have attachment with id 2 as 1st attachment"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[1].dataset.id,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`)[1].dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: 3 }).localId,
         "should have attachment with id 3 as 2nd attachment"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[2].dataset.id,
+        document.querySelectorAll(`.o_Composer .o_AttachmentCardView`)[2].dataset.id,
         messaging.models['Attachment'].findFromIdentifyingData({ id: 4 }).localId,
         "should have attachment with id 4 as 3rd attachment"
     );
@@ -3715,12 +3715,12 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     );
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard',
+        '.o_AttachmentCardView',
         "should have only one attachment"
     );
     assert.containsOnce(
         document.body,
-        '.o_AttachmentCard.o-isUploading',
+        '.o_AttachmentCardView.o-isUploading',
         "attachment displayed is being uploaded"
     );
     assert.containsOnce(

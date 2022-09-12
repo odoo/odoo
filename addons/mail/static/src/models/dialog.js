@@ -52,33 +52,33 @@ registerModel({
         },
     },
     fields: {
-        attachmentCardOwnerAsAttachmentDeleteConfirm: one('AttachmentCard', {
+        attachmentCardViewOwnerAsAttachmentDeleteConfirm: one('AttachmentCardView', {
             identifying: true,
             inverse: 'attachmentDeleteConfirmDialog',
         }),
         attachmentDeleteConfirmView: one('AttachmentDeleteConfirmView', {
             compute() {
-                if (this.attachmentCardOwnerAsAttachmentDeleteConfirm) {
+                if (this.attachmentCardViewOwnerAsAttachmentDeleteConfirm) {
                     return {};
                 }
-                if (this.attachmentImageOwnerAsAttachmentDeleteConfirm) {
+                if (this.attachmentImageViewOwnerAsAttachmentDeleteConfirm) {
                     return {};
                 }
                 return clear();
             },
             inverse: 'dialogOwner',
         }),
-        attachmentImageOwnerAsAttachmentDeleteConfirm: one('AttachmentImage', {
+        attachmentImageViewOwnerAsAttachmentDeleteConfirm: one('AttachmentImageView', {
             identifying: true,
             inverse: 'attachmentDeleteConfirmDialog',
         }),
-        attachmentListOwnerAsAttachmentView: one('AttachmentList', {
+        attachmentListViewOwnerAsAttachmentView: one('AttachmentListView', {
             identifying: true,
             inverse: 'attachmentListViewDialog',
         }),
         attachmentViewer: one('AttachmentViewer', {
             compute() {
-                if (this.attachmentListOwnerAsAttachmentView) {
+                if (this.attachmentListViewOwnerAsAttachmentView) {
                     return {};
                 }
                 return clear();
@@ -113,7 +113,7 @@ registerModel({
                     return 'AttachmentViewer';
                 }
                 if (this.attachmentDeleteConfirmView) {
-                    return 'AttachmentDeleteConfirm';
+                    return 'AttachmentDeleteConfirmView';
                 }
                 if (this.deleteMessageConfirmView) {
                     return 'DeleteMessageConfirm';

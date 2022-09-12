@@ -588,31 +588,31 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 
     assert.containsOnce(
         document.body,
-        '.o_AttachmentImage',
+        '.o_AttachmentImageView',
         "should have an attachment",
     );
     assert.containsOnce(
         document.body,
-        '.o_AttachmentImage_actionUnlink',
+        '.o_AttachmentImageView_actionUnlink',
         "should have delete attachment button"
     );
 
-    await click('.o_AttachmentImage_actionUnlink');
+    await click('.o_AttachmentImageView_actionUnlink');
     assert.containsOnce(
         document.body,
-        '.o_AttachmentDeleteConfirm',
+        '.o_AttachmentDeleteConfirmView',
         "An attachment delete confirmation dialog should have been opened"
     );
     assert.strictEqual(
-        document.querySelector('.o_AttachmentDeleteConfirm_mainText').textContent,
+        document.querySelector('.o_AttachmentDeleteConfirmView_mainText').textContent,
         `Do you really want to delete "BLAH"?`,
         "Confirmation dialog should contain the attachment delete confirmation text"
     );
 
-    await click('.o_AttachmentDeleteConfirm_confirmButton');
+    await click('.o_AttachmentDeleteConfirmView_confirmButton');
     assert.containsNone(
         document.body,
-        '.o_AttachmentCard',
+        '.o_AttachmentCardView',
         "should no longer have an attachment",
     );
 });
@@ -646,12 +646,12 @@ QUnit.test('prevent attachment delete on non-authored message in channels', asyn
 
     assert.containsOnce(
         document.body,
-        '.o_AttachmentImage',
+        '.o_AttachmentImageView',
         "should have an attachment",
     );
     assert.containsNone(
         document.body,
-        '.o_AttachmentImage_actionUnlink',
+        '.o_AttachmentImageView_actionUnlink',
         "delete attachment button should not be printed"
     );
 });
@@ -681,7 +681,7 @@ QUnit.test('allow attachment image download on message', async function (assert)
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_AttachmentImage_actionDownload',
+        '.o_AttachmentImageView_actionDownload',
         "should have download attachment button"
     );
 });

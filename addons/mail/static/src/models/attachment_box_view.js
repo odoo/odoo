@@ -16,9 +16,9 @@ registerModel({
     },
     fields: {
         /**
-         * Determines the attachment list that will be used to display the attachments.
+         * Determines the attachment list view that will be used to display the attachments.
          */
-        attachmentList: one('AttachmentList', {
+        attachmentListView: one('AttachmentListView', {
             compute() {
                 return (this.chatter.thread && this.chatter.thread.allAttachments.length > 0)
                     ? {}

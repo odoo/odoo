@@ -2,15 +2,15 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_AttachmentCard:hover .o_AttachmentCard_asideItemUnlink.o-pretty {
+.o_AttachmentCardView:hover .o_AttachmentCardView_asideItemUnlink.o-pretty {
     transform: translateX(0);
 }
 
-.o_AttachmentCard_action {
+.o_AttachmentCardView_action {
     min-width: 20px;
 }
 
-.o_AttachmentCard_aside {
+.o_AttachmentCardView_aside {
     &:not(.o-hasMultipleActions) {
         min-width: 50px;
     }
@@ -20,11 +20,11 @@
     }
 }
 
-.o_AttachmentCard_asideItemUnlink.o-pretty {
+.o_AttachmentCardView_asideItemUnlink.o-pretty {
     transform: translateX(100%);
 }
 
-.o_AttachmentCard_details {
+.o_AttachmentCardView_details {
     min-width: 0; /* This allows the text ellipsis in the flex element */
 }
 
@@ -32,6 +32,6 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_AttachmentCard_image.o-attachment-viewable {
+.o_AttachmentCardView_image.o-attachment-viewable {
     cursor: zoom-in;
 }

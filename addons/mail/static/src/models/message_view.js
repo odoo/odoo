@@ -324,10 +324,10 @@ registerModel({
     },
     fields: {
         /**
-         * Determines the attachment list displaying the attachments of this
+         * Determines the attachment list view displaying the attachments of this
          * message (if any).
          */
-        attachmentList: one('AttachmentList', {
+        attachmentListView: one('AttachmentListView', {
             compute() {
                 return (this.message && this.message.attachments.length > 0)
                     ? {}

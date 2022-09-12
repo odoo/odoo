@@ -42,15 +42,15 @@ registerModel({
         },
     },
     fields: {
-        callParticipantCardOwner: one('CallParticipantCard', {
+        callParticipantCardViewOwner: one('CallParticipantCardView', {
             identifying: true,
             inverse: 'callParticipantVideoView',
         }),
         component: attr(),
         rtcSession: one('RtcSession', {
             compute() {
-                if (this.callParticipantCardOwner.rtcSession) {
-                    return this.callParticipantCardOwner.rtcSession;
+                if (this.callParticipantCardViewOwner.rtcSession) {
+                    return this.callParticipantCardViewOwner.rtcSession;
                 }
                 return clear();
             },

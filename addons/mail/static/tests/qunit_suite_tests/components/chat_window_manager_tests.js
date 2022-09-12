@@ -864,7 +864,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     await insertText('.o_ComposerTextInput_textarea', 'XDU for the win !');
     assert.containsNone(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_Composer .o_AttachmentCardView',
         "composer should have no attachment initially"
     );
     // Set attachments of the composer
@@ -893,7 +893,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     );
     assert.containsN(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_Composer .o_AttachmentCardView',
         2,
         "composer should have 2 total attachments after adding 2 attachments"
     );
@@ -913,7 +913,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     );
     assert.containsN(
         document.body,
-        '.o_Composer .o_AttachmentCard',
+        '.o_Composer .o_AttachmentCardView',
         2,
         "Chat window composer should have 2 attachments after closing discuss"
     );
