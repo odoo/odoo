@@ -257,12 +257,17 @@ export class KanbanRenderer extends Component {
 
     getGroupName({ groupByField, count, displayName, isFolded }) {
         let name = displayName;
-        if (isNull(name)) {
-            name = this.env._t("None");
-        } else if (isRelational(groupByField)) {
-            name = name || this.env._t("None");
-        } else if (groupByField.type === "boolean") {
+        if (groupByField.type === "boolean") {
             name = name ? this.env._t("Yes") : this.env._t("No");
+        } else if (!name) {
+            if (
+                isRelational(groupByField) ||
+                groupByField.type === "date" ||
+                groupByField.type === "datetime" ||
+                isNull(name)
+            ) {
+                name = this.env._t("None");
+            }
         }
         return !this.env.isSmall && isFolded ? `${name} (${count})` : name;
     }

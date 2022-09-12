@@ -626,6 +626,29 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("kanban grouped by date field", async (assert) => {
+        serverData.models.partner.records[0].date = "2007-06-10";
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["date"],
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_column_title")), [
+            "None",
+            "June 2007",
+        ]);
+    });
     QUnit.test("context can be used in kanban template", async (assert) => {
         await makeView({
             type: "kanban",
