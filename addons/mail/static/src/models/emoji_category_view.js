@@ -10,16 +10,16 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick() {
-            this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBarView.reset();
+            this.emojiPickerView.emojiSearchBarView.reset();
             let categoryRowScrollPosition = Math.max(
                 0,
                 // Index of the beginning of the category
-                (this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.rowHeight * this.viewCategory.emojiGridRowView.index)
+                (this.emojiPickerView.emojiGridView.rowHeight * this.viewCategory.emojiGridRowView.index)
                 -
                 // Cancels the amount of buffer rows
-                (this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.rowHeight * this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.topBufferAmount)
+                (this.emojiPickerView.emojiGridView.rowHeight * this.emojiPickerView.emojiGridView.topBufferAmount)
             );
-            this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiGridView.containerRef.el.scrollTo({ top: categoryRowScrollPosition });
+            this.emojiPickerView.emojiGridView.containerRef.el.scrollTo({ top: categoryRowScrollPosition });
         },
         /**
          * @param {MouseEvent} ev
@@ -41,6 +41,9 @@ registerModel({
         emojiCategoryBarViewOwner: one('EmojiCategoryBarView', {
             identifying: true,
             inverse: 'emojiCategoryViews',
+        }),
+        emojiPickerView: one('EmojiPickerView', {
+            related: 'emojiCategoryBarViewOwner.emojiPickerView',
         }),
         isActive: attr({
             compute() {

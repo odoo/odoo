@@ -19,6 +19,9 @@ registerModel({
             });
         },
         onScroll() {
+            if (!this.exists()) {
+                return;
+            }
             this.onScrollThrottle.do();
         },
         _onChangeScrollRecomputeCount() {

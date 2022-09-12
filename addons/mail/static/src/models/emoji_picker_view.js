@@ -37,12 +37,6 @@ registerModel({
                 return this.categories[0];
             },
         }),
-        emojiCategoryBarView: one('EmojiCategoryBarView', {
-            default: {},
-            inverse: 'emojiPickerViewOwner',
-            readonly: true,
-            required: true,
-        }),
         emojiGridView: one('EmojiGridView', {
             default: {},
             inverse: 'emojiPickerViewOwner',
@@ -53,6 +47,12 @@ registerModel({
             default: {},
             inverse: 'emojiPickerView',
             readonly: true,
+        }),
+        headerView: one('EmojiPickerHeaderView', {
+            default: {},
+            inverse: 'emojiPickerViewOwner',
+            readonly: true,
+            required: true,
         }),
         popoverViewOwner: one('PopoverView', {
             identifying: true,
