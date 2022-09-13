@@ -81,10 +81,10 @@ QUnit.module("DescriptionPageField", (hooks) => {
             await clickEdit(target);
             await click(target.querySelector(".o_data_cell"));
             assert.containsOnce(target.querySelector(".o_data_row"), "button.o_icon_button");
-            assert.containsNone(target, ".modal .o_form_view_dialog");
+            assert.containsNone(target, ".modal .o_form_view");
 
             await click(target, "button.o_icon_button");
-            assert.containsOnce(target, ".modal .o_form_view_dialog");
+            assert.containsOnce(target, ".modal .o_form_view");
         }
     );
 });

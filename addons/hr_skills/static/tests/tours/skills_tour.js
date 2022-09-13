@@ -34,7 +34,7 @@ tour.register('hr_skills_tour', {
     },
     {
         content: "Enter some company name",
-        trigger: ".o_form_view_dialog .o_field_widget[name='name'] input",
+        trigger: ".modal-body .o_field_widget[name='name'] input",
         run: "text Mamie Rock",
     },
     {

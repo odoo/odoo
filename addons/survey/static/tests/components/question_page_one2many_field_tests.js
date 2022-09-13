@@ -111,7 +111,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
         });
         await click(target.querySelector(".o_data_cell"));
         assert.containsNone(target, ".o_selected_row");
-        assert.containsOnce(target, ".modal .o_form_view_dialog");
+        assert.containsOnce(target, ".modal .o_form_view");
     });
 
     QUnit.test("click on section edit the section in place", async (assert) => {
@@ -134,7 +134,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
         await clickEdit(target);
         await click(target.querySelector(".o_data_cell"));
         assert.hasClass(target.querySelector(".o_is_section"), "o_selected_row");
-        assert.containsNone(target, ".modal .o_form_view_dialog");
+        assert.containsNone(target, ".modal .o_form_view");
     });
 
     QUnit.test("click on real line opens a dialog", async (assert) => {
@@ -158,7 +158,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
         await clickEdit(target);
         await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
         assert.containsNone(target, ".o_selected_row");
-        assert.containsOnce(target, ".modal .o_form_view_dialog");
+        assert.containsOnce(target, ".modal .o_form_view");
     });
 
     QUnit.test("can create section inline", async (assert) => {
@@ -189,7 +189,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
 
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
         assert.containsOnce(target, ".o_selected_row.o_is_section");
-        assert.containsNone(target, ".modal .o_form_view_dialog");
+        assert.containsNone(target, ".modal .o_form_view");
     });
 
     QUnit.test("creates real record in form dialog", async (assert) => {
@@ -218,7 +218,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
         await clickEdit(target);
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.containsNone(target, ".o_selected_row");
-        assert.containsOnce(target, ".modal .o_form_view_dialog");
+        assert.containsOnce(target, ".modal .o_form_view");
     });
 
     QUnit.test(

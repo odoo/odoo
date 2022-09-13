@@ -44,6 +44,7 @@ Dialog.props = {
             footer: { type: Object, optional: true },
         },
     },
+    withBodyPadding: { type: Boolean, optional: true },
 };
 Dialog.defaultProps = {
     contentClass: "",
@@ -53,4 +54,5 @@ Dialog.defaultProps = {
     size: "lg",
     technical: true,
     title: "Odoo",
+    withBodyPadding: true,
 };
