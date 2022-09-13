@@ -53,10 +53,6 @@ export const websiteService = {
         });
         const bus = new EventBus();
 
-        const setCurrentWebsiteId = id => {
-            currentWebsiteId = id;
-            websiteSystrayRegistry.trigger('EDIT-WEBSITE');
-        };
         hotkey.add("escape", () => {
             // Toggle fullscreen mode when pressing escape.
             if (currentWebsiteId) {
@@ -75,8 +71,15 @@ export const websiteService = {
         });
         return {
             set currentWebsiteId(id) {
-                setCurrentWebsiteId(id);
+                currentWebsiteId = id;
+                websiteSystrayRegistry.trigger('EDIT-WEBSITE');
             },
+            /**
+             * This represents the current website being edited in the
+             * WebsitePreview client action. Multiple components based their
+             * visibility on this value, which is falsy if the client action is
+             * not displayed.
+             */
             get currentWebsite() {
                 const currentWebsite = websites.find(w => w.id === currentWebsiteId);
                 if (currentWebsite) {
@@ -174,23 +177,16 @@ export const websiteService = {
                     },
                 });
             },
-            async fetchWebsites() {
+            async fetchUserGroups() {
                 // Fetch user groups, before fetching the websites.
                 [isRestrictedEditor, isDesigner, hasMultiWebsites] = await Promise.all([
                     user.hasGroup('website.group_website_restricted_editor'),
                     user.hasGroup('website.group_website_designer'),
                     user.hasGroup('website.group_multi_website'),
                 ]);
-
-                const [currentWebsiteRepr, allWebsites] = await Promise.all([
-                    orm.call('website', 'get_current_website'),
-                    hasMultiWebsites ? orm.searchRead('website', [], ['domain', 'id', 'name']) : [],
-                ]);
-                websites = [...allWebsites];
-                setCurrentWebsiteId(unslugHtmlDataObject(currentWebsiteRepr).id);
-                if (!websites.length) {
-                    websites = [{ id: currentWebsiteId }];
-                }
+            },
+            async fetchWebsites() {
+                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
             },
             async loadWysiwyg() {
                 if (!Wysiwyg) {

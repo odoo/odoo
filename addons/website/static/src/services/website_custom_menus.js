@@ -61,7 +61,8 @@ registry.category('website_custom_menus').add('website.menu_optimize_seo', {
         && !!env.services.website.currentWebsite.metadata.mainObject,
 });
 registry.category('website_custom_menus').add('website.menu_current_page', {
-    isDisplayed: (env) => !!env.services.website.currentWebsite,
+    isDisplayed: (env) => !!env.services.website.currentWebsite
+        && !!env.services.website.pageDocument,
 },);
 registry.category('website_custom_menus').add('website.menu_ace_editor', {
     openWidget: (services) => services.website.context.showAceEditor = true,
