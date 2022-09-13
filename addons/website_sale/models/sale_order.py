@@ -449,9 +449,17 @@ class SaleOrder(models.Model):
         # If a potential customer creates one or more abandoned sale order and then completes a sale order before
         # the recovery email gets sent, then the email won't be sent.
 
-        return self.filtered(lambda abandoned_sale_order:
+        return self.filtered(
+            lambda abandoned_sale_order:
             abandoned_sale_order.partner_id.email
             and not any(transaction.state == 'error' for transaction in abandoned_sale_order.transaction_ids)
             and any(not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding) for line in abandoned_sale_order.order_line)
             and not has_later_sale_order.get(abandoned_sale_order.partner_id, False)
         )
+
+    def action_preview_sale_order(self):
+        action = super().action_preview_sale_order()
+        if action['url'].startswith('/'):
+            # URL should always be relative, safety check
+            action['url'] = f'/@{action["url"]}'
+        return action
