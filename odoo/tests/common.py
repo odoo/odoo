@@ -1726,7 +1726,7 @@ class HttpCase(TransactionCase):
             odoo.http.root.session_store.delete(self.session)
 
         self.session = session = odoo.http.root.session_store.new()
-        session.update(odoo.http.DEFAULT_SESSION, db=get_db_name())
+        session.update(odoo.http.get_default_session(), db=get_db_name())
         session.context['lang'] = odoo.http.DEFAULT_LANG
 
         if user: # if authenticated
