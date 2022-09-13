@@ -114,6 +114,7 @@ start the server specifying the ``--unaccent`` flag.
 
 """
 import collections.abc
+import json
 import logging
 import reprlib
 import traceback
@@ -123,7 +124,7 @@ from datetime import date, datetime, time
 from psycopg2.sql import Composable, SQL
 
 import odoo.modules
-from ..models import BaseModel
+from ..models import BaseModel, check_property_field_value_name
 from odoo.tools import pycompat, Query, _generate_table_alias, sql
 
 
@@ -702,6 +703,57 @@ class expression(object):
                 query = comodel.with_context(**field.context)._where_calc(domain)
                 subquery, subparams = query.select('"%s"."%s"' % (comodel._table, field.inverse_name))
                 push(('id', 'inselect', (subquery, subparams)), model, alias, internal=True)
+
+            elif field.type == 'properties':
+                assert len(path) == 2 and "." not in path[1]
+                assert operator in ('=', '!=', '>', '>=', '<', '<=', 'in', 'not in', 'like', 'ilike', 'not like', 'not ilike'), \
+                    f"Wrong search operator {operator!r}"
+                property_name = path[1]
+                check_property_field_value_name(property_name)
+
+                if (isinstance(right, bool) or right is None) and operator in ('=', '!='):
+                    # check for boolean value but also for key existence
+                    if right:
+                        # inverse the condition
+                        right = False
+                        operator = '!=' if operator == '=' else '='
+
+                    sql_path = f'"{alias}"."{field.name}"'
+                    key_existence_expr = ""
+                    if operator == '=':  # property == False
+                        key_existence_expr = (
+                            f"OR ({sql_path} IS NULL) "
+                            f"OR NOT ({sql_path} ? '{property_name}')"
+                        )
+
+                    expr = f"(({sql_path} -> '{property_name}') {operator} '%s' {key_existence_expr})"
+                    push_result(expr, [right])
+
+                else:
+                    if 'like' in operator:
+                        right = f'%{pycompat.to_text(right)}%'
+                        unaccent = self._unaccent(field)
+                    else:
+                        unaccent = lambda x: x
+
+                    inverse = ''
+                    arrow = '->'  # raw value
+                    if operator in ('in', 'not in'):
+                        if operator == 'not in':
+                            inverse = 'NOT'
+                        if isinstance(right, (list, tuple)):
+                            operator = '<@'
+                        else:
+                            operator = '@>'
+                        right = json.dumps(right)
+                    elif isinstance(right, str):
+                        arrow = '->>'  # JSONified value
+                    else:
+                        right = json.dumps(right)
+
+                    sql_path = f""""{alias}"."{field.name}" {arrow} '{property_name}'"""
+                    expr = f"""({inverse} ({unaccent(sql_path)}) {operator} ({unaccent('%s')}))"""
+                    push_result(expr, [right])
 
             elif len(path) > 1 and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
