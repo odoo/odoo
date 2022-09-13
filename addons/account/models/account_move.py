@@ -1837,7 +1837,7 @@ class AccountMove(models.Model):
         rec = super().copy(default)
         # invoice_date is not copied but is the basis for currency rates and payment terms
         if rec.invoice_date != self.invoice_date:
-            rec.with_context(check_move_validity=False)._onchange_invoice_date()
+            rec.with_context(check_move_validity=False)._onchange_currency()
             rec._check_balanced()
         return rec
 

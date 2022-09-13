@@ -3139,3 +3139,36 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def test_out_invoice_duplicate_currency_rate(self):
+        ''' Test the correct update of currency rate on invoice duplication'''
+        move_form = Form(self.invoice)
+        move_form.date = '2016-01-01'
+        move_form.currency_id = self.currency_data['currency']
+        move_form.save()
+
+        self.invoice.post()
+
+        # === Duplicate invoice. The currency conversion's rate should change to match today rate ===
+
+        with self.mocked_today('2019-01-01'):
+            copy = self.invoice.copy()
+
+        copy.action_post()
+        self.assertRecordValues(
+            copy.line_ids.filtered(lambda l: l.exclude_from_invoice_tab == False),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1000.0,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -200.0,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                },
+            ],
+        )
