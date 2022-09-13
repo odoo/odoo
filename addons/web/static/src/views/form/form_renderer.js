@@ -65,6 +65,10 @@ export class FormRenderer extends Component {
     evalDomainFromRecord(record, expr) {
         return evalDomain(expr, record.evalContext);
     }
+
+    get compileParams() {
+        return {};
+    }
 }
 
 FormRenderer.template = xml`<t t-call="{{ templates.FormRenderer }}" />`;
