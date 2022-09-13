@@ -539,6 +539,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @private
      */
     _dropdownHover: function () {
+        this.$dropdownMenus.attr('data-bs-popper', 'none');
         if (config.device.size_class > config.device.SIZES.SM) {
             this.$dropdownMenus.css('margin-top', '0');
             this.$dropdownMenus.css('top', 'unset');
