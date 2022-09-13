@@ -224,6 +224,13 @@
         }
     }
 
+    .o_form_view_container {
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+        flex: 1 1 auto;
+    }
+
     // No sheet
     &.o_form_nosheet, .o_form_nosheet {
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
@@ -1150,6 +1157,7 @@
 }
 
 .o_form_view.o_xxl_form_view {
+    flex-flow: row nowrap !important;
 
     .o_form_sheet_bg {
         flex: 1 1 auto; // Side chatter is disabled if this has to shrink but this was added for safety

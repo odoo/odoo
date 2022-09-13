@@ -3,43 +3,58 @@
 
     <t t-name="web.FormView" owl="1">
         <div t-att-class="className" t-ref="root">
-            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
-                <t t-set-slot="layout-buttons">
-                    <t t-if="footerArchInfo and env.inDialog">
-                        <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo"/>
+            <div class="o_form_view_container">
+                <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                    <t t-set-slot="layout-buttons">
+                        <t t-if="footerArchInfo and env.inDialog">
+                            <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo"/>
+                        </t>
+                        <t t-else="">
+                            <t t-call="{{ props.buttonTemplate }}"/>
+                        </t>
                     </t>
-                    <t t-else="">
-                        <t t-call="{{ props.buttonTemplate }}"/>
+                    <t t-set-slot="control-panel-bottom-left">
+                        <t t-if="props.info.actionMenus and !model.root.isVirtual">
+                            <ActionMenus
+                                activeIds="[model.root.resId]"
+                                context="props.context"
+                                items="getActionMenuItems()"
+                                isDomainSelected="model.root.isDomainSelected"
+                                resModel="model.root.resModel"
+                                domain="props.domain"
+                                onActionExecuted="() => model.load()"
+                            />
+                        </t>
                     </t>
-                </t>
-                <t t-set-slot="control-panel-bottom-left">
-                    <t t-if="!env.isSmall and props.info.actionMenus and !model.root.isVirtual">
-                        <ActionMenus
-                            activeIds="[model.root.resId]"
-                            context="props.context"
-                            items="getActionMenuItems()"
-                            isDomainSelected="model.root.isDomainSelected"
-                            resModel="model.root.resModel"
-                            domain="props.domain"
-                            onActionExecuted="() => model.load()"
-                        />
+                    <t t-set-slot="control-panel-bottom-left">
+                        <t t-if="!env.isSmall and props.info.actionMenus and !model.root.isVirtual">
+                            <ActionMenus
+                                activeIds="[model.root.resId]"
+                                context="props.context"
+                                items="getActionMenuItems()"
+                                isDomainSelected="model.root.isDomainSelected"
+                                resModel="model.root.resModel"
+                                domain="props.domain"
+                                onActionExecuted="() => model.load()"
+                            />
+                        </t>
                     </t>
-                </t>
-                <t t-set-slot="control-panel-bottom-right">
-                    <t t-if="env.isSmall and props.info.actionMenus and !model.root.isVirtual">
-                        <ActionMenus
-                            activeIds="[model.root.resId]"
-                            context="props.context"
-                            items="getActionMenuItems()"
-                            isDomainSelected="model.root.isDomainSelected"
-                            resModel="model.root.resModel"
-                            domain="props.domain"
-                            onActionExecuted="() => model.load()"
-                        />
+                    <t t-set-slot="control-panel-bottom-right">
+                        <t t-if="env.isSmall and props.info.actionMenus and !model.root.isVirtual">
+                            <ActionMenus
+                                activeIds="[model.root.resId]"
+                                context="props.context"
+                                items="getActionMenuItems()"
+                                isDomainSelected="model.root.isDomainSelected"
+                                resModel="model.root.resModel"
+                                domain="props.domain"
+                                onActionExecuted="() => model.load()"
+                            />
+                        </t>
                     </t>
-                </t>
-                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert"/>
-            </Layout>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert"/>
+                </Layout>
+            </div>
         </div>
     </t>
 

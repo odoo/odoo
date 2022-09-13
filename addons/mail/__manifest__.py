@@ -193,6 +193,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/components/*/*.js',
             'mail/static/src/components/*/*.scss',
             'mail/static/src/components/*/*.xml',
+            'mail/static/src/views/*/*.xml',
             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
             'mail/static/src/views/**/*.js',
