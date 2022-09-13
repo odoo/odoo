@@ -1683,6 +1683,7 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean} true if a table was deselected
      */
     deselectTable() {
+        this.observerUnactive('deselectTable');
         let didDeselectTable = false;
         for (const td of this.editable.querySelectorAll('.o_selected_table, .o_selected_td')) {
             td.classList.remove('o_selected_td', 'o_selected_table');
@@ -1691,6 +1692,7 @@ export class OdooEditor extends EventTarget {
             }
             didDeselectTable = true;
         }
+        this.observerActive('deselectTable');
         return didDeselectTable;
     }
 
@@ -2085,7 +2087,7 @@ export class OdooEditor extends EventTarget {
         } else if (!traversedNodes.every(node => !!closestElement(node, 'td'))) {
             // The selection goes through a table but also outside of it ->
             // select the whole table.
-            this.historyPauseSteps('handleSelectionInTable');
+            this.observerUnactive('handleSelectionInTable');
             for (const table of new Set(traversedNodes.map(node => closestElement(node, 'table')))) {
                 if (table) {
                     table.classList.toggle('o_selected_table', true);
@@ -2095,6 +2097,7 @@ export class OdooEditor extends EventTarget {
                     appliedCustomSelection = true;
                 }
             }
+            this.observerActive('handleSelectionInTable');
         } else if (ev) {
             // We're redirected from a mousemove event.
             const selectedNodes = getSelectedNodes(this.editable);
@@ -2129,7 +2132,7 @@ export class OdooEditor extends EventTarget {
      * @param {Range} range
      */
     _selectTableCells(range) {
-        this.historyPauseSteps('handleSelectionInTable');
+        this.observerUnactive('_selectTableCells');
         const table = closestElement(range.startContainer, 'table');
         const alreadyHadSelection = table.classList.contains('o_selected_table');
         this.deselectTable(); // Undo previous selection.
@@ -2152,6 +2155,7 @@ export class OdooEditor extends EventTarget {
         if (!alreadyHadSelection) {
             this.toolbarShow();
         }
+        this.observerActive('_selectTableCells');
     }
     /**
      * If the mouse is hovering over one of the borders of a table cell element,
@@ -3593,7 +3597,6 @@ export class OdooEditor extends EventTarget {
 
         this._fixSelectionOnContenteditableFalse();
 
-        this.historyUnpauseSteps('handleSelectionInTable');
         if (this.toolbar) {
             this.toolbar.style.pointerEvents = 'auto';
         }
