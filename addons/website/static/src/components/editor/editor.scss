@@ -2,6 +2,9 @@
     .o_notification_manager {
         @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
     }
+    .o_ChatWindowManager {
+        display: none !important;
+    }
 }
 
 .ui-autocomplete.o_website_ui_autocomplete {
