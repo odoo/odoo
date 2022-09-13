@@ -57,11 +57,7 @@ class PortalShare(models.TransientModel):
                     record = res_model.browse(rec.res_id)
                     rec.access_warning = record.access_warning
 
-    @api.model
-    def _get_note(self):
-        return self.env.ref('mail.mt_note')
-
-    def _send_public_link(self, note, partners=None):
+    def _send_public_link(self, partners=None):
         if partners is None:
             partners = self.partner_ids
         for partner in partners:
@@ -73,12 +69,12 @@ class PortalShare(models.TransientModel):
                 values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
                         'share_link': share_link},
                 subject=_("You are invited to access %s", self.resource_ref.display_name),
-                subtype_id=note.id,
+                subtype_xmlid='mail.mt_note',
                 email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=[(6, 0, partner.ids)])
             self = self.with_context(lang=saved_lang)
 
-    def _send_signup_link(self, note, partners=None):
+    def _send_signup_link(self, partners=None):
         if partners is None:
             partners = self.partner_ids.filtered(lambda partner: not partner.user_ids)
         for partner in partners:
@@ -92,13 +88,12 @@ class PortalShare(models.TransientModel):
                 values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
                         'share_link': share_link},
                 subject=_("You are invited to access %s", self.resource_ref.display_name),
-                subtype_id=note.id,
+                subtype_xmlid='mail.mt_note',
                 email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=[(6, 0, partner.ids)])
             self = self.with_context(lang=saved_lang)
 
     def action_send_mail(self):
-        note = self._get_note()
         signup_enabled = self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope') == 'b2c'
 
         if getattr(self.resource_ref, 'access_token', False) or not signup_enabled:
@@ -106,9 +101,9 @@ class PortalShare(models.TransientModel):
         else:
             partner_ids = self.partner_ids.filtered(lambda x: x.user_ids)
         # if partner already user or record has access token send common link in batch to all user
-        self._send_public_link(note, partner_ids)
+        self._send_public_link(partner_ids)
         # when partner not user send individual mail with signup token
-        self._send_signup_link(note, self.partner_ids - partner_ids)
+        self._send_signup_link(self.partner_ids - partner_ids)
 
         # subscribe all recipients so that they receive future communication (better than
         # using autofollow as more precise)

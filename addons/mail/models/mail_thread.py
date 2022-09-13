@@ -2119,6 +2119,10 @@ class MailThread(models.AbstractModel):
         res_id = kwargs.get('res_id', self.ids and self.ids[0] or 0)
         res_ids = kwargs.get('res_id') and [kwargs['res_id']] or self.ids
 
+        # support xml based subtype id
+        if kwargs.get('subtype_xmlid') and not kwargs.get('subtype_id'):
+            kwargs['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id(kwargs.pop('subtype_xmlid'))
+
         # Create the composer
         composer = self.env['mail.compose.message'].with_context(
             active_id=res_id,
@@ -2139,7 +2143,9 @@ class MailThread(models.AbstractModel):
 
     def message_notify(self, *,
                        partner_ids=False, parent_id=False, model=False, res_id=False,
-                       author_id=None, email_from=None, body='', subject=False, **kwargs):
+                       author_id=None, email_from=None, body='', subject=False,
+                       subtype_xmlid=None,
+                       **kwargs):
         """ Shortcut allowing to notify partners of messages that shouldn't be
         displayed on a document. It pushes notifications on inbox or by email depending
         on the user configuration, like other notifications. """
@@ -2181,7 +2187,9 @@ class MailThread(models.AbstractModel):
         }
         msg_values.update(msg_kwargs)
         # add default-like values afterwards, to avoid useless queries
-        if 'subtype_id' not in msg_values:
+        if subtype_xmlid:
+            msg_values['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
+        elif 'subtype_id' not in msg_values:
             msg_values['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         if 'reply_to' not in msg_values:
             msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]

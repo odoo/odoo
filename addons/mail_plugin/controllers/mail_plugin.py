@@ -120,7 +120,7 @@ class MailPluginController(http.Controller):
         partner.message_post_with_view(
             'iap_mail.enrich_company',
             values=iap_data,
-            subtype_id=request.env.ref('mail.mt_note').id,
+            subtype_xmlid='mail.mt_note',
         )
 
         return {
@@ -360,7 +360,7 @@ class MailPluginController(http.Controller):
         new_company.message_post_with_view(
             'iap_mail.enrich_company',
             values=iap_data,
-            subtype_id=request.env.ref('mail.mt_note').id,
+            subtype_xmlid='mail.mt_note',
         )
 
         return new_company, {'type': 'company_created'}

@@ -31,11 +31,10 @@ class MailThread(models.AbstractModel):
     def message_post_with_template(self, template_id, **kwargs):
         # avoid having message send through `message_post*` methods being implicitly considered as
         # mass-mailing
-        no_massmail = self.with_context(
+        return super(MailThread, self.with_context(
             default_mass_mailing_name=False,
             default_mass_mailing_id=False,
-        )
-        return super(MailThread, no_massmail).message_post_with_template(template_id, **kwargs)
+        )).message_post_with_template(template_id, **kwargs)
 
     @api.model
     def _routing_handle_bounce(self, email_message, message_dict):

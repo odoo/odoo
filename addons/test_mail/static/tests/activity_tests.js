@@ -351,6 +351,7 @@ QUnit.module("test_mail", {}, function () {
                         {
                             default_model: "mail.test.activity",
                             default_res_id: mailTestActivityId2,
+                            default_subtype_xmlid: 'mail.mt_comment',
                             default_template_id: mailTemplateId1,
                             default_use_template: true,
                             force_email: true,

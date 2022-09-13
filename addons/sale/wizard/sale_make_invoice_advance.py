@@ -189,7 +189,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
             invoice.message_post_with_view(
                 'mail.message_origin_link',
                 values={'self': invoice, 'origin': order},
-                subtype_id=self.env.ref('mail.mt_note').id)
+                subtype_xmlid='mail.mt_note',
+            )
 
             return invoice
 

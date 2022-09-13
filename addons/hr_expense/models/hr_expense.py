@@ -636,8 +636,11 @@ class HrExpense(models.Model):
     def refuse_expense(self, reason):
         self.write({'is_refused': True})
         self.sheet_id.write({'state': 'cancel'})
-        self.sheet_id.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
-                                             values={'reason': reason, 'is_sheet': False, 'name': self.name})
+        self.sheet_id.message_post_with_view(
+            'hr_expense.hr_expense_template_refuse_reason',
+            values={'reason': reason, 'is_sheet': False, 'name': self.name},
+            subtype_xmlid='mail.mt_comment',
+        )
 
     @api.model
     def get_expense_dashboard(self):
@@ -798,21 +801,21 @@ class HrExpense(models.Model):
         # TDE TODO: seems louche, check to use notify
         if expense.employee_id.user_id.partner_id:
             expense.message_post(
+                body=body,
+                email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=expense.employee_id.user_id.partner_id.ids,
                 subject='Re: %s' % msg_dict.get('subject', ''),
-                body=body,
-                subtype_id=self.env.ref('mail.mt_note').id,
-                email_layout_xmlid='mail.mail_notification_light',
+                subtype_xmlid='mail.mt_note',
             )
         else:
             self.env['mail.mail'].sudo().create({
-                'email_from': self.env.user.email_formatted,
                 'author_id': self.env.user.partner_id.id,
-                'body_html': body,
-                'subject': 'Re: %s' % msg_dict.get('subject', ''),
-                'email_to': msg_dict.get('email_from', False),
                 'auto_delete': True,
+                'body_html': body,
+                'email_from': self.env.user.email_formatted,
+                'email_to': msg_dict.get('email_from', False),
                 'references': msg_dict.get('message_id'),
+                'subject': 'Re: %s' % msg_dict.get('subject', ''),
             }).send()
 
 
@@ -1213,8 +1216,13 @@ class HrExpenseSheet(models.Model):
                 raise UserError(_("You can only refuse your department expenses"))
 
         self.write({'state': 'cancel'})
+        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         for sheet in self:
-            sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': sheet.name})
+            sheet.message_post_with_view(
+                'hr_expense.hr_expense_template_refuse_reason',
+                subtype_id=subtype_id,
+                values={'reason': reason, 'is_sheet': True, 'name': sheet.name},
+            )
         self.activity_update()
 
     def reset_expense_sheets(self):

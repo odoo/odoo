@@ -169,7 +169,7 @@ class ResPartner(models.Model):
                 partners.message_post_with_view(
                     'iap_mail.enrich_company',
                     values=template_values,
-                    subtype_id=self.env.ref('mail.mt_note').id,
+                    subtype_xmlid='mail.mt_note',
                 )
                 partners.write({'additional_info': False})
 

@@ -45,7 +45,8 @@ class StockMove(models.Model):
                 picking_id.message_post_with_view(
                     'mail.message_origin_link',
                     values={'self': picking_id, 'origin': sale_order_id},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                    subtype_xmlid='mail.mt_note',
+                )
 
 
 class ProcurementGroup(models.Model):

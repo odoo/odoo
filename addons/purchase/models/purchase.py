@@ -750,7 +750,11 @@ class PurchaseOrder(models.Model):
                     if send_single:
                         return order._send_reminder_open_composer(template.id)
                     else:
-                        order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature", composition_mode='comment')
+                        order.with_context(is_reminder=True).message_post_with_template(
+                            template.id,
+                            email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
+                            subtype_xmlid='mail.mt_comment',
+                        )
 
     def send_reminder_preview(self):
         self.ensure_one()
@@ -1100,9 +1104,11 @@ class PurchaseOrderLine(models.Model):
         if 'product_qty' in values:
             for line in self:
                 if line.order_id.state == 'purchase':
-                    line.order_id.message_post_with_view('purchase.track_po_line_template',
-                                                         values={'line': line, 'product_qty': values['product_qty']},
-                                                         subtype_id=self.env.ref('mail.mt_note').id)
+                    line.order_id.message_post_with_view(
+                        'purchase.track_po_line_template',
+                        values={'line': line, 'product_qty': values['product_qty']},
+                        subtype_xmlid='mail.mt_note',
+                    )
         if 'qty_received' in values:
             for line in self:
                 line._track_qty_received(values['qty_received'])
@@ -1422,7 +1428,7 @@ class PurchaseOrderLine(models.Model):
             self.order_id.message_post_with_view(
                 'purchase.track_po_line_qty_received_template',
                 values={'line': self, 'qty_received': new_qty},
-                subtype_id=self.env.ref('mail.mt_note').id
+                subtype_xmlid='mail.mt_note',
             )
 
     def _validate_analytic_distribution(self):

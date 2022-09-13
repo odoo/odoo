@@ -581,7 +581,7 @@ class MailActivity(models.Model):
                         'feedback': feedback,
                         'display_assignee': activity.user_id != self.env.user
                     },
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_activities'),
+                    subtype_xmlid='mail.mt_activities',
                     mail_activity_type_id=activity.activity_type_id.id,
                     attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
                 )
