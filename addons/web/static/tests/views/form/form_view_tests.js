@@ -10844,25 +10844,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("display tooltips for save and discard buttons", async function (assert) {
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><field name="foo"/></form>`,
-        });
-        assert.hasAttrValue(
-            target.querySelector(".o_form_button_save"),
-            "data-tooltip",
-            "Save record"
-        );
-        assert.hasAttrValue(
-            target.querySelector(".o_form_button_cancel"),
-            "data-tooltip",
-            "Discard changes"
-        );
-    });
-
     QUnit.test("resequence list lines when discardable lines are present", async function (assert) {
         var onchangeNum = 0;
         serverData.models.partner.onchanges = {
