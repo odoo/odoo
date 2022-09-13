@@ -269,13 +269,15 @@
                                 <field name="payment_method_line_id" required="1" options="{'no_create': True, 'no_open': True}"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"
+                                <field name="partner_bank_id" string="Customer Bank Account"
+                                      context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
                                         attrs="{
                                             'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
                                         }"/>
 
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Vendor Bank Account"
+                                <field name="partner_bank_id" string="Vendor Bank Account"
+                                        context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
                                         attrs="{
                                             'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
@@ -283,7 +285,8 @@
 
                                 <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
                                 fields readonly condition in the framework, preventing the modification of these fields -->
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Company Bank Account"
+                                <field name="partner_bank_id" string="Company Bank Account"
+                                        context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
                                         attrs="{
                                             'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('is_internal_transfer', '=', True), ('payment_type', '=', 'outbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],

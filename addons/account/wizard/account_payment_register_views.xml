@@ -34,7 +34,8 @@
                                    required="1"  options="{'no_create': True, 'no_open': True}"/>
                             <field name="partner_bank_id"
                                    attrs="{'invisible': ['|', ('show_partner_bank_account', '=', False), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)],
-                                           'required': [('require_partner_bank_account', '=', True), ('can_edit_wizard', '=', True), '|', ('can_group_payments', '=', False), ('group_payment', '=', False)], 'readonly': [('payment_type', '=', 'inbound')]}"/>
+                                           'required': [('require_partner_bank_account', '=', True), ('can_edit_wizard', '=', True), '|', ('can_group_payments', '=', False), ('group_payment', '=', False)], 'readonly': [('payment_type', '=', 'inbound')]}"
+                                    context="{'default_allow_out_payment': True}"/>
                             <field name="group_payment"
                                    attrs="{'invisible': [('can_group_payments', '=', False)]}"/>
                         </group>
