@@ -75,7 +75,7 @@
     <field name="model">website.page</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree js_class="website_pages_list" type="object" action="open_website_url" default_order="url">
+        <tree js_class="website_pages_list" type="object" action="open_website_url" default_order="url asc, id asc">
             <field name="is_homepage" invisible="1"/>
             <field name="name" string="Page Title"/>
             <field name="website_url" string="Page URL"/>
