@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.SelectCreateDialog" owl="1">
-        <Dialog title="props.title">
+        <Dialog title="props.title" withBodyPadding="false">
             <View t-props="viewProps" />
             <t t-set-slot="footer">
                 <t t-if="props.multiSelect">
