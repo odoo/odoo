@@ -181,7 +181,6 @@ registerModel({
         callDemoView: one('CallDemoView', {
             compute: '_computeCallDemoView',
             inverse: 'welcomeView',
-            isCausal: true,
         }),
         /**
          * States the name the guest had when landing on the welcome view.

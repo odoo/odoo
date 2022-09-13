@@ -1587,7 +1587,6 @@ registerModel({
         cache: one('ThreadCache', {
             default: {},
             inverse: 'thread',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
@@ -1601,7 +1600,6 @@ registerModel({
          */
         chatWindow: one('ChatWindow', {
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * Determines the composer state of this thread.
@@ -1609,7 +1607,6 @@ registerModel({
         composer: one('Composer', {
             compute: '_computeComposer',
             inverse: 'thread',
-            isCausal: true,
         }),
         creator: one('User'),
         /**
@@ -1621,7 +1618,6 @@ registerModel({
          */
         currentPartnerInactiveTypingTimer: one('Timer', {
             inverse: 'threadAsCurrentPartnerInactiveTypingTimerOwner',
-            isCausal: true,
         }),
         /**
          * Last 'is_typing' status of current partner that has been notified
@@ -1649,7 +1645,6 @@ registerModel({
          */
         currentPartnerLongTypingTimer: one('Timer', {
             inverse: 'threadAsCurrentPartnerLongTypingTimerOwner',
-            isCausal: true,
         }),
         /**
          * Determines the default display mode of this channel. Should contain
@@ -1918,7 +1913,6 @@ registerModel({
          */
         messageSeenIndicators: many('MessageSeenIndicator', {
             inverse: 'thread',
-            isCausal: true,
         }),
         messagingAsAllCurrentClientThreads: one('Messaging', {
             compute: '_computeMessagingAsAllCurrentClientThreads',
@@ -1984,7 +1978,6 @@ registerModel({
          */
         otherMembersLongTypingTimers: many('OtherMemberLongTypingInThreadTimer', {
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * States the `Activity` that belongs to `this` and that are
@@ -1999,7 +1992,6 @@ registerModel({
          */
         partnerSeenInfos: many('ThreadPartnerSeenInfo', {
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * Determine if there is a pending seen message change, which is a change
@@ -2019,7 +2011,6 @@ registerModel({
         callInviteRequestPopup: one('CallInviteRequestPopup', {
             compute: '_computeCallInviteRequestPopup',
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * The session that invited the current user, it is only set when the
@@ -2055,7 +2046,6 @@ registerModel({
         suggestable: one('ComposerSuggestable', {
             default: {},
             inverse: 'thread',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
@@ -2110,7 +2100,6 @@ registerModel({
         throttleNotifyCurrentPartnerTypingStatus: one('Throttle', {
             compute: '_computeThrottleNotifyCurrentPartnerTypingStatus',
             inverse: 'threadAsThrottleNotifyCurrentPartnerTypingStatus',
-            isCausal: true,
         }),
         /**
          * States the `Activity` that belongs to `this` and that are due
@@ -2121,7 +2110,6 @@ registerModel({
         }),
         threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * Members that are currently typing something in the composer of this

@@ -74,7 +74,6 @@ registerModel({
                 }
                 return clear();
             },
-            isCausal: true,
             inverse: 'emojiGridViewRowRegistryOwner',
             sort: '_sortRows',
         }),

@@ -1169,6 +1169,10 @@ export class ModelManager {
                     continue;
                 }
                 if (field.inverse) {
+                    // Automatically make causal the inverse of an identifying.
+                    if (field.identifying) {
+                        this.models[field.to].fields[field.inverse].isCausal = true;
+                    }
                     continue;
                 }
                 const relatedModel = this.models[field.to];

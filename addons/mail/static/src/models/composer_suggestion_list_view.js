@@ -102,12 +102,10 @@ registerModel({
         composerSuggestionListViewExtraComposerSuggestionViewItems: many('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
             compute: '_computeComposerSuggestionListViewExtraComposerSuggestionViewItems',
             inverse: 'composerSuggestionListViewOwner',
-            isCausal: true,
         }),
         composerSuggestionListViewMainComposerSuggestionViewItems: many('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
             compute: '_computeComposerSuggestionListViewMainComposerSuggestionViewItems',
             inverse: 'composerSuggestionListViewOwner',
-            isCausal: true,
         }),
         composerViewOwner: one('ComposerView', {
             identifying: true,

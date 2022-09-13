@@ -230,7 +230,6 @@ registerModel({
         activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
             compute: '_computeActivityMarkDonePopoverContentView',
             inverse: 'popoverViewOwner',
-            isCausal: true,
         }),
         activityViewOwnerAsMarkDone: one('ActivityView', {
             identifying: true,
@@ -250,7 +249,6 @@ registerModel({
         callOptionMenuView: one('CallOptionMenu', {
             compute: '_computeCallOptionMenuView',
             inverse: 'popoverViewOwner',
-            isCausal: true,
         }),
         callParticipantCardOwner: one('CallParticipantCard', {
             identifying: true,
@@ -259,7 +257,6 @@ registerModel({
         callParticipantCardPopoverContentView: one('CallParticipantCardPopoverContentView', {
             compute: '_computeCallParticipantCardPopoverContentView',
             inverse: 'popoverViewOwner',
-            isCausal: true,
         }),
         /**
          * The record that represents the content inside the popover view.
@@ -267,7 +264,6 @@ registerModel({
         channelInvitationForm: one('ChannelInvitationForm', {
             compute: '_computeChannelInvitationForm',
             inverse: 'popoverViewOwner',
-            isCausal: true,
         }),
         /**
          * States the OWL component of this popover view.
@@ -309,7 +305,6 @@ registerModel({
         emojiPickerView: one('EmojiPickerView', {
             compute: '_computeEmojiPickerView',
             inverse: 'popoverViewOwner',
-            isCausal: true,
         }),
         manager: one('PopoverManager', {
             compute: '_computeManager',
@@ -325,7 +320,6 @@ registerModel({
         messageNotificationPopoverContentView: one('MessageNotificationPopoverContentView', {
             compute: '_computeMessageNotificationPopoverContentView',
             inverse: 'popoverViewOwner',
-            isCausal: true,
         }),
         messageViewOwnerAsNotificationContent: one('MessageView', {
             identifying: true,

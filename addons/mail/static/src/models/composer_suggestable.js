@@ -17,11 +17,9 @@ registerModel({
         }),
         composerSuggestionListViewExtraComposerSuggestionViewItems: many('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
             inverse: 'suggestable',
-            isCausal: true,
         }),
         composerSuggestionListViewMainComposerSuggestionViewItems: many('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
             inverse: 'suggestable',
-            isCausal: true,
         }),
         partner: one('Partner', {
             identifying: true,

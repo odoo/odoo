@@ -27,7 +27,6 @@ registerModel({
         activityViews: many('ActivityView', {
             compute: '_computeActivityViews',
             inverse: 'activityBoxView',
-            isCausal: true,
         }),
         chatter: one('Chatter', {
             identifying: true,

@@ -296,7 +296,6 @@ registerModel({
         categoryChannel: one('DiscussSidebarCategory', {
             default: {},
             inverse: 'discussAsChannel',
-            isCausal: true,
         }),
         /**
          * Discuss sidebar category for `chat` type channel threads.
@@ -304,11 +303,9 @@ registerModel({
         categoryChat: one('DiscussSidebarCategory', {
             default: {},
             inverse: 'discussAsChat',
-            isCausal: true,
         }),
         discussView: one('DiscussView', {
             inverse: 'discuss',
-            isCausal: true,
         }),
         /**
          * Determines whether `this.thread` should be displayed.
@@ -345,7 +342,6 @@ registerModel({
         notificationListView: one('NotificationListView', {
             compute: '_computeNotificationListView',
             inverse: 'discussOwner',
-            isCausal: true,
         }),
         /**
          * The navbar view on the discuss app when in mobile and when not
@@ -354,7 +350,6 @@ registerModel({
         mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'discuss',
-            isCausal: true,
         }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful
@@ -376,7 +371,6 @@ registerModel({
         threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'discuss',
-            isCausal: true,
             required: true,
         }),
     },

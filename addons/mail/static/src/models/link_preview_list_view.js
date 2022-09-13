@@ -35,17 +35,14 @@ registerModel({
         linkPreviewAsCardViews: many('LinkPreviewCardView', {
             compute: '_computeLinkPreviewAsCardViews',
             inverse: 'linkPreviewListViewOwner',
-            isCausal: true,
         }),
         linkPreviewAsImageViews: many('LinkPreviewImageView', {
             compute: '_computeLinkPreviewAsImageViews',
             inverse: 'linkPreviewListViewOwner',
-            isCausal: true,
         }),
         linkPreviewAsVideoViews: many('LinkPreviewVideoView', {
             compute: '_computeLinkPreviewAsVideoViews',
             inverse: 'linkPreviewListViewOwner',
-            isCausal: true,
         }),
         messageViewOwner: one('MessageView', {
             identifying: true,

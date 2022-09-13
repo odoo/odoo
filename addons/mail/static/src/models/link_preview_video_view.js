@@ -47,7 +47,6 @@ registerModel({
         linkPreviewAsideView: one('LinkPreviewAsideView', {
             compute: '_computeLinkPreviewAsideView',
             inverse: 'linkPreviewVideoView',
-            isCausal: true,
         }),
         linkPreviewListViewOwner: one('LinkPreviewListView', {
             identifying: true,

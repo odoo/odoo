@@ -1132,7 +1132,6 @@ registerModel({
         audioTrack: attr(),
         blurManager: one('BlurManager', {
             inverse: 'rtc',
-            isCausal: true,
         }),
         /**
          * The channel that is hosting the current RTC call.
@@ -1258,7 +1257,6 @@ registerModel({
         callSystrayMenu: one('CallSystrayMenu', {
             default: {},
             inverse: 'rtc',
-            isCausal: true,
         }),
         /**
          * True if we want to enable the video track of the current partner.

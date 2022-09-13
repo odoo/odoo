@@ -297,7 +297,6 @@ registerModel({
         selectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
             compute: '_computeSelectablePartnerViews',
             inverse: 'channelInvitationFormOwner',
-            isCausal: true,
         }),
         /**
          * Determines all partners that are currently selected.
@@ -306,7 +305,6 @@ registerModel({
         selectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
             compute: '_computeSelectedPartnerViews',
             inverse: 'channelInvitationFormOwner',
-            isCausal: true,
         }),
         /**
          * States the thread on which this list operates (if any).

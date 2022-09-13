@@ -123,14 +123,12 @@ registerModel({
         nonSearchRowRegistry: one('EmojiGridViewRowRegistry', {
             default: {},
             inverse: 'emojiGridViewOwnerAsNonSearch',
-            isCausal: true,
         }),
         onScrollThrottle: one('Throttle', {
             compute() {
                 return { func: () => this.update({ scrollRecomputeCount: increment() }) };
             },
             inverse: 'emojiGridViewAsOnScroll',
-            isCausal: true,
         }),
         renderedRows: many('EmojiGridRowView', {
             compute() {
@@ -190,12 +188,10 @@ registerModel({
                 return clear();
             },
             inverse: 'emojiGridViewOwner',
-            isCausal: true,
         }),
         searchRowRegistry: one('EmojiGridViewRowRegistry', {
             default: {},
             inverse: 'emojiGridViewOwnerAsSearch',
-            isCausal: true,
         }),
         topBufferAmount: attr({
             default: 2,

@@ -624,7 +624,6 @@ registerModel({
          * open in the topbar.
          */
         invitePopoverView: one('PopoverView', {
-            isCausal: true,
             inverse: 'threadViewTopbarOwnerAsInvite',
         }),
         /**

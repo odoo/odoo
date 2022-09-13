@@ -176,11 +176,9 @@ registerModel({
         }),
         followerSubtypeListDialog: one('Dialog', {
             inverse: 'followerOwnerAsSubtypeList',
-            isCausal: true,
         }),
         followerViews: many('FollowerView', {
             inverse: 'follower',
-            isCausal: true,
         }),
         id: attr({
             identifying: true,

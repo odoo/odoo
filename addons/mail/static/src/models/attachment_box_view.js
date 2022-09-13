@@ -30,7 +30,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'attachmentBoxViewOwner',
-            isCausal: true,
         }),
         chatter: one('Chatter', {
             identifying: true,
@@ -43,7 +42,6 @@ registerModel({
         fileUploader: one('FileUploader', {
             default: {},
             inverse: 'attachmentBoxView',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

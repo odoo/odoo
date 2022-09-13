@@ -78,7 +78,6 @@ registerModel({
         followerSubtypeViews: many('FollowerSubtypeView', {
             compute: '_computeFollowerSubtypeViews',
             inverse: 'followerSubtypeListOwner',
-            isCausal: true,
             sort: '_sortFollowerSubtypeViews',
         }),
     },

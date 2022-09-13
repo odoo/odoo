@@ -127,7 +127,6 @@ registerModel({
         messageActionView: one('MessageActionView', {
             compute: '_computeMessageActionView',
             inverse: 'messageAction',
-            isCausal: true,
         }),
         /**
          * States the listing sequence of the action inside of the aciton list.

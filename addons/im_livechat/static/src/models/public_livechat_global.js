@@ -197,15 +197,12 @@ registerModel({
         chatbot: one('Chatbot', {
             default: {},
             inverse: 'publicLivechatGlobalOwner',
-            isCausal: true,
         }),
         chatWindow: one('PublicLivechatWindow', {
             inverse: 'publicLivechatGlobalOwner',
-            isCausal: true,
         }),
         feedbackView: one('PublicLivechatFeedbackView', {
             inverse: 'publicLivechatGlobalOwner',
-            isCausal: true,
         }),
         hasLoadedQWebTemplate: attr({
             default: false,
@@ -232,20 +229,17 @@ registerModel({
         livechatButtonView: one('LivechatButtonView', {
             compute: '_computeLivechatButtonView',
             inverse: 'publicLivechatGlobalOwner',
-            isCausal: true,
         }),
         livechatInit: attr(),
         messages: many('PublicLivechatMessage'),
         notificationHandler: one('PublicLivechatGlobalNotificationHandler', {
             inverse: 'publicLivechatGlobalOwner',
-            isCausal: true,
         }),
         options: attr({
             default: {},
         }),
         publicLivechat: one('PublicLivechat', {
             inverse: 'publicLivechatGlobalOwner',
-            isCausal: true,
         }),
         rule: attr(),
         serverUrl: attr({

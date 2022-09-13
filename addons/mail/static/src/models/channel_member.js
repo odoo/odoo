@@ -101,7 +101,6 @@ registerModel({
         }),
         channelMemberViews: many('ChannelMemberView', {
             inverse: 'channelMember',
-            isCausal: true,
         }),
         id: attr({
             identifying: true,
@@ -118,7 +117,6 @@ registerModel({
         }),
         otherMemberLongTypingInThreadTimers: many('OtherMemberLongTypingInThreadTimer', {
             inverse: 'member',
-            isCausal: true,
         }),
         persona: one('Persona', {
             inverse: 'channelMembers',

@@ -131,7 +131,6 @@ registerModel({
         suggestable: one('ComposerSuggestable', {
             default: {},
             inverse: 'channelCommand',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

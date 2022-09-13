@@ -55,7 +55,6 @@ registerModel({
         persona: one('Persona', {
             default: {},
             inverse: 'guest',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
