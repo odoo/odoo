@@ -6,7 +6,7 @@ from odoo.fields import Date
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('-at_install', 'post_install')
@@ -523,6 +523,178 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(so_line_deliver_global_project.qty_invoiced, timesheet1.unit_amount + timesheet2.unit_amount + timesheet3.unit_amount)
         self.assertTrue(so_line_deliver_task_project.invoice_lines)
         self.assertEqual(so_line_deliver_task_project.qty_invoiced, timesheet4.unit_amount)
+
+    def test_timesheet_invoice_after_refund(self):
+        """ Test creation of invoice for sale order with timesheeted line that were partially refunded
+
+            1) Create a sale order with a timesheeted service invoiced on delivery
+            2) Log a portion of the order
+            3) Invoice the order
+            4) Refund/Credit a portion of the order
+            5) Log more hours (don't finish order)
+            6) Invoice
+            7) Refund/Credit a portion of the order
+            8) Log the rest of the hours (finish the order)
+            9) Invoice
+        """
+        today = Date.context_today(self.env.user)
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        so_line_deliver_global_project, so_line_deliver_task_project = self.env['sale.order.line'].create([
+            {
+                'name': self.product_delivery_timesheet2.name,
+                'product_id': self.product_delivery_timesheet2.id,
+                'product_uom_qty': 50,
+                'product_uom': self.product_delivery_timesheet2.uom_id.id,
+                'price_unit': self.product_delivery_timesheet2.list_price,
+                'order_id': sale_order.id,
+            },
+            {
+                'name': self.product_delivery_timesheet3.name,
+                'product_id': self.product_delivery_timesheet3.id,
+                'product_uom_qty': 50,
+                'product_uom': self.product_delivery_timesheet3.uom_id.id,
+                'price_unit': self.product_delivery_timesheet3.list_price,
+                'order_id': sale_order.id,
+            },
+        ])
+        so_line_deliver_global_project.product_id_change()
+        so_line_deliver_task_project.product_id_change()
+        # confirm SO
+        sale_order.action_confirm()
+        task_serv1 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_global_project.id)])
+        task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
+        # Log 30 hours of the order
+        self.env['account.analytic.line'].create([
+            {
+                'name': 'Test Line',
+                'project_id': task_serv1.project_id.id,
+                'task_id': task_serv1.id,
+                'unit_amount': 30,
+                'employee_id': self.employee_manager.id,
+                'date': today,
+            },
+            {
+                'name': 'Test Line',
+                'project_id': task_serv2.project_id.id,
+                'task_id': task_serv2.id,
+                'unit_amount': 30,
+                'employee_id': self.employee_manager.id,
+                'date': today,
+            }
+        ])
+        # Context for sale.advance.payment.inv wizard
+        wizard_context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        # invoice SO
+        wizard = self.env['sale.advance.payment.inv'].with_context(wizard_context).create({
+            'advance_payment_method': 'delivered',
+        })
+        wizard.create_invoices()
+        invoice = sale_order.invoice_ids[0]  # there is only 1 invoice, we can index directly
+        # post the invoice
+        invoice.action_post()
+        # make a credit note
+        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [invoice.id], 'active_id': invoice.id, 'active_model': 'account.move'}).create({
+            'refund_method': 'refund',
+            'reason': 'reason test create',
+            'journal_id': invoice.journal_id.id,
+        })
+        credit_note_wizard.reverse_moves()
+        invoice_refund = sale_order.invoice_ids.sorted(key=lambda inv: inv.id)[-1]
+        # refund 10 units
+        with Form(invoice_refund) as invoice_refund_form:
+            for idx in range(len(invoice_refund_form.invoice_line_ids)):
+                with invoice_refund_form.invoice_line_ids.edit(idx) as line_form:
+                    line_form.quantity = 10
+        invoice_refund.action_post()
+        # Log 5 timesheet hours
+        self.env['account.analytic.line'].create([
+            {
+                'name': 'Test Line 2',
+                'project_id': task_serv1.project_id.id,
+                'task_id': task_serv1.id,
+                'unit_amount': 5,
+                'employee_id': self.employee_manager.id,
+                'date': today,
+            },
+            {
+                'name': 'Test Line 2',
+                'project_id': task_serv2.project_id.id,
+                'task_id': task_serv2.id,
+                'unit_amount': 5,
+                'employee_id': self.employee_manager.id,
+                'date': today,
+            }
+        ])
+        # now we should have 35 hours delivered, and 20 already invoiced
+        for line in sale_order.order_line:
+            self.assertEqual(line.qty_delivered, 35, "We should have 35 (30 + 5) hours delivered")
+            self.assertEqual(line.qty_invoiced, 20, "We should have 20 (30 - 10) hours invoiced")
+        # create an invoice that contains the timesheeted days
+        invoice_timesheeted_wizard = self.env['sale.advance.payment.inv'].with_context(wizard_context).create({
+            'advance_payment_method': 'delivered',
+            'date_start_invoice_timesheet': today,
+            'date_end_invoice_timesheet': today + timedelta(days=1),
+        })
+        invoice_timesheeted_wizard.create_invoices()
+        invoice = sale_order.invoice_ids.sorted(key=lambda inv: inv.id)[-1]
+        invoice.action_post()
+        # We should have 35 hours delivered, and 35 invoiced
+        for line in sale_order.order_line:
+            self.assertEqual(line.qty_delivered, 35, "We should have 35 (30 + 5) hours delivered")
+            self.assertEqual(line.qty_invoiced, line.qty_delivered, "We should have the delivered quantity = invoiced quantity")
+        # we need to create a new wizard to take the base it on the new invoice
+        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [invoice.id], 'active_id': invoice.id, 'active_model': 'account.move'}).create({
+            'refund_method': 'refund',
+            'reason': 'reason test create',
+            'journal_id': invoice.journal_id.id,
+        })
+        credit_note_wizard.reverse_moves()
+        invoice_refund_2 = sale_order.invoice_ids.sorted(key=lambda inv: inv.id)[-1]
+        # we refund 3 hours
+        with Form(invoice_refund_2) as invoice_refund_form:
+            for idx in range(len(invoice_refund_form.invoice_line_ids)):
+                with invoice_refund_form.invoice_line_ids.edit(idx) as line_form:
+                    line_form.quantity = 3
+        invoice_refund_2.action_post()
+        # We should have 35 hours delivered, and 32 invoiced.
+        for line in sale_order.order_line:
+            self.assertEqual(line.qty_delivered, 35, "We should have 35 (30 + 5) hours delivered")
+            self.assertEqual(line.qty_invoiced, 32, "We should have 32 (35 - 3) hours invoiced")
+        # Log the rest of the hours necessary
+        self.env['account.analytic.line'].create([{
+                'name': 'Test Line 2',
+                'project_id': task_serv1.project_id.id,
+                'task_id': task_serv1.id,
+                'unit_amount': 15,
+                'employee_id': self.employee_manager.id,
+                'date': today,
+            },
+            {
+                'name': 'Test Line 2',
+                'project_id': task_serv2.project_id.id,
+                'task_id': task_serv2.id,
+                'unit_amount': 15,
+                'employee_id': self.employee_manager.id,
+                'date': today,
+            }
+        ])
+        invoice_timesheeted_wizard.create_invoices()
+        invoice = sale_order.invoice_ids.sorted(key=lambda inv: inv.id)[-1]
+        invoice.action_post()
+        # now here we should have delivered = invoiced
+        for line in sale_order.order_line:
+            self.assertEqual(line.qty_delivered, 50, "All the timesheeted hours should've be delivered")
+            self.assertEqual(line.qty_invoiced, line.qty_delivered, "The invoiced quantity should be the same as the delivered, and not more")
 
     def test_transfert_project(self):
         """ Transfert task with timesheet to another project. """

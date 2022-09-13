@@ -280,5 +280,14 @@ class SaleOrderLine(models.Model):
             domain = expression.AND([domain, [('date', '<=', end_date)]])
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
+        # we need to remove the already invoiced quantity for lines that were credited
+        if refund_account_moves:
+            lines = self.env["sale.order.line"].search([
+                ("id", "in", list(mapping)),
+                ("invoice_lines", "in", refund_account_moves.line_ids.ids),
+            ])
+            for line in lines:
+                mapping[line.id] = max(0, mapping[line.id] - line.qty_invoiced)
+
         for line in lines_by_timesheet:
             line.qty_to_invoice = mapping.get(line.id, 0.0)
