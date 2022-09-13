@@ -607,6 +607,7 @@ class PosOrder(models.Model):
             'invoice_date': invoice_date.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
+            'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
             'invoice_cash_rounding_id': self.config_id.rounding_method.id
             if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
             else False
