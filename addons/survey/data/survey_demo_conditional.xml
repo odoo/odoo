@@ -68,8 +68,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug1"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug1'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p2_q1_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p2_q1"/>
@@ -97,8 +96,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug1"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug1'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p2_q2_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p2_q2"/>
@@ -130,8 +128,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug1"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug1'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p2_q3_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p2_q3"/>
@@ -171,8 +168,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug2"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug2'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p3_q1_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p3_q1"/>
@@ -199,8 +195,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug2"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug2'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p3_q2_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p3_q2"/>
@@ -232,8 +227,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug2"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug2'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p3_q3_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p3_q3"/>
@@ -273,8 +267,7 @@
         <field name="question_type">multiple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug3"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug3'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p4_q1_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p4_q1"/>
@@ -308,8 +301,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug3"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug3'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p4_q2_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p4_q2"/>
@@ -341,8 +333,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug3"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug3'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p4_q3_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p4_q3"/>
@@ -372,8 +363,7 @@
         <field name="question_type">multiple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug4"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug4'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p5_q1_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p5_q1"/>
@@ -407,8 +397,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug4"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug4'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p5_q2_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p5_q2"/>
@@ -444,8 +433,7 @@
         <field name="question_type">simple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="is_conditional" eval="True"/>
-        <field name="triggering_question_id" ref="survey_demo_burger_quiz_p1_q1"/>
-        <field name="triggering_answer_id" ref="survey_demo_burger_quiz_p1_q1_sug4"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('survey.survey_demo_burger_quiz_p1_q1_sug4'))]"/>
     </record>
         <record id="survey_demo_burger_quiz_p5_q3_sug1" model="survey.question.answer">
             <field name="question_id" ref="survey_demo_burger_quiz_p5_q3"/>

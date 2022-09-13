@@ -360,11 +360,11 @@ class Survey(models.Model):
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        """ Correctly copy the 'triggering_question_id' and 'triggering_answer_id' fields from the original
+        """ Correctly copy the 'triggering_answer_ids' field from the original
         to the clone.
         This needs to be done in post-processing to make sure we get references to the newly created
-        answers/questions from the copy instead of references to the answers/questions of the original.
-        This implementation assumes that the order of created questions/answers will be kept between
+        answers from the copy instead of references to the answers of the original.
+        This implementation assumes that the order of created answers will be kept between
         the original and the clone, using 'zip()' to match the records between the two.
 
         Note that when question_ids is provided in the default parameter, it falls back to the standard copy.
@@ -374,7 +374,6 @@ class Survey(models.Model):
         if default and 'question_ids' in default:
             return clone
 
-        questions_map = {src.id: dst.id for src, dst in zip(self.question_ids, clone.question_ids)}
         answers_map = {
             source_answer.id: copy_answer.id
             for source_answer, copy_answer
@@ -382,8 +381,7 @@ class Survey(models.Model):
         }
         for src, dst in zip(self.question_ids, clone.question_ids):
             if src.is_conditional:
-                dst.triggering_question_id = questions_map.get(src.triggering_question_id.id)
-                dst.triggering_answer_id = answers_map.get(src.triggering_answer_id.id)
+                dst.triggering_answer_ids = [answers_map.get(answer_id.id) for answer_id in src.triggering_answer_ids]
         return clone
 
     def copy_data(self, default=None):
@@ -639,8 +637,8 @@ class Survey(models.Model):
                     if contains_active_question or is_description_section:
                         return question
                 else:
-                    triggering_answer = triggering_answer_by_question.get(question)
-                    if not triggering_answer or triggering_answer in selected_answers:
+                    triggering_answers = triggering_answer_by_question.get(question)
+                    if not triggering_answers or any(triggering_answer in selected_answers for triggering_answer in triggering_answers):
                         # question is visible because not conditioned or conditioned by a selected answer
                         return question
         elif survey.questions_layout == 'page_per_section':
@@ -749,13 +747,14 @@ class Survey(models.Model):
         triggering_answer_by_question = {}
         triggered_questions_by_answer = {}
         for question in self.question_ids:
-            triggering_answer_by_question[question] = question.is_conditional and question.triggering_answer_id
+            triggering_answer_by_question[question] = question.is_conditional and question.triggering_answer_ids
 
             if question.is_conditional:
-                if question.triggering_answer_id in triggered_questions_by_answer:
-                    triggered_questions_by_answer[question.triggering_answer_id] |= question
-                else:
-                    triggered_questions_by_answer[question.triggering_answer_id] = question
+                for triggering_answer_id in question.triggering_answer_ids:
+                    if triggering_answer_id in triggered_questions_by_answer:
+                        triggered_questions_by_answer[triggering_answer_id] |= question
+                    else:
+                        triggered_questions_by_answer[triggering_answer_id] = question
         return triggering_answer_by_question, triggered_questions_by_answer
 
     # ------------------------------------------------------------

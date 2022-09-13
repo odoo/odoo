@@ -574,7 +574,8 @@ class SurveyUserInput(models.Model):
         inactive_questions = self.env['survey.question']
         for answer in triggered_questions_by_answer.keys():
             if answer not in selected_answers:
-                for question in triggered_questions_by_answer[answer]:
+                for question in triggered_questions_by_answer[answer].filtered(lambda question: \
+                    any(ans and question not in triggered_questions_by_answer.get(ans, []) for ans in selected_answers)):
                     inactive_questions |= question
         return inactive_questions
 

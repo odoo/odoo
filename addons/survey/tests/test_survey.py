@@ -253,15 +253,13 @@ class TestSurveyInternals(common.TestSurveyCommon):
         q_food_vegetarian_text = 'Choose your green meal'
         self._add_question(self.page_0, q_food_vegetarian_text, 'multiple_choice',
                            is_conditional=True, sequence=101,
-                           triggering_question_id=q_is_vegetarian.id,
-                           triggering_answer_id=q_is_vegetarian.suggested_answer_ids[0].id,
+                           triggering_answer_ids=[q_is_vegetarian.suggested_answer_ids[0].id, q_is_vegetarian.suggested_answer_ids[1].id],
                            survey_id=self.survey.id,
                            labels=[{'value': 'Vegetarian pizza'}, {'value': 'Vegetarian burger'}])
         q_food_not_vegetarian_text = 'Choose your meal'
         self._add_question(self.page_0, q_food_not_vegetarian_text, 'multiple_choice',
                            is_conditional=True, sequence=102,
-                           triggering_question_id=q_is_vegetarian.id,
-                           triggering_answer_id=q_is_vegetarian.suggested_answer_ids[1].id,
+                           triggering_answer_ids=q_is_vegetarian.suggested_answer_ids[1].ids,
                            survey_id=self.survey.id,
                            labels=[{'value': 'Steak with french fries'}, {'value': 'Fish'}])
 
@@ -278,21 +276,17 @@ class TestSurveyInternals(common.TestSurveyCommon):
         # Vegetarian choice
         self.assertTrue(q_food_vegetarian_cloned)
         # Correct conditional layout
-        self.assertEqual(q_food_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian_cloned.id)
-        self.assertEqual(q_food_vegetarian_cloned.triggering_answer_id.id,
-                         q_is_vegetarian_cloned.suggested_answer_ids[0].id)
+        self.assertEqual(q_food_vegetarian_cloned.triggering_answer_ids.ids,
+                         [q_is_vegetarian_cloned.suggested_answer_ids[0].id, q_is_vegetarian_cloned.suggested_answer_ids[1].id])
         # Doesn't reference the original survey
-        self.assertNotEqual(q_food_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
-        self.assertNotEqual(q_food_vegetarian_cloned.triggering_answer_id.id,
-                            q_is_vegetarian.suggested_answer_ids[0].id)
+        self.assertNotEqual(q_food_vegetarian_cloned.triggering_answer_ids.ids,
+                            [q_is_vegetarian.suggested_answer_ids[0].id, q_is_vegetarian.suggested_answer_ids[1].id])
 
         # Not vegetarian choice
         self.assertTrue(q_food_not_vegetarian_cloned.is_conditional)
         # Correct conditional layout
-        self.assertEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian_cloned.id)
-        self.assertEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
-                         q_is_vegetarian_cloned.suggested_answer_ids[1].id)
+        self.assertEqual(q_food_not_vegetarian_cloned.triggering_answer_ids.ids,
+                         q_is_vegetarian_cloned.suggested_answer_ids[1].ids)
         # Doesn't reference the original survey
-        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
-        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
-                            q_is_vegetarian.suggested_answer_ids[1].id)
+        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_answer_ids.ids,
+                            q_is_vegetarian.suggested_answer_ids[1].ids)

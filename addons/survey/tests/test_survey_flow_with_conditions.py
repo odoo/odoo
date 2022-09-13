@@ -41,7 +41,7 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
                 page_0, 'Question 2', 'simple_choice',
                 sequence=2,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
-                is_conditional=True, triggering_question_id=q01.id, triggering_answer_id=q01.suggested_answer_ids.filtered(lambda q: q.is_correct).id,
+                is_conditional=True, triggering_answer_ids=[q01.suggested_answer_ids.filtered(lambda q: q.is_correct).id,],
                 labels=[
                     {'value': 'Answer 1'},
                     {'value': 'Answer 2', 'is_correct': True, 'answer_score': 1.0},
@@ -64,7 +64,7 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
                 page_0, 'Question 4', 'simple_choice',
                 sequence=2,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
-                is_conditional=True, triggering_question_id=q03.id, triggering_answer_id=q03.suggested_answer_ids.filtered(lambda q: q.is_correct).id,
+                is_conditional=True, triggering_answer_ids=[q03.suggested_answer_ids.filtered(lambda q: q.is_correct).id,],
                 labels=[
                     {'value': 'Answer 1'},
                     {'value': 'Answer 2', 'is_correct': True, 'answer_score': 1.0},
@@ -87,7 +87,7 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
                 page_0, 'Question 6', 'simple_choice',
                 sequence=2,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
-                is_conditional=True, triggering_question_id=q05.id, triggering_answer_id=q05.suggested_answer_ids.filtered(lambda q: q.is_correct).id,
+                is_conditional=True, triggering_answer_ids=[q05.suggested_answer_ids.filtered(lambda q: q.is_correct).id,],
                 labels=[
                     {'value': 'Answer 1'},
                     {'value': 'Answer 2', 'is_correct': True, 'answer_score': 1.0},

@@ -109,6 +109,7 @@
                 t-att-data-is-page-description="bool(question and question.is_page and not is_html_empty(question.description))"
                 t-att-data-questions-layout="survey.questions_layout"
                 t-att-data-triggered-questions-by-answer="json.dumps(triggered_questions_by_answer)"
+                t-att-data-triggering-answer-by-question="json.dumps(triggering_answer_by_question)"
                 t-att-data-selected-answers="json.dumps(selected_answers)"
                 t-att-data-refresh-background="any(page.background_image for page in survey.page_ids)">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -312,7 +313,7 @@
         <t t-set="display_question"
            t-value="survey.questions_layout == 'page_per_question'
                     or (survey.questions_layout == 'one_page' and not question.is_conditional)
-                    or (survey.questions_layout == 'page_per_section' and (not question.is_conditional or triggering_answer_by_question[question.id] in selected_answers))"/>
+                    or (survey.questions_layout == 'page_per_section' and (not question.is_conditional or any(triggering_answer in selected_answers for triggering_answer in triggering_answer_by_question[question.id])))"/>
 
         <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
         <!--Use Key selection if number of choices is < 26 to keep Z for other choice if any-->

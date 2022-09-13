@@ -208,7 +208,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                             dependingQuestion.addClass('d-none');
                             self._clearQuestionInputs(dependingQuestion);
 
-                            treatedQuestionIds.push(questionId);
+                            if (self.options.triggeringAnswerByQuestion[questionId].length === 1) {
+                                treatedQuestionIds.push(questionId);
+                            }
                         });
                         // Remove answer from selected answer
                         self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
@@ -216,7 +218,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     if (Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
                         // Display depending question
                         this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
-                            if (!treatedQuestionIds.includes(questionId)) {
+                            if (!(treatedQuestionIds.includes(questionId) || previouslySelectedAnswer.find('input').val() == $target.val())) {
                                 var dependingQuestion = $('.js_question-wrapper#' + questionId);
                                 dependingQuestion.removeClass('d-none');
                             }
@@ -243,20 +245,21 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 // Conditional display
                 if (this.options.questionsLayout !== 'page_per_question' && Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
                     var isInputSelected = $label.hasClass('o_survey_selected');
-                    // Hide and clear or display depending question
-                    this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
-                        var dependingQuestion = $('.js_question-wrapper#' + questionId);
-                        dependingQuestion.toggleClass('d-none', !isInputSelected);
-                        if (!isInputSelected) {
-                            self._clearQuestionInputs(dependingQuestion);
-                        }
-                    });
                     // Add/remove answer to/from selected answer
                     if (!isInputSelected) {
                         self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
                     } else {
                         self.selectedAnswers.push(parseInt($target.val()));
                     }
+                    // Hide and clear or display depending question
+                    this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
+                        var dependingQuestion = $('.js_question-wrapper#' + questionId);
+                        const inputSelected = self.options.triggeringAnswerByQuestion[questionId].some((ans) => self.selectedAnswers.includes(ans));
+                        dependingQuestion.toggleClass('d-none', !inputSelected);
+                        if (!isInputSelected) {
+                            self._clearQuestionInputs(dependingQuestion);
+                        }
+                    });
                 }
             }
         }

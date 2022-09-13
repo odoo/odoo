@@ -272,7 +272,7 @@ class Survey(http.Controller):
             triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
                 'triggering_answer_by_question': {
-                    question.id: triggering_answer_by_question[question].id for question in triggering_answer_by_question.keys()
+                    question.id: triggering_answer_by_question[question].mapped('id') for question in triggering_answer_by_question.keys()
                     if triggering_answer_by_question[question]
                 },
                 'triggered_questions_by_answer': {
