@@ -832,9 +832,11 @@ class SaleOrder(models.Model):
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
 
-        mail_template = self._get_confirmation_template()
-        if mail_template:
-            self.with_context(force_send=True).message_post_with_template(
+        for sale_order in self:
+            mail_template = sale_order._get_confirmation_template()
+            if not mail_template:
+                continue
+            sale_order.with_context(force_send=True).message_post_with_template(
                 mail_template.id,
                 composition_mode='comment',
                 email_layout_xmlid='mail.mail_notification_paynow',
