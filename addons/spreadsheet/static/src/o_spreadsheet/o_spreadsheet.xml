@@ -1993,12 +1993,12 @@
       t-attf-style="font-weight:{{currentStyle.bold ?'bold':'normal'}};
                        text-decoration:{{getTextDecoration(currentStyle)}};
                        font-style:{{currentStyle.italic?'italic':'normal'}};
-                       color:{{currentStyle.textColor}};
+                       color:{{currentStyle.textColor || '#000'}};
                        border-radius: 4px;
-                       background-color:{{currentStyle.fillColor}};"
-    />
-    <t t-if="previewText" t-esc="previewText"/>
-    <t t-else="">Preview text</t>
+                       background-color:{{currentStyle.fillColor}};">
+      <t t-if="previewText" t-esc="previewText"/>
+      <t t-else="">Preview text</t>
+    </div>
   </t>
 
   <t t-name="o-spreadsheet-CellIsRuleEditor" owl="1">

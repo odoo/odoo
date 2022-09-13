@@ -3550,7 +3550,8 @@
     const LinkCellPopoverBuilder = {
         onHover: (position, getters) => {
             const cell = getters.getCell(getters.getActiveSheetId(), position.col, position.row);
-            const shouldDisplayLink = (cell === null || cell === void 0 ? void 0 : cell.isLink()) &&
+            const shouldDisplayLink = !getters.isDashboard() &&
+                (cell === null || cell === void 0 ? void 0 : cell.isLink()) &&
                 getters.isVisibleInViewport(position.col, position.row, getters.getActiveViewport());
             if (!shouldDisplayLink)
                 return { isOpen: false };
@@ -4585,13 +4586,24 @@
             x: left + Math.max(0, (width - DEFAULT_FIGURE_WIDTH) / 2),
             y: top + Math.max(0, (height - DEFAULT_FIGURE_HEIGHT) / 2),
         }; // Position at the center of the viewport
-        let dataSetsHaveTitle = false;
-        for (let x = dataSetZone.left; x <= dataSetZone.right; x++) {
-            const cell = env.model.getters.getCell(sheetId, x, zone.top);
-            if (cell && cell.evaluated.type !== CellValueType.number) {
-                dataSetsHaveTitle = true;
-                break;
-            }
+        let title = "";
+        const cells = env.model.getters.getCellsInZone(sheetId, {
+            ...dataSetZone,
+            bottom: dataSetZone.top,
+        });
+        const dataSetsHaveTitle = !!cells.find((cell) => cell && cell.evaluated.type !== CellValueType.number);
+        if (dataSetsHaveTitle) {
+            const texts = cells.reduce((acc, cell) => {
+                const text = cell && cell.evaluated.type !== CellValueType.error && env.model.getters.getCellText(cell);
+                if (text) {
+                    acc.push(text);
+                }
+                return acc;
+            }, []);
+            const lastElement = texts.splice(-1)[0];
+            title = texts.join(", ");
+            if (lastElement)
+                title += (title ? " " + env._t("and") + " " : "") + lastElement;
         }
         if (zone.left !== zone.right) {
             labelRange = zoneToXc({
@@ -4607,7 +4619,7 @@
             position,
             size,
             definition: {
-                title: "",
+                title,
                 dataSets,
                 labelRange,
                 type: "bar",
@@ -6042,18 +6054,15 @@
             return baseline.formattedValue;
         }
         else {
-            let diff = (keyValue === null || keyValue === void 0 ? void 0 : keyValue.value) - baselineEvaluated.value;
+            let diff = keyValue.value - baselineEvaluated.value;
             if (baselineMode === "percentage") {
                 diff = (diff / baselineEvaluated.value) * 100;
             }
-            let baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
-            if (baselineMode === "percentage") {
-                baselineStr += "%";
+            if (baselineMode !== "percentage" && baselineEvaluated.format) {
+                return formatValue(diff, baselineEvaluated.format);
             }
-            else if (baseline.format) {
-                baselineStr = formatValue(diff, baseline.format);
-            }
-            return baselineStr;
+            const baselineStr = Math.abs(parseFloat(diff.toFixed(2))).toLocaleString();
+            return baselineMode === "percentage" ? baselineStr + "%" : baselineStr;
         }
     }
     function getBaselineColor(baseline, baselineMode, keyValue, colorUp, colorDown) {
@@ -17324,6 +17333,8 @@
                 argToFocus: 0,
             });
             this.isKeyStillDown = false;
+            /** Should be true if a mousedown was called on the composer, and the mouseUp still hasn't been handled */
+            this.mouseDownActive = false;
             this.borderStyle = `box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);`;
             // we can't allow input events to be triggered while we remove and add back the content of the composer in processContent
             this.shouldProcessInputEvents = false;
@@ -17514,9 +17525,17 @@
                 // not main button, probably a context menu
                 return;
             }
-            this.contentHelper.removeSelection();
+            if (this.props.focus === "inactive") {
+                const newSelection = this.contentHelper.getCurrentSelection();
+                this.props.onComposerContentFocused(newSelection);
+            }
+            else {
+                this.contentHelper.removeSelection();
+                this.mouseDownActive = true;
+            }
         }
         onClick() {
+            this.mouseDownActive = false;
             if (this.env.model.getters.isReadonly()) {
                 return;
             }
@@ -17529,6 +17548,11 @@
             this.processTokenAtCursor();
         }
         onBlur() {
+            if (this.mouseDownActive && this.props.focus !== "inactive") {
+                const newSelection = this.contentHelper.getCurrentSelection();
+                this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", newSelection);
+                this.mouseDownActive = false;
+            }
             this.isKeyStillDown = false;
         }
         onCompleted(text) {
@@ -24633,7 +24657,7 @@
                             // TODO:
                             // This is not really correct, it should be the role of figures to
                             // duplicate a figure.
-                            this.addFigure(id, cmd.sheetIdTo, { x: fig.x, y: fig.y });
+                            this.addFigure(id, cmd.sheetIdTo, { x: fig.x, y: fig.y }, { width: fig.width, height: fig.height });
                             this.history.update("charts", id, chart);
                         }
                     }
@@ -30379,7 +30403,6 @@
                         this.onMoveElements(cmd);
                     }
                     break;
-                case "UPDATE_CHART":
                 case "SELECT_FIGURE":
                     this.selectedFigureId = cmd.id;
                     break;
@@ -32062,7 +32085,8 @@
         }
         getTextWidth(cell) {
             const text = this.getters.getCellText(cell, this.getters.shouldShowFormulas());
-            return computeTextWidth(this.ctx, text, this.getters.getCellStyle(cell));
+            const { sheetId, col, row } = this.getters.getCellPosition(cell.id);
+            return computeTextWidth(this.ctx, text, this.getters.getCellComputedStyle(sheetId, col, row));
         }
         getCellText(cell, showFormula = false) {
             if (showFormula && (cell.isFormula() || cell.evaluated.type === CellValueType.error)) {
@@ -37556,8 +37580,8 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-09-09T12:45:57.973Z';
-    exports.__info__.hash = 'a5236ad';
+    exports.__info__.date = '2022-09-13T07:37:09.243Z';
+    exports.__info__.hash = 'fd4cd7c';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
