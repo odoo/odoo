@@ -21,6 +21,8 @@ export const UNTITLED_SPREADSHEET_NAME = _lt("Untitled spreadsheet");
 export const RELATIVE_DATE_RANGE_TYPES = [
     { type: "last_week", description: _lt("Last 7 Days") },
     { type: "last_month", description: _lt("Last 30 Days") },
+    { type: "last_three_months", description: _lt("Last 90 Days") },
+    { type: "last_six_months", description: _lt("Last 180 Days") },
     { type: "last_year", description: _lt("Last 365 Days") },
     { type: "last_three_years", description: _lt("Last 3 Years") },
 ];
