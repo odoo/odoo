@@ -94,10 +94,8 @@ class PaymentCommon(TransactionCase):
 
     def setUp(self):
         def stop_patcher_without_fail():
-            """ Magic hack: we start the patcher even if it was started already so that we do not
-            call stop on a non started patcher. """
-            self.reconcile_after_done_patcher.start()
-            self.reconcile_after_done_patcher.stop()
+            if self.is_patcher_started:
+                self.reconcile_after_done_patcher.stop()
 
         super().setUp()
         if self.account_payment_installed:
@@ -107,6 +105,7 @@ class PaymentCommon(TransactionCase):
                 'odoo.addons.account_payment.models.payment_transaction.PaymentTransaction._reconcile_after_done',
             )
             self.reconcile_after_done_patcher.start()
+            self.is_patcher_started = True
             self.addCleanup(stop_patcher_without_fail)
 
     #=== Utils ===#
