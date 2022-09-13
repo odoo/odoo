@@ -21,22 +21,22 @@ function viewSeparator() {
 debugRegistry.category("view").add("viewSeparator", viewSeparator);
 
 //------------------------------------------------------------------------------
-// Fields View Get
+// Get view
 //------------------------------------------------------------------------------
 
-class FieldViewGetDialog extends Component {}
-FieldViewGetDialog.template = xml`
+class GetViewDialog extends Component {}
+GetViewDialog.template = xml`
 <Dialog title="this.constructor.title">
     <pre t-esc="props.arch"/>
 </Dialog>`;
-FieldViewGetDialog.components = { Dialog };
-FieldViewGetDialog.props = {
+GetViewDialog.components = { Dialog };
+GetViewDialog.props = {
     arch: { type: String },
     close: { type: Function },
 };
-FieldViewGetDialog.title = _lt("Fields View Get");
+GetViewDialog.title = _lt("Get View");
 
-export function fieldsViewGet({ component, env }) {
+export function getView({ component, env }) {
     let { arch } = component.props;
     if ("viewInfo" in component.props) {
         //legacy
@@ -44,15 +44,15 @@ export function fieldsViewGet({ component, env }) {
     }
     return {
         type: "item",
-        description: env._t("Fields View Get"),
+        description: env._t("Get View"),
         callback: () => {
-            env.services.dialog.add(FieldViewGetDialog, { arch });
+            env.services.dialog.add(GetViewDialog, { arch });
         },
         sequence: 340,
     };
 }
 
-debugRegistry.category("view").add("fieldsViewGet", fieldsViewGet);
+debugRegistry.category("view").add("getView", getView);
 
 //------------------------------------------------------------------------------
 // Edit View
