@@ -46,7 +46,7 @@ def MockRequest(
         params={},
         redirect=env['ir.http']._redirect,
         session=DotDict(
-            odoo.http.DEFAULT_SESSION,
+            odoo.http.get_default_session(),
             geoip={'country_code': country_code},
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
