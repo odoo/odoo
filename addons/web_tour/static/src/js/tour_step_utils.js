@@ -61,7 +61,7 @@ return Class.extend({
     goBackBreadcrumbsMobile(description, ...extraTrigger) {
         return extraTrigger.map(element => ({
             mobile: true,
-            trigger: '.breadcrumb-item:not(.d-none):first',
+            trigger: '.breadcrumb-item.o_back_button',
             extra_trigger: element,
             content: description,
             position: 'bottom',
@@ -160,18 +160,20 @@ return Class.extend({
     /**
      * Utility steps to save a form and wait for the save to complete
      *
-     * @param extra_trigger additional save-condition selector
+     * @param {object} [options]
+     * @param {string} [options.content]
+     * @param {string} [options.extra_trigger] additional save-condition selector
      */
-    saveForm(extra_trigger) {
+    saveForm(options = {}) {
         return [{
-            content: "save form",
-            trigger: '.o_form_button_save:contains("Save")',
-            extra_trigger,
-            run: 'click',
+            content: options.content || "save form",
+            trigger: ".o_form_button_save",
+            extra_trigger: options.extra_trigger,
+            run: "click",
             auto: true,
         }, {
             content: "wait for save completion",
-            trigger: '.o_form_readonly',
+            trigger: '.o_form_readonly, .o_form_saved',
             run() {},
             auto: true,
         }];
@@ -182,15 +184,16 @@ return Class.extend({
      * Supports creation/edition from either a form or a list view (so checks
      * for both states).
      */
-    discardForm() {
+    discardForm(options = {}) {
         return [{
-            content: "exit the form",
+            content: options.content || "exit the form",
             trigger: ".o_form_button_cancel",
-            run: 'click',
+            extra_trigger: options.extra_trigger,
+            run: "click",
             auto: true,
         }, {
             content: "wait for cancellation to complete",
-            trigger: ".o_list_renderer, .o_form_readonly",
+            trigger: ".o_list_renderer, .o_form_readonly, .o_form_saved",
             run() {},
             auto: true,
         }];

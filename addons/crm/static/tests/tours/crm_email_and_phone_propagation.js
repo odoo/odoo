@@ -16,17 +16,10 @@ odoo.define('crm.crm_email_and_phone_propagation', function (require) {
             content: 'Open the first lead',
             run: 'click',
         }, {
-            trigger: '.o_form_button_edit',
-            extra_trigger: '.o_lead_opportunity_form.o_form_readonly',
-            content: 'Edit the lead',
-            run: 'click',
-        }, {
             trigger: '.o_form_button_save',
             extra_trigger: '.o_form_editable .o_field_widget[name=email_from] input',
             content: 'Save the lead',
             run: 'click',
-        }, {
-            trigger: '.o_form_readonly',
         },
     ]);
 
@@ -43,10 +36,6 @@ odoo.define('crm.crm_email_and_phone_propagation', function (require) {
             content: 'Open the first lead',
             run: 'click',
         }, {
-            trigger: '.o_form_button_edit',
-            content: 'Edit the lead',
-            run: 'click',
-        }, {
             trigger: '.o_form_editable .o_field_widget[name=email_from] input',
             extra_trigger: '.o_form_editable .o_field_widget[name=phone] input',
             content: 'Remove the email and the phone',
@@ -55,14 +44,13 @@ odoo.define('crm.crm_email_and_phone_propagation', function (require) {
                 action.remove_text("", ".o_form_editable .o_field_widget[name=phone] input");
             },
         }, {
-            trigger: '.o_form_button_save',
+            trigger: '.o_back_button',
             // wait the the warning message to be visible
             extra_trigger: '.o_form_sheet_bg .fa-exclamation-triangle:not(.o_invisible_modifier)',
-            content: 'Save the lead',
+            content: 'Save the lead and exit to kanban',
             run: 'click',
-        }, {
-            trigger: '.o_form_readonly',
-        },
+        },{
+            trigger: '.o_kanban_renderer',
+        }
     ]);
-
 });
