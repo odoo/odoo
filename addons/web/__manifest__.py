@@ -513,6 +513,16 @@ This module provides the core of the Odoo Web Client.
         ],
 
         # ---------------------------------------------------------------------
+        # COLOR SCHEME BUNDLES
+        # ---------------------------------------------------------------------
+        "web.dark_mode_assets_common": [
+            ('include', 'web.assets_common'),
+        ],
+        "web.dark_mode_assets_backend": [
+            ('include', 'web.assets_backend'),
+        ],
+
+        # ---------------------------------------------------------------------
         # SUB BUNDLES
         # ---------------------------------------------------------------------
         # These bundles can be used by main bundles but are not supposed to be
