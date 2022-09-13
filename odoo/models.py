@@ -1832,6 +1832,7 @@ class BaseModel(metaclass=MetaModel):
 
         node = etree.fromstring(result['arch'])
         node = self.env['ir.ui.view']._postprocess_access_rights(node)
+        node = self.env['ir.ui.view']._postprocess_context_dependent(node)
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result
