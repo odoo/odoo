@@ -4440,12 +4440,10 @@ registry.sizing = SnippetOptionWidget.extend({
                 handleEl.classList.toggle('readonly', isMobileView && isGridHandle);
             }
 
-            // Hiding the move handle for some snippets so we can't drag them
-            // and so we can't toggle the grid mode.
+            // Hiding the move handle in mobile view so we can't drag the
+            // columns.
             const moveHandleEl = this.$overlay[0].querySelector('.o_move_handle');
-            const untoggleableColumns = '.s_masonry_block, .s_showcase, .s_features_grid, .s_website_form';
-            const disableToggle = this.$target[0].closest(untoggleableColumns);
-            moveHandleEl.classList.toggle('d-none', disableToggle || isMobileView);
+            moveHandleEl.classList.toggle('d-none', isMobileView);
 
             // Hiding/showing the arrows.
             if (isGrid) {
