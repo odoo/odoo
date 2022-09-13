@@ -844,8 +844,8 @@ class SaleOrder(models.Model):
                 continue
             sale_order.with_context(force_send=True).message_post_with_template(
                 mail_template.id,
-                composition_mode='comment',
                 email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                subtype_xmlid='mail.mt_comment',
             )
 
     def action_done(self):
@@ -1184,7 +1184,8 @@ class SaleOrder(models.Model):
             move.message_post_with_view(
                 'mail.message_origin_link',
                 values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
-                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
+                subtype_xmlid='mail.mt_note',
+            )
         return moves
 
     # MAIL #

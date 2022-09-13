@@ -45,8 +45,9 @@ class ApplicantGetRefuseReason(models.TransientModel):
         self.applicant_ids.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False})
         if self.send_mail:
             applicants = self.applicant_ids.filtered(lambda x: x.email_from or x.partner_id.email)
-            applicants.with_context(active_test=True).message_post_with_template(self.template_id.id, **{
-                'auto_delete_message': True,
-                'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-                'email_layout_xmlid': 'mail.mail_notification_light'
-            })
+            applicants.with_context(active_test=True).message_post_with_template(
+                self.template_id.id,
+                auto_delete_message=True,
+                email_layout_xmlid='mail.mail_notification_light',
+                subtype_xmlid='mail.mt_note',
+            )

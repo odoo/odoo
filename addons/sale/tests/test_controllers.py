@@ -88,6 +88,8 @@ class TestSaleSignature(HttpCaseWithUserPortal):
         email_act = sales_order.action_quotation_send()
         email_ctx = email_act.get('context', {})
         sales_order.with_context(**email_ctx).message_post_with_template(
-            email_ctx.get('default_template_id'))
+            email_ctx.get('default_template_id'),
+            subtype_xmlid='mail.mt_comment',
+        )
 
         self.start_tour("/", 'sale_signature', login="portal")

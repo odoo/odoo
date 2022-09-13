@@ -80,7 +80,8 @@ class EventRegistration(models.Model):
                 registration.message_post_with_view(
                     'mail.message_origin_link',
                     values={'self': registration, 'origin': registration.sale_order_id},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                    subtype_xmlid='mail.mt_note',
+                )
         return registrations
 
     def write(self, vals):

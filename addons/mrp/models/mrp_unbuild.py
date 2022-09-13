@@ -212,7 +212,8 @@ class MrpUnbuild(models.Model):
             )
             self.mo_id.message_post(
                 body=unbuild_msg,
-                subtype_id=self.env.ref('mail.mt_note').id)
+                subtype_xmlid='mail.mt_note',
+            )
         return self.write({'state': 'done'})
 
     def _generate_consume_moves(self):

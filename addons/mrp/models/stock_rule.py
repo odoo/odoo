@@ -48,6 +48,7 @@ class StockRule(models.Model):
 
             productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
 
+        note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for company_id, productions_values in productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_values)
@@ -61,17 +62,20 @@ class StockRule(models.Model):
                     production.message_post(
                         body=_('This production order has been created from Replenishment Report.'),
                         message_type='comment',
-                        subtype_xmlid='mail.mt_note')
+                        subtype_id=note_subtype_id
+                    )
                 elif orderpoint:
                     production.message_post_with_view(
                         'mail.message_origin_link',
                         values={'self': production, 'origin': orderpoint},
-                        subtype_id=self.env.ref('mail.mt_note').id)
+                        subtype_id=note_subtype_id,
+                    )
                 elif origin_production:
                     production.message_post_with_view(
                         'mail.message_origin_link',
                         values={'self': production, 'origin': origin_production},
-                        subtype_id=self.env.ref('mail.mt_note').id)
+                        subtype_id=note_subtype_id,
+                    )
         return True
 
     @api.model

@@ -866,7 +866,12 @@ class TestMailComplexPerformance(BaseMailPerformance):
 
         # about 20 (19 ?) queries per additional customer group
         with self.assertQueryCount(__system__=42, employee=43):
-            record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
+            record.message_post_with_template(
+                template_id,
+                message_type='comment',
+                composition_mode='comment',
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+            )
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
         self.assertEqual(record.message_ids[0].notified_partner_ids, self.partners | self.user_portal.partner_id | self.customer)
@@ -890,6 +895,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             messages_as_sudo = test_records.message_post_with_view(
                 'test_mail.mail_template_simple_test',
                 values={'partner': self.user_test.partner_id},
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             )
 
         self.assertEqual(len(messages_as_sudo), 10)

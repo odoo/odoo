@@ -1568,7 +1568,7 @@ class Lead(models.Model):
                 "opportunities": opportunities_tail,
                 "is_html_empty": is_html_empty,
             },
-            subtype_id=self.env.ref('mail.mt_note').id,
+            subtype_xmlid='mail.mt_note',
         )
 
     def _format_properties(self):

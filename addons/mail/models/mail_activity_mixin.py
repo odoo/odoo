@@ -345,7 +345,8 @@ class MailActivityMixin(models.AbstractModel):
         for record in self:
             record.message_post_with_template(
                 template_id,
-                composition_mode='comment'
+                composition_mode='comment',
+                subtype_xmlid='mail.mt_comment',
             )
         return True
 

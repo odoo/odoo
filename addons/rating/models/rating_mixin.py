@@ -185,7 +185,7 @@ class RatingMixin(models.AbstractModel):
             record.message_post_with_template(
                 template.id,
                 email_layout_xmlid='mail.mail_notification_light',
-                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                subtype_xmlid='mail.mt_note',
             )
 
     def rating_apply(self, rate, token=None, rating=None, feedback=None,
@@ -223,7 +223,7 @@ class RatingMixin(models.AbstractModel):
             if subtype_xmlid is None:
                 subtype_id = self._rating_apply_get_default_subtype_id()
             else:
-                subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
+                subtype_id = False
             feedback = tools.plaintext2html(feedback or '')
 
             scheduled_datetime = (
@@ -249,6 +249,7 @@ class RatingMixin(models.AbstractModel):
                     rating_id=rating.id,
                     scheduled_date=scheduled_datetime,
                     subtype_id=subtype_id,
+                    subtype_xmlid=subtype_xmlid,
                 )
         return rating
 
