@@ -589,6 +589,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
+        this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
         this.addDomListener(this.document, 'click', this._onDocumentClick);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
@@ -3596,10 +3597,6 @@ export class OdooEditor extends EventTarget {
         this._fixFontAwesomeSelection();
 
         this._fixSelectionOnContenteditableFalse();
-
-        if (this.toolbar) {
-            this.toolbar.style.pointerEvents = 'auto';
-        }
     }
 
     _onMouseDown(ev) {
@@ -3751,6 +3748,12 @@ export class OdooEditor extends EventTarget {
             this._onKeyupResetContenteditableNodes = [];
         }
         this._fixSelectionOnContenteditableFalse();
+    }
+
+    _onDocumentMouseup() {
+        if (this.toolbar) {
+            this.toolbar.style.pointerEvents = 'auto';
+        }
     }
 
     _onMousemove(ev) {
