@@ -285,7 +285,7 @@ class MailActivityMixin(models.AbstractModel):
             SELECT 1 AS id, count(*) AS "__count", {fields}
             FROM {from_clause}
             JOIN LATERAL (
-                SELECT 
+                SELECT res_id,
                 CASE
                     WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) > 0 THEN 'planned'
                     WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) < 0 THEN 'overdue'
@@ -297,7 +297,8 @@ class MailActivityMixin(models.AbstractModel):
                 JOIN res_partner ON (res_partner.id = res_users.partner_id)
                 WHERE res_model = '{model}'
                   AND "{table}".id = "mail_activity".res_id
-            ) AS "_last_activity_state" ON TRUE
+                GROUP BY res_id
+            ) AS "_last_activity_state" ON ("{table}".id = "_last_activity_state".res_id)
             WHERE {where_clause}
             GROUP BY {group_by}
         """.format(
