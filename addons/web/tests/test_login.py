@@ -12,7 +12,7 @@ class TestWebLoginCommon(HttpCase):
     def login(self, username, password):
         """Log in with provided credentials and return response to POST request or raises for status."""
         self.session = http.root.session_store.new()
-        self.session.update(http.DEFAULT_SESSION, db=get_db_name())
+        self.session.update(http.get_default_session(), db=get_db_name())
         self.opener = Opener(self.env.cr)
         self.opener.cookies.set('session_id', self.session.sid, domain=HOST, path='/')
 
