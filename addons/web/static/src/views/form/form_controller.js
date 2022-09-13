@@ -197,8 +197,10 @@ export class FormController extends Component {
                     limit: 1,
                     total: resIds.length,
                     onUpdate: async ({ offset }) => {
-                        await this.model.root.save({ stayInEdition: true });
-                        this.model.load({ resId: resIds[offset] });
+                        const canProceed = await this.model.root.save({ stayInEdition: true });
+                        if (canProceed) {
+                            this.model.load({ resId: resIds[offset] });
+                        }
                     },
                 };
             }

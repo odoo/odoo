@@ -4383,6 +4383,39 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
     });
 
+    QUnit.test("switching to another record from an invalid one", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" required="1"/>
+                </form>`,
+            resIds: [1, 2],
+            resId: 1,
+            mockRPC(route) {
+                if (route === "/web/dataset/call_kw/partner/write") {
+                    throw new Error("Shouldn't call write as the record is invalid");
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name=foo] input", "");
+        await click(target.querySelector(".o_pager_next"));
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
+        assert.containsOnce(target, ".o_notification_manager .o_notification");
+    });
+
     QUnit.test("keynav switching to another record from a dirty one", async function (assert) {
         let nbWrite = 0;
         await makeView({
@@ -8140,12 +8173,14 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-     QUnit.test("form rendering innergroup: separator should take one line", async function (assert) {
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+    QUnit.test(
+        "form rendering innergroup: separator should take one line",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -8159,16 +8194,17 @@ QUnit.module("Views", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            resId: 1,
-        });
+                resId: 1,
+            });
 
-         const rows = document.querySelectorAll('.o_inner_group tr');
-         assert.containsOnce(rows[0], '> td', 'Should only contain one cell');
-         assert.containsOnce(rows[0], '.o_horizontal_separator');
-         assert.containsN(rows[1], '> td', 2, 'Should contain 2 cells');
-         assert.containsOnce(rows[1], 'label[for=display_name]');
-         assert.containsOnce(rows[1], 'div[name=display_name]');
-    });
+            const rows = document.querySelectorAll(".o_inner_group tr");
+            assert.containsOnce(rows[0], "> td", "Should only contain one cell");
+            assert.containsOnce(rows[0], ".o_horizontal_separator");
+            assert.containsN(rows[1], "> td", 2, "Should contain 2 cells");
+            assert.containsOnce(rows[1], "label[for=display_name]");
+            assert.containsOnce(rows[1], "div[name=display_name]");
+        }
+    );
 
     QUnit.test("outer and inner groups string attribute", async function (assert) {
         await makeView({
