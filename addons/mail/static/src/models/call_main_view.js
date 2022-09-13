@@ -161,7 +161,6 @@ registerModel({
         callActionListView: one('CallActionListView', {
             default: {},
             inverse: 'callMainView',
-            isCausal: true,
             readonly: true,
         }),
         callView: one('CallView', {
@@ -181,7 +180,6 @@ registerModel({
         mainTiles: many('CallMainViewTile', {
             compute: '_computeMainTiles',
             inverse: 'callMainViewOwner',
-            isCausal: true,
         }),
         /**
          * Determines if we show the overlay with the control buttons.
@@ -191,7 +189,6 @@ registerModel({
         }),
         showOverlayTimer: one('Timer', {
             inverse: 'callMainViewAsShowOverlay',
-            isCausal: true,
         }),
         thread: one('Thread', {
             related: 'callView.thread',

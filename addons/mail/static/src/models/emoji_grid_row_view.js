@@ -14,7 +14,6 @@ registerModel({
             identifying: true,
         }),
         items: many('EmojiGridItemView', {
-            isCausal: true,
             inverse: 'emojiGridRowViewOwner',
         }),
         sectionView: one('EmojiGridSectionView', {
@@ -24,7 +23,6 @@ registerModel({
                 }
                 return clear();
             },
-            isCausal: true,
             inverse: 'emojiGridRowViewOwner',
         }),
         emojiGridViewRowRegistryOwner: one('EmojiGridViewRowRegistry', {

@@ -38,7 +38,6 @@ registerModel({
         actions: attr(),
         activityGroupViews: many('ActivityGroupView', {
             inverse: 'activityGroup',
-            isCausal: true,
         }),
         domain: attr(),
         irModel: one('ir.model', {

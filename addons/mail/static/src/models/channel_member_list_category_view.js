@@ -85,7 +85,6 @@ registerModel({
         channelMemberViews: many('ChannelMemberView', {
             compute: '_computeChannelMemberViews',
             inverse: 'channelMemberListCategoryViewOwner',
-            isCausal: true,
         }),
         members: many('ChannelMember', {
             compute: '_computeMembers',

@@ -11,7 +11,6 @@ registerModel({
                 return this.emojiPickerViewOwner.categories.map(category => ({ viewCategory: category }));
             },
             inverse: 'emojiCategoryBarViewOwner',
-            isCausal: true,
         }),
         emojiPickerViewOwner: one('EmojiPickerView', {
             identifying: true,

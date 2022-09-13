@@ -116,7 +116,6 @@ registerModel({
         messageListViewItems: many('MessageListViewItem', {
             compute: '_computeMessageListViewMessageViewItems',
             inverse: 'messageListViewOwner',
-            isCausal: true,
         }),
         scrollHeight: attr(),
         scrollTop: attr(),

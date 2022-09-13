@@ -335,15 +335,12 @@ registerModel({
         activityBoxView: one('ActivityBoxView', {
             compute: '_computeActivityBoxView',
             inverse: 'chatter',
-            isCausal: true,
         }),
         attachmentBoxView: one('AttachmentBoxView', {
             inverse: 'chatter',
-            isCausal: true,
         }),
         attachmentsLoaderTimer: one('Timer', {
             inverse: 'chatterOwnerAsAttachmentsLoader',
-            isCausal: true,
         }),
         /**
          * States the OWL Chatter component of this chatter.
@@ -354,7 +351,6 @@ registerModel({
          */
         composerView: one('ComposerView', {
             inverse: 'chatter',
-            isCausal: true,
         }),
         context: attr({
             default: {},
@@ -362,22 +358,18 @@ registerModel({
         dropZoneView: one('DropZoneView', {
             compute: '_computeDropZoneView',
             inverse: 'chatterOwner',
-            isCausal: true,
         }),
         fileUploader: one('FileUploader', {
             compute: '_computeFileUploader',
             inverse: 'chatterOwner',
-            isCausal: true,
         }),
         followButtonView: one('FollowButtonView', {
             compute: '_computeFollowButtonView',
             inverse: 'chatterOwner',
-            isCausal: true,
         }),
         followerListMenuView: one('FollowerListMenuView', {
             compute: '_computeFollowerListMenuView',
             inverse: 'chatterOwner',
-            isCausal: true,
         }),
         /**
          * Determines whether `this` should display an activity box.
@@ -483,18 +475,15 @@ registerModel({
         threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'chatter',
-            isCausal: true,
             required: true,
         }),
         topbar: one('ChatterTopbar', {
             default: {},
             inverse: 'chatter',
-            isCausal: true,
         }),
         useDragVisibleDropZone: one('UseDragVisibleDropZone', {
             default: {},
             inverse: 'chatterOwner',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

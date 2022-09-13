@@ -23,7 +23,6 @@ registerModel({
         }),
         activityGroup: one('ActivityGroup', {
             inverse: 'irModel',
-            isCausal: true,
         }),
         iconUrl: attr(),
         id: attr({

@@ -188,7 +188,6 @@ registerModel({
         }),
         deleteConfirmDialog: one('Dialog', {
             inverse: 'messageActionViewOwnerAsDeleteConfirm',
-            isCausal: true,
         }),
         messageAction: one('MessageAction', {
             identifying: true,
@@ -200,7 +199,6 @@ registerModel({
         }),
         reactionPopoverView: one('PopoverView', {
             inverse: 'messageActionViewOwnerAsReaction',
-            isCausal: true,
         }),
         tabindex: attr({
             compute: '_computeTabindex',

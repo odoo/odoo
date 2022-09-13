@@ -18,7 +18,6 @@ registerModel({
         composerSuggestionView: one('ComposerSuggestionView', {
             default: {},
             inverse: 'composerSuggestionListViewExtraComposerSuggestionViewItemOwner',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

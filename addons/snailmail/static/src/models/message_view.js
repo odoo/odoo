@@ -9,11 +9,9 @@ import '@mail/models/message_view';
 addFields('MessageView', {
     snailmailErrorDialog: one('Dialog', {
         inverse: 'messageViewOwnerAsSnailmailError',
-        isCausal: true,
     }),
     snailmailNotificationPopoverView: one('PopoverView', {
         inverse: 'messageViewOwnerAsSnailmailNotificationContent',
-        isCausal: true,
     }),
 });
 

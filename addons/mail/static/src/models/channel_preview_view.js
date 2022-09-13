@@ -123,7 +123,6 @@ registerModel({
         messageAuthorPrefixView: one('MessageAuthorPrefixView', {
             compute: '_computeMessageAuthorPrefixView',
             inverse: 'channelPreviewViewOwner',
-            isCausal: true,
         }),
         notificationListViewOwner: one('NotificationListView', {
             identifying: true,
@@ -132,7 +131,6 @@ registerModel({
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
             inverse: 'channelPreviewViewOwner',
-            isCausal: true,
         }),
         thread: one('Thread', {
             related: 'channel.thread',

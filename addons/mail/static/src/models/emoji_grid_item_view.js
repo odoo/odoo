@@ -26,7 +26,6 @@ registerModel({
                 return clear();
             },
             inverse: 'emojiGridItemViewOwner',
-            isCausal: true,
         }),
         width: attr({
             compute() {

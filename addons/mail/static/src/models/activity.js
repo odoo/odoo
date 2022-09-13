@@ -262,7 +262,6 @@ registerModel({
     fields: {
         activityViews: many('ActivityView', {
             inverse: 'activity',
-            isCausal: true,
         }),
         assignee: one('User', {
             inverse: 'activitiesAsAssignee',

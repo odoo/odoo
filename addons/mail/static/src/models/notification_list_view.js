@@ -163,7 +163,6 @@ registerModel({
         channelPreviewViews: many('ChannelPreviewView', {
             compute: '_computeChannelPreviewViews',
             inverse: 'notificationListViewOwner',
-            isCausal: true,
         }),
         discussOwner: one('Discuss', {
             identifying: true,
@@ -182,12 +181,10 @@ registerModel({
         notificationGroupViews: many('NotificationGroupView', {
             compute: '_computeNotificationGroupViews',
             inverse: 'notificationListViewOwner',
-            isCausal: true,
         }),
         notificationRequestView: one('NotificationRequestView', {
             compute: '_computeNotificationRequestView',
             inverse: 'notificationListViewOwner',
-            isCausal: true,
         }),
         notificationViews: many('Record', {
             compute: '_computeNotificationViews',
@@ -196,7 +193,6 @@ registerModel({
         threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
             compute: '_computeThreadNeedactionPreviewViews',
             inverse: 'notificationListViewOwner',
-            isCausal: true,
         }),
     },
 });

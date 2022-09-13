@@ -784,7 +784,6 @@ registerModel({
          */
         messageReactionGroups: many('MessageReactionGroup', {
             inverse: 'message',
-            isCausal: true,
         }),
         messageTypeText: attr({
             compute: '_computeMessageTypeText',
@@ -803,7 +802,6 @@ registerModel({
         }),
         messageListViewItems: many('MessageListViewItem', {
             inverse: 'message',
-            isCausal: true,
         }),
         notifications: many('Notification', {
             inverse: 'message',

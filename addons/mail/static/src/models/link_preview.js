@@ -70,15 +70,12 @@ registerModel({
         }),
         linkPreviewCardView: many('LinkPreviewCardView', {
             inverse: 'linkPreview',
-            isCausal: true,
         }),
         linkPreviewImageView: many('LinkPreviewImageView', {
             inverse: 'linkPreview',
-            isCausal: true,
         }),
         linkPreviewVideoView: many('LinkPreviewVideoView', {
             inverse: 'linkPreview',
-            isCausal: true,
         }),
         message: one('Message', {
             inverse: 'linkPreviews',

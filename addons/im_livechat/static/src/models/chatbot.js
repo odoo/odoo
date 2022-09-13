@@ -598,7 +598,6 @@ registerModel({
         }),
         currentStep: one('ChatbotStep', {
             inverse: 'chabotOwner',
-            isCausal: true,
         }),
         debouncedAwaitUserInput: attr({
             compute: '_computeDebouncedAwaitUserInput',

@@ -46,7 +46,6 @@ registerModel({
                 return this.emojiCategories.map(category => ({ category }));
             },
             inverse: 'emoji',
-            isCausal: true,
         }),
         codepoints: attr({
             identifying: true,
@@ -63,7 +62,6 @@ registerModel({
         emojiDataCategory: one('EmojiCategory'),
         emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', {
             inverse: 'emoji',
-            isCausal: true,
         }),
         emojiRegistry: one('EmojiRegistry', {
             compute() {
@@ -78,7 +76,6 @@ registerModel({
         emojiViews: many('EmojiView', {
             inverse: 'emoji',
             readonly: true,
-            isCausal: true,
         }),
         emoticons: attr(),
         keywords: attr(),

@@ -89,7 +89,6 @@ registerModel({
         activityGroupViews: many('ActivityGroupView', {
             compute: '_computeActivityGroupViews',
             inverse: 'activityMenuViewOwner',
-            isCausal: true,
         }),
         component: attr(),
         counter: attr({

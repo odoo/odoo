@@ -62,7 +62,6 @@ registerModel({
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
             inverse: 'channelMemberViewOwner',
-            isCausal: true,
         }),
     },
 });
