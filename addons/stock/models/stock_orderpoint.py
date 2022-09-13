@@ -241,7 +241,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_forecast = False
                 continue
             orderpoint_context = orderpoint._get_product_context()
-            product_context = frozendict({**self.env.context, **orderpoint_context})
+            product_context = frozendict({**orderpoint_context})
             orderpoints_contexts[product_context] |= orderpoint
         for orderpoint_context, orderpoints_by_context in orderpoints_contexts.items():
             products_qty = {
