@@ -3,7 +3,6 @@
 import { browser } from "@web/core/browser/browser";
 import {
     click,
-    clickEdit,
     clickSave,
     editInput,
     getFixture,
@@ -78,15 +77,13 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=user_id]").textContent.trim(),
+            target.querySelector(".o_field_widget[name=user_id] input").value,
             "Aline"
         );
         assert.containsOnce(
             target,
             '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
         );
-
-        await clickEdit(target);
 
         assert.containsOnce(target, ".o_input_dropdown");
         assert.strictEqual(target.querySelector(".o_input_dropdown input").value, "Aline");
@@ -105,7 +102,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=user_id]").textContent.trim(),
+            target.querySelector(".o_field_widget[name=user_id] input").value,
             "Christine"
         );
         assert.containsOnce(
@@ -113,7 +110,6 @@ QUnit.module("Fields", (hooks) => {
             '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]'
         );
 
-        await clickEdit(target);
         await editInput(target, '.o_field_widget[name="user_id"] input', "");
 
         assert.containsNone(target, ".o_m2o_avatar > img");
@@ -121,7 +117,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
 
         assert.containsNone(target, ".o_m2o_avatar > img");
-        assert.containsNone(target, ".o_m2o_avatar > .o_m2o_avatar_empty");
+        assert.containsOnce(target, ".o_m2o_avatar > .o_m2o_avatar_empty");
     });
 
     QUnit.test("onchange in form view flow", async function (assert) {

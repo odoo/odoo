@@ -171,7 +171,7 @@ export class DatePicker extends Component {
      */
     updateInput({ useStatic } = {}) {
         const [formattedDate] = this.formatValue(this.date, this.getOptions(useStatic));
-        if (formattedDate) {
+        if (formattedDate !== null) {
             this.inputRef.el.value = formattedDate;
         }
     }
@@ -230,7 +230,7 @@ export class DatePicker extends Component {
             // Reset to default (= given) date.
             this.updateInput();
         }
-        if (!areDateEquals(this.date, parsedDate)) {
+        if (parsedDate !== null && !areDateEquals(this.date, parsedDate)) {
             this.props.onDateTimeChanged(parsedDate);
         }
     }

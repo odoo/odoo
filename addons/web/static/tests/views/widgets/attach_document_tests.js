@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, clickEdit, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 
@@ -72,7 +72,6 @@ QUnit.module("Widgets", (hooks) => {
                 </form>`,
         });
 
-        await clickEdit(target);
         await editInput(target, "[name='display_name'] input", "yop");
         await click(target, ".o_attach_document");
         await triggerEvent(

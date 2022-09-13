@@ -208,11 +208,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Today");
-        assert.hasClass(target.querySelector(".o_field_widget > div "), "fw-bold text-warning");
-
-        // in edit mode, this widget should be editable.
-        await click(target, ".o_form_button_edit");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "10/08/2017");
 
         assert.containsOnce(target, ".o_form_editable");
         assert.containsOnce(target, "div.o_field_widget[name='date'] .o_datepicker");
@@ -226,14 +222,43 @@ QUnit.module("Fields", (hooks) => {
 
         await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
         await click(target, ".o_form_button_save");
-        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Tomorrow");
+        assert.strictEqual(target.querySelector(".o_field_widget input").value, "10/09/2017");
+    });
 
-        await click(target, ".o_form_button_edit");
-        await click(target.querySelector(".o_datepicker .o_datepicker_input"));
-        await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/07/2017']");
-        await click(target, ".o_form_button_save");
-        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Yesterday");
-        assert.hasClass(target.querySelector(".o_field_widget > div"), "text-danger");
+    QUnit.test("RemainingDaysField in form view (readonly)", async function (assert) {
+        patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        serverData.models.partner.records = [
+            { id: 1, date: "2017-10-08", datetime: "2017-10-08 10:00:00" }, // today
+        ];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" widget="remaining_days" readonly="1" />
+                    <field name="datetime" widget="remaining_days" readonly="1" />
+                </form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='date']").textContent,
+            "Today"
+        );
+        assert.hasClass(
+            target.querySelector(".o_field_widget[name='date'] > div "),
+            "fw-bold text-warning"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='datetime']").textContent,
+            "Today"
+        );
+        assert.hasClass(
+            target.querySelector(".o_field_widget[name='datetime'] > div "),
+            "fw-bold text-warning"
+        );
     });
 
     QUnit.test("RemainingDaysField on a datetime field in form view", async function (assert) {
@@ -252,13 +277,10 @@ QUnit.module("Fields", (hooks) => {
                     <field name="datetime" widget="remaining_days" />
                 </form>`,
         });
-        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "Today");
-        assert.hasClass(target.querySelector(".o_field_widget > div"), "text-warning");
-
-        // in edit mode, this widget should be editable.
-        await click(target, ".o_form_button_edit");
-
-        assert.containsOnce(target, ".o_form_editable");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "10/08/2017 11:00:00"
+        );
         assert.containsOnce(target, "div.o_field_widget[name='datetime'] .o_datepicker");
 
         await click(target.querySelector(".o_datepicker .o_datepicker_input"));
@@ -271,7 +293,10 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
         await click(document.body, "a[data-action='close']");
         await click(target, ".o_form_button_save");
-        assert.strictEqual(target.querySelector(".o_field_widget > div").textContent, "Tomorrow");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "10/09/2017 11:00:00"
+        );
     });
 
     QUnit.test(

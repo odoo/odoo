@@ -10,7 +10,6 @@ import {
     triggerEvent,
     editSelect,
     clickSave,
-    clickEdit,
     triggerHotkey,
     nextTick,
 } from "@web/../tests/helpers/utils";
@@ -239,7 +238,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='reference'] input", "new partner");
         await click(target, ".o_field_widget[name='reference'] .o_m2o_dropdown_option_create");
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.verifySteps(
             [
@@ -280,7 +279,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             serverData,
             arch: `
-                <form>
+                <form edit="0">
                     <field name="reference" />
                     <field name="p" />
                 </form>`,
@@ -339,9 +338,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        // current form
-        await click(target, ".o_form_button_edit");
-
         let fieldRef = target.querySelector(".o_field_widget[name=reference]");
         assert.strictEqual(
             fieldRef.querySelector("option:checked").textContent,
@@ -374,7 +370,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("reference in form view", async function (assert) {
-        assert.expect(14);
+        assert.expect(11);
 
         serverData.views = {
             "product,false,form": `
@@ -408,7 +404,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="reference" string="custom label" />
+                            <field name="reference" string="custom label" open_target="new" />
                         </group>
                     </sheet>
                 </form>`,
@@ -448,14 +444,12 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.strictEqual(
-            target.querySelector("a.o_form_uri").textContent,
-            "xphone",
-            "should contain a link"
-        );
-        await click(target, "a.o_form_uri");
-
-        await click(target, ".o_form_button_edit");
+        // assert.strictEqual(
+        //     target.querySelector("a.o_form_uri").textContent,
+        //     "xphone",
+        //     "should contain a link"
+        // );
+        // await click(target, "a.o_form_uri");
 
         assert.containsOnce(target, ".o_field_many2one_selection", "should contain one many2one");
         assert.strictEqual(
@@ -499,7 +493,7 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target);
         assert.strictEqual(
-            target.querySelector("a.o_form_uri").textContent,
+            target.querySelector(".o_field_widget[name=reference] input").value,
             "gold",
             "should contain a link with the new value"
         );
@@ -547,7 +541,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".ui-autocomplete .ui-menu-item"));
 
         // save
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
     });
 
     QUnit.test("default_get and onchange with a reference field", async function (assert) {
@@ -673,8 +667,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_edit");
-
         assert.strictEqual(nbNameGet, 1, "the first name_get should have been done");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo]").textContent,
@@ -738,8 +730,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, ".o_form_button_edit");
-
         assert.containsNone(
             target,
             "select",
@@ -797,18 +787,6 @@ QUnit.module("Fields", (hooks) => {
                    </form>`,
             });
 
-            assert.strictEqual(
-                target.querySelector(".o_field_widget[name='model_id'] span").textContent,
-                "Product",
-                "the value of model_id field should be Product"
-            );
-            assert.strictEqual(
-                target.querySelector(".o_field_widget[name='reference'] span").textContent,
-                "John Smith",
-                "the value of model_id field should be John Smith"
-            );
-
-            await click(target, ".o_form_button_edit");
             assert.containsNone(
                 target,
                 "select",
@@ -850,8 +828,6 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                    </form>`,
             });
-
-            await clickEdit(target);
 
             assert.strictEqual(target.querySelector(".reference_field").textContent, "xpad");
 
@@ -904,7 +880,6 @@ QUnit.module("Fields", (hooks) => {
                 "xpad"
             );
 
-            await clickEdit(target);
             await click(target.querySelector(".o_list_table .o_data_cell"));
             await editInput(target, ".o_list_table [name='name'] input", "plop");
             await click(target, ".o_form_view");
@@ -943,8 +918,6 @@ QUnit.module("Fields", (hooks) => {
                     </group>
                 </form>`,
         });
-
-        await click(target, ".o_form_button_edit");
 
         const groups = target.querySelectorAll(".o_group");
 

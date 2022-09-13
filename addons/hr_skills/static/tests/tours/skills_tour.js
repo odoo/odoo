@@ -25,10 +25,6 @@ tour.register('hr_skills_tour', {
         trigger: ".o_form_button_save",
     },
     {
-        content: "Switch to edit",
-        trigger: ".o_form_button_edit",
-    },
-    {
         content: "Add a new Resume experience",
         trigger: ".o_field_resume_one2many tr.o_resume_group_header button.btn-secondary",
     },
@@ -50,6 +46,7 @@ tour.register('hr_skills_tour', {
     {
         content: "Save it",
         trigger: ".o_form_button_save",
+        in_modal: true,
         run: "click",
     },
     {
