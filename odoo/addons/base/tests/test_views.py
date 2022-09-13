@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ast
+import json
 import logging
 import time
 
@@ -2186,6 +2187,31 @@ class TestViews(ViewCase):
             arch % "[('model', '=', '1')]",
             "Attribute readonly evaluation expects a boolean, got [('model', '=', '1')]",
         )
+
+    def test_modifier_attribute_using_context(self):
+        view = self.assertValid("""
+            <form string="View">
+                <field name="name"
+                    invisible="context.get('foo')"
+                    readonly="context.get('bar')"
+                    required="context.get('baz')"
+                />
+            </form>
+        """)
+
+        for context, expected in [
+            ({}, {}),
+            ({'foo': True}, {'invisible': True}),
+            ({'bar': True}, {'readonly': True}),
+            ({'baz': True}, {'required': True}),
+            ({'foo': True, 'bar': True}, {'invisible': True, 'readonly': True}),
+        ]:
+            arch = self.View.with_context(**context).get_view(view.id)['arch']
+            field_node = etree.fromstring(arch).xpath('//field[@name="name"]')[0]
+            modifiers = json.loads(field_node.get('modifiers') or '{}')
+            self.assertEqual(modifiers.get('invisible'), expected.get('invisible'))
+            self.assertEqual(modifiers.get('readonly'), expected.get('readonly'))
+            self.assertEqual(modifiers.get('required'), expected.get('required'))
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_in_filter(self):
