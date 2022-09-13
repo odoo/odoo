@@ -131,6 +131,11 @@ class Country(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+    @api.onchange("address_format")
+    def onchange_street_format(self):
+        # Prevent unexpected truncation with whitespaces in front of the street format
+        self.address_format = self.address_format.strip()
+
 class CountryGroup(models.Model):
     _description = "Country Group"
     _name = 'res.country.group'
