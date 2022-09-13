@@ -23,7 +23,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
-from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node
+from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node, str2bool
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools import safe_eval, lazy, lazy_property, frozendict
 from odoo.tools.view_validation import valid_view, get_variable_names, get_domain_identifiers, get_dict_asts
@@ -53,20 +53,6 @@ ref_re = re.compile(r"""
 """, re.VERBOSE)
 
 
-def quick_eval(expr, globals_dict):
-    """ Functionally identical to safe_eval(), but optimized with special-casing. """
-    # most (~95%) elements are 1/True/0/False
-    if expr == '1':
-        return 1
-    if expr == 'True':
-        return True
-    if expr == '0':
-        return 0
-    if expr == 'False':
-        return False
-    return safe_eval.safe_eval(expr, globals_dict)
-
-
 def att_names(name):
     yield name
     yield f"t-att-{name}"
@@ -91,10 +77,8 @@ def transfer_field_to_modifiers(field, modifiers):
             modifiers[attr] = default_value
 
 
-def transfer_node_to_modifiers(node, modifiers, context=None):
+def transfer_node_to_modifiers(node, modifiers):
     # Don't deal with groups, it is done by check_group().
-    # Need the context to evaluate the invisible attribute on tree views.
-    # For non-tree views, the context shouldn't be given.
     attrs = node.attrib.pop('attrs', None)
     if attrs:
         modifiers.update(ast.literal_eval(attrs.strip()))
@@ -108,20 +92,36 @@ def transfer_node_to_modifiers(node, modifiers, context=None):
         else:
             modifiers['invisible'] = [('state', 'not in', states)]
 
+    context_dependent_modifiers = []
     for attr in ('invisible', 'readonly', 'required'):
         value_str = node.attrib.pop(attr, None)
         if value_str:
-            value = bool(quick_eval(value_str, {'context': context or {}}))
+
             if (attr == 'invisible'
                     and any(parent.tag == 'tree' for parent in node.iterancestors())
                     and not any(parent.tag == 'header' for parent in node.iterancestors())):
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
-                modifiers['column_invisible'] = value
-            elif value or (attr not in modifiers or not isinstance(modifiers[attr], list)):
+                attr = 'column_invisible'
+
+            # TODO: for invisible="context.get('...')", delegate to the web client.
+            try:
+                # most (~95%) elements are 1/True/0/False
+                value = str2bool(value_str)
+            except ValueError:
+                # if str2bool fails, it means it's something else than 1/True/0/False,
+                # meaning most-likely `context.get('...')`,
+                # which should be evaluated after retrieving the view arch from the cache
+                value = value_str
+                context_dependent_modifiers.append(attr)
+
+            if value or (attr not in modifiers or not isinstance(modifiers[attr], list)):
                 # Don't set the attribute to False if a dynamic value was
                 # provided (i.e. a domain from attrs or states).
                 modifiers[attr] = value
+
+    if context_dependent_modifiers:
+        node.set('context-dependent-modifiers', ','.join(context_dependent_modifiers))
 
 
 def simplify_modifiers(modifiers):
@@ -1076,6 +1076,29 @@ actual arch.
 
         return tree
 
+    def _postprocess_context_dependent(self, tree):
+        """
+        Evaluate the modifiers which depends on the context after retrieving the view from the cache.
+
+        e.g.
+        <field name="date_approve" invisible="context.get('quotation_only', False)"
+
+        For such modifiers, which cannot be cached, the modifier has been stored under it's non-evaluated expression,
+        along with a temporary technical attribute `context-dependent-modifiers`
+        to tell which modifier should be evaluated after retrieving the view from the cache.
+        e.g.
+        <field
+            name="date_approve"
+            modifiers="{&quot;invisible&quot;: &quot;context.get('quotation_only')&quot;}"
+            context-dependent-modifiers="invisible"/>
+        """
+        for node in tree.xpath('//*[@context-dependent-modifiers]'):
+            modifiers = json.loads(node.attrib.pop('modifiers'))
+            for attr in node.attrib.pop('context-dependent-modifiers').split(','):
+                modifiers[attr] = bool(safe_eval.safe_eval(modifiers[attr], {'context': self._context}))
+            transfer_modifiers_to_node(modifiers, node)
+        return tree
+
     def _postprocess_view(self, node, model_name, editable=True, parent_name_manager=None, **options):
         """ Process the given architecture, modifying it in-place to add and
         remove stuff.
@@ -1119,7 +1142,7 @@ actual arch.
                     # the node has been removed, stop processing here
                     continue
 
-            transfer_node_to_modifiers(node, node_info['modifiers'], self._context)
+            transfer_node_to_modifiers(node, node_info['modifiers'])
             transfer_modifiers_to_node(node_info['modifiers'], node)
 
             # if present, iterate on node_info['children'] instead of node
@@ -1458,7 +1481,11 @@ actual arch.
             for attribute in ('invisible', 'readonly', 'required'):
                 val = node.get(attribute)
                 if val:
-                    res = quick_eval(val, {'context': self._context})
+                    try:
+                        # most (~95%) elements are 1/True/0/False
+                        res = str2bool(val)
+                    except ValueError:
+                        res = safe_eval.safe_eval(val, {'context': self._context})
                     if res not in (1, 0, True, False, None):
                         msg = _(
                             'Attribute %(attribute)s evaluation expects a boolean, got %(value)s',
