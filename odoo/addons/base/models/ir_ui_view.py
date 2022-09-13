@@ -125,7 +125,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None):
 
 
 def simplify_modifiers(modifiers):
-    for a in ('invisible', 'readonly', 'required'):
+    for a in ('column_invisible', 'invisible', 'readonly', 'required'):
         if a in modifiers and not modifiers[a]:
             del modifiers[a]
 
