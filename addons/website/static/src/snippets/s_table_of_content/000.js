@@ -52,7 +52,12 @@ const TableOfContent = publicWidget.Widget.extend({
         position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
         position += isHorizontalNavbar ? this.$el.outerHeight() : 0;
         this._scrollingElement = $().getScrollingElement();
-        this._scrollingElement.scrollspy({target: this.$el.find('.s_table_of_content_navbar'), method: 'offset', offset: position + 100, alwaysKeepFirstActive: true});
+        new ScrollSpy(this._scrollingElement, {
+            target: this.$el.find('.s_table_of_content_navbar'),
+            method: 'offset',
+            offset: position + 100,
+            alwaysKeepFirstActive: true
+        });
     },
 });
 
