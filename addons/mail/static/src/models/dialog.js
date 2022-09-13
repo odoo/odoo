@@ -63,7 +63,7 @@ registerModel({
          * @returns {string}
          */
         _computeComponentClassName() {
-            if (this.attachmentDeleteConfirmView) {
+            if (this.attachmentDeleteConfirmView || this.linkPreviewDeleteConfirmView) {
                 return 'o_Dialog_componentMediumSize align-self-start mt-5';
             }
             if (this.deleteMessageConfirmView) {
