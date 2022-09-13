@@ -3,6 +3,7 @@
 import { makeContext } from "@web/core/context";
 import { registry } from "@web/core/registry";
 import { Pager } from "@web/core/pager/pager";
+import { sprintf } from "@web/core/utils/strings";
 import {
     useActiveActions,
     useAddInlineRecord,
@@ -219,7 +220,9 @@ export class X2ManyField extends Component {
             context = makeContext([record.getFieldContext(this.props.name), context]);
         }
         if (this.isMany2Many) {
-            return this.selectCreate({ domain, context });
+            const { string } = this.props.record.activeFields[this.props.name];
+            const title = sprintf(this.env._t("Add: %s"), string);
+            return this.selectCreate({ domain, context, title });
         }
         if (editable) {
             if (this.list.editedRecord) {

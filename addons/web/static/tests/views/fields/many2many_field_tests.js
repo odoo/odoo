@@ -479,6 +479,44 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("field string is used in the SelectCreateDialog", async function (assert) {
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,search": '<search><field name="display_name"/></search>',
+            "turtle,false,list": '<tree><field name="display_name"/></tree>',
+            "turtle,false,search": '<search><field name="display_name"/></search>',
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                    <field name="turtles" widget="many2many" string="Abcde">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[0]);
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal .modal-title").innerText, "Add: pokemon");
+
+        await click(target.querySelector(".modal .o_form_button_cancel"));
+        assert.containsNone(target, ".modal");
+
+        await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal .modal-title").innerText, "Add: Abcde");
+    });
+
     QUnit.test("many2many kanban: create action disabled", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
 
