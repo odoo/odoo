@@ -1644,7 +1644,9 @@ var SnippetsMenu = Widget.extend({
                     }
                 }
 
-                $dropZones.droppable('destroy');
+                if ($dropZones) {
+                    $dropZones.droppable('destroy');
+                }
                 self.getEditableArea().find('.oe_drop_zone').remove();
 
                 if (dropped) {
@@ -1681,6 +1683,7 @@ var SnippetsMenu = Widget.extend({
                 } else {
                     $toInsert.remove();
                 }
+                $dropZones = undefined;
             },
         });
     },
