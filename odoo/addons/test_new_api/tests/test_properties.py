@@ -3,6 +3,7 @@
 
 import json
 
+import unittest
 from unittest.mock import patch
 
 from odoo import Command
@@ -996,7 +997,7 @@ class PropertiesCase(TransactionCase):
             'discussion': self.discussion_1.id,
             'author': self.user.id,
             'attributes': [{
-                'name': 'My Tags',
+                'name': 'my_tags',
                 'type': 'many2many',
                 'comodel': 'test_new_api.multi.tag',
                 'value': tags.ids,
@@ -1335,7 +1336,6 @@ class PropertiesCase(TransactionCase):
         }
         self.assertEqual(expected_properties, sql_properties)
 
-    @mute_logger('odoo.fields')
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""
         MultiTag = type(self.env['test_new_api.multi.tag'])
@@ -1388,3 +1388,283 @@ class PropertiesCase(TransactionCase):
         value = self.env.cr.fetchone()
         self.assertTrue(value and value[0])
         return value[0]
+
+
+class PropertiesSearchCase(PropertiesCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.messages = cls.message_1 | cls.message_2 | cls.message_3
+        cls.env['test_new_api.message'].search([('id', 'not in', cls.messages.ids)]).unlink()
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_boolean(self):
+        # search on boolean
+        self.message_1.attributes = [{
+            'name': 'myboolean',
+            'type': 'boolean',
+            'value': True,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'myboolean': False}
+        messages = self.env['test_new_api.message'].search([('attributes.myboolean', '=', True)])
+        self.assertEqual(messages, self.message_1)
+        messages = self.env['test_new_api.message'].search([('attributes.myboolean', '!=', False)])
+        self.assertEqual(messages, self.message_1)
+        messages = self.env['test_new_api.message'].search([('attributes.myboolean', '=', False)])
+        # message 2 has a falsy boolean properties
+        # message 3 doesn't have the properties (key in dict doesn't exist)
+        self.assertEqual(messages, self.message_2 | self.message_3)
+        messages = self.env['test_new_api.message'].search([('attributes.myboolean', '!=', True)])
+        self.assertEqual(messages, self.message_2 | self.message_3)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_char(self):
+        # search on text properties
+        self.message_1.attributes = [{
+            'name': 'mychar',
+            'type': 'char',
+            'value': 'Test',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mychar': 'TeSt'}
+
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '=', 'Test')])
+        self.assertEqual(messages, self.message_1, "Should be able to search on a properties field")
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '=', '"Test"')])
+        self.assertFalse(messages)
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', 'ilike', 'test')])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', 'not ilike', 'test')])
+        self.assertFalse(messages)
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', 'ilike', '"test"')])
+        self.assertFalse(messages)
+
+        for forbidden_char in '! ()"\'.':
+            searches = (
+                f'mychar{forbidden_char}',
+                f'my{forbidden_char}char',
+                f'{forbidden_char}mychar',
+            )
+            for search in searches:
+                with self.assertRaises(ValueError), self.assertQueryCount(0):
+                    self.env['test_new_api.message'].search([(f'attributes.{search}', '=', 'Test')])
+
+        # search falsy properties
+        self.message_3.discussion = self.message_2.discussion
+        self.message_3.attributes = [{'name': 'mychar', 'value': False}]
+        self.assertEqual(self._get_sql_properties(self.message_3), {'mychar': False})
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '=', False)])
+        self.assertEqual(messages, self.message_3)
+
+        # search falsy properties when the key doesn't exist in the dict
+        # message 2 properties is False, message 3 properties doesn't exist in database
+        self.message_2.attributes = [{'name': 'mychar', 'value': False}]
+        self.env.cr.execute(
+            "UPDATE test_new_api_message SET attributes = '{}' WHERE id = %s",
+            [self.message_3.id],
+        )
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '=', False)])
+        self.assertEqual(messages, self.message_2 | self.message_3)
+
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '!=', False)])
+        self.assertEqual(messages, self.message_1)
+
+        # message 1 property contain a string but is not falsy so it's not returned
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '!=', True)])
+        self.assertEqual(messages, self.message_2 | self.message_3)
+
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '=', True)])
+        self.assertEqual(messages, self.message_1)
+
+        # message 3 is now null instead of being an empty dict
+        self.env.cr.execute(
+            "UPDATE test_new_api_message SET attributes = NULL WHERE id = %s",
+            [self.message_3.id],
+        )
+
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '=', False)])
+        self.assertEqual(messages, self.message_2 | self.message_3)
+
+        messages = self.env['test_new_api.message'].search([('attributes.mychar', '!=', False)])
+        self.assertEqual(messages, self.message_1)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_float(self):
+        # search on float
+        self.message_1.attributes = [{
+            'name': 'myfloat',
+            'type': 'float',
+            'value': 3.14,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'myfloat': 5.55}
+        messages = self.env['test_new_api.message'].search([('attributes.myfloat', '>', 4.4)])
+        self.assertEqual(messages, self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.myfloat', '<', 4.4)])
+        self.assertEqual(messages, self.message_1)
+        messages = self.env['test_new_api.message'].search([('attributes.myfloat', '>', 1.1)])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.myfloat', '<=', 1.1)])
+        self.assertFalse(messages)
+        messages = self.env['test_new_api.message'].search([('attributes.myfloat', '=', 3.14)])
+        self.assertEqual(messages, self.message_1)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_integer(self):
+        # search on integer
+        self.messages.discussion = self.discussion_1
+        self.message_1.attributes = [{
+            'name': 'myint',
+            'type': 'integer',
+            'value': 33,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'myint': 111}
+        self.message_3.attributes = {'myint': -2}
+
+        messages = self.env['test_new_api.message'].search([('attributes.myint', '>', 4)])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.myint', '<', 4)])
+        self.assertEqual(messages, self.message_3)
+        messages = self.env['test_new_api.message'].search([('attributes.myint', '=', 111)])
+        self.assertEqual(messages, self.message_2)
+        # search on the JSONified value (operator "->>")
+        messages = self.env['test_new_api.message'].search([('attributes.myint', 'ilike', '1')])
+        self.assertEqual(messages, self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.myint', 'not ilike', '1')])
+        self.assertEqual(messages, self.message_1 | self.message_3)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_many2many(self):
+        self.messages.discussion = self.discussion_1
+        partners = self.env['res.partner'].create([{'name': 'A'}, {'name': 'B'}, {'name': 'C'}])
+        self.message_1.attributes = [{
+            'name': 'mymany2many',
+            'type': 'many2many',
+            'comodel': 'res.partner',
+            'value': partners.ids,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mymany2many': [partners[1].id]}
+        self.message_3.attributes = {'mymany2many': [partners[2].id]}
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.mymany2many', 'in', partners[0].id)])
+        self.assertEqual(messages, self.message_1)
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.mymany2many', 'in', partners[1].id)])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.mymany2many', 'in', partners[2].id)])
+        self.assertEqual(messages, self.message_1 | self.message_3)
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.mymany2many', 'not in', partners[0].id)])
+        self.assertEqual(messages, self.message_2 | self.message_3)
+
+        # IN operator (not supported on many2many and return weird results)
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.mymany2many', 'in', [partners[0].id, partners[1].id])])
+        self.assertEqual(messages, self.message_2)  # should be self.message_1 | self.message_2
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_many2one(self):
+        # many2one are just like integer
+        self.messages.discussion = self.discussion_1
+        self.message_1.attributes = [{
+            'name': 'mypartner',
+            'type': 'integer',
+            'value': self.partner.id,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mypartner': self.partner_2.id}
+        self.message_3.attributes = {'mypartner': False}
+
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.mypartner', 'in', [self.partner.id, self.partner_2.id])])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id])])
+        self.assertEqual(messages, self.message_3)
+
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.mypartner', 'ilike', self.partner.display_name)])
+        self.assertFalse(messages, "The ilike on relational properties is not supported")
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_tags(self):
+        self.messages.discussion = self.discussion_1
+        self.message_1.attributes = [{
+            'name': 'mytags',
+            'type': 'tags',
+            'value': ['a', 'b'],
+            'tags': [['a', 'A', 1], ['b', 'B', 2], ['aa', 'AA', 3]],
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mytags': ['b']}
+        self.message_3.attributes = {'mytags': ['aa']}
+
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'in', 'a')])
+        self.assertEqual(messages, self.message_1)
+        # the search is done on the JSONified value (operator "->>")
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'ilike', 'a')])
+        self.assertEqual(messages, self.message_1 | self.message_3)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'not ilike', 'a')])
+        self.assertEqual(messages, self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'in', 'b')])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'in', 'aa')])
+        self.assertEqual(messages, self.message_3)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'not in', 'b')])
+        self.assertEqual(messages, self.message_3)
+        # the search is done on the JSONified value (operator "->>")
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'ilike', '["aa"]')])
+        self.assertEqual(messages, self.message_3)
+
+        # IN operator on array
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'in', [])])
+        self.assertFalse(messages)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'not in', [])])
+        self.assertEqual(messages, self.message_1 | self.message_2 | self.message_3)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'in', ['a', 'b'])])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'in', ['b', 'a'])])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'in', ['aa'])])
+        self.assertEqual(messages, self.message_3)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'in', ['aa', 'b'])])
+        self.assertEqual(messages, self.message_3 | self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.mytags', 'not in', ['a', 'b'])])
+        self.assertEqual(messages, self.message_3)
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_unaccent(self):
+        if not self.registry.has_unaccent:
+            # To enable unaccent feature:
+            # CREATE EXTENSION unaccent;
+            raise unittest.SkipTest("unaccent not enabled")
+
+        Model = self.env['test_new_api.message']
+        (self.message_1 | self.message_2).discussion = self.discussion_1
+        # search on text properties
+        self.message_1.attributes = [{
+            'name': 'mychar',
+            'type': 'char',
+            'value': 'Hélène',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mychar': 'Helene'}
+
+        result = Model.search([('attributes.mychar', 'ilike', 'Helene')])
+        self.assertEqual(self.message_1 | self.message_2, result)
+
+        result = Model.search([('attributes.mychar', 'ilike', 'hélène')])
+        self.assertEqual(self.message_1 | self.message_2, result)
+
+        result = Model.search([('attributes.mychar', 'not ilike', 'Helene')])
+        self.assertNotIn(self.message_1, result)
+        self.assertNotIn(self.message_2, result)
+
+        result = Model.search([('attributes.mychar', 'not ilike', 'hélène')])
+        self.assertNotIn(self.message_1, result)
+        self.assertNotIn(self.message_2, result)
