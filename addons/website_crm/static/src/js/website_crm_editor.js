@@ -52,6 +52,7 @@ FormEditorRegistry.add('create_lead', {
         name: 'user_id',
         type: 'many2one',
         relation: 'res.users',
+        domain: [['share', '=', false]],
         string: _t('Salesperson'),
         title: _t('Assign leads/opportunities to a salesperson.'),
     }],
