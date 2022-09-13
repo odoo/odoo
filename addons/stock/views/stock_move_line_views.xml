@@ -119,7 +119,7 @@
                 <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
                 <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
                 <separator/>
-                <filter string="To Do" name="todo" domain="[('state', 'not in', ['done', 'draft'])]"/>
+                <filter string="To Do" name="todo" domain="[('state', 'not in', ['done', 'draft', 'cancel'])]"/>
                 <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
                 <separator/>
                 <filter string="Incoming" name="incoming" domain="[('picking_id.picking_type_id.code', '=', 'incoming')]"/>
