@@ -106,7 +106,7 @@ class ProjectCustomerPortal(CustomerPortal):
         return request.redirect(request.httprequest.full_path.replace('/my/project/', '/my/projects/'))
 
     @http.route(['/my/task',
-                 '/my/task/page/<int:page>'
+                 '/my/task/page/<int:page>',
                  '/my/task/<int:task_id>'], type='http', auth='public')
     def portal_my_task_routes_outdated(self, **kwargs):
         """ Redirect the outdated routes to the new routes. """
