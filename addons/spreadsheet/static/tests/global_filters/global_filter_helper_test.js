@@ -22,6 +22,20 @@ QUnit.module("spreadsheet > Global filters helpers", {}, () => {
         assertDateDomainEqual(assert, "field", "2022-04-16", "2022-05-15", domain);
     });
 
+    QUnit.test("getRelativeDateDomain > last_three_months (last 90 days)", async function (assert) {
+        const now = DateTime.fromISO("2022-05-16");
+        const domain = getRelativeDateDomain(now, 0, "last_three_months", "field", "date");
+        assert.equal(getDateDomainDurationInDays(domain), 90);
+        assertDateDomainEqual(assert, "field", "2022-02-15", "2022-05-15", domain);
+    });
+
+    QUnit.test("getRelativeDateDomain > last_six_months (last 180 days)", async function (assert) {
+        const now = DateTime.fromISO("2022-05-16");
+        const domain = getRelativeDateDomain(now, 0, "last_six_months", "field", "date");
+        assert.equal(getDateDomainDurationInDays(domain), 180);
+        assertDateDomainEqual(assert, "field", "2021-11-17", "2022-05-15", domain);
+    });
+
     QUnit.test("getRelativeDateDomain > last_year (last 365 days)", async function (assert) {
         const now = DateTime.fromISO("2022-05-16");
         const domain = getRelativeDateDomain(now, 0, "last_year", "field", "date");

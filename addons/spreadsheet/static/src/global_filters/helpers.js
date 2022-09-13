@@ -68,6 +68,18 @@ export function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldTy
             startDate = now.minus({ day: 30 }).plus(offsetParam);
             break;
         }
+        case "last_three_months": {
+            const offsetParam = { day: 90 * offset };
+            endDate = endDate.plus(offsetParam);
+            startDate = now.minus({ day: 90 }).plus(offsetParam);
+            break;
+        }
+        case "last_six_months": {
+            const offsetParam = { day: 180 * offset };
+            endDate = endDate.plus(offsetParam);
+            startDate = now.minus({ day: 180 }).plus(offsetParam);
+            break;
+        }
         case "last_year": {
             const offsetParam = { day: 365 * offset };
             endDate = endDate.plus(offsetParam);

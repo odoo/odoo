@@ -1319,6 +1319,16 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getDateDomainDurationInDays(computedDomain), 30);
         assertDateDomainEqual(assert, "date", "2022-04-16", "2022-05-15", computedDomain);
 
+        await setGlobalFilterValue(model, { id: "42", value: "last_three_months" });
+        computedDomain = model.getters.getPivotComputedDomain("1");
+        assert.equal(getDateDomainDurationInDays(computedDomain), 90);
+        assertDateDomainEqual(assert, "date", "2022-02-15", "2022-05-15", computedDomain);
+
+        await setGlobalFilterValue(model, { id: "42", value: "last_six_months" });
+        computedDomain = model.getters.getPivotComputedDomain("1");
+        assert.equal(getDateDomainDurationInDays(computedDomain), 180);
+        assertDateDomainEqual(assert, "date", "2021-11-17", "2022-05-15", computedDomain);
+
         await setGlobalFilterValue(model, { id: "42", value: "last_year" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 365);
@@ -1351,6 +1361,16 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 30);
         assertDateDomainEqual(assert, "date", "2022-03-17", "2022-04-15", computedDomain);
+
+        await setGlobalFilterValue(model, { id: "42", value: "last_three_months" });
+        computedDomain = model.getters.getPivotComputedDomain("1");
+        assert.equal(getDateDomainDurationInDays(computedDomain), 90);
+        assertDateDomainEqual(assert, "date", "2021-11-17", "2022-02-14", computedDomain);
+
+        await setGlobalFilterValue(model, { id: "42", value: "last_six_months" });
+        computedDomain = model.getters.getPivotComputedDomain("1");
+        assert.equal(getDateDomainDurationInDays(computedDomain), 180);
+        assertDateDomainEqual(assert, "date", "2021-05-21", "2021-11-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_year" });
         computedDomain = model.getters.getPivotComputedDomain("1");
