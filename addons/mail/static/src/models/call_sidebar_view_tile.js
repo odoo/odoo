@@ -16,7 +16,6 @@ registerModel({
         participantCard: one('CallParticipantCard', {
             default: {},
             inverse: 'sidebarViewTileOwner',
-            isCausal: true,
         }),
     },
 });

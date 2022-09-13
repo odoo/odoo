@@ -16,7 +16,6 @@ registerModel({
         }),
         emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', {
             inverse: 'emojiInCategory',
-            isCausal: true,
         }),
     },
 });

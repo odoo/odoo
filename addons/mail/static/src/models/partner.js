@@ -316,11 +316,9 @@ registerModel({
         }),
         channelInvitationFormSelectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
             inverse: 'partner',
-            isCausal: true,
         }),
         channelInvitationFormSelectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
             inverse: 'partner',
-            isCausal: true,
         }),
         country: one('Country'),
         /**
@@ -372,14 +370,12 @@ registerModel({
         persona: one('Persona', {
             default: {},
             inverse: 'partner',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
         suggestable: one('ComposerSuggestable', {
             default: {},
             inverse: 'partner',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

@@ -59,7 +59,6 @@ registerModel({
     fields: {
         cooldownTimer: one('Timer', {
             inverse: 'throttleOwner',
-            isCausal: true,
         }),
         /**
          * Duration, in milliseconds, of the cool down phase.

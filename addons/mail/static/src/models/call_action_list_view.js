@@ -179,7 +179,6 @@ registerModel({
         moreButtonRef: attr(),
         moreMenuPopoverView: one('PopoverView', {
             inverse: 'callActionListViewOwnerAsMoreMenu',
-            isCausal: true,
         }),
         screenSharingButtonTitle: attr({
             compute: '_computeScreenSharingButtonTitle',

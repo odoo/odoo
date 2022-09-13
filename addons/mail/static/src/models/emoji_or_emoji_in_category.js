@@ -16,7 +16,6 @@ registerModel({
             inverse: 'emojiOrEmojiInCategory',
         }),
         emojiGridItemViews: many('EmojiGridItemView', {
-            isCausal: true,
             inverse: 'emojiOrEmojiInCategory',
         }),
     },

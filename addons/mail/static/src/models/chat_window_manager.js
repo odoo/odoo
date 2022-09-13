@@ -350,7 +350,6 @@ registerModel({
         }),
         newMessageChatWindow: one('ChatWindow', {
             inverse: 'managerAsNewMessage',
-            isCausal: true,
         }),
         startGapWidth: attr({
             compute: '_computeStartGapWidth',

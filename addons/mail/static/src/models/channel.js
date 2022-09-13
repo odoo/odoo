@@ -226,7 +226,6 @@ registerModel({
         }),
         channelPreviewViews: many('ChannelPreviewView', {
             inverse: 'channel',
-            isCausal: true,
         }),
         channel_type: attr(),
         correspondent: one('Partner', {
@@ -260,7 +259,6 @@ registerModel({
         discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', {
             compute: '_computeDiscussSidebarCategoryItem',
             inverse: 'channel',
-            isCausal: true,
         }),
         displayName: attr({
             compute: '_computeDisplayName',

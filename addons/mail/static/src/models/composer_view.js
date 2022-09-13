@@ -1332,7 +1332,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         /**
          * States the ref to the html node of the emojis button.
@@ -1360,12 +1359,10 @@ registerModel({
         composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', {
             compute: '_computeComposerSuggestedRecipientListView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         composerSuggestionListView: one('ComposerSuggestionListView', {
             compute: '_computeComposerSuggestionListView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         /**
          * Current partner image URL.
@@ -1380,20 +1377,17 @@ registerModel({
         dropZoneView: one('DropZoneView', {
             compute: '_computeDropZoneView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         /**
          * Determines the emojis popover that is active on this composer view.
          */
         emojisPopoverView: one('PopoverView', {
             inverse: 'composerViewOwnerAsEmoji',
-            isCausal: true,
         }),
         extraSuggestions: many('ComposerSuggestable'),
         fileUploader: one('FileUploader', {
             default: {},
             inverse: 'composerView',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
@@ -1576,7 +1570,6 @@ registerModel({
         useDragVisibleDropZone: one('UseDragVisibleDropZone', {
             default: {},
             inverse: 'composerViewOwner',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

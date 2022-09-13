@@ -334,12 +334,10 @@ registerModel({
         callSettingsMenu: one('CallSettingsMenu', {
             compute: '_computeCallSettingsMenu',
             inverse: 'threadViewOwner',
-            isCausal: true,
         }),
         channelMemberListView: one('ChannelMemberListView', {
             compute: '_computeChannelMemberListView',
             inverse: 'threadViewOwner',
-            isCausal: true,
         }),
         compact: attr({
             related: 'threadViewer.compact',
@@ -368,7 +366,6 @@ registerModel({
         composerView: one('ComposerView', {
             compute: '_computeComposerView',
             inverse: 'threadView',
-            isCausal: true,
         }),
         /**
          * Determines which extra class this thread view component should have.
@@ -475,7 +472,6 @@ registerModel({
         messageListView: one('MessageListView', {
             compute: '_computeMessageListView',
             inverse: 'threadViewOwner',
-            isCausal: true,
         }),
         messages: many('Message', {
             related: 'threadCache.messages',
@@ -497,7 +493,6 @@ registerModel({
         callView: one('CallView', {
             compute: '_computeCallView',
             inverse: 'threadView',
-            isCausal: true,
         }),
         /**
          * Determines the `Thread` currently displayed by `this`.
@@ -546,7 +541,6 @@ registerModel({
         topbar: one('ThreadViewTopbar', {
             compute: '_computeTopbar',
             inverse: 'threadView',
-            isCausal: true,
         }),
     },
     onChanges: [

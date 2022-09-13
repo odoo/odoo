@@ -38,11 +38,9 @@ registerModel({
         }),
         newValue: one('TrackingValueItem', {
             inverse: 'trackingValueAsNewValue',
-            isCausal: true,
         }),
         oldValue: one('TrackingValueItem', {
             inverse: 'trackingValueAsOldValue',
-            isCausal: true,
         }),
     },
 });

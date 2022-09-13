@@ -187,7 +187,6 @@ registerModel({
                 },
             },
             inverse: 'activityViewOwner',
-            isCausal: true,
         }),
         /**
          * States the OWL component of this activity view.
@@ -202,7 +201,6 @@ registerModel({
         fileUploader: one('FileUploader', {
             compute: '_computeFileUploader',
             inverse: 'activityView',
-            isCausal: true,
         }),
         /**
          * Format the create date to something human reabable.
@@ -219,12 +217,10 @@ registerModel({
         mailTemplateViews: many('MailTemplateView', {
             compute: '_computeMailTemplateViews',
             inverse: 'activityViewOwner',
-            isCausal: true,
         }),
         markDoneButtonRef: attr(),
         markDonePopoverView: one('PopoverView', {
             inverse: 'activityViewOwnerAsMarkDone',
-            isCausal: true,
         }),
         /**
          * Label for mark as done. This is just for translations purpose.

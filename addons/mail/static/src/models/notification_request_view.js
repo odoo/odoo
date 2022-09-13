@@ -41,7 +41,6 @@ registerModel({
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
             inverse: 'notificationRequestViewOwner',
-            isCausal: true,
         }),
     },
 });

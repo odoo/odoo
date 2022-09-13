@@ -302,7 +302,6 @@ registerModel({
         }),
         attachmentViewerViewable: one('AttachmentViewerViewable', {
             inverse: 'attachmentOwner',
-            isCausal: true,
         }),
         checksum: attr(),
         /**

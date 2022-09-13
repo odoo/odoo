@@ -83,7 +83,6 @@ registerModel({
         suggestable: one('ComposerSuggestable', {
             default: {},
             inverse: 'cannedResponse',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

@@ -47,12 +47,10 @@ registerModel({
         notificationMessageView: one('NotificationMessageView', {
             compute: '_computeNotificationMessageView',
             inverse: 'messageListViewItemOwner',
-            isCausal: true,
         }),
         messageView: one('MessageView', {
             compute: '_computeMessageView',
             inverse: 'messageListViewItemOwner',
-            isCausal: true,
         }),
     },
 });

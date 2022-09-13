@@ -131,7 +131,6 @@ registerModel({
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
             inverse: 'composerSuggestionViewOwner',
-            isCausal: true,
         }),
         suggestable: one('ComposerSuggestable', {
             compute: '_computeSuggestable',

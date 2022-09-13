@@ -94,7 +94,6 @@ registerModel({
         publicLivechatView: one('PublicLivechatView', {
             default: {},
             inverse: 'publicLivechatWindowOwner',
-            isCausal: true,
         }),
         widget: attr(),
     },

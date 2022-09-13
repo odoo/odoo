@@ -144,12 +144,10 @@ registerModel({
         historyView: one('DiscussSidebarMailboxView', {
             default: {},
             inverse: 'discussViewOwnerAsHistory',
-            isCausal: true,
         }),
         inboxView: one('DiscussSidebarMailboxView', {
             default: {},
             inverse: 'discussViewOwnerAsInbox',
-            isCausal: true,
         }),
         /**
          * Determines whether current user is adding a channel from the sidebar.
@@ -166,7 +164,6 @@ registerModel({
         mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeMobileAddItemHeaderAutocompleteInputView',
             inverse: 'discussViewOwnerAsMobileAddItemHeader',
-            isCausal: true,
         }),
         orderedMailboxes: many('Mailbox', {
             related: 'messaging.allMailboxes',
@@ -182,7 +179,6 @@ registerModel({
         starredView: one('DiscussSidebarMailboxView', {
             default: {},
             inverse: 'discussViewOwnerAsStarred',
-            isCausal: true,
         }),
     },
     onChanges: [

@@ -14,7 +14,6 @@ addFields('Dialog', {
     snailmailErrorView: one('SnailmailErrorView', {
         compute: '_computeSnailmailErrorView',
         inverse: 'dialogOwner',
-        isCausal: true,
     }),
 });
 

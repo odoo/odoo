@@ -24,6 +24,5 @@ addFields('Discuss', {
     categoryLivechat: one('DiscussSidebarCategory', {
         default: {},
         inverse: 'discussAsLivechat',
-        isCausal: true,
     }),
 });

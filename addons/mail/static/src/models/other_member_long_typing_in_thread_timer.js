@@ -22,7 +22,6 @@ registerModel({
         timer: one('Timer', {
             default: {},
             inverse: 'otherMemberLongTypingInThreadTimerOwner',
-            isCausal: true,
             required: true,
         }),
     },

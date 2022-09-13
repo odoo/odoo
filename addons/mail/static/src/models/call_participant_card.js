@@ -107,7 +107,6 @@ registerModel({
     fields: {
         callParticipantCardPopoverView: one('PopoverView', {
             inverse: 'callParticipantCardOwner',
-            isCausal: true,
         }),
         channelMember: one('ChannelMember', {
             compute: '_computeChannelMember',
@@ -149,7 +148,6 @@ registerModel({
         callParticipantVideoView: one('CallParticipantVideoView', {
             compute: '_computeCallParticipantVideoView',
             inverse: 'callParticipantCardOwner',
-            isCausal: true,
         }),
         volumeMenuAnchorRef: attr(),
     },

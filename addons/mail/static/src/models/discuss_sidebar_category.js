@@ -340,7 +340,6 @@ registerModel({
         addingItemAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeAddingItemAutocompleteInputView',
             inverse: 'discussSidebarCategoryOwnerAsAddingItem',
-            isCausal: true,
         }),
         /**
          * Determines how the autocomplete of this category should behave.
@@ -363,7 +362,6 @@ registerModel({
          */
         categoryItems: many('DiscussSidebarCategoryItem', {
             inverse: 'category',
-            isCausal: true,
             sort: '_sortDefinitionCategoryItems',
         }),
         /**

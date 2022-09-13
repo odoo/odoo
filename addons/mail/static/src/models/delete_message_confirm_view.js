@@ -57,7 +57,6 @@ registerModel({
         messageView: one('MessageView', {
             compute: '_computeMessageView',
             inverse: 'deleteMessageConfirmViewOwner',
-            isCausal: true,
             required: true,
         }),
     },

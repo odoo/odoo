@@ -28,7 +28,6 @@ registerModel({
                 return this.messaging.emojiRegistry.allCategories.map(category => ({ category }));
             },
             inverse: 'emojiPickerViewOwner',
-            isCausal: true,
         }),
         defaultActiveCategory: one('EmojiPickerView.Category', {
             compute() {
@@ -43,20 +42,17 @@ registerModel({
             inverse: 'emojiPickerViewOwner',
             readonly: true,
             required: true,
-            isCausal: true,
         }),
         emojiGridView: one('EmojiGridView', {
             default: {},
             inverse: 'emojiPickerViewOwner',
             readonly: true,
             required: true,
-            isCausal: true,
         }),
         emojiSearchBarView: one('EmojiSearchBarView', {
             default: {},
             inverse: 'emojiPickerView',
             readonly: true,
-            isCausal: true,
         }),
         popoverViewOwner: one('PopoverView', {
             identifying: true,

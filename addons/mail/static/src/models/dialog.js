@@ -200,7 +200,6 @@ registerModel({
         attachmentDeleteConfirmView: one('AttachmentDeleteConfirmView', {
             compute: '_computeAttachmentDeleteConfirmView',
             inverse: 'dialogOwner',
-            isCausal: true,
         }),
         attachmentImageOwnerAsAttachmentDeleteConfirm: one('AttachmentImage', {
             identifying: true,
@@ -213,7 +212,6 @@ registerModel({
         attachmentViewer: one('AttachmentViewer', {
             compute: '_computeAttachmentViewer',
             inverse: 'dialogOwner',
-            isCausal: true,
         }),
         backgroundOpacity: attr({
             compute: '_computeBackgroundOpacity',
@@ -228,7 +226,6 @@ registerModel({
         deleteMessageConfirmView: one('DeleteMessageConfirmView', {
             compute: '_computeDeleteMessageConfirmView',
             inverse: 'dialogOwner',
-            isCausal: true,
         }),
         linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm: one('LinkPreviewAsideView', {
             inverse: 'linkPreviewDeleteConfirmDialog',
@@ -237,7 +234,6 @@ registerModel({
         linkPreviewDeleteConfirmView: one('LinkPreviewDeleteConfirmView', {
             compute: '_computeLinkPreviewDeleteConfirmView',
             inverse: 'dialogOwner',
-            isCausal: true,
         }),
         followerOwnerAsSubtypeList: one('Follower', {
             identifying: true,
@@ -246,7 +242,6 @@ registerModel({
         followerSubtypeList: one('FollowerSubtypeList', {
             compute: '_computeFollowerSubtypeList',
             inverse: 'dialogOwner',
-            isCausal: true,
         }),
         isCloseable: attr({
             compute: '_computeIsCloseable',

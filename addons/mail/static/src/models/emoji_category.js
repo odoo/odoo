@@ -8,11 +8,9 @@ registerModel({
     fields: {
         allEmojiInCategoryOfCurrent: many('EmojiInCategory', {
             inverse: 'category',
-            isCausal: true,
         }),
         allEmojiPickerViewCategory: many('EmojiPickerView.Category', {
             inverse: 'category',
-            isCausal: true,
         }),
         allEmojis: many('Emoji', {
             inverse: 'emojiCategories',

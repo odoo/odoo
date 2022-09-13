@@ -50,7 +50,6 @@ registerModel({
         followerViews: many('FollowerView', {
             compute: '_computeFollowerViews',
             inverse: 'followerListMenuViewOwner',
-            isCausal: true,
         }),
         isDisabled: attr({
             compute: '_computeIsDisabled',

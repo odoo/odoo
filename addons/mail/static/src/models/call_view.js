@@ -171,13 +171,11 @@ registerModel({
         callMainView: one('CallMainView', {
             default: {},
             inverse: 'callView',
-            isCausal: true,
             readonly: true,
         }),
         callSidebarView: one('CallSidebarView', {
             compute: '_computeCallSideBarView',
             inverse: 'callView',
-            isCausal: true,
         }),
         channel: one('Channel', {
             related: 'thread.channel',

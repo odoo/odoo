@@ -22,7 +22,6 @@ registerModel({
         sidebarTiles: many('CallSidebarViewTile', {
             compute: '_computeSidebarTiles',
             inverse: 'callSidebarViewOwner',
-            isCausal: true,
         }),
     },
 });

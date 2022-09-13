@@ -51,7 +51,6 @@ registerModel({
         }),
         attachmentDeleteConfirmDialog: one('Dialog', {
             inverse: 'attachmentCardOwnerAsAttachmentDeleteConfirm',
-            isCausal: true,
         }),
         /**
          * States the attachmentList displaying this card.

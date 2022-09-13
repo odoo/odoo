@@ -23,7 +23,6 @@ registerModel({
         }),
         emojiCategoryView: one('EmojiCategoryView', {
             inverse: 'viewCategory',
-            isCausal: true,
         }),
         emojiGridRowView: one('EmojiGridRowView', {
             inverse: 'viewCategory',

@@ -195,7 +195,6 @@ registerModel({
         }),
         frameRequestTimer: one('Timer', {
             inverse: 'blurManagerOwnerAsFrameRequest',
-            isCausal: true,
         }),
         isVideoDataLoaded: attr({
             default: false,

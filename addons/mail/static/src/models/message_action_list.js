@@ -128,37 +128,30 @@ registerModel({
         actionDelete: one('MessageAction', {
             compute: '_computeActionDelete',
             inverse: 'messageActionListOwnerAsDelete',
-            isCausal: true,
         }),
         actionEdit: one('MessageAction', {
             compute: '_computeActionEdit',
             inverse: 'messageActionListOwnerAsEdit',
-            isCausal: true,
         }),
         actionMarkAsRead: one('MessageAction', {
             compute: '_computeActionMarkAsRead',
             inverse: 'messageActionListOwnerAsMarkAsRead',
-            isCausal: true,
         }),
         actionReaction: one('MessageAction', {
             compute: '_computeActionReaction',
             inverse: 'messageActionListOwnerAsReaction',
-            isCausal: true,
         }),
         actionReplyTo: one('MessageAction', {
             compute: '_computeActionReplyTo',
             inverse: 'messageActionListOwnerAsReplyTo',
-            isCausal: true,
         }),
         actionToggleCompact: one('MessageAction', {
             compute: '_computeActionToggleCompact',
             inverse: 'messageActionListOwnerAsToggleCompact',
-            isCausal: true,
         }),
         actionToggleStar: one('MessageAction', {
             compute: '_computeActionToggleStar',
             inverse: 'messageActionListOwnerAsToggleStar',
-            isCausal: true,
         }),
         compactThreshold: attr({
             default: 2,

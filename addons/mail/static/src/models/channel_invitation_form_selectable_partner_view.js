@@ -27,7 +27,6 @@ registerModel({
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
             inverse: 'channelInvitationFormSelectablePartnerViewOwner',
-            isCausal: true,
         }),
     },
 });

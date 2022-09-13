@@ -51,7 +51,6 @@ registerModel({
         composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', {
             compute: '_computeComposerSuggestedRecipientViews',
             inverse: 'composerSuggestedRecipientListViewOwner',
-            isCausal: true,
         }),
         composerViewOwner: one('ComposerView', {
             identifying: true,
