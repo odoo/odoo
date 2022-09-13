@@ -24,7 +24,7 @@
                     groups="getDashboardGroups()"/>
             </t>
             <t t-else="">
-                <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-white overflow-auto">
+                <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-white overflow-auto">
                     <section t-foreach="getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category">
                         <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default user-select-none">
                             <b t-esc="group.name"/>
