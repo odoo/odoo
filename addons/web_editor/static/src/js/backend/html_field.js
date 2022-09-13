@@ -45,15 +45,15 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     }
 
     updateWidget(newProps) {
+        const lastValue = String(this.props.widgetArgs[0].value || '');
+        const lastCollaborationChannel = this.props.widgetArgs[0].collaborationChannel;
         const newValue = String(newProps.widgetArgs[0].value || '');
         const newCollaborationChannel = newProps.widgetArgs[0].collaborationChannel;
 
-        if ((newValue !== newProps.editingValue && this._lastValue !== newValue) || this._lastCollaborationChannel !== newCollaborationChannel) {
+        if ((newValue !== newProps.editingValue && lastValue !== newValue) || !_.isEqual(lastCollaborationChannel, newCollaborationChannel)) {
             this.widget.resetEditor(newValue, {
                 collaborationChannel: newCollaborationChannel,
             });
-            this._lastValue = newValue;
-            this._lastCollaborationChannel = newCollaborationChannel;
         }
     }
     renderWidget() {}
