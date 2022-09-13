@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="web.X2ManyFieldDialog" owl="1">
-    <Dialog title="title" contentClass="'o_form_view_dialog'" modalRef="modalRef">
+    <Dialog title="title" withBodyPadding="false" modalRef="modalRef">
         <FormRenderer class="'o_form_view'" record="record" fields="archInfo.fields" archInfo="archInfo"/>
         <t t-set-slot="footer">
             <t t-if="footerArchInfo">

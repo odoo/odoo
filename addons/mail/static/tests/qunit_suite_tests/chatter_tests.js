@@ -443,16 +443,16 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     // add an other existing tag
     await selectDropdownItem(document.body, 'partner_ids', "silver");
 
-    assert.strictEqual(document.querySelectorAll('.modal-content.o_form_view_dialog').length, 1,
+    assert.strictEqual(document.querySelectorAll('.modal-content .o_form_view').length, 1,
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual(document.querySelector(".modal-content.o_form_view_dialog .o_input#name").value, "silver",
+    assert.strictEqual(document.querySelector(".modal-content .o_form_view .o_input#name").value, "silver",
         "the opened modal in edit mode should be a form view dialog with the res.partner 14");
-    assert.strictEqual(document.querySelectorAll(".modal-content.o_form_view_dialog .o_input#email").length, 1,
+    assert.strictEqual(document.querySelectorAll(".modal-content .o_form_view .o_input#email").length, 1,
         "there should be an email field in the modal");
 
     // set the email and save the modal (will rerender the form view)
-    await testUtils.fields.editInput($('.modal-content.o_form_view_dialog .o_input#email'), 'coucou@petite.perruche');
-    await testUtils.dom.click($('.modal-content.o_form_view_dialog .o_form_button_save'));
+    await testUtils.fields.editInput($('.modal-content .o_form_view .o_input#email'), 'coucou@petite.perruche');
+    await testUtils.dom.click($('.modal-content .o_form_button_save'));
 
     assert.containsN(document.body, '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0', 2,
         "should contain the second tag");

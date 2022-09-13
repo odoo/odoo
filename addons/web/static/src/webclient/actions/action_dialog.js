@@ -45,6 +45,10 @@ ActionDialog.props = {
     actionType: { optional: true },
     title: { optional: true },
 };
+ActionDialog.defaultProps = {
+    ...Dialog.defaultProps,
+    withBodyPadding: false,
+};
 
 /**
  * This LegacyAdaptedActionDialog class will disappear when legacy code will be entirely rewritten.
