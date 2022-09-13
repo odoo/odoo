@@ -240,37 +240,47 @@
                 },
                 "C21": {
                     "style": 7,
+                    "format": 1,
                     "content": "=ODOO.LIST(1,1,\"total_amount\")"
                 },
                 "C22": {
+                    "format": 1,
                     "content": "=ODOO.LIST(1,2,\"total_amount\")"
                 },
                 "C23": {
                     "style": 7,
+                    "format": 1,
                     "content": "=ODOO.LIST(1,3,\"total_amount\")"
                 },
                 "C24": {
+                    "format": 1,
                     "content": "=ODOO.LIST(1,4,\"total_amount\")"
                 },
                 "C25": {
                     "style": 7,
+                    "format": 1,
                     "content": "=ODOO.LIST(1,5,\"total_amount\")"
                 },
                 "C26": {
+                    "format": 1,
                     "content": "=ODOO.LIST(1,6,\"total_amount\")"
                 },
                 "C27": {
                     "style": 7,
+                    "format": 1,
                     "content": "=ODOO.LIST(1,7,\"total_amount\")"
                 },
                 "C28": {
+                    "format": 1,
                     "content": "=ODOO.LIST(1,8,\"total_amount\")"
                 },
                 "C29": {
                     "style": 7,
+                    "format": 1,
                     "content": "=ODOO.LIST(1,9,\"total_amount\")"
                 },
                 "C30": {
+                    "format": 1,
                     "content": "=ODOO.LIST(1,10,\"total_amount\")"
                 },
                 "C33": {
@@ -896,7 +906,7 @@
         }
     },
     "formats": {
-        "1": "#,##0.00[$€]"
+        "1": "#,##0[$€]"
     },
     "borders": {
         "1": {
@@ -912,6 +922,7 @@
             ]
         }
     },
+    "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
         "6ce637db-4068-457f-91a4-ce83736932ff": "hr_expense.menu_hr_expense_root"
     },
@@ -941,7 +952,14 @@
                 "product_id"
             ],
             "name": "Top Categories",
-            "sortedColumn": null
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "total_amount",
+                "order": "desc"
+            }
         },
         "3": {
             "colGroupBys": [],

@@ -840,6 +840,7 @@
                 },
                 "F21": {
                     "style": 14,
+                    "format": 1,
                     "content": "=ODOO.LIST(1,1,\"invoice_date\")"
                 },
                 "F22": {
@@ -2105,13 +2106,12 @@
                 }
             },
             "listFields": {
-                "1": {}
+                "1": {
+                    "field": "invoice_line_ids",
+                    "type": "one2many"
+                }
             },
             "graphFields": {
-                "0833ccd2-8b33-4840-a4b6-0dcad53fc86e": {
-                    "field": "product_categ_id",
-                    "type": "many2one"
-                },
                 "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": {
                     "field": "product_categ_id",
                     "type": "many2one"
@@ -2158,13 +2158,12 @@
                 }
             },
             "listFields": {
-                "1": {}
+                "1": {
+                    "field": "invoice_line_ids",
+                    "type": "one2many"
+                }
             },
             "graphFields": {
-                "0833ccd2-8b33-4840-a4b6-0dcad53fc86e": {
-                    "field": "product_id",
-                    "type": "many2one"
-                },
                 "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": {
                     "field": "product_id",
                     "type": "many2one"
@@ -2212,15 +2211,11 @@
             },
             "listFields": {
                 "1": {
-                    "field": "activity_user_id",
+                    "field": "invoice_user_id",
                     "type": "many2one"
                 }
             },
             "graphFields": {
-                "0833ccd2-8b33-4840-a4b6-0dcad53fc86e": {
-                    "field": "invoice_user_id",
-                    "type": "many2one"
-                },
                 "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": {
                     "field": "invoice_user_id",
                     "type": "many2one"
