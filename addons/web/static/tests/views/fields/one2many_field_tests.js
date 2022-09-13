@@ -3654,6 +3654,41 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("save a record with not new, dirty and invalid subrecord", async function (assert) {
+        serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[1].display_name = ""; // invalid record
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name" required="1"/>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    throw new Error("Should not call write as record is invalid");
+                }
+            },
+            mode: "edit",
+        });
+
+        assert.containsOnce(target, ".o_form_editable");
+        await click(target.querySelector(".o_data_cell")); // edit the first row
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+        await editInput(target, ".o_field_widget[name=int_field] input", 44);
+        await click(target.querySelector(".o_form_button_save"));
+        assert.containsOnce(target, ".o_form_editable");
+        assert.containsOnce(target, ".o_invalid_cell");
+    });
+
     QUnit.test("editable one2many list, adding, discarding, and pager", async function (assert) {
         serverData.models.partner.records[0].turtles = [1];
 

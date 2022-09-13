@@ -453,7 +453,7 @@ export class Record extends DataPoint {
     async checkX2ManyValidity(fieldName) {
         const list = this.data[fieldName];
         const record = list.editedRecord;
-        if (record && record.isNew && !(await record.checkValidity())) {
+        if (record && !(await record.checkValidity())) {
             if (record.canBeAbandoned && !record.isDirty) {
                 list.abandonRecord(record.id);
             } else {
