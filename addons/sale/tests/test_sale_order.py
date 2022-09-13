@@ -79,7 +79,10 @@ class TestSaleOrder(SaleCommon):
         # send quotation
         email_act = self.sale_order.action_quotation_send()
         email_ctx = email_act.get('context', {})
-        self.sale_order.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
+        self.sale_order.with_context(**email_ctx).message_post_with_template(
+            email_ctx.get('default_template_id'),
+            subtype_xmlid='mail.mt_comment',
+        )
         self.assertTrue(self.sale_order.state == 'sent', 'Sale: state after sending is wrong')
         self.sale_order.order_line._compute_product_updatable()
         self.assertTrue(self.sale_order.order_line[0].product_updatable)
@@ -101,7 +104,10 @@ class TestSaleOrder(SaleCommon):
         # sent to to author or not (in case author is present in 'Recipients' of composer).
         mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id')).copy({'auto_delete': False})
         # send the mail with same user as customer
-        sale_order.with_context(**email_ctx).with_user(self.sale_user).message_post_with_template(mail_template.id)
+        sale_order.with_context(**email_ctx).with_user(self.sale_user).message_post_with_template(
+            mail_template.id,
+            subtype_xmlid='mail.mt_comment',
+        )
         self.assertTrue(sale_order.state == 'sent', 'Sale : state should be changed to sent')
         mail_message = sale_order.message_ids[0]
         self.assertEqual(mail_message.author_id, sale_order.partner_id, 'Sale: author should be same as customer')

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools.translate import _
 from datetime import timedelta
 
 
@@ -31,5 +30,6 @@ class HrEmployee(models.Model):
                 employee.applicant_id.message_post_with_view(
                     'hr_recruitment.applicant_hired_template',
                     values={'applicant': employee.applicant_id},
-                    subtype_id=self.env.ref("hr_recruitment.mt_applicant_hired").id)
+                    subtype_xmlid='hr_recruitment.mt_applicant_hired',
+                )
         return employees

@@ -404,16 +404,16 @@ class Track(models.Model):
 
         tracks = super(Track, self).create(vals_list)
 
+        post_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
         for track in tracks:
-            email_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
             track.event_id.message_post_with_view(
                 'website_event_track.event_track_template_new',
                 values={
                     'track': track,
                     'is_html_empty': is_html_empty,
                 },
-                subtype_id=self.env.ref('website_event_track.mt_event_track').id,
-                **email_values,
+                subtype_xmlid='website_event_track.mt_event_track',
+                **post_values,
             )
             track._synchronize_with_stage(track.stage_id)
 
@@ -492,10 +492,10 @@ class Track(models.Model):
         track = self[0]
         if 'stage_id' in changes and track.stage_id.mail_template_id:
             res['stage_id'] = (track.stage_id.mail_template_id, {
-                'composition_mode': 'comment',
                 'auto_delete_message': True,
+                'composition_mode': 'comment',
+                'email_layout_xmlid': 'mail.mail_notification_light',
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-                'email_layout_xmlid': 'mail.mail_notification_light'
             })
         return res
 

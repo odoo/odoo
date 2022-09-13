@@ -105,7 +105,7 @@ class EventBooth(models.Model):
                 values={
                     'booth': booth,
                 },
-                subtype_id=self.env.ref('event_booth.mt_event_booth_booked').id,
+                subtype_xmlid='event_booth.mt_event_booth_booked',
             )
 
     def action_confirm(self, additional_values=None):

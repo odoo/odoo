@@ -627,13 +627,15 @@ class Post(models.Model):
                     'website_forum.forum_post_template_new_answer',
                     subject=_('Re: %s', post.parent_id.name),
                     partner_ids=[(4, p.id) for p in tag_partners],
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('website_forum.mt_answer_new'))
+                    subtype_xmlid='website_forum.mt_answer_new',
+                )
             elif post.state == 'active' and not post.parent_id:
                 post.message_post_with_view(
                     'website_forum.forum_post_template_new_question',
                     subject=post.name,
                     partner_ids=[(4, p.id) for p in tag_partners],
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('website_forum.mt_question_new'))
+                    subtype_xmlid='website_forum.mt_question_new',
+                )
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
@@ -644,7 +646,8 @@ class Post(models.Model):
                     'website_forum.forum_post_template_validation',
                     subject=post.name,
                     partner_ids=partners.ids,
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
+                    subtype_xmlid='mail.mt_note',
+                )
         return True
 
     def reopen(self):

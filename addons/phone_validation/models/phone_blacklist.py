@@ -98,7 +98,7 @@ class PhoneBlackList(models.Model):
                 for record in new_records:
                     record.with_context(mail_create_nosubscribe=True).message_post(
                         body=message,
-                        subtype_id=self.env.ref('mail.mt_note').id,
+                        subtype_xmlid='mail.mt_note',
                     )
             records += new_records
         return records
@@ -123,7 +123,7 @@ class PhoneBlackList(models.Model):
                 for record in new_records:
                     record.with_context(mail_create_nosubscribe=True).message_post(
                         body=message,
-                        subtype_id=self.env.ref('mail.mt_note').id,
+                        subtype_xmlid='mail.mt_note',
                     )
             records += new_records
         return records
