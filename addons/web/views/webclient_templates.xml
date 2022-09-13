@@ -207,8 +207,14 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Tests</t>
             <t t-set="head">
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+                    <t t-call-assets="web.dark_mode_assets_common" t-js="false"/>
+                    <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
+                </t>
+                <t t-else="">
+                    <t t-call-assets="web.assets_common" t-js="false"/>
+                    <t t-call-assets="web.assets_backend" t-js="false"/>
+                </t>
                 <t t-call-assets="web.tests_assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
 
@@ -229,8 +235,14 @@
             <t t-set="head">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+                    <t t-call-assets="web.dark_mode_assets_common" t-js="false"/>
+                    <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
+                </t>
+                <t t-else="">
+                    <t t-call-assets="web.assets_common" t-js="false"/>
+                    <t t-call-assets="web.assets_backend" t-js="false"/>
+                </t>
                 <t t-call-assets="web.tests_assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
 
@@ -252,8 +264,14 @@
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>
 
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+                    <t t-call-assets="web.dark_mode_assets_common" t-js="false"/>
+                    <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
+                </t>
+                <t t-else="">
+                    <t t-call-assets="web.assets_common" t-js="false"/>
+                    <t t-call-assets="web.assets_backend" t-js="false"/>
+                </t>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
 
@@ -318,8 +336,14 @@
                         fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);
                     }
                 </script>
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+                    <t t-call-assets="web.dark_mode_assets_common" t-js="false"/>
+                    <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
+                </t>
+                <t t-else="">
+                    <t t-call-assets="web.assets_common" t-js="false"/>
+                    <t t-call-assets="web.assets_backend" t-js="false"/>
+                </t>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
                 <t t-call-assets="web.assets_backend_prod_only" t-css="false"/>

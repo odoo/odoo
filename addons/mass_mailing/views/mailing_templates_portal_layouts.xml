@@ -4,8 +4,14 @@
     <template id="mass_mailing.layout" name="Mass Mailing Layout">
         <t t-call="web.layout">
             <t t-set="head">
-                <t t-call-assets="web.assets_common"/>
-                <t t-call-assets="web.assets_backend"/>
+                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+                    <t t-call-assets="web.dark_mode_assets_common"/>
+                    <t t-call-assets="web.dark_mode_assets_backend"/>
+                </t>
+                <t t-else="">
+                    <t t-call-assets="web.assets_common"/>
+                    <t t-call-assets="web.assets_backend"/>
+                </t>
             </t>
             <body class="o_white_body">
                 <header>
