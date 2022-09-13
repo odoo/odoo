@@ -477,8 +477,8 @@
     </div>
 
     <div data-js="layout_column"
-        data-selector="section.s_features_grid"
-        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns">
+        data-selector="section.s_features_grid, section.s_process_steps"
+        data-target="> *:has(> .row), > .s_allow_columns">
         <we-select string="Columns" data-no-preview="true">
             <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
             <we-button data-select-count="1">1</we-button>
@@ -491,9 +491,9 @@
     </div>
 
     <div data-js="layout_column"
-        data-selector="section"
-        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns"
-        data-exclude=".s_masonry_block, .s_features_grid">
+        data-selector="section, section.s_carousel_wrapper .carousel-item"
+        data-target="> *:has(> .row), > .s_allow_columns"
+        data-exclude=".s_masonry_block, .s_features_grid, .s_media_list, .s_showcase, .s_table_of_content, .s_process_steps">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
