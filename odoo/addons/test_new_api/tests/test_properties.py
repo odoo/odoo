@@ -3,6 +3,7 @@
 
 import json
 
+import unittest
 from unittest.mock import patch
 
 from odoo import Command
@@ -1209,6 +1210,138 @@ class PropertiesCase(TransactionCase):
             'my_many2many': [self.partner_2.id],
         }
         self.assertEqual(expected_properties, sql_properties)
+
+    def test_properties_field_search(self):
+        # search on text properties
+        self.message_1.attributes = [{
+            'name': 'b97300923a1c251e',
+            'type': 'char',
+            'value': 'Test',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'b97300923a1c251e': 'TeSt'}
+
+        messages = self.env['test_new_api.message'].search([('attributes.b97300923a1c251e', '=', 'Test')])
+        self.assertEqual(messages, self.message_1, "Should be able to search on a properties field")
+        messages = self.env['test_new_api.message'].search([('attributes.b97300923a1c251e', 'ilike', 'test')])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+
+        for search in ['b97300923a1c251e!', 'b97300923a!1c251e', '!b97300923a1c251e']:
+            with self.assertRaises(ValueError):
+                self.env['test_new_api.message'].search([(f'attributes.{search}', '=', 'Test')])
+
+        with self.assertRaises(AssertionError):
+            self.env['test_new_api.message'].search([('attributes.b97300923a1c251e.test', '=', 'Test')])
+
+        # search on number
+        self.message_1.attributes = [{
+            'name': '3e66697e3c9b10c1',
+            'type': 'float',
+            'value': 3.14,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'3e66697e3c9b10c1': 5.55}
+        messages = self.env['test_new_api.message'].search([('attributes.3e66697e3c9b10c1', '>', 4.4)])
+        self.assertEqual(messages, self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.3e66697e3c9b10c1', '<', 4.4)])
+        self.assertEqual(messages, self.message_1)
+        messages = self.env['test_new_api.message'].search([('attributes.3e66697e3c9b10c1', '>', 1.1)])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.3e66697e3c9b10c1', '<=', 1.1)])
+        self.assertFalse(messages)
+
+        # search on boolean
+        self.message_1.attributes = [{
+            'name': '70401f673ac87299',
+            'type': 'boolean',
+            'value': True,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'70401f673ac87299': False}
+        messages = self.env['test_new_api.message'].search([('attributes.70401f673ac87299', '=', True)])
+        self.assertEqual(messages, self.message_1)
+        messages = self.env['test_new_api.message'].search([('attributes.70401f673ac87299', '=', False)])
+        self.assertEqual(messages, self.message_2)
+
+        # search on tags properties
+        (self.message_1 | self.message_2 | self.message_3).discussion = self.discussion_1
+        self.message_1.attributes = [{
+            'name': '7483843a7ce8b6f5',
+            'type': 'tags',
+            'value': ['a'],
+            'tags': [['a', 'A', 1], ['b', 'B', 2], ['aa', 'AA', 3]],
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'7483843a7ce8b6f5': ['b']}
+        self.message_3.attributes = {'7483843a7ce8b6f5': ['aa']}
+
+        messages = self.env['test_new_api.message'].search([('attributes.7483843a7ce8b6f5', 'in', 'a')])
+        self.assertEqual(messages, self.message_1)
+        # the search is done on the JSONified value (operator "->>")
+        messages = self.env['test_new_api.message'].search([('attributes.7483843a7ce8b6f5', 'ilike', 'a')])
+        self.assertEqual(messages, self.message_1 | self.message_3)
+        messages = self.env['test_new_api.message'].search([('attributes.7483843a7ce8b6f5', 'in', 'b')])
+        self.assertEqual(messages, self.message_2)
+        messages = self.env['test_new_api.message'].search([('attributes.7483843a7ce8b6f5', 'in', 'aa')])
+        self.assertEqual(messages, self.message_3)
+        messages = self.env['test_new_api.message'].search([('attributes.7483843a7ce8b6f5', 'not in', 'b')])
+        self.assertEqual(messages, self.message_1 | self.message_3)
+        # the search is done on the JSONified value (operator "->>")
+        messages = self.env['test_new_api.message'].search([('attributes.7483843a7ce8b6f5', 'ilike', '["aa"]')])
+        self.assertEqual(messages, self.message_3)
+
+        # search on many2many properties
+        partners = self.env['res.partner'].create([{'name': 'A'}, {'name': 'B'}, {'name': 'C'}])
+        self.message_1.attributes = [{
+            'name': 'd0c4679df140838f',
+            'type': 'many2many',
+            'comodel': 'res.partner',
+            'value': partners.ids,
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'d0c4679df140838f': [partners[1].id]}
+        self.message_3.attributes = {'d0c4679df140838f': [partners[2].id]}
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.d0c4679df140838f', 'in', partners[0].id)])
+        self.assertEqual(messages, self.message_1)
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.d0c4679df140838f', 'in', partners[1].id)])
+        self.assertEqual(messages, self.message_1 | self.message_2)
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.d0c4679df140838f', 'in', partners[2].id)])
+        self.assertEqual(messages, self.message_1 | self.message_3)
+        messages = self.env['test_new_api.message'].search(
+            [('attributes.d0c4679df140838f', 'not in', partners[0].id)])
+        self.assertEqual(messages, self.message_2 | self.message_3)
+
+    def test_properties_field_search_unaccent(self):
+        if not self.registry.has_unaccent:
+            raise unittest.SkipTest("unaccent not enabled")
+
+        Model = self.env['test_new_api.message']
+        (self.message_1 | self.message_2).discussion = self.discussion_1
+        # search on text properties
+        self.message_1.attributes = [{
+            'name': 'b97300923a1c251e',
+            'type': 'char',
+            'value': 'Hélène',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'b97300923a1c251e': 'Helene'}
+
+        result = Model.search([('attributes.b97300923a1c251e', 'ilike', 'Helene')])
+        self.assertEqual(self.message_1 | self.message_2, result)
+
+        result = Model.search([('attributes.b97300923a1c251e', 'ilike', 'hélène')])
+        self.assertEqual(self.message_1 | self.message_2, result)
+
+        result = Model.search([('attributes.b97300923a1c251e', 'not ilike', 'Helene')])
+        self.assertNotIn(self.message_1, result)
+        self.assertNotIn(self.message_2, result)
+
+        result = Model.search([('attributes.b97300923a1c251e', 'not ilike', 'hélène')])
+        self.assertNotIn(self.message_1, result)
+        self.assertNotIn(self.message_2, result)
 
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""

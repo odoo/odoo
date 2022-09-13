@@ -114,6 +114,7 @@ start the server specifying the ``--unaccent`` flag.
 
 """
 import collections.abc
+import json
 import logging
 import reprlib
 import traceback
@@ -123,7 +124,7 @@ from datetime import date, datetime, time
 from psycopg2.sql import Composable, SQL
 
 import odoo.modules
-from ..models import BaseModel
+from ..models import BaseModel, check_property_name
 from odoo.tools import pycompat, Query, _generate_table_alias
 
 
@@ -710,6 +711,44 @@ class expression(object):
                 query = comodel.with_context(**field.context)._where_calc(domain)
                 subquery, subparams = query.select('"%s"."%s"' % (comodel._table, field.inverse_name))
                 push(('id', 'inselect', (subquery, subparams)), model, alias, internal=True)
+
+            elif field.type == 'properties':
+                assert len(path) == 2 and "." not in path[1]
+                assert operator in ('=', '!=', '>', '>=', '<', '<=', 'in', 'not in', 'like', 'ilike', 'not like', 'not ilike'), \
+                    f"Wrong search operator {operator!r}"
+                check_property_name(path[1])
+
+                def _convert_json_type(value):
+                    if isinstance(value, str):
+                        return value
+                    elif isinstance(value, (int, float, bool)):
+                        return json.dumps(value)
+                    elif isinstance(right, (list, tuple)):
+                        return [_convert_json_type(r) for r in right]
+
+                    raise ValueError(f"Wrong value {value!r}.")
+
+                if 'like' in operator:
+                    right = f'%{pycompat.to_text(right)}%'
+                    unaccent = self._unaccent(field)
+                else:
+                    unaccent = lambda x: x
+
+                inverse = ''
+                if operator in ('in', 'not in'):
+                    if operator == 'not in':
+                        inverse = 'NOT'
+                    arrow = '->'  # raw value
+                    operator = '@>'
+                    right = json.dumps(right)
+                else:
+                    arrow = '->>'  # JSONified value
+                    right = _convert_json_type(right)
+
+                sql_path = f""""{alias}"."{path[0]}" {arrow} '{path[1]}'"""
+                expr = f"""({inverse} ({unaccent(sql_path)}) {operator} ({unaccent('%s')}))"""
+
+                push_result(expr, [right])
 
             elif len(path) > 1 and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)

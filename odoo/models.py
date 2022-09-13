@@ -71,6 +71,7 @@ _unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\.id)?(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
+regex_alphanumeric = re.compile(r'^[a-z0-9]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
 
@@ -120,6 +121,12 @@ def check_method_name(name):
     """ Raise an ``AccessError`` if ``name`` is a private method name. """
     if regex_private.match(name):
         raise AccessError(_('Private methods (such as %s) cannot be called remotely.', name))
+
+
+def check_property_name(property_name):
+    if not regex_alphanumeric.match(property_name):
+        raise ValueError(_("Wrong property name %r.", property_name))
+
 
 def fix_import_export_id_paths(fieldname):
     """
@@ -1871,7 +1878,7 @@ class BaseModel(metaclass=MetaModel):
         :rtype: list
         """
         return [
-            'context', 'currency_field', 'definition_record', 'digits', 'domain', 'group_operator', 'groups', 'help',
+            'context', 'currency_field', 'definition_record', 'definition_record_field', 'digits', 'domain', 'group_operator', 'groups', 'help',
             'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
             'sortable', 'store', 'string', 'translate', 'trim', 'type',
         ]

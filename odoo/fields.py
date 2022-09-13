@@ -3164,6 +3164,7 @@ class Properties(Field):
     column_type = ('jsonb', 'jsonb')
     copy = False
     prefetch = False
+    unaccent = True
     write_sequence = 10              # because it must be written after the definition field
 
     # the field is computed editable by design (see the compute method below)
