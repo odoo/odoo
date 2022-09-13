@@ -116,7 +116,7 @@ describe('Link', () => {
                         await insertLineBreak(editor);
                     },
                     // Writing at the end of a link writes outside the link.
-                    contentAfter: '<p>a<a href="#">link</a>b<br>[]c</p>',
+                    contentAfter: '<p>a<a href="#">link</a>b<br class="oe_linebreak">[]c</p>',
                 });
             });
             it('should insert a link and write a character insert a <br> and another character', async () => {
@@ -129,7 +129,7 @@ describe('Link', () => {
                         await insertText(editor, 'c');
                     },
                     // Writing at the end of a link writes outside the link.
-                    contentAfter: '<p>a<a href="#">link</a>b<br>c[]d</p>',
+                    contentAfter: '<p>a<a href="#">link</a>b<br class="oe_linebreak">c[]d</p>',
                 });
             });
             it('should insert a <br> inside a link', async () => {
