@@ -188,7 +188,11 @@ export class Many2OneField extends Component {
         }
     }
     onExternalBtnClick() {
-        this.openDialog(this.resId);
+        if (this.props.openTarget === "current") {
+            this.openAction();
+        } else {
+            this.openDialog(this.resId);
+        }
     }
     async onBarcodeBtnClick() {
         const barcode = await BarcodeScanner.scanBarcode();
@@ -259,6 +263,7 @@ Many2OneField.props = {
     relation: { type: String, optional: true },
     string: { type: String, optional: true },
     canScanBarcode: { type: Boolean, optional: true },
+    openTarget: { type: String, validate: (v) => ["current", "new"].includes(v), optional: true },
 };
 Many2OneField.defaultProps = {
     canOpen: true,
@@ -270,6 +275,7 @@ Many2OneField.defaultProps = {
     searchLimit: 7,
     string: "",
     canScanBarcode: false,
+    openTarget: "current",
 };
 
 Many2OneField.displayName = _lt("Many2one");
@@ -295,6 +301,7 @@ Many2OneField.extractProps = ({ attrs, field }) => {
         string: attrs.string || field.string,
         createNameField: attrs.options.create_name_field,
         canScanBarcode: canScanBarcode,
+        openTarget: attrs.open_target,
     };
 };
 

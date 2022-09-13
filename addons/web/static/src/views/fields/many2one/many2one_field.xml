@@ -45,7 +45,8 @@
                 <t t-if="hasExternalButton">
                     <button
                         type="button"
-                        class="btn btn-secondary fa fa-external-link o_external_button"
+                        class="btn btn-secondary fa o_external_button"
+                        t-att-class="props.openTarget === 'current' ? 'fa-arrow-right' : 'fa-external-link'"
                         tabindex="-1"
                         draggable="false"
                         aria-label="External link"

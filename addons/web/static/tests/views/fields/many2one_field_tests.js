@@ -4209,4 +4209,67 @@ QUnit.module("Fields", (hooks) => {
             "Placeholder"
         );
     });
+
+    QUnit.test("open_target prop = current", async function (assert) {
+        serverData.views = {
+            "partner,false,form": '<form><field name="trululu" open_target="current"/></form>',
+            "partner,false,search": "<search></search>",
+        };
+        serverData.actions = {
+            1: {
+                name: "Partner",
+                res_model: "partner",
+                res_id: 1,
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+        };
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC(route, { method }) {
+                if (method === "get_formview_action") {
+                    assert.step("get_formview_action");
+                    return {
+                        type: "ir.actions.act_window",
+                        res_model: "partner",
+                        view_type: "form",
+                        view_mode: "form",
+                        views: [[false, "form"]],
+                        target: "current",
+                        res_id: false,
+                    };
+                }
+            },
+        });
+        await doAction(webClient, 1);
+
+        await selectDropdownItem(target, "trululu", "first record");
+        assert.containsOnce(target, ".o_field_widget .o_external_button.fa-arrow-right");
+        await click(target, ".o_field_widget .o_external_button");
+
+        assert.verifySteps(["get_formview_action"]);
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "first recordNew");
+    });
+
+    QUnit.test("open_target prop = new", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="trululu" open_target="new" /></form>',
+            mockRPC(route, { method }) {
+                if (method === "get_formview_id") {
+                    assert.step("get_formview_id");
+                    return false;
+                }
+            },
+        });
+
+        await selectDropdownItem(target, "trululu", "first record");
+        assert.containsOnce(target, ".o_field_widget .o_external_button.fa-external-link");
+        await click(target, ".o_field_widget .o_external_button");
+
+        assert.verifySteps(["get_formview_id"]);
+        assert.containsOnce(target, ".modal");
+    });
 });
