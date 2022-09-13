@@ -69,7 +69,7 @@ QUnit.module('field html', (hooks) => {
     });
 
     QUnit.test('save arch and html', async function (assert) {
-        assert.expect(4);
+        assert.expect(2);
 
         await makeView({
             type: "form",
@@ -94,15 +94,6 @@ QUnit.module('field html', (hooks) => {
         await testUtils.nextTick();
         let fieldReadonly = fixture.querySelector('.o_field_widget[name="body_html"]');
         let fieldEdit = fixture.querySelector('.o_field_widget[name="body_arch"]');
-
-        assert.strictEqual($(fieldReadonly).css('display'), 'block', "should display the readonly mode");
-        assert.strictEqual($(fieldEdit).css('display'), 'none', "should hide the edit mode");
-
-        await testUtils.clickEdit(fixture);
-        await testUtils.nextTick();
-
-        fieldReadonly = fixture.querySelector('.o_field_widget[name="body_html"]');
-        fieldEdit = fixture.querySelector('.o_field_widget[name="body_arch"]');
 
         assert.strictEqual($(fieldReadonly).css('display'), 'none', "should hide the readonly mode");
         assert.strictEqual($(fieldEdit).css('display'), 'block', "should display the edit mode");

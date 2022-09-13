@@ -1,3 +1,45 @@
 .o_field_cursor_disabled {
     cursor: not-allowed;
 }
+
+.o_field_widget:not(.o_legacy_field_widget) {
+    .o_input {
+        border: $input-border-width solid transparent;
+        padding: $o-input-padding-y $o-input-padding-x;
+
+        &:hover, &:focus {
+            border-color: var(--o-input-border-color);
+        }
+    }
+
+    .o_field_many2one_selection, .o_field_many2many_selection, .o_datepicker {
+        .o_dropdown_button, .o_datepicker_button {
+            display: none;
+        }
+
+        &:hover, &:focus-within {
+            .o_dropdown_button, .o_datepicker_button {
+                display: unset;
+            }
+        }
+    }
+
+    .o_field_many2one_selection {
+        display: flex;
+        width: 100%;
+
+        .o_external_button {
+            visibility: hidden;
+        }
+
+        &:hover, &:focus-within {
+            .o_external_button {
+                visibility: visible;
+            }
+        }
+    }
+}
+
+.o_kanban_quick_create .o_field_widget .o_input {
+    border-color: var(--o-input-border-color);
+}

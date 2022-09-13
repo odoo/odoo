@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, clickEdit, clickSave, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -47,9 +47,6 @@ QUnit.module("Fields", (hooks) => {
             "0.056", // 0.4444 * 0.125
             "The formatted time value should be displayed properly."
         );
-
-        await clickEdit(target);
-
         assert.strictEqual(
             target.querySelector("button.o_field_float_toggle").textContent,
             "0.056",

@@ -4,7 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import { ROUTES_TO_IGNORE } from '@mail/../tests/helpers/webclient_setup';
 
 import testUtils from 'web.test_utils';
-import { clickEdit, patchWithCleanup, selectDropdownItem } from '@web/../tests/helpers/utils';
+import { patchWithCleanup, selectDropdownItem } from '@web/../tests/helpers/utils';
 import { ListController } from "@web/views/list/list_controller";
 
 QUnit.module('mail', {}, function () {
@@ -488,8 +488,6 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
     });
 
     assert.strictEqual(document.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 100);
-
-    await clickEdit(document.body);
 
     assert.containsOnce(document.body, '.o_form_editable');
 

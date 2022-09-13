@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
+import { getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -81,8 +81,6 @@ QUnit.module("Fields", (hooks) => {
             "right mask should be rotated from 360*(10/100) = 36 degrees"
         );
 
-        // switch to edit mode and check the result
-        await click(target.querySelector(".o_form_button_edit"));
         assert.containsOnce(
             target,
             ".o_field_percent_pie.o_field_widget .o_pie",
@@ -111,8 +109,6 @@ QUnit.module("Fields", (hooks) => {
             "right mask should be rotated from 360*(10/100) = 36 degrees"
         );
 
-        // save
-        await click(target.querySelector(".o_form_button_save"));
         assert.containsOnce(
             target,
             ".o_field_percent_pie.o_field_widget .o_pie",
@@ -179,8 +175,6 @@ QUnit.module("Fields", (hooks) => {
             "right mask should be hidden since the value > 50%"
         );
 
-        // switch to edit mode and check the result
-        await click(target.querySelector(".o_form_button_edit"));
         assert.containsOnce(
             target,
             ".o_field_percent_pie.o_field_widget .o_pie",
@@ -204,8 +198,6 @@ QUnit.module("Fields", (hooks) => {
             "right mask should be hidden since the value > 50%"
         );
 
-        // save
-        await click(target.querySelector(".o_form_button_save"));
         assert.containsOnce(
             target,
             ".o_field_percent_pie.o_field_widget .o_pie",

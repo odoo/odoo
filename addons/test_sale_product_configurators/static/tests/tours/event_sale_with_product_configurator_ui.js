@@ -113,5 +113,5 @@ tour.register('event_sale_with_product_configurator_tour', {
     in_modal: false,
 }, {
     trigger: '.o_event_sale_js_event_configurator_ok',
-}, ...tour.stepUtils.saveForm('.o_field_cell.o_data_cell.o_list_number:contains("60.00")'),
+}, ...tour.stepUtils.saveForm({ extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("60.00")' }),
 ]);
