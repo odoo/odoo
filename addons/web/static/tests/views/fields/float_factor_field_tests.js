@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -25,7 +25,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("FloatFactorField");
 
     QUnit.test("FloatFactorField in form view", async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         await makeView({
             type: "form",
@@ -46,23 +46,16 @@ QUnit.module("Fields", (hooks) => {
             },
         });
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "4.55", // 9.1 / 0.5
-            "The formatted value should be displayed properly."
-        );
-
-        await click(target, ".o_form_button_edit");
-        assert.strictEqual(
             target.querySelector(".o_field_widget[name='qux'] input").value,
             "4.55",
             "The value should be rendered correctly in the input."
         );
 
         await editInput(target, ".o_field_widget[name='qux'] input", "2.3");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "2.30",
             "The new value should be saved and displayed properly."
         );

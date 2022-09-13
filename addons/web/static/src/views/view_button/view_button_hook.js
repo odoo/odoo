@@ -15,11 +15,14 @@ function disableButtons(el) {
     return btns;
 }
 
-function enableButtons(el, manuallyDisabledButtons) {
+function enableButtons(el, manuallyDisabledButtons, enableAction) {
     if (el) {
         for (const btn of manuallyDisabledButtons) {
             btn.removeAttribute("disabled");
         }
+    }
+    if (enableAction) {
+        enableAction();
     }
 }
 
@@ -37,8 +40,17 @@ export function useViewButtons(model, ref, options = {}) {
             return true;
         });
     useSubEnv({
-        async onClickViewButton({ clickParams, getResParams, beforeExecute }) {
+        async onClickViewButton({
+            clickParams,
+            getResParams,
+            beforeExecute,
+            disableAction,
+            enableAction,
+        }) {
             const manuallyDisabledButtons = disableButtons(getEl());
+            if (disableAction) {
+                disableAction();
+            }
 
             async function execute() {
                 let _continue = true;
@@ -48,7 +60,7 @@ export function useViewButtons(model, ref, options = {}) {
 
                 _continue = _continue && undefinedAsTrue(await beforeExecuteAction(clickParams));
                 if (!_continue) {
-                    enableButtons(getEl(), manuallyDisabledButtons);
+                    enableButtons(getEl(), manuallyDisabledButtons, enableAction);
                     return;
                 }
                 const params = getResParams();
@@ -85,7 +97,7 @@ export function useViewButtons(model, ref, options = {}) {
                     error = _e;
                     await doActionParams.onClose();
                 }
-                enableButtons(getEl(), manuallyDisabledButtons);
+                enableButtons(getEl(), manuallyDisabledButtons, enableAction);
                 if (error) {
                     return Promise.reject(error);
                 }
@@ -100,7 +112,7 @@ export function useViewButtons(model, ref, options = {}) {
                     };
                     dialog.add(ConfirmationDialog, dialogProps, { onClose: resolve });
                 });
-                enableButtons(getEl(), manuallyDisabledButtons);
+                enableButtons(getEl(), manuallyDisabledButtons, enableAction);
             } else {
                 return execute();
             }

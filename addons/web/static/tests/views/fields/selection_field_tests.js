@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editSelect, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, editSelect, editInput, getFixture, clickSave } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -111,38 +111,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.containsNone(target, "select");
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name='product_id']").textContent,
-            "xphone",
-            "should have rendered the many2one field correctly"
-        );
-        assert.hasAttrValue(
-            target.querySelector(".o_field_widget[name='product_id'] span"),
-            "raw-value",
-            "37",
-            "should have set the raw-value attr for many2one field correctly"
-        );
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name='trululu']").textContent,
-            "",
-            "should have rendered the unset many2one field correctly"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name='color']").textContent,
-            "Red",
-            "should have rendered the selection field correctly"
-        );
-        assert.hasAttrValue(
-            target.querySelector(".o_field_widget[name='color'] span"),
-            "raw-value",
-            "red",
-            "should have set the raw-value attr for selection field correctly"
-        );
-
-        await click(target, ".o_form_button_edit");
-
         assert.containsN(target, "select", 3);
         assert.containsOnce(
             target,
@@ -199,7 +167,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             resId: 1,
             serverData,
-            arch: '<form><field name="selection" /></form>',
+            arch: '<form edit="0"><field name="selection" /></form>',
         });
 
         assert.strictEqual(
@@ -232,7 +200,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             resId: 1,
             serverData,
-            arch: '<form><field name="selection" /></form>',
+            arch: '<form edit="0"><field name="selection" /></form>',
         });
 
         assert.strictEqual(
@@ -267,9 +235,8 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_edit");
         await editSelect(target, ".o_form_view select", "false");
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
     });
 
     QUnit.test("field selection with many2ones and special characters", async function (assert) {
@@ -283,8 +250,6 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<form><field name="trululu" widget="selection" /></form>',
         });
-
-        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
             target.querySelector("select option[value='4']").textContent,
@@ -327,8 +292,6 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(target, ".o_form_button_edit");
-
             assert.containsN(
                 target,
                 ".o_field_widget[name='trululu'] option",
@@ -370,7 +333,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, ".o_form_button_edit");
         assert.deepEqual(
             [...target.querySelectorAll(".o_field_widget[name='color'] option")].map(
                 (option) => option.style.display
@@ -424,12 +386,11 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             });
 
-            await click(target, ".o_form_button_edit");
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_field_widget[name='color'] option")].map(
-                    (option) => option.style.display
-                ),
-                ["", "", ""]
+            assert.containsN(
+                target.querySelector(".o_field_widget[name='color']"),
+                "option",
+                3,
+                "Three options in non required field (one blank option)"
             );
 
             // change value to update widget modifier values

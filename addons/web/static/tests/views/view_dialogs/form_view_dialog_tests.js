@@ -209,7 +209,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             serverData,
             arch: `<form>
                     <field name="name"/>
-                    <field name="instrument" context="{'tree_view_ref': 'some_tree_view'}"/>
+                    <field name="instrument" context="{'tree_view_ref': 'some_tree_view'}" open_target="new"/>
                    </form>`,
             mockRPC: function (route, args) {
                 if (args.method === "get_formview_id") {
@@ -242,7 +242,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                 }
             },
         });
-        await click(target, ".o_form_button_edit");
         await click(target, '.o_field_widget[name="instrument"] button.o_external_button');
     });
 

@@ -4,7 +4,6 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     addRow,
     click,
-    clickEdit,
     clickSave,
     editInput,
     getFixture,
@@ -108,14 +107,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "$\u00a09.10",
-            "The value should be displayed properly."
-        );
-
-        await clickEdit(target);
-
         assert.containsOnce(
             target,
             ".o_field_monetary > div.text-nowrap",
@@ -141,8 +132,8 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "$\u00a0108.25",
+            target.querySelector(".o_field_widget input").value,
+            "108.25",
             "The new value should be rounded properly."
         );
     });
@@ -170,13 +161,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "$\u00a09.10",
-            "The value should be displayed properly."
-        );
-
-        await clickEdit(target);
-        assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "9.10",
             "The input should be rendered without the currency symbol."
@@ -196,8 +180,8 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "$\u00a0108.25",
+            target.querySelector(".o_field_widget input").value,
+            "108.25",
             "The new value should be rounded properly."
         );
     });
@@ -225,12 +209,11 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // Test computation and rounding
-        await clickEdit(target);
         await editInput(target, ".o_field_monetary input", "=100/3");
         await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "$\u00a033.33",
+            target.querySelector(".o_field_widget input").value,
+            "33.33",
             "The new value should be calculated and rounded properly."
         );
     });
@@ -258,12 +241,11 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // Test computation and rounding
-        await clickEdit(target);
         await editInput(target, ".o_field_monetary input", "=100/3");
         await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "$\u00a033.33",
+            target.querySelector(".o_field_widget input").value,
+            "33.33",
             "The new value should be calculated and rounded properly."
         );
     });
@@ -290,14 +272,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        // Non-breaking space between the currency and the amount
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "0.00\u00a0€",
-            "The value should be displayed properly."
-        );
-
-        await clickEdit(target);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "0.00",
@@ -317,10 +291,9 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
-        // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "108.25\u00a0€",
+            target.querySelector(".o_field_widget input").value,
+            "108.25",
             "The new value should be rounded properly."
         );
     });
@@ -347,14 +320,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        // Non-breaking space between the currency and the amount
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "0.00\u00a0€",
-            "The value should be displayed properly."
-        );
-
-        await clickEdit(target);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "0.00",
@@ -374,10 +339,9 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
-        // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "108.25\u00a0€",
+            target.querySelector(".o_field_widget input").value,
+            "108.25",
             "The new value should be rounded properly."
         );
     });
@@ -417,14 +381,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        // Non-breaking space between the currency and the amount
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "99.1234\u00a0Bs.F",
-            "The value should be displayed properly."
-        );
-
-        await clickEdit(target);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "99.1234",
@@ -444,10 +400,9 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
-        // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "99.1111\u00a0Bs.F",
+            target.querySelector(".o_field_widget input").value,
+            "99.1111",
             "The new value should be rounded properly."
         );
     });
@@ -487,14 +442,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        // Non-breaking space between the currency and the amount
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "99.1234\u00a0Bs.F",
-            "The value should be displayed properly."
-        );
-
-        await clickEdit(target);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "99.1234",
@@ -514,10 +461,9 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
-        // Non-breaking space between the currency and the amount
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "99.1111\u00a0Bs.F",
+            target.querySelector(".o_field_widget input").value,
+            "99.1111",
             "The new value should be rounded properly."
         );
     });
@@ -734,14 +680,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_field_monetary").textContent,
-            "$\u00a04.20",
-            "readonly value should contain the currency"
-        );
-
-        await clickEdit(target);
-
         // replace bottom with new helpers when they exist
         await click(target, ".o_field_many2one_selection input");
         const euroM2OListItem = Array.from(
@@ -757,10 +695,9 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
-
         assert.strictEqual(
-            target.querySelector(".o_field_monetary").textContent,
-            "4.20\u00a0€",
+            target.querySelector(".o_field_monetary input").value,
+            "4.20",
             "The new value should still be correct."
         );
     });
@@ -787,14 +724,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_field_monetary").textContent,
-            "$\u00a04.20",
-            "readonly value should contain the currency"
-        );
-
-        await clickEdit(target);
-
         // replace bottom with new helpers when they exist
         await click(target, ".o_field_many2one_selection input");
         const euroM2OListItem = Array.from(
@@ -810,10 +739,9 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
-
         assert.strictEqual(
-            target.querySelector(".o_field_monetary").textContent,
-            "4.20\u00a0€",
+            target.querySelector(".o_field_monetary input").value,
+            "4.20",
             "The new value should still be correct."
         );
     });
@@ -831,7 +759,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             arch: `
-                <form>
+                <form edit="0">
                     <sheet>
                         <field name="float_field" options="{'currency_field': 'company_currency_id'}"/>
                         <field name="company_currency_id"/>
@@ -1008,7 +936,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             arch: `
-                <form>
+                <form edit="0">
                     <sheet>
                         <field name="monetary" widget="float"/>
                         <field name="currency_id" invisible="1"/>
@@ -1059,14 +987,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        // Non-breaking space between the currency and the amount
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "$\u00a0-8.9",
-            "The value should be displayed properly."
-        );
-
-        await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=float_field] input").value,
             "-8.9",
@@ -1086,11 +1006,10 @@ QUnit.module("Fields", (hooks) => {
             "The value should should be formatted on blur."
         );
 
-        await click(target.querySelector(".o_form_button_save"));
-        // Non-breaking space between the currency and the amount
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "$\u00a0109.2",
+            target.querySelector(".o_field_widget input").value,
+            "109.2",
             "The new value should be rounded properly."
         );
     });
@@ -1109,8 +1028,6 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
         });
-
-        await clickEdit(target);
 
         // Non-breaking space between the currency and the amount
         assert.strictEqual(
@@ -1154,10 +1071,5 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(target, ".o_form_editable");
         assert.strictEqual(target.querySelector("[name=monetary_field] input").value, "0.00");
-
-        await clickSave(target);
-
-        assert.containsOnce(target, ".o_form_readonly");
-        assert.strictEqual(target.querySelector("[name=monetary_field] span").innerText, "0.00");
     });
 });

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, clickEdit, getFixture } from "@web/../tests/helpers/utils";
+import { click, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -79,7 +79,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.containsOnce(target, ".o_form_readonly");
+        assert.containsOnce(target, ".o_form_editable");
         assert.containsOnce(target, ".form-check.o_boolean_toggle");
         assert.notOk(target.querySelector(".o_boolean_toggle input").disabled);
         assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
@@ -98,8 +98,6 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(target, ".form-check.o_boolean_toggle");
         assert.ok(target.querySelector(".o_boolean_toggle input").disabled);
-        await click(target.querySelector(".o_form_button_edit"));
-        assert.ok(target.querySelector(".o_boolean_toggle input").disabled);
     });
 
     QUnit.test("BooleanToggleField is enabled in edit mode", async function (assert) {
@@ -112,7 +110,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(target, ".form-check.o_boolean_toggle");
-        await click(target.querySelector(".o_form_button_edit"));
 
         assert.notOk(target.querySelector(".o_boolean_toggle input").disabled);
         assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
@@ -165,8 +162,6 @@ QUnit.module("Fields", (hooks) => {
                 ".form-check.o_boolean_toggle",
                 "Boolean toggle widget applied to boolean field"
             );
-
-            await clickEdit(target);
             assert.containsNone(target, ".o_boolean_toggle input:checked");
 
             await click(target, ".o_boolean_toggle");
@@ -193,8 +188,6 @@ QUnit.module("Fields", (hooks) => {
             ".form-check.o_boolean_toggle",
             "Boolean toggle widget applied to boolean field"
         );
-
-        await clickEdit(target);
         assert.containsNone(target, ".o_boolean_toggle input:checked");
 
         await click(target, ".o_boolean_toggle");

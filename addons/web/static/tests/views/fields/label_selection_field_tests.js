@@ -91,52 +91,6 @@ QUnit.module("Fields", (hooks) => {
             "Blocked",
             "the label should say 'Blocked' since this is the label value for that state"
         );
-
-        // // switch to edit mode and check the result
-        await click(target.querySelector(".o_form_button_edit"));
-        assert.containsOnce(
-            target,
-            ".o_field_widget .badge.text-bg-warning",
-            "should have a warning status label since selection is the second, blocked state"
-        );
-        assert.containsNone(
-            target,
-            ".o_field_widget .badge.text-bg-secondary",
-            "should not have a default status since selection is the second, blocked state"
-        );
-        assert.containsNone(
-            target,
-            ".o_field_widget .badge.text-bg-success",
-            "should not have a success status since selection is the second, blocked state"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.text-bg-warning").textContent,
-            "Blocked",
-            "the label should say 'Blocked' since this is the label value for that state"
-        );
-
-        // save
-        await click(target.querySelector(".o_form_button_save"));
-        assert.containsOnce(
-            target,
-            ".o_field_widget .badge.text-bg-warning",
-            "should have a warning status label since selection is the second, blocked state"
-        );
-        assert.containsNone(
-            target,
-            ".o_field_widget .badge.text-bg-secondary",
-            "should not have a default status since selection is the second, blocked state"
-        );
-        assert.containsNone(
-            target,
-            ".o_field_widget .badge.text-bg-success",
-            "should not have a success status since selection is the second, blocked state"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_widget .badge.text-bg-warning").textContent,
-            "Blocked",
-            "the label should say 'Blocked' since this is the label value for that state"
-        );
     });
 
     QUnit.test("LabelSelectionField in editable list view", async function (assert) {

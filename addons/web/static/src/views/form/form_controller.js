@@ -15,6 +15,8 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
+import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import { useFormErrorDialog } from "./form_error_dialog/form_error_dialog";
 
 const { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } = owl;
 
@@ -94,7 +96,14 @@ export class FormController extends Component {
         this.user = useService("user");
         this.viewService = useService("view");
         this.ui = useService("ui");
+        this.state = useState({
+            isDisabled: false,
+        });
         useBus(this.ui.bus, "resize", this.render);
+        useFormErrorDialog(async () => {
+            await this.discard();
+            this.env.config.historyBack();
+        });
 
         this.archInfo = this.props.archInfo;
         const activeFields = this.archInfo.activeFields;
@@ -103,6 +112,16 @@ export class FormController extends Component {
         const beforeLoadProm = new Promise((r) => {
             this.beforeLoadResolver = r;
         });
+
+        const { create, edit } = this.archInfo.activeActions;
+        this.canCreate = create && !this.props.preventCreate;
+        this.canEdit = edit && !this.props.preventEdit;
+
+        let mode = this.props.mode || "edit";
+        if (!this.canEdit) {
+            mode = "readonly";
+        }
+
         this.model = useModel(
             this.props.Model,
             {
@@ -113,17 +132,13 @@ export class FormController extends Component {
                 activeFields,
                 viewMode: "form",
                 rootType: "record",
-                mode: this.props.mode,
+                mode,
                 beforeLoadProm,
             },
             {
                 ignoreUseSampleModel: true,
             }
         );
-        const { create, edit } = this.archInfo.activeActions;
-
-        this.canCreate = create && !this.props.preventCreate;
-        this.canEdit = edit && !this.props.preventEdit;
 
         this.cpButtonsRef = useRef("cpButtons");
 
@@ -235,9 +250,9 @@ export class FormController extends Component {
                         !isInEdition &&
                         !rootRef.el.querySelector(".o_content").contains(document.activeElement)
                     ) {
-                        const elementToFocus =
-                            rootRef.el.querySelector(".o_content button.btn-primary") ||
-                            rootRef.el.querySelector(".o_control_panel .o_form_button_edit");
+                        const elementToFocus = rootRef.el.querySelector(
+                            ".o_content button.btn-primary"
+                        );
                         if (elementToFocus) {
                             elementToFocus.focus();
                         }
@@ -301,9 +316,16 @@ export class FormController extends Component {
                 key: "delete",
                 description: this.env._t("Delete"),
                 callback: () => this.deleteRecord(),
+                skipSave: true,
             });
         }
         return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
+    }
+
+    async beforeAction(item) {
+        if ((this.model.root.isDirty || this.model.root.isVirtual) && !item.skipSave) {
+            await this.model.root.save({ stayInEdition: true });
+        }
     }
 
     async duplicateRecord() {
@@ -325,16 +347,11 @@ export class FormController extends Component {
     }
 
     disableButtons() {
-        const btns = this.cpButtonsRef.el.querySelectorAll(".o_cp_buttons button");
-        for (const btn of btns) {
-            btn.setAttribute("disabled", "1");
-        }
-        return btns;
+        this.state.isDisabled = true;
     }
-    enableButtons(btns) {
-        for (const btn of btns) {
-            btn.removeAttribute("disabled");
-        }
+
+    enableButtons() {
+        this.state.isDisabled = false;
     }
 
     async edit() {
@@ -342,12 +359,20 @@ export class FormController extends Component {
     }
 
     async create() {
-        this.disableButtons();
-        await this.model.load({ resId: null });
+        await this.model.root.askChanges(); // ensures that isDirty is correct
+        let canProceed = true;
+        if (this.model.root.isDirty) {
+            canProceed = await this.model.root.save({ stayInEdition: true });
+        }
+        if (canProceed) {
+            this.disableButtons();
+            await this.model.load({ resId: null });
+            this.enableButtons();
+        }
     }
 
     async save(params = {}) {
-        const disabledButtons = this.disableButtons();
+        this.disableButtons();
         const record = this.model.root;
         let saved = false;
 
@@ -360,13 +385,17 @@ export class FormController extends Component {
                 ...record.dirtyTranslatableFields,
             ]);
         }
-
-        if (this.props.saveRecord) {
-            saved = await this.props.saveRecord(record, params);
-        } else {
-            saved = await record.save();
+        try {
+            if (this.props.saveRecord) {
+                saved = await this.props.saveRecord(record, params);
+            } else {
+                saved = await record.save();
+            }
+        } catch {
+            // if the save failed, we want to re-enable buttons
+            this.enableButtons();
         }
-        this.enableButtons(disabledButtons);
+        this.enableButtons();
         if (saved && this.props.onSave) {
             this.props.onSave(record);
         }
@@ -424,7 +453,7 @@ export class FormController extends Component {
 }
 
 FormController.template = `web.FormView`;
-FormController.components = { ActionMenus, Layout };
+FormController.components = { ActionMenus, FormStatusIndicator, Layout };
 FormController.props = {
     ...standardViewProps,
     discardRecord: { type: Function, optional: true },

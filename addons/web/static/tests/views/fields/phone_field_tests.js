@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { getNextTabableElement } from "@web/core/utils/ui";
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -31,11 +31,12 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PhoneField");
 
-    QUnit.test("PhoneField in form view on normal screens", async function (assert) {
+    QUnit.test("PhoneField in form view on normal screens (readonly)", async function (assert) {
         await makeView({
             serverData,
             type: "form",
             resModel: "partner",
+            mode: "readonly",
             arch: `
                 <form>
                     <sheet>
@@ -55,9 +56,24 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(phone.textContent, "yop", "value should be displayed properly");
         assert.hasAttrValue(phone, "href", "tel:yop", "should have proper tel prefix");
+    });
 
-        // switch to edit mode and check the result
-        await click(target.querySelector(".o_form_button_edit"));
+    QUnit.test("PhoneField in form view on normal screens (edit)", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="phone"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
         assert.containsOnce(
             target,
             'input[type="tel"]',
@@ -73,9 +89,9 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, "input[type='tel']", "new");
 
         // save
-        await click(target.querySelector(".o_form_button_save"));
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_phone a").textContent,
+            target.querySelector("input[type='tel']").value,
             "new",
             "new value should be displayed properly"
         );

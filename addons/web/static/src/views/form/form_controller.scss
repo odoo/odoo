@@ -201,7 +201,7 @@
         }
 
         .oe_title {
-            max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
+            max-width: 75%;
         }
 
         .o_field_x2many .o_list_table .o_handle_cell .o_row_handle {
@@ -986,8 +986,15 @@
             max-width: 300px;
         }
     }
-
     @include media-breakpoint-down(md) {
+        .o_control_panel {
+            padding-right: 16px;
+
+            > div.o_cp_top {
+                display: grid;
+            }
+        }
+
         .o_cp_buttons {
             width: 100%;
             div, .o-kanban-button-new {

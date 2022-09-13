@@ -73,15 +73,12 @@ QUnit.module("Fields", (hooks) => {
             "handle should not have any content"
         );
 
-        assert.strictEqual(
-            getComputedStyle(target.querySelector("td span.o_row_handle")).display,
-            "none",
-            "handle should be invisible in readonly mode"
+        assert.isVisible(
+            target.querySelector("td span.o_row_handle"),
+            "handle should be invisible"
         );
 
         assert.containsN(target, "span.o_row_handle", 2, "should have 2 handles");
-
-        await click(target, ".o_form_button_edit");
 
         assert.hasClass(
             target.querySelector("td"),
@@ -150,16 +147,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             getComputedStyle(target.querySelector("td span.o_row_handle")).display,
             "none",
-            "handle should be invisible in readonly mode"
-        );
-
-        await click(target, ".o_form_button_edit");
-
-        assert.containsN(target, ".o_row_handle", 3, "the handle fields should still be there");
-        assert.strictEqual(
-            getComputedStyle(target.querySelector("td span.o_row_handle")).display,
-            "none",
-            "the handle icons should still not be displayed (on readonly fields)"
+            "handle should be invisible"
         );
     });
 });

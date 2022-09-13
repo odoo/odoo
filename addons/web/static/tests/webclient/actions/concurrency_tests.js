@@ -387,7 +387,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("open a record while reloading the list view", async function (assert) {
-        assert.expect(12);
+        assert.expect(10);
         let def;
         const mockRPC = async function (route) {
             if (route === "/web/dataset/search_read") {
@@ -408,14 +408,12 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".o_list_view .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
         assert.containsNone(target, ".o_control_panel .o_list_buttons");
-        assert.containsOnce(target, ".o_control_panel .o_form_buttons_view");
         // unblock the search_read RPC
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.containsNone(target, ".o_list_view");
         assert.containsNone(target, ".o_control_panel .o_list_buttons");
-        assert.containsOnce(target, ".o_control_panel .o_form_buttons_view");
     });
 
     QUnit.test(

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { clickSave, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -30,7 +30,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("PercentageField");
 
     QUnit.test("PercentageField in form view", async function (assert) {
-        assert.expect(6);
+        assert.expect(5);
 
         await makeView({
             serverData,
@@ -52,12 +52,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "44.4%",
-            "The value should be displayed properly."
-        );
-        await click(target.querySelector(".o_form_button_edit"));
-        assert.strictEqual(
             target.querySelector(".o_field_widget[name=float_field] input").value,
             "44.4",
             "The input should be rendered without the percentage symbol."
@@ -70,10 +64,10 @@ QUnit.module("Fields", (hooks) => {
         const field = target.querySelector("[name='float_field'] input");
         await editInput(target, "[name='float_field'] input", "24");
         assert.strictEqual(field.value, "24", "The value should not be formated yet.");
-        await click(target.querySelector(".o_form_button_save"));
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "24%",
+            target.querySelector(".o_field_widget input").value,
+            "24",
             "The new value should be formatted properly."
         );
     });

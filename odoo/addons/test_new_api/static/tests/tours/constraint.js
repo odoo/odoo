@@ -30,7 +30,7 @@ odoo.define('web.test.constraint', function (require) {
         run() {}
     }, {
         content: "close notification box",
-        trigger: '.modal-footer .o-default-button',
+        trigger: '.modal-footer .btn-primary',
     },
     ...tour.stepUtils.discardForm(),
     ]);

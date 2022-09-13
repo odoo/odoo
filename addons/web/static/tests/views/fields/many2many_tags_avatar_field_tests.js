@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    click,
-    clickEdit,
-    clickSave,
-    getFixture,
-    selectDropdownItem,
-} from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture, selectDropdownItem } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -206,12 +200,12 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             tag.dataset["tooltipTemplate"],
             "web.TagsList.Tooltip",
-            "uses the proper tooltip template",
+            "uses the proper tooltip template"
         );
         const tooltipInfo = JSON.parse(tag.dataset["tooltipInfo"]);
         assert.strictEqual(
-            tooltipInfo.tags.map(tag => tag.text).join(" "),
-            'record 6 record 7',
+            tooltipInfo.tags.map((tag) => tag.text).join(" "),
+            "record 6 record 7",
             "shows a tooltip on hover"
         );
 
@@ -363,12 +357,12 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             tag.dataset["tooltipTemplate"],
             "web.TagsList.Tooltip",
-            "uses the proper tooltip template",
+            "uses the proper tooltip template"
         );
         const tooltipInfo = JSON.parse(tag.dataset["tooltipInfo"]);
         assert.strictEqual(
-            tooltipInfo.tags.map(tag => tag.text).join(" "),
-            'aaa record 5',
+            tooltipInfo.tags.map((tag) => tag.text).join(" "),
+            "aaa record 5",
             "shows a tooltip on hover"
         );
 
@@ -391,7 +385,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await clickEdit(target);
         assert.containsN(
             target,
             ".o_field_many2many_tags_avatar.o_field_widget .badge",

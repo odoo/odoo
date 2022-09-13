@@ -105,9 +105,6 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            // Record edit mode
-            await click(target.querySelector(".o_form_button_edit"));
-
             // Get all inputs
             const floatFactorField = target.querySelector(".o_field_float_factor input");
             const floatInput = target.querySelector(".o_field_float input");
