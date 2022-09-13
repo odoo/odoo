@@ -5,7 +5,7 @@ from werkzeug.exceptions import ServiceUnavailable
 
 from odoo.http import Controller, request, route
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-from ..models.bus import channel_with_db
+from ..models.bus import channel_with_db, hashable
 from ..websocket import WebsocketConnectionHandler
 
 
@@ -33,6 +33,7 @@ class WebsocketController(Controller):
 
     @route('/websocket/peek_notifications', type='json', auth='public', cors='*')
     def peek_notifications(self, channels, last):
+        channels = [hashable(chan) for chan in channels]
         channels = list(set(
             channel_with_db(request.db, c)
             for c in request.env['ir.websocket']._build_bus_channel_list(channels)
@@ -40,9 +41,10 @@ class WebsocketController(Controller):
         notifications = request.env['bus.bus']._poll(channels, last)
         return {'channels': channels, 'notifications': notifications}
 
-    @route('/websocket/update_bus_presence', type='http', auth='public', cors='*')
+    @route('/websocket/update_bus_presence', type='json', auth='public', cors='*')
     def update_bus_presence(self, inactivity_period):
         request.env['ir.websocket']._update_bus_presence(int(inactivity_period))
+        return {}
 
     @route('/bus/websocket_worker_bundle', type='http', auth='public', cors='*')
     def get_websocket_worker_bundle(self):
