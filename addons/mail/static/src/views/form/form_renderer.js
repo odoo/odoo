@@ -15,6 +15,13 @@ patch(FormRenderer.prototype, 'mail', {
         }
     },
 
+    get compileParams() {
+        return {
+            ...this._super(),
+            hasAttachmentViewer: this.props.hasAttachmentViewer,
+        };
+    },
+
     //--------------------------------------------------------------------------
     // Mail Methods
     //--------------------------------------------------------------------------
