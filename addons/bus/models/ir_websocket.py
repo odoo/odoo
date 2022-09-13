@@ -34,7 +34,7 @@ class IrWebsocket(models.AbstractModel):
         dispatch.subscribe(channels, data['last'], self.env.registry.db_name, wsrequest.ws)
 
     def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
-        if self.env.uid:
+        if self.env.user and not self.env.user._is_public():
             self.env['bus.presence'].update(
                 inactivity_period,
                 identity_field='user_id',

@@ -42,9 +42,10 @@ class WebsocketController(Controller):
         notifications = request.env['bus.bus']._poll(channels, last)
         return {'channels': channels, 'notifications': notifications}
 
-    @route('/websocket/update_bus_presence', type='http', auth='public', cors='*')
+    @route('/websocket/update_bus_presence', type='json', auth='public', cors='*')
     def update_bus_presence(self, inactivity_period, im_status_ids_by_model):
         request.env['ir.websocket']._update_bus_presence(int(inactivity_period), im_status_ids_by_model)
+        return {}
 
     @route('/bus/websocket_worker_bundle', type='http', auth='public', cors='*')
     def get_websocket_worker_bundle(self):
