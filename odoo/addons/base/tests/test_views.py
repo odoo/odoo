@@ -1800,7 +1800,7 @@ class TestViews(ViewCase):
         ''')
         _test_modifiers(tree[0][0], {"invisible": True})
         _test_modifiers(tree[1], {})
-        _test_modifiers(tree[2], {"column_invisible": False})
+        _test_modifiers(tree[2], {})
         _test_modifiers(tree[3], {"column_invisible": True})
         _test_modifiers(tree[4], {"invisible": [['b', '=', 'c']]})
 
