@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { createSpreadsheetWithGraph } from "../utils/chart";
-import { addGlobalFilter } from "../utils/commands";
+import { addGlobalFilter, setGlobalFilterValue } from "../utils/commands";
 
 async function addChartGlobalFilter(model) {
     const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
@@ -41,5 +41,29 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
             },
         });
         await addChartGlobalFilter(model);
+    });
+
+    QUnit.test("Chart is impacted by global filter in dashboard mode", async function (assert) {
+        const { model } = await createSpreadsheetWithGraph();
+        assert.equal(model.getters.getGlobalFilters().length, 0);
+        const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+        const filter = {
+            id: "42",
+            type: "date",
+            label: "Last Year",
+            rangeType: "year",
+            graphFields: { [chartId]: { field: "date", type: "date" } },
+        };
+        await addGlobalFilter(model, { filter });
+        model.updateMode("dashboard");
+        let computedDomain = model.getters.getGraphDataSource(chartId).getComputedDomain();
+        assert.equal(computedDomain.length, 0);
+        await setGlobalFilterValue(model, {
+            id: "42",
+            value: { yearOffset: -1 },
+        });
+        computedDomain = model.getters.getGraphDataSource(chartId).getComputedDomain();
+        assert.equal(computedDomain.length, 3);
+        assert.equal(computedDomain[0], "&");
     });
 });
