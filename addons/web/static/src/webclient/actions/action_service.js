@@ -41,10 +41,11 @@ const viewRegistry = registry.category("views");
  * @property {ViewType} [viewType]
  */
 
-export function clearUncommittedChanges(env) {
+export async function clearUncommittedChanges(env) {
     const callbacks = [];
     env.bus.trigger("CLEAR-UNCOMMITTED-CHANGES", callbacks);
-    return Promise.all(callbacks.map((fn) => fn()));
+    const res = await Promise.all(callbacks.map((fn) => fn()));
+    return !res.includes(false);
 }
 
 function parseActiveIds(ids) {
@@ -944,7 +945,10 @@ function makeActionManager(env) {
         const clientAction = actionRegistry.get(action.tag);
         if (clientAction.prototype instanceof Component) {
             if (action.target !== "new") {
-                await clearUncommittedChanges(env);
+                const canProceed = await clearUncommittedChanges(env);
+                if (!canProceed) {
+                    return;
+                }
                 if (clientAction.target) {
                     action.target = clientAction.target;
                 }
@@ -1190,7 +1194,10 @@ function makeActionManager(env) {
                 return _executeActURLAction(action, options);
             case "ir.actions.act_window":
                 if (action.target !== "new") {
-                    await clearUncommittedChanges(env);
+                    const canProceed = await clearUncommittedChanges(env);
+                    if (!canProceed) {
+                        return;
+                    }
                 }
                 return _executeActWindowAction(action, options);
             case "ir.actions.act_window_close":
@@ -1357,8 +1364,10 @@ function makeActionManager(env) {
             );
             index = index > -1 ? index : controllerStack.length;
         }
-        await clearUncommittedChanges(env);
-        return _updateUI(newController, { index });
+        const canProceed = await clearUncommittedChanges(env);
+        if (canProceed) {
+            return _updateUI(newController, { index });
+        }
     }
 
     /**
@@ -1390,8 +1399,10 @@ function makeActionManager(env) {
             }
             Object.assign(controller, _getViewInfo(view, action, views, props));
         }
-        await clearUncommittedChanges(env);
-        return _updateUI(controller, { index });
+        const canProceed = await clearUncommittedChanges(env);
+        if (canProceed) {
+            return _updateUI(controller, { index });
+        }
     }
 
     /**

@@ -1159,6 +1159,25 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
+    QUnit.test("can't restore previous action if form is invalid", async function (assert) {
+        serverData.models.partner.fields.foo.required = true;
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 3);
+        assert.containsOnce(target, ".o_list_view");
+
+        await click(target.querySelector(".o_list_button_add"));
+        assert.containsOnce(target, ".o_form_view");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
+
+        await editInput(target, ".o_field_widget[name=display_name] input", "make record dirty");
+        await click(target.querySelector(".breadcrumb .o_back_button"));
+        assert.containsNone(target, ".o_list_view");
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsOnce(target, ".o_notification_manager .o_notification");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
+    });
+
     QUnit.test("view switcher is properly highlighted in graph view", async function (assert) {
         assert.expect(4);
         serverData.actions[3].views.splice(1, 1, [false, "graph"]);
