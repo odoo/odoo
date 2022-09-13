@@ -41,6 +41,7 @@ class AccountInvoiceSend(models.TransientModel):
 
         composer = self.env['mail.compose.message'].create({
             'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
         })
         res.update({
             'invoice_ids': res_ids,
@@ -86,7 +87,8 @@ class AccountInvoiceSend(models.TransientModel):
             if not self.composer_id:
                 self.composer_id = self.env['mail.compose.message'].create({
                     'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
-                    'template_id': self.template_id.id
+                    'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+                    'template_id': self.template_id.id,
                 })
             else:
                 self.composer_id.composition_mode = 'comment' if len(res_ids) == 1 else 'mass_mail'

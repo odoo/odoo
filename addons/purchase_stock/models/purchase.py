@@ -250,7 +250,8 @@ class PurchaseOrder(models.Model):
                 (pickings | forward_pickings).action_confirm()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+                )
         return True
 
     def _add_picking_info(self, activity):

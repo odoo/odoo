@@ -142,13 +142,13 @@ class PurchaseOrder(models.Model):
                 origin_po_id.purchase_group_id.order_ids |= orders
             else:
                 self.env['purchase.order.group'].create({'order_ids': [Command.set(origin_po_id.ids + orders.ids)]})
-        mt_note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for order in orders:
             if order.requisition_id:
                 order.message_post_with_view(
                     'mail.message_origin_link',
                     values={'self': order, 'origin': order.requisition_id},
-                    subtype_id=mt_note)
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+                )
         return orders
 
     def write(self, vals):

@@ -636,8 +636,11 @@ class HrExpense(models.Model):
     def refuse_expense(self, reason):
         self.write({'is_refused': True})
         self.sheet_id.write({'state': 'cancel'})
-        self.sheet_id.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
-                                             values={'reason': reason, 'is_sheet': False, 'name': self.name})
+        self.sheet_id.message_post_with_view(
+            'hr_expense.hr_expense_template_refuse_reason',
+            subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+            values={'reason': reason, 'is_sheet': False, 'name': self.name},
+        )
 
     @api.model
     def get_expense_dashboard(self):
@@ -1213,8 +1216,13 @@ class HrExpenseSheet(models.Model):
                 raise UserError(_("You can only refuse your department expenses"))
 
         self.write({'state': 'cancel'})
+        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         for sheet in self:
-            sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': sheet.name})
+            sheet.message_post_with_view(
+                'hr_expense.hr_expense_template_refuse_reason',
+                subtype_id=subtype_id,
+                values={'reason': reason, 'is_sheet': True, 'name': sheet.name},
+            )
         self.activity_update()
 
     def reset_expense_sheets(self):

@@ -852,6 +852,16 @@ class TestComposerResultsComment(TestMailComposer):
         _mail, message = composer._action_send_mail()
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
+        # subtype through xml id
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record),
+            default_subtype_xmlid='mail.mt_note',
+        ).create({
+            'body': '<p>Default subtype through xml id</p>',
+        })
+        _mail, message = composer._action_send_mail()
+        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
+
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_mail_composer_recipients(self):

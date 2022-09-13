@@ -492,10 +492,10 @@ class Track(models.Model):
         track = self[0]
         if 'stage_id' in changes and track.stage_id.mail_template_id:
             res['stage_id'] = (track.stage_id.mail_template_id, {
-                'composition_mode': 'comment',
                 'auto_delete_message': True,
+                'composition_mode': 'comment',
+                'email_layout_xmlid': 'mail.mail_notification_light',
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-                'email_layout_xmlid': 'mail.mail_notification_light'
             })
         return res
 

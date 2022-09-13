@@ -392,7 +392,7 @@ class CRMRevealRule(models.Model):
         lead.message_post_with_view(
             'iap_mail.enrich_company',
             values=template_values,
-            subtype_id=self.env.ref('mail.mt_note').id
+            subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
         )
 
         return lead

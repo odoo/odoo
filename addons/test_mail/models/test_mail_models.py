@@ -139,9 +139,21 @@ class MailTestTicket(models.Model):
         res = super(MailTestTicket, self)._track_template(changes)
         record = self[0]
         if 'customer_id' in changes and record.mail_template:
-            res['customer_id'] = (record.mail_template, {'composition_mode': 'mass_mail'})
+            res['customer_id'] = (
+                record.mail_template,
+                {
+                    'composition_mode': 'mass_mail',
+                    'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                }
+            )
         elif 'datetime' in changes:
-            res['datetime'] = ('test_mail.mail_test_ticket_tracking_view', {'composition_mode': 'mass_mail'})
+            res['datetime'] = (
+                'test_mail.mail_test_ticket_tracking_view',
+                {
+                    'composition_mode': 'mass_mail',
+                    'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                }
+            )
         return res
 
     def _creation_subtype(self):

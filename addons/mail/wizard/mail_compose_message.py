@@ -53,6 +53,13 @@ class MailComposer(models.TransientModel):
         # email_layout_xmlid field: to remove in 15.1+
         if self._context.get('custom_layout') and 'default_email_layout_xmlid' not in self._context:
             self = self.with_context(default_email_layout_xmlid=self._context['custom_layout'])
+        # support subtype xmlid, like ``message_post``, when easier than using ``ref``
+        if self.env.context.get('default_subtype_xmlid'):
+            self = self.with_context(
+                default_subtype_id=self.env['ir.model.data']._xmlid_to_res_id(
+                    self.env.context['default_subtype_xmlid']
+                )
+            )
 
         result = super(MailComposer, self).default_get(fields)
 

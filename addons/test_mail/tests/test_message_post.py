@@ -989,6 +989,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
             _new_mails, _new_messages = test_records.with_user(self.user_employee).message_post_with_template(
                 template.id,
                 composition_mode='mass_mail',
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             )
 
         # created partners from inline email addresses
@@ -1038,6 +1039,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 values={'partner': self.user_employee.partner_id},
                 composition_mode='mass_mail',
                 subject='About mass mailing',
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             )
         self.assertEqual(len(new_messages), 0)
         self.assertEqual(len(self._new_mails), 10)
@@ -1333,7 +1335,7 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
                 composition_mode='mass_mail',
                 email_layout_xmlid='mail.test_layout',
                 message_type='comment',
-                subtype_id=self.env.ref('mail.mt_comment').id,
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             )
 
         record0_customer = self.env['res.partner'].search([('email_normalized', '=', 'test.record.1@test.customer.com')], limit=1)
@@ -1399,7 +1401,7 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
                     test_template.id,
                     email_layout_xmlid='mail.test_layout',
                     message_type='comment',
-                    subtype_id=self.env.ref('mail.mt_comment').id,
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
                 )
 
         record0_customer = self.env['res.partner'].search([('email_normalized', '=', 'test.record.1@test.customer.com')], limit=1)
