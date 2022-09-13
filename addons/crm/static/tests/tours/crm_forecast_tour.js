@@ -65,10 +65,6 @@ tour.register('crm_forecast', {
         content: "edit lead",
         run: "click"
     }, {
-        trigger: ".o_form_button_edit",
-        content: "edit datetime",
-        run: "click"
-    }, {
         trigger: ".o_field_widget[name=date_deadline] input",
         content: "complete expected closing",
         run: function (actions) {

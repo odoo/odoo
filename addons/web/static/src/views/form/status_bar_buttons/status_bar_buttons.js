@@ -11,10 +11,7 @@ export class StatusBarButtons extends Component {
             return [];
         }
         return Object.entries(this.props.slots)
-            .filter(
-                (entry) =>
-                    entry[1].isVisible && (entry[1].displayInReadOnly ? this.props.readonly : true)
-            )
+            .filter((entry) => entry[1].isVisible)
             .map((entry) => entry[0]);
     }
 }

@@ -1,6 +1,14 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
+import {
+    click,
+    clickDiscard,
+    clickSave,
+    editInput,
+    getFixture,
+    nextTick,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -147,8 +155,6 @@ QUnit.module("Fields", (hooks) => {
             mockRPC,
         });
 
-        await click(target, ".o_form_button_edit");
-
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
 
@@ -189,8 +195,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC,
         });
-
-        await click(target, ".o_form_button_edit");
 
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
@@ -255,12 +259,12 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk(inputValue.value);
 
         // Discard the form view and check that the properties take its old values
-        await click(target, ".o_form_button_cancel");
+        await clickDiscard(target);
         const propertyValue = document.querySelector(
-            ".o_property_field:first-child .o_property_field_value"
+            ".o_property_field:first-child .o_property_field_value input"
         );
         assert.strictEqual(
-            propertyValue.innerText,
+            propertyValue.value,
             "char value",
             "Discarding the form view should reset the old values"
         );
@@ -292,8 +296,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC,
         });
-
-        await click(target, ".o_form_button_edit");
 
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
@@ -351,8 +353,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC,
         });
-
-        await click(target, ".o_form_button_edit");
 
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
@@ -498,8 +498,6 @@ QUnit.module("Fields", (hooks) => {
             return [...labels].map((label) => label.innerText);
         };
 
-        await click(target, ".o_form_button_edit");
-
         const field = target.querySelector(".o_field_properties");
         assert.ok(field, "The field must be in the view");
 
@@ -585,7 +583,6 @@ QUnit.module("Fields", (hooks) => {
             return [...tags].map((tag) => tag.innerText);
         };
 
-        await click(target, ".o_form_button_edit");
         await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
         let popover = target.querySelector(".o_property_field_popover");
         // Select the tags type
@@ -718,7 +715,6 @@ QUnit.module("Fields", (hooks) => {
             mockRPC,
         });
 
-        await click(target, ".o_form_button_edit");
         await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
         const popover = target.querySelector(".o_property_field_popover");
         // Select the many2one type
@@ -807,7 +803,6 @@ QUnit.module("Fields", (hooks) => {
             return [...selectedUsers].map((badge) => badge.innerText);
         };
 
-        await click(target, ".o_form_button_edit");
         await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
         const popover = target.querySelector(".o_property_field_popover");
         // Select the many2many type
@@ -916,16 +911,15 @@ QUnit.module("Fields", (hooks) => {
 
         // check initial properties
         assert.equal(
-            target.querySelector("[property-name=property_1] .o_property_field_value").innerText,
+            target.querySelector("[property-name=property_1] .o_property_field_value input").value,
             "01/01/2019"
         );
         assert.equal(
-            target.querySelector("[property-name=property_2] .o_property_field_value").innerText,
+            target.querySelector("[property-name=property_2] .o_property_field_value input").value,
             "01/01/2019 11:00:00"
         );
 
         // edit date property
-        await click(target, ".o_form_button_edit");
         await click(target, ".o_property_field[property-name=property_1] input");
         await click(document.body, ".datepicker [data-day='12/31/2018']");
         assert.equal(target.querySelector("[property-name=property_1] input").value, "12/31/2018");
@@ -945,7 +939,7 @@ QUnit.module("Fields", (hooks) => {
 
         // save
         assert.verifySteps([]);
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.verifySteps(["write", "read"]);
     });
 });

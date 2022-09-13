@@ -86,7 +86,7 @@ tour.register('account_tour', {
     ...tour.stepUtils.saveForm(),
     {
         trigger: "button[name=action_post]",
-        extra_trigger: "button.o_form_button_edit",
+        extra_trigger: "button.o_form_button_create",
         content: _t("Once your invoice is ready, press CONFIRM."),
     }, {
         trigger: "button[name=action_invoice_sent]",

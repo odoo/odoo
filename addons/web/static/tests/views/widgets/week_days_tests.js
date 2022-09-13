@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { makeFakeLocalizationService } from "../../helpers/mock_services";
-import { getFixture, click, clickEdit, clickSave } from "../../helpers/utils";
+import { getFixture, click, clickSave } from "../../helpers/utils";
 import { makeView, setupViewRegistries } from "../helpers";
 
 let serverData;
@@ -46,7 +46,7 @@ QUnit.module("Widgets", ({ beforeEach }) => {
     QUnit.module("WeekDays");
 
     QUnit.test("simple week recurrence widget", async (assert) => {
-        assert.expect(14);
+        assert.expect(13);
 
         let writeCall = 0;
         registry.category("services", makeFakeLocalizationService({ weekStart: 1 }));
@@ -80,12 +80,6 @@ QUnit.module("Widgets", ({ beforeEach }) => {
             },
         });
 
-        assert.containsN(
-            fixture,
-            "input:disabled",
-            7,
-            "all inputs should be disabled in readonly mode"
-        );
         const labelsTexts = [...fixture.querySelectorAll(".o_recurrent_weekday_label")].map((el) =>
             el.innerText.trim()
         );
@@ -95,7 +89,6 @@ QUnit.module("Widgets", ({ beforeEach }) => {
             "labels should be short week names"
         );
 
-        await clickEdit(fixture);
         assert.containsNone(
             fixture,
             ".form-check input:disabled",
@@ -109,7 +102,6 @@ QUnit.module("Widgets", ({ beforeEach }) => {
         );
         await clickSave(fixture);
 
-        await clickEdit(fixture);
         await click(fixture.querySelector("td:nth-child(1) input"));
         assert.ok(
             fixture.querySelector("td:nth-child(1) input").checked,
