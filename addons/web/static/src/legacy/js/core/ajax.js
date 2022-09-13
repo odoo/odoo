@@ -150,6 +150,13 @@ function rpc(url, params, settings) {
  * to <head>.
  * If the url has already been requested and loaded, the promise will resolve
  * immediately.
+ * It allows for a retry mechanism that works as follows:
+ * - upon actual calls, it adds the link and it returns a Promise that the CSS
+ * will be loaded. The caller can simply await on that Promise even if several
+ * retries are necessary.
+ * - on error, it removes the link and tries again by awaiting a Promise for
+ * the same CSS to be loaded. Upon success it resolves the whole chain of
+ * Promises, upon too many retries it rejects the whole chain.
  *
  * @param {String} url of the css to be fetched
  * @returns {Promise} resolved when the css has been loaded.
@@ -157,10 +164,10 @@ function rpc(url, params, settings) {
 var loadCSS = (function () {
     var urlDefs = {};
 
-    return function loadCSS(url) {
-        if (url in urlDefs) {
+    return function loadCSS(url, retryCount = 0) {
+        if (url in urlDefs && !retryCount) {
             // nothing to do here
-        } else if ($('link[href="' + url + '"]').length) {
+        } else if ($('link[href="' + url + '"]').length && !retryCount) {
             // the link is already in the DOM, the promise can be resolved
             urlDefs[url] = Promise.resolve();
         } else {
@@ -169,14 +176,25 @@ var loadCSS = (function () {
                 'rel': 'stylesheet',
                 'type': 'text/css'
             });
-            urlDefs[url] = new Promise(function (resolve, reject) {
+            const promise = new Promise((resolve, reject) => {
                 $link.on('load', function () {
                     resolve();
-                }).on('error', function () {
-                    reject(new Error("Couldn't load css dependency: " + $link[0].href));
+                }).on('error', async () => {
+                    if (retryCount < 3) {
+                        await concurrency.delay(5000 + 2500 * retryCount);
+                        $link.remove();
+                        loadCSS(url, retryCount + 1).then(resolve).guardedCatch(reject);
+                    } else {
+                        reject(new Error(_.str.sprintf(_t("Try reloading the page, a css dependency could not be loaded: %s"), $link[0].href)));
+                    }
                 });
             });
             $('head').append($link);
+            if (retryCount) {
+                return promise;
+            } else {
+                urlDefs[url] = promise;
+            }
         }
         return urlDefs[url];
     };
