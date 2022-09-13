@@ -939,40 +939,67 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('drag_and_drop_start');
         this.options.wysiwyg.odooEditor.automaticStepUnactive();
         var self = this;
+        const rowEl = this.$target[0].parentNode;
+
+        // Allow the grid mode if the option is present in the right panel or
+        // if the grid mode is already activated.
+        let hasGridLayoutOption = false;
+        this.trigger_up('user_value_widget_request', {
+            name: 'grid_mode',
+            allowParentOption: true,
+            onSuccess: () => hasGridLayoutOption = true,
+        });
+        const allowGridMode = hasGridLayoutOption || rowEl.classList.contains('o_grid_mode');
 
         // Number of grid columns and rows in the grid item (BS column).
         let columnColCount;
         let columnRowCount;
-        const rowEl = this.$target[0].parentNode;
+        this.dragState = {};
         if (rowEl.classList.contains('row') && this.options.isWebsite) {
-            // Toggle grid mode if it is not already on.
-            if (!rowEl.classList.contains('o_grid_mode')) {
-                const containerEl = rowEl.parentNode;
-                gridUtils._toggleGridMode(containerEl);
+            if (allowGridMode) {
+                // Toggle grid mode if it is not already on.
+                if (!rowEl.classList.contains('o_grid_mode')) {
+                    const containerEl = rowEl.parentNode;
+                    gridUtils._toggleGridMode(containerEl);
+                }
+
+                // Computing the moving column width and height in terms of columns
+                // and rows.
+                const columnStart = self.$target[0].style.gridColumnStart;
+                const columnEnd = self.$target[0].style.gridColumnEnd;
+                const rowStart = self.$target[0].style.gridRowStart;
+                const rowEnd = self.$target[0].style.gridRowEnd;
+
+                columnColCount = columnEnd - columnStart;
+                columnRowCount = rowEnd - rowStart;
+                this.dragState.columnColCount = columnColCount;
+                this.dragState.columnRowCount = columnRowCount;
+
+                // Storing the current grid and grid area to use them for the
+                // history.
+                this.dragState.previousGrid = rowEl;
+                this.dragState.prevGridArea = self.$target[0].style.gridArea;
+
+                // Reload the images.
+                gridUtils._reloadLazyImages(this.$target[0]);
+            } else {
+                // If the column comes from a snippet that doesn't toggle the
+                // grid mode on drag, store its width and height to use them
+                // when the column goes over a grid dropzone.
+                const isImageColumn = gridUtils._checkIfImageColumn(this.$target[0]);
+                if (isImageColumn) {
+                    // Store the image width and height if the column only
+                    // contains an image.
+                    const imageEl = this.$target[0].querySelector('img');
+                    this.dragState.columnWidth = parseFloat(imageEl.scrollWidth);
+                    this.dragState.columnHeight = parseFloat(imageEl.scrollHeight);
+                } else {
+                    this.dragState.columnWidth = parseFloat(this.$target[0].scrollWidth);
+                    this.dragState.columnHeight = parseFloat(this.$target[0].scrollHeight);
+                }
             }
-
-            this.dragState = {};
-            // Computing the moving column width and height in terms of columns
-            // and rows.
-            const columnStart = self.$target[0].style.gridColumnStart;
-            const columnEnd = self.$target[0].style.gridColumnEnd;
-            const rowStart = self.$target[0].style.gridRowStart;
-            const rowEnd = self.$target[0].style.gridRowEnd;
-
-            columnColCount = columnEnd - columnStart;
-            columnRowCount = rowEnd - rowStart;
-            this.dragState.columnColCount = columnColCount;
-            this.dragState.columnRowCount = columnRowCount;
-
             // Deactivate the snippet so the overlay doesn't show.
             this.trigger_up('deactivate_snippet', {$snippet: self.$target});
-            // Storing the current grid and grid area to use them for the
-            // history.
-            this.dragState.previousGrid = rowEl;
-            this.dragState.prevGridArea = self.$target[0].style.gridArea;
-
-            // Reload the images.
-            gridUtils._reloadLazyImages(this.$target[0]);
         }
 
         const isPopup = this.$target[0].closest('div.s_popup');
@@ -1011,7 +1038,7 @@ var SnippetEditor = Widget.extend({
         // Remove the siblings that belong to a snippet in grid mode
         // and put the identified grid mode snippets in their own "selector".
         const selectorGrids = new Set();
-        if (this.$target[0].classList.contains('o_grid_item')) {
+        if (rowEl.classList.contains('row')) {
             if ($selectorSiblings) {
                 // Looping backwards because elements are removed, so the
                 // indexes are not lost.
@@ -1061,6 +1088,18 @@ var SnippetEditor = Widget.extend({
                     // Case where the column we are dragging is over a grid
                     // dropzone.
                     const rowEl = $dropzone[0].parentNode;
+
+                    // If the column doesn't come from a grid mode snippet.
+                    if (!self.$target[0].classList.contains('o_grid_item')) {
+                        // Converting the column to grid.
+                        const spans = gridUtils._convertColumnToGrid(rowEl, self.$target[0], self.dragState.columnWidth, self.dragState.columnHeight);
+                        columnColCount = spans.columnColCount;
+                        columnRowCount = spans.columnRowCount;
+
+                        // Storing the column spans.
+                        self.dragState.columnColCount = columnColCount;
+                        self.dragState.columnRowCount = columnRowCount;
+                    }
 
                     // Creating the drag helper.
                     const dragHelperEl = document.createElement('div');
@@ -1197,21 +1236,32 @@ var SnippetEditor = Widget.extend({
             $el = $el.filter(this.$dropZones);
             if ($el.length) {
                 // If the column is not dropped inside a dropzone.
-                if (this.$target[0].classList.contains('o_grid_item')) {
-                    if ($el[0].classList.contains('oe_grid_zone')) {
-                        // Case when a column is dropped near a grid.
-                        // Placing it in the top left corner.
-                        this.$target[0].style.gridArea = `1 / 1 / ${1 + this.dragState.columnRowCount} / ${1 + this.dragState.columnColCount}`;
-                        const rowEl = $el[0].parentNode;
-                        const rowCount = Math.max(rowEl.dataset.rowCount, 1 + this.dragState.columnRowCount);
-                        rowEl.dataset.rowCount = rowCount;
+                if ($el[0].classList.contains('oe_grid_zone')) {
+                    // Case when a column is dropped near a grid.
+                    const rowEl = $el[0].parentNode;
 
-                        // Setting the z-index to the maximum of the grid.
-                        gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
-                    } else {
-                        // Case when a column is dropped near a non-grid dropzone.
+                    // If the column doesn't come from a snippet in grid mode,
+                    // convert it.
+                    if (!this.$target[0].classList.contains('o_grid_item')) {
+                        const spans = gridUtils._convertColumnToGrid(rowEl, this.$target[0], this.dragState.columnWidth, this.dragState.columnHeight);
+                        this.dragState.columnColCount = spans.columnColCount;
+                        this.dragState.columnRowCount = spans.columnRowCount;
+                    }
+
+                    // Placing it in the top left corner.
+                    this.$target[0].style.gridArea = `1 / 1 / ${1 + this.dragState.columnRowCount} / ${1 + this.dragState.columnColCount}`;
+                    const rowCount = Math.max(rowEl.dataset.rowCount, 1 + this.dragState.columnRowCount);
+                    rowEl.dataset.rowCount = rowCount;
+
+                    // Setting the z-index to the maximum of the grid.
+                    gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
+                } else {
+                    if (this.$target[0].classList.contains('o_grid_item')) {
+                        // Case when a grid column is dropped near a non-grid
+                        // dropzone.
                         this.$target[0].classList.remove('o_grid_item');
                         this.$target[0].style.removeProperty('z-index');
+                        this.$target[0].style.removeProperty('grid-area');
                         if (this.$target[0].classList.contains('o_grid_item_image')) {
                             this.$target[0].classList.remove('o_grid_item_image');
                             this.$target[0].removeAttribute('contentEditable');
