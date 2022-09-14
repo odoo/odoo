@@ -96,9 +96,9 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
         self.alipay.write({
             'fees_active': True,
             'fees_dom_fixed': 1.0,
-            'fees_dom_var': 0.35,
+            'fees_dom_var': 0.0035,
             'fees_int_fixed': 1.5,
-            'fees_int_var': 0.50,
+            'fees_int_var': 0.005,
         })
 
         transaction_fees = self.currency.round(
@@ -108,12 +108,12 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
                 self.partner.country_id,
             )
         )
-        self.assertEqual(transaction_fees, 7.09)
+        self.assertEqual(transaction_fees, 18.78)
         total_fee = self.currency.round(self.amount + transaction_fees)
-        self.assertEqual(total_fee, 1118.2)
+        self.assertEqual(total_fee, 1129.89)
 
         tx = self._create_transaction(flow='redirect')
-        self.assertEqual(tx.fees, 7.09)
+        self.assertEqual(tx.fees, 18.78)
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
         redirect_form_data = self._extract_values_from_html_form(processing_values['redirect_form_html'])
