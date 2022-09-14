@@ -305,7 +305,6 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
 });
 
 options.registry.WebsiteSaleProductsItem = options.Class.extend({
-    xmlDependencies: (options.Class.prototype.xmlDependencies || []).concat(['/website_sale/static/src/xml/website_sale_utils.xml']),
     events: _.extend({}, options.Class.prototype.events || {}, {
         'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
         'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',

@@ -31,6 +31,7 @@ Then it can be made specific at the product level.
     'assets': {
         'web.assets_frontend': [
             'website_sale_stock/static/src/js/**/*',
+            'website_sale_stock/static/src/xml/**/*',
         ],
         'web.assets_tests': [
             'website_sale_stock/static/tests/tours/website_sale_stock_stock_notification.js',

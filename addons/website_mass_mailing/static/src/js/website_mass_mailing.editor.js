@@ -106,8 +106,6 @@ options.registry.mailing_list_subscribe = options.Class.extend({
 });
 
 options.registry.recaptchaSubscribe = options.Class.extend({
-    xmlDependencies: ['/google_recaptcha/static/src/xml/recaptcha.xml'],
-
     /**
      * Toggle the recaptcha legal terms
      */

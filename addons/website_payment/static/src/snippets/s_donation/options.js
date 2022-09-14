@@ -4,8 +4,6 @@ import {_t, qweb} from 'web.core';
 import options from 'web_editor.snippets.options';
 
 options.registry.Donation = options.Class.extend({
-    xmlDependencies: ['/website_payment/static/src/snippets/s_donation/000.xml'],
-
     /**
      * @override
      */

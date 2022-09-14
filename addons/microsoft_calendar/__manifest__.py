@@ -21,8 +21,6 @@
             'microsoft_calendar/static/src/js/microsoft_calendar_popover.js',
             'microsoft_calendar/static/src/js/microsoft_calendar.js',
             'microsoft_calendar/static/src/scss/microsoft_calendar.scss',
-        ],
-        'web.assets_qweb': [
             'microsoft_calendar/static/src/xml/*.xml',
         ],
     },

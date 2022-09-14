@@ -16,13 +16,11 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_sale_autocomplete/static/src/js/address_form.js'
+            'website_sale_autocomplete/static/src/js/address_form.js',
+            'website_sale_autocomplete/static/src/xml/autocomplete.xml',
         ],
         'web.assets_tests': [
             'website_sale_autocomplete/static/tests/**/*.js'
-        ],
-        'web.assets_qweb': [
-            'website_sale_autocomplete/static/src/xml/autocomplete.xml',
         ],
     },
     'installable': True,

@@ -38,7 +38,6 @@ odoo.define('website.s_website_form', function (require) {
 
     publicWidget.registry.s_website_form = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
-        xmlDependencies: ['/website/static/src/xml/website_form.xml'],
         events: {
             'click .s_website_form_send, .o_website_form_send': 'send', // !compatibility
         },
@@ -488,7 +487,7 @@ odoo.define('website.s_website_form', function (require) {
             }
 
             // Note: we still need to wait that the widget is properly started
-            // before any qweb rendering which depends on xmlDependencies
+            // before any qweb rendering which depends on xml assets
             // because the event handlers are binded before the call to
             // willStart for public widgets...
             this.__started.then(() => $result.replaceWith(qweb.render(`website.s_website_form_status_${status}`, {

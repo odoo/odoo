@@ -64,8 +64,6 @@ const PTP_CLIENT_DISCONNECTED_STATES = [
 ];
 
 const Wysiwyg = Widget.extend({
-    xmlDependencies: [
-    ],
     defaultOptions: {
         lang: 'odoo',
         colors: customColors,

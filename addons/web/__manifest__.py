@@ -38,21 +38,6 @@ This module provides the core of the Odoo Web Client.
         # Exemples:
         #   > web.assets_common = assets common to both frontend and backend clients.
         #   > web_editor.assets_wysiwyg = assets needed by components defined in the "web_editor" module.
-
-        'web.assets_qweb': [
-            'web/static/src/**/*.xml',
-            ('remove', 'web/static/src/legacy/**/*.xml'),
-            'web/static/src/legacy/xml/base.xml',
-            'web/static/src/legacy/xml/control_panel.xml',
-            'web/static/src/legacy/xml/chart.xml',
-            'web/static/src/legacy/xml/fields.xml',
-            'web/static/src/legacy/xml/kanban.xml',
-            'web/static/src/legacy/xml/pivot.xml',
-            'web/static/src/legacy/xml/web_calendar.xml',
-            'web/static/src/legacy/xml/graph.xml',
-            'web/static/src/legacy/xml/search_panel.xml',
-            'web/static/src/legacy/xml/week_days.xml',
-        ],
         'web.assets_common_minimal': [
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
@@ -94,15 +79,17 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/**/*',
             'web/static/src/legacy/legacy_fields.scss',
             'web/static/src/search/**/*',
+            'web/static/src/webclient/icons.scss', # variables required in list_controller.scss
+            'web/static/src/views/**/*',
             'web/static/src/webclient/**/*',
             ('remove', 'web/static/src/webclient/navbar/navbar.scss'), # already in _assets_common_styles
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
-            'web/static/src/views/**/*',
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
 
             # remove the report code and whitelist only what's needed
             ('remove', 'web/static/src/webclient/actions/reports/**/*'),
             'web/static/src/webclient/actions/reports/*.js',
+            'web/static/src/webclient/actions/reports/*.xml',
 
             'web/static/src/env.js',
 
@@ -195,6 +182,18 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/owl_compatibility.js',
             ("remove", 'web/static/src/legacy/js/views/graph/**/*'),
             ("remove", 'web/static/src/legacy/js/views/pivot/**/*'),
+
+            'web/static/src/legacy/xml/base.xml',
+            'web/static/src/legacy/xml/ribbon.xml',
+            'web/static/src/legacy/xml/control_panel.xml',
+            'web/static/src/legacy/xml/chart.xml',
+            'web/static/src/legacy/xml/fields.xml',
+            'web/static/src/legacy/xml/kanban.xml',
+            'web/static/src/legacy/xml/pivot.xml',
+            'web/static/src/legacy/xml/web_calendar.xml',
+            'web/static/src/legacy/xml/graph.xml',
+            'web/static/src/legacy/xml/search_panel.xml',
+            'web/static/src/legacy/xml/week_days.xml',
         ],
         "web.assets_backend_legacy_lazy": [
             ("include", "web._assets_helpers"),
@@ -204,6 +203,7 @@ This module provides the core of the Odoo Web Client.
             # graph
             'web/static/src/legacy/js/views/graph/**/*',
             'web/static/src/legacy/scss/graph_view.scss',
+            'web/static/src/legacy/xml/graph.xml',
             # pivot
             'web/static/src/legacy/js/views/pivot/**/*',
             'web/static/src/legacy/scss/pivot_view.scss',
@@ -406,6 +406,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/clipboard/clipboard.js',
             'web/static/lib/jSignature/jSignatureCustom.js',
             'web/static/lib/qweb/qweb2.js',
+            'web/static/src/legacy/js/assets.js',
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/content-disposition.js',
@@ -426,6 +427,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/collections.js',
             'web/static/src/legacy/js/core/concurrency.js',
             'web/static/src/legacy/js/core/dialog.js',
+            'web/static/src/legacy/xml/dialog.xml',
             'web/static/src/legacy/js/core/owl_dialog.js',
             'web/static/src/legacy/js/core/popover.js',
             'web/static/src/legacy/js/core/dom.js',
@@ -449,9 +451,12 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/session_storage_service.js',
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
+            'web/static/src/legacy/xml/name_and_signature.xml',
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
+            'web/static/src/legacy/xml/colorpicker.xml',
             'web/static/src/legacy/js/widgets/translation_dialog.js',
+            'web/static/src/legacy/xml/translation_dialog.xml',
         ],
 
         # Used during the transition of the web architecture
@@ -490,14 +495,20 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/fullcalendar/daygrid/main.js',
             'web/static/lib/fullcalendar/timegrid/main.js',
             'web/static/lib/fullcalendar/list/main.js',
+
             'web/static/lib/ace/ace.js',
             'web/static/lib/ace/javascript_highlight_rules.js',
             'web/static/lib/ace/mode-python.js',
             'web/static/lib/ace/mode-xml.js',
             'web/static/lib/ace/mode-js.js',
+            'web/static/lib/ace/mode-qweb.js',
             'web/static/lib/nearest/jquery.nearest.js',
             'web/static/lib/daterangepicker/daterangepicker.js',
+            'web/static/src/legacy/js/libs/daterangepicker.js',
             'web/static/lib/stacktracejs/stacktrace.js',
+            'web/static/lib/Chart/Chart.js',
+
+            '/web/static/lib/daterangepicker/daterangepicker.js',
 
             # 'web/static/tests/legacy/main_tests.js',
             'web/static/tests/helpers/**/*.js',

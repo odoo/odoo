@@ -416,7 +416,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         one_year_away = (datetime.utcnow() + timedelta(days=365)).strftime(http_date_format)
 
         res1 = self.assertDownloadGizeh(f'{domain}/web/content/test_http.gizeh_png?unique=1')
-        self.assertEqual(res1.headers.get('Cache-Control'), 'public, max-age=31536000')  # one year
+        self.assertEqual(res1.headers.get('Cache-Control'), 'public, max-age=31536000, immutable')  # one year
         self.assertEqual(res1.headers.get('Expires'), one_year_away)
         self.assertIn('ETag', res1.headers)
 

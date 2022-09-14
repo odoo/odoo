@@ -1,14 +1,16 @@
 odoo.define('web_editor.loader', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
-
-let wysiwygPromises = {};
+const { getBundle, loadBundle } = require('@web/core/assets');
 
 const exports = {};
 
-function loadWysiwyg(additionnalAssets=[]) {
-    return ajax.loadLibs({assetLibs: ['web_editor.compiled_assets_wysiwyg', ...additionnalAssets]}, undefined, '/web_editor/public_render_template');
+async function loadWysiwyg(additionnalAssets=[]) {
+    const xmlids = ['web_editor.assets_wysiwyg', ...additionnalAssets];
+    for (const xmlid of xmlids) {
+        const assets = await getBundle(xmlid);
+        await loadBundle(assets);
+    }
 }
 exports.loadWysiwyg = loadWysiwyg;
 
@@ -27,25 +29,10 @@ exports.createWysiwyg = async (parent, options = {}) => {
 };
 
 async function getWysiwygClass({moduleName = 'web_editor.wysiwyg', additionnalAssets = []} = {}) {
-    if (!wysiwygPromises[moduleName]) {
-        wysiwygPromises[moduleName] = new Promise(async (resolve) => {
-            if (odoo.__DEBUG__.services[moduleName]) {
-                return resolve();
-            }
-            await loadWysiwyg(additionnalAssets);
-            // Wait the loading of the service and his dependencies (use string to
-            // avoid parsing of require function).
-            const stringFunction = `return new Promise(resolve => {
-                odoo.define('${moduleName}.loaded', require => {
-                    ` + 'require' + `('${moduleName}');
-                    resolve();
-                });
-            });`;
-            await new Function(stringFunction)();
-            resolve();
-        });
+    if (!(await odoo.ready(moduleName))) {
+        await loadWysiwyg(additionnalAssets);
+        await odoo.ready(moduleName);
     }
-    await wysiwygPromises[moduleName];
     return odoo.__DEBUG__.services[moduleName];
 }
 exports.getWysiwygClass = getWysiwygClass;

@@ -3,7 +3,7 @@ odoo.define('payment_authorize.payment_form', require => {
     'use strict';
 
     const core = require('web.core');
-    const ajax = require('web.ajax');
+    const { loadJS } = require('@web/core/assets');
 
     const checkoutForm = require('payment.checkout_form');
     const manageForm = require('payment.manage_form');
@@ -102,7 +102,7 @@ odoo.define('payment_authorize.payment_form', require => {
                 }
                 this.authorizeInfo = providerInfo;
             }).then(() => {
-                ajax.loadJS(acceptJSUrl);
+                loadJS(acceptJSUrl);
             }).guardedCatch((error) => {
                 error.event.preventDefault();
                 this._displayError(

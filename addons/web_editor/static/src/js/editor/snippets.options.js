@@ -3865,7 +3865,7 @@ const SnippetOptionWidget = Widget.extend({
                 // widget start.
                 parentEl.removeChild(el);
 
-                if (widget.isContainer()) {
+                if (widget.isContainer() && !widget.isDestroyed()) {
                     return this._renderXMLWidgets(widget.el, widget);
                 }
             });
@@ -6978,8 +6978,6 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
  * Handles the edition of snippets' background image position.
  */
 registry.BackgroundPosition = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
-
     /**
      * @override
      */
@@ -7490,8 +7488,6 @@ registry.many2one = SnippetOptionWidget.extend({
  * Allows to display a warning message on outdated snippets.
  */
 registry.VersionControl = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
-
     /**
      * @override
      */
@@ -7513,7 +7509,6 @@ registry.VersionControl = SnippetOptionWidget.extend({
  * Handle the save of a snippet as a template that can be reused later
  */
 registry.SnippetSave = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     isTopOption: true,
 
     //--------------------------------------------------------------------------

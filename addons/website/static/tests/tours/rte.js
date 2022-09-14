@@ -1,14 +1,13 @@
 odoo.define('website.tour.rte', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var session = require('web.session');
 const wTourUtils = require('website.tour_utils');
 
 var domReady = new Promise(function (resolve) {
     $(resolve);
 });
-var ready = Promise.all([domReady, session.is_bound, ajax.loadXML()]);
+var ready = Promise.all([domReady, session.is_bound]);
 
 wTourUtils.registerWebsitePreviewTour('rte_translator', {
     test: true,

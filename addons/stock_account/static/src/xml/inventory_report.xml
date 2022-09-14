@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-extend="InventoryReport.Buttons" owl="1">
-    <t t-jquery="button.o_button_at_date" t-operation="append">
+<t t-inherit="stock.InventoryReport.Buttons" t-inherit-mode="extension" owl="1">
+    <xpath expr="//button[hasclass('o_button_at_date')]" position="inside">
         <t t-if="props.resModel == 'stock.valuation.layer'">
             Valuation at Date
         </t>
-    </t>
+    </xpath>
 </t>
 
 </templates>

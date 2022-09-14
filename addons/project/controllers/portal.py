@@ -12,8 +12,6 @@ from odoo.tools import groupby as groupbyelem
 
 from odoo.osv.expression import OR, AND
 
-from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
-
 
 class ProjectCustomerPortal(CustomerPortal):
 
@@ -135,7 +133,6 @@ class ProjectCustomerPortal(CustomerPortal):
         session_info = request.env['ir.http'].session_info()
         user_context = dict(request.env.context) if request.session.uid else {}
         mods = conf.server_wide_modules or []
-        qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="project.assets_qweb")
         if request.env.lang:
             lang = request.env.lang
             session_info['user_context']['lang'] = lang
@@ -144,7 +141,6 @@ class ProjectCustomerPortal(CustomerPortal):
         lang = user_context.get("lang")
         translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
         cache_hashes = {
-            "qweb": qweb_checksum,
             "translations": translation_hash,
         }
 

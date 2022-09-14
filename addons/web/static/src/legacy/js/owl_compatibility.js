@@ -2,6 +2,7 @@ odoo.define('web.OwlCompatibility', function (require) {
     "use strict";
 
     const { LegacyComponent } = require("@web/legacy/legacy_component");
+    const { templates } = require("@web/core/assets");
 
     /**
      * This file defines the necessary tools for the transition phase where Odoo
@@ -293,7 +294,7 @@ odoo.define('web.OwlCompatibility', function (require) {
     function standaloneAdapter(props = {}, ref = bodyRef) {
         const env = owl.Component.env;
         const app = new App(null, {
-            templates: window.__OWL_TEMPLATES__,
+            templates,
             env,
             dev: env.isDebug(),
             translatableAttributes: ["data-tooltip"],
@@ -548,7 +549,7 @@ odoo.define('web.OwlCompatibility', function (require) {
             const env = owl.Component.env;
             const appConfig = {
                 env,
-                templates: window.__OWL_TEMPLATES__,
+                templates,
                 dev: env.isDebug(),
                 translatableAttributes: ["data-tooltip"],
                 translateFn: env._t,

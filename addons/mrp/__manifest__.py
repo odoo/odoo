@@ -58,14 +58,10 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_backend': [
-            'mrp/static/src/**/*.js',
-            'mrp/static/src/**/*.scss',
+            'mrp/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
             'mrp/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'mrp/static/src/**/*.xml',
         ],
     },
     'license': 'LGPL-3',

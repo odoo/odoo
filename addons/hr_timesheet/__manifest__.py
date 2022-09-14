@@ -48,9 +48,8 @@ up a management by affair.
     'uninstall_hook': '_uninstall_hook',
     'assets': {
         'web.assets_backend': [
-            'hr_timesheet/static/src/**/*.scss',
-            'hr_timesheet/static/src/**/*.js',
-            ('remove', 'hr_timesheet/static/src/js/*_legacy.js')
+            'hr_timesheet/static/src/**/*',
+            ('remove', 'hr_timesheet/static/src/js/*_legacy.js'),
         ],
         "web.assets_backend_legacy_lazy": [
             'hr_timesheet/static/src/js/*_legacy.js',

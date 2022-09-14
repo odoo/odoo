@@ -3,14 +3,13 @@ odoo.define('website_forum.share', function (require) {
 
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
+require('website.content.snippets.animation');
 
 var qweb = core.qweb;
 
 // FIXME There is no reason to inherit from socialShare here
 var ForumShare = publicWidget.registry.socialShare.extend({
     selector: '',
-    xmlDependencies: publicWidget.registry.socialShare.prototype.xmlDependencies
-        .concat(['/website_forum/static/src/xml/public_templates.xml']),
     events: {},
 
     /**
