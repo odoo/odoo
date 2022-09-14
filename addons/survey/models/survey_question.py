@@ -144,6 +144,11 @@ class SurveyQuestion(models.Model):
                  '|', \
                      ('sequence', '<', sequence), \
                      '&', ('sequence', '=', sequence), ('id', '<', id)]")
+    allowed_triggering_question_ids = fields.Many2many(
+        'survey.question', string="Allowed Triggering Questions", copy=False, compute="_compute_allowed_triggering_question_ids")
+    is_placed_before_trigger = fields.Boolean(
+        string='Is misplaced?', help="Is this question placed before its trigger question?",
+        compute="_compute_allowed_triggering_question_ids")
     triggering_answer_id = fields.Many2one(
         'survey.question.answer', string="Triggering Answer", copy=False, compute="_compute_triggering_answer_id",
         store=True, readonly=False, help="Answer that will trigger the display of the current question.",
@@ -274,6 +279,39 @@ class SurveyQuestion(models.Model):
         for question in self:
             if not question.validation_required or question.question_type not in ['char_box', 'numerical_box', 'date', 'datetime']:
                 question.validation_required = False
+
+    @api.depends('is_conditional', 'survey_id', 'survey_id.question_ids', 'triggering_question_id')
+    def _compute_allowed_triggering_question_ids(self):
+        """ This method is required to fetch the possible triggering questions when
+        the question is being created. """
+        conditional_questions = self.filtered(lambda q: q.is_conditional)
+        non_conditional_questions = self - conditional_questions
+        non_conditional_questions.allowed_triggering_question_ids = False
+        non_conditional_questions.is_placed_before_trigger = False
+        if not conditional_questions:
+            return
+
+        possible_trigger_questions = self.search([
+            ('is_page', '=', False),
+            ('question_type', 'in', ['simple_choice', 'multiple_choice']),
+            ('suggested_answer_ids', '!=', False),
+            ('survey_id', 'in', self.survey_id.ids)
+        ])
+
+        for question in conditional_questions:
+            # As existing questions sometimes get newIds, and sequence values from the web client
+            # are not reliable, we need to fetch the correct sequence in db. This works well as
+            # we are updating records each time a question form is opened/closed.
+            question_id = question._origin.id
+            question_sequence = self.browse(question_id).sequence or question.sequence
+
+            question.allowed_triggering_question_ids = possible_trigger_questions.filtered(
+                lambda q: q.survey_id.id == question.survey_id._origin.id
+                and (q.sequence < question_sequence or q.sequence == question_sequence and q.id < question_id)
+            )
+            question.is_placed_before_trigger = (
+                question.triggering_question_id
+                and question.triggering_question_id.id not in question.allowed_triggering_question_ids.ids)
 
     @api.depends('is_conditional')
     def _compute_triggering_question_id(self):
