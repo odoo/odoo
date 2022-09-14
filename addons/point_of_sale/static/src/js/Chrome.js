@@ -212,20 +212,20 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
 
         connect_to_proxy() {
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
                 this.env.barcode_reader.disconnect_from_proxy();
                 this.state.loadingSkipButtonIsShown = true;
                 this.env.proxy.autoconnect({
                     force_ip: this.env.pos.config.proxy_ip || undefined,
                     progress: function(prog){},
                 }).then(
-                    function () {
+                    () => {
                         if (this.env.pos.config.iface_scan_via_proxy) {
                             this.env.barcode_reader.connect_to_proxy();
                         }
                         resolve();
                     },
-                    function (statusText, url) {
+                    (statusText, url) => {
                         // this should reject so that it can be captured when we wait for pos.ready
                         // in the chrome component.
                         // then, if it got really rejected, we can show the error.
