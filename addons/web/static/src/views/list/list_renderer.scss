@@ -11,6 +11,9 @@
 
     .o_list_table {
         background-color: $o-view-background-color;
+        // We need this to be collapse because we want to add a border on the rows
+        // for sale order/invoice lines of type section.
+        border-collapse: collapse;
 
         > thead, > tbody, > tfoot {
             > tr > :first-child {
@@ -76,6 +79,11 @@
                         margin-right: 3px;
                     }
                 }
+            }
+
+            // ------- Decrease table's inner content "visual depth" -------
+            &:first-of-type > tr:first-child:not(.o_group_header) {
+                box-shadow: inset 0px 5px 10px -4px rgba(black, 0.15);
             }
         }
         &.o_list_computing_widths {
@@ -350,6 +358,70 @@
                 font-weight: 400;
                 padding: 0;
                 vertical-align: baseline;
+            }
+        }
+    }
+
+    // ------- Force progress bars to respect table's layout -------
+    .o_progressbar_cell {
+        .o_progressbar {
+            display: table-row;
+
+            .o_progressbar_value {
+                width: 45px;
+                min-width: 45px;
+            }
+        }
+    }
+
+    .o_data_row.o_selected_row > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
+        border-bottom: 1px solid $o-input-border-required;
+
+        &.o_invalid_cell {
+            border-bottom-color: 1px solid $danger;
+        }
+    }
+
+    /**
+    Because of border-collapse, border top and border bottom are 'merged'.
+
+    * cell border overlaps row border
+    * when there is a border collapse the first cell (e.g. A1) take over the following cell (e.g. B1 or A2)
+    ┌──┬──┐
+    │A1│B1│
+    ├──┼──┤
+    │A2│B2│
+    └──┴──┘
+
+    So we apply some rules to have the style wanted:
+    */
+    // 1. we set the global separator (gray line) of the table on the row (bottom) and not on the cell (bottom)
+    .o_data_row {
+        border-bottom-width: 1px;
+    }
+    // 2. we remove the bottom border (added by BS5) on all cells (this force to show the top border of selected cell)
+    .o_data_row > .o_data_cell {
+        border-bottom-width: 0;
+    }
+    // 3. we add only a bottom border to selected cells (this force to show the bottom border of the selected cell)
+    .o_data_row.o_data_row_selected > .o_data_cell {
+        border-bottom-width: 1px;
+    }
+
+}
+
+@include media-breakpoint-down(md) {
+    .o_data_row_selected {
+        user-select: none; // Prevent text selection when editing
+    }
+
+    .o_web_client.o_touch_device .o_content table.o_list_table.table tr > {
+        .o_list_record_selector:first-child {
+            display: none;
+
+            // first-child will be hidden so add left padding to second child
+            & + * {
+                padding-left: var(--ListRenderer-table-padding-h);
             }
         }
     }
