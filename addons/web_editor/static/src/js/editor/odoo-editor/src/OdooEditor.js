@@ -3290,6 +3290,11 @@ export class OdooEditor extends EventTarget {
      */
     _onSelectionChange() {
         const selection = this.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+            return;
+        }
+
         if (
             !this.editable.contains(selection.anchorNode) &&
             !this.editable.contains(selection.focusNode)
@@ -3499,6 +3504,12 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _handleCommandHint() {
+        const selection = this.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+            return;
+        }
+
         const selectors = {
             BLOCKQUOTE: 'Empty quote',
             H1: 'Heading 1',
@@ -3567,12 +3578,16 @@ export class OdooEditor extends EventTarget {
     }
 
     _fixSelectionOnContenteditableFalse() {
+        const selection = this.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+            return;
+        }
         // When the browser set the selection inside a node that is
         // contenteditable=false, it breaks the edition upon keystroke. Move the
         // selection so that it remain in an editable area. An example of this
         // case happend when the selection goes into a fontawesome node.
 
-        const selection = this.document.getSelection();
         if (!selection.rangeCount) {
             return;
         }
