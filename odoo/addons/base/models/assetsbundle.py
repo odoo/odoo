@@ -193,14 +193,18 @@ class AssetsBundle(object):
         return response
 
     @func.lazy_property
-    def last_modified(self):
+    def last_modified_combined(self):
         """Returns last modified date of linked files"""
+        # WebAsset are recreate here when a better solution would be to use self.stylesheets and self.javascripts
+        # We currently have no garanty that they are present since it will depends on js and css parameters
+        # last_modified is actually only usefull for the checksum and checksum should be extension specific since
+        # they are differents bundles. This will be a future work.
+
+        # changing the logic from max date to combined date to fix bundle invalidation issues.
         assets = [WebAsset(self, url=f['url'], filename=f['filename'], inline=f['content'])
             for f in self.files
             if f['atype'] in ['text/sass', "text/scss", "text/less", "text/css", "text/javascript", "text/xml"]]
-        return max(itertools.chain(
-            (asset.last_modified for asset in assets),
-        ))
+        return ','.join(str(asset.last_modified) for asset in assets)
 
     @func.lazy_property
     def version(self):
@@ -210,9 +214,9 @@ class AssetsBundle(object):
     def checksum(self):
         """
         Not really a full checksum.
-        We compute a SHA512/256 on the rendered bundle + max linked files last_modified date
+        We compute a SHA512/256 on the rendered bundle + combined linked files last_modified date
         """
-        check = u"%s%s" % (json.dumps(self.files, sort_keys=True), self.last_modified)
+        check = u"%s%s" % (json.dumps(self.files, sort_keys=True), self.last_modified_combined)
         return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
 
     def _get_asset_template_url(self):
