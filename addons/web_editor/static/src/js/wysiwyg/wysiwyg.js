@@ -286,6 +286,13 @@ const Wysiwyg = Widget.extend({
         this.showTooltip = true;
         this.$editable.on('dblclick', mediaSelector, function () {
             self.showTooltip = false;
+
+            const selection = self.odooEditor.document.getSelection();
+            const anchorNode = selection.anchorNode;
+            if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+                return;
+            }
+
             const $el = $(this);
             let params = {node: this};
             $el.selectElement();
@@ -1740,6 +1747,12 @@ const Wysiwyg = Widget.extend({
      * Update any editor UI that is not handled by the editor itself.
      */
     _updateEditorUI: function (e) {
+        let selection = this.odooEditor.document.getSelection();
+        const anchorNode = selection.anchorNode;
+        if (anchorNode && closestElement(anchorNode, '.oe-blackbox')) {
+            return;
+        }
+
         this.odooEditor.automaticStepSkipStack();
         // We need to use the editor's window so the tooltip displays in its
         // document even if it's in an iframe.
@@ -1787,7 +1800,7 @@ const Wysiwyg = Widget.extend({
         this.toolbar.$el.find('#colorInputButtonGroup, #create-link').toggleClass('d-none', isInMedia && !$target.is('.fa'));
         this.toolbar.$el.find('.only_fa').toggleClass('d-none', !$target.is('.fa'));
         // Hide the create-link button if the selection spans several blocks.
-        const selection = this.odooEditor.document.getSelection();
+        selection = this.odooEditor.document.getSelection();
         const range = selection && selection.rangeCount && selection.getRangeAt(0);
         const $rangeContainer = range && $(range.commonAncestorContainer);
         const spansBlocks = range && !!$rangeContainer.contents().filter((i, node) => isBlock(node)).length;
