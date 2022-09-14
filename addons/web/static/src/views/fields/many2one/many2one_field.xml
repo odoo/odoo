@@ -41,22 +41,7 @@
         </t>
         <t t-else="">
             <div class="o_field_many2one_selection">
-                <Many2XAutocomplete
-                    value="displayName"
-                    id="props.id"
-                    placeholder="props.placeholder"
-                    resModel="relation"
-                    autoSelect="true"
-                    fieldString="props.string"
-                    activeActions="state.activeActions"
-                    update="update"
-                    quickCreate="quickCreate"
-                    context="context"
-                    getDomain.bind="getDomain"
-                    nameCreateField="props.nameCreateField"
-                    setInputFloats="setFloating"
-                    autocomplete_container="autocompleteContainerRef"
-                />
+                <Many2XAutocomplete t-props="Many2XAutocompleteProps"/>
                 <t t-if="hasExternalButton">
                     <button
                         type="button"
