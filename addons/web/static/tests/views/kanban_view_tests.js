@@ -6681,14 +6681,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        // Check keynav is disabled
-        assert.hasClass(getCard(0), "o_sample_data_disabled");
-
         await toggleColumnActions(0);
 
-        assert.hasClass(target.querySelector(".o_kanban_toggle_fold"), "o_sample_data_disabled");
         assert.containsNone(target, '[tabindex]:not([tabindex="-1"])');
-
         assert.hasClass(document.activeElement, "o_searchview_input");
 
         await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowDown" });
@@ -6951,10 +6946,6 @@ QUnit.module("Views", (hooks) => {
 
         await toggleColumnActions(0);
 
-        assert.hasClass(
-            target.querySelector(".o_kanban_config .o_kanban_toggle_fold"),
-            "o_sample_data_disabled"
-        );
         assert.hasClass(target.querySelector(".o_kanban_config .o_kanban_toggle_fold"), "disabled");
     });
 

@@ -65,11 +65,7 @@
                     <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
                         <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                     </t>
-                    <t t-component="props.Renderer"
-                        class="model.useSampleModel ? 'o_sample_data_disabled' : ''"
-                        model="model"
-                        onGraphClicked="(domain) => this.onGraphClicked(domain)"
-                        />
+                    <t t-component="props.Renderer" model="model" onGraphClicked="(domain) => this.onGraphClicked(domain)" />
                 </t>
                 <t t-else="" t-call="web.NoContentHelper">
                     <t t-set="title">Invalid data</t>

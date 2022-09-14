@@ -5601,7 +5601,6 @@ QUnit.module("Views", (hooks) => {
         });
         assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.ok(target.querySelectorAll(".o_data_row").length > 0);
-        assert.hasClass(target.querySelectorAll(".o_data_row"), "o_sample_data_disabled");
         assert.containsN(
             target,
             "th",
@@ -5616,7 +5615,6 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.ok(target.querySelectorAll(".o_data_row").length > 0);
-        assert.hasClass(target.querySelector(".o_data_row"), "o_sample_data_disabled");
         assert.containsN(target, "th", 4);
     });
 
@@ -5635,12 +5633,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Check keynav is disabled
-        assert.hasClass(target.querySelector(".o_data_row"), "o_sample_data_disabled");
-        assert.hasClass(target.querySelector(".o_list_table > tfoot"), "o_sample_data_disabled");
-        assert.hasClass(
-            target.querySelector(".o_list_table > thead .o_list_record_selector"),
-            "o_sample_data_disabled"
-        );
+        assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
 
         // From search bar
         assert.hasClass(document.activeElement, "o_searchview_input");

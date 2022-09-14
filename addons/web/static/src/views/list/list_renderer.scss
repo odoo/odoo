@@ -1,3 +1,4 @@
+// ------- List renderer -------
 .o_list_renderer {
     --ListRenderer-table-padding-h: #{$table-cell-padding-x-sm};
 
@@ -89,7 +90,8 @@
         &.o_list_computing_widths {
             > tbody > tr > td {
                 &.o_list_text, // text field, className on the td
-                > .o_field_text { // text field with widget, className inside the td
+                > .o_field_text {
+                    // text field with widget, className inside the td
                     white-space: pre !important;
                 }
             }
@@ -162,7 +164,8 @@
 
         // Grouped list views
         tbody > tr.o_group_header {
-            > th, > td {
+            > th,
+            > td {
                 vertical-align: middle;
                 padding-top: 5px;
                 padding-bottom: 5px;
@@ -191,7 +194,8 @@
                 margin-top: -2px;
                 margin-bottom: -2px;
 
-                .o_pager_previous, .o_pager_next {
+                .o_pager_previous,
+                .o_pager_next {
                     max-height: 30px;
                     padding: 0 5px;
                     background-color: lighten($o-brand-lightsecondary, 10%);
@@ -202,16 +206,15 @@
             }
         }
         tbody + tbody {
-            border-top: none;  // Override bootstrap for grouped list views
+            border-top: none; // Override bootstrap for grouped list views
         }
-
 
 
         .o_data_cell.o_text_overflow,
         .o_data_cell.o_invisible_modifier {
             // Override display: none to keep table cells aligned. Note: cannot use
             // 'initial' as it will force them to 'inline', not 'table-cell'.
-            display: table-cell!important;
+            display: table-cell !important;
         }
 
         &.o_resizing tr > :not(.o_column_resizing) {
@@ -239,7 +242,6 @@
         }
 
         .o_data_row:not(.o_selected_row) .o_data_cell {
-
             // Boolean fields in non-selected rows completely disabled.
             .form-check {
                 pointer-events: none;
@@ -310,16 +312,19 @@
                 &.o_field_badge {
                     width: auto; // override width: 100% to keep the optimal badge width
                 }
-                .o_input_dropdown, .o_datepicker {
+                .o_input_dropdown,
+                .o_datepicker {
                     > .o_input {
                         padding-right: 15px; // to prevent caret overlapping
                     }
-                    > .o_dropdown_button, .o_datepicker_button {
+                    > .o_dropdown_button,
+                    .o_datepicker_button {
                         margin-right: 5px;
                         @include o-position-absolute(0, 0);
                     }
                 }
-                > input.o_field_translate, textarea.o_field_translate {
+                > input.o_field_translate,
+                textarea.o_field_translate {
                     padding-right: 25px;
                     + span.o_field_translate {
                         margin-left: -35px;
@@ -336,8 +341,12 @@
             }
         }
 
-        .o_field_x2many_list_row_add, .o_group_field_row_add {
-            a:focus, a:active, button:focus, button:active {
+        .o_field_x2many_list_row_add,
+        .o_group_field_row_add {
+            a:focus,
+            a:active,
+            button:focus,
+            button:active {
                 color: $link-hover-color;
                 outline: none;
             }
@@ -412,5 +421,18 @@
                 padding-left: var(--ListRenderer-table-padding-h);
             }
         }
+    }
+}
+
+// ------- Sample mode -------
+.o_list_view .o_view_sample_data {
+    .o_list_table {
+        cursor: default !important;
+    }
+
+    .o_data_row,
+    .o_list_footer,
+    thead .o_list_record_selector {
+        @include o-sample-data-disabled;
     }
 }

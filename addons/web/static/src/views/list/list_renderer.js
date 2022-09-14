@@ -621,9 +621,6 @@ export class ListRenderer extends Component {
         if (record.selected) {
             classNames.push("o_data_row_selected");
         }
-        if (this.props.list.model.useSampleModel) {
-            classNames.push("o_sample_data_disabled");
-        }
         if (this.canResequenceRows) {
             classNames.push("o_row_draggable");
         }

@@ -24,7 +24,7 @@
                                         </t>
                                         <DropdownItem t-if="!env.isSmall" class="{
                                                 'o_kanban_toggle_fold': true,
-                                                'o_sample_data_disabled disabled': props.list.model.useSampleModel,
+                                                'disabled': props.list.model.useSampleModel,
                                             }" onSelected="() => this.toggleGroup(group)">
                                             Fold
                                         </DropdownItem>

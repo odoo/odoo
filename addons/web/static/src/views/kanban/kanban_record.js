@@ -236,9 +236,6 @@ export class KanbanRecord extends Component {
             const value = record.data[archInfo.cardColorField];
             classes.push(getColorClass(value));
         }
-        if (record.model.useSampleModel) {
-            classes.push("o_sample_data_disabled");
-        }
         if (!this.props.list.isGrouped) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
         }

@@ -6,10 +6,7 @@
 
             <table
                 class="table-hover table table-sm table-bordered table-borderless bg-white"
-                t-att-class="{
-                    o_enable_linking: !model.metaData.disableLinking,
-                    o_sample_data_disabled: model.useSampleModel,
-                }"
+                t-att-class="{ o_enable_linking: !model.metaData.disableLinking }"
                 t-ref="table"
             >
                 <thead>
