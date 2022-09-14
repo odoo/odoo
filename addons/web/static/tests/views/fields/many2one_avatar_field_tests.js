@@ -187,7 +187,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
-            ["Aline", "Christine", "Aline", ""]
+            ["Aline", "Christine", "Aline"]
         );
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
         assert.strictEqual(imgs[0].dataset.src, "/web/image/user/17/avatar_128");
@@ -205,7 +205,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
-            ["Aline", "Christine", "Aline", ""]
+            ["Aline", "Christine", "Aline"]
         );
 
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
