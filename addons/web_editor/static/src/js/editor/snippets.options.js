@@ -5130,17 +5130,6 @@ registry.SnippetMove = SnippetOptionWidget.extend({
 
         return this._super(...arguments);
     },
-    /**
-     * @override
-     */
-    onFocus: function () {
-        // TODO improve this: hack to hide options section if snippet move is
-        // the only one.
-        const $allOptions = this.$el.parent();
-        if ($allOptions.find('we-customizeblock-option').length <= 1) {
-            $allOptions.addClass('d-none');
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Options
