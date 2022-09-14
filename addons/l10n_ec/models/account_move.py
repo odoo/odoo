@@ -175,11 +175,8 @@ class AccountMove(models.Model):
     def _get_l10n_ec_internal_type(self):
         self.ensure_one()
         internal_type = self.env.context.get("internal_type", "invoice")
-        if self.move_type in ("out_refund", "in_refund"):
-            internal_type = "credit_note"
-        if self.debit_origin_id:
-            internal_type = "debit_note"
-        return internal_type
+        if self.l10n_latam_document_type_id:
+            internal_type = self.l10n_latam_document_type_id.internal_type
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
@@ -224,7 +221,7 @@ class AccountMove(models.Model):
             "in_invoice",
             "in_refund",
         ):
-            where_string, param = super(AccountMove, self)._get_last_sequence_domain(False)
+            where_string, param = super(AccountMove, self)._get_last_sequence_domain(False) #seems duplicated code
             internal_type = self._get_l10n_ec_internal_type()
             document_types = l10n_latam_document_type_model.search([
                 ('internal_type', '=', internal_type),
