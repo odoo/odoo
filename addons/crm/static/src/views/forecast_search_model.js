@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
 import { makeContext } from "@web/core/context";
@@ -55,7 +55,6 @@ export class ForecastSearchModel extends SearchModel {
             [forecastField, ">=", forecastStart],
         ];
         const fullDomain = Domain.and([domain, forecastDomain]);
-
         return params.raw ? fullDomain : fullDomain.toList();
     }
 

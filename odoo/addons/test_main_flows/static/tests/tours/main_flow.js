@@ -441,7 +441,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: Markup(_t("Click here to <b>create your first opportunity</b> and add it to your pipeline.")),
     position: "bottom"
 }, {
-    trigger: ".o_kanban_quick_create input[name='name']",
+    trigger: ".o_kanban_quick_create .o_field_widget[name=name] input",
     content: Markup(_t("<b>Choose a name</b> for your opportunity.")),
     position: "right",
     run: "text the_flow.opportunity",
@@ -489,7 +489,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     trigger: ".o_kanban_group:first .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: Markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     position: "right",
-    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
+    run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
     mobile: false,
     trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))",
@@ -502,7 +502,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "bottom",
 }, {
     mobile: true,
-    trigger: ".o_statusbar_status .btn.dropdown-toggle:contains(New)",
+    trigger: ".o_statusbar_status .btn.dropdown-toggle",
     content: _t("Change status from New to proposition."),
     position: "bottom",
 }, {

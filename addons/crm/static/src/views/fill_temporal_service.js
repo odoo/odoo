@@ -1,6 +1,6 @@
-/** @odoo-module */
-import AbstractService from 'web.AbstractService';
-import core from 'web.core';
+/** @odoo-module **/
+
+import { registry } from "@web/core/registry";
 
 /**
  * Configuration depending on the granularity:
@@ -19,36 +19,36 @@ import core from 'web.core';
  *                       {1} is the first index. {+1} is used for functions which have an index
  *                       starting from 0, to standardize between granularities.
  */
-const GRANULARITY_TABLE = {
+export const GRANULARITY_TABLE = {
     hour: {
-        startOf: x => x.startOf('hour'),
+        startOf: (x) => x.startOf("hour"),
         cycle: 24,
-        cyclePos: x => x.hour() + 1,
+        cyclePos: (x) => x.hour() + 1,
     },
     day: {
-        startOf: x => x.startOf('day'),
+        startOf: (x) => x.startOf("day"),
         cycle: 7,
-        cyclePos: x => x.isoWeekday(),
+        cyclePos: (x) => x.isoWeekday(),
     },
     week: {
-        startOf: x => x.startOf('isoWeek'),
+        startOf: (x) => x.startOf("isoWeek"),
         cycle: 1,
-        cyclePos: x => 1,
+        cyclePos: (x) => 1,
     },
     month: {
-        startOf: x => x.startOf('month'),
+        startOf: (x) => x.startOf("month"),
         cycle: 12,
-        cyclePos: x => x.month() + 1,
+        cyclePos: (x) => x.month() + 1,
     },
     quarter: {
-        startOf: x => x.startOf('quarter'),
+        startOf: (x) => x.startOf("quarter"),
         cycle: 4,
-        cyclePos: x => x.quarter(),
+        cyclePos: (x) => x.quarter(),
     },
     year: {
-        startOf: x => x.startOf('year'),
+        startOf: (x) => x.startOf("year"),
         cycle: 1,
-        cyclePos: x => 1,
+        cyclePos: (x) => 1,
     },
 };
 
@@ -58,7 +58,7 @@ const GRANULARITY_TABLE = {
  * @param {string} minGranularity granularity of the smallest time interval used in Odoo for this
  *                                type
  */
-const FIELD_TYPE_TABLE = {
+export const FIELD_TYPE_TABLE = {
     date: {
         format: "YYYY-MM-DD",
         minGranularity: "day",
@@ -66,7 +66,7 @@ const FIELD_TYPE_TABLE = {
     datetime: {
         format: "YYYY-MM-DD HH:mm:ss",
         minGranularity: "second",
-    }
+    },
 };
 
 /**
@@ -78,16 +78,16 @@ const FIELD_TYPE_TABLE = {
  * method. It will be used when we want to get continuous groups in chronological
  * order in a specific date/time range.
  */
-class FillTemporalPeriod {
+export class FillTemporalPeriod {
     /**
      * This constructor is meant to be used only by the FillTemporalService (see below)
      *
      * @param {string} modelName directly taken from model.loadParams.modelName.
      *                           this is the `res_model` from the action (i.e. `crm.lead`)
      * @param {Object} field a dictionary with keys "name" and "type".
-    *                        name: Name of the field on which the fill_temporal should apply
-    *                              (i.e. 'date_deadline')
-    *                        type: 'date' or 'datetime'
+     *                        name: Name of the field on which the fill_temporal should apply
+     *                              (i.e. 'date_deadline')
+     *                        type: 'date' or 'datetime'
      * @param {string} granularity can either be : hour, day, week, month, quarter, year
      * @param {integer} minGroups minimum amount of groups to display, regardless of other
      *                            constraints
@@ -147,7 +147,7 @@ class FillTemporalPeriod {
          *
          * (5) add minGroups!
          */
-        const fillTemporalPeriod = (2 * cycle - (this.minGroups - 1) % cycle - cyclePos) % cycle + this.minGroups;
+        const fillTemporalPeriod = ((2 * cycle - ((this.minGroups - 1) % cycle) - cyclePos) % cycle) + this.minGroups;
         this.end = moment(this.start).add(fillTemporalPeriod, `${this.granularity}s`);
         this.computedEnd = true;
     }
@@ -173,17 +173,15 @@ class FillTemporalPeriod {
      *                                       constraint to limit read_group results or not
      * @returns {Array[]} new domain
      */
-    getDomain({domain, forceStartBound=true, forceEndBound=true}) {
+    getDomain({ domain, forceStartBound = true, forceEndBound = true }) {
         if (!forceEndBound && !forceStartBound) {
             return domain;
         }
-        const originalDomain = domain.length ? ['&', ...domain] : [];
-        const defaultDomain = ['|', [this.field.name, '=', false]];
-        const linkDomain = forceStartBound && forceEndBound ? ['&'] : [];
-        const startDomain = !forceStartBound ? [] : [
-            [this.field.name, '>=', this._getFormattedServerDate(this.start)]];
-        const endDomain = !forceEndBound ? [] : [
-            [this.field.name, '<', this._getFormattedServerDate(this.end)]];
+        const originalDomain = domain.length ? ["&", ...domain] : [];
+        const defaultDomain = ["|", [this.field.name, "=", false]];
+        const linkDomain = forceStartBound && forceEndBound ? ["&"] : [];
+        const startDomain = !forceStartBound ? [] : [[this.field.name, ">=", this._getFormattedServerDate(this.start)]];
+        const endDomain = !forceEndBound ? [] : [[this.field.name, "<", this._getFormattedServerDate(this.end)]];
         return [...originalDomain, ...defaultDomain, ...linkDomain, ...startDomain, ...endDomain];
     }
     /**
@@ -204,7 +202,7 @@ class FillTemporalPeriod {
      *                                          false: the last group with at least one record
      * @returns {Object} new context
      */
-    getContext({context, forceFillingFrom=true, forceFillingTo=!this.computedEnd}) {
+    getContext({ context, forceFillingFrom = true, forceFillingTo = !this.computedEnd }) {
         const fillTemporal = {
             min_groups: this.minGroups,
         };
@@ -216,7 +214,7 @@ class FillTemporalPeriod {
                 moment(this.end).subtract(1, FIELD_TYPE_TABLE[this.field.type].minGranularity)
             );
         }
-        context = {...context, fill_temporal: fillTemporal};
+        context = { ...context, fill_temporal: fillTemporal };
         return context;
     }
     /**
@@ -261,58 +259,58 @@ class FillTemporalPeriod {
  * A specific fill_temporal period configuration will always refer to the same instance
  * unless forceRecompute is true
  */
- const FillTemporalService = AbstractService.extend({
-    /**
-     * @override
-     */
+export const fillTemporalService = {
     start() {
-        this._super.apply(...arguments);
-        this._fillTemporalPeriods = {};
+        const _fillTemporalPeriods = {};
+
+        /**
+         * Get a fill_temporal period according to the configuration.
+         * The default initial fill_temporal period is the number of [granularity] from [start]
+         * to the end of the [cycle] reached after adding [minGroups]
+         * i.e. we are in october 2020 :
+         *      [start] = 2020-10-01
+         *      [granularity] = 'month',
+         *      [cycle] = 12 (one year)
+         *      [minGroups] = 4,
+         *      => fillTemporalPeriod = 15 months (until the end of december 2021)
+         * Once created, a fill_temporal period for a specific configuration will be stored
+         * until requested again. This allows to manipulate the period and store the changes
+         * to it. This also allows to keep the configuration when switching to another view
+         *
+         * @param {Object} configuration
+         * @param {string} [modelName] directly taken from model.loadParams.modelName.
+         *                             this is the `res_model` from the action (i.e. `crm.lead`)
+         * @param {Object} [field] a dictionary with keys "name" and "type".
+         * @param {string} [field.name] name of the field on which the fill_temporal should apply
+         *                              (i.e. 'date_deadline')
+         * @param {string} [field.type] date field type: 'date' or 'datetime'
+         * @param {string} [granularity] can either be : hour, day, week, month, quarter, year
+         * @param {integer} [minGroups=4] optional minimal amount of desired groups
+         * @param {boolean} [forceRecompute=false] optional whether the fill_temporal period should be
+         *                                         reinstancied
+         * @returns {FillTemporalPeriod}
+         */
+        const getFillTemporalPeriod = ({ modelName, field, granularity, minGroups = 4, forceRecompute = false }) => {
+            if (!(modelName in _fillTemporalPeriods)) {
+                _fillTemporalPeriods[modelName] = {};
+            }
+            if (!(field.name in _fillTemporalPeriods[modelName])) {
+                _fillTemporalPeriods[modelName][field.name] = {};
+            }
+            if (!(granularity in _fillTemporalPeriods[modelName][field.name]) || forceRecompute) {
+                _fillTemporalPeriods[modelName][field.name][granularity] = new FillTemporalPeriod(
+                    modelName,
+                    field,
+                    granularity,
+                    minGroups
+                );
+            } else if (_fillTemporalPeriods[modelName][field.name][granularity].minGroups != minGroups) {
+                _fillTemporalPeriods[modelName][field.name][granularity].setMinGroups(minGroups);
+            }
+            return _fillTemporalPeriods[modelName][field.name][granularity];
+        };
+        return { getFillTemporalPeriod };
     },
-    /**
-     * Get a fill_temporal period according to the configuration.
-     * The default initial fill_temporal period is the number of [granularity] from [start]
-     * to the end of the [cycle] reached after adding [minGroups]
-     * i.e. we are in october 2020 :
-     *      [start] = 2020-10-01
-     *      [granularity] = 'month',
-     *      [cycle] = 12 (one year)
-     *      [minGroups] = 4,
-     *      => fillTemporalPeriod = 15 months (until the end of december 2021)
-     * Once created, a fill_temporal period for a specific configuration will be stored
-     * until requested again. This allows to manipulate the period and store the changes
-     * to it. This also allows to keep the configuration when switching to another view
-     *
-     * @param {Object} configuration
-     * @param {string} [modelName] directly taken from model.loadParams.modelName.
-     *                             this is the `res_model` from the action (i.e. `crm.lead`)
-     * @param {Object} [field] a dictionary with keys "name" and "type".
-     * @param {string} [field.name] name of the field on which the fill_temporal should apply
-     *                              (i.e. 'date_deadline')
-     * @param {string} [field.type] date field type: 'date' or 'datetime'
-     * @param {string} [granularity] can either be : hour, day, week, month, quarter, year
-     * @param {integer} [minGroups=4] optional minimal amount of desired groups
-     * @param {boolean} [forceRecompute=false] optional whether the fill_temporal period should be
-     *                                         reinstancied
-     * @returns {FillTemporalPeriod}
-     */
-    getFillTemporalPeriod({modelName, field, granularity, minGroups=4, forceRecompute=false}) {
-        if (!(modelName in this._fillTemporalPeriods)) {
-            this._fillTemporalPeriods[modelName] = {};
-        }
-        if (!(field.name in this._fillTemporalPeriods[modelName])) {
-            this._fillTemporalPeriods[modelName][field.name] = {};
-        }
-        if (!(granularity in this._fillTemporalPeriods[modelName][field.name]) || forceRecompute) {
-            this._fillTemporalPeriods[modelName][field.name][granularity] =
-                new FillTemporalPeriod(modelName, field, granularity, minGroups);
-        } else if (this._fillTemporalPeriods[modelName][field.name][granularity].minGroups != minGroups) {
-            this._fillTemporalPeriods[modelName][field.name][granularity].setMinGroups(minGroups);
-        }
-        return this._fillTemporalPeriods[modelName][field.name][granularity];
-    }
-});
+};
 
-core.serviceRegistry.add('fillTemporalService', FillTemporalService);
-
-export default FillTemporalService;
+registry.category("services").add("fillTemporalService", fillTemporalService);

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="LeadMiningRequest.generate_leads_button" owl="1">
+        <button t-if="isSalesManager" type="button" class="btn btn-secondary o_button_generate_leads" t-on-click="onClickGenerateLead">
+            Generate Leads
+        </button>
+    </t>
+
+    <t t-name="LeadMiningRequestListView.buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
+        <!-- Before the export button -->
+        <xpath expr="//t[contains(@t-if, 'isExportEnable')]" position="before">
+            <t t-call="LeadMiningRequest.generate_leads_button"/>
+        </xpath>
+    </t>
+
+    <t t-name="LeadMiningRequestKanbanView.buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[@t-if='props.showButtons']" position="inside">
+            <t t-call="LeadMiningRequest.generate_leads_button"/>
+        </xpath>
+    </t>
+</templates>

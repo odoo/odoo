@@ -39,11 +39,11 @@ tour.register('crm_tour', {
     content: Markup(_t("Now, <b>add your Opportunity</b> to your Pipeline.")),
     position: "bottom",
 }, {
-    trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child .oe_kanban_content",
+    trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-of-type .oe_kanban_content",
     extra_trigger: ".o_opportunity_kanban",
     content: Markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     position: "right",
-    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
+    run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
     trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
     extra_trigger: ".o_opportunity_kanban",
@@ -64,10 +64,10 @@ tour.register('crm_tour', {
     },
 }, {
     id: "drag_opportunity_to_won_step",
-    trigger: ".o_opportunity_kanban .o_kanban_record:last-child",
+    trigger: ".o_opportunity_kanban .o_kanban_record:last-of-type",
     content: Markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats !")),
     position: "bottom",
-    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(3) ",
+    run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(3) ",
 },  {
     trigger: ".o_kanban_record",
     extra_trigger: ".o_opportunity_kanban",
