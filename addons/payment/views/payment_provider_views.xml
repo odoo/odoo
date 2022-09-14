@@ -94,11 +94,19 @@
                         </page>
                         <page string="Fees" name="fees" attrs="{'invisible': [('support_fees', '=', False)]}">
                             <group name="payment_fees">
-                                <field name="fees_active"/>
-                                <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <group class="oe_inline">
+                                    <field name="fees_active"/>
+                                    <field name="fees_dom_fixed"
+                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_dom_var"
+                                           widget="percentage"
+                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_fixed"
+                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_var"
+                                           widget="percentage"
+                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Messages"
