@@ -1121,6 +1121,52 @@ QUnit.module("MockServer", (hooks) => {
         }
     );
 
+    QUnit.test("performRPC: read_progress_bar grouped by boolean", async (assert) => {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "read_progress_bar",
+            args: [],
+            kwargs: {
+                domain: [],
+                group_by: "bool",
+                progress_bar: {
+                    colors: { new: "success", dev: "warning", done: "danger" },
+                    field: "select",
+                },
+            },
+        });
+
+        assert.deepEqual(result, {
+            false: { new: 0, dev: 0, done: 2 },
+            true: { new: 3, dev: 1, done: 0 },
+        });
+    });
+
+    QUnit.test("performRPC: read_progress_bar grouped by datetime", async (assert) => {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "read_progress_bar",
+            args: [],
+            kwargs: {
+                domain: [],
+                group_by: "datetime:week",
+                progress_bar: {
+                    colors: { new: "aaa", dev: "bbb", done: "ccc" },
+                    field: "select",
+                },
+            },
+        });
+
+        assert.deepEqual(result, {
+            "W01 2020": { dev: 0, done: 0, new: 1 },
+            "W15 2016": { dev: 0, done: 0, new: 1 },
+            "W43 2016": { dev: 0, done: 0, new: 1 },
+            "W50 2016": { dev: 1, done: 2, new: 0 },
+        });
+    });
+
     QUnit.test("many2one_ref should auto fill inverse field", async function (assert) {
         data.models.bar.records = [{ id: 1 }];
         data.models.foo.records = [

@@ -1113,21 +1113,24 @@ export class MockServer {
 
     mockReadProgressBar(modelName, kwargs) {
         const { domain, group_by: groupBy, progress_bar: progressBar } = kwargs;
-        const records = this.getRecords(modelName, domain || []);
+        const groups = this.mockReadGroup(modelName, { domain, fields: [], groupby: [groupBy] });
 
+        // Find group by field
         const data = {};
-        for (const record of records) {
-            const groupByValue = record[groupBy]; // always technical value here
+        for (const group of groups) {
+            const records = this.getRecords(modelName, group.__domain || []);
+            const groupByValue = group[groupBy]; // always technical value here
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
                 for (const key in progressBar.colors) {
                     data[groupByValue][key] = 0;
                 }
             }
-
-            const fieldValue = record[progressBar.field];
-            if (fieldValue in data[groupByValue]) {
-                data[groupByValue][fieldValue]++;
+            for (const record of records) {
+                const fieldValue = record[progressBar.field];
+                if (fieldValue in data[groupByValue]) {
+                    data[groupByValue][fieldValue]++;
+                }
             }
         }
 
@@ -2221,7 +2224,10 @@ export async function makeMockServer(serverData, mockRPC) {
                 if (res === undefined) {
                     res = await loadJS(ressource);
                 } else {
-                    console.log("%c[assets] fetch (mock) JS ressource " + ressource, "color: #66e; font-weight: bold;");
+                    console.log(
+                        "%c[assets] fetch (mock) JS ressource " + ressource,
+                        "color: #66e; font-weight: bold;"
+                    );
                 }
                 return res;
             },
@@ -2230,7 +2236,10 @@ export async function makeMockServer(serverData, mockRPC) {
                 if (res === undefined) {
                     res = await loadCSS(ressource);
                 } else {
-                    console.log("%c[assets] fetch (mock) CSS ressource " + ressource, "color: #66e; font-weight: bold;");
+                    console.log(
+                        "%c[assets] fetch (mock) CSS ressource " + ressource,
+                        "color: #66e; font-weight: bold;"
+                    );
                 }
                 return res;
             },
