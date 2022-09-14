@@ -1,23 +1,18 @@
-odoo.define('auth_password_policy_signup.policy', function (require) {
-"use strict";
+/** @odoo-module */
 
-require('web.dom_ready');
-var policy = require('auth_password_policy');
-var PasswordMeter = require('auth_password_policy.Meter');
+import "web.dom_ready";
+import { ConcretePolicy, recommendations } from "@auth_password_policy/password_policy";
+import PasswordMeter from "@auth_password_policy_signup/js/password_meter";
 
-var $signupForm = $('.oe_signup_form, .oe_reset_password_form');
-if (!$signupForm.length) { return; }
-
-// hook in password strength meter
-// * requirement is the password field's minlength
-// * recommendations are from the module
-var $password = $('[type=password][minlength]');
-var minlength = Number($password.attr('minlength'));
-if (isNaN(minlength)) { return; }
-
-var meter = new PasswordMeter(null, new policy.Policy({minlength: minlength}), policy.recommendations);
-meter.insertAfter($password);
-$password.on('input', function () {
-    meter.update($password.val());
-});
-});
+const signupForm = document.querySelector('.oe_signup_form, .oe_reset_password_form');
+if (signupForm) {
+    const password = document.querySelector("[type=password][minlength]");
+    const minlength = Number(password.getAttribute("minlength"));
+    if (!isNaN(minlength)) {
+        const meter = new PasswordMeter(null, new ConcretePolicy({minlength}), recommendations);
+        meter.insertAfter(password);
+        password.addEventListener("input", (e) => {
+            meter.update(e.target.value);
+        });
+    }
+}
