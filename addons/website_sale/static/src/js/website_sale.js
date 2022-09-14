@@ -65,11 +65,12 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        var self = this;
+        let self = this;
+        self.hovered = true;
         clearTimeout(timeout);
         $(this.selector).not(ev.currentTarget).popover('hide');
         timeout = setTimeout(function () {
-            if (!self.$el.is(':hover') || $('.mycart-popover:visible').length) {
+            if (!self.hovered || $('.mycart-popover:visible').length) {
                 return;
             }
             self._popoverRPC = $.get("/shop/cart", {
@@ -93,7 +94,8 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        var self = this;
+        let self = this;
+        self.hovered = false;
         setTimeout(function () {
             if ($('.popover:hover').length) {
                 return;
