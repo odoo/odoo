@@ -26,22 +26,22 @@ tour.register('crm_forecast', {
         content: "click create",
         run: 'click',
     }, {
-        trigger: "input[name=name]",
+        trigger: ".o_field_widget[name=name] input",
         content: "complete name",
         run: "text Test Opportunity 1",
     }, {
-        trigger: "div[name=expected_revenue] > input",
+        trigger: ".o_field_widget[name=expected_revenue] input",
         content: "complete expected revenue",
         run: "text 999999",
     }, {
         trigger: "button.o_kanban_edit",
         content: "edit lead",
     }, {
-        trigger: "input[name=date_deadline]",
+        trigger: "div[name=date_deadline] input",
         content: "complete expected closing",
         run: `text ${today.format("MM/DD/YYYY")}`,
     }, {
-        trigger: "input[name=date_deadline]",
+        trigger: "div[name=date_deadline] input",
         content: "click to make the datepicker disappear",
         run: "click"
     }, {
@@ -58,27 +58,29 @@ tour.register('crm_forecast', {
         content: "move to the next month",
         run: function (actions) {
             const undefined_groups = $('.o_column_title:contains("None")').length;
-            actions.drag_and_drop(` .o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`, this.$anchor);
-        }
+            actions.drag_and_drop_native(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`, this.$anchor);
+        },
     }, {
         trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 1')",
         content: "edit lead",
         run: "click"
     }, {
-        trigger: `span[name=date_deadline]:contains("${moment(today).add(2, 'months').startOf('month').subtract(1, 'days').format("MM/DD/YYYY")}")`,
+        trigger: ".o_form_button_edit",
         content: "edit datetime",
-        position: "bottom",
         run: "click"
     }, {
-        trigger: "input[name=date_deadline]",
+        trigger: ".o_field_widget[name=date_deadline] input",
         content: "complete expected closing",
-        run: `text ${moment(today).add(5, 'months').startOf('month').subtract(1, 'days').format("MM/DD/YYYY")}`
+        run: function (actions) {
+            actions.text(`text ${moment(today).add(5, 'months').startOf('month').subtract(1, 'days').format("MM/DD/YYYY")}`, this.$anchor);
+            this.$anchor[0].dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
+        },
     }, {
         trigger: "body:not(:has(div.bootstrap-datetimepicker-widget))",
         content: "wait for date_picker to disappear",
         run: function () {},
     }, {
-        trigger: "input[name=probability]",
+        trigger: ".o_field_widget[name=probability] input",
         content: "max out probability",
         run: "text 100"
     }, {

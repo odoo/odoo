@@ -17,7 +17,7 @@
                             attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <button name="action_set_lost" string="Lost" type="object" data-hotkey="l" title="Mark as lost"
                             attrs="{'invisible': ['|', ('type', '=', 'opportunity'), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
-                        <field name="stage_id" widget="statusbar"
+                        <field name="stage_id" widget="crm_statusbar" class="o_field_statusbar"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
@@ -497,6 +497,7 @@
                         <field name="website" invisible="1"/>
                         <field name="function" invisible="1"/>
                         <field name="title" invisible="1"/>
+                        <field name="activity_ids" invisible="1"/>
                     </group>
                 </form>
             </field>
@@ -528,7 +529,7 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
-                    archivable="false" sample="1">
+                    archivable="false" sample="1" js_class="crm_kanban">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="probability"/>
                     <field name="color"/>

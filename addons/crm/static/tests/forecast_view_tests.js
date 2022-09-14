@@ -1,23 +1,16 @@
 /** @odoo-module **/
 
-import { getFixture, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { menuService } from "@web/webclient/menus/menu_service";
 import {
-    setupControlPanelServiceRegistry,
-    switchView,
     toggleFilterMenu,
     toggleGroupByMenu,
     toggleMenuItem,
     toggleMenuItemOption,
 } from "@web/../tests/search/helpers";
-import { makeView } from "@web/../tests/views/helpers";
-import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { _lt } from "@web/core/l10n/translation";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import AbstractModel from "web.AbstractModel";
-import AbstractView from "web.AbstractView";
-import { controlPanel as cpHelpers, mock } from "web.test_utils";
-import legacyViewRegistry from "web.view_registry";
+import { mock } from "web.test_utils";
 import { browser } from "@web/core/browser/browser";
 
 const patchDate = mock.patchDate;
@@ -66,8 +59,8 @@ QUnit.module("Views", (hooks) => {
                 `,
             },
         };
-        setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
+        setupViewRegistries();
+        serviceRegistry.add("menu", menuService);
 
         target = getFixture();
     });
@@ -162,143 +155,6 @@ QUnit.module("Views", (hooks) => {
 
             // note that the facets of the two filters are combined with an OR.
             // --> current behavior in legacy
-
-            unpatchDate();
-        }
-    );
-
-    /** @todo remove this legacy test when conversion of all forecast views is done */
-    QUnit.test(
-        "legacy and new forecast views can share search model state",
-        async function (assert) {
-            assert.expect(16);
-
-            patchWithCleanup(browser, { setTimeout: (fn) => fn() });
-            const unpatchDate = patchDate(2021, 8, 16, 16, 54, 0);
-
-            const expectedDomains = [
-                // first doAction
-                forecastDomain("2021-09-01"), // initial load of forecast_graph
-                forecastDomain("2021-07-01"), // toggle date field groupby with quarter option
-                forecastDomain("2021-07-01"), // initial load of legacy_toy
-                forecastDomain("2021-01-01"), // toggle date field groupby with year option
-                forecastDomain("2021-01-01"), // switch back to forecast_graph
-
-                // second doAction
-
-                forecastDomain("2021-09-01"), // initial load of legacy_toy
-                forecastDomain("2021-07-01"), // toggle date field groupby with quarter option
-                forecastDomain("2021-07-01"), // switch to forecast_graph
-                forecastDomain("2021-01-01"), // toggle date field groupby with year option
-                forecastDomain("2021-01-01"), // switch back to legacy_toy
-            ];
-
-            patchWithCleanup(AbstractModel.prototype, {
-                async load(params) {
-                    assert.deepEqual(params.domain, expectedDomains.shift());
-                    return this._super(...arguments);
-                },
-                async reload(_, params) {
-                    assert.deepEqual(params.domain, expectedDomains.shift());
-                    return this._super(...arguments);
-                },
-            });
-
-            const LegacyForecastView = AbstractView.extend({
-                display_name: _lt("Legacy toy view"),
-                icon: "fa fa-bars",
-                multiRecord: true,
-                viewType: "legacy_toy",
-                searchMenuTypes: ["filter", "groupBy"],
-
-                _createSearchModel(params, extraExtensions = {}) {
-                    Object.assign(extraExtensions, { forecast: {} });
-                    return this._super(params, extraExtensions);
-                },
-            });
-
-            legacyViewRegistry.add("legacy_toy", LegacyForecastView);
-
-            const webClient = await createWebClient({
-                serverData,
-                mockRPC(_, args) {
-                    if (args.method === "web_read_group") {
-                        const { domain } = args.kwargs;
-                        assert.deepEqual(domain, expectedDomains.shift());
-                    }
-                },
-            });
-
-            // first doAction forecast_graph -> legacy_toy -> forecast_graph
-
-            await doAction(webClient, {
-                name: "Action name",
-                res_model: "foo",
-                type: "ir.actions.act_window",
-                views: [
-                    [false, "graph"],
-                    [false, "legacy_toy"],
-                ],
-                context: {
-                    search_default_forecast_filter: 1,
-                    forecast_field: "date_field",
-                },
-            });
-
-            assert.containsOnce(target, ".o_switch_view.o_graph.active");
-
-            await toggleGroupByMenu(target);
-            await toggleMenuItem(target, "Date Field");
-            await toggleMenuItemOption(target, "Date Field", "Quarter");
-
-            await switchView(target, "legacy_toy");
-            await legacyExtraNextTick();
-
-            assert.containsOnce(target, ".o_switch_view.o_legacy_toy.active");
-
-            await cpHelpers.toggleGroupByMenu(target);
-            await toggleMenuItem(target, "Date Field");
-            await toggleMenuItemOption(target, "Date Field", "Year");
-
-            await switchView(target, "graph");
-
-            assert.containsOnce(target, ".o_switch_view.o_graph.active");
-
-            // second doAction legacy_toy -> forecast_graph -> legacy_toy
-
-            await doAction(webClient, {
-                name: "Action name",
-                res_model: "foo",
-                type: "ir.actions.act_window",
-                views: [
-                    [false, "legacy_toy"],
-                    [false, "graph"],
-                ],
-                context: {
-                    search_default_forecast_filter: 1,
-                    forecast_field: "date_field",
-                },
-            });
-            await legacyExtraNextTick();
-
-            assert.containsOnce(target, ".o_switch_view.o_legacy_toy.active");
-
-            await cpHelpers.toggleGroupByMenu(target);
-            await toggleMenuItem(target, "Date Field");
-            await toggleMenuItemOption(target, "Date Field", "Quarter");
-
-            await switchView(target, "graph");
-
-            assert.containsOnce(target, ".o_switch_view.o_graph.active");
-
-            await toggleGroupByMenu(target);
-            await toggleMenuItem(target, "Date Field");
-            await toggleMenuItemOption(target, "Date Field", "Year");
-
-            await switchView(target, "legacy_toy");
-            await legacyExtraNextTick();
-
-            assert.containsOnce(target, ".o_switch_view.o_legacy_toy.active");
 
             unpatchDate();
         }

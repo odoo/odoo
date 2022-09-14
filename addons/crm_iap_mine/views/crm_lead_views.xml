@@ -12,17 +12,6 @@
         </field>
     </record>
 
-    <record id="crm_lead_view_kanban_opportunity" model="ir.ui.view">
-        <field name="name">crm.lead.view.kanban.inherit.iap.mine</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads" />
-        <field name="arch" type="xml">
-            <xpath expr="//kanban" position="attributes">
-                <attribute name="js_class">crm_iap_lead_mining_request_kanban</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <record id="crm_lead_view_tree_lead" model="ir.ui.view">
         <field name="name">crm.lead.view.tree.lead.inherit.iap.mine</field>
         <field name="model">crm.lead</field>
@@ -30,17 +19,6 @@
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="js_class">crm_iap_lead_mining_request_tree</attribute>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="crm_lead_view_kanban_lead" model="ir.ui.view">
-        <field name="name">crm.lead.view.kanban.lead.inherit.iap.mine</field>
-        <field name="model">crm.lead</field>
-        <field name="inherit_id" ref="crm.view_crm_lead_kanban" />
-        <field name="arch" type="xml">
-            <xpath expr="//kanban" position="attributes">
-                <attribute name="js_class">crm_iap_lead_mining_request_kanban</attribute>
             </xpath>
         </field>
     </record>
