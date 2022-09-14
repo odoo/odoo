@@ -1,17 +1,14 @@
 /** @odoo-module */
 
-import { ListController } from '@web/views/list/list_controller';
 import { useBus } from "@web/core/utils/hooks";
 import { session } from "@web/session";
+import { ListController } from "@web/views/list/list_controller";
 
 export class InventoryReportListController extends ListController {
-
     setup() {
         super.setup();
         if (this.props.context.inventory_mode || this.props.context.inventory_report_mode) {
-            useBus(this.model, "record-updated",
-                this.recordUpdated
-            );
+            useBus(this.model, "record-updated", this.recordUpdated);
         }
     }
 
@@ -25,35 +22,17 @@ export class InventoryReportListController extends ListController {
             active_model: this.props.resModel,
         };
         if (this.props.context.default_product_id) {
-            context.product_id =  this.props.context.default_product_id;
+            context.product_id = this.props.context.default_product_id;
         } else if (this.props.context.product_tmpl_id) {
-            context.product_tmpl_id =  this.props.context.product_tmpl_id;
+            context.product_tmpl_id = this.props.context.product_tmpl_id;
         }
         this.actionService.doAction({
-            res_model: 'stock.quantity.history',
-            views: [[false, 'form']],
-            target: 'new',
-            type: 'ir.actions.act_window',
+            res_model: "stock.quantity.history",
+            views: [[false, "form"]],
+            target: "new",
+            type: "ir.actions.act_window",
             context,
         });
-    }
-
-    /**
-     * Count 'resId' loaded records.
-     * Multiple records occurs when adding an already loaded-in-view record.
-     */
-    _countResIdRecords(level, resId) {
-        let count = 0;
-        if (level.groupByInfo && level.isGrouped) {
-            for (const i in level.groups) {
-                count += this._countResIdRecords(level.groups[i], resId);
-            }
-        }
-        else {
-            const records = level.groupByInfo ? level.list.records : level.records;
-            count += records.filter(record => record.resId == resId).length;
-        }
-        return count;
     }
 
     /**
@@ -64,16 +43,20 @@ export class InventoryReportListController extends ListController {
      * This is done by checking :
      * - the record id against the 'lastCreatedRecordId' on model
      * - the create_date against the write_date (both are equal for newly created records).
+     *
+     * @param {CustomEvent<{ record: Record, relatedRecords: Record[] }>} event
      */
     async recordUpdated(event) {
-        const record = event.detail.record;
+        const { record, relatedRecords } = event.detail;
         const justCreated = record.id == record.model.lastCreatedRecordId;
         if (justCreated && record.data.create_date.diff(record.data.write_date) != 0) {
             this.notificationService.add(
-                this.env._t("You tried to create a record that already exists. The existing record was modified instead."),
+                this.env._t(
+                    "You tried to create a record that already exists. The existing record was modified instead."
+                ),
                 { title: this.env._t("This record already exists.") }
             );
-            if (this._countResIdRecords(record.model.root, record.resId) > 1) {
+            if (relatedRecords.length > 0) {
                 /* more than 1 'resId' record loaded in view (user added an already loaded record) :
                  * - both have been updated
                  * - remove the current record (the added one)
@@ -91,7 +74,7 @@ export class InventoryReportListController extends ListController {
             limit: session.active_ids_limit,
             context: this.props.context,
         });
-        return this.actionService.doAction('stock.action_stock_inventory_adjustement_name', {
+        return this.actionService.doAction("stock.action_stock_inventory_adjustement_name", {
             additionalContext: {
                 active_ids: activeIds,
             },
