@@ -307,14 +307,14 @@
             - 'merchant_name' - The merchant name.
             - 'access_token' - The access token used to authenticate the partner.
             - 'transaction_route' - The route used to create a transaction when the user clicks Pay.
-            - 'express_route' - The route where the billing and shipping information are sent.
             - 'shipping_address_update_route' - The route where available carriers are computed
                                                 based on the (partial) shipping information
                                                 available. Optional
+            - 'express_checkout_route' - The route where the billing and shipping information are
+                                         sent.
             - 'landing_route' - The route the user is redirected to after the transaction.
         -->
-        <form name="o_payment_express_checkout_form"
-              class="container"
+        <form name="o_payment_express_checkout_form" class="container"
               t-att-data-reference-prefix="reference_prefix"
               t-att-data-amount="amount"
               t-att-data-minor-amount="minor_amount"
@@ -324,12 +324,12 @@
               t-att-data-partner-id="partner_id"
               t-att-data-access-token="payment_access_token"
               t-att-data-transaction-route="transaction_route"
-              t-att-data-landing-route="landing_route"
-              t-att-data-express-route="express_route"
-              t-att-data-shipping-address-update-route="shipping_address_update_route">
+              t-att-data-shipping-address-update-route="shipping_address_update_route"
+              t-att-data-express-checkout-route="express_checkout_route"
+              t-att-data-landing-route="landing_route">
             <t t-foreach="providers_sudo" t-as="provider_sudo">
                 <t t-set="express_checkout_form_xml_id"
-                    t-value="provider_sudo.express_checkout_form_view_id.xml_id"/>
+                   t-value="provider_sudo.express_checkout_form_view_id.xml_id"/>
                 <t t-if="express_checkout_form_xml_id">
                     <t t-call="{{express_checkout_form_xml_id}}">
                         <t t-set="provider_sudo" t-value="provider_sudo"/>
