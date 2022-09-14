@@ -1217,14 +1217,12 @@ export function isFontSize(node, props) {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedText = getSelectedNodes(editable)
+    const selectedNodes = getSelectedNodes(editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
     const isFormatted = formatsSpecs[format].isFormatted;
-    if (selectedText.length) {
-        return selectedText.every(n => isFormatted(n.parentElement, editable))
-    } else {
-        return isFormatted(closestElement(editable.ownerDocument.getSelection().anchorNode), editable);
-    }
+    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().anchorNode));
+    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().focusNode));
+    return selectedNodes.every(n => isFormatted(n, editable));
 }
 
 export function isUnbreakable(node) {
