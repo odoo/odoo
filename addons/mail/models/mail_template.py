@@ -319,7 +319,7 @@ class MailTemplate(models.Model):
                 'model_description': model.display_name,
                 'record': record,
                 'record_name': False,
-                'subtitle': False,
+                'subtitles': False,
                 # user / environment
                 'company': 'company_id' in record and record['company_id'] or self.env.company,
                 'email_add_signature': False,

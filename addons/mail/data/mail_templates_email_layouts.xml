@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="message_notification_email">
+        <template id="mail_notification_layout" name="Mail: mail notification layout template">
 <html t-att-lang="lang">
 <header>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
 </header>
-<body>
-<t t-set="subtype_internal" t-value="subtype.internal"/>
+<body style="font-family:Verdana, Arial,sans-serif; color: #454748;">
+<t t-set="subtype_internal" t-value="subtype and subtype.internal"/>
+<!-- HEADER -->
 <t t-call="mail.notification_preview"/>
 <div style="max-width: 900px; width: 100%;">
 <div t-if="has_button_access" itemscope="itemscope" itemtype="http://schema.org/EmailMessage">
@@ -17,7 +18,7 @@
         <meta itemprop="name" t-att-content="button_access['title']"/>
     </div>
 </div>
-<div t-if="has_button_access or len(actions) &gt; 0 or not is_discussion"
+<div t-if="subtitles or has_button_access or len(actions) &gt; 0 or not is_discussion"
         summary="o_mail_notification" style="padding: 0px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
         <tbody>
@@ -36,26 +37,30 @@
                     <table cellspacing="0" cellpadding="0" border="0">
                         <tbody>
                             <tr>
-                                <td t-if="has_button_access" style="border-radius: 3px; background: #875A7B; text-align: center; padding: 8px 12px;">
+                                <td t-if="has_button_access" style="border-radius: 3px; background: #875A7B; text-align: center; padding: 8px 12px 11px;">
                                     <a t-att-href="button_access['url']" style="font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400;">
                                         <t t-out="button_access['title']"/>
                                     </a>
                                 </td>
                                 <td t-if="has_button_access">&amp;nbsp;&amp;nbsp;</td>
 
+                                <td t-if="subtitles" style="font-size: 12px;">
+                                     <t t-foreach="subtitles" t-as="subtitle">
+                                        <span t-attf-style="{{ 'font-weight:bold;' if subtitle_first else '' }}"
+                                              t-out="subtitle"/>
+                                        <br t-if="not subtitle_last"/>
+                                    </t>
+                                </td>
+                                <td t-else=""><span style="font-weight:bold;" t-out="record_name"/><br/></td>
+                                <td>&amp;nbsp;&amp;nbsp;</td>
+
                                 <td t-if="actions">
                                     <t t-foreach="actions" t-as="action">
                                         |
-                                        <a t-att-href="action['url']" style="color: #875A7B; text-decoration:none !important;">
+                                        <a t-att-href="action['url']" style="font-size: 12px; color: #875A7B; text-decoration:none !important;">
                                             <t t-out="action['title']"/>
                                         </a>
                                     </t>
-                                </td>
-                                <td t-if="actions">&amp;nbsp;&amp;nbsp;</td>
-
-                                <td style="font-size: 12px;">
-                                    <span style="font-weight:bold;" t-out="record_name"/><br/>
-                                    <span t-if="not is_html_empty(subtitle)" t-out="subtitle"/>
                                 </td>
                             </tr>
                         </tbody>
@@ -66,7 +71,7 @@
                 <td valign="center">
                     <hr width="100%"
                         style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin: 10px 0px;"/>
-                    <p t-if="subtype_internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
+                    <p t-if="subtype_internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px; font-size: 13px;">
                         <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
                     </p>
                 </td>
@@ -74,24 +79,30 @@
         </tbody>
     </table>
 </div>
-<div t-out="message.body"/>
+<!-- CONTENT -->
+<div t-out="message.body" style="font-size: 13px;"/>
 <ul t-if="tracking_values">
     <t t-foreach="tracking_values" t-as="tracking">
         <li><t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> &#8594; <t t-out="tracking[2]"/></li>
     </t>
 </ul>
-<div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
-<p style="color: #555555; margin-top:32px;">
-    Sent
-    <span t-if="company.name">
-    by
-    <a t-if="website_url" t-att-href="website_url" style="text-decoration:none; color: #875A7B;">
-        <span t-out="company.name"/>
-    </a>
-    <span t-if="not website_url" t-out="company.name"/>
-    </span>
-    using
-    <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="text-decoration:none; color: #875A7B;">Odoo</a>.
+<t class="o_signature">
+    <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
+</t>
+<!-- FOOTER -->
+<div style="margin-top:32px;">
+    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
+    <b t-out="company.name" style="font-size:11px;"/><br/>
+    <p style="color: #999999; margin-top:2px; font-size:11px;">
+        <t t-out="company.phone"/>
+        <t t-if="company.email and company.phone"> |</t>
+        <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;" t-out="company.email"/>
+        <t t-if="company.website and (company.phone or company.email)"> |</t>
+        <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-out="company.website"/>
+    </p>
+</div>
+<p style="color: #555555; font-size:11px;">
+    Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
 </p>
 </div>
 </body></html>
@@ -168,112 +179,6 @@
 </html>
         </template>
 
-        <!-- Used mainly in conjunction of portal models (SO, PO, Invoices) although not mandatory -->
-        <template id="mail_notification_paynow" name="Mail: Pay Now mail notification template">
-<html t-att-lang="lang">
-<header>
-    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
-</header>
-<body>
-<t t-set="subtype_internal" t-value="False"/>
-<t t-call="mail.notification_preview"/>
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td>
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="max-width:900px; width:100%; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
-<tbody>
-    <!-- HEADER -->
-    <tr>
-        <td align="center">
-            <table role="presentation" border="0" cellpadding="0" cellspacing="5" width="100%" style="background-color: #FFFFFF; padding: 0; border-collapse:separate;">
-                <tr><td>
-                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" height="48" style="padding: 0; margin: 0"  t-att-alt="'%s' % company.name"/>
-                </td></tr>
-                <tr><td>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:5px 0;"/>
-                </td></tr>
-                <tr><td valign="middle" style="white-space:nowrap;"><table cellspacing="0" cellpadding="0"><tr>
-                    <t t-if="has_button_access"><td>
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                            <tr><td style="border-radius: 3px; background: #875A7B; text-align: center; padding: 8px 12px;">
-                                <a t-att-href="button_access['url']"
-                                   style="border: 0; font-size: 12px; text-decoration: none !important; text-decoration: none; font-weight: 400; text-align: center; display: block;">
-                                    <span style="white-space:nowrap; color:#FFFFFF;" t-out="button_access['title']"></span>
-                                </a>
-                            </td></tr>
-                        </table></td><td width="7"></td><!--only inner cellspacing-->
-                    </t>
-                    <t t-if="not has_button_access and is_html_empty(subtitle)">
-                        <td>
-                            <span style="font-size: 10px;">Your <t t-out="model_description or 'document'"/></span>
-                            <br />
-                            <span style="font-size: 20px; font-weight: bold;">
-                                <t t-out="message.record_name and message.record_name.replace('/','-') or ''"/>
-                            </span>
-                        </td><td width="7"></td>
-                    </t>
-                    <t t-if="actions">
-                        <td>
-                            <t t-foreach="actions" t-as="action">
-                                |
-                                <a t-att-href="action['url']" style="color: #875A7B; text-decoration:none !important; text-decoration: none;">
-                                    <t t-out="action['title']"/>
-                                </a>
-                            </t>
-                        </td><td width="7"></td>
-                    </t>
-                    <t t-if="not is_html_empty(subtitle)">
-                        <td style="font-size: 12px;">
-                            <span style="font-weight:bold;" t-out="record.name"/><br/>
-                            <span t-out="subtitle"/>
-                        </td>
-                    </t>
-                </tr></table></td></tr>
-                <tr><td>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 5px 0px;"/>
-                </td></tr>
-            </table>
-        </td>
-    </tr>
-    <!-- CONTENT -->
-    <tr>
-        <td style="padding-left: 5px;">
-            <t t-out="message.body"/>
-            <t t-if="email_add_signature and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)">
-                <div style="margin: 0px; padding: 0px; font-size:13px;">
-                    Best regards,
-                </div>
-                <div>&amp;nbsp;</div>
-                <div style="font-size: 13px;">
-                    <div t-out="record.user_id.sudo().signature"/>
-                </div>
-            </t>
-        </td>
-    </tr>
-    <!-- FOOTER -->
-    <tr>
-        <td style="padding-left: 5px; font-size:11px;">
-            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
-            <b t-out="company.name"/><br/>
-            <div style="color: #999999; padding-top:2px">
-                <t t-out="company.phone"/>
-                <t t-if="company.email and company.phone"> |</t>
-                <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;" t-out="company.email"/>
-                <t t-if="company.website and (company.phone or company.email)"> |</t>
-                <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-out="company.website"/>
-            </div>
-        </td>
-    </tr>
-    <!-- POWERED BY -->
-    <tr><td style="padding: 2px 0 0 5px; font-size:11px;">
-        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
-    </td></tr>
-</tbody>
-</table>
-</td></tr>
-</table>
-</body>
-</html>
-        </template>
-
         <template id="notification_preview">
 <div style="display: none; max-height: 0px; overflow: hidden;">
     <t t-if="tracking_values">
@@ -285,6 +190,17 @@
     <!--Trailing whitespace to push back email content so that it doesn't appear in preview. Specific characters to use may change over time -->
     <t t-out="'&#847; &#8203; ' * 140"/>
 </div>
+        </template>
+
+        <template id="mail_notification_layout_with_responsible_signature"
+                  name="Mail: mail notification layout with responsible signature (user_id of the record)"
+                  inherit_id="mail.mail_notification_layout" primary="True">
+            <xpath expr="//t[hasclass('o_signature')]" position="replace">
+                <t class="o_signature">
+                    <div t-if="email_add_signature and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)"
+                         t-out="record.user_id.sudo().signature" style="font-size: 13px;"/>
+                </t>
+            </xpath>
         </template>
     </data>
 </odoo>
