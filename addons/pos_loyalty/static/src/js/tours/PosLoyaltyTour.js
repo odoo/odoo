@@ -164,14 +164,14 @@ startSteps();
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 
-ProductScreen.exec.addOrderline('Promo Product', '1');
+ProductScreen.do.clickDisplayedProduct('Promo Product');
 PosLoyalty.check.orderTotalIs('34.50');
-ProductScreen.exec.addOrderline('Product B', '1');
+ProductScreen.do.clickDisplayedProduct('Product B');
 PosLoyalty.check.hasRewardLine('100% on specific products', '25.00');
-ProductScreen.exec.addOrderline('Product A', '1');
+ProductScreen.do.clickDisplayedProduct('Product A');
 PosLoyalty.check.hasRewardLine('100% on specific products', '15.00');
 PosLoyalty.check.orderTotalIs('34.50');
-ProductScreen.exec.addOrderline('Product A', '2');
+ProductScreen.do.clickDisplayedProduct('Product A');
 PosLoyalty.check.hasRewardLine('100% on specific products', '21.82');
 PosLoyalty.check.hasRewardLine('100% on specific products', '18.18');
 PosLoyalty.check.orderTotalIs('49.50');
