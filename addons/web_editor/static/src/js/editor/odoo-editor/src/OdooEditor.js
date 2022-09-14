@@ -580,6 +580,8 @@ export class OdooEditor extends EventTarget {
 
         this.observerActive();
 
+        this._pluginCall('addDomListeners', []);
+
         this.addDomListener(this.editable, 'keydown', this._onKeyDown);
         this.addDomListener(this.editable, 'input', this._onInput);
         this.addDomListener(this.editable, 'beforeinput', this._onBeforeInput);
@@ -3285,10 +3287,25 @@ export class OdooEditor extends EventTarget {
             }
         }
     }
+    _onSelectionChangePluginHook() {
+        const selection = this.document.getSelection();
+        try {
+            this._pluginCall('onSelectionChange', [selection]);
+        } catch (err) {
+            if (err === 'STOP_HANDLING_SELECTION') {
+                return false;
+            }
+        }
+        return true;
+    }
     /**
      * @private
      */
     _onSelectionChange() {
+        if (!this._onSelectionChangePluginHook()) {
+            return;
+        }
+
         const selection = this.document.getSelection();
         if (
             !this.editable.contains(selection.anchorNode) &&
@@ -3499,6 +3516,10 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _handleCommandHint() {
+        if (!this._onSelectionChangePluginHook()) {
+            return;
+        }
+
         const selectors = {
             BLOCKQUOTE: 'Empty quote',
             H1: 'Heading 1',
@@ -3565,8 +3586,10 @@ export class OdooEditor extends EventTarget {
             this.observerActive();
         }
     }
-
-    _fixSelectionOnContenteditableFalse() {
+    _fixSelectionOnContenteditableFalse(ev) {
+        if (ev && ev.target.closest('.o_knowledge_embedded_view')) {
+            return;
+        }
         // When the browser set the selection inside a node that is
         // contenteditable=false, it breaks the edition upon keystroke. Move the
         // selection so that it remain in an editable area. An example of this
@@ -3671,7 +3694,12 @@ export class OdooEditor extends EventTarget {
 
         this._fixFontAwesomeSelection();
 
-        this._fixSelectionOnContenteditableFalse();
+        this._fixSelectionOnContenteditableFalse(ev);
+
+        this.historyUnpauseSteps('handleSelectionInTable');
+        if (this.toolbar) {
+            this.toolbar.style.pointerEvents = 'auto';
+        }
     }
 
     _onMouseDown(ev) {
@@ -3814,7 +3842,7 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    _onDocumentKeyup() {
+    _onDocumentKeyup (ev) {
         if (this._onKeyupResetContenteditableNodes.length) {
             for (const node of this._onKeyupResetContenteditableNodes) {
                 this.automaticStepSkipStack();
@@ -3822,7 +3850,7 @@ export class OdooEditor extends EventTarget {
             }
             this._onKeyupResetContenteditableNodes = [];
         }
-        this._fixSelectionOnContenteditableFalse();
+        this._fixSelectionOnContenteditableFalse(ev);
     }
 
     _onDocumentMouseup() {

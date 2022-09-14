@@ -284,8 +284,11 @@ const Wysiwyg = Widget.extend({
 
         this.$editable.on('click', '.o_image, .media_iframe_video', e => e.preventDefault());
         this.showTooltip = true;
-        this.$editable.on('dblclick', mediaSelector, function () {
+        this.$editable.on('dblclick', mediaSelector, function (e) {
             self.showTooltip = false;
+            if (e && e.target.closest('.o_knowledge_embedded_view')) {
+                return;
+            }
             const $el = $(this);
             let params = {node: this};
             $el.selectElement();
@@ -1740,6 +1743,9 @@ const Wysiwyg = Widget.extend({
      * Update any editor UI that is not handled by the editor itself.
      */
     _updateEditorUI: function (e) {
+        if (e && e.target.closest('.o_knowledge_embedded_view')) {
+            return;
+        }
         this.odooEditor.automaticStepSkipStack();
         // We need to use the editor's window so the tooltip displays in its
         // document even if it's in an iframe.
