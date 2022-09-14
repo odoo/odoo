@@ -309,6 +309,7 @@ class account_journal(models.Model):
             'has_at_least_one_statement': has_at_least_one_statement,
             'nb_lines_bank_account_balance': nb_lines_bank_account_balance,
             'outstanding_pay_account_balance': formatLang(self.env, currency.round(outstanding_pay_account_balance), currency_obj=currency),
+            'account_balance_plus_outstanding': formatLang(self.env, currency.round(bank_account_balance + outstanding_pay_account_balance), currency_obj=currency),
             'nb_lines_outstanding_pay_account_balance': nb_lines_outstanding_pay_account_balance,
             'last_balance': formatLang(self.env, currency.round(last_balance) + 0.0, currency_obj=currency),
             'number_draft': number_draft,

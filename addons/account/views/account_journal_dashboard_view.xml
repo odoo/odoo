@@ -278,6 +278,15 @@
                                     <span><t t-esc="dashboard.outstanding_pay_account_balance"/></span>
                                 </div>
                             </div>
+                            <div class="row" t-if="dashboard.nb_lines_outstanding_pay_account_balance > 0">
+                                <div id="dashboard_account_balance_plus_outstanding" class="col overflow-hidden text-left">
+                                    <span title="Balance + Outstanding">Balance + Outstanding</span>
+                                </div>
+                                <div class="col-auto text-right">
+                                    <span><t t-esc="dashboard.account_balance_plus_outstanding"/></span>
+                                </div>
+                            </div>
+
                             <t t-if="dashboard.has_at_least_one_statement and dashboard.account_balance != dashboard.last_balance">
                                 <div class="row" name="latest_statement">
                                     <div class="col overflow-hidden text-left">
