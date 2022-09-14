@@ -277,18 +277,22 @@ class KanbanGroup extends Group {
         await this.checkActiveValue();
     }
 
+    /**
+     * @param {number} index
+     * @returns {Promise<Record | false>}
+     */
     async validateQuickCreate(index) {
         const record = this.list.quickCreateRecord;
-        if (!record) {
-            return false;
+        if (record) {
+            const saved = await record.save();
+            if (saved) {
+                this.addRecord(this.removeRecord(record), index);
+                this.count++;
+                this.list.count++;
+                return record;
+            }
         }
-        const saved = await record.save();
-        if (saved) {
-            this.addRecord(this.removeRecord(record), index);
-            this.count++;
-            this.list.count++;
-            return record;
-        }
+        return false;
     }
 
     // ------------------------------------------------------------------------

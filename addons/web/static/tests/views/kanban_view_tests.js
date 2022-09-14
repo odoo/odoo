@@ -3,8 +3,8 @@
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
-    drag,
     clickSave,
+    drag,
     dragAndDrop,
     editInput,
     getFixture,
@@ -12,6 +12,7 @@ import {
     makeDeferred,
     nextTick,
     patchWithCleanup,
+    selectDropdownItem,
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
@@ -27,16 +28,16 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
-import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { makeErrorFromResponse, RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
+import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { nbsp } from "@web/core/utils/strings";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { kanbanView } from "@web/views/kanban/kanban_view";
-import { ViewButton } from "@web/views/view_button/view_button";
 import { DynamicRecordList } from "@web/views/relational_model";
+import { ViewButton } from "@web/views/view_button/view_button";
 import AbstractField from "web.AbstractField";
 import legacyFieldRegistry from "web.field_registry";
 
@@ -11758,5 +11759,54 @@ QUnit.module("Views", (hooks) => {
             "read", // read the created record to get foo value
             "onchange", // reopen the quick create automatically
         ]);
+    });
+
+    QUnit.test("Move new record with onchanges and different active fields", async (assert) => {
+        serverData.models.partner.fields.foo.default = "abc";
+        serverData.models.partner.onchanges = {
+            bar(obj) {
+                obj.foo = [...obj.foo].reverse().join("");
+            },
+        };
+        serverData.views["partner,some_view_ref,form"] = /* xml */ `
+            <form>
+                <field name="int_field" />
+                <field name="category_ids" widget="many2many_tags" />
+            </form>`;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="foo" />
+                    <field name="bar" />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <t t-esc="record.foo.raw_value" />
+                            <field name="int_field" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+        });
+
+        assert.deepEqual(getCardTexts(0), ["blip-4"]);
+        assert.deepEqual(getCardTexts(1), ["yop10", "blip9", "gnap17"]);
+
+        await quickCreateRecord(0);
+        await editQuickCreateInput("int_field", "13");
+        await selectDropdownItem(target, "category_ids", "gold");
+        await validateRecord();
+
+        assert.deepEqual(getCardTexts(0), ["abc13", "blip-4"]);
+        assert.deepEqual(getCardTexts(1), ["yop10", "blip9", "gnap17"]);
+
+        await dragAndDrop(".o_kanban_record", ".o_kanban_group:nth-child(2)");
+
+        assert.deepEqual(getCardTexts(0), ["blip-4"]);
+        assert.deepEqual(getCardTexts(1), ["yop10", "blip9", "gnap17", "cba13"]);
     });
 });
