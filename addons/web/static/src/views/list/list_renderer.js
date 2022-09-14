@@ -544,9 +544,10 @@ export class ListRenderer extends Component {
     }
 
     formatAggregateValue(group, column) {
-        const { widget, type, rawAttrs } = column;
+        const { widget, rawAttrs } = column;
+        const fieldType = this.props.list.fields[column.name].type;
         const aggregateValue = group.aggregates[column.name];
-        const formatter = formatters.get(widget, false) || formatters.get(type, false);
+        const formatter = formatters.get(widget, false) || formatters.get(fieldType, false);
         const formatOptions = {
             digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : undefined,
             escape: true,

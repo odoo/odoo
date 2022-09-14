@@ -56,11 +56,13 @@ import {
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
 import { getNextTabableElement } from "@web/core/utils/ui";
+import { FloatField } from "@web/views/fields/float/float_field";
 import { TextField } from "@web/views/fields/text/text_field";
 import { DynamicRecordList } from "@web/views/relational_model";
 
 const { Component, onWillStart, xml } = owl;
 
+const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
 
 let serverData;
@@ -2741,6 +2743,29 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("aggregates are formatted correctly in grouped lists", async function (assert) {
+        // in this scenario, there is a widget on an aggregated field, and this widget has no
+        // associated formatter, so we fallback on the formatter corresponding to the field type
+        fieldRegistry.add("my_float", FloatField);
+        serverData.models.foo.records[0].qux = 5.1654846456;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="qux" widget="my_float" sum="Sum"/>
+                </tree>`,
+            groupBy: ["int_field"],
+        });
+
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_group_header .o_list_number")),
+            ["9.00", "13.00", "5.17", "-3.00"]
+        );
+    });
+
     QUnit.test("aggregates in grouped lists with buttons", async function (assert) {
         await makeView({
             type: "list",
@@ -2756,7 +2781,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        const cellVals = ["23", "6.4", "9", "13", "32", "19.40"];
+        const cellVals = ["23", "6.40", "9", "13.00", "32", "19.40"];
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_list_number")), cellVals);
     });
 
