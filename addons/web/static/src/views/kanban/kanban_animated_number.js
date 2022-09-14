@@ -45,5 +45,12 @@ KanbanAnimatedNumber.props = {
     animationClass: { type: String, optional: true },
     currency: { type: [Object, Boolean], optional: true },
     title: { type: String, optional: true },
+    slots: {
+        type: Object,
+        shape: {
+            prefix: { type: Object, optional: true },
+        },
+        optional: true,
+    },
 };
 KanbanAnimatedNumber.enableAnimations = true;
