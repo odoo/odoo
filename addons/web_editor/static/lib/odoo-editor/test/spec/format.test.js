@@ -15,6 +15,8 @@ const strikeThrough = async editor => {
 };
 const setFontSize = size => editor => editor.execCommand('setFontSize', size);
 
+const switchDirection = editor => editor.execCommand('switchDirection');
+
 describe('Format', () => {
     const getZwsTag = (tagName, {style} = {}) => {
         const styleAttr = style ? ` style="${style}"` : '';
@@ -708,6 +710,22 @@ describe('Format', () => {
                 stepFunction: (editor) => {
                     window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(false);
                 },
+            });
+        });
+    });
+    describe('switchDirection', () => {
+        it('should switch direction on a collapsed range', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a[]b</p>`,
+                stepFunction: switchDirection,
+                contentAfter: `<p dir="rtl">a[]b</p>`,
+            });
+        });
+        it('should switch direction on an uncollapsed range', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a[b]c</p>`,
+                stepFunction: switchDirection,
+                contentAfter: `<p dir="rtl">a[b]c</p>`,
             });
         });
     });
