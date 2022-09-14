@@ -111,10 +111,14 @@ class PaymentProvider(models.Model):
 
     # Fees fields
     fees_active = fields.Boolean(string="Add Extra Fees")
-    fees_dom_fixed = fields.Float(string="Fixed domestic fees")
-    fees_dom_var = fields.Float(string="Variable domestic fees (in percents)")
-    fees_int_fixed = fields.Float(string="Fixed international fees")
-    fees_int_var = fields.Float(string="Variable international fees (in percents)")
+    fees_dom_fixed = fields.Monetary(
+        string="Fixed domestic fees", currency_field='main_currency_id'
+    )
+    fees_dom_var = fields.Float(string="Variable domestic fees")
+    fees_int_fixed = fields.Monetary(
+        string="Fixed international fees", currency_field='main_currency_id'
+    )
+    fees_int_var = fields.Float(string="Variable international fees")
 
     # Message fields
     display_as = fields.Char(
@@ -315,7 +319,7 @@ class PaymentProvider(models.Model):
         :return None
         """
         for provider in self:
-            if any(not 0 <= fee < 100 for fee in (provider.fees_dom_var, provider.fees_int_var)):
+            if any(not 0 <= fee < 1 for fee in (provider.fees_dom_var, provider.fees_int_var)):
                 raise ValidationError(_("Variable fees must always be positive and below 100%."))
 
     #=== CRUD METHODS ===#
@@ -499,9 +503,9 @@ class PaymentProvider(models.Model):
 
         The computation is based on the fields `fees_dom_fixed`, `fees_dom_var`, `fees_int_fixed`
         and `fees_int_var`, and is performed with the formula
-        :code:`fees = (amount * variable / 100.0 + fixed) / (1 - variable / 100.0)` where the values
-        of `fixed` and `variable` are taken from either the domestic (`dom`) or international
-        (`int`) fields, depending on whether the country matches the company's country.
+        :code:`fees = (amount * variable + fixed) / (1 - variable)` where the values of `fixed` and
+        `variable` are taken from either the domestic (`dom`) or international (`int`) fields,
+        depending on whether the country matches the company's country.
 
         For a provider to base the computation on different variables, or to use a different
         formula, it must override this method and return the resulting fees.
@@ -522,7 +526,10 @@ class PaymentProvider(models.Model):
             else:
                 fixed = self.fees_int_fixed
                 variable = self.fees_int_var
-            fees = (amount * variable / 100.0 + fixed) / (1 - variable / 100.0)
+            fixed_converted = self.main_currency_id._convert(
+                fixed, currency, self.company_id, fields.Date.context_today(self)
+            )
+            fees = (amount * variable + fixed_converted) / (1 - variable)
         return fees
 
     def _get_validation_amount(self):

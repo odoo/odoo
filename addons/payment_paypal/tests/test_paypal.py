@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-from odoo.tools import mute_logger
+from odoo.tools import float_repr, mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_paypal.controllers.main import PaypalController
@@ -41,7 +41,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             fees = self.currency.round(self.paypal._compute_fees(self.amount, self.currency, self.partner.country_id))
             if fees:
                 # handling input is only specified if truthy
-                values['handling'] = str(fees)
+                values['handling'] = float_repr(fees, self.currency.decimal_places)
 
         return values
 
@@ -111,9 +111,9 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         self.paypal.write({
             'fees_active': True,
             'fees_int_fixed': 0.30,
-            'fees_int_var': 2.90,
+            'fees_int_var': 0.029,
         })
-        total_fee = self.paypal._compute_fees(100, False, False)
+        total_fee = self.paypal._compute_fees(100, self.paypal.main_currency_id, False)
         self.assertEqual(round(total_fee, 2), 3.3, 'Wrong computation of the Paypal fees')
 
     def test_parsing_pdt_validation_response_returns_notification_data(self):
