@@ -204,7 +204,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """
         bundle0 = self._get_asset(self.jsbundle_name)
         bundle0.js()
-        last_modified0 = bundle0.last_modified
+        last_modified0 = bundle0.last_modified_combined
         version0 = bundle0.version
 
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
@@ -212,7 +212,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         with self._touch(path):
             bundle1.js()
-            last_modified1 = bundle1.last_modified
+            last_modified1 = bundle1.last_modified_combined
             version1 = bundle1.version
             self.assertNotEqual(last_modified0, last_modified1,
                                 "the creation date of the ir.attachment should change because the bundle has changed.")
@@ -486,13 +486,13 @@ class TestJavascriptAssetsBundle(FileTouchable):
         # Assets access for en_US language
         ltr_bundle0 = self._get_asset(self.cssbundle_name)
         ltr_bundle0.css()
-        ltr_last_modified0 = ltr_bundle0.last_modified
+        ltr_last_modified0 = ltr_bundle0.last_modified_combined
         ltr_version0 = ltr_bundle0.version
 
         # Assets access for ar_SY language
         rtl_bundle0 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
         rtl_bundle0.css()
-        rtl_last_modified0 = rtl_bundle0.last_modified
+        rtl_last_modified0 = rtl_bundle0.last_modified_combined
         rtl_version0 = rtl_bundle0.version
 
         # Touch test_cssfile1.css
@@ -502,7 +502,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         with self._touch(path):
             ltr_bundle1.css()
-            ltr_last_modified1 = ltr_bundle1.last_modified
+            ltr_last_modified1 = ltr_bundle1.last_modified_combined
             ltr_version1 = ltr_bundle1.version
             ltr_ira1 = self._any_ira_for_bundle('min.css')
             self.assertNotEqual(ltr_last_modified0, ltr_last_modified1)
@@ -511,7 +511,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
             rtl_bundle1 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
 
             rtl_bundle1.css()
-            rtl_last_modified1 = rtl_bundle1.last_modified
+            rtl_last_modified1 = rtl_bundle1.last_modified_combined
             rtl_version1 = rtl_bundle1.version
             rtl_ira1 = self._any_ira_for_bundle('min.css', lang='ar_SY')
             self.assertNotEqual(rtl_last_modified0, rtl_last_modified1)
