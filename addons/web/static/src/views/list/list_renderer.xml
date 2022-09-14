@@ -15,7 +15,7 @@
             <table t-if="showTable" t-attf-class="o_list_table table table-sm position-relative mb-0  {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
                 <thead>
                     <tr>
-                        <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
+                        <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
                             <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="selectAll" className="'d-flex'" onChange.bind="toggleSelection"/>
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
@@ -72,7 +72,7 @@
                         <t t-set="list" t-value="props.list"/>
                     </t>
                 </tbody>
-                <tfoot t-on-click="() => props.list.unselectRecord(true)" class="cursor-default" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
+                <tfoot t-on-click="() => props.list.unselectRecord(true)" class="o_list_footer cursor-default" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
                         <td t-if="hasSelectors"/>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">

@@ -1,3 +1,4 @@
+// ------- Pivot renderer -------
 .o_pivot table {
     width: var(--PivotView-width, auto);
 
@@ -8,7 +9,8 @@
     }
 
     // This can be removed after the migration to BS5.
-    th, td {
+    th,
+    td {
         border-width: $border-width;
     }
 
@@ -22,11 +24,18 @@
         @include o-hover-text-color($body-color, $headings-color);
 
         &:hover {
-            background-color: map-get($grays, '200') !important;
+            background-color: map-get($grays, "200") !important;
         }
     }
 
     .o_pivot_cell_value.o_cell_hover {
         background-color: $table-hover-bg;
+    }
+}
+
+// ------- Sample mode -------
+.o_pivot_view .o_view_sample_data {
+    table {
+        @include o-sample-data-disabled;
     }
 }
