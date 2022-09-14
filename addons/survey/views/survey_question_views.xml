@@ -205,9 +205,14 @@
                                     <field name="is_conditional" attrs="{'invisible': [('questions_selection', '=', 'random')]}"/>
                                     <field name="triggering_question_id" options="{'no_open': True, 'no_create': True}"
                                         attrs="{'invisible': [('is_conditional','=', False)], 'required': [('is_conditional','=', True)]}"/>
+                                    <field name="triggering_question_type" invisible="1"/>
+                                    <field name="triggering_row_id" options="{'no_open': True, 'no_create': True}"
+                                        attrs="{'invisible': [('triggering_question_type', '!=', 'matrix')],
+                                               'required': [('triggering_question_type','=', 'matrix')]}"/>
                                     <field name="triggering_answer_id" options="{'no_open': True, 'no_create': True}"
-                                        attrs="{'invisible': ['|', ('is_conditional','=', False), ('triggering_question_id','=', False)],
-                                                'required': [('is_conditional','=', True)]}"/>
+                                        attrs="{'invisible': ['|', ('triggering_question_id','=', False),
+                                               '&amp;', ('triggering_question_type','=', 'matrix'), ('triggering_row_id','=', False)],
+                                               'required': [('is_conditional','=', True)]}"/>
                                 </group>
                             </group>
                             <group>

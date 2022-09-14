@@ -640,7 +640,7 @@ class Survey(models.Model):
                         return question
                 else:
                     triggering_answer = triggering_answer_by_question.get(question)
-                    if not triggering_answer or triggering_answer in selected_answers:
+                    if not triggering_answer[0] or triggering_answer in selected_answers:
                         # question is visible because not conditioned or conditioned by a selected answer
                         return question
         elif survey.questions_layout == 'page_per_section':
@@ -681,12 +681,12 @@ class Survey(models.Model):
             triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
             if self.questions_layout == 'page_per_question':
                 next_active_question = any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
-                is_triggering_question = any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in page_or_question.suggested_answer_ids)
+                is_triggering_question = any(triggering_answer in [answer[0] for answer in triggered_questions_by_answer] for triggering_answer in page_or_question.suggested_answer_ids)
                 return not(next_active_question or is_triggering_question)
             elif self.questions_layout == 'page_per_section':
                 is_triggering_section = False
                 for question in page_or_question.question_ids:
-                    if any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in
+                    if any(triggering_answer in [answer[0] for answer in triggered_questions_by_answer] for triggering_answer in
                            question.suggested_answer_ids):
                         is_triggering_section = True
                         break
@@ -746,16 +746,20 @@ class Survey(models.Model):
     # ------------------------------------------------------------
 
     def _get_conditional_maps(self):
+        """ Compute maps for survey_user_input.
+            'triggering answer' is a tuple (answer: SurveyQuestionAnswer, row: SurveyQuestionAnswer),
+            where row is the triggering row for matrix questions.
+        """
         triggering_answer_by_question = {}
         triggered_questions_by_answer = {}
         for question in self.question_ids:
-            triggering_answer_by_question[question] = question.is_conditional and question.triggering_answer_id
-
+            triggering_answer_by_question[question] = (question.triggering_answer_id, question.triggering_row_id)
             if question.is_conditional:
-                if question.triggering_answer_id in triggered_questions_by_answer:
-                    triggered_questions_by_answer[question.triggering_answer_id] |= question
+                if (question.triggering_answer_id, question.triggering_row_id) in triggered_questions_by_answer:
+                    triggered_questions_by_answer[(question.triggering_answer_id, question.triggering_row_id)] |= question
                 else:
-                    triggered_questions_by_answer[question.triggering_answer_id] = question
+                    triggered_questions_by_answer[(question.triggering_answer_id, question.triggering_row_id)] = question
+
         return triggering_answer_by_question, triggered_questions_by_answer
 
     # ------------------------------------------------------------
@@ -792,19 +796,18 @@ class Survey(models.Model):
         current_user_input_lines = current_user_inputs.mapped('user_input_line_ids').filtered(lambda answer: answer.suggested_answer_id)
 
         # count the number of vote per answer
-        votes_by_answer = dict.fromkeys(current_user_input_lines.mapped('suggested_answer_id'), 0)
+        votes_by_answer = dict.fromkeys(current_user_input_lines.mapped(lambda answer: (answer.suggested_answer_id, answer.matrix_row_id)), 0)
         for answer in current_user_input_lines:
-            votes_by_answer[answer.suggested_answer_id] += 1
+            votes_by_answer[(answer.suggested_answer_id, answer.matrix_row_id)] += 1
 
         # extract most voted answer for each question
-        most_voted_answer_by_questions = dict.fromkeys(current_user_input_lines.mapped('question_id'))
-        for question in most_voted_answer_by_questions.keys():
-            for answer in votes_by_answer.keys():
-                if answer.question_id != question:
+        most_voted_answer_by_questions = dict.fromkeys(current_user_input_lines.mapped(lambda answer: (answer.question_id, answer.matrix_row_id)))
+        for (question, question_row), most_voted_answer in most_voted_answer_by_questions.items():
+            for (answer, answer_row), answer_votes in votes_by_answer.items():
+                if answer.question_id != question or answer_row != question_row:
                     continue
-                most_voted_answer = most_voted_answer_by_questions[question]
-                if not most_voted_answer or votes_by_answer[most_voted_answer] < votes_by_answer[answer]:
-                    most_voted_answer_by_questions[question] = answer
+                if not most_voted_answer or votes_by_answer[most_voted_answer] < answer_votes:
+                    most_voted_answer_by_questions[(question, question_row)] = (answer, answer_row)
 
         # return a fake 'audience' user_input
         fake_user_input = self.env['survey.user_input'].new({
@@ -813,12 +816,13 @@ class Survey(models.Model):
         })
 
         fake_user_input_lines = self.env['survey.user_input.line']
-        for question, answer in most_voted_answer_by_questions.items():
+        for (question, question_row), (answer, answer_row) in most_voted_answer_by_questions.items():
             fake_user_input_lines |= self.env['survey.user_input.line'].new({
                 'question_id': question.id,
                 'suggested_answer_id': answer.id,
                 'survey_id': self.id,
-                'user_input_id': fake_user_input.id
+                'user_input_id': fake_user_input.id,
+                'matrix_row_id': answer_row.id
             })
 
         return fake_user_input

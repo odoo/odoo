@@ -272,14 +272,15 @@ class Survey(http.Controller):
             triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
                 'triggering_answer_by_question': {
-                    question.id: triggering_answer_by_question[question].id for question in triggering_answer_by_question.keys()
-                    if triggering_answer_by_question[question]
+                    question.id: (answer.id, row.id)
+                    for question, (answer, row) in triggering_answer_by_question.items()
+                    if answer
                 },
                 'triggered_questions_by_answer': {
-                    answer.id: triggered_questions_by_answer[answer].ids
-                    for answer in triggered_questions_by_answer.keys()
+                    "%s,%s" % (answer.id, row.id) if row else "%s" % answer.id: questions.ids
+                    for (answer, row), questions in triggered_questions_by_answer.items()
                 },
-                'selected_answers': selected_answers.ids
+                'selected_answers': [(answer.id, row.id) for (answer, row) in selected_answers]
             })
 
         if not answer_sudo.is_session_answer and survey_sudo.is_time_limited and answer_sudo.start_datetime:

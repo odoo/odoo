@@ -140,10 +140,15 @@ class SurveyQuestion(models.Model):
         'survey.question', string="Triggering Question", copy=False, compute="_compute_triggering_question_id",
         store=True, readonly=False, help="Question containing the triggering answer to display the current question.",
         domain="[('survey_id', '=', survey_id), \
-                 '&', ('question_type', 'in', ['simple_choice', 'multiple_choice']), \
+                 '&', ('question_type', 'in', ['simple_choice', 'multiple_choice', 'matrix']), \
                  '|', \
                      ('sequence', '<', sequence), \
                      '&', ('sequence', '=', sequence), ('id', '<', id)]")
+    triggering_question_type = fields.Selection(related="triggering_question_id.question_type", string="Triggering Question Type")
+    triggering_row_id = fields.Many2one(
+        'survey.question.answer', string="Triggering Row", copy=False, compute="_compute_triggering_row_id",
+        store=True, readonly=False, help="Matrix row containing the triggering answer to display the current question.",
+        domain="[('matrix_question_id', '=', triggering_question_id)]")
     triggering_answer_id = fields.Many2one(
         'survey.question.answer', string="Triggering Answer", copy=False, compute="_compute_triggering_answer_id",
         store=True, readonly=False, help="Answer that will trigger the display of the current question.",
@@ -276,6 +281,17 @@ class SurveyQuestion(models.Model):
         for question in self:
             if not question.is_conditional or question.triggering_question_id is None:
                 question.triggering_question_id = False
+
+    @api.depends('triggering_question_id')
+    def _compute_triggering_row_id(self):
+        """ Used as an 'onchange' : Reset the triggering row if user change the triggering question
+            or uncheck 'Conditional Display'.
+            Avoid CacheMiss : set the value to False if the value is not set yet."""
+        for question in self:
+            if not question.triggering_question_id \
+                    or question.triggering_question_id != question.triggering_row_id.matrix_question_id\
+                    or question.triggering_row_id is None:
+                question.triggering_row_id = False
 
     @api.depends('triggering_question_id')
     def _compute_triggering_answer_id(self):

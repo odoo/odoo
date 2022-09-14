@@ -170,15 +170,27 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
 
         var $matrixBtn = $target.closest('.o_survey_matrix_btn');
+        var $selectedAnswer;
+        var selectedAnswerValue;
+        if ($matrixBtn.length > 0) {
+            $selectedAnswer = $matrixBtn;
+            selectedAnswerValue = $selectedAnswer.find('input').data('suggestedAnswer');
+        } else {
+            $selectedAnswer = $target.closest('label');
+            selectedAnswerValue = $target.val();
+        }
+
         if ($target.attr('type') === 'radio') {
             var isQuestionComplete = false;
+            var previouslySelectedAnswer;
             if ($matrixBtn.length > 0) {
-                $matrixBtn.closest('tr').find('td').removeClass('o_survey_selected');
+                previouslySelectedAnswer = $target.closest('tr').find('.o_survey_selected').find('input').data('suggestedAnswer');
+                $selectedAnswer.closest('tr').find('td').removeClass('o_survey_selected');
                 if ($target.is(':checked')) {
-                    $matrixBtn.addClass('o_survey_selected');
+                    $selectedAnswer.addClass('o_survey_selected');
                 }
                 if (this.options.questionsLayout === 'page_per_question') {
-                    var subQuestionsIds = $matrixBtn.closest('table').data('subQuestions');
+                    var subQuestionsIds = $selectedAnswer.closest('table').data('subQuestions');
                     var completedQuestions = [];
                     subQuestionsIds.forEach(function (id) {
                         if (self.$('tr#' + id).find('input:checked').length !== 0) {
@@ -188,42 +200,39 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     isQuestionComplete = completedQuestions.length === subQuestionsIds.length;
                 }
             } else {
-                var previouslySelectedAnswer = $choiceItemGroup.find('label.o_survey_selected');
-                previouslySelectedAnswer.removeClass('o_survey_selected');
+                previouslySelectedAnswer = $choiceItemGroup.find('label.o_survey_selected').find('input').val();
+                $choiceItemGroup.find('label.o_survey_selected').removeClass('o_survey_selected');
 
-                var newlySelectedAnswer = $target.closest('label');
-                if (newlySelectedAnswer.find('input').val() !== previouslySelectedAnswer.find('input').val()) {
-                    newlySelectedAnswer.addClass('o_survey_selected');
+                if (selectedAnswerValue !== previouslySelectedAnswer) {
+                    $selectedAnswer.addClass('o_survey_selected');
                     isQuestionComplete = this.options.questionsLayout === 'page_per_question';
                 }
+            }
 
-                // Conditional display
-                if (this.options.questionsLayout !== 'page_per_question') {
-                    var treatedQuestionIds = [];  // Needed to avoid show (1st 'if') then immediately hide (2nd 'if') question during conditional propagation cascade
-                    if (Object.keys(this.options.triggeredQuestionsByAnswer).includes(previouslySelectedAnswer.find('input').val())) {
-                        // Hide and clear depending question
-                        this.options.triggeredQuestionsByAnswer[previouslySelectedAnswer.find('input').val()].forEach(function (questionId) {
+            // Conditional display
+            if (this.options.questionsLayout !== 'page_per_question') {
+                var treatedQuestionIds = [];  // Needed to avoid show (1st 'if') then immediately hide (2nd 'if') question during conditional propagation cascade
+                if (Object.keys(this.options.triggeredQuestionsByAnswer).includes(previouslySelectedAnswer)) {
+                    // Hide and clear depending question
+                    this.options.triggeredQuestionsByAnswer[previouslySelectedAnswer].forEach(function (questionId) {
+                        var dependingQuestion = $('.js_question-wrapper#' + questionId);
+                        dependingQuestion.addClass('d-none');
+                        self._clearQuestionInputs(dependingQuestion);
+                        treatedQuestionIds.push(questionId);
+                    });
+                    // Remove answer from selected answer
+                    self.selectedAnswers.splice(self.selectedAnswers.indexOf(selectedAnswerValue), 1);
+                }
+                if (Object.keys(this.options.triggeredQuestionsByAnswer).includes(selectedAnswerValue)) {
+                    // Display depending question
+                    this.options.triggeredQuestionsByAnswer[selectedAnswerValue].forEach(function (questionId) {
+                        if (!treatedQuestionIds.includes(questionId)) {
                             var dependingQuestion = $('.js_question-wrapper#' + questionId);
-
-                            dependingQuestion.addClass('d-none');
-                            self._clearQuestionInputs(dependingQuestion);
-
-                            treatedQuestionIds.push(questionId);
-                        });
-                        // Remove answer from selected answer
-                        self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
-                    }
-                    if (Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
-                        // Display depending question
-                        this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
-                            if (!treatedQuestionIds.includes(questionId)) {
-                                var dependingQuestion = $('.js_question-wrapper#' + questionId);
-                                dependingQuestion.removeClass('d-none');
-                            }
-                        });
-                        // Add answer to selected answer
-                        this.selectedAnswers.push(parseInt($target.val()));
-                    }
+                            dependingQuestion.removeClass('d-none');
+                        }
+                    });
+                    // Add answer to selected answer
+                    this.selectedAnswers.push(selectedAnswerValue);
                 }
             }
             // Auto Submit Form
@@ -234,29 +243,24 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 this._submitForm({});
             }
         } else {  // $target.attr('type') === 'checkbox'
-            if ($matrixBtn.length > 0) {
-                $matrixBtn.toggleClass('o_survey_selected', !$matrixBtn.hasClass('o_survey_selected'));
-            } else {
-                var $label = $target.closest('label');
-                $label.toggleClass('o_survey_selected', !$label.hasClass('o_survey_selected'));
+            $selectedAnswer.toggleClass('o_survey_selected', !$selectedAnswer.hasClass('o_survey_selected'));
 
-                // Conditional display
-                if (this.options.questionsLayout !== 'page_per_question' && Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
-                    var isInputSelected = $label.hasClass('o_survey_selected');
-                    // Hide and clear or display depending question
-                    this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
-                        var dependingQuestion = $('.js_question-wrapper#' + questionId);
-                        dependingQuestion.toggleClass('d-none', !isInputSelected);
-                        if (!isInputSelected) {
-                            self._clearQuestionInputs(dependingQuestion);
-                        }
-                    });
-                    // Add/remove answer to/from selected answer
+            // Conditional display
+            if (this.options.questionsLayout !== 'page_per_question' && Object.keys(this.options.triggeredQuestionsByAnswer).includes(selectedAnswerValue)) {
+                var isInputSelected = $selectedAnswer.hasClass('o_survey_selected');
+                // Hide and clear or display depending question
+                this.options.triggeredQuestionsByAnswer[selectedAnswerValue].forEach(function (questionId) {
+                    var dependingQuestion = $('.js_question-wrapper#' + questionId);
+                    dependingQuestion.toggleClass('d-none', !isInputSelected);
                     if (!isInputSelected) {
-                        self.selectedAnswers.splice(self.selectedAnswers.indexOf(parseInt($target.val())), 1);
-                    } else {
-                        self.selectedAnswers.push(parseInt($target.val()));
+                        self._clearQuestionInputs(dependingQuestion);
                     }
+                });
+                // Add/remove answer to/from selected answer
+                if (!isInputSelected) {
+                    self.selectedAnswers.splice(self.selectedAnswers.indexOf(selectedAnswerValue), 1);
+                } else {
+                    self.selectedAnswers.push(selectedAnswerValue);
                 }
             }
         }

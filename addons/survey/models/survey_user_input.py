@@ -500,7 +500,9 @@ class SurveyUserInput(models.Model):
 
     def _get_conditional_values(self):
         """ For survey containing conditional questions, we need a triggered_questions_by_answer map that contains
-                {key: answer, value: the question that the answer triggers, if selected},
+                {key: (answer, row), value: the question that the answer triggers, if selected},
+                where answer is the suggested answer selected by the user,
+                and row the matrix row for this answer, if the answer is related to a matrix question.
          The idea is to be able to verify, on every answer check, if this answer is triggering the display
          of another question.
          If answer is not in the conditional map:
@@ -519,11 +521,11 @@ class SurveyUserInput(models.Model):
                    that is the next in sequence and that is either not triggered by another question's answer, or that
                    is triggered by an already selected answer.
          To do all this, we need to return:
-            - list of all selected answers: [answer_id1, answer_id2, ...] (for survey reloading, otherwise, this list is
+            - list of all selected answers: [(answer_id1, row_id1), (answer_id2, row_id2), ...] (for survey reloading, otherwise, this list is
               updated at client side)
-            - triggered_questions_by_answer: dict -> for a given answer, list of questions triggered by this answer;
+            - triggered_questions_by_answer: dict -> for a given (answer ,row) pair, list of questions triggered by this answer;
                 Used mainly for dynamic show/hide behaviour at client side
-            - triggering_answer_by_question: dict -> for a given question, the answer that triggers it
+            - triggering_answer_by_question: dict -> for a given question, the (answer, row) pair that triggers it
                 Used mainly to ease template rendering
         """
         triggering_answer_by_question, triggered_questions_by_answer = {}, {}
@@ -536,13 +538,11 @@ class SurveyUserInput(models.Model):
 
     def _get_selected_suggested_answers(self):
         """
-        For now, only simple and multiple choices question type are handled by the conditional questions feature.
-        Mapping all the suggested answers selected by the user will also include answers from matrix question type,
-        Those ones won't be used.
-        Maybe someday, conditional questions feature will be extended to work with matrix question.
-        :return: all the suggested answer selected by the user.
+        :return: all the suggested answers selected by the user.
+        A suggested answer is a tuple (answer: SurveyQuestionAnswer, row: SurveyQuestionAnswer),
+        where row is the matrix row for the selected suggested answer (or empty if other question type).
         """
-        return self.mapped('user_input_line_ids.suggested_answer_id')
+        return [(user_input_line.suggested_answer_id, user_input_line.matrix_row_id) for user_input_line in self.user_input_line_ids]
 
     def _clear_inactive_conditional_answers(self):
         """
@@ -572,7 +572,7 @@ class SurveyUserInput(models.Model):
 
         # get questions that should not be answered
         inactive_questions = self.env['survey.question']
-        for answer in triggered_questions_by_answer.keys():
+        for answer in triggered_questions_by_answer:
             if answer not in selected_answers:
                 for question in triggered_questions_by_answer[answer]:
                     inactive_questions |= question

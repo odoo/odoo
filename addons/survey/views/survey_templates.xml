@@ -577,9 +577,11 @@
                         <td t-att-class="'o_survey_matrix_btn text-primary position-relative %s'
                         % ('o_survey_selected' if answer else '')">
                             <input t-att-type="'checkbox' if question.matrix_subtype == 'multiple' else 'radio'"
-                                   t-att-name="'%s_%s' % (question.id, row_label.id)" t-att-value='col_label.id'
+                                   t-att-name="'%s_%s' % (question.id, row_label.id)"
+                                   t-att-value='col_label.id'
                                    t-att-checked="'checked' if answer else None"
                                    t-att-data-row-id="row_label.id"
+                                   t-att-data-suggested-answer="'%s,%s' % (col_label.id, row_label.id)"
                                    t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"
                                    class="o_survey_form_choice_item d-none"/>
                             <i t-att-class="'o_survey_matrix_empty_checkbox fa fa-%s position-relative'
