@@ -705,7 +705,13 @@ var SnippetEditor = Widget.extend({
         const proms = Object.values(this.styles).map(opt => {
             return opt.updateUIVisibility();
         });
-        return Promise.all(proms);
+        await Promise.all(proms);
+        // Hide the snippetEditor if none of its options are visible
+        // This cannot be done using the visibility of the options' UI
+        // because some options can be located in the overlay.
+        const $visibleOptions = this.$optionsSection.find('we-top-button-group, we-customizeblock-option')
+                .children(':not(.d-none)');
+        this.$optionsSection.toggleClass('d-none', !$visibleOptions.length);
     },
     /**
      * Clones the current snippet.
