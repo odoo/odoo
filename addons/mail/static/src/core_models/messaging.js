@@ -77,10 +77,11 @@ registerModel({
                 return browser;
             },
         }),
-        device: one('Device', {
+        global: one('Global', {
             default: {},
-            isCausal: true,
+            inverse: 'allRecords',
             readonly: true,
+            required: true,
         }),
         /**
          * Promise that will be resolved when messaging is initialized.
@@ -93,11 +94,6 @@ registerModel({
         }),
         isInitialized: attr({
             default: false,
-        }),
-        locale: one('Locale', {
-            default: {},
-            isCausal: true,
-            readonly: true,
         }),
         /**
          * Determines the bus that is used to communicate messaging events.

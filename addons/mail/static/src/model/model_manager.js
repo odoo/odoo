@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { IS_RECORD, patchesAppliedPromise, registry } from '@mail/model/model_core';
-import { ModelField } from '@mail/model/model_field';
+import { IS_RECORD, addFields, patchesAppliedPromise, registry } from '@mail/model/model_core';
+import { ModelField, one } from '@mail/model/model_field';
 import { ModelIndexAnd } from '@mail/model/model_index_and';
 import { ModelIndexXor } from '@mail/model/model_index_xor';
 import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
@@ -269,6 +269,20 @@ export class ModelManager {
     }
 
     /**
+     * Returns the global singleton associated to this model manager.
+     *
+     * @returns {Global|undefined}
+     */
+    get global() {
+        if (!this.models['Global']) {
+            return undefined;
+        }
+        // Use "findFromIdentifyingData" specifically to ensure the record still
+        // exists and to ensure listeners are properly notified of this access.
+        return this.models['Global'].findFromIdentifyingData({});
+    }
+
+    /**
      * Removes a listener, with the same object reference as given to `startListening`.
      * Removing the listener effectively makes its `onChange` function no longer
      * called.
@@ -387,6 +401,10 @@ export class ModelManager {
                     return new ModelIndexXor(model);
             }
         })();
+        const isSingletonModel = [...definition.get('fields').values()].every(field => !field.identifying);
+        if (isSingletonModel && !registry.get('Global').get('fields').has(model.name)) {
+            addFields('Global', { [model.name]: one(model.name, { default: {} }) });
+        }
         this._listenersObservingAllByModel.set(model, new Map());
         this.models[model.name] = model;
     }

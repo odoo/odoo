@@ -70,10 +70,6 @@ registerModel({
             identifying: true,
             inverse: 'threadViewer',
         }),
-        discussPublicView: one('DiscussPublicView', {
-            identifying: true,
-            inverse: 'threadViewer',
-        }),
         /**
          * Determines which extra class this thread view component should have.
          */
@@ -145,9 +141,6 @@ registerModel({
         }),
         threadView_hasComposerThreadTyping: attr({
             compute() {
-                if (this.discussPublicView) {
-                    return true;
-                }
                 if (this.discuss) {
                     return true;
                 }

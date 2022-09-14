@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, one } from '@mail/model/model_field';
+import { attr } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 
 registerModel({
@@ -153,13 +153,6 @@ registerModel({
          */
         videoStream: attr({
             default: null,
-        }),
-        /**
-         * States the welcome view containing this media preview.
-         */
-        welcomeView: one('WelcomeView', {
-            identifying: true,
-            inverse: 'callDemoView',
         }),
     },
 });

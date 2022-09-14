@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ActivityMenuContainer } from '@mail/components/activity_menu_container/activity_menu_container';
+import { ActivityMenuContainer } from '@mail/backend_components/activity_menu_container/activity_menu_container';
 import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
 import { CallSystrayMenuContainer } from '@mail/components/call_systray_menu_container/call_systray_menu_container';
 

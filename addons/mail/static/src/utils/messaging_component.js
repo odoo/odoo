@@ -47,6 +47,9 @@ export function registerMessagingComponent(ComponentClass) {
         get messaging() {
             return this.env.services.messaging.modelManager.messaging;
         }
+        get global() {
+            return this.env.services.messaging.modelManager.global;
+        }
         /**
          * @returns {string}
          */

@@ -53,20 +53,15 @@ registerModel({
         /**
          * States the channel linked to this discuss public view.
          */
-        channel: one('Thread', {
-            readonly: true,
-            required: true,
-        }),
+        channel: one('Thread'),
         isChannelTokenSecret: attr({
             default: true,
         }),
         shouldAddGuestAsMemberOnJoin: attr({
             default: false,
-            readonly: true,
         }),
         shouldDisplayWelcomeViewInitially: attr({
             default: false,
-            readonly: true,
         }),
         /**
          * States the thread view linked to this discuss public view.

@@ -326,6 +326,12 @@ registerPatch({
             isCausal: true,
             readonly: true,
         }),
+        global: one('Global', {
+            default: {},
+            inverse: 'allRecords',
+            readonly: true,
+            required: true,
+        }),
         hasLinkPreviewFeature: attr(),
         history: one('Mailbox', {
             default: {},

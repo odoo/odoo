@@ -185,5 +185,11 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        global: one('Global', {
+            default: {},
+            inverse: 'allRecords',
+            readonly: true,
+            required: true,
+        }),
     },
 });

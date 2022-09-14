@@ -3,6 +3,7 @@
 import { registerPatch } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
+import '@mail/models/backend/activity_menu_view'; // ensure the model definition is loaded before the patch
 
 const { DateTime } = luxon;
 

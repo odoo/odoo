@@ -118,6 +118,15 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/model/*.js',
             'mail/static/src/core_models/*.js',
         ],
+        'mail.assets_messaging_frontend': [
+            ('include', 'mail.assets_messaging'),
+            'mail/static/src/models/frontend/*.js',
+        ],
+        'mail.assets_messaging_backend': [
+            ('include', 'mail.assets_messaging'),
+            'mail/static/src/backend_components/*/*',
+            'mail/static/src/models/backend/*.js',
+        ],
         'mail.assets_messaging': [
             ('include', 'mail.assets_core_messaging'),
             'mail/static/src/models/*.js',
@@ -149,10 +158,9 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/components/*/*',
             # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
             ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
-            ('remove', 'mail/static/src/components/activity_menu_container/*'),
             'mail/static/src/js/emojis.js',
             'mail/static/src/js/utils.js',
-            ('include', 'mail.assets_messaging'),
+            ('include', 'mail.assets_messaging_frontend'),
             'mail/static/src/public/*',
             'mail/static/src/services/*.js',
             ('remove', 'mail/static/src/services/systray_service.js'),
@@ -189,12 +197,11 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/scss/*.scss',
             'mail/static/src/xml/*.xml',
             'mail/static/src/component_hooks/*.js',
-            'mail/static/src/backend_components/*/*',
+            ('include', 'mail.assets_messaging_backend'),
             'mail/static/src/components/*/*.js',
             'mail/static/src/components/*/*.scss',
             'mail/static/src/components/*/*.xml',
             'mail/static/src/views/*/*.xml',
-            ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
             'mail/static/src/views/**/*.js',
             'mail/static/src/views/**/*.xml',
@@ -215,7 +222,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web.tests_assets': [
             'mail/static/tests/helpers/**/*.js',
-            'mail/static/tests/models/*.js',
+            'mail/static/tests/models/**/*.js',
         ],
         'web.qunit_suite_tests': [
             'mail/static/tests/qunit_suite_tests/**/*.js',

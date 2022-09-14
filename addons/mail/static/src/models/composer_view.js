@@ -1260,8 +1260,8 @@ registerModel({
         isInDiscuss: attr({
             compute() {
                 return Boolean(
-                    (this.threadView && (this.threadView.threadViewer.discuss || this.threadView.threadViewer.discussPublicView)) ||
-                    (this.messageViewInEditing && this.messageViewInEditing.isInDiscuss)
+                    this.threadView && this.threadView.threadViewer.discuss ||
+                    this.messageViewInEditing && this.messageViewInEditing.isInDiscuss
                 );
             },
         }),
