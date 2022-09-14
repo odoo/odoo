@@ -175,6 +175,9 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickExpand(ev) {
+            if (!this.exists()) {
+                return;
+            }
             ev.stopPropagation();
             this.expand();
         },
