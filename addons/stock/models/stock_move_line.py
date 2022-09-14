@@ -385,6 +385,8 @@ class StockMoveLine(models.Model):
                         new_reserved_uom_qty = ml.product_id.uom_id._compute_quantity(reserved_qty, ml.product_uom_id, rounding_method='HALF-UP')
                         moves_to_recompute_state |= ml.move_id
                         ml.with_context(bypass_reservation_update=True).reserved_uom_qty = new_reserved_uom_qty
+                        # we don't want to override the new reserved quantity
+                        vals.pop('reserved_uom_qty', None)
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         if updates or 'qty_done' in vals:
