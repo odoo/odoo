@@ -401,7 +401,7 @@ export class ModelManager {
                     return new ModelIndexXor(model);
             }
         })();
-        const isSingletonModel = [...definition.get('fields').values()].every(field => !field.identifying);
+        const isSingletonModel = model.identifyingMode !== 'xor' && [...definition.get('fields').values()].every(field => !field.identifying);
         if (isSingletonModel && !registry.get('Global').get('fields').has(model.name)) {
             addFields('Global', { [model.name]: one(model.name, { default: {} }) });
         }

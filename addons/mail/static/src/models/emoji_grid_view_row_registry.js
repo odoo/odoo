@@ -35,7 +35,7 @@ registerModel({
             if (this.emojiGridViewOwner.emojiPickerViewOwner.emojiSearchBarView.currentSearch === "") {
                 return clear();
             }
-            const emojis = this.messaging.emojiRegistry.allEmojis.filter(this.emojiGridViewOwner._filterEmoji);
+            const emojis = this.global.EmojiRegistry.allEmojis.filter(this.emojiGridViewOwner._filterEmoji);
             const value = [];
             let index = 0;
             let currentItems = [];

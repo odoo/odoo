@@ -231,8 +231,8 @@ registerModel({
 
             if (openChatWindow) {
                 // open chat upon being invited (if it was not already opened or folded)
-                if (thread.channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !thread.chatWindow) {
-                    this.messaging.chatWindowManager.openThread(thread);
+                if (thread.channel.channel_type !== 'channel' && !this.global.Device.isSmall && !thread.chatWindow) {
+                    this.global.ChatWindowManager.openThread(thread);
                 }
             }
         },
@@ -313,8 +313,8 @@ registerModel({
                     channel.thread.markAsFetched();
                 }
                 // open chat on receiving new message if it was not already opened or folded
-                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.thread.chatWindow) {
-                    this.messaging.chatWindowManager.openThread(channel.thread);
+                if (channel.channel_type !== 'channel' && !this.global.Device.isSmall && !channel.thread.chatWindow) {
+                    this.global.ChatWindowManager.openThread(channel.thread);
                 }
             }
         },
@@ -408,7 +408,7 @@ registerModel({
          */
         _handleNotificationRtcPeerToPeer({ sender, notifications }) {
             for (const content of notifications) {
-                this.messaging.rtc.handleNotification(sender, content);
+                this.global.Rtc.handleNotification(sender, content);
             }
         },
         /**
@@ -434,9 +434,9 @@ registerModel({
          * @param {number} [sessionId]
          */
         async _handleNotificationRtcSessionEnded({ sessionId }) {
-            const currentSession = this.messaging.rtc.currentRtcSession;
+            const currentSession = this.global.Rtc.currentRtcSession;
             if (currentSession && currentSession.id === sessionId) {
-                this.messaging.rtc.channel.endCall();
+                this.global.Rtc.channel.endCall();
                 this.messaging.notify({
                     message: this.env._t("Disconnected from the RTC call by the server"),
                     type: 'warning',
@@ -630,12 +630,12 @@ registerModel({
             // then open a chat for the current user with the new user.
             const message = sprintf(this.env._t('%s connected'), username);
             const title = this.env._t("This is their first connection. Wish them luck.");
-            this.messaging.userNotificationManager.sendNotification({ message, title, type: 'info' });
+            this.global.UserNotificationManager.sendNotification({ message, title, type: 'info' });
             const chat = await this.messaging.getChat({ partnerId });
-            if (!this.exists() || !chat || this.messaging.device.isSmall) {
+            if (!this.exists() || !chat || this.global.Device.isSmall) {
                 return;
             }
-            this.messaging.chatWindowManager.openThread(chat.thread);
+            this.global.ChatWindowManager.openThread(chat.thread);
         },
         /**
          * @private
@@ -672,7 +672,7 @@ registerModel({
             const notificationContent = escape(
                 htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
             );
-            this.messaging.userNotificationManager.sendNotification({
+            this.global.UserNotificationManager.sendNotification({
                 message: notificationContent,
                 title: notificationTitle,
                 type: 'info',

@@ -19,17 +19,17 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
     init: function (parent, messaging, chatbotData) {
         this._super(...arguments);
 
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({
+        this.global.PublicLivechatGlobal.livechatButtonView.update({
             rule: {
                 'action': 'auto_popup',
                 'auto_popup_timer': 0,
             },
         });
-        this.messaging.publicLivechatGlobal.update({ isTestChatbot: true });
-        this.messaging.publicLivechatGlobal.update({ testChatbotData: chatbotData.chatbot });
-        this.messaging.publicLivechatGlobal.chatbot.update({
+        this.global.PublicLivechatGlobal.update({ isTestChatbot: true });
+        this.global.PublicLivechatGlobal.update({ testChatbotData: chatbotData.chatbot });
+        this.global.PublicLivechatGlobal.chatbot.update({
             currentStep: {
-                data: this.messaging.publicLivechatGlobal.chatbot.lastWelcomeStep,
+                data: this.global.PublicLivechatGlobal.chatbot.lastWelcomeStep,
             },
         });
     },

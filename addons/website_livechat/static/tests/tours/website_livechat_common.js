@@ -40,12 +40,12 @@ registerPatch({
                     if (!in_test_mode) {
                         return;
                     }
-                    this.messaging.publicLivechatGlobal.notificationHandler._handleNotification({
+                    this.global.PublicLivechatGlobal.notificationHandler._handleNotification({
                         type: 'mail.channel/new_message',
                         payload: {
-                            id: this.messaging.publicLivechatGlobal.publicLivechat.id,
+                            id: this.global.PublicLivechatGlobal.publicLivechat.id,
                             message: {
-                                id: this.messaging.publicLivechatGlobal.messages.length + 1,
+                                id: this.global.PublicLivechatGlobal.messages.length + 1,
                                 author_id: [0, 'Website Visitor Test'],
                                 email_from: 'Website Visitor Test',
                                 body: Markup('<p>' + message.content + '</p>'),

@@ -26,8 +26,8 @@
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton d-flex align-items-center px-3 cursor-pointer" t-on-click="attachmentViewer.onClickDownload" role="button" title="Download">
-                        <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-download fa-fw" t-att-class="{ 'o-hasLabel me-2': messaging.device.sizeClass > messaging.device.sizeClasses.MD }" role="img"/>
-                        <t t-if="messaging.device.sizeClass > messaging.device.sizeClasses.MD">
+                        <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-download fa-fw" t-att-class="{ 'o-hasLabel me-2': global.Device.sizeClass > global.Device.sizeClasses.MD }" role="img"/>
+                        <t t-if="global.Device.sizeClass > global.Device.sizeClasses.MD">
                             <span>Download</span>
                         </t>
                     </div>
@@ -47,7 +47,7 @@
                         </div>
                     </t>
                     <t t-if="attachmentViewer.attachmentViewerViewable.isPdf">
-                        <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf w-75 h-100 bg-black border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': messaging.device.isSmall }" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"/>
+                        <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf w-75 h-100 bg-black border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': global.Device.isSmall }" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"/>
                     </t>
                     <t t-if="attachmentViewer.attachmentViewerViewable.isText">
                         <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text w-75 h-100 bg-white border-0" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"/>
@@ -56,7 +56,7 @@
                         <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube w-75 h-100 bg-black border-0" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource" height="315" width="560"/>
                     </t>
                     <t t-if="attachmentViewer.attachmentViewerViewable.isVideo">
-                        <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo w-75 h-75 bg-black" t-att-class="{ 'w-100 h-100': messaging.device.isSmall }" t-on-click="attachmentViewer.onClickVideo" controls="controls">
+                        <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo w-75 h-75 bg-black" t-att-class="{ 'w-100 h-100': global.Device.isSmall }" t-on-click="attachmentViewer.onClickVideo" controls="controls">
                             <source t-att-data-type="attachmentViewer.attachmentViewerViewable.mimetype" t-att-src="attachmentViewer.attachmentViewerViewable.defaultSource"/>
                         </video>
                     </t>

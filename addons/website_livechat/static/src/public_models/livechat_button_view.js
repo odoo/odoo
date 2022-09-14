@@ -18,9 +18,9 @@ registerPatch({
          * @override
          */
         async onChatbotRestartScript(ev) {
-            if (this.messaging.publicLivechatGlobal.chatbot.isWebsiteLivechatTourFlow) {
-                this.messaging.publicLivechatGlobal.update({ messages: clear() });
-                this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
+            if (this.global.PublicLivechatGlobal.chatbot.isWebsiteLivechatTourFlow) {
+                this.global.PublicLivechatGlobal.update({ messages: clear() });
+                this.global.PublicLivechatGlobal.chatWindow.renderMessages();
             }
             return this._super(ev);
         },
@@ -35,24 +35,24 @@ registerPatch({
          * @override
          */
         async _openChat() {
-            if (!this.messaging.publicLivechatGlobal.isTestChatbot) {
+            if (!this.global.PublicLivechatGlobal.isTestChatbot) {
                 return this._super();
             }
-            this.messaging.publicLivechatGlobal.update({
-                publicLivechat: { data: this.messaging.publicLivechatGlobal.testChatbotData.channel },
+            this.global.PublicLivechatGlobal.update({
+                publicLivechat: { data: this.global.PublicLivechatGlobal.testChatbotData.channel },
             });
             await this.openChatWindow();
             this.widget._sendWelcomeMessage();
-            this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
-            this.env.services.bus_service.addChannel(this.messaging.publicLivechatGlobal.publicLivechat.uuid);
-            setCookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
+            this.global.PublicLivechatGlobal.chatWindow.renderMessages();
+            this.env.services.bus_service.addChannel(this.global.PublicLivechatGlobal.publicLivechat.uuid);
+            setCookie('im_livechat_session', unaccent(JSON.stringify(this.global.PublicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
             this.update({ isOpeningChat: false });
         },
     },
     fields: {
         isOpenChatDebounced: {
             compute() {
-                if (this.messaging.publicLivechatGlobal.isTestChatbot) {
+                if (this.global.PublicLivechatGlobal.isTestChatbot) {
                     return false;
                 }
                 return this._super();

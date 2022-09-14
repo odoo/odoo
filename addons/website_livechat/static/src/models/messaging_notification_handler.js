@@ -18,7 +18,7 @@ registerPatch({
                     id: message.payload.id,
                     model: 'mail.channel',
                 });
-                this.messaging.chatWindowManager.openThread(channel, {
+                this.global.ChatWindowManager.openThread(channel, {
                     makeActive: true,
                 });
             }

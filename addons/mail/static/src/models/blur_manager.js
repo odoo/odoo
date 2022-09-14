@@ -230,7 +230,7 @@ registerModel({
          */
         stream: attr(),
         userSetting: one('UserSetting', {
-            related: 'messaging.userSetting',
+            related: 'global.UserSetting',
         }),
         video: attr({
             default: document.createElement('video'),

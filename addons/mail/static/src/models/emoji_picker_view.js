@@ -25,7 +25,7 @@ registerModel({
         }),
         categories: many('EmojiPickerView.Category', {
             compute() {
-                return this.messaging.emojiRegistry.allCategories.map(category => ({ category }));
+                return this.global.EmojiRegistry.allCategories.map(category => ({ category }));
             },
             inverse: 'emojiPickerViewOwner',
         }),

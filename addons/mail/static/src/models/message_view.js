@@ -186,7 +186,7 @@ registerModel({
          * Stops editing this message.
          */
         stopEditing() {
-            if (this.messageListViewItemOwner && this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView && !this.messaging.device.isMobileDevice) {
+            if (this.messageListViewItemOwner && this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView && !this.global.Device.isMobileDevice) {
                 this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView.update({ doFocus: true });
             }
             this.update({
@@ -356,10 +356,7 @@ registerModel({
             compute() {
                 return Boolean(
                     this.messageListViewItemOwner &&
-                    (
-                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discuss ||
-                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discussPublicView
-                    )
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discuss
                 );
             },
         }),

@@ -39,7 +39,7 @@ registerModel({
                     this.env._t('From %(name)s: %(candidateType)s (%(protocol)s)'), {
                         candidateType: this.callParticipantCard.rtcSession.remoteCandidateType,
                         name: this.callParticipantCard.channelMember.persona.name,
-                        protocol: this.messaging.rtc.protocolsByCandidateTypes[this.callParticipantCard.rtcSession.remoteCandidateType],
+                        protocol: this.global.Rtc.protocolsByCandidateTypes[this.callParticipantCard.rtcSession.remoteCandidateType],
                     },
                 );
             },
@@ -56,7 +56,7 @@ registerModel({
                     this.env._t('To %(name)s: %(candidateType)s (%(protocol)s)'), {
                         candidateType: this.callParticipantCard.rtcSession.localCandidateType,
                         name: this.callParticipantCard.channelMember.persona.name,
-                        protocol: this.messaging.rtc.protocolsByCandidateTypes[this.callParticipantCard.rtcSession.localCandidateType],
+                        protocol: this.global.Rtc.protocolsByCandidateTypes[this.callParticipantCard.rtcSession.localCandidateType],
                     },
                 );
             },

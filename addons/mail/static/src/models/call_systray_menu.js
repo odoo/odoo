@@ -11,12 +11,12 @@ registerModel({
     fields: {
         buttonTitle: attr({
             compute() {
-                if (!this.messaging.rtc.channel) {
+                if (!this.global.Rtc.channel) {
                     return clear();
                 }
                 return sprintf(
                     this.env._t("Open conference: %s"),
-                    this.messaging.rtc.channel.displayName,
+                    this.global.Rtc.channel.displayName,
                 );
             },
             default: '',

@@ -131,7 +131,7 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: true,
     });
-    const { messaging, openDiscuss } = await start();
+    const { global, openDiscuss } = await start();
     await openDiscuss();
 
     assert.containsOnce(
@@ -142,7 +142,7 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
     // fold the livechat category
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            messaging.discuss.categoryLivechat.localId}"]
+            global.Discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
@@ -170,7 +170,7 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
-    const { messaging, openDiscuss } = await start();
+    const { global, openDiscuss } = await start();
     await openDiscuss();
 
     assert.containsNone(
@@ -181,7 +181,7 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
     // open the livechat category
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            messaging.discuss.categoryLivechat.localId}"]
+            global.Discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
@@ -210,7 +210,7 @@ QUnit.test('livechat - states: close should update the value on the server', asy
         is_discuss_sidebar_category_livechat_open: true,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { messaging, openDiscuss } = await start();
+    const { global, messaging, openDiscuss } = await start();
     await openDiscuss();
 
     const initalSettings = await messaging.rpc({
@@ -226,7 +226,7 @@ QUnit.test('livechat - states: close should update the value on the server', asy
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            messaging.discuss.categoryLivechat.localId}"]
+            global.Discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
@@ -260,7 +260,7 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
         is_discuss_sidebar_category_livechat_open: false,
     });
     const currentUserId = pyEnv.currentUserId;
-    const { messaging, openDiscuss } = await start();
+    const { global, messaging, openDiscuss } = await start();
     await openDiscuss();
 
     const initalSettings = await messaging.rpc({
@@ -276,7 +276,7 @@ QUnit.test('livechat - states: open should update the value on the server', asyn
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            messaging.discuss.categoryLivechat.localId}"]
+            global.Discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
@@ -382,7 +382,7 @@ QUnit.test('livechat - states: category item should be invisible if the category
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, openDiscuss } = await start();
+    const { global, openDiscuss } = await start();
     await openDiscuss();
 
     assert.containsOnce(
@@ -392,7 +392,7 @@ QUnit.test('livechat - states: category item should be invisible if the category
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            messaging.discuss.categoryLivechat.localId}"]
+            global.Discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );
@@ -417,7 +417,7 @@ QUnit.test('livechat - states: the active category item should be visble even if
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, openDiscuss } = await start();
+    const { global, openDiscuss } = await start();
     await openDiscuss();
 
     assert.containsOnce(
@@ -433,7 +433,7 @@ QUnit.test('livechat - states: the active category item should be visble even if
 
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory[data-category-local-id="${
-            messaging.discuss.categoryLivechat.localId}"]
+            global.Discuss.categoryLivechat.localId}"]
             .o_DiscussSidebarCategory_title
         `).click()
     );

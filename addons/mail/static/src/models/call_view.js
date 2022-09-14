@@ -21,7 +21,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onRtcSettingsDialogClosed(ev) {
-            this.messaging.userSetting.callSettingsMenu.toggle();
+            this.global.UserSetting.callSettingsMenu.toggle();
         },
         async activateFullScreen() {
             const el = document.body;
@@ -106,7 +106,7 @@ registerModel({
          */
         aspectRatio: attr({
             compute() {
-                const rtcAspectRatio = this.messaging.rtc.videoConfig && this.messaging.rtc.videoConfig.aspectRatio;
+                const rtcAspectRatio = this.global.Rtc.videoConfig && this.global.Rtc.videoConfig.aspectRatio;
                 const aspectRatio = rtcAspectRatio || 16 / 9;
                 // if we are in minimized mode (round avatar frames), we treat the cards like squares.
                 return this.isMinimized ? 1 : aspectRatio;

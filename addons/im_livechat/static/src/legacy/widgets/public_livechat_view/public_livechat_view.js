@@ -47,7 +47,7 @@ const PublicLivechatView = Widget.extend({
      */
     init(parent, messaging, options) {
         this._super(...arguments);
-        this.messaging = messaging;
+        this.global = messaging.global;
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
         this._enabledOptions = _.defaults(options || {}, {
@@ -85,13 +85,13 @@ const PublicLivechatView = Widget.extend({
      */
     render(options) {
         let shouldScrollToBottomAfterRendering = false;
-        if (this._currentThreadID === this.messaging.publicLivechatGlobal.publicLivechat.id && this.isAtBottom()) {
+        if (this._currentThreadID === this.global.PublicLivechatGlobal.publicLivechat.id && this.isAtBottom()) {
             shouldScrollToBottomAfterRendering = true;
         }
-        this._currentThreadID = this.messaging.publicLivechatGlobal.publicLivechat.id;
+        this._currentThreadID = this.global.PublicLivechatGlobal.publicLivechat.id;
 
         // copy so that reverse do not alter order in the thread object
-        const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages());
+        const messages = _.clone(this.global.PublicLivechatGlobal.publicLivechat.widget.getMessages());
 
         const modeOptions = this._enabledOptions;
 

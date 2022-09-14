@@ -70,10 +70,10 @@ registerModel({
         onAddItemAutocompleteSelect(ev, ui) {
             switch (this.autocompleteMethod) {
                 case 'channel':
-                    this.messaging.discuss.handleAddChannelAutocompleteSelect(ev, ui);
+                    this.global.Discuss.handleAddChannelAutocompleteSelect(ev, ui);
                     break;
                 case 'chat':
-                    this.messaging.discuss.handleAddChatAutocompleteSelect(ev, ui);
+                    this.global.Discuss.handleAddChatAutocompleteSelect(ev, ui);
                     break;
             }
         },
@@ -85,10 +85,10 @@ registerModel({
         onAddItemAutocompleteSource(req, res) {
             switch (this.autocompleteMethod) {
                 case 'channel':
-                    this.messaging.discuss.handleAddChannelAutocompleteSource(req, res);
+                    this.global.Discuss.handleAddChannelAutocompleteSource(req, res);
                     break;
                 case 'chat':
-                    this.messaging.discuss.handleAddChatAutocompleteSource(req, res);
+                    this.global.Discuss.handleAddChatAutocompleteSource(req, res);
                     break;
             }
         },
@@ -133,7 +133,7 @@ registerModel({
          */
         activeItem: one('DiscussSidebarCategoryItem', {
             compute() {
-                const channel = this.messaging.discuss.activeThread && this.messaging.discuss.activeThread.channel;
+                const channel = this.global.Discuss.activeThread && this.global.Discuss.activeThread.channel;
                 if (channel && this.supportedChannelTypes.includes(channel.channel_type)) {
                     return {
                         category: this,
@@ -246,7 +246,7 @@ registerModel({
         filteredCategoryItems: many('DiscussSidebarCategoryItem', {
             compute() {
                 let categoryItems = this.orderedCategoryItems;
-                const searchValue = this.messaging.discuss.sidebarQuickSearchValue;
+                const searchValue = this.global.Discuss.sidebarQuickSearchValue;
                 if (searchValue) {
                     const qsVal = searchValue.toLowerCase();
                     categoryItems = categoryItems.filter(categoryItem => {

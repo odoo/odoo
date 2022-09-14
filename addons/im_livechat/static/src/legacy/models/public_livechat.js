@@ -37,7 +37,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     init(messaging, params) {
         Mixins.EventDispatcherMixin.init.call(this, arguments);
         this.setParent(params.parent);
-        this.messaging = messaging;
+        this.global = messaging.global;
 
         /**
          * Initialize the internal data for typing feature on threads.
@@ -97,15 +97,15 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this._typingPartnerIDs = [];
 
         if (params.data.message_unread_counter !== undefined) {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({
+            this.global.PublicLivechatGlobal.publicLivechat.update({
                 unreadCounter: params.data.message_unread_counter
             });
         }
 
         if (_.isBoolean(params.data.folded)) {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: params.data.folded });
+            this.global.PublicLivechatGlobal.publicLivechat.update({ isFolded: params.data.folded });
         } else {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: params.data.state === 'folded' });
+            this.global.PublicLivechatGlobal.publicLivechat.update({ isFolded: params.data.state === 'folded' });
         }
     },
 
@@ -127,7 +127,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {@im_livechat/legacy/models/public_livechat_message} message
      */
     addMessage(message) {
-        const operatorID = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
+        const operatorID = this.global.PublicLivechatGlobal.publicLivechat.operator.id;
         if (message.hasAuthor() && message.getAuthorID() === operatorID) {
             this.unregisterTyping({ partnerID: operatorID });
         }
@@ -138,7 +138,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
      getMessages() {
         // ignore removed messages
-        return this.messaging.publicLivechatGlobal.messages.filter(message => !message.widget.isEmpty()).map(message => message.widget);
+        return this.global.PublicLivechatGlobal.messages.filter(message => !message.widget.isEmpty()).map(message => message.widget);
     },
     /**
      * Get the text to display when some partners are typing something on the
@@ -168,8 +168,8 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     getTypingMembersToText() {
         const typingPartnerIDs = this._typingPartnerIDs;
         const typingMembers = (
-            this.messaging.publicLivechatGlobal.publicLivechat.operator && this._typingPartnerIDs.includes(this.messaging.publicLivechatGlobal.publicLivechat.operator.id)
-            ? [this.messaging.publicLivechatGlobal.publicLivechat.operator]
+            this.global.PublicLivechatGlobal.publicLivechat.operator && this._typingPartnerIDs.includes(this.global.PublicLivechatGlobal.publicLivechat.operator.id)
+            ? [this.global.PublicLivechatGlobal.publicLivechat.operator]
             : []
         );
         const sortedTypingMembers = _.sortBy(typingMembers, function (member) {
@@ -213,9 +213,9 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {Promise}
      */
     markAsRead() {
-        if (this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter > 0) {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: 0 });
-            this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
+        if (this.global.PublicLivechatGlobal.publicLivechat.unreadCounter > 0) {
+            this.global.PublicLivechatGlobal.publicLivechat.update({ unreadCounter: 0 });
+            this.global.PublicLivechatGlobal.chatWindow.widget.renderHeader();
             return Promise.resolve();
         }
         return Promise.resolve();
@@ -289,19 +289,19 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     toData() {
         return {
-            folded: this.messaging.publicLivechatGlobal.publicLivechat.isFolded,
-            id: this.messaging.publicLivechatGlobal.publicLivechat.id,
-            message_unread_counter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
+            folded: this.global.PublicLivechatGlobal.publicLivechat.isFolded,
+            id: this.global.PublicLivechatGlobal.publicLivechat.id,
+            message_unread_counter: this.global.PublicLivechatGlobal.publicLivechat.unreadCounter,
             operator_pid: (
-                this.messaging.publicLivechatGlobal.publicLivechat.operator
+                this.global.PublicLivechatGlobal.publicLivechat.operator
                 ? [
-                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                    this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                    this.global.PublicLivechatGlobal.publicLivechat.operator.id,
+                    this.global.PublicLivechatGlobal.publicLivechat.operator.name,
                 ]
                 : []
             ),
-            name: this.messaging.publicLivechatGlobal.publicLivechat.name,
-            uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+            name: this.global.PublicLivechatGlobal.publicLivechat.name,
+            uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid,
         };
     },
     /**
@@ -339,7 +339,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _notifyMyselfTyping(params) {
         return session.rpc('/im_livechat/notify_typing', {
-            uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+            uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid,
             is_typing: params.typing,
         }, { shadow: true });
     },
@@ -350,7 +350,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @private
      */
     _warnUpdatedTypingPartners() {
-        this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
+        this.global.PublicLivechatGlobal.chatWindow.widget.renderHeader();
     },
 
     //--------------------------------------------------------------------------

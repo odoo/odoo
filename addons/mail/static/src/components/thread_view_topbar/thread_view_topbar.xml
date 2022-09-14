@@ -85,7 +85,7 @@
                     </t>
                 </div>
                 <!-- FIXME: handle display on mobile -->
-                <t t-if="threadViewTopbar.threadView.threadViewer.discussPublicView and !messaging.device.isSmall">
+                <t t-if="messaging.currentGuest and global.DiscussPublicView and !global.Device.isSmall">
                     <div class="o_ThreadViewTopbar_userInfo d-flex align-items-center">
                         <img class="o_ThreadViewTopbar_avatar mx-1 rounded-circle o_object_fit_cover" t-att-src="threadViewTopbar.avatarUrl" alt="Avatar"/>
                         <t t-if="!threadViewTopbar.isEditingGuestName">

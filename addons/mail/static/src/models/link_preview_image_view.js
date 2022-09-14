@@ -38,7 +38,7 @@ registerModel({
                 if (!this.linkPreview.isDeletable) {
                     return clear();
                 }
-                if (this.messaging.device.isMobileDevice) {
+                if (this.global.Device.isMobileDevice) {
                     return {};
                 }
                 if (this.isHovered || (this.linkPreviewAsideView && this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)) {

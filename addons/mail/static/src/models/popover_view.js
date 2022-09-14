@@ -245,8 +245,8 @@ registerModel({
         }),
         manager: one('PopoverManager', {
             compute() {
-                if (this.messaging.popoverManager) {
-                    return this.messaging.popoverManager;
+                if (this.global.PopoverManager) {
+                    return this.global.PopoverManager;
                 }
                 return clear();
             },

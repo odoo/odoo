@@ -19,8 +19,8 @@ registerModel({
          * the current user. This includes pinned channels for instance.
          */
         async start() {
-            this.messaging.device.start();
-            const discuss = this.messaging.discuss;
+            this.global.Device.start();
+            const discuss = this.global.Discuss;
             const data = await this.performInitRpc();
             if (!this.exists()) {
                 return;
@@ -68,7 +68,7 @@ registerModel({
             shortcodes = [],
             starred_counter = 0,
         }) {
-            const discuss = this.messaging.discuss;
+            const discuss = this.global.Discuss;
             // partners first because the rest of the code relies on them
             this._initPartners({
                 currentGuest,

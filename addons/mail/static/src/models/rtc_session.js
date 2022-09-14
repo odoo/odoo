@@ -77,7 +77,7 @@ registerModel({
             if (this.channelMember.persona.volumeSetting) {
                 this.channelMember.persona.volumeSetting.update({ volume: this.volume });
             }
-            this.messaging.userSetting.saveVolumeSetting({
+            this.global.UserSetting.saveVolumeSetting({
                 partnerId: this.channelMember.persona.partner && this.channelMember.persona.partner.id,
                 guestId: this.channelMember.persona.guest && this.channelMember.persona.guest.id,
                 volume: this.volume,
@@ -91,10 +91,10 @@ registerModel({
             if (!this.rtcAsCurrentSession) {
                 return;
             }
-            if (this.messaging.rtc.currentRtcSession.isDeaf) {
-                await this.messaging.rtc.undeafen();
+            if (this.global.Rtc.currentRtcSession.isDeaf) {
+                await this.global.Rtc.undeafen();
             } else {
-                await this.messaging.rtc.deafen();
+                await this.global.Rtc.deafen();
             }
         },
         /**
@@ -260,7 +260,7 @@ registerModel({
             } else {
                 audioElement.volume = this.volume;
             }
-            audioElement.muted = this.messaging.rtc.currentRtcSession.isDeaf;
+            audioElement.muted = this.global.Rtc.currentRtcSession.isDeaf;
             // Using both autoplay and play() as safari may prevent play() outside of user interactions
             // while some browsers may not support or block autoplay.
             audioElement.autoplay = true;
@@ -444,11 +444,11 @@ registerModel({
         }),
         rtcAsConnectedSession: one('Rtc', {
             compute() {
-                if (!this.messaging || !this.messaging.rtc) {
+                if (!this.messaging || !this.global.Rtc) {
                     return clear();
                 }
                 if (this.rtcPeerConnection) {
-                    return this.messaging.rtc;
+                    return this.global.Rtc;
                 }
                 return clear();
             },

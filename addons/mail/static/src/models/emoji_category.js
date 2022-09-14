@@ -20,7 +20,7 @@ registerModel({
         }),
         emojiRegistry: one("EmojiRegistry", {
             compute() {
-                return this.messaging.emojiRegistry;
+                return this.global.EmojiRegistry;
             },
             inverse: "allCategories",
             required: true,

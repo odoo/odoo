@@ -21,8 +21,8 @@ registerModel({
                 return;
             }
             this.thread.open();
-            if (!this.messaging.device.isSmall) {
-                this.messaging.messagingMenu.close();
+            if (!this.global.Device.isSmall) {
+                this.global.MessagingMenu.close();
             }
         },
         /**

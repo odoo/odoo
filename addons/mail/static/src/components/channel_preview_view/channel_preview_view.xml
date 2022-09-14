@@ -21,8 +21,8 @@
                             <PersonaImStatusIcon
                                 className="'o_NotificationListItem_personaImStatusIcon o_ChannelPreviewView_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
                                 classNameObj="{
-                                    'o-isDeviceSmall': messaging.device.isSmall,
-                                    'small': !messaging.device.isSmall,
+                                    'o-isDeviceSmall': global.Device.isSmall,
+                                    'small': !global.Device.isSmall,
                                     'o-muted': channelPreviewView.channel.localMessageUnreadCounter === 0,
                                 }"
                                 record="channelPreviewView.personaImStatusIconView"
@@ -32,7 +32,7 @@
                 </div>
                 <div class="o_NotificationListItem_content o_ChannelPreviewView_content d-flex flex-column flex-grow-1 align-self-start m-2">
                     <div class="o_NotificationListItem_header o_ChannelPreviewView_header d-flex align-items-baseline">
-                        <span class="o_NotificationListItem_name o_ChannelPreviewView_name text-truncate fw-bold" t-att-class="{ 'o-isDeviceSmall fs-5': messaging.device.isSmall, 'o-muted text-600': channelPreviewView.channel.localMessageUnreadCounter === 0 }">
+                        <span class="o_NotificationListItem_name o_ChannelPreviewView_name text-truncate fw-bold" t-att-class="{ 'o-isDeviceSmall fs-5': global.Device.isSmall, 'o-muted text-600': channelPreviewView.channel.localMessageUnreadCounter === 0 }">
                             <t t-esc="channelPreviewView.channel.displayName"/>
                         </span>
                         <t t-if="channelPreviewView.channel.localMessageUnreadCounter > 1">

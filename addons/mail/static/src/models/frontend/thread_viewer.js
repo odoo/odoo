@@ -1,15 +1,18 @@
 /** @odoo-module **/
 
-import { addFields, patchFields } from '@mail/model/model_core';
+import { registerPatch, patchFields } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/thread_viewer';
 
-addFields('ThreadViewer', {
-    discussPublicView: one('DiscussPublicView', {
-        identifying: true,
-        inverse: 'threadViewer',
-    }),
+registerPatch({
+    name: 'ThreadViewer',
+    fields: {
+        discussPublicView: one('DiscussPublicView', {
+            identifying: true,
+            inverse: 'threadViewer',
+        }),
+    },
 });
 
 patchFields('ThreadViewer', {

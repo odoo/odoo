@@ -40,7 +40,7 @@ function addContextToErrors(func, contextMessage) {
  * @param {string} modelName The name of the model to which to add the fields.
  * @param {Object} fields Fields to be added. key = field name, value = field attributes
  */
-function addFields(modelName, fields) {
+export function addFields(modelName, fields) {
     if (!registry.has(modelName)) {
         throw new Error(`Cannot add fields to model "${modelName}": model must be registered before fields can be added.`);
     }

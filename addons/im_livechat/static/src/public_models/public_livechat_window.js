@@ -11,9 +11,9 @@ registerModel({
         _created() {
             this.update({
                 widget: new PublicLivechatWindow(
-                    this.messaging.publicLivechatGlobal.livechatButtonView.widget,
+                    this.global.PublicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
-                    this.messaging.publicLivechatGlobal.publicLivechat.widget,
+                    this.global.PublicLivechatGlobal.publicLivechat.widget,
                 ),
             });
         },
@@ -30,9 +30,9 @@ registerModel({
                 .val('')
                 .focus();
 
-            $composerTextField.off('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
-            if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-                $composerTextField.on('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
+            $composerTextField.off('keydown', this.global.PublicLivechatGlobal.chatbot.onKeydownInput);
+            if (this.global.PublicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
+                $composerTextField.on('keydown', this.global.PublicLivechatGlobal.chatbot.onKeydownInput);
             }
         },
         /**
@@ -56,16 +56,16 @@ registerModel({
             const self = this;
 
             this.widget.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
-                $(this).on('click', self.messaging.publicLivechatGlobal.livechatButtonView.widget._onChatbotOptionClicked.bind(self.messaging.publicLivechatGlobal.livechatButtonView.widget));
+                $(this).on('click', self.global.PublicLivechatGlobal.livechatButtonView.widget._onChatbotOptionClicked.bind(self.global.PublicLivechatGlobal.livechatButtonView.widget));
             });
 
             this.widget.$('.o_livechat_chatbot_main_restart').on('click', (ev) => {
                 ev.stopPropagation(); // prevent fold behaviour
-                this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript(ev);
+                this.global.PublicLivechatGlobal.livechatButtonView.onChatbotRestartScript(ev);
             });
 
-            if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
-                const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
+            if (this.global.PublicLivechatGlobal.messages.length !== 0) {
+                const lastMessage = this.global.PublicLivechatGlobal.lastMessage;
                 const stepAnswers = lastMessage.widget.getChatbotStepAnswers();
                 if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.widget.getChatbotStepAnswerId()) {
                     this.disableInput(this.env._t("Select an option above"));
@@ -76,8 +76,8 @@ registerModel({
     fields: {
         inputPlaceholder: attr({
             compute() {
-                if (this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder) {
-                    return this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder;
+                if (this.global.PublicLivechatGlobal.livechatButtonView.inputPlaceholder) {
+                    return this.global.PublicLivechatGlobal.livechatButtonView.inputPlaceholder;
                 }
                 return this.env._t("Say something");
             },

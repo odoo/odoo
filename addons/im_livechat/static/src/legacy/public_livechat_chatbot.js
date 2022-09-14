@@ -27,8 +27,8 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
     _prepareGetSessionParameters() {
         const parameters = this._super(...arguments);
 
-        if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
-            parameters.chatbot_script_id = this.messaging.publicLivechatGlobal.chatbot.scriptId;
+        if (this.global.PublicLivechatGlobal.chatbot.isActive) {
+            parameters.chatbot_script_id = this.global.PublicLivechatGlobal.chatbot.scriptId;
         }
 
         return parameters;
@@ -38,10 +38,10 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
      * @private
      */
     _sendWelcomeMessage() {
-        if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
+        if (this.global.PublicLivechatGlobal.chatbot.isActive) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this.messaging.publicLivechatGlobal.chatbot.state === 'welcome' ? 0 : this.messaging.publicLivechatGlobal.chatbot.messageDelay,
+                this.global.PublicLivechatGlobal.chatbot.state === 'welcome' ? 0 : this.global.PublicLivechatGlobal.chatbot.messageDelay,
             );
         } else {
             this._super(...arguments);
@@ -69,18 +69,18 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
      * @private
      */
     _sendWelcomeChatbotMessage(stepIndex, welcomeMessageDelay) {
-        const chatbotStep = this.messaging.publicLivechatGlobal.chatbot.welcomeSteps[stepIndex];
-        this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: chatbotStep } });
+        const chatbotStep = this.global.PublicLivechatGlobal.chatbot.welcomeSteps[stepIndex];
+        this.global.PublicLivechatGlobal.chatbot.update({ currentStep: { data: chatbotStep } });
 
         if (chatbotStep.chatbot_step_message) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
+            this.global.PublicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome_' + stepIndex,
                 is_discussion: true, // important for css style -> we only want white background for chatbot
                 author: (
-                    this.messaging.publicLivechatGlobal.publicLivechat.operator
+                    this.global.PublicLivechatGlobal.publicLivechat.operator
                     ? {
-                        id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                        name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                        id: this.global.PublicLivechatGlobal.publicLivechat.operator.id,
+                        name: this.global.PublicLivechatGlobal.publicLivechat.operator.name,
                     }
                     : [['clear']]
                 ),
@@ -90,33 +90,33 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
                 message_type: "comment",
-                res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
+                res_id: this.global.PublicLivechatGlobal.publicLivechat.id,
             });
         }
 
-        if (stepIndex + 1 < this.messaging.publicLivechatGlobal.chatbot.welcomeSteps.length) {
+        if (stepIndex + 1 < this.global.PublicLivechatGlobal.chatbot.welcomeSteps.length) {
             if (welcomeMessageDelay !== 0) {
-                this.messaging.publicLivechatGlobal.chatbot.setIsTyping(true);
+                this.global.PublicLivechatGlobal.chatbot.setIsTyping(true);
             }
 
-            this.messaging.publicLivechatGlobal.chatbot.update({
+            this.global.PublicLivechatGlobal.chatbot.update({
                 welcomeMessageTimeout: setTimeout(() => {
                     this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
-                    this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
+                    this.global.PublicLivechatGlobal.chatWindow.renderMessages();
                 }, welcomeMessageDelay),
             });
         } else {
-            if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator') {
+            if (this.global.PublicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator') {
                 // special case when the last welcome message is a forward to an operator
                 // we need to save the welcome messages before continuing the script
                 // indeed, if there are no operator available, the script will continue
                 // with steps that are NOT included in the welcome messages
                 // (hence why we need to have those welcome messages posted BEFORE that)
-                this.messaging.publicLivechatGlobal.chatbot.postWelcomeMessages();
+                this.global.PublicLivechatGlobal.chatbot.postWelcomeMessages();
             }
 
             // we are done posting welcome messages, let's start the actual script
-            this.messaging.publicLivechatGlobal.chatbot.processStep();
+            this.global.PublicLivechatGlobal.chatbot.processStep();
         }
     },
 
@@ -126,7 +126,7 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
     /**
      * Saves the selected chatbot.script.answer onto our chatbot.message.
-     * Will update the state of the related message (in this.messaging.publicLivechatGlobal.messages) to set the selected option
+     * Will update the state of the related message (in this.global.PublicLivechatGlobal.messages) to set the selected option
      * as well which will in turn adapt the display to not show options anymore.
      *
      * This method also handles an optional redirection link placed on the chatbot.script.answer and
@@ -143,14 +143,14 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
         const selectedAnswer = $target.data('chatbotStepAnswerId');
 
         const redirectLink = $target.data('chatbotStepRedirectLink');
-        this.messaging.publicLivechatGlobal.chatbot.update({ isRedirecting: !!redirectLink });
+        this.global.PublicLivechatGlobal.chatbot.update({ isRedirecting: !!redirectLink });
 
-        await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage({
+        await this.global.PublicLivechatGlobal.livechatButtonView.sendMessage({
             content: $target.text().trim(),
         });
 
         let stepMessage = null;
-        for (const message of this.messaging.publicLivechatGlobal.messages) {
+        for (const message of this.global.PublicLivechatGlobal.messages) {
             // we do NOT want to use a 'find' here because we want the LAST message that respects
             // this condition.
             // indeed, if you restart the script, you can have multiple messages with the same step id,
@@ -163,12 +163,12 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
         }
         const messageId = stepMessage.id;
         stepMessage.widget.setChatbotStepAnswerId(selectedAnswer);
-        this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
-        this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
-        this.messaging.publicLivechatGlobal.chatbot.saveSession();
+        this.global.PublicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
+        this.global.PublicLivechatGlobal.chatWindow.renderMessages();
+        this.global.PublicLivechatGlobal.chatbot.saveSession();
 
         const saveAnswerPromise = session.rpc('/chatbot/answer/save', {
-            channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+            channel_uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid,
             message_id: messageId,
             selected_answer_id: selectedAnswer,
         });

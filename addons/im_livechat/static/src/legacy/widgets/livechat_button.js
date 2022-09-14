@@ -11,10 +11,10 @@ const LivechatButton = Widget.extend({
     },
     init(parent, messaging) {
         this._super(parent);
-        this.messaging = messaging;
+        this.global = messaging.global;
     },
     start() {
-        this.messaging.publicLivechatGlobal.livechatButtonView.start();
+        this.global.PublicLivechatGlobal.livechatButtonView.start();
         return this._super();
     },
 
@@ -45,8 +45,8 @@ const LivechatButton = Widget.extend({
      */
     _prepareGetSessionParameters() {
         return {
-            channel_id: this.messaging.publicLivechatGlobal.channelId,
-            anonymous_name: this.messaging.publicLivechatGlobal.livechatButtonView.defaultUsername,
+            channel_id: this.global.PublicLivechatGlobal.channelId,
+            anonymous_name: this.global.PublicLivechatGlobal.livechatButtonView.defaultUsername,
             previous_operator_id: this._get_previous_operator_id(),
         };
     },
@@ -54,17 +54,17 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _sendWelcomeMessage() {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
+        if (this.global.PublicLivechatGlobal.livechatButtonView.defaultMessage) {
+            this.global.PublicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome',
                 author: {
-                    id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                    name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                    id: this.global.PublicLivechatGlobal.publicLivechat.operator.id,
+                    name: this.global.PublicLivechatGlobal.publicLivechat.operator.name,
                 },
-                body: this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage,
+                body: this.global.PublicLivechatGlobal.livechatButtonView.defaultMessage,
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
-                res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
+                res_id: this.global.PublicLivechatGlobal.publicLivechat.id,
             }, { prepend: true });
         }
     },
@@ -77,7 +77,7 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _onClick() {
-        this.messaging.publicLivechatGlobal.livechatButtonView.openChat();
+        this.global.PublicLivechatGlobal.livechatButtonView.openChat();
     },
 });
 

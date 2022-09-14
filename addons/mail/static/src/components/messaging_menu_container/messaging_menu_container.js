@@ -17,8 +17,8 @@ export class MessagingMenuContainer extends Component {
         super.setup();
     }
 
-    get messaging() {
-        return this.env.services.messaging.modelManager.messaging;
+    get global() {
+        return this.env.services.messaging.modelManager.global;
     }
 }
 

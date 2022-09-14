@@ -86,7 +86,7 @@ registerModel({
                 audioInputDeviceId,
             });
             browser.localStorage.setItem('mail_user_setting_audio_input_device_id', audioInputDeviceId);
-            await this.messaging.rtc.updateLocalAudioTrack(true);
+            await this.global.Rtc.updateLocalAudioTrack(true);
         },
         /**
          * @param {string} value
@@ -133,11 +133,11 @@ registerModel({
         async setThresholdValue(voiceActivationThreshold) {
             this.update({ voiceActivationThreshold });
             browser.localStorage.setItem('mail_user_setting_voice_threshold', voiceActivationThreshold.toString());
-            await this.messaging.rtc.updateVoiceActivation();
+            await this.global.Rtc.updateVoiceActivation();
         },
         async togglePushToTalk() {
             this.update({ localUsePushToTalk: !this.usePushToTalk });
-            await this.messaging.rtc.updateVoiceActivation();
+            await this.global.Rtc.updateVoiceActivation();
             if (this.messaging.currentUser) {
                 this._saveSettings();
             }
@@ -164,10 +164,10 @@ registerModel({
             });
         },
         _onChangeUseBlur() {
-            if (!this.messaging.rtc.sendUserVideo) {
+            if (!this.global.Rtc.sendUserVideo) {
                 return;
             }
-            this.messaging.rtc.toggleUserVideo({ force: true });
+            this.global.Rtc.toggleUserVideo({ force: true });
         },
         /**
          * @private
@@ -176,7 +176,7 @@ registerModel({
         async _onStorage(ev) {
             if (ev.key === 'mail_user_setting_voice_threshold') {
                 this.update({ voiceActivationThreshold: ev.newValue });
-                await this.messaging.rtc.updateVoiceActivation();
+                await this.global.Rtc.updateVoiceActivation();
             }
         },
         /**

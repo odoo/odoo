@@ -156,7 +156,7 @@ registerModel({
          */
         onClickAddAttachment() {
             this.fileUploader.openBrowserFileUploader();
-            if (!this.messaging.device.isMobileDevice) {
+            if (!this.global.Device.isMobileDevice) {
                 this.update({ doFocus: true });
             }
         },
@@ -215,7 +215,7 @@ registerModel({
         onClickEmoji(ev) {
             this.saveStateInStore();
             this.insertIntoTextInput(ev.currentTarget.dataset.codepoints);
-            if (!this.messaging.device.isMobileDevice) {
+            if (!this.global.Device.isMobileDevice) {
                 this.update({ doFocus: true });
             }
             this.update({ emojisPopoverView: clear() });
@@ -1103,7 +1103,7 @@ registerModel({
                     return false;
                 }
                 if (this.threadView.threadViewer.discuss) {
-                    return !this.messaging.device.isSmall;
+                    return !this.global.Device.isSmall;
                 }
                 return clear();
             },
@@ -1114,7 +1114,7 @@ registerModel({
                 if (this.messageViewInEditing) {
                     return false;
                 }
-                if (this.messaging.device.isSmall) {
+                if (this.global.Device.isSmall) {
                     return false;
                 }
                 if (!this.threadView) {
@@ -1186,7 +1186,7 @@ registerModel({
                     return false;
                 }
                 if (this.threadView && this.threadView.threadViewer.chatWindow) {
-                    return this.messaging.device.isSmall;
+                    return this.global.Device.isSmall;
                 }
                 return clear();
             },
@@ -1343,7 +1343,7 @@ registerModel({
                     return ['enter'];
                 }
                 if (this.threadView) {
-                    if (!this.messaging.device) {
+                    if (!this.global.Device) {
                         return clear();
                     }
                     // Actually in mobile there is a send button, so we need there 'enter' to allow new
@@ -1351,7 +1351,7 @@ registerModel({
                     // small screen size with a non-mailing channel. Here send will be done on clicking
                     // the button or using the 'ctrl/meta enter' shortcut.
                     if (
-                        this.messaging.device.isSmall ||
+                        this.global.Device.isSmall ||
                         (
                             this.messaging.discuss.threadView === this.threadView &&
                             this.messaging.discuss.activeThread === this.messaging.inbox.thread

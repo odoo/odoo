@@ -219,7 +219,7 @@ registerModel({
          */
         isActive: attr({
             compute() {
-                return this.messaging.discuss && this.thread === this.messaging.discuss.activeThread;
+                return this.global.Discuss && this.thread === this.global.Discuss.activeThread;
             },
         }),
         /**

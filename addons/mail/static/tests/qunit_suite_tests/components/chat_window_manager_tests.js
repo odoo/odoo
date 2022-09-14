@@ -190,13 +190,13 @@ QUnit.test('chat window new message: fold', async function (assert) {
 QUnit.test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async function (assert) {
     /**
      * InnerWith computation uses following info:
-     * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
+     * ([mocked] messaging window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
      * - hidden menu width: 170px
-     * - global width: 1920px
+     * - messaging width: 1920px
      *
      * Enough space for 3 visible chat windows:
      *  10 + 340 + 5 + 340 + 5 + 340 + 10 = 1050 < 1920
@@ -788,13 +788,13 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
 QUnit.test('focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]', async function (assert) {
     /**
      * computation uses following info:
-     * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
+     * ([mocked] messaging window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
      * - hidden menu width: 170px
-     * - global width: 1920px
+     * - messaging width: 1920px
      *
      * Enough space for 2 visible chat windows:
      *  10 + 340 + 5 + 340 + 10 = 705 < 1920
@@ -857,7 +857,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
 
     const pyEnv = await startServer();
     const mailChannelId = pyEnv['mail.channel'].create({});
-    const { click, insertText, messaging, openDiscuss, openView } = await start();
+    const { click, insertText, global, openDiscuss, openView } = await start();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
     // Set content of the composer of the chat window
@@ -882,7 +882,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     ];
     await afterNextRender(() =>
         inputFiles(
-            messaging.chatWindowManager.chatWindows[0].threadView.composerView.fileUploader.fileInput,
+            global.ChatWindowManager.chatWindows[0].threadView.composerView.fileUploader.fileInput,
             files
         )
     );
@@ -994,7 +994,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
 QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]', async function (assert) {
     /**
      * computation uses following info:
-     * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
+     * ([mocked] messaging window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
      * - chat window width: 340px
@@ -1949,7 +1949,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel1' }]);
     patchUiSize({ width: 600 }); // enough to fit 1 chat window + hidden menu
-    const { click, messaging } = await start();
+    const { click, global } = await start();
     // open, from systray menu, chat windows of channels with id 1, 2
     await click('.o_MessagingMenu_toggler');
     await click(`
@@ -1963,7 +1963,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     `);
     // simulate resize to go into mobile
     await afterNextRender(
-        () => messaging.device.update({
+        () => global.Device.update({
             globalWindowInnerWidth: 300,
             isMobileDevice: true,
             isSmall: true,

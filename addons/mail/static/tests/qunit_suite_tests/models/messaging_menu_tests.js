@@ -18,7 +18,7 @@ QUnit.test('messaging menu counter should ignore unread messages in channels tha
             permission: 'denied',
         },
     });
-    const { messaging } = await start();
+    const { global, messaging } = await start();
     messaging.models['Thread'].insert({
         channel: {
             id: 31,
@@ -29,7 +29,7 @@ QUnit.test('messaging menu counter should ignore unread messages in channels tha
         model: 'mail.channel',
     });
     assert.strictEqual(
-        messaging.messagingMenu.counter,
+        global.MessagingMenu.counter,
         0,
         "messaging menu counter should ignore unread messages in channels that are unpinned"
     );

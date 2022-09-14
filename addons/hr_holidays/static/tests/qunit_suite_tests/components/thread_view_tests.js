@@ -24,7 +24,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         ],
         channel_type: 'chat',
     });
-    const { openDiscuss, messaging } = await start({
+    const { openDiscuss, global } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -38,7 +38,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         "should have an out of office alert on thread view"
     );
     const formattedDate = returningDate.toDate().toLocaleDateString(
-        messaging.locale.language.replace(/_/g, '-'),
+        global.Locale.language.replace(/_/g, '-'),
         { day: 'numeric', month: 'short' }
     );
     assert.ok(

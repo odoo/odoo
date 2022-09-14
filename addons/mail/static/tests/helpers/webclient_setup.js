@@ -74,11 +74,13 @@ function setupMessagingServiceRegistries({
     const messagingValues = {
         start() {
             return {
+                global: {
+                    UserNotificationManager: { canPlayAudio: false },
+                },
                 isInQUnitTest: true,
                 disableAnimation: true,
                 loadingBaseDelayDuration,
                 messagingBus,
-                userNotificationManager: { canPlayAudio: false },
             };
         }
     };

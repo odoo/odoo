@@ -130,10 +130,10 @@ registerModel({
             compute() {
                 switch (this.channel_type) {
                     case 'channel':
-                        return this.messaging.discuss.categoryChannel;
+                        return this.global.Discuss.categoryChannel;
                     case 'chat':
                     case 'group':
-                        return this.messaging.discuss.categoryChat;
+                        return this.global.Discuss.categoryChat;
                     default:
                         return clear();
                 }

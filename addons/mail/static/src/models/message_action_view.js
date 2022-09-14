@@ -113,7 +113,7 @@ registerModel({
         }),
         paddingClassNames: attr({
             compute() {
-                const isDeviceSmall = this.messaging.device.isSmall;
+                const isDeviceSmall = this.global.Device.isSmall;
                 const paddingClassNames = [];
                 if (
                     (

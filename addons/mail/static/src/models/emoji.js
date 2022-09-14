@@ -68,7 +68,7 @@ registerModel({
                 if (!this.messaging) {
                     return clear();
                 }
-                return this.messaging.emojiRegistry;
+                return this.global.EmojiRegistry;
             },
             inverse: 'allEmojis',
             required: true,

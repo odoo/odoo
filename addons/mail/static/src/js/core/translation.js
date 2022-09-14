@@ -19,7 +19,7 @@ TranslationDataBase.include({
                 // In particular if messaging is created before the end of the
                 // `load_translations` RPC, the default values have to be
                 // updated by the received ones.
-                messaging.locale.update({
+                messaging.global.Locale.update({
                     language: this.parameters.code,
                     textDirection: this.parameters.direction,
                 });

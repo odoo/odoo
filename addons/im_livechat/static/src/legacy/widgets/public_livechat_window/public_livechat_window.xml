@@ -5,21 +5,21 @@
     -->
     <t t-name="im_livechat.legacy.PublicLivechatWindow">
         <div class="o_thread_window o_in_home_menu"
-            t-att-data-thread-id="widget.messaging.publicLivechatGlobal.publicLivechat.id"
-            t-att-data-thread-model='widget.messaging.publicLivechatGlobal.publicLivechat.model'
+            t-att-data-thread-id="widget.global.PublicLivechatGlobal.publicLivechat.id"
+            t-att-data-thread-model='widget.global.PublicLivechatGlobal.publicLivechat.model'
         >
             <div class="o_thread_window_header">
                 <t t-call="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
-                    <t t-set="status" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.status"/>
-                    <t t-set="title" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.name"/>
-                    <t t-set="unreadCounter" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"/>
-                    <t t-set="thread" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.widget"/>
+                    <t t-set="status" t-value="widget.global.PublicLivechatGlobal.publicLivechat.status"/>
+                    <t t-set="title" t-value="widget.global.PublicLivechatGlobal.publicLivechat.name"/>
+                    <t t-set="unreadCounter" t-value="widget.global.PublicLivechatGlobal.publicLivechat.unreadCounter"/>
+                    <t t-set="thread" t-value="widget.global.PublicLivechatGlobal.publicLivechat.widget"/>
                 </t>
             </div>
             <div class="o_thread_window_content">
             </div>
             <div class="o_thread_composer o_chat_mini_composer">
-                <input class="o_composer_text_field o_PublicLivechatWindow_composer" t-att-placeholder="widget.messaging.publicLivechatGlobal.chatWindow.inputPlaceholder"/>
+                <input class="o_composer_text_field o_PublicLivechatWindow_composer" t-att-placeholder="widget.global.PublicLivechatGlobal.chatWindow.inputPlaceholder"/>
             </div>
         </div>
     </t>
@@ -32,9 +32,9 @@
             <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
         </span>
         <span class="o_thread_window_title">
-            <t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.name"/>
-            <span t-if="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"> (<t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"/>)</span>
-            <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.widget.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
+            <t t-esc="widget.global.PublicLivechatGlobal.publicLivechat.name"/>
+            <span t-if="widget.global.PublicLivechatGlobal.publicLivechat.unreadCounter"> (<t t-esc="widget.global.PublicLivechatGlobal.publicLivechat.unreadCounter"/>)</span>
+            <t t-if="widget.global.PublicLivechatGlobal.publicLivechat.widget.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
         </span>
         <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
             <a href="#" class="o_thread_window_close fa fa-close"/>
@@ -45,7 +45,7 @@
         @param {mail.model.Thread} thread with typing feature
     -->
     <t t-name="im_livechat.legacy.mail.ThreadTypingIcon">
-        <span class="o_mail_thread_typing_icon" t-att-title="widget.messaging.publicLivechatGlobal.publicLivechat.widget.getTypingMembersToText()">
+        <span class="o_mail_thread_typing_icon" t-att-title="widget.global.PublicLivechatGlobal.publicLivechat.widget.getTypingMembersToText()">
             <span class="o_mail_thread_typing_icon_dot"/>
             <span class="o_mail_thread_typing_icon_dot"/>
             <span class="o_mail_thread_typing_icon_dot"/>

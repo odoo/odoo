@@ -169,8 +169,8 @@ registerModel({
         }),
         manager: one('DialogManager', {
             compute() {
-                if (this.messaging.dialogManager) {
-                    return this.messaging.dialogManager;
+                if (this.global.DialogManager) {
+                    return this.global.DialogManager;
                 }
                 return clear();
             },

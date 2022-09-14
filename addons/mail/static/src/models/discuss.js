@@ -128,7 +128,7 @@ registerModel({
                 return;
             }
             thread.open();
-            if (this.messaging.device.isSmall && thread.channel && thread.channel.channel_type) {
+            if (this.global.Device.isSmall && thread.channel && thread.channel.channel_type) {
                 this.update({ activeMobileNavbarTabId: thread.channel.channel_type });
             }
         },
@@ -141,7 +141,7 @@ registerModel({
          */
         async openThread(thread, { focus } = {}) {
             this.update({ thread });
-            if (focus !== undefined ? focus : !this.messaging.device.isMobileDevice) {
+            if (focus !== undefined ? focus : !this.global.Device.isMobileDevice) {
                 this.focus();
             }
             if (!this.discussView) {
@@ -245,7 +245,7 @@ registerModel({
                     return false;
                 }
                 if (
-                    this.messaging.device.isSmall &&
+                    this.global.Device.isSmall &&
                     (
                         this.activeMobileNavbarTabId !== 'mailbox' ||
                         !this.activeThread.mailbox
@@ -284,7 +284,7 @@ registerModel({
         }),
         notificationListView: one('NotificationListView', {
             compute() {
-                return (this.messaging.device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? {} : clear();
+                return (this.global.Device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? {} : clear();
             },
             inverse: 'discussOwner',
         }),
@@ -295,8 +295,8 @@ registerModel({
         mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute() {
                 if (
-                    this.messaging.device &&
-                    this.messaging.device.isSmall &&
+                    this.global.Device &&
+                    this.global.Device.isSmall &&
                     !(this.threadView && this.threadView.replyingToMessageView)
                 ) {
                     return {};

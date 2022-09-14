@@ -21,10 +21,10 @@ registerPatch({
                 res_model: this.res_model,
                 domain: [['message_ids.snailmail_error', '=', true]],
             });
-            if (this.messaging.device.isSmall) {
+            if (this.global.Device.isSmall) {
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
-                this.messaging.messagingMenu.close();
+                this.global.MessagingMenu.close();
             }
         },
     },

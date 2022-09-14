@@ -45,9 +45,9 @@ QUnit.test('discuss should be marked as opened if the component is already rende
     await openDiscuss({ waitUntilMessagesLoaded: false });
 
     await afterNextRender(() => messagingBeforeCreationDeferred.resolve());
-    const { messaging } = env.services.messaging.modelManager;
+    const { global } = env.services.messaging.modelManager;
     assert.ok(
-        messaging.discuss.discussView,
+        global.Discuss.discussView,
         "discuss should be marked as opened if the component is already rendered and messaging becomes created afterwards"
     );
 });
@@ -55,12 +55,12 @@ QUnit.test('discuss should be marked as opened if the component is already rende
 QUnit.test('discuss should be marked as closed when the component is unmounted', async function (assert) {
     assert.expect(1);
 
-    const { messaging, openDiscuss, webClient } = await start();
+    const { global, openDiscuss, webClient } = await start();
     await openDiscuss();
 
     await afterNextRender(() => destroy(webClient));
     assert.notOk(
-        messaging.discuss.discussView,
+        global.Discuss.discussView,
         "discuss should be marked as closed when the component is unmounted"
     );
 });
@@ -2418,7 +2418,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
         { name: "General" },
         { name: "Special" },
     ]);
-    const { messaging, openDiscuss } = await start({
+    const { global, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2437,7 +2437,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
             name: 'text.txt',
         });
         inputFiles(
-            messaging.discuss.threadView.composerView.fileUploader.fileInput,
+            global.Discuss.threadView.composerView.fileUploader.fileInput,
             [file]
         );
     });
@@ -2463,7 +2463,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     ];
     await afterNextRender(() =>
         inputFiles(
-            messaging.discuss.threadView.composerView.fileUploader.fileInput,
+            global.Discuss.threadView.composerView.fileUploader.fileInput,
             files
         )
     );
@@ -3673,7 +3673,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { messaging, openDiscuss } = await start({
+    const { global, openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
@@ -3709,7 +3709,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     });
     await afterNextRender(() =>
         inputFiles(
-            messaging.discuss.threadView.composerView.fileUploader.fileInput,
+            global.Discuss.threadView.composerView.fileUploader.fileInput,
             [file]
         )
     );

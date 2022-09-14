@@ -8,8 +8,8 @@
                     'o-focused': chatWindow.isFocused,
                     'o-folded': chatWindow.isFolded,
                     'o-fullscreen w-100 h-100': chatWindow.isFullscreen,
-                    'o-isDeviceSmall position-fixed': messaging.device.isSmall,
-                    'mw-100 mh-100': !messaging.device.isSmall,
+                    'o-isDeviceSmall position-fixed': global.Device.isSmall,
+                    'mw-100 mh-100': !global.Device.isSmall,
                     'o-new-message': !chatWindow.thread,
                 }" t-att-style="chatWindow.componentStyle" t-on-keydown="chatWindow.onKeydown" t-on-focusout="chatWindow.onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-id="chatWindow.thread ? chatWindow.thread.id : ''" t-ref="root"
                 t-att-data-thread-model="chatWindow.thread ? chatWindow.thread.model : ''"

@@ -8,14 +8,12 @@ registerPatch({
     name: 'Messaging',
     lifecycleHooks: {
         _created() {
-            this._super();
             this.refreshIsNotificationPermissionDefault();
         },
         _willDelete() {
             this.env.services['im_status'].unregisterFromImStatus('res.partner');
             this.env.services['im_status'].unregisterFromImStatus('mail.guest');
             this.env.bus.removeEventListener('window_focus', this._handleGlobalWindowFocus);
-            this._super();
         },
     },
     recordMethods: {
@@ -143,12 +141,12 @@ registerPatch({
                 views: [[false, 'form']],
                 res_id: id,
             });
-            if (this.messaging.device.isSmall) {
+            if (this.global.Device.isSmall) {
                 // When opening documents chat windows need to be closed
-                this.messaging.chatWindowManager.closeAll();
+                this.global.ChatWindowManager.closeAll();
                 // messaging menu has a higher z-index than views so it must
                 // be closed to ensure the visibility of the view
-                this.messaging.messagingMenu.close();
+                this.global.MessagingMenu.close();
             }
         },
         /**
@@ -260,9 +258,9 @@ registerPatch({
          */
         _onChangeRingingThreads() {
             if (this.ringingThreads && this.ringingThreads.length > 0) {
-                this.soundEffects.incomingCall.play({ loop: true });
+                this.global.SoundEffects.incomingCall.play({ loop: true });
             } else {
-                this.soundEffects.incomingCall.stop();
+                this.global.SoundEffects.incomingCall.stop();
             }
         },
     },
@@ -325,12 +323,6 @@ registerPatch({
             default: {},
             isCausal: true,
             readonly: true,
-        }),
-        global: one('Global', {
-            default: {},
-            inverse: 'allRecords',
-            readonly: true,
-            required: true,
         }),
         hasLinkPreviewFeature: attr(),
         history: one('Mailbox', {

@@ -17,14 +17,14 @@ registerModel({
          */
         close({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.messaging.device.isSmall;
+                notifyServer = !this.global.Device.isSmall;
             }
-            if (this.messaging.device.isSmall && !this.messaging.discuss.discussView) {
+            if (this.global.Device.isSmall && !this.global.Discuss.discussView) {
                 // If we are in mobile and discuss is not open, it means the
                 // chat window was opened from the messaging menu. In that
                 // case it should be re-opened to simulate it was always
                 // there in the background.
-                this.messaging.messagingMenu.update({ isOpen: true });
+                this.global.MessagingMenu.update({ isOpen: true });
             }
             // Flux specific: 'closed' fold state should only be saved on the
             // server when manually closing the chat window. Delete at destroy
@@ -71,7 +71,7 @@ registerModel({
          */
         fold({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.messaging.device.isSmall;
+                notifyServer = !this.global.Device.isSmall;
             }
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
@@ -89,7 +89,7 @@ registerModel({
         makeActive(options) {
             this.makeVisible();
             this.unfold(options);
-            if ((options && options.focus !== undefined) ? options.focus : !this.messaging.device.isMobileDevice) {
+            if ((options && options.focus !== undefined) ? options.focus : !this.global.Device.isMobileDevice) {
                 this.focus();
             }
         },
@@ -118,7 +118,7 @@ registerModel({
             if (!chat) {
                 return;
             }
-            this.messaging.chatWindowManager.openThread(chat.thread, {
+            this.global.ChatWindowManager.openThread(chat.thread, {
                 makeActive: true,
                 replaceNewMessage: true,
             });
@@ -186,7 +186,7 @@ registerModel({
          * window.
          */
         onClickHeader(ev) {
-            if (!this.exists() || this.messaging.device.isSmall) {
+            if (!this.exists() || this.global.Device.isSmall) {
                 return;
             }
             if (this.isFolded) {
@@ -354,7 +354,7 @@ registerModel({
          */
         unfold({ notifyServer } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.messaging.device.isSmall;
+                notifyServer = !this.global.Device.isSmall;
             }
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the
@@ -441,7 +441,7 @@ registerModel({
         }),
         componentStyle: attr({
             compute() {
-                const textDirection = this.messaging.locale.textDirection;
+                const textDirection = this.global.Locale.textDirection;
                 const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
                 const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
                 return `${offsetFrom}: ${this.visibleOffset}px; ${oppositeFrom}: auto`;
@@ -461,7 +461,7 @@ registerModel({
         }),
         hasCloseAsBackButton: attr({
             compute() {
-                if (this.isVisible && this.messaging.device.isSmall) {
+                if (this.isVisible && this.global.Device.isSmall) {
                     return true;
                 }
                 return clear();
@@ -475,7 +475,7 @@ registerModel({
             compute() {
                 return Boolean(
                     this.thread && this.thread.hasInviteFeature &&
-                    this.messaging && this.messaging.device && this.messaging.device.isSmall
+                    this.messaging && this.global.Device && this.global.Device.isSmall
                 );
             },
         }),
@@ -509,7 +509,7 @@ registerModel({
         }),
         isExpandable: attr({
             compute() {
-                if (this.isVisible && !this.messaging.device.isSmall && this.thread) {
+                if (this.isVisible && !this.global.Device.isSmall && this.thread) {
                     return true;
                 }
                 return clear();
@@ -530,7 +530,7 @@ registerModel({
         }),
         isFullscreen: attr({
             compute() {
-                if (this.isVisible && this.messaging.device.isSmall) {
+                if (this.isVisible && this.global.Device.isSmall) {
                     return true;
                 }
                 return clear();

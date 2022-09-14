@@ -31,7 +31,7 @@ registerPatch({
                 if (!this.out_of_office_date_end) {
                     return clear();
                 }
-                if (!this.messaging.locale || !this.messaging.locale.language) {
+                if (!this.global.Locale || !this.global.Locale.language) {
                     return clear();
                 }
                 const currentDate = new Date();

@@ -275,6 +275,7 @@ async function start(param0 = {}) {
         afterNextRender,
         click: getClick({ afterNextRender }),
         env: webClient.env,
+        global: webClient.env.services.messaging.modelManager.global,
         insertText,
         messaging: webClient.env.services.messaging.modelManager.messaging,
         mouseenter: getMouseenter({ afterNextRender }),

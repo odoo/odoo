@@ -151,7 +151,7 @@ registerModel({
         mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
             compute() {
                 if (
-                    this.messaging.device.isSmall &&
+                    this.global.Device.isSmall &&
                     (this.isAddingChannel || this.isAddingChat)
                 ) {
                     return {};

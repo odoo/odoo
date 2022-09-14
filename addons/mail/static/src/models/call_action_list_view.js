@@ -11,31 +11,31 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickCamera(ev) {
-            this.messaging.rtc.toggleUserVideo();
+            this.global.Rtc.toggleUserVideo();
         },
         /**
          * @param {MouseEvent} ev
          */
         async onClickDeafen(ev) {
-            if (this.messaging.rtc.currentRtcSession.isDeaf) {
-                this.messaging.rtc.undeafen();
+            if (this.global.Rtc.currentRtcSession.isDeaf) {
+                this.global.Rtc.undeafen();
             } else {
-                this.messaging.rtc.deafen();
+                this.global.Rtc.deafen();
             }
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickMicrophone(ev) {
-            if (this.messaging.rtc.currentRtcSession.isMute) {
-                if (this.messaging.rtc.currentRtcSession.isSelfMuted) {
-                    this.messaging.rtc.unmute();
+            if (this.global.Rtc.currentRtcSession.isMute) {
+                if (this.global.Rtc.currentRtcSession.isSelfMuted) {
+                    this.global.Rtc.unmute();
                 }
-                if (this.messaging.rtc.currentRtcSession.isDeaf) {
-                    this.messaging.rtc.undeafen();
+                if (this.global.Rtc.currentRtcSession.isDeaf) {
+                    this.global.Rtc.undeafen();
                 }
             } else {
-                this.messaging.rtc.mute();
+                this.global.Rtc.mute();
             }
         },
         /**
@@ -57,7 +57,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickScreen(ev) {
-            this.messaging.rtc.toggleScreenShare();
+            this.global.Rtc.toggleScreenShare();
         },
         /**
          * @param {MouseEvent} ev
@@ -104,7 +104,7 @@ registerModel({
         }),
         cameraButtonTitle: attr({
             compute() {
-                if (this.messaging.rtc.sendUserVideo) {
+                if (this.global.Rtc.sendUserVideo) {
                     return this.env._t("Stop camera");
                 } else {
                     return this.env._t("Turn camera on");
@@ -114,10 +114,10 @@ registerModel({
         }),
         headphoneButtonTitle: attr({
             compute() {
-                if (!this.messaging.rtc.currentRtcSession) {
+                if (!this.global.Rtc.currentRtcSession) {
                     return clear();
                 }
-                if (this.messaging.rtc.currentRtcSession.isDeaf) {
+                if (this.global.Rtc.currentRtcSession.isDeaf) {
                     return this.env._t("Undeafen");
                 } else {
                     return this.env._t("Deafen");
@@ -132,10 +132,10 @@ registerModel({
         }),
         microphoneButtonTitle: attr({
             compute() {
-                if (!this.messaging.rtc.currentRtcSession) {
+                if (!this.global.Rtc.currentRtcSession) {
                     return clear();
                 }
-                if (this.messaging.rtc.currentRtcSession.isMute) {
+                if (this.global.Rtc.currentRtcSession.isMute) {
                     return this.env._t("Unmute");
                 } else {
                     return this.env._t("Mute");
@@ -148,7 +148,7 @@ registerModel({
         }),
         screenSharingButtonTitle: attr({
             compute() {
-                if (this.messaging.rtc.sendDisplay) {
+                if (this.global.Rtc.sendDisplay) {
                     return this.env._t("Stop screen sharing");
                 } else {
                     return this.env._t("Share screen");

@@ -80,14 +80,14 @@
                         classNameObj="{
                             'o-composer-is-compact': composerView.isCompact,
                             'rounded-3': !composerView.isCompact,
-                            'o_Composer_textInput-mobile': messaging.device.isSmall,
+                            'o_Composer_textInput-mobile': global.Device.isSmall,
                             'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
                             'rounded-start-3': composerView.isCompact and composerView.hasCurrentPartnerAvatar,
                         }"
                         record="composerView"
                         t-key="composerView.localId"
                     />
-                    <div class="o_Composer_buttons d-flex align-items-stretch align-self-stretch flex-shrink-0" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'h-auto w-100 px-3': !composerView.isCompact, 'o-isDeviceSmall': messaging.device.isSmall, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing, 'border-end': composerView.messageViewInEditing and !composerView.hasCurrentPartnerAvatar }">
+                    <div class="o_Composer_buttons d-flex align-items-stretch align-self-stretch flex-shrink-0" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'h-auto w-100 px-3': !composerView.isCompact, 'o-isDeviceSmall': global.Device.isSmall, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing, 'border-end': composerView.messageViewInEditing and !composerView.hasCurrentPartnerAvatar }">
                         <div class="o_Composer_toolButtons d-flex py-1 border-top bg-white"
                             t-att-class="{
                                 'o-composer-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
@@ -98,7 +98,7 @@
                                 <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light border-0 rounded-pill"
                                     t-att-class="{
                                         'o-open bg-200': composerView.emojisPopoverView,
-                                        'o-isDeviceSmall': messaging.device.isSmall,
+                                        'o-isDeviceSmall': global.Device.isSmall,
                                     }"
                                     t-attf-class="{{ composerView.messageViewInEditing ? 'my-1' : 'mx-1' }}"
                                     t-att-aria-expanded="composerView.emojisPopoverView ? 'true' : 'false'"
@@ -108,11 +108,11 @@
                                 >
                                     <i class="fa fa-smile-o" role="img" aria-label="Emojis"/>
                                 </button>
-                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip border-0 rounded-pill bg-white" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ composerView.messageViewInEditing ? 'my-1' : 'mx-1' }}" title="Add attachment" aria-label="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
+                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip border-0 rounded-pill bg-white" t-att-class="{ 'o-isDeviceSmall': global.Device.isSmall }" t-attf-class="{{ composerView.messageViewInEditing ? 'my-1' : 'mx-1' }}" title="Add attachment" aria-label="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
                             </div>
                             <t t-if="composerView.isExpandable">
                                 <div class="o_Composer_secondaryToolButtons">
-                                    <button class="o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton btn btn-light fa fa-expand mx-1 border-0 rounded-pill bg-white" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" title="Full composer" aria-label="Full composer" type="button" t-on-click="composerView.onClickFullComposer"/>
+                                    <button class="o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton btn btn-light fa fa-expand mx-1 border-0 rounded-pill bg-white" t-att-class="{ 'o-isDeviceSmall': global.Device.isSmall }" title="Full composer" aria-label="Full composer" type="button" t-on-click="composerView.onClickFullComposer"/>
                                 </div>
                             </t>
                         </div>
@@ -158,7 +158,7 @@
                     type="button"
                     t-on-click="composerView.onClickSend"
                 >
-                    <t t-if="!messaging.device.isSmall"><t t-esc="composerView.sendButtonText"/></t>
+                    <t t-if="!global.Device.isSmall"><t t-esc="composerView.sendButtonText"/></t>
                     <t t-else=""><i class="fa fa-paper-plane-o"/></t>
                 </button>
             </t>

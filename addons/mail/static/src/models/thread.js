@@ -435,7 +435,7 @@ registerModel({
         endCall() {
             if (this.rtc) {
                 this.rtc.reset();
-                this.messaging.soundEffects.channelLeave.play();
+                this.global.SoundEffects.channelLeave.play();
             }
             this.update({
                 rtc: clear(),
@@ -557,8 +557,8 @@ registerModel({
         async toggleCall(options) {
             this.update({ hasPendingRtcRequest: true });
             const isActiveCall = !!this.rtc;
-            if (this.messaging.rtc.channel) {
-                await this.messaging.rtc.channel.leaveCall();
+            if (this.global.Rtc.channel) {
+                await this.global.Rtc.channel.leaveCall();
             }
             if (isActiveCall) {
                 this.update({ hasPendingRtcRequest: false });
@@ -576,7 +576,7 @@ registerModel({
             if (this.model !== 'mail.channel') {
                 return;
             }
-            if (!this.messaging.device.hasRtcSupport) {
+            if (!this.global.Device.hasRtcSupport) {
                 this.messaging.notify({
                     message: this.env._t("Your browser does not support webRTC."),
                     type: 'warning',
@@ -594,12 +594,12 @@ registerModel({
                 return;
             }
             this.update({
-                rtc: this.messaging.rtc,
+                rtc: this.global.Rtc,
                 rtcInvitingSession: clear(),
                 rtcSessions,
                 invitedMembers,
             });
-            await this.messaging.rtc.initSession({
+            await this.global.Rtc.initSession({
                 currentSessionId: sessionId,
                 iceServers,
                 startWithAudio: true,
@@ -609,7 +609,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.messaging.soundEffects.channelJoin.play();
+            this.global.SoundEffects.channelJoin.play();
         },
         /**
          * Notifies the server and does the cleanup of the current call.
@@ -627,10 +627,10 @@ registerModel({
             if (this.rtc) {
                 const newCount = this.rtcSessions.length;
                 if (newCount > oldCount) {
-                    this.messaging.soundEffects.channelJoin.play();
+                    this.global.SoundEffects.channelJoin.play();
                 }
                 if (newCount < oldCount) {
-                    this.messaging.soundEffects.memberLeave.play();
+                    this.global.SoundEffects.memberLeave.play();
                 }
             }
             this.rtc && this.rtc.filterCallees(this.rtcSessions);
@@ -750,14 +750,14 @@ registerModel({
          * @param {boolean} [param0.focus]
          */
         async open({ expanded = false, focus } = {}) {
-            const discuss = this.messaging.discuss;
+            const discuss = this.global.Discuss;
             // check if thread must be opened in form view
             if (!this.channel && !this.mailbox) {
                 if (expanded || discuss.discussView) {
                     // Close chat window because having the same thread opened
                     // both in chat window and as main document does not look
                     // good.
-                    this.messaging.chatWindowManager.closeThread(this);
+                    this.global.ChatWindowManager.closeThread(this);
                     await this.messaging.openDocument({
                         id: this.id,
                         model: this.model,
@@ -767,15 +767,15 @@ registerModel({
             }
             // check if thread must be opened in discuss
             if (
-                (!this.messaging.device.isSmall && (discuss.discussView || expanded)) ||
+                (!this.global.Device.isSmall && (discuss.discussView || expanded)) ||
                 this.mailbox
             ) {
                 return discuss.openThread(this, {
-                    focus: focus !== undefined ? focus : !this.messaging.device.isMobileDevice,
+                    focus: focus !== undefined ? focus : !this.global.Device.isMobileDevice,
                 });
             }
             // thread must be opened in chat window
-            return this.messaging.chatWindowManager.openThread(this, {
+            return this.global.ChatWindowManager.openThread(this, {
                 makeActive: true,
             });
         },
@@ -968,7 +968,7 @@ registerModel({
          */
         unsubscribe() {
             this.leaveCall();
-            this.messaging.chatWindowManager.closeThread(this);
+            this.global.ChatWindowManager.closeThread(this);
             this.unpin();
         },
         /**
@@ -1027,19 +1027,19 @@ registerModel({
          * @private
          */
         _onServerFoldStateChanged() {
-            if (!this.messaging.chatWindowManager) {
+            if (!this.global.ChatWindowManager) {
                 // avoid crash during destroy
                 return;
             }
-            if (this.messaging.device.isSmall) {
+            if (this.global.Device.isSmall) {
                 return;
             }
             if (this.serverFoldState === 'closed') {
-                this.messaging.chatWindowManager.closeThread(this, {
+                this.global.ChatWindowManager.closeThread(this, {
                     notifyServer: false,
                 });
             } else {
-                this.messaging.chatWindowManager.openThread(this, {
+                this.global.ChatWindowManager.openThread(this, {
                     isFolded: this.serverFoldState === 'folded',
                     notifyServer: false,
                 });
@@ -1678,11 +1678,11 @@ registerModel({
         }),
         messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', {
             compute() {
-                if (!this.messaging || !this.messaging.messagingMenu) {
+                if (!this.messaging || !this.global.MessagingMenu) {
                     return clear();
                 }
                 if (this.channel && this.isPinned && this.channel.localMessageUnreadCounter > 0) {
-                    return this.messaging.messagingMenu;
+                    return this.global.MessagingMenu;
                 }
                 return clear();
             },

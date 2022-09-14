@@ -107,7 +107,7 @@ registerModel({
             replaceNewMessage = false
         } = {}) {
             if (notifyServer === undefined) {
-                notifyServer = !this.messaging.device.isSmall;
+                notifyServer = !this.global.Device.isSmall;
             }
             let chatWindow = thread.chatWindow;
             if (!chatWindow) {
@@ -187,7 +187,7 @@ registerModel({
         }),
         endGapWidth: attr({
             compute() {
-                if (this.messaging.device.isSmall) {
+                if (this.global.Device.isSmall) {
                     return 0;
                 }
                 return 10;
@@ -226,7 +226,7 @@ registerModel({
         }),
         startGapWidth: attr({
             compute() {
-                if (this.messaging.device.isSmall) {
+                if (this.global.Device.isSmall) {
                     return 0;
                 }
                 return 10;
@@ -249,22 +249,22 @@ registerModel({
         visual: attr({
             compute() {
                 let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
-                if (!this.messaging || !this.messaging.device) {
+                if (!this.messaging || !this.global.Device) {
                     return visual;
                 }
-                if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
+                if (!this.global.Device.isSmall && this.global.Discuss.discussView) {
                     return visual;
                 }
                 if (!this.chatWindows.length) {
                     return visual;
                 }
-                const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - this.startGapWidth - this.endGapWidth;
+                const relativeGlobalWindowWidth = this.global.Device.globalWindowInnerWidth - this.startGapWidth - this.endGapWidth;
                 let maxAmountWithoutHidden = Math.floor(
                     relativeGlobalWindowWidth / (this.chatWindowWidth + this.betweenGapWidth));
                 let maxAmountWithHidden = Math.floor(
                     (relativeGlobalWindowWidth - this.hiddenMenuWidth - this.betweenGapWidth) /
                     (this.chatWindowWidth + this.betweenGapWidth));
-                if (this.messaging.device.isSmall) {
+                if (this.global.Device.isSmall) {
                     maxAmountWithoutHidden = 1;
                     maxAmountWithHidden = 1;
                 }
@@ -284,7 +284,7 @@ registerModel({
                         visual.visible.push({ chatWindow, offset });
                     }
                     if (this.chatWindows.length > maxAmountWithHidden) {
-                        visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
+                        visual.isHiddenMenuVisible = !this.global.Device.isSmall;
                         visual.hiddenMenuOffset = visual.visible[maxAmountWithHidden - 1].offset
                             + this.chatWindowWidth + this.betweenGapWidth;
                     }
@@ -294,7 +294,7 @@ registerModel({
                     visual.availableVisibleSlots = maxAmountWithHidden;
                 } else {
                     // all hidden
-                    visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
+                    visual.isHiddenMenuVisible = !this.global.Device.isSmall;
                     visual.hiddenMenuOffset = this.startGapWidth;
                     visual.hiddenChatWindows.push(...this.chatWindows);
                     console.warn('cannot display any visible chat windows (screen is too small)');

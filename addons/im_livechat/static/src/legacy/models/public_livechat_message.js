@@ -30,7 +30,7 @@ const PublicLivechatMessage = Class.extend({
      * @param {string} [data.message_type = undefined]
      */
     init(parent, messaging, data) {
-        this.messaging = messaging;
+        this.global = messaging.global;
         this._body = data.body || "";
         // by default: current datetime
         this._date = data.date ? moment(time.str_to_datetime(data.date)) : moment();
@@ -40,10 +40,10 @@ const PublicLivechatMessage = Class.extend({
         this._serverAuthor = data.author;
         this._type = data.message_type || undefined;
 
-        this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
-        this._serverURL = this.messaging.publicLivechatGlobal.serverUrl;
+        this._defaultUsername = this.global.PublicLivechatGlobal.options.default_username;
+        this._serverURL = this.global.PublicLivechatGlobal.serverUrl;
 
-        if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
+        if (this.global.PublicLivechatGlobal.chatbot.isActive) {
             this._chatbotStepId = data.chatbot_script_step_id;
             this._chatbotStepAnswers = data.chatbot_step_answers;
             this._chatbotStepAnswerId = data.chatbot_selected_answer_id;

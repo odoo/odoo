@@ -31,8 +31,8 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickNewMessage(ev) {
-            if (!this.messaging.device.isSmall) {
-                this.messaging.chatWindowManager.openNewMessage();
+            if (!this.global.Device.isSmall) {
+                this.global.ChatWindowManager.openNewMessage();
                 this.close();
             } else {
                 this.toggleMobileNewMessage();
@@ -175,7 +175,7 @@ registerModel({
          */
         mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute() {
-                if (this.messaging.device && this.messaging.device.isSmall) {
+                if (this.global.Device && this.global.Device.isSmall) {
                     return {};
                 }
                 return clear();
@@ -184,7 +184,7 @@ registerModel({
         }),
         mobileNewMessageAutocompleteInputView: one('AutocompleteInputView', {
             compute() {
-                if (this.isOpen && this.messaging.isInitialized && this.messaging.device.isSmall && this.isMobileNewMessageToggled) {
+                if (this.isOpen && this.messaging.isInitialized && this.global.Device.isSmall && this.isMobileNewMessageToggled) {
                     return {};
                 }
                 return clear();

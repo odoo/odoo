@@ -60,8 +60,7 @@ export class ChatWindowHiddenMenu extends Component {
      * @private
      */
     _applyListHeight() {
-        const device = this.messaging.device;
-        const height = device.globalWindowInnerHeight / 2;
+        const height = this.global.Device.globalWindowInnerHeight / 2;
         this._listRef.el.style['max-height'] = `${height}px`;
     }
 
@@ -69,10 +68,10 @@ export class ChatWindowHiddenMenu extends Component {
      * @private
      */
     _applyOffset() {
-        const textDirection = this.messaging.locale.textDirection;
+        const textDirection = this.global.Locale.textDirection;
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
-        const offset = this.messaging.chatWindowManager.visual.hiddenMenuOffset;
+        const offset = this.global.ChatWindowManager.visual.hiddenMenuOffset;
         this.root.el.style[offsetFrom] = `${offset}px`;
         this.root.el.style[oppositeFrom] = 'auto';
     }
@@ -92,7 +91,7 @@ export class ChatWindowHiddenMenu extends Component {
         if (!this.root.el || this.root.el.contains(ev.target)) {
             return;
         }
-        this.messaging.chatWindowManager.closeHiddenMenu();
+        this.global.ChatWindowManager.closeHiddenMenu();
     }
 
 }

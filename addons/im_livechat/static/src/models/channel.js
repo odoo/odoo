@@ -11,7 +11,7 @@ registerPatch({
         discussSidebarCategory: {
             compute() {
                 if (this.channel_type === 'livechat') {
-                    return this.messaging.discuss.categoryLivechat;
+                    return this.global.Discuss.categoryLivechat;
                 }
                 return this._super();
             },

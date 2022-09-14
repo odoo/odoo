@@ -35,7 +35,7 @@ registerModel({
     recordMethods: {
         async deafen() {
             await this._setDeafState(true);
-            this.messaging.soundEffects.deafen.play();
+            this.global.SoundEffects.deafen.play();
         },
         /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
@@ -66,7 +66,7 @@ registerModel({
                 // does handle notifications targeting a different session
                 return;
             }
-            if (!this.messaging.device.hasRtcSupport) {
+            if (!this.global.Device.hasRtcSupport) {
                 return;
             }
             if (!rtcSession.rtcPeerConnection && (!channelId || !this.channel || channelId !== this.channel.id)) {
@@ -118,7 +118,7 @@ registerModel({
         },
         async mute() {
             await this._setMuteState(true);
-            this.messaging.soundEffects.mute.play();
+            this.global.SoundEffects.mute.play();
         },
         /**
          * @param {number[]} targetToken
@@ -230,7 +230,7 @@ registerModel({
         },
         async undeafen() {
             await this._setDeafState(false);
-            this.messaging.soundEffects.undeafen.play();
+            this.global.SoundEffects.undeafen.play();
         },
         async unmute() {
             if (this.audioTrack) {
@@ -239,7 +239,7 @@ registerModel({
                 // if we don't have an audioTrack, we try to request it again
                 await this.updateLocalAudioTrack(true);
             }
-            this.messaging.soundEffects.unmute.play();
+            this.global.SoundEffects.unmute.play();
         },
         /**
          * @param {Boolean} audio
@@ -255,7 +255,7 @@ registerModel({
             if (audio) {
                 let audioTrack;
                 try {
-                    const audioStream = await browser.navigator.mediaDevices.getUserMedia({ audio: this.messaging.userSetting.getAudioConstraints() });
+                    const audioStream = await browser.navigator.mediaDevices.getUserMedia({ audio: this.global.UserSetting.getAudioConstraints() });
                     audioTrack = audioStream.getAudioTracks()[0];
                 } catch (_e) {
                     this.messaging.notify({
@@ -316,7 +316,7 @@ registerModel({
             if (!this.currentRtcSession) {
                 return;
             }
-            if (this.messaging.userSetting.usePushToTalk || !this.channel || !this.audioTrack) {
+            if (this.global.UserSetting.usePushToTalk || !this.channel || !this.audioTrack) {
                 this.currentRtcSession.update({ isTalking: false });
                 await this._updateLocalAudioTrackEnabledState();
                 return;
@@ -327,7 +327,7 @@ registerModel({
                         this.audioTrack,
                         {
                             onThreshold: this._onThresholdAudioMonitor,
-                            volumeThreshold: this.messaging.userSetting.voiceActivationThreshold,
+                            volumeThreshold: this.global.UserSetting.voiceActivationThreshold,
                         },
                     ),
                 });
@@ -930,7 +930,7 @@ registerModel({
                     });
                 }
                 if (type === 'display') {
-                    this.messaging.soundEffects.screenSharing.play();
+                    this.global.SoundEffects.screenSharing.play();
                 }
                 stopVideo();
                 return;
@@ -946,7 +946,7 @@ registerModel({
                 }
                 if (type === 'display') {
                     sourceWebMediaStream = await browser.navigator.mediaDevices.getDisplayMedia({ video: this.videoConfig });
-                    this.messaging.soundEffects.screenSharing.play();
+                    this.global.SoundEffects.screenSharing.play();
                 }
             } catch (_e) {
                 this.messaging.notify({
@@ -961,7 +961,7 @@ registerModel({
                 return;
             }
             let videoStream = sourceWebMediaStream;
-            if (this.messaging.userSetting.useBlur && type === 'user-video') {
+            if (this.global.UserSetting.useBlur && type === 'user-video') {
                 try {
                     this.update({ blurManager: { srcStream: { webMediaStream: sourceWebMediaStream, id: sourceWebMediaStream.id } }, });
                     const mediaStream = await this.blurManager.stream;
@@ -976,7 +976,7 @@ registerModel({
                         ),
                         type: 'warning',
                     });
-                    this.messaging.userSetting.update({ useBlur: false });
+                    this.global.UserSetting.update({ useBlur: false });
                 }
             }
             const videoTrack = videoStream ? videoStream.getVideoTracks()[0] : undefined;
@@ -1052,18 +1052,18 @@ registerModel({
             if (!this.channel) {
                 return;
             }
-            if (!this.messaging.userSetting.usePushToTalk || !this.messaging.userSetting.isPushToTalkKey(ev)) {
+            if (!this.global.UserSetting.usePushToTalk || !this.global.UserSetting.isPushToTalkKey(ev)) {
                 return;
             }
             if (this.currentRtcSession.isMute) {
                 return;
             }
-            if (this.messaging.userSetting.isRegisteringKey) {
+            if (this.global.UserSetting.isRegisteringKey) {
                 return;
             }
             this.messaging.browser.clearTimeout(this.pushToTalkTimeout);
             if (!this.currentRtcSession.isTalking) {
-                this.messaging.soundEffects.pushToTalkOn.play();
+                this.global.SoundEffects.pushToTalkOn.play();
                 this._setSoundBroadcast(true);
             }
         },
@@ -1075,19 +1075,19 @@ registerModel({
             if (!this.channel) {
                 return;
             }
-            if (!this.messaging.userSetting.usePushToTalk || !this.messaging.userSetting.isPushToTalkKey(ev, { ignoreModifiers: true })) {
+            if (!this.global.UserSetting.usePushToTalk || !this.global.UserSetting.isPushToTalkKey(ev, { ignoreModifiers: true })) {
                 return;
             }
             if (!this.currentRtcSession.isTalking) {
                 return;
             }
             if (!this.currentRtcSession.isMute) {
-                this.messaging.soundEffects.pushToTalkOff.play();
+                this.global.SoundEffects.pushToTalkOff.play();
             }
             this.update({
                 pushToTalkTimeout: this.messaging.browser.setTimeout(
                     this._onPushToTalkTimeout,
-                    this.messaging.userSetting.voiceActiveDuration,
+                    this.global.UserSetting.voiceActiveDuration,
                 ),
             });
         },

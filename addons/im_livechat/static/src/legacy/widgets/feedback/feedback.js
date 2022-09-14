@@ -31,7 +31,7 @@ const Feedback = Widget.extend({
      */
     init(parent, messaging, livechat) {
         this._super(parent);
-        this.messaging = messaging;
+        this.global = messaging.global;
         this.server_origin = session.origin;
         this.rating = undefined;
         this.dp = new concurrency.DropPrevious();
@@ -47,12 +47,12 @@ const Feedback = Widget.extend({
      */
      _sendFeedback(reason) {
         const args = {
-            uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+            uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid,
             rate: this.rating,
             reason,
         };
         this.dp.add(session.rpc('/im_livechat/feedback', args)).then((response) => {
-            const emoji = this.messaging.publicLivechatGlobal.RATING_TO_EMOJI[this.rating] || "??";
+            const emoji = this.global.PublicLivechatGlobal.RATING_TO_EMOJI[this.rating] || "??";
             let content;
             if (!reason) {
                 content = utils.sprintf(_t("Rating: %s"), emoji);
@@ -124,7 +124,7 @@ const Feedback = Widget.extend({
             this._rpc({
                 route: '/im_livechat/email_livechat_transcript',
                 params: {
-                    uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                    uuid: this.global.PublicLivechatGlobal.publicLivechat.uuid,
                     email: $email.val(),
                 }
             }).then(() => {

@@ -22,7 +22,7 @@ export class DiscussContainer extends Component {
                 (action.context && action.context.active_id) ||
                 (action.params && action.params.default_active_id) ||
                 'mail.box_inbox';
-            this.discuss = this.messaging.discuss;
+            this.discuss = this.global.Discuss;
             this.discuss.update({
                 discussView: {
                     actionId: action.id,
@@ -54,6 +54,10 @@ export class DiscussContainer extends Component {
 
     get messaging() {
         return this.env.services.messaging.modelManager.messaging;
+    }
+
+    get global() {
+        return this.env.services.messaging.modelManager.global;
     }
 
     _willDestroy() {

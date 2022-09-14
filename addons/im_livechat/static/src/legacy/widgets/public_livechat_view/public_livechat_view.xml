@@ -9,7 +9,7 @@
         @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread">
-        <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.widget.hasMessages()">
+        <t t-if="widget.global.PublicLivechatGlobal.publicLivechat.widget.hasMessages()">
             <t t-call="im_livechat.legacy.mail.widget.Thread.Content"/>
         </t>
     </t>
@@ -42,7 +42,7 @@
 
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread.Content">
-        <t t-set="messages" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages({ 'domain': options.domain || [] })"/>
+        <t t-set="messages" t-value="widget.global.PublicLivechatGlobal.publicLivechat.widget.getMessages({ 'domain': options.domain || [] })"/>
         <t t-if="options.displayOrder === ORDER.ASC" t-call="im_livechat.legacy.mail.widget.Thread.Content.ASC"/>
         <t t-else="" t-call="im_livechat.legacy.mail.widget.Thread.Content.DESC"/>
     </t>

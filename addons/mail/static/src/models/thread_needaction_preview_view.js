@@ -20,10 +20,10 @@ registerModel({
                 // handled in `_onClickMarkAsRead`
                 return;
             }
-            const messaging = this.messaging;
+            const global = this.global;
             this.thread.open();
-            if (!messaging.device.isSmall) {
-                messaging.messagingMenu.close();
+            if (!global.Device.isSmall) {
+                global.MessagingMenu.close();
             }
         },
         /**

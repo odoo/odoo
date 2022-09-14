@@ -10,7 +10,7 @@ registerModel({
     name: 'PublicLivechatMessage',
     lifecycleHooks: {
         _created() {
-            this.update({ widget: new PublicLivechatMessage(this.messaging.publicLivechatGlobal.livechatButtonView.widget, this.messaging, this.data) });
+            this.update({ widget: new PublicLivechatMessage(this.global.PublicLivechatGlobal.livechatButtonView.widget, this.messaging, this.data) });
         },
         _willDelete() {
             this.widget.destroy();

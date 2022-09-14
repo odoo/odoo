@@ -107,7 +107,7 @@ registerModel({
         customClass: attr({
             compute() {
                 if (this.discussSidebarCategoryOwnerAsAddingItem) {
-                    if (this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel) {
+                    if (this.discussSidebarCategoryOwnerAsAddingItem === this.global.Discuss.categoryChannel) {
                         return 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions';
                     }
                 }
@@ -147,7 +147,7 @@ registerModel({
                     return this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel;
                 }
                 if (this.discussSidebarCategoryOwnerAsAddingItem) {
-                    return this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel;
+                    return this.discussSidebarCategoryOwnerAsAddingItem === this.global.Discuss.categoryChannel;
                 }
                 return clear();
             },

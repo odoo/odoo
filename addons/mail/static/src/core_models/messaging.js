@@ -10,14 +10,6 @@ const { EventBus } = owl;
 
 registerModel({
     name: 'Messaging',
-    lifecycleHooks: {
-        _created() {
-            odoo.__DEBUG__.messaging = this;
-        },
-        _willDelete() {
-            delete odoo.__DEBUG__.messaging;
-        },
-    },
     recordMethods: {
         /**
          * Perform a rpc call and return a promise resolving to the result.
@@ -76,12 +68,6 @@ registerModel({
             compute() {
                 return browser;
             },
-        }),
-        global: one('Global', {
-            default: {},
-            inverse: 'allRecords',
-            readonly: true,
-            required: true,
         }),
         /**
          * Promise that will be resolved when messaging is initialized.

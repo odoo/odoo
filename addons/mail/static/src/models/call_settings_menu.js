@@ -135,7 +135,7 @@ registerModel({
             default: [],
         }),
         userSetting: one('UserSetting', {
-            related: 'messaging.userSetting',
+            related: 'global.UserSetting',
         }),
     },
 });

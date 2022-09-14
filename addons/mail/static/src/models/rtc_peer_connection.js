@@ -17,7 +17,7 @@ registerModel({
          */
         getTransceiver(trackKind) {
             const transceivers = this.peerConnection.getTransceivers();
-            return transceivers[this.messaging.rtc.orderedTransceiverNames.indexOf(trackKind)];
+            return transceivers[this.global.Rtc.orderedTransceiverNames.indexOf(trackKind)];
         },
         /**
          * @private

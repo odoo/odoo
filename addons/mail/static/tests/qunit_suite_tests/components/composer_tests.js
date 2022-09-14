@@ -912,7 +912,7 @@ QUnit.test('composer: add an attachment', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { messaging, openDiscuss } = await start({
+    const { global, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -925,7 +925,7 @@ QUnit.test('composer: add an attachment', async function (assert) {
         name: 'text.txt',
     });
     await afterNextRender(() =>
-        inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
+        inputFiles(global.Discuss.threadView.composerView.fileUploader.fileInput, [file])
     );
     assert.ok(
         document.querySelector('.o_Composer_attachmentList'),
@@ -1246,7 +1246,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     const pyEnv = await startServer();
     const attachmentUploadedPromise = makeTestPromise();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { messaging, openDiscuss } = await start({
+    const { global, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1, },
         },
@@ -1263,7 +1263,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
         name: 'text.txt',
     });
     await afterNextRender(() =>
-        inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
+        inputFiles(global.Discuss.threadView.composerView.fileUploader.fileInput, [file])
     );
     assert.containsOnce(
         document.body,
@@ -1313,7 +1313,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { afterEvent, messaging, openDiscuss } = await start({
+    const { afterEvent, global, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -1327,7 +1327,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
     await afterNextRender(() => afterEvent({
         eventName: 'o-file-uploader-upload',
         func() {
-            inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file]);
+            inputFiles(global.Discuss.threadView.composerView.fileUploader.fileInput, [file]);
         },
         message: 'should wait until files are uploaded',
         predicate: ({ files: uploadedFiles }) => uploadedFiles[0] === file,
@@ -1367,7 +1367,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, openDiscuss, messaging } = await start({
+    const { click, openDiscuss, global } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -1385,7 +1385,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
         name: 'text.txt',
     });
     await afterNextRender(() =>
-        inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
+        inputFiles(global.Discuss.threadView.composerView.fileUploader.fileInput, [file])
     );
     assert.containsOnce(
         document.body,
@@ -1416,7 +1416,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { afterEvent, openDiscuss, messaging } = await start({
+    const { afterEvent, openDiscuss, global } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -1434,7 +1434,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
         name: 'text.txt',
     });
     await afterNextRender(() =>
-        inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
+        inputFiles(global.Discuss.threadView.composerView.fileUploader.fileInput, [file])
     );
     assert.containsOnce(
         document.body,
@@ -1534,7 +1534,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     // Promise to block attachment uploading
     const uploadPromise = makeTestPromise();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { messaging, openDiscuss } = await start({
+    const { global, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -1557,7 +1557,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     });
     await afterNextRender(() =>
         inputFiles(
-            messaging.discuss.threadView.composerView.fileUploader.fileInput,
+            global.Discuss.threadView.composerView.fileUploader.fileInput,
             [file1, file2]
         )
     );

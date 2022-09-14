@@ -31,7 +31,7 @@ export class NotificationRequest extends Component {
     _handleResponseNotificationPermission(value) {
         this.messaging.refreshIsNotificationPermissionDefault();
         if (value !== 'granted') {
-            this.messaging.userNotificationManager.sendNotification({
+            this.global.UserNotificationManager.sendNotification({
                 message: this.env._t("Odoo will not have the permission to send native notifications on this device."),
                 title: this.env._t("Permission denied"),
             });
@@ -51,8 +51,8 @@ export class NotificationRequest extends Component {
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
         }
-        if (!this.messaging.device.isSmall) {
-            this.messaging.messagingMenu.close();
+        if (!this.global.Device.isSmall) {
+            this.global.MessagingMenu.close();
         }
     }
 

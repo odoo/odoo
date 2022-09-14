@@ -10,14 +10,14 @@
                         <PersonaImStatusIcon
                             t-if="notificationRequestView.personaImStatusIconView"
                             className="'o_NotificationListItem_personaImStatusIcon o_NotificationRequest_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
-                            classNameObj="{ 'o-isDeviceSmall': messaging.device.isSmall, 'small': !messaging.device.isSmall }"
+                            classNameObj="{ 'o-isDeviceSmall': global.Device.isSmall, 'small': !global.Device.isSmall }"
                             record="notificationRequestView.personaImStatusIconView"
                         />
                     </div>
                 </div>
                 <div class="o_NotificationListItem_content o_NotificationRequest_content d-flex flex-column flex-grow-1 align-self-start m-2">
                     <div class="o_NotificationListItem_header o_NotificationRequest_header d-flex">
-                        <span class="o_NotificationListItem_name o_NotificationRequest_name text-truncate fw-bold" t-att-class="{ 'o-isDeviceSmall fs-5': messaging.device.isSmall }">
+                        <span class="o_NotificationListItem_name o_NotificationRequest_name text-truncate fw-bold" t-att-class="{ 'o-isDeviceSmall fs-5': global.Device.isSmall }">
                             <t t-esc="notificationRequestView.headerText"/>
                         </span>
                     </div>

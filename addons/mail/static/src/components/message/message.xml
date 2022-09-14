@@ -11,7 +11,7 @@
                     'o-has-message-selection': messageView.messageListViewItemOwner and messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView,
                     'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
                     'o-isReplyHighlighted bg-white shadow-lg': messageView.isHighlighted,
-                    'o-isDeviceSmall': messaging.device.isSmall,
+                    'o-isDeviceSmall': global.Device.isSmall,
                     'o-not-discussion': !messageView.message.isDiscussionOrNotification,
                     'o-notification': messageView.message.message_type === 'notification',
                     'o-selected': messageView.isSelected,
@@ -38,8 +38,8 @@
                                         className="'o_Message_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-white'"
                                         classNameObj="{
                                             'o-message-selected': messageView.isSelected,
-                                            'o_Message_personaImStatusIcon-mobile': messaging.device.isSmall,
-                                            'small': !messaging.device.isSmall,
+                                            'o_Message_personaImStatusIcon-mobile': global.Device.isSmall,
+                                            'small': !global.Device.isSmall,
                                             'text-100': messageView.message.is_note and !messageView.isSelected,
                                         }"
                                         hasOpenChat="messageView.hasAuthorOpenChat"
