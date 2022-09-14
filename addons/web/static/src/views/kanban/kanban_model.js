@@ -85,7 +85,10 @@ class KanbanGroup extends Group {
         });
 
         this.model.addEventListener("record-updated", ({ detail }) => {
-            if (this.list.records.some((r) => r.id === detail.record.id)) {
+            const { record, relatedRecords } = detail;
+            const localIds = this.records.map((r) => r.id);
+            const updatedIds = [record, ...relatedRecords].map((r) => r.id);
+            if (localIds.some((id) => updatedIds.includes(id))) {
                 this.model.trigger("group-updated", {
                     group: this,
                     withProgressBars: true,
@@ -142,28 +145,7 @@ class KanbanGroup extends Group {
     /**
      * @override
      */
-    getAggregableRecords() {
-        const records = super.getAggregableRecords();
-        if (!this.hasActiveProgressValue) {
-            return records;
-        }
-        const { fieldName } = this.model.progressAttributes;
-        let recordsFilter;
-        if (this.progressValue.active === FALSE) {
-            const values = this.progressBars
-                .map((pv) => pv.value)
-                .filter((val) => val !== this.progressValue.active);
-            recordsFilter = (r) => !values.includes(r.data[fieldName]);
-        } else {
-            recordsFilter = (r) => r.data[fieldName] === this.progressValue.active;
-        }
-        return records.filter(recordsFilter);
-    }
-
-    /**
-     * @override
-     */
-    quickCreate(activeFields, context, atFirstPosition = false) {
+    quickCreate(activeFields, context, atFirstPosition) {
         const ctx = { ...context };
         if (this.hasActiveProgressValue && this.progressValue.active !== FALSE) {
             const { fieldName } = this.model.progressAttributes;
@@ -346,9 +328,9 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
 
         this.groupBy = this.groupBy.slice(0, 1);
 
-        this.model.addEventListener("group-updated", ({ detail }) => {
+        this.model.addEventListener("group-updated", async ({ detail }) => {
             if (this.groups.some((g) => g.id === detail.group.id)) {
-                this.updateGroupProgressData([detail.group], detail.withProgressBars);
+                await this.updateGroupProgressData([detail.group], detail.withProgressBars);
                 this.model.notify();
             }
         });
@@ -484,7 +466,9 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             await Promise.all(promises);
         }
 
-        if (!fullyLoadGroup) {
+        if (fullyLoadGroup) {
+            this.model.notify();
+        } else {
             // Only trigger resequence if the group hasn't been fully loaded
             await targetGroup.list.resequence(dataRecordId, refId);
         }

@@ -173,11 +173,11 @@ class FieldAdapter extends ComponentAdapter {
         } else if (evType === "reload") {
             const record = this.props.record;
             if (payload.db_id === record.id) {
-                await record.load();
+                await record.model.reloadRecords(record);
             } else {
                 await record.model.root.load();
+                record.model.notify();
             }
-            record.model.notify();
             if (payload.onSuccess) {
                 payload.onSuccess();
             }
