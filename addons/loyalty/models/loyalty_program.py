@@ -362,6 +362,8 @@ class LoyaltyProgram(models.Model):
             'program_type': self.program_type,
             'program_item_name': self._program_items_name()[self.program_type],
             'default_program_id': self.id,
+            # For the wizard
+            'default_mode': self.program_type == 'ewallet' and 'selected' or 'anonymous',
         }
         return action
 
