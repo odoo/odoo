@@ -1,3 +1,4 @@
+import { isSelectionFormat } from '../../src/utils/utils.js';
 import { BasicEditor, testEditor, setTestSelection, Direction } from '../utils.js';
 import { applyInlineStyle } from '../../src/commands/commands.js';
 
@@ -555,6 +556,33 @@ describe('applyInlineStyle', () => {
             contentBefore: '<p>a<span>[b<span>c]d</span>e</span>f</p>',
             stepFunction: editor => applyInlineStyle(editor, (el) => el.style.color = 'tomato'),
             contentAfter: '<p>a<span><span style="color: tomato;">[b</span><span><span style="color: tomato;">c]</span>d</span>e</span>f</p>',
+        });
+    });
+
+    describe('isSelectionFormat', () => {
+        it('return false for isSelectionFormat when partially selecting 2 text node, the anchor is formated and focus is not formated', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>${strong(`a[b`)}</p><p>c]d</p>`,
+                stepFunction: (editor) => {
+                    window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(false);
+                },
+            });
+        });
+        it('return false for isSelectionFormat when partially selecting 2 text node, the anchor is not formated and focus is formated', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>${strong(`a]b`)}</p><p>c[d</p>`,
+                stepFunction: (editor) => {
+                    window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(false);
+                },
+            });
+        });
+        it('return false for isSelectionFormat when selecting 3 text node, the anchor and focus not formated and the text node in between formated', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a[b</p><p>${strong(`c`)}</p><p>d]e</p>`,
+                stepFunction: (editor) => {
+                    window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(false);
+                },
+            });
         });
     });
 });

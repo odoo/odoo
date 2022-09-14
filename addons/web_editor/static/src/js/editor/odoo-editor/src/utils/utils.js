@@ -1055,14 +1055,12 @@ export const isFormat = {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedText = getSelectedNodes(editable)
+    const selectedNodes = getSelectedNodes(editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
-    if (selectedText.length) {
-        return selectedText.every(n => isFormat[format](n.parentElement, editable))
-    } else {
-        return isFormat[format](closestElement(editable.ownerDocument.getSelection().anchorNode), editable);
-    }
-}
+    const isFormatted = formatsSpecs[format].isFormatted;
+    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().anchorNode));
+    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().focusNode));
+    return selectedNodes.every(n => isFormatted(n, editable));
 
 export function isUnbreakable(node) {
     if (!node || node.nodeType === Node.TEXT_NODE) {
