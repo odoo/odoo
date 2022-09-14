@@ -104,13 +104,7 @@ export class KanbanArchParser extends XMLParser {
         let progressAttributes = false;
         const progressBar = xmlDoc.querySelector("progressbar");
         if (progressBar) {
-            const attrs = extractAttributes(progressBar, ["field", "colors", "sum_field", "help"]);
-            progressAttributes = {
-                fieldName: attrs.field,
-                colors: JSON.parse(attrs.colors),
-                sumField: fields[attrs.sum_field] || false,
-                help: attrs.help,
-            };
+            progressAttributes = this.parseProgressBar(progressBar, fields);
         }
 
         // Concrete kanban box elements in the template
@@ -156,6 +150,16 @@ export class KanbanArchParser extends XMLParser {
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
             __rawArch: arch,
+        };
+    }
+
+    parseProgressBar(progressBar, fields) {
+        const attrs = extractAttributes(progressBar, ["field", "colors", "sum_field", "help"]);
+        return {
+            fieldName: attrs.field,
+            colors: JSON.parse(attrs.colors),
+            sumField: fields[attrs.sum_field] || false,
+            help: attrs.help,
         };
     }
 }
