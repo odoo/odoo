@@ -670,7 +670,7 @@ class PosOrder(models.Model):
         # Reconcile the invoice to the created payment moves.
         # But not when the invoice's total amount is zero because it's already reconciled.
         if not invoice_receivable.reconciled and receivable_account.reconcile:
-            payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account)
+            payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account and line.partner_id)
             (invoice_receivable | payment_receivables).sudo().with_company(self.company_id).reconcile()
 
     @api.model
