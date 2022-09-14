@@ -375,6 +375,9 @@
                    <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
                    <attribute name="invisible">1</attribute>
                 </field>
+                <xpath expr="//label[@for='list_price']" position="replace">
+                    <label for="lst_price"/>
+                </xpath>
                 <field name="list_price" position="after">
                    <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                 </field>
