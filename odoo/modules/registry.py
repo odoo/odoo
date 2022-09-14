@@ -543,7 +543,7 @@ class Registry(Mapping):
                 sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
                 conname = sql.get_foreign_keys(cr, table1, column1, table2, column2, ondelete)[0]
                 model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
-            elif (spec[1], spec[2], spec[3]) != (table2, column2, deltype):
+            elif (key[0], key[1], spec[1], spec[2], spec[3]) != (table1, column1, table2, column2, deltype):
                 sql.drop_constraint(cr, table1, spec[0])
                 sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
                 conname = sql.get_foreign_keys(cr, table1, column1, table2, column2, ondelete)[0]
