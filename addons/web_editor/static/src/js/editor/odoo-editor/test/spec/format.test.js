@@ -14,6 +14,8 @@ const strikeThrough = async editor => {
     await editor.execCommand('strikeThrough');
 };
 
+const switchDirection = editor => editor.execCommand('switchDirection');
+
 describe('Format', () => {
     const b = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-weight: bolder;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
     const notB = (content, weight, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-weight: ${weight || 'normal'};"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
@@ -555,6 +557,22 @@ describe('applyInlineStyle', () => {
             contentBefore: '<p>a<span>[b<span>c]d</span>e</span>f</p>',
             stepFunction: editor => applyInlineStyle(editor, (el) => el.style.color = 'tomato'),
             contentAfter: '<p>a<span><span style="color: tomato;">[b</span><span><span style="color: tomato;">c]</span>d</span>e</span>f</p>',
+        });
+    });
+    describe('switchDirection', () => {
+        it('should switch direction on a collapsed range', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a[]b</p>`,
+                stepFunction: switchDirection,
+                contentAfter: `<p dir="rtl">a[]b</p>`,
+            });
+        });
+        it('should switch direction on an uncollapsed range', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a[b]c</p>`,
+                stepFunction: switchDirection,
+                contentAfter: `<p dir="rtl">a[b]c</p>`,
+            });
         });
     });
 });
