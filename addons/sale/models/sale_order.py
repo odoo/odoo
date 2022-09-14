@@ -728,7 +728,7 @@ class SaleOrder(models.Model):
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
-            'default_email_layout_xmlid': 'mail.mail_notification_paynow',
+            'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
             'model_description': self.with_context(lang=lang).type_name,
@@ -837,7 +837,7 @@ class SaleOrder(models.Model):
             self.with_context(force_send=True).message_post_with_template(
                 mail_template.id,
                 composition_mode='comment',
-                email_layout_xmlid='mail.mail_notification_paynow',
+                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             )
 
     def action_done(self):
@@ -873,7 +873,7 @@ class SaleOrder(models.Model):
                 'default_template_id': template_id,
                 'default_order_id': self.id,
                 'mark_so_as_canceled': True,
-                'default_email_layout_xmlid': 'mail.mail_notification_paynow',
+                'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
                 'model_description': self.with_context(lang=lang).type_name,
             }
             return {
@@ -1231,15 +1231,15 @@ class SaleOrder(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
+        subtitles = [render_context['record'].name]
         if self.validity_date:
-            render_context['subtitle'] = _(
-                u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
-            )
+            subtitles.append(_(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
+                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
+                          ))
         else:
-            render_context['subtitle'] = format_amount(
-                self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        render_context['subtitles'] = subtitles
         return render_context
 
     def _sms_get_number_fields(self):

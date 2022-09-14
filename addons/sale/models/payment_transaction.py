@@ -132,7 +132,7 @@ class PaymentTransaction(models.Model):
             for invoice in invoice_to_send.with_user(SUPERUSER_ID):
                 invoice.message_post_with_template(
                     int(template_id),
-                    email_layout_xmlid='mail.mail_notification_paynow',
+                    email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
                 )
 
     def _cron_send_invoice(self):
