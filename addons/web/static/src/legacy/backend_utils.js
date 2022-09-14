@@ -7,7 +7,7 @@ import { makeContext } from "@web/core/context";
  * @param {string} state
  * @returns {string}
  */
-function searchModelStateFromLegacy(state) {
+export function searchModelStateFromLegacy(state) {
     /**
      * Possible problem if only one of ControlPanelModelExtension or SearchPanelModelExtension is installed.
      * We might need to do something in SearchModel.
