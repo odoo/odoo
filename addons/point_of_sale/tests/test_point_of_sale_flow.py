@@ -1261,3 +1261,52 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             closing_entry_receivable_line = closing_entry.line_ids.filtered(lambda line: line.account_id == self.company_data['default_account_receivable'])  # Because the payment method use the default receivable
             statement_receivable_line = statement.line_ids.filtered(lambda line: line.account_id == self.company_data['default_account_receivable'] and line.name == pos_order.session_id.name)  # Because the payment method use the default receivable
             self.assertEqual(closing_entry_receivable_line.matching_number, statement_receivable_line.matching_number)
+
+    def test_order_pos_tax_same_as_company(self):
+        """Test that when the default_pos_receivable_account and the partner account_receivable are the same,
+            payment are correctly reconciled and the invoice is correctly marked as paid.
+        """
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        current_session.company_id.account_default_pos_receivable_account_id = self.partner1.property_account_receivable_id
+
+        product5_order = {'data':
+          {'amount_paid': 750,
+           'amount_tax': 0,
+           'amount_return':0,
+           'amount_total': 750,
+           'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+           'lines': [[0, 0, {
+                'discount': 0,
+                'id': 42,
+                'pack_lot_ids': [],
+                'price_unit': 750.0,
+                'product_id': self.product3.id,
+                'price_subtotal': 750.0,
+                'price_subtotal_incl': 750.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            }]],
+           'name': 'Order 12345-123-1234',
+           'partner_id': self.partner1.id,
+           'pos_session_id': current_session.id,
+           'sequence_number': 2,
+           'statement_ids': [[0, 0, {
+                'amount': 450,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id
+            }], [0, 0, {
+                'amount': 300,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.bank_payment_method.id
+            }]],
+           'uid': '12345-123-1234',
+           'user_id': self.env.uid,
+           'to_invoice': True, }
+        }
+
+        pos_order_id = self.PosOrder.create_from_ui([product5_order])[0]['id']
+        pos_order = self.PosOrder.search([('id', '=', pos_order_id)])
+        self.assertEqual(pos_order.account_move.amount_residual, 0)
