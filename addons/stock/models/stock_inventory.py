@@ -183,7 +183,7 @@ class Inventory(models.Model):
             self._action_done()
 
     def _action_done(self):
-        negative = next((line for line in self.mapped('line_ids') if line.product_qty < 0 and line.product_qty != line.theoretical_qty), False)
+        negative = next((line for line in self.mapped('line_ids') if line.product_qty < 0), False)
         if negative:
             raise UserError(_('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s') % (negative.product_id.name, negative.product_qty))
         self.action_check()
