@@ -777,6 +777,11 @@ export class Record extends DataPoint {
         return value.records.every(async (r) => await r.checkValidity());
     }
 
+    /**
+     * @param {Object} [params={}]
+     * @param {Object} [params.values]
+     * @param {Object} [params.changes]
+     */
     async load(params = {}) {
         this._cache = {};
         for (const fieldName in this.activeFields) {
@@ -1290,8 +1295,7 @@ export class Record extends DataPoint {
                 await this.model.orm.write(this.resModel, [this.resId], changes, { context });
             } catch (e) {
                 if (!this.isInEdition) {
-                    await Promise.all([this.model.reloadRecords(this.resId), this.load()]);
-                    this.model.notify();
+                    await this.model.reloadRecords(this);
                 }
                 throw e;
             }
@@ -1305,9 +1309,7 @@ export class Record extends DataPoint {
         }
         this.isInQuickCreation = false;
         if (shouldReload) {
-            await Promise.all([this.model.reloadRecords(this.resId), this.load()]);
-            this.model.trigger("record-updated", { record: this });
-            this.model.notify();
+            await this.model.reloadRecords(this);
         }
         if (!options.stayInEdition) {
             this.switchMode("readonly");
@@ -1720,7 +1722,6 @@ class DynamicList extends DataPoint {
             }
         }
 
-        this.model.notify();
         return records;
     }
 
@@ -1753,6 +1754,7 @@ export class DynamicRecordList extends DynamicList {
     get quickCreateRecordIndex() {
         return this.records.findIndex((r) => r.isInQuickCreation);
     }
+
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
@@ -1945,6 +1947,7 @@ export class DynamicRecordList extends DynamicList {
 
     async resequence() {
         this.records = await this._resequence(this.records, this.resModel, ...arguments);
+        this.model.notify();
     }
 
     // -------------------------------------------------------------------------
@@ -2087,7 +2090,7 @@ export class DynamicGroupList extends DynamicList {
     get records() {
         return this.groups
             .filter((group) => !group.isFolded)
-            .map((group) => group.list.records)
+            .map((group) => group.records)
             .flat();
     }
 
@@ -2256,6 +2259,7 @@ export class DynamicGroupList extends DynamicList {
             ? this.groupByField.relation
             : this.resModel;
         this.groups = await this._resequence(this.groups, resModel, ...arguments);
+        this.model.notify();
     }
 
     // ------------------------------------------------------------------------
@@ -2478,6 +2482,10 @@ export class Group extends DataPoint {
             },
         };
         this.list = this.model.createDataPoint("list", listParams, state.listState);
+    }
+
+    get records() {
+        return this.list.records;
     }
 
     // ------------------------------------------------------------------------
@@ -3411,13 +3419,23 @@ export class RelationalModel extends Model {
         return this.root.groups && this.root.groups.length ? this.root.groups : null;
     }
 
-    async reloadRecords(resId) {
-        if (this.rootType !== "form") {
-            const records = this.root.records.filter((r) => r.resId === resId);
-            if (records.length) {
-                await Promise.all(records.map((r) => r.load()));
-            }
-        }
+    /**
+     * Reloads a given record and all related records (those sharing the same resId).
+     * A "record-updated" event containing the given and related records is then
+     * triggered on the model.
+     *
+     * @param {Record} record
+     */
+    async reloadRecords(record) {
+        const records = this.rootType === "record" ? [this.root] : this.root.records;
+        const relatedRecords = records.filter(
+            (r) => r.id !== record.id && r.resId === record.resId
+        );
+
+        await Promise.all([record, ...relatedRecords].map((r) => r.load()));
+
+        this.trigger("record-updated", { record, relatedRecords });
+        this.notify();
     }
 }
 
