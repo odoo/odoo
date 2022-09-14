@@ -188,11 +188,9 @@ class CustomerPortal(portal.CustomerPortal):
             ('partner_id', '=', order_sudo.partner_id.id)
         ]) if logged_in else request.env['payment.token']
         # Make sure that the partner's company matches the order's company.
-        if not payment_portal.PaymentPortal._can_partner_pay_in_company(
+        company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
             order_sudo.partner_id, order_sudo.company_id
-        ):
-            providers_sudo = request.env['payment.provider'].sudo()
-            tokens = request.env['payment.token']
+        )
         fees_by_provider = {
             provider: provider._compute_fees(
                 order_sudo.amount_total,
@@ -200,7 +198,11 @@ class CustomerPortal(portal.CustomerPortal):
                 order_sudo.partner_id.country_id,
             ) for provider in providers_sudo.filtered('fees_active')
         }
-        return {
+        portal_page_values = {
+            'company_mismatch': company_mismatch,
+            'expected_company': order_sudo.company_id,
+        }
+        payment_form_values = {
             'providers': providers_sudo,
             'tokens': tokens,
             'fees_by_provider': fees_by_provider,
@@ -214,6 +216,7 @@ class CustomerPortal(portal.CustomerPortal):
             'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
             'landing_route': order_sudo.get_portal_url(),
         }
+        return {**portal_page_values, **payment_form_values}
 
     @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):

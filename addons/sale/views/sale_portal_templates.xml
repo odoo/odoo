@@ -252,7 +252,10 @@
                                             </li>
                                         </ul>
                                     </p>
-                                    <div t-if="providers or tokens" id="payment_method" class="text-start">
+                                    <div t-if="company_mismatch">
+                                        <t t-call="payment.company_mismatch_warning"/>
+                                    </div>
+                                    <div t-elif="providers or tokens" id="payment_method" class="text-start">
                                         <h3 class="mb24">Pay with</h3>
                                         <t t-call="payment.checkout"/>
                                     </div>
