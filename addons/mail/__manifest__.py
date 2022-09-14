@@ -139,7 +139,6 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/lib/bootstrap/scss/utilities/_api.scss',
             'web/static/src/legacy/scss/bootstrap_review.scss',
             'web/static/src/webclient/webclient.scss',
-            'web/static/src/webclient/webclient_extra.scss',
             'web/static/src/core/utils/*.scss',
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
