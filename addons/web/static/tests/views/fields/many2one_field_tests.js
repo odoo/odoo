@@ -959,6 +959,18 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("empty readonly many2one field", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="trululu" readonly="1"/></form>`,
+        });
+
+        assert.containsOnce(target, "div.o_field_widget[name=trululu]");
+        assert.strictEqual(target.querySelector(".o_field_widget[name=trululu]").innerHTML, "");
+    });
+
     QUnit.test("empty many2one field with node options", async function (assert) {
         assert.expect(2);
 
@@ -1207,17 +1219,12 @@ QUnit.module("Fields", (hooks) => {
             "href should contain id and model"
         );
 
-        // Remove value from many2one and then save, there should not have href with id and model on m2o anchor
+        // Remove value from many2one and then save, there should be no link anymore
         await click(target, ".o_form_button_edit");
         await editInput(target, ".o_field_many2one input", "");
 
         await click(target, ".o_form_button_save");
-        assert.hasAttrValue(
-            target.querySelector("a.o_form_uri"),
-            "href",
-            "#",
-            "href should have #"
-        );
+        assert.containsNone(target, "a.o_form_uri");
     });
 
     QUnit.test("many2one with co-model whose name field is a many2one", async function (assert) {

@@ -26,6 +26,7 @@
             </t>
             <t t-else="">
                 <a
+                    t-if="props.value"
                     class="o_form_uri"
                     t-att-href="props.value ? `#id=${props.value[0]}&amp;model=${relation}` : '#'"
                     t-on-click.prevent="onClick"
