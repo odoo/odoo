@@ -32,18 +32,27 @@ class PaymentTransaction(models.Model):
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
     def _set_pending(self, state_message=None):
-        """ Override of payment to send the quotations automatically. """
-        super(PaymentTransaction, self)._set_pending(state_message=state_message)
+        """ Override of `payment` to send the quotations automatically.
 
-        for record in self:
-            sales_orders = record.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
-            sales_orders.filtered(lambda so: so.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
+        :param str state_message: The reason for which the transaction is set in 'pending' state.
+        :return: updated transactions.
+        :rtype: `payment.transaction` recordset.
+        """
+        txs_to_process = super()._set_pending(state_message=state_message)
 
-            if record.provider_id.code == 'custom':
-                for so in record.sale_order_ids:
-                    so.reference = record._compute_sale_order_reference(so)
-            # send order confirmation mail
+        for tx in txs_to_process:  # Consider only transactions that are indeed set pending.
+            sales_orders = tx.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
+            sales_orders.filtered(
+                lambda so: so.state == 'draft'
+            ).with_context(tracking_disable=True).action_quotation_sent()
+
+            if tx.provider_id.code == 'custom':
+                for so in tx.sale_order_ids:
+                    so.reference = tx._compute_sale_order_reference(so)
+            # send order confirmation mail.
             sales_orders._send_order_confirmation_mail()
+
+        return txs_to_process
 
     def _check_amount_and_confirm_order(self):
         """ Confirm the sales order based on the amount of a transaction.
