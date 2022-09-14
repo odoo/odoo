@@ -237,7 +237,7 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        if (this.props.searchLimit < records.length) {
+        if (!this.props.noSearchMore && this.props.searchLimit < records.length) {
             options.push({
                 label: this.env._t("Search More..."),
                 action: this.onSearchMore.bind(this, request),

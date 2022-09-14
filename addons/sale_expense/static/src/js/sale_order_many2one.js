@@ -1,21 +1,25 @@
-odoo.define('sale_expense.sale_order_many2one', function (require) {
-"use strict";
+/** @odoo-module alias=sale_expense.sale_order_many2one **/
 
-var FieldMany2One = require('web.relational_fields').FieldMany2One;
-var FieldRegistry = require('web.field_registry');
+import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
 
+import { registry } from "@web/core/registry";
 
-var OrderField = FieldMany2One.extend({
-    /**
-     * hide the search more option from the dropdown menu
-     * @override
-     * @private
-     * @returns {Object}
-     */
-    _manageSearchMore: function (values) {
-        return values;
+export class OrderField extends Many2OneField {
+    setup() {
+        super.setup();
     }
-});
-FieldRegistry.add('sale_order_many2one', OrderField);
-return OrderField;
-});
+
+    /**
+     * @override
+     */
+    get Many2XAutocompleteProps() {
+        // hide the search more option from the dropdown menu
+       return {
+           ...super.Many2XAutocompleteProps,
+           noSearchMore: true,
+       }
+    }
+}
+
+registry.category('fields').add('sale_order_many2one', OrderField)
+registry.add('sale_order_many2one', OrderField);

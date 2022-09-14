@@ -133,6 +133,24 @@ export class Many2OneField extends Component {
     get resId() {
         return this.props.value && this.props.value[0];
     }
+    get Many2XAutocompleteProps() {
+        return {
+            value: this.displayName,
+            id: this.props.id,
+            placeholder: this.props.placeholder,
+            resModel: this.relation,
+            autoSelect: true,
+            fieldString: this.props.string,
+            activeActions: this.state.activeActions,
+            update: this.update,
+            quickCreate: this.quickCreate,
+            context: this.context,
+            getDomain: this.getDomain.bind(this),
+            nameCreateField: this.props.nameCreateField,
+            setInputFloats: this.setFloating,
+            autocomplete_container: this.autocompleteContainerRef,
+        }
+    }
     getDomain() {
         return this.domain.toList(this.context);
     }
