@@ -1,3 +1,4 @@
+import { isSelectionFormat } from '../../src/utils/utils.js';
 import { BasicEditor, testEditor, setTestSelection, Direction } from '../utils.js';
 
 const bold = async editor => {
@@ -681,6 +682,33 @@ describe('Format', () => {
             contentBefore: `<p>a<span style="background-color: black;">${strong(`[bc]`)}</span>d</p>`,
             stepFunction: setFontSize('10px'),
             contentAfter: `<p>a<span style="background-color: black; font-size: 10px;">${strong(`[bc]`)}</span>d</p>`,
+        });
+    });
+
+    describe('isSelectionFormat', () => {
+        it('return false for isSelectionFormat when partially selecting 2 text node, the anchor is formated and focus is not formated', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>${strong(`a[b`)}</p><p>c]d</p>`,
+                stepFunction: (editor) => {
+                    window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(false);
+                },
+            });
+        });
+        it('return false for isSelectionFormat when partially selecting 2 text node, the anchor is not formated and focus is formated', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>${strong(`a]b`)}</p><p>c[d</p>`,
+                stepFunction: (editor) => {
+                    window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(false);
+                },
+            });
+        });
+        it('return false for isSelectionFormat when selecting 3 text node, the anchor and focus not formated and the text node in between formated', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a[b</p><p>${strong(`c`)}</p><p>d]e</p>`,
+                stepFunction: (editor) => {
+                    window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(false);
+                },
+            });
         });
     });
 });
