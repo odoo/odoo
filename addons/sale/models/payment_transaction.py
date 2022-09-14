@@ -98,6 +98,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._log_message_on_linked_documents(message)
+        self = self.with_user(SUPERUSER_ID)  # Log messages as 'OdooBot'
         for order in self.sale_order_ids:
             order.message_post(body=message)
 
