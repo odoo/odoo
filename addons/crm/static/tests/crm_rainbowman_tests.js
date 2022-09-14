@@ -1,15 +1,34 @@
-odoo.define('crm.form_rainbowman_tests', function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    var CrmFormView = require('@crm/js/crm_form')[Symbol.for("default")].CrmFormView;
-    var CrmKanbanView = require('@crm/js/crm_kanban')[Symbol.for("default")].CrmKanbanView;
-    var testUtils = require('web.test_utils');
-    var createView = testUtils.createView;
+import "@crm/../tests/mock_server";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import {
+    click,
+    clickEdit,
+    clickSave,
+    dragAndDrop,
+    getFixture,
+} from '@web/../tests/helpers/utils';
+import testUtils from 'web.test_utils';
+const find = testUtils.dom.find;
 
-    QUnit.module('Crm Rainbowman Triggers', {
-        beforeEach: function () {
-            const format = "YYYY-MM-DD HH:mm:ss";
-            this.data = {
+let target;
+
+function getMockRpc(assert) {
+    return async (route, args, performRpc) => {
+        const result = await performRpc(route, args);
+        if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
+            assert.step(result || "no rainbowman");
+        }
+        return result;
+    };
+}
+
+QUnit.module('Crm Rainbowman Triggers', {
+    beforeEach: function () {
+        const format = "YYYY-MM-DD HH:mm:ss";
+        const serverData = {
+            models: {
                 'res.users': {
                     fields: {
                         display_name: { string: 'Name', type: 'char' },
@@ -65,320 +84,217 @@ odoo.define('crm.form_rainbowman_tests', function (require) {
                         { id: 11, name: 'Lead 11', planned_revenue: 2.0, stage_id: 3, team_id: 2, user_id: 4, date_closed: moment().subtract(5, 'days').format(format) },
                     ],
                 },
-            };
-            this.testFormView = {
-                arch: `
-                    <form js_class="crm_form">
-                        <header><field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/></header>
-                        <field name="name"/>
-                        <field name="planned_revenue"/>
-                        <field name="team_id"/>
-                        <field name="user_id"/>
-                    </form>`,
-                data: this.data,
-                model: 'crm.lead',
-                View: CrmFormView,
-            };
-            this.testKanbanView = {
-                arch: `
-                    <kanban js_class="crm_kanban">
-                        <templates>
-                            <t t-name="kanban-box">
-                                <div><field name="name"/></div>
-                            </t>
-                        </templates>
-                    </kanban>`,
-                data: this.data,
-                model: 'crm.lead',
-                View: CrmKanbanView,
-                groupBy: ['stage_id'],
-            };
-        },
-    }, function () {
-        QUnit.test("first lead won, click on statusbar", async function (assert) {
-            assert.expect(2);
+            },
+            views: {},
+        };
+        this.testFormView = {
+            arch: `
+                <form js_class="crm_form">
+                    <header><field name="stage_id" widget="crm_statusbar" options="{'clickable': '1'}"/></header>
+                    <field name="name"/>
+                    <field name="planned_revenue"/>
+                    <field name="team_id"/>
+                    <field name="user_id"/>
+                </form>`,
+            serverData,
+            type: "form",
+            resModel: 'crm.lead',
+        };
+        this.testKanbanView = {
+            arch: `
+                <kanban js_class="crm_kanban">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="name"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            serverData,
+            resModel: 'crm.lead',
+            type: "kanban",
+            groupBy: ['stage_id'],
+        };
+        target = getFixture();
+        setupViewRegistries();
+    },
+}, function () {
+    QUnit.test("first lead won, click on statusbar", async function (assert) {
+        assert.expect(2);
 
-            this.testFormView.res_id = 6;
-            this.testFormView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const form = await createView(this.testFormView);
-
-            await testUtils.dom.click(form.$(".o_statusbar_status button[data-value='3']"));
-            assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
-
-            form.destroy();
+        await makeView({
+            ...this.testFormView,
+            resId: 6,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("first lead won, click on statusbar in edit mode then save", async function (assert) {
-            assert.expect(3);
+        await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
+        assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
+    });
 
-            const form = await createView(_.extend(this.testFormView, {
-                res_id: 6,
-                mockRPC: async function (route, args) {
-                    const result = await this._super(...arguments);
-                    if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                        assert.step(result || "no rainbowman");
-                    }
-                    return result;
-                },
-                viewOptions: {mode: 'edit'}
-            }));
+    QUnit.test("first lead won, click on statusbar in edit mode then save", async function (assert) {
+        assert.expect(3);
 
-            await testUtils.dom.click(form.$(".o_statusbar_status button[data-value='3']"));
-            assert.verifySteps([]); // no message displayed yet
+        await makeView({
+            ...this.testFormView,
+            resId: 6,
+            mockRPC: getMockRpc(assert),
+        });
+        await clickEdit(target);
 
-            await testUtils.form.clickSave(form);
-            assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
+        await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
+        assert.verifySteps([]); // no message displayed yet
 
-            form.destroy();
+        await clickSave(target);
+        assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
+    });
+
+    QUnit.test("team record 30 days, click on statusbar", async function (assert) {
+        assert.expect(2);
+
+        await makeView({
+            ...this.testFormView,
+            resId: 2,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("team record 30 days, click on statusbar", async function (assert) {
-            assert.expect(2);
+        await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
+        assert.verifySteps(['Boom! Team record for the past 30 days.']);
+    });
 
-            this.testFormView.res_id = 2;
-            this.testFormView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const form = await createView(this.testFormView);
+    QUnit.test("team record 7 days, click on statusbar", async function (assert) {
+        assert.expect(2);
 
-            await testUtils.dom.click(form.$(".o_statusbar_status button[data-value='3']"));
-            assert.verifySteps(['Boom! Team record for the past 30 days.']);
-
-            form.destroy();
+        await makeView({
+            ...this.testFormView,
+            resId: 1,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("team record 7 days, click on statusbar", async function (assert) {
-            assert.expect(2);
+        await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
+        assert.verifySteps(['Yeah! Deal of the last 7 days for the team.']);
+    });
 
-            this.testFormView.res_id = 1;
-            this.testFormView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const form = await createView(this.testFormView);
+    QUnit.test("user record 30 days, click on statusbar", async function (assert) {
+        assert.expect(2);
 
-            await testUtils.dom.click(form.$(".o_statusbar_status button[data-value='3']"));
-            assert.verifySteps(['Yeah! Deal of the last 7 days for the team.']);
-
-            form.destroy();
+        await makeView({
+            ...this.testFormView,
+            resId: 8,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("user record 30 days, click on statusbar", async function (assert) {
-            assert.expect(2);
+        await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
+        assert.verifySteps(['You just beat your personal record for the past 30 days.']);
+    });
 
-            this.testFormView.res_id = 8;
-            this.testFormView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const form = await createView(this.testFormView);
+    QUnit.test("user record 7 days, click on statusbar", async function (assert) {
+        assert.expect(2);
 
-            await testUtils.dom.click(form.$(".o_statusbar_status button[data-value='3']"));
-            assert.verifySteps(['You just beat your personal record for the past 30 days.']);
-
-            form.destroy();
+        await makeView({
+            ...this.testFormView,
+            resId: 10,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("user record 7 days, click on statusbar", async function (assert) {
-            assert.expect(2);
+        await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
+        assert.verifySteps(['You just beat your personal record for the past 7 days.']);
+    });
 
-            this.testFormView.res_id = 10;
-            this.testFormView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const form = await createView(this.testFormView);
+    QUnit.test("click on stage (not won) on statusbar", async function (assert) {
+        assert.expect(2);
 
-            await testUtils.dom.click(form.$(".o_statusbar_status button[data-value='3']"));
-            assert.verifySteps(['You just beat your personal record for the past 7 days.']);
-
-            form.destroy();
+        await makeView({
+            ...this.testFormView,
+            resId: 1,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("click on stage (not won) on statusbar", async function (assert) {
-            assert.expect(2);
+        await click(target.querySelector(".o_statusbar_status button[data-value='2']"));
+        assert.verifySteps(['no rainbowman']);
+    });
 
-            this.testFormView.res_id = 1;
-            this.testFormView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const form = await createView(this.testFormView);
+    QUnit.test("first lead won, drag & drop kanban", async function (assert) {
+        assert.expect(2);
 
-            await testUtils.dom.click(form.$(".o_statusbar_status button[data-value='2']"));
-            assert.verifySteps(['no rainbowman']);
-
-            form.destroy();
+        await makeView({
+            ...this.testKanbanView,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("first lead won, drag & drop kanban", async function (assert) {
-            assert.expect(2);
+        await dragAndDrop(find(target, ".o_kanban_record", "Lead 6"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
+    });
 
-            this.testKanbanView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const kanban = await createView(this.testKanbanView);
+    QUnit.test("team record 30 days, drag & drop kanban", async function (assert) {
+        assert.expect(2);
 
-            kanban.model.defaultGroupedBy = ['stage_id'];
-            await kanban.reload();
-
-            await testUtils.dom.dragAndDrop(kanban.$('.o_kanban_record:contains("Lead 6")'), kanban.$('.o_kanban_group:eq(2)'));
-            assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
-
-            kanban.destroy();
+        await makeView({
+            ...this.testKanbanView,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("team record 30 days, drag & drop kanban", async function (assert) {
-            assert.expect(2);
+        await dragAndDrop(find(target, ".o_kanban_record", "Lead 2"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        assert.verifySteps(['Boom! Team record for the past 30 days.']);
+    });
 
-            this.testKanbanView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const kanban = await createView(this.testKanbanView);
+    QUnit.test("team record 7 days, drag & drop kanban", async function (assert) {
+        assert.expect(2);
 
-            kanban.model.defaultGroupedBy = ['stage_id'];
-            await kanban.reload();
-
-            await testUtils.dom.dragAndDrop(kanban.$('.o_kanban_record:contains("Lead 2")'), kanban.$('.o_kanban_group:eq(2)'));
-            assert.verifySteps(['Boom! Team record for the past 30 days.']);
-
-            kanban.destroy();
+        await makeView({
+            ...this.testKanbanView,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("team record 7 days, drag & drop kanban", async function (assert) {
-            assert.expect(2);
+        await dragAndDrop(find(target, ".o_kanban_record", "Lead 1"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        assert.verifySteps(['Yeah! Deal of the last 7 days for the team.']);
+    });
 
-            this.testKanbanView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const kanban = await createView(this.testKanbanView);
+    QUnit.test("user record 30 days, drag & drop kanban", async function (assert) {
+        assert.expect(2);
 
-            kanban.model.defaultGroupedBy = ['stage_id'];
-            await kanban.reload();
-
-            await testUtils.dom.dragAndDrop(kanban.$('.o_kanban_group:eq(0) .o_kanban_record:contains("Lead 1")'), kanban.$('.o_kanban_group:eq(2)'));
-            assert.verifySteps(['Yeah! Deal of the last 7 days for the team.']);
-
-            kanban.destroy();
+        await makeView({
+            ...this.testKanbanView,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("user record 30 days, drag & drop kanban", async function (assert) {
-            assert.expect(2);
+        await dragAndDrop(find(target, ".o_kanban_record", "Lead 8"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        assert.verifySteps(['You just beat your personal record for the past 30 days.']);
+    });
 
-            this.testKanbanView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const kanban = await createView(this.testKanbanView);
+    QUnit.test("user record 7 days, drag & drop kanban", async function (assert) {
+        assert.expect(2);
 
-            kanban.model.defaultGroupedBy = ['stage_id'];
-            await kanban.reload();
-
-            await testUtils.dom.dragAndDrop(kanban.$('.o_kanban_record:contains("Lead 8")'), kanban.$('.o_kanban_group:eq(2)'));
-            assert.verifySteps(['You just beat your personal record for the past 30 days.']);
-
-            kanban.destroy();
+        await makeView({
+            ...this.testKanbanView,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("user record 7 days, drag & drop kanban", async function (assert) {
-            assert.expect(2);
+        await dragAndDrop(find(target, ".o_kanban_record", "Lead 10"), target.querySelector('.o_kanban_group:nth-of-type(3)'));
+        assert.verifySteps(['You just beat your personal record for the past 7 days.']);
+    });
 
-            this.testKanbanView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const kanban = await createView(this.testKanbanView);
+    QUnit.test("drag & drop record kanban in stage not won", async function (assert) {
+        assert.expect(2);
 
-            kanban.model.defaultGroupedBy = ['stage_id'];
-            await kanban.reload();
-
-            await testUtils.dom.dragAndDrop(kanban.$('.o_kanban_record:contains("Lead 10")'), kanban.$('.o_kanban_group:eq(2)'));
-            assert.verifySteps(['You just beat your personal record for the past 7 days.']);
-
-            kanban.destroy();
+        await makeView({
+            ...this.testKanbanView,
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("drag & drop record kanban in stage not won", async function (assert) {
-            assert.expect(2);
+        await dragAndDrop(find(target, ".o_kanban_record", "Lead 8"), target.querySelector('.o_kanban_group:nth-of-type(2)'));
+        assert.verifySteps(["no rainbowman"]);
+    });
 
-            this.testKanbanView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            const kanban = await createView(this.testKanbanView);
+    QUnit.test("drag & drop record in kanban not grouped by stage_id", async function (assert) {
+        assert.expect(1);
 
-            kanban.model.defaultGroupedBy = ['stage_id'];
-            await kanban.reload();
-
-            await testUtils.dom.dragAndDrop(kanban.$('.o_kanban_record:contains("Lead 8")'), kanban.$('.o_kanban_group:eq(1)'));
-            assert.verifySteps(["no rainbowman"]);
-
-            kanban.destroy();
+        await makeView({
+            ...this.testKanbanView,
+            groupBy: ["user_id"],
+            mockRPC: getMockRpc(assert),
         });
 
-        QUnit.test("drag & drop record in kanban not grouped by stage_id", async function (assert) {
-            assert.expect(1);
-
-            this.testKanbanView.mockRPC = async function (route, args) {
-                const result = await this._super(...arguments);
-                if (args.model === 'crm.lead' && args.method === 'get_rainbowman_message') {
-                    assert.step(result || "no rainbowman");
-                }
-                return result;
-            };
-            this.testKanbanView.groupBy = ['user_id'];
-            const kanban = await createView(this.testKanbanView);
-
-            kanban.model.defaultGroupedBy = ['stage_id'];
-            await kanban.reload();
-
-            await testUtils.dom.dragAndDrop(kanban.$('.o_kanban_group:eq(0) .o_kanban_record:first'), kanban.$('.o_kanban_group:eq(1)'));
-            assert.verifySteps([]); // Should never pass by the rpc
-
-            kanban.destroy();
-        });
+        await dragAndDrop(target.querySelector('.o_kanban_group:nth-of-type(1)'), target.querySelector('.o_kanban_group:nth-of-type(2)'));
+        assert.verifySteps([]); // Should never pass by the rpc
     });
 });

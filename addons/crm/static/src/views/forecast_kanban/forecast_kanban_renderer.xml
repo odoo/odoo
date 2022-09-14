@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="crm.ForecastKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
+        <KanbanColumnQuickCreate position="replace">
+            <t t-if="isGroupedByForecastField()">
+                <ForecastKanbanColumnQuickCreate
+                    folded="true"
+                    onFoldChange="() => {}"
+                    onValidate.bind="addForecastColumn"
+                    exampleData="exampleData"
+                    groupByFieldString="getForecastQuickCreateTitle()"
+                />
+            </t>
+            <t t-else="">$0</t>
+        </KanbanColumnQuickCreate>
+    </t>
+</templates>
