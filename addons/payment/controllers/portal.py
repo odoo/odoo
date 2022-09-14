@@ -117,9 +117,7 @@ class PaymentPortal(portal.CustomerPortal):
         ) if logged_in else request.env['payment.token']
 
         # Make sure that the partner's company matches the company passed as parameter.
-        if not PaymentPortal._can_partner_pay_in_company(partner_sudo, company):
-            providers_sudo = request.env['payment.provider'].sudo()
-            payment_tokens = request.env['payment.token']
+        company_mismatch = not PaymentPortal._can_partner_pay_in_company(partner_sudo, company)
 
         # Compute the fees taken by providers supporting the feature
         fees_by_provider = {
@@ -130,7 +128,12 @@ class PaymentPortal(portal.CustomerPortal):
         # Generate a new access token in case the partner id or the currency id was updated
         access_token = payment_utils.generate_access_token(partner_sudo.id, amount, currency.id)
 
-        rendering_context = {
+        portal_page_values = {
+            'company_mismatch': company_mismatch,
+            'expected_company': company,
+            'partner_is_different': partner_is_different,
+        }
+        payment_form_values = {
             'providers': providers_sudo,
             'tokens': payment_tokens,
             'fees_by_provider': fees_by_provider,
@@ -145,9 +148,9 @@ class PaymentPortal(portal.CustomerPortal):
             'transaction_route': '/payment/transaction',
             'landing_route': '/payment/confirmation',
             'res_company': company,  # Display the correct logo in a multi-company environment
-            'partner_is_different': partner_is_different,
             **self._get_custom_rendering_context_values(**kwargs),
         }
+        rendering_context = {**portal_page_values, **payment_form_values}
         return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)
 
     @staticmethod

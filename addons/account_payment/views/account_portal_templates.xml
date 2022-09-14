@@ -48,7 +48,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div t-if="providers or tokens" id="payment_method" class="text-start col-md-13">
+                            <div t-if="company_mismatch">
+                                <t t-call="payment.company_mismatch_warning"/>
+                            </div>
+                            <div t-elif="providers or tokens" id="payment_method" class="text-start col-md-13">
                                 <t t-call="payment.checkout"/>
                             </div>
                             <div t-else="" class="alert alert-warning">

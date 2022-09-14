@@ -30,16 +30,21 @@ class PortalAccount(portal.PortalAccount):
         )  # Tokens are cleared at the end if the user is not logged in
 
         # Make sure that the partner's company matches the invoice's company.
-        if not PaymentPortal._can_partner_pay_in_company(partner_sudo, invoice_company):
-            providers_sudo = request.env['payment.provider'].sudo()
-            tokens = request.env['payment.token']
+        company_mismatch = not PaymentPortal._can_partner_pay_in_company(
+            partner_sudo, invoice_company
+        )
 
         fees_by_provider = {
             pro_sudo: pro_sudo._compute_fees(
                 invoice.amount_total, invoice.currency_id, invoice.partner_id.country_id
             ) for pro_sudo in providers_sudo.filtered('fees_active')
         }
-        values.update({
+
+        portal_page_values = {
+            'company_mismatch': company_mismatch,
+            'expected_company': invoice_company,
+        }
+        payment_form_values = {
             'providers': providers_sudo,
             'tokens': tokens,
             'fees_by_provider': fees_by_provider,
@@ -52,7 +57,8 @@ class PortalAccount(portal.PortalAccount):
             'access_token': access_token,
             'transaction_route': f'/invoice/transaction/{invoice.id}/',
             'landing_route': _build_url_w_params(invoice.access_url, {'access_token': access_token})
-        })
+        }
+        values.update(**portal_page_values, **payment_form_values)
         if not logged_in:
             # Don't display payment tokens of the invoice partner if the user is not logged in, but
             # inform that logging in will make them available.
