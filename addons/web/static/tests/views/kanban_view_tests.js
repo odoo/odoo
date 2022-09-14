@@ -86,6 +86,11 @@ function getCounters() {
     );
 }
 
+function getProgressBars(columnIndex) {
+    const column = getColumn(columnIndex);
+    return [...column.querySelectorAll(".o_kanban_counter_progress .progress-bar")];
+}
+
 function getTooltips(groupIndex) {
     const root = groupIndex >= 0 ? getColumn(groupIndex) : target;
     return [...root.querySelectorAll(".o_kanban_counter_progress .progress-bar")]
@@ -10944,6 +10949,76 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
         }
     );
+
+    QUnit.test("update field on which progress bars are computed", async (assert) => {
+        serverData.models.partner.records.push({ id: 5, state: "abc", bar: true });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="state" widget="state_selection" />
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+        });
+
+        // Initial state: 2 columns, the "Yes" column contains 2 records "abc", 1 "def" and 1 "ghi"
+        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 4);
+        assert.containsN(getColumn(1), ".o_kanban_counter_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "50%"); // abc: 2
+        assert.strictEqual(getProgressBars(1)[1].style.width, "25%"); // def: 1
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+
+        // Filter on state "abc" => matches 2 records
+        await click(getProgressBars(1)[0]);
+
+        assert.deepEqual(getCounters(), ["1", "2"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+        assert.containsN(getColumn(1), ".o_kanban_counter_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "50%"); // abc: 2
+        assert.strictEqual(getProgressBars(1)[1].style.width, "25%"); // def: 1
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+
+        // Changes the state of the first record of the "Yes" column to "def"
+        // The updated record should remain visible
+        await click(getCard(2), ".o_status");
+        await click(getCard(2), ".o_field_state_selection .dropdown-item:first-child");
+
+        assert.deepEqual(getCounters(), ["1", "1"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+        assert.containsN(getColumn(1), ".o_kanban_counter_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+
+        // Filter on state "def" => matches 2 records (including the one we just changed)
+        await click(getProgressBars(1)[1]);
+
+        assert.deepEqual(getCounters(), ["1", "2"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+
+        // Filter back on state "abc" => matches only 1 record
+        await click(getProgressBars(1)[0]);
+
+        assert.deepEqual(getCounters(), ["1", "1"]);
+        assert.containsN(getColumn(1), ".o_kanban_record", 1);
+        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+    });
 
     QUnit.test(
         "keep focus inside control panel when pressing arrowdown and no kanban card",
