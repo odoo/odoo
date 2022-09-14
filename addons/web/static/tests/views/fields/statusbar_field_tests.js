@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { commandService } from "@web/core/commands/command_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
@@ -19,8 +18,6 @@ const { EventBus } = owl;
 
 let serverData;
 let target;
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -527,8 +524,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test('statusbar edited by the smart action "Move to stage..."', async function (assert) {
-        serviceRegistry.add("command", commandService);
-
         await makeView({
             serverData,
             type: "form",
