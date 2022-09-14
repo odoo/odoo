@@ -1,14 +1,10 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-import { commandService } from "@web/core/commands/command_service";
 import { click, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
 let target;
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -440,8 +436,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         'StateSelectionField edited by the smart action "Set kanban state..."',
         async function (assert) {
-            serviceRegistry.add("command", commandService);
-
             await makeView({
                 type: "form",
                 resModel: "partner",

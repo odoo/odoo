@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
+import { useCommand } from "@web/core/commands/command_hook";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
@@ -13,7 +13,27 @@ export class PriorityField extends Component {
             index: -1,
         });
         if (this.props.record.activeFields[this.props.name].viewType === "form") {
-            this.initiateCommand();
+            const commandName = this.env._t("Set priority...");
+            useCommand(
+                commandName,
+                () => {
+                    return {
+                        placeholder: commandName,
+                        providers: [
+                            {
+                                provide: () =>
+                                    this.options.map((value) => ({
+                                        name: value[1],
+                                        action: () => {
+                                            this.props.update(value[0]);
+                                        },
+                                    })),
+                            },
+                        ],
+                    };
+                },
+                { category: "smart_action", hotkey: "alt+r" }
+            );
         }
     }
 
@@ -41,33 +61,6 @@ export class PriorityField extends Component {
             this.props.update(this.options[0][0]);
         } else {
             this.props.update(value);
-        }
-    }
-    initiateCommand() {
-        try {
-            const commandService = useService("command");
-            const provide = () => {
-                return this.options.map((value) => ({
-                    name: value[1],
-                    action: () => {
-                        this.props.update(value[0]);
-                    },
-                }));
-            };
-            const name = this.env._t("Set priority...");
-            const action = () => {
-                return {
-                    placeholder: this.env._t("Set a priority..."),
-                    providers: [{ provide }],
-                };
-            };
-            const options = {
-                category: "smart_action",
-                hotkey: "alt+r",
-            };
-            commandService.add(name, action, options);
-        } catch {
-            console.log("Could not add command to service");
         }
     }
 }

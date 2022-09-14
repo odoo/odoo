@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
+import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
@@ -13,7 +13,27 @@ const { Component } = owl;
 export class StateSelectionField extends Component {
     setup() {
         if (this.props.record.activeFields[this.props.name].viewType === "form") {
-            this.initiateCommand();
+            const commandName = this.env._t("Set kanban state...");
+            useCommand(
+                commandName,
+                () => {
+                    return {
+                        placeholder: commandName,
+                        providers: [
+                            {
+                                provide: () =>
+                                    this.options.map((value) => ({
+                                        name: value[1],
+                                        action: () => {
+                                            this.props.update(value[0]);
+                                        },
+                                    })),
+                            },
+                        ],
+                    };
+                },
+                { category: "smart_action", hotkey: "alt+shift+r" }
+            );
         }
         this.colorPrefix = "o_status_";
         this.colors = {
@@ -48,33 +68,6 @@ export class StateSelectionField extends Component {
         return this.props.record.isReadonly(this.props.name);
     }
 
-    initiateCommand() {
-        try {
-            const commandService = useService("command");
-            const provide = () => {
-                return this.options.map((value) => ({
-                    name: value[1],
-                    action: () => {
-                        this.props.update(value[0]);
-                    },
-                }));
-            };
-            const name = this.env._t("Set kanban state...");
-            const action = () => {
-                return {
-                    placeholder: this.env._t("Set a kanban state..."),
-                    providers: [{ provide }],
-                };
-            };
-            const options = {
-                category: "smart_action",
-                hotkey: "alt+shift+r",
-            };
-            commandService.add(name, action, options);
-        } catch {
-            console.log("Could not add command to service");
-        }
-    }
     statusColor(value) {
         return this.colors[value] ? this.colorPrefix + this.colors[value] : "";
     }

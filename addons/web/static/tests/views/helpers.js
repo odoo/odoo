@@ -16,6 +16,7 @@ import {
     makeFakeRouterService,
     makeFakeUserService,
 } from "../helpers/mock_services";
+import { commandService } from "@web/core/commands/command_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { createDebugContext } from "@web/core/debug/debug_context";
@@ -110,6 +111,7 @@ export function setupViewRegistries() {
     serviceRegistry.add("dialog", dialogService), { force: true };
     serviceRegistry.add("popover", popoverService), { force: true };
     serviceRegistry.add("company", fakeCompanyService);
+    serviceRegistry.add("command", commandService);
 }
 
 /**
