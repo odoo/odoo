@@ -2290,6 +2290,9 @@ class AccountMove(models.Model):
         if copied_am.is_invoice(include_receipts=True):
             # Make sure to recompute payment terms. This could be necessary if the date is different for example.
             # Also, this is necessary when creating a credit note because the current invoice is copied.
+            if copied_am.currency_id != self.company_id.currency_id:
+                copied_am.with_context(check_move_validity=False)._onchange_currency()
+                copied_am._check_balanced()
             copied_am._recompute_payment_terms_lines()
 
         return copied_am
