@@ -239,6 +239,8 @@ class Registry(Mapping):
         for cls in models.MetaModel.module_to_models.get(module.name, []):
             # models register themselves in self.models
             model = cls._build_model(self, cr)
+            if model._abstract and cls._inherit == [cls._name] and not cls._field_definitions:
+                continue
             model_names.append(model._name)
 
         return self.descendants(model_names, '_inherit', '_inherits')
