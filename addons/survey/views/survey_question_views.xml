@@ -7,12 +7,16 @@
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
             <form string="Survey Question" create="false" class="o_survey_question_view_form">
+                <field name="is_placed_before_trigger" invisible="1"/>
+                <div class="alert alert-warning mb-0 text-center" role="alert" attrs="{'invisible': [('is_placed_before_trigger', '=', False)]}">
+                    ⚠️ This question is positioned before its trigger and will be skipped.
+                </div>
                 <field name="is_page" invisible="1"/>
                 <field name="page_id" invisible="1" required="False"/>
-                <field name="survey_id" invisible="1"/>
                 <field name="sequence" invisible="1"/>
                 <field name="scoring_type" invisible="1"/>
                 <sheet>
+                    <field name="survey_id" invisible="not context.get('show_survey_field')" readonly="1"/>
                     <div class="float-end d-flex flex-column text-center" attrs="{'invisible': [('is_page', '=', False)]}">
                         <label for="background_image"/>
                         <field name="background_image" widget="image" class="oe_avatar"/>
@@ -222,11 +226,16 @@
                                         attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"/>
                                 </group>
                                 <group string="Layout">
+                                    <p class="text-muted" colspan="2" attrs="{'invisible': [('questions_selection', '=', 'all')]}">
+                                        Conditional display is not available when questions are randomly picked.
+                                    </p>
                                     <field name="is_conditional" attrs="{'invisible': [('questions_selection', '=', 'random')]}"/>
-                                    <field name="triggering_question_id" options="{'no_open': True, 'no_create': True}"
-                                        attrs="{'invisible': [('is_conditional','=', False)], 'required': [('is_conditional','=', True)]}"/>
+                                    <field name="allowed_triggering_question_ids" invisible="1"/>
+                                    <field name="triggering_question_id"  options="{'no_create_edit': True, 'no_open': True, 'no_create': True}"
+                                           domain="[('id', 'in', allowed_triggering_question_ids)]" placeholder="Pick a previous multiple-choice question"
+                                           attrs="{'invisible': ['|', ('questions_selection', '=', 'random'), ('is_conditional','=', False)], 'required': [('is_conditional','=', True)]}"/>
                                     <field name="triggering_answer_id" options="{'no_open': True, 'no_create': True}"
-                                        attrs="{'invisible': ['|', ('is_conditional','=', False), ('triggering_question_id','=', False)],
+                                        attrs="{'invisible': ['|', ('questions_selection', '=', 'random'), ('triggering_question_id','=', False)],
                                                 'required': [('is_conditional','=', True)]}"/>
                                 </group>
                             </group>
@@ -263,8 +272,8 @@
                 <field name="survey_id"/>
                 <field name="question_type"/>
                 <field name="triggering_question_id" invisible="1"/>
-                <button disabled="disabled" icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
-                    title="This question depends on another question's answer." class="icon_rotates"/>
+                <field name="triggering_answer_id" invisible="1"/>
+                <widget name="survey_question_trigger"/>
             </tree>
         </field>
     </record>
@@ -289,7 +298,7 @@
         <field name="res_model">survey.question</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="survey_question_search"/>
-        <field name="context">{'search_default_group_by_page': True}</field>
+        <field name="context">{'search_default_group_by_page': True, 'show_survey_field': True}</field>
         <field name="domain">[('is_page', '=', False)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">

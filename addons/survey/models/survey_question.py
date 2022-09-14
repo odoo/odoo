@@ -144,6 +144,11 @@ class SurveyQuestion(models.Model):
                  '|', \
                      ('sequence', '<', sequence), \
                      '&', ('sequence', '=', sequence), ('id', '<', id)]")
+    allowed_triggering_question_ids = fields.Many2many(
+        'survey.question', string="Allowed Triggering Questions", copy=False, compute="_compute_allowed_triggering_question_ids")
+    is_placed_before_trigger = fields.Boolean(
+        string='Is misplaced?', help="Is this question placed before its trigger question?",
+        compute="_compute_allowed_triggering_question_ids")
     triggering_answer_id = fields.Many2one(
         'survey.question.answer', string="Triggering Answer", copy=False, compute="_compute_triggering_answer_id",
         store=True, readonly=False, help="Answer that will trigger the display of the current question.",
@@ -274,6 +279,51 @@ class SurveyQuestion(models.Model):
         for question in self:
             if not question.validation_required or question.question_type not in ['char_box', 'numerical_box', 'date', 'datetime']:
                 question.validation_required = False
+
+    @api.depends('is_conditional', 'survey_id', 'survey_id.question_ids', 'triggering_question_id')
+    def _compute_allowed_triggering_question_ids(self):
+        """ Although the question (and possible trigger questions) sequence
+        is used here, we do not add these fields to the dependency list to
+        avoid cascading rpc calls when reordering questions via the webclient.
+        """
+        conditional_questions = self.filtered(lambda q: q.is_conditional)
+        non_conditional_questions = self - conditional_questions
+        non_conditional_questions.allowed_triggering_question_ids = False
+        non_conditional_questions.is_placed_before_trigger = False
+        if not conditional_questions:
+            return
+
+        possible_trigger_questions = self.search([
+            ('is_page', '=', False),
+            ('question_type', 'in', ['simple_choice', 'multiple_choice']),
+            ('suggested_answer_ids', '!=', False),
+            ('survey_id', 'in', self.survey_id.ids)
+        ])
+        # Using the sequence stored in db is necessary for existing questions that are passed as
+        # NewIds because the sequence provided by the JS client can be incorrect.
+        (conditional_questions | possible_trigger_questions).flush_recordset()
+        self.env.cr.execute(
+            "SELECT id, sequence FROM survey_question WHERE id =ANY(%s)",
+            [conditional_questions.ids]
+        )
+        conditional_questions_sequences = dict(self.env.cr.fetchall())  # id: sequence mapping
+
+        for question in conditional_questions:
+            question_id = question._origin.id
+            if not question_id:  # New question
+                conditional_questions.allowed_triggering_question_ids = possible_trigger_questions
+                question.is_placed_before_trigger = False
+                continue
+
+            question_sequence = conditional_questions_sequences[question_id]
+
+            question.allowed_triggering_question_ids = possible_trigger_questions.filtered(
+                lambda q: q.survey_id.id == question.survey_id._origin.id
+                and (q.sequence < question_sequence or q.sequence == question_sequence and q.id < question_id)
+            )
+            question.is_placed_before_trigger = (
+                question.triggering_question_id
+                and question.triggering_question_id.id not in question.allowed_triggering_question_ids.ids)
 
     @api.depends('is_conditional')
     def _compute_triggering_question_id(self):
