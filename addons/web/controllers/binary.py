@@ -125,9 +125,7 @@ class Binary(http.Controller):
                 filename = unicodedata.normalize('NFD', ufile.filename)
 
             try:
-                cids = request.httprequest.cookies.get('cids', str(request.env.user.company_id.id))
-                allowed_company_ids = [int(cid) for cid in cids.split(',')]
-                attachment = Model.with_context(allowed_company_ids=allowed_company_ids).create({
+                attachment = Model.create({
                     'name': filename,
                     'datas': base64.encodebytes(ufile.read()),
                     'res_model': model,
