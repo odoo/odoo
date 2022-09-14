@@ -110,10 +110,10 @@
         ],
         'web.assets_backend': [
             'stock/static/src/**/*.js',
+            'stock/static/src/**/*.xml',
             'stock/static/src/scss/forecast_widget.scss',
             'stock/static/src/scss/stock_empty_screen.scss',
-            'stock/static/src/views/**/*.js',
-            'stock/static/src/views/**/**.scss',
+            'stock/static/src/views/**/*',
         ],
         'web.assets_tests': [
             'stock/static/tests/tours/stock_report_tests.js',
@@ -123,10 +123,6 @@
             'stock/static/tests/popover_widget_tests.js',
             'stock/static/tests/lazy_column_list_tests.js',
             'stock/static/tests/stock_traceability_report_backend_tests.js',
-        ],
-        'web.assets_qweb': [
-            'stock/static/src/**/*.xml',
-            'stock/static/src/views/**/*.xml',
         ],
     },
     'license': 'LGPL-3',

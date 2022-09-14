@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "mass_mailing.design_constants";
 import { toInline } from "web_editor.convertInline";
-import { loadLibs, loadXML } from "web.ajax";
+import { loadBundle } from "@web/core/assets";
 import { qweb } from 'web.core';
 import { useService } from "@web/core/utils/hooks";
 import { buildQuery } from "web.rpc";
@@ -107,8 +107,7 @@ export class MassMailingHtmlField extends HtmlField {
     async startWysiwyg(...args) {
         await super.startWysiwyg(...args);
 
-        await loadXML('/mass_mailing/static/src/xml/mass_mailing.xml', qweb);
-        await loadLibs({
+        await loadBundle({
             jsLibs: [
                 '/mass_mailing/static/src/js/mass_mailing_link_dialog_fix.js',
                 '/mass_mailing/static/src/js/mass_mailing_snippets.js',

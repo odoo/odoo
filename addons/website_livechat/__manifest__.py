@@ -45,6 +45,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'web.assets_backend': [
             'website_livechat/static/src/components/*/*.js',
             'website_livechat/static/src/components/*/*.scss',
+            'website_livechat/static/src/components/*/*.xml',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
@@ -54,9 +55,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/tests/qunit_suite_tests/**/*.js',
-        ],
-        'web.assets_qweb': [
-            'website_livechat/static/src/components/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

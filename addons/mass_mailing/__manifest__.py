@@ -97,6 +97,8 @@
             'mass_mailing/static/src/js/mass_mailing_html_field.js',
             'mass_mailing/static/src/js/mailing_mailing_view_form_full_width.js',
             'mass_mailing/static/src/js/mailing_portal.js',
+            'mass_mailing/static/src/xml/*.xml',
+            'mass_mailing/static/src/views/*.xml',
         ],
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',
@@ -121,10 +123,6 @@
             'mass_mailing/static/src/snippets/s_showcase/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js',
             'mass_mailing/static/tests/mass_mailing_html_tests.js',
-        ],
-        'web.assets_qweb': [
-            'mass_mailing/static/src/xml/*.xml',
-            'mass_mailing/static/src/views/*.xml',
         ],
     },
     'license': 'LGPL-3',

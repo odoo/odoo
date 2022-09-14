@@ -123,10 +123,4 @@ SlidesUpload.SlideUploadDialog.include({
     },
 });
 
-SlidesUpload.websiteSlidesUpload.include({
-    xmlDependencies: (SlidesUpload.websiteSlidesUpload.prototype.xmlDependencies || []).concat(
-        ["/website_slides_survey/static/src/xml/website_slide_upload.xml"]
-    ),
-});
-
 });

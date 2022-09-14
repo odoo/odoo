@@ -750,7 +750,6 @@ var SlideUploadDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
     selector: '.o_wslides_js_slide_upload',
-    xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
     events: {
         'click': '_onUploadClick',
     },

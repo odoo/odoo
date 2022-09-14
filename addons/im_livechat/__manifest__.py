@@ -67,6 +67,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/components/*/*.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
+            'im_livechat/static/src/components/*/*.xml',
         ],
         'web.tests_assets': [
             'im_livechat/static/tests/helpers/**/*.js',
@@ -77,9 +78,6 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
-        ],
-        'web.assets_qweb': [
-            'im_livechat/static/src/components/*/*.xml',
         ],
         'mail.assets_messaging': [
             'im_livechat/static/src/legacy/models/*',
@@ -108,7 +106,6 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
             'web/static/src/legacy/legacy_component.js',
-            'web/static/src/core/assets.js',
             'web/static/src/core/browser/browser.js',
             'web/static/src/core/browser/feature_detection.js',
             'web/static/src/core/dialog/dialog.js',
@@ -122,6 +119,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/core/l10n/translation.js',
             'web/static/src/core/main_components_container.js',
             'web/static/src/core/network/rpc_service.js',
+            'web/static/src/core/assets.js',
             'web/static/src/core/notifications/notification.js',
             'web/static/src/core/notifications/notification_container.js',
             'web/static/src/core/notifications/notification_service.js',

@@ -15,6 +15,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
+import { assets } from "@web/core/assets";
 
 const serviceRegistry = registry.category("services");
 
@@ -2200,12 +2201,11 @@ export async function makeMockServer(serverData, mockRPC) {
             // simulates that we serialized the call to be passed in a real request
             args = JSON.parse(JSON.stringify(args));
         }
-        const performRPC = (route, args) => mockServer.performRPC(route, args);
         if (mockRPC) {
-            res = await mockRPC(route, args, performRPC);
+            res = await mockRPC(route, args, mockServer.performRPC.bind(mockServer));
         }
         if (res === undefined) {
-            res = await performRPC(route, args);
+            res = await mockServer.performRPC(route, args);
         }
         return res;
     };
@@ -2213,6 +2213,29 @@ export async function makeMockServer(serverData, mockRPC) {
     patchWithCleanup(browser, {
         fetch: makeMockFetch(_mockRPC),
     });
+    if (mockRPC) {
+        const { loadJS, loadCSS } = assets;
+        patchWithCleanup(assets, {
+            loadJS: async function (ressource) {
+                let res = await mockRPC(ressource, {});
+                if (res === undefined) {
+                    res = await loadJS(ressource);
+                } else {
+                    console.log("%c[assets] fetch (mock) JS ressource " + ressource, "color: #66e; font-weight: bold;");
+                }
+                return res;
+            },
+            loadCSS: async function (ressource) {
+                let res = await mockRPC(ressource, {});
+                if (res === undefined) {
+                    res = await loadCSS(ressource);
+                } else {
+                    console.log("%c[assets] fetch (mock) CSS ressource " + ressource, "color: #66e; font-weight: bold;");
+                }
+                return res;
+            },
+        });
+    }
     // Replace RPC service
     serviceRegistry.add("rpc", rpcService, { force: true });
     return mockServer;

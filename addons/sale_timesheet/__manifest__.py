@@ -45,12 +45,10 @@ have real delivered quantities in sales orders.
         'web.assets_backend': [
             'sale_timesheet/static/src/components/**/*',
             'sale_timesheet/static/src/js/so_line_one2many.js',
+            'sale_timesheet/static/src/xml/**/*',
         ],
         'web.assets_tests': [
             'sale_timesheet/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'sale_timesheet/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',

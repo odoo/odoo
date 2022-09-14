@@ -21,6 +21,7 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'web.assets_frontend': [
             'website_mass_mailing/static/src/scss/website_mass_mailing_popup.scss',
             'website_mass_mailing/static/src/js/website_mass_mailing.js',
+            'website_mass_mailing/static/src/xml/*.xml',
         ],
         'website.assets_wysiwyg': [
             'website_mass_mailing/static/src/js/website_mass_mailing.editor.js',
@@ -32,9 +33,6 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         ],
         'web.assets_tests': [
             'website_mass_mailing/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'website_mass_mailing/static/src/xml/*.xml',
         ],
     },
     'license': 'LGPL-3',

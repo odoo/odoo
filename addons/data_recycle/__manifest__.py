@@ -22,8 +22,6 @@
     'assets': {
         'web.assets_backend': [
             'data_recycle/static/src/views/*.js',
-        ],
-        'web.assets_qweb': [
             'data_recycle/static/src/views/*.xml',
         ],
     },

@@ -10,7 +10,6 @@ var Widget = require('web.Widget');
  */
 var WebsiteEventReplaySuggestion = Widget.extend({
     template: 'website_event_track_live.website_event_track_replay_suggestion',
-    xmlDependencies: ['/website_event_track_live/static/src/xml/website_event_track_live_templates.xml'],
     events: {
         'click .owevent_track_suggestion_replay': '_onReplayClick'
     },

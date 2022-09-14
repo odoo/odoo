@@ -22,7 +22,9 @@ const makeTestEnvironment = require('web.test_env');
 const MockServer = require('web.MockServer');
 const RamStorage = require('web.RamStorage');
 const session = require('web.session');
-const { patchDate } = require("@web/../tests/helpers/utils");
+const { patchWithCleanup, patchDate } = require("@web/../tests/helpers/utils");
+const { browser } = require("@web/core/browser/browser");
+const { assets } = require("@web/core/assets");
 const { processArch } = require("@web/legacy/legacy_load_views");
 
 const { Component } = owl;
@@ -333,7 +335,7 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
     if (!mockServer) {
         let Server = MockServer;
         if (params.mockFetch) {
-            Server = MockServer.extend({ _performFetch: params.mockFetch });
+            Server = Server.extend({ _performFetch: params.mockFetch });
         }
         if (params.mockRPC) {
             Server = Server.extend({ _performRpc: params.mockRPC });
@@ -343,6 +345,40 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
             archs: params.archs,
             currentDate: params.currentDate,
             debug: params.debug,
+        });
+    }
+
+    patchWithCleanup(browser, {
+        fetch: async (url, args) => {
+            const result = await mockServer.performFetch(url, args || {});
+            return {
+                json: () => result,
+                text: () => result,
+            };
+        },
+    });
+
+    if (params.mockFetch) {
+        const { loadJS, loadCSS } = assets;
+        patchWithCleanup(assets, {
+            loadJS: async function (ressource) {
+                let res = await params.mockFetch(ressource, {});
+                if (res === undefined) {
+                    res = await loadJS(ressource);
+                } else {
+                    console.log("%c[assets] fetch (mock) JS ressource " + ressource, "color: #66e; font-weight: bold;");
+                }
+                return res;
+            },
+            loadCSS: async function (ressource) {
+                let res = await params.mockFetch(ressource, {});
+                if (res === undefined) {
+                    res = await loadCSS(ressource);
+                } else {
+                    console.log("%c[assets] fetch (mock) CSS ressource " + ressource, "color: #66e; font-weight: bold;");
+                }
+                return res;
+            },
         });
     }
 

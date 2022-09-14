@@ -13,7 +13,6 @@ odoo.define('payment.post_processing', function (require) {
 
     publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
         selector: 'div[name="o_payment_status"]',
-        xmlDependencies: ['/payment/static/src/xml/payment_post_processing.xml'],
 
         _pollCount: 0,
 

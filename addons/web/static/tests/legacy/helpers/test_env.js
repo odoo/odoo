@@ -4,7 +4,7 @@ odoo.define('web.test_env', async function (require) {
     const Bus = require('web.Bus');
     const session = require('web.session');
     const { makeTestEnvServices } = require('@web/../tests/legacy/helpers/test_services');
-
+    const { templates, setLoadXmlDefaultApp } = require("@web/core/assets");
     const { renderToString } = require('@web/core/utils/render');
     const { App, Component } = owl;
 
@@ -21,8 +21,9 @@ odoo.define('web.test_env', async function (require) {
      */
     function makeTestEnvironment(env = {}, providedRPC = null) {
         if (!app) {
-            app = new App(null, { templates: window.__OWL_TEMPLATES__, test: true });
+            app = new App(null, { templates, test: true });
             renderToString.app = app;
+            setLoadXmlDefaultApp(app);
         }
 
         const defaultTranslationParamters = {

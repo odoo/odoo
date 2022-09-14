@@ -408,6 +408,7 @@ class Stream:
     etag = True
     last_modified = None
     max_age = None
+    immutable = False
     size = None
 
     def __init__(self, **kwargs):
@@ -501,12 +502,16 @@ class Stream:
         with open(self.path, 'rb') as file:
             return file.read()
 
-    def get_response(self, as_attachment=None, **send_file_kwargs):
+    def get_response(self, as_attachment=None, immutable=None, **send_file_kwargs):
         """
         Create the corresponding :class:`~Response` for the current stream.
 
         :param bool as_attachment: Indicate to the browser that it
             should offer to save the file instead of displaying it.
+        :param bool immutable: Add the ``immutable`` directive to the
+            ``Cache-Control`` response header, allowing intermediary
+            proxies to aggresively cache the response. This option
+            also set the ``max-age`` directive to 1 year.
         :param send_file_kwargs: Other keyword arguments to send to
             :func:`odoo.tools._vendor.send_file.send_file` instead of
             the stream sensitive values. Discouraged.
@@ -519,6 +524,8 @@ class Stream:
 
         if as_attachment is None:
             as_attachment = self.as_attachment
+        if immutable is None:
+            immutable = self.immutable
 
         send_file_kwargs = {
             'mimetype': self.mimetype,
@@ -527,7 +534,7 @@ class Stream:
             'conditional': self.conditional,
             'etag': self.etag,
             'last_modified': self.last_modified,
-            'max_age': self.max_age,
+            'max_age': STATIC_CACHE_LONG if immutable else self.max_age,
             'environ': request.httprequest.environ,
             'response_class': Response,
             **send_file_kwargs,
@@ -545,6 +552,9 @@ class Stream:
                 send_file_kwargs['use_x_sendfile'] = True
 
         res = _send_file(self.path, **send_file_kwargs)
+
+        if immutable and res.cache_control:
+            res.cache_control["immutable"] = None  # None sets the directive
 
         if 'X-Sendfile' in res.headers:
             res.headers['X-Accel-Redirect'] = x_accel_redirect

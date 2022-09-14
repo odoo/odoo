@@ -5,9 +5,6 @@ var weWidgets = require('wysiwyg.widgets');
 var wUtils = require('website.utils');
 
 weWidgets.LinkTools.include({
-    xmlDependencies: (weWidgets.LinkTools.prototype.xmlDependencies || []).concat(
-        ['/website/static/src/xml/website.editor.xml']
-    ),
     events: _.extend({}, weWidgets.LinkTools.prototype.events || {}, {
         'click we-selection-items[name="link_anchor"] we-button': '_onAnchorChange',
         'input input[name="url"]': '_onURLInput',

@@ -54,7 +54,9 @@
             'sale/static/src/js/variant_mixin.js',
             'website_sale/static/src/js/variant_mixin.js',
             'website_sale/static/src/js/website_sale.js',
+            'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_utils.js',
+            'website_sale/static/src/xml/website_sale_utils.xml',
             'website_sale/static/src/js/website_sale_payment.js',
             'website_sale/static/src/js/website_sale_validate.js',
             'website_sale/static/src/js/website_sale_recently_viewed.js',
@@ -74,6 +76,7 @@
             'website_sale/static/src/js/website_sale_backend.js',
             'website_sale/static/src/scss/website_sale_dashboard.scss',
             'website_sale/static/src/scss/website_sale_backend.scss',
+            'website_sale/static/src/xml/website_sale_dashboard.xml',
             'website_sale/static/src/js/tours/website_sale_shop.js',
         ],
         'website.assets_wysiwyg': [
@@ -92,9 +95,6 @@
         ],
         'web.assets_tests': [
             'website_sale/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'website_sale/static/src/xml/*.xml',
         ],
     },
     'license': 'LGPL-3',

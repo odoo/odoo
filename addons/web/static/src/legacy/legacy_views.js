@@ -12,8 +12,8 @@ import {
     getLocalState,
     searchModelStateToLegacy,
 } from "./backend_utils";
+import { getBundle, loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
-import { loadPublicAsset } from "@web/core/assets";
 import { LegacyComponent } from "./legacy_component";
 
 const { xml, onWillStart } = owl;
@@ -182,14 +182,7 @@ for (const [name, action] of Object.entries(legacyViewRegistry.entries())) {
 }
 legacyViewRegistry.onAdd(registerView);
 
-export async function loadLegacyViews({ orm, rpc }) {
-    if (!orm && rpc) {
-        orm = {
-            call: (...callArgs) => {
-                const [model, method, args = [], kwargs = {}] = callArgs;
-                return rpc({ model, method, args, kwargs });
-            },
-        };
-    }
-    await loadPublicAsset("web.assets_backend_legacy_lazy", orm);
+export async function loadLegacyViews() {
+    const assets = await getBundle("web.assets_backend_legacy_lazy");
+    await loadBundle(assets);
 }

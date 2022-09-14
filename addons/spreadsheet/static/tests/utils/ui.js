@@ -3,7 +3,7 @@
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { getFixture } from "@web/../tests/helpers/utils";
-import { loadJS } from "@web/core/assets";
+import { loadJS, templates } from "@web/core/assets";
 
 const { App } = owl;
 const { Spreadsheet } = spreadsheet;
@@ -20,7 +20,7 @@ export async function mountSpreadsheet(model) {
     await loadJS("/web/static/lib/Chart/Chart.js");
     const app = new App(Spreadsheet, {
         props: { model },
-        templates: window.__OWL_TEMPLATES__,
+        templates: templates,
         env: model.config.evalContext.env,
         test: true,
     });

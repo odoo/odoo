@@ -494,21 +494,6 @@ class Web_Editor(http.Controller):
 
         return files_data_by_bundle
 
-    @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
-    def public_render_template(self, args, kwargs):  # pylint: disable=unused-argument
-        # args[0]: xml id of the template to render
-        # args[1]: optional dict of rendering values, only trusted keys are supported
-        len_args = len(args)
-        assert len_args >= 1 and len_args <= 2, 'Need a xmlID and potential rendering values to render a template'
-
-        trusted_value_keys = ('debug',)
-
-        xmlid = args[0]
-        values = len_args > 1 and args[1] or {}
-
-        View = request.env['ir.ui.view']
-        return View.render_public_asset(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
-
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None):
         """

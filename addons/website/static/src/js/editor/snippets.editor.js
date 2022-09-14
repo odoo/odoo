@@ -12,8 +12,6 @@ const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
 const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
-    xmlDependencies: (weSnippetEditor.SnippetsMenu.prototype.xmlDependencies || [])
-        .concat(['/website/static/src/xml/website.editor.xml']),
     events: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
         'click .o_we_animate_text': '_onAnimateTextClick',

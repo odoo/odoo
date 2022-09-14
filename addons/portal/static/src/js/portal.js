@@ -4,7 +4,6 @@ odoo.define('portal.portal', function (require) {
 var publicWidget = require('web.public.widget');
 const Dialog = require('web.Dialog');
 const {_t, qweb} = require('web.core');
-const ajax = require('web.ajax');
 const session = require('web.session');
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
@@ -198,7 +197,6 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
             method: 'api_key_wizard',
             args: [session.user_id],
         }));
-        await ajax.loadXML('/portal/static/src/xml/portal_security.xml', qweb);
         const self = this;
         const d_description = new Dialog(self, {
             title: _t('New API Key'),
@@ -304,7 +302,7 @@ function handleCheckIdentity(rpc, wrapped) {
             return r;
         }
         const check_id = r.res_id;
-        return ajax.loadXML('/portal/static/src/xml/portal_security.xml', qweb).then(() => new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const d = new Dialog(null, {
                 title: _t("Security Control"),
                 $content: qweb.render('portal.identitycheck'),
@@ -355,7 +353,7 @@ function handleCheckIdentity(rpc, wrapped) {
                 });
             });
             d.open();
-        }));
+        });
     });
 }
 return {

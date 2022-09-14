@@ -7,6 +7,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { isVisible } from "@web/core/utils/ui";
 import { registerCleanup } from "./cleanup";
+import { templates } from "@web/core/assets";
 
 const { App, onMounted, onPatched, useComponent } = owl;
 
@@ -587,7 +588,7 @@ export async function mount(Comp, target, config = {}) {
     env = env || {};
     const configuration = {
         env,
-        templates: window.__OWL_TEMPLATES__,
+        templates,
         test: true,
         props,
     };

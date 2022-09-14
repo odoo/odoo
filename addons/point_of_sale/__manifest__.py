@@ -59,8 +59,7 @@
         ##
         ## 1. When defining new component, put the .js files in `point_of_sale/static/src/js/`
         ##    and the corresponding .xml files in `point_of_sale/static/src/xml/`
-        ##    * POS is setup to automatically include the .xml files in `web.assets_qweb` and the `.js` files
-        ##    * in `point_of_sale.assets`.
+        ##    * POS is setup to automatically include the .xml and `.js` files in `point_of_sale.assets`.
         ## 2. When adding new tour tests, put the .js files in `point_of_sale/static/tests/tours/`.
         ## 3. When adding new qunit tests, put the .js files in `point_of_sale/static/tests/unit/`.
         ##
@@ -83,9 +82,6 @@
         ],
         'web.assets_tests': [
             'point_of_sale/static/tests/tours/**/*',
-        ],
-        'web.assets_qweb': [
-            'point_of_sale/static/src/xml/**/*.xml',
         ],
 
         ####################################################
@@ -128,6 +124,7 @@
             'web_editor/static/lib/html2canvas.js',
             'point_of_sale/static/src/js/**/*.js',
             'web/static/lib/zxing-library/zxing-library.js',
+            'point_of_sale/static/src/xml/**/*.xml',
         ],
         # This bundle contains the code responsible for starting the POS UI.
         # It is practically the entry point.

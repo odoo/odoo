@@ -1,10 +1,11 @@
 odoo.define('web.Widget', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
+const { loadBundle } = require("@web/core/assets");
+
 
 /**
  * Base class for all visual components. Provides a lot of functions helpful
@@ -77,14 +78,6 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      */
     template: null,
     /**
-     * List of paths to xml files that need to be loaded before the widget can
-     * be rendered. This will not induce loading anything that has already been
-     * loaded.
-     *
-     * @type {null|string[]}
-     */
-    xmlDependencies: null,
-    /**
      * List of paths to css files that need to be loaded before the widget can
      * be rendered. This will not induce loading anything that has already been
      * loaded.
@@ -142,13 +135,8 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      */
     willStart: function () {
         var proms = [];
-        if (this.xmlDependencies) {
-            proms.push.apply(proms, _.map(this.xmlDependencies, function (xmlPath) {
-                return ajax.loadXML(xmlPath, core.qweb);
-            }));
-        }
         if (this.jsLibs || this.cssLibs || this.assetLibs) {
-            proms.push(this._loadLibs(this));
+            proms.push(loadBundle(this));
         }
         return Promise.all(proms);
     },

@@ -31,12 +31,10 @@ The actual till still requires one user but an unlimited number of employees can
             'pos_hr/static/src/js/CashierName.js',
             'pos_hr/static/src/js/LoginScreen.js',
             'pos_hr/static/src/js/PaymentScreen.js',
+            'pos_hr/static/src/xml/**/*',
         ],
         'web.assets_tests': [
             'pos_hr/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'pos_hr/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',

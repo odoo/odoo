@@ -17,7 +17,7 @@ from odoo.modules import get_manifest, get_resource_path
 from odoo.http import request
 from odoo.tools import lazy
 from odoo.tools.misc import file_open
-from .utils import HomeStaticTemplateHelpers, _local_web_translations
+from .utils import _local_web_translations
 
 
 _logger = logging.getLogger(__name__)
@@ -52,17 +52,6 @@ class WebClient(http.Controller):
             ('Content-Type', 'application/javascript'),
             ('Cache-Control', f'max-age={http.STATIC_CACHE}'),
         ])
-
-    @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
-    def qweb(self, unique, mods=None, db=None, bundle=None):
-        if not request.db and mods is None:
-            mods = odoo.conf.server_wide_modules or []
-        content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug, bundle=bundle)
-
-        return request.make_response(content, [
-                ('Content-Type', 'text/xml'),
-                ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}')
-            ])
 
     @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
     def bootstrap_translations(self, mods=None):
@@ -139,14 +128,20 @@ class WebClient(http.Controller):
     def benchmarks(self, mod=None, **kwargs):
         return request.render('web.benchmark_suite')
 
-    @http.route('/web/bundle/<string:bundle_name>', auth="user", methods=["GET"])
-    def bundle(self, bundle_name):
+    @http.route('/web/bundle/<string:bundle_name>', auth="public", methods=["GET"])
+    def bundle(self, bundle_name, **bundle_params):
         """
         Request the definition of a bundle, including its javascript and css bundled assets
         """
-        files = request.env["ir.qweb"]._get_asset_nodes(bundle_name, debug=request.session.debug, js=True, css=True)
-        data = json.dumps([{
+        if 'lang' in bundle_params:
+            request.update_context(lang=bundle_params['lang'])
+
+        debug = bundle_params.get('debug', request.session.debug)
+        files = request.env["ir.qweb"]._get_asset_nodes(bundle_name, debug=debug, js=True, css=True)
+        data = [{
             "type": tag,
-            "src": attrs.get("src") or attrs.get('href'),
-        } for tag, attrs, _ in files])
-        return request.make_response(data, [('Content-Type', 'application/json')])
+            "src": attrs.get("src") or attrs.get("data-src") or attrs.get('href'),
+            "content": content,
+        } for tag, attrs, content in files]
+
+        return request.make_json_response(data)

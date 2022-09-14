@@ -78,6 +78,7 @@
             'project/static/src/scss/project_dashboard.scss',
             'project/static/src/scss/project_form.scss',
             'project/static/src/scss/project_widgets.scss',
+            'project/static/src/xml/**/*',
         ],
         "web.assets_backend_legacy_lazy": [
             'project/static/src/js/*_legacy.js',
@@ -86,11 +87,6 @@
             'project/static/src/scss/portal_rating.scss',
             'project/static/src/js/portal_rating.js',
         ],
-        'web.assets_qweb': [
-            'project/static/src/xml/**/*',
-            'project/static/src/components/**/*.xml',
-            'project/static/src/views/**/*.xml',
-        ],
         'web.qunit_suite_tests': [
             'project/static/tests/project_test_utils.js',
             'project/static/tests/burndown_chart_tests.js',
@@ -98,10 +94,6 @@
         ],
         'web.assets_tests': [
             'project/static/tests/tours/**/*',
-        ],
-        'project.assets_qweb': [
-            ('include', 'web.assets_qweb'),
-            'project/static/src/project_sharing/**/*.xml',
         ],
         'project.webclient': [
             ('include', 'web.assets_backend'),
@@ -120,6 +112,9 @@
             'project/static/src/scss/project_sharing/*',
             'web/static/src/start.js',
             'web/static/src/legacy/legacy_setup.js',
+
+            'project/static/src/project_sharing/**/*.xml',
+            'portal/static/src/xml/portal_chatter.xml',
         ],
     },
     'license': 'LGPL-3',

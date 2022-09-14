@@ -32,7 +32,6 @@ _MOVED_TO_MAP = {
     'GroupExportXlsxWriter': export,
     'GroupsTreeNode': export,
     'Home': home,
-    'HomeStaticTemplateHelpers': utils,
     'none_values_filtered': export,
     'OPERATOR_MAPPING': export,
     'ReportController': report,

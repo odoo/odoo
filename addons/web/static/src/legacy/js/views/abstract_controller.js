@@ -12,7 +12,7 @@
  */
 
 import ActionMixin from 'web.ActionMixin';
-import ajax from 'web.ajax';
+import { loadCSS, loadJS } from "@web/core/assets";
 import concurrency from 'web.concurrency';
 import { ComponentWrapper } from 'web.OwlCompatibility';
 import mvc from 'web.mvc';
@@ -355,11 +355,11 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             // Css and js are moved to <head>
             var defs = [];
             $('link[rel="stylesheet"]', $banner).each(function (i, link) {
-                defs.push(ajax.loadCSS(link.href));
+                defs.push(loadCSS(link.href));
                 link.remove();
             });
             $('script[type="text/javascript"]', $banner).each(function (i, js) {
-                defs.push(ajax.loadJS(js.src));
+                defs.push(loadJS(js.src));
                 js.remove();
             });
             await Promise.all(defs);

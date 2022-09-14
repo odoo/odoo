@@ -8,7 +8,6 @@ var _t = core._t;
 
 var Tip = Widget.extend({
     template: "Tip",
-    xmlDependencies: ['/web_tour/static/src/xml/tip.xml'],
     events: {
         click: '_onTipClicked',
         mouseenter: '_onMouseEnter',

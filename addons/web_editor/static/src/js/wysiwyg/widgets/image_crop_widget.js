@@ -9,7 +9,6 @@ const _t = core._t;
 
 const ImageCropWidget = Widget.extend({
     template: ['wysiwyg.widgets.crop'],
-    xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
     events: {
         'click.crop_options [data-action]': '_onCropOptionClick',
         // zoom event is triggered by the cropperjs library when the user zooms.

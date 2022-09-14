@@ -28,10 +28,6 @@
      */
     var Quiz = publicWidget.Widget.extend({
         template: 'slide.slide.quiz',
-        xmlDependencies: [
-            '/website_slides/static/src/xml/slide_quiz.xml',
-            '/website_slides/static/src/xml/slide_course_join.xml'
-        ],
         events: {
             "click .o_wslides_quiz_answer": '_onAnswerClick',
             "click .o_wslides_js_lesson_quiz_submit": '_submitQuiz',
@@ -642,10 +638,6 @@
      */
     var ConfirmationDialog = Dialog.extend({
         template: 'slide.quiz.confirm.deletion',
-        xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-            ['/website_slides/static/src/xml/slide_quiz_create.xml']
-        ),
-
         /**
          * @override
          * @param parent
@@ -831,4 +823,4 @@
 
     export var Quiz = Quiz;
     export var ConfirmationDialog = ConfirmationDialog;
-    export const websiteSlidesQuizNoFullscree = publicWidget.registry.websiteSlidesQuizNoFullscreen;
+    export const websiteSlidesQuizNoFullscreen = publicWidget.registry.websiteSlidesQuizNoFullscreen;

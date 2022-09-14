@@ -21,7 +21,6 @@
                     // Prevent the menu_service to load anything. In an ideal world, Project Sharing assets would only contain
                     // what is genuinely necessary, and not the whole backend.
                     odoo.loadMenusPromise = Promise.resolve();
-                    odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=project.assets_qweb`).then(doc => doc.text());
                 </script>
                 <base target="_parent"/>
                 <t t-call-assets="web.assets_common" t-js="false"/>

@@ -6,10 +6,6 @@ const DynamicSnippet = require('website.s_dynamic_snippet');
 
 const DynamicSnippetCarousel = DynamicSnippet.extend({
     selector: '.s_dynamic_snippet_carousel',
-    xmlDependencies: (DynamicSnippet.prototype.xmlDependencies || []).concat(
-        ['/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml']
-    ),
-
     /**
      * @override
      */

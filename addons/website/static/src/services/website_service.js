@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
 import { registry } from '@web/core/registry';
-import core from 'web.core';
-import ajax from 'web.ajax';
 import { getWysiwygClass } from 'web_editor.loader';
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
@@ -196,10 +194,9 @@ export const websiteService = {
             },
             async loadWysiwyg() {
                 if (!Wysiwyg) {
-                    await ajax.loadXML('/website/static/src/xml/website.editor.xml', core.qweb);
                     Wysiwyg = await getWysiwygClass({
                         moduleName: 'website.wysiwyg',
-                        additionnalAssets: ['website.compiled_assets_wysiwyg']
+                        additionnalAssets: ['website.assets_wysiwyg']
                     });
                 }
                 return Wysiwyg;

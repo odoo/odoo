@@ -377,6 +377,7 @@ class Http(models.AbstractModel):
                 'website_id': request.website.id,
                 'website_company_id': request.website._get_cached('company_id'),
             })
+        session_info['bundle_params']['website_id'] = request.website.id
         return session_info
 
 

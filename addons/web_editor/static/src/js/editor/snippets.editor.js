@@ -130,7 +130,6 @@ var globalSelector = {
  */
 var SnippetEditor = Widget.extend({
     template: 'web_editor.snippet_overlay',
-    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     events: {
         'click .oe_snippet_remove': '_onRemoveClick',
         'wheel': '_onMouseWheel',

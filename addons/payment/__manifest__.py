@@ -41,6 +41,7 @@
             'payment/static/src/js/manage_form.js',
             'payment/static/src/js/payment_form_mixin.js',
             'payment/static/src/js/post_processing.js',
+            'payment/static/src/xml/payment_post_processing.xml',
         ],
         'web.assets_backend': [
             'payment/static/src/scss/payment_provider.scss',

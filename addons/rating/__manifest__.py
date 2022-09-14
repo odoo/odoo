@@ -25,12 +25,10 @@ This module allows a customer to give rating.
         'web.assets_backend': [
             'rating/static/src/scss/rating_rating_views.scss',
             'rating/static/src/components/*/*.scss',
+            'rating/static/src/components/*/*.xml',
         ],
         'web.assets_frontend': [
             'rating/static/src/scss/rating_templates.scss',
-        ],
-        'web.assets_qweb': [
-            'rating/static/src/components/*/*.xml',
         ],
         'web.tests_assets': [
             'rating/static/tests/helpers/*.js',
