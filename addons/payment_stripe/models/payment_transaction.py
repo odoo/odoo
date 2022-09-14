@@ -434,17 +434,27 @@ class PaymentTransaction(models.Model):
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif status in STATUS_MAPPING['cancel']:
             self._set_canceled()
-        elif status in STATUS_MAPPING['error'] and self.operation == 'refund':
-            self._set_error("Stripe: " + _(
-                "The refund did not go through. Please log into your Stripe Dashboard to get more "
-                "information on that matter, and address any accounting discrepancies."
-            ))
+        elif status in STATUS_MAPPING['error']:
+            if self.operation != 'refund':
+                last_payment_error = notification_data.get('payment_intent', {}).get(
+                    'last_payment_error'
+                )
+                if last_payment_error:
+                    message = last_payment_error.get('message', {})
+                else:
+                    message = _("The customer left the payment page.")
+                self._set_error(message)
+            else:
+                self._set_error(_(
+                    "The refund did not go through. Please log into your Stripe Dashboard to get "
+                    "more information on that matter, and address any accounting discrepancies."
+                ))
         else:  # Classify unknown intent statuses as `error` tx state
             _logger.warning(
                 "received invalid payment status (%s) for transaction with reference %s",
                 status, self.reference
             )
-            self._set_error("Stripe: " + _("Received data with invalid intent status: %s", status))
+            self._set_error(_("Received data with invalid intent status: %s", status))
 
     def _stripe_tokenize_from_notification_data(self, notification_data):
         """ Create a new token based on the notification data.
