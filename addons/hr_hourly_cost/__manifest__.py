@@ -12,7 +12,6 @@ This module assigns an hourly wage to employees to be used by other modules.
     """,
     'depends': ['hr'],
     'data': [
-        'security/hr_hourly_cost_security.xml',
         'views/hr_employee_views.xml',
     ],
     'demo': [
