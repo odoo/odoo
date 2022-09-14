@@ -57,14 +57,6 @@ export default class PivotDataSource extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string} fieldName
-     */
-    getPossibleValuesForGroupBy(fieldName) {
-        this._assertDataIsLoaded();
-        return this._model.getPossibleValuesForGroupBy(fieldName);
-    }
-
-    /**
      * @param {string[]} domain
      */
     getDisplayedPivotHeaderValue(domain) {
