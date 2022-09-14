@@ -1485,10 +1485,25 @@ class AccountMove(models.Model):
                                 first_tax_line.amount_currency -= delta_amount * sign
             self._compute_amount()
 
+<<<<<<< HEAD
     def _inverse_amount_total(self):
         for move in self:
             if len(move.line_ids) != 2 or move.is_invoice(include_receipts=True):
                 continue
+||||||| parent of a2b49039a17e... temp
+        if copied_am.is_invoice(include_receipts=True):
+            # Make sure to recompute payment terms. This could be necessary if the date is different for example.
+            # Also, this is necessary when creating a credit note because the current invoice is copied.
+            copied_am._recompute_payment_terms_lines()
+=======
+        if copied_am.is_invoice(include_receipts=True):
+            # Make sure to recompute payment terms. This could be necessary if the date is different for example.
+            # Also, this is necessary when creating a credit note because the current invoice is copied.
+            if copied_am.currency_id != self.company_id.currency_id:
+                copied_am.with_context(check_move_validity=False)._onchange_currency()
+                copied_am._check_balanced()
+            copied_am._recompute_payment_terms_lines()
+>>>>>>> a2b49039a17e... temp
 
             to_write = []
 

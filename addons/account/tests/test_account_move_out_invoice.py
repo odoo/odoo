@@ -3286,6 +3286,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Tags should be empty since the tax has been removed from the invoice line
         self.assertRecordValues(invoice.line_ids, [{'tax_tag_ids': []}, {'tax_tag_ids': []}])
+<<<<<<< HEAD
 
     def test_quick_edit_total_amount(self):
         move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
@@ -3333,3 +3334,39 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice.amount_untaxed, 82.64)
         self.assertEqual(invoice.amount_tax, 17.36)
         self.assertEqual(len(invoice.invoice_line_ids), 2)
+||||||| parent of a2b49039a17e... temp
+=======
+
+    @freeze_time('2019-01-01')
+    def test_out_invoice_duplicate_currency_rate(self):
+        ''' Test the correct update of currency rate on invoice duplication'''
+        move_form = Form(self.invoice)
+        move_form.date = '2016-01-01'
+        move_form.currency_id = self.currency_data['currency']
+        move_form.save()
+
+        self.invoice.action_post()
+
+        # === Duplicate invoice. The currency conversion's rate should change to match today rate ===
+
+        copy = self.invoice.copy()
+        copy.action_post()
+
+        self.assertRecordValues(
+            copy.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1000.0,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -200.0,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                },
+            ],
+        )
+>>>>>>> a2b49039a17e... temp
