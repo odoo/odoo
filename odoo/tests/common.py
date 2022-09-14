@@ -37,6 +37,7 @@ except ImportError:
     InvalidStateError = NotImplementedError
 from contextlib import contextmanager, ExitStack
 from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch
 from xmlrpc import client as xmlrpclib
@@ -2107,14 +2108,29 @@ class Form(object):
         contexts = fvg['contexts'] = {}
         order = fvg['fields_ordered'] = []
         field_level = fvg['tree'].xpath('count(ancestor::field)')
+        eval_context = {
+            "uid": self._env.user.id,
+            "tz": self._env.user.tz,
+            "lang": self._env.user.lang,
+            "datetime": datetime,
+            "context_today": lambda: odoo.fields.Date.context_today(self._env.user),
+            "relativedelta": relativedelta,
+            "current_date": time.strftime("%Y-%m-%d"),
+            "allowed_company_ids": [self._env.user.company_id.id],
+            "context": {},
+        }
         for f in fvg['tree'].xpath('.//field[count(ancestor::field) = %s]' % field_level):
             fname = f.get('name')
             order.append(fname)
 
-            node_modifiers = {
-                modifier: ([TRUE_LEAF] if domain else [FALSE_LEAF]) if isinstance(domain, int) else normalize_domain(domain)
-                for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
-            }
+            node_modifiers = {}
+            for modifier, domain in json.loads(f.get('modifiers', '{}')).items():
+                if isinstance(domain, int):
+                    node_modifiers[modifier] = [TRUE_LEAF] if domain else [FALSE_LEAF]
+                elif isinstance(domain, str):
+                    node_modifiers[modifier] = normalize_domain(safe_eval(domain, eval_context))
+                else:
+                    node_modifiers[modifier] = normalize_domain(domain)
 
             for a in f.xpath('ancestor::*[@modifiers][count(ancestor::field) = %s]' % field_level):
                 ancestor_modifiers = json.loads(a.get('modifiers'))
