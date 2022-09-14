@@ -50,6 +50,9 @@ registerModel({
             if (this.emojiGridViewAsOnScroll) {
                 return 150;
             }
+            if (this.emojiRegistryAsSaveFrequentlyUsedInLocalStorage) {
+                return 2.5 * 1000;
+            }
             if (this.threadAsThrottleNotifyCurrentPartnerTypingStatus) {
                 return 2.5 * 1000;
             }
@@ -71,6 +74,10 @@ registerModel({
         emojiGridViewAsOnScroll: one('EmojiGridView', {
             identifying: true,
             inverse: 'onScrollThrottle',
+        }),
+        emojiRegistryAsSaveFrequentlyUsedInLocalStorage: one('EmojiRegistry', {
+            identifying: true,
+            inverse: 'onSaveFrequentlyUsedInLocalStorageThrottle',
         }),
         /**
          * Inner function to be invoked and throttled.

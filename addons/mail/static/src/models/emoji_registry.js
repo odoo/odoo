@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
+import { many, one } from '@mail/model/model_field';
 import { insert } from '@mail/model/model_field_command';
 import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
 
@@ -13,6 +13,9 @@ registerModel({
         },
     },
     recordMethods: {
+        saveFrequentlyUsedInLocalStorage() {
+            this.update({ onSaveFrequentlyUsedInLocalStorageThrottle: {} });
+        },
         async _populateFromEmojiData(dataCategories, dataEmojis) {
             await this.messaging.executeGracefully(dataCategories.map(category => () => {
                 if (!this.exists()) {
@@ -44,6 +47,14 @@ registerModel({
                     emojiDataCategory: { name: emojiData.category },
                 });
             }));
+            // todo make the frequently used category
+            for (const { codepoints, usage } of this.frequentlyUsedLocalStorageItem) {
+                const emoji = this.models['Emoji'].findFromIdentifyingData({ codepoints });
+                if (!emoji) {
+                    continue;
+                }
+                emoji.update({ usage });
+            }
         },
         _sortAllCategories() {
             return [['smaller-first', 'sortId']];
@@ -65,5 +76,21 @@ registerModel({
             sort: '_sortAllEmojis'
         }),
         dataCategories: many('EmojiCategory'),
+        frequentlyUsedLocalStorageItem: one('LocalStorageItem', {
+            default: {},
+            inverse: 'emojiRegistryAsFrequentlyUsed',
+            isCausal: true,
+        }),
+        onSaveFrequentlyUsedInLocalStorageThrottle: one('Throttle', {
+            compute() {
+                return {
+                    func: () => this.frequentlyUsedLocalStorageItem.update({
+                        value: this.allEmojis.map(emoji => ({ codepoints: emoji.codepoints, usage: emoji.usage })),
+                    }),
+                };
+            },
+            inverse: 'emojiRegistryAsSaveFrequentlyUsedInLocalStorage',
+            isCausal: true,
+        }),
     },
 });

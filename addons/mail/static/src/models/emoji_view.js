@@ -13,6 +13,7 @@ registerModel({
             if (!this.emojiGridItemViewOwner.emojiGridRowViewOwner) {
                 return;
             }
+            this.emoji.update({ isRecentlyUsed: true });
             if (this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
                 this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
                 return;

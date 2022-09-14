@@ -39,6 +39,12 @@ registerModel({
             }
             return false;
         },
+        _onChangeIsRecentlyUsed() {
+            if (!this.isRecentlyUsed) {
+                return;
+            }
+            this.messaging.emojiRegistry.saveFrequentlyUsedInLocalStorage();
+        },
     },
     fields: {
         allEmojiInCategoryOfCurrent: many('EmojiInCategory', {
@@ -81,6 +87,9 @@ registerModel({
             isCausal: true,
         }),
         emoticons: attr(),
+        isRecentlyUsed: attr({
+            default: false,
+        }),
         keywords: attr(),
         name: attr({
             readonly: true,
@@ -96,5 +105,14 @@ registerModel({
                 return [...this.shortcodes, ...this.emoticons];
             },
         }),
+        usage: attr({
+            default: 0,
+        }),
     },
+    onChanges: [
+        {
+            dependencies: ['isRecentlyUsed'],
+            methodName: '_onChangeIsRecentlyUsed',
+        },
+    ],
 });
