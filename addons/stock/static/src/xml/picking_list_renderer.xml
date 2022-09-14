@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock.ListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary" owl="1">
+        <xpath expr="//td[hasclass('o_data_cell')]//ViewButton" position="replace">
+            <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
+                className="button.className"
+                clickParams="button.clickParams"
+                defaultRank="button.defaultRank"
+                disabled="record.isVirtual and button.clickParams.name != 'action_show_details'"
+                icon="button.icon"
+                record="record"
+                string="button.string"
+                title="button.title"
+                tabindex="props.list.editedRecord ? '-1' : '0'"
+            />
+        </xpath>
+    </t>
+</templates>

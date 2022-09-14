@@ -112,6 +112,7 @@
             'stock/static/src/**/*.xml',
             'stock/static/src/scss/forecast_widget.scss',
             'stock/static/src/scss/stock_empty_screen.scss',
+            'stock/static/src/scss/stock_move_list_renderer.scss',
             'stock/static/src/views/**/*',
         ],
         'web.assets_frontend': [

@@ -187,10 +187,19 @@ class StockMove(models.Model):
         help="Computes when a move should be reserved")
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
+    can_open_action_details = fields.Boolean(compute='_compute_can_open_action_details')
     is_action_show_details_danger = fields.Boolean(compute='_compute_is_action_show_details_danger')
 
     def is_multi_location(self):
         return self.user_has_groups('stock.group_stock_multi_locations')
+
+    @api.depends('has_tracking', 'from_immediate_transfer', 'picking_id')
+    def _compute_can_open_action_details(self):
+        for move in self:
+            if move.from_immediate_transfer:
+                move.can_open_action_details = move.is_multi_location() or move.has_tracking != 'none'
+            else:
+                move.can_open_action_details = move.has_tracking != 'none'
 
     @api.depends('product_id')
     def _compute_product_uom(self):
@@ -2056,7 +2065,7 @@ class StockMove(models.Model):
 
     def _show_details_in_draft(self):
         self.ensure_one()
-        return self.state != 'draft' or (self.picking_id.immediate_transfer and self.state == 'draft')
+        return self.state != 'draft' or (self.picking_id.immediate_transfer and self.state == 'draft') or (not self.picking_id.immediate_transfer and self.picking_id.state != 'draft' and self.state == 'draft')
 
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """
