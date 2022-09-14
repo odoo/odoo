@@ -36,6 +36,7 @@ class Page(models.Model):
     # Page options
     header_overlay = fields.Boolean()
     header_color = fields.Char()
+    header_text_color = fields.Char()
     header_visible = fields.Boolean(default=True)
     footer_visible = fields.Boolean(default=True)
 
