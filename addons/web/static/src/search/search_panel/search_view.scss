@@ -3,78 +3,107 @@
     padding: 0 20px 1px 0;
     position: relative;
 
+    @include media-breakpoint-up(md) {
+        border-bottom: 1px solid $border-color;
+        padding-bottom: 3px;
+
+        &:focus-within {
+            border-bottom-color: $primary;
+        }
+    }
+
+    @include media-breakpoint-down(md) {
+        margin-right: 5px; // o_switch_view_button_icon alignment
+        padding-right: 0;
+    }
+
     .o_searchview_input_container {
         display: flex;
         flex-flow: row wrap;
         position: relative;
+    }
 
-        .o_searchview_facet {
+    .o_searchview_facet {
+        display: flex;
+        flex: 0 0 auto;
+        margin: 1px 3px 0 0;
+        max-width: 100%;
+        position: relative;
+        $o-searchview-facet-remove-width: 18px;
+
+        @include media-breakpoint-down(md) {
+            flex-flow: row wrap;
+        }
+
+        .o_searchview_facet_label {
+            align-items: center;
+            flex: 0 0 auto;
+            padding: 0 3px;
+            @include o-text-overflow($display: flex);
+        }
+
+        .o_facet_values {
+            direction: ltr#{"/*rtl:ignore*/"};
+            padding: 0 $o-searchview-facet-remove-width 0 5px;
+
+            .o_facet_values_sep {
+                font-style: italic;
+                margin: 0 0.3rem;
+            }
+        }
+
+        .o_facet_remove {
+            align-items: center;
+            cursor: pointer;
             display: flex;
             flex: 0 0 auto;
-            margin: 1px 3px 0 0;
-            max-width: 100%;
-            position: relative;
-            $o-searchview-facet-remove-width: 18px;
-
-            .o_searchview_facet_label {
-                align-items: center;
-                flex: 0 0 auto;
-                padding: 0 3px;
-                @include o-text-overflow($display: flex);
-            }
-
-            .o_facet_values {
-                direction: ltr#{"/*rtl:ignore*/"};
-                padding: 0 $o-searchview-facet-remove-width 0 5px;
-
-                .o_facet_values_sep {
-                    font-style: italic;
-                    margin: 0 0.3rem;
-                }
-            }
-
-            .o_facet_remove {
-                align-items: center;
-                cursor: pointer;
-                display: flex;
-                flex: 0 0 auto;
-                justify-content: center;
-                width: $o-searchview-facet-remove-width;
-                @include o-position-absolute(0, 0, 0);
-            }
+            justify-content: center;
+            width: $o-searchview-facet-remove-width;
+            @include o-position-absolute(0, 0, 0);
+            @include o-hover-text-color($text-muted, $o-brand-odoo);
         }
+    }
 
-        .o_searchview_input {
-            flex: 1 0 auto;
-            width: 75px;
-        }
+    .o_searchview_input {
+        flex: 1 0 auto;
+        width: 75px;
+        border: none;
+        outline: none;
+    }
 
-        .o_searchview_autocomplete {
-            width: 100%;
-            @include o-position-absolute(100%, $left: auto);
+    .o_searchview_autocomplete {
+        width: 100%;
+        @include o-position-absolute(100%, $left: auto);
 
-            .o_menu_item {
-                align-items: center;
-                display: flex;
-                padding-left: 25px;
+        .o_menu_item {
+            align-items: center;
+            display: flex;
+            padding-left: 25px;
 
-                &.o_indent {
-                    padding-left: 50px;
-                }
+            &.o_indent {
+                padding-left: 50px;
+            }
 
-                a {
-                    color: inherit;
+            a {
+                color: inherit;
 
-                    &.o_expand {
-                        display: flex;
-                        justify-content: center;
-                        width: 25px;
-                        @include o-position-absolute($left: 0);
-                    }
+                &.o_expand {
+                    display: flex;
+                    justify-content: center;
+                    width: 25px;
+                    @include o-position-absolute($left: 0);
                 }
             }
         }
     }
+
+    .o_searchview_icon {
+        @include o-position-absolute($top: 4px, $right: 0);
+    }
+}
+
+.o_search_options {
+    margin: auto 0;
 }
 
 // Filter menu
@@ -113,5 +142,112 @@
         .fa {
             font-size: $font-size-lg;
         }
+    }
+}
+
+.o_web_client .o_mobile_search {
+    align-items: normal;
+    background-color: white;
+    border: none;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    overflow: auto;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: $zindex-modal;
+
+    .o_mobile_search_header {
+        background-color: $o-brand-odoo;
+        display: flex;
+        min-height: $o-navbar-height;
+        justify-content: space-between;
+        width: 100%;
+
+        .o_mobile_search_button {
+            color: white;
+
+            &:active {
+                background-color: darken($o-brand-primary, 10%);
+            }
+        }
+    }
+
+    .o_mobile_search_content {
+        flex: auto;
+        height: auto;
+        overflow-y: auto;
+        width: 100%;
+
+        .o_searchview_input_container {
+            display: flex;
+            padding: 15px 20px 0 20px;
+            position: relative;
+    
+            .o_searchview_input {
+                border-bottom: 1px solid $o-brand-secondary;
+                margin-bottom: 15px;
+                width: 100%;
+            }
+    
+            .o_searchview_facet {
+                border-radius: 10px;
+                display: inline-flex;
+                order: 1;
+    
+                .o_searchview_facet_label {
+                    border-radius: 2em 0em 0em 2em;
+                }
+            }
+    
+            .o_searchview_autocomplete {
+                top: 100%;
+    
+                > li {
+                    margin: 5px 0px;
+                }
+            }
+        }
+    
+        .o_mobile_search_filter {
+            padding: 8px 20px 15%;
+            flex: auto;
+    
+            .dropdown {
+                margin-top: 15px;
+                flex-direction: column;
+                line-height: 2;
+    
+                &:not(.show) {
+                    box-shadow: 0 0 0 1px $border-color;
+                }
+            }
+    
+            .dropdown, .dropdown-toggle {
+                width: 100%;
+            }
+    
+            // We disable the backdrop in this case because it prevents any
+            // interaction outside of a dropdown while it is open.
+            .dropdown-backdrop {
+                z-index: -1;
+            }
+    
+            .dropdown-menu {
+                // Here we use !important because of popper js adding custom style
+                // to element so to override it use !important
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100%;
+            }
+        }
+    }
+
+    .o_mobile_search_footer {
+        width: 100%;
     }
 }

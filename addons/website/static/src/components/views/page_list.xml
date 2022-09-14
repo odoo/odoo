@@ -33,9 +33,15 @@
     </xpath>
 </t>
 
-<t t-name="website.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="extension" owl="1">
+<t t-name="website.ControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="extension" owl="1">
     <xpath expr="//div[hasclass('o_search_options')]/*[last()]" position="after">
         <t t-slot="control-panel-website-extra-actions"/>
+    </xpath>
+</t>
+
+<t t-name="website.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
+    <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
+        <t t-call="website.ControlPanel.Regular"/>
     </xpath>
 </t>
 

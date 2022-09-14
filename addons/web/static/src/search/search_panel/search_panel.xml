@@ -2,6 +2,15 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web.SearchPanel" owl="1">
+    <t t-if="env.isSmall">
+        <t t-call="web.SearchPanel.Small" />
+    </t>
+    <t t-else="">
+        <t t-call="web.SearchPanel.Regular" />
+    </t>
+</t>
+
+<t t-name="web.SearchPanelContent" owl="1">
     <div class="o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-white overflow-auto" t-att-class="env.searchModel.searchPanelInfo.className" t-ref="root">
         <section t-foreach="sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
@@ -31,7 +40,7 @@
                         <header class="o_search_panel_group_header pb-1">
                             <div class="form-check w-100">
                                 <!-- TODO: "indeterminate" could not be set in the template and had to be set in
-                                     JS manually. See https://github.com/odoo/owl/issues/713 (adapt when solved)
+                                    JS manually. See https://github.com/odoo/owl/issues/713 (adapt when solved)
                                 -->
                                 <input type="checkbox"
                                     class="form-check-input"
@@ -75,6 +84,72 @@
             </ul>
         </section>
     </div>
+</t>
+
+<t t-name="web.SearchPanel.Regular" t-inherit="web.SearchPanelContent" t-inherit-mode="primary" owl="1"/>
+
+<t t-name="web.SearchPanel.Small" owl="1">
+    <t t-if="state.showMobileSearch">
+        <t t-portal="'body'">
+            <div class="o_search_panel o_searchview o_mobile_search" t-ref="root">
+                <div class="o_mobile_search_header">
+                    <button type="button"
+                        class="o_mobile_search_button btn"
+                        t-on-click="() => state.showMobileSearch = false"
+                    >
+                        <i class="fa fa-arrow-left" />
+                        <strong class="ms-2">FILTER</strong>
+                    </button>
+                </div>
+                <div class="o_mobile_search_content">
+                    <t t-call="web.SearchPanelContent" />
+                </div>
+                <button type="button"
+                    class="btn btn-primary o_mobile_search_footer"
+                    t-on-click.stop="() => state.showMobileSearch = false"
+                >
+                    <t>SEE RESULT</t>
+                </button>
+            </div>
+        </t>
+    </t>
+    <!-- Summary header -->
+    <t t-else="">
+        <button
+            class="o_search_panel o_search_panel_summary btn w-100 overflow-visible"
+            t-on-click="() => state.showMobileSearch = true"
+            t-ref="root"
+            >
+            <t t-set="categories" t-value="getCategorySelection()" />
+            <t t-set="filters" t-value="getFilterSelection()" />
+            <div class="d-flex align-items-center">
+                <i class="fa fa-fw fa-filter" />
+                <div class="o_search_panel_current_selection text-truncate ms-2 me-auto">
+                    <t t-if="!categories.length and !filters.length">All</t>
+                    <t t-else="">
+                        <t t-foreach="categories" t-as="category" t-key="category.id">
+                            <span class="o_search_panel_category me-1">
+                                <i t-if="category.icon"
+                                    t-attf-class="o_search_panel_section_icon fa {{ category.icon }} me-1"
+                                    t-att-style="category.color and ('color: ' + category.color)"
+                                />
+                                <t t-esc="category.values.join('/')" />
+                            </span>
+                        </t>
+                        <t t-foreach="filters" t-as="filter" t-key="filter.id">
+                            <span class="o_search_panel_filter me-1">
+                                <i t-if="filter.icon"
+                                    t-attf-class="o_search_panel_section_icon fa {{ filter.icon }} me-1"
+                                    t-att-style="filter.color and ('color: ' + filter.color)"
+                                />
+                                <t t-esc="filter.values.join(', ')" />
+                            </span>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </button>
+    </t>
 </t>
 
 <t t-name="web.SearchPanel.Category" owl="1">
