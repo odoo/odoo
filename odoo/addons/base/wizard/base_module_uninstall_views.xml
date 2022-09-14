@@ -5,13 +5,21 @@
         <record id="view_base_module_uninstall" model="ir.ui.view">
             <field name="name">Uninstall module</field>
             <field name="model">base.module.uninstall</field>
+            <field name="type">form</field>
             <field name="arch" type="xml">
+                <div class="alert alert-warning mb-0" role="alert">
+                    <p class="mt-3">
+                        Uninstalling modules can be risky, we recommend you to try it on a duplicate or test database first.
+                    </p>
+                </div>
                 <form string="Uninstall module">
-                    <field name="module_id" groups="base.group_no_one"/>
-                    <h3>The following apps will be uninstalled</h3>
-                    <field name="show_all"/> Show technical modules
-                    <field name="module_ids" mode="kanban">
-                        <kanban create="false">
+                    <field name="module_id" invisible="1"/>
+                    <div class="d-flex bd-highlight">
+                        <div class="me-auto p-2 bd-highlight"><h3>Apps to Uninstall</h3></div>
+                        <div class="p-2 bd-highlight"><field name="show_all"/> Show All</div>
+                    </div>
+                    <field name="module_ids" mode="kanban" class="o_modules_field">
+                        <kanban create="false" class="o_modules_kanban">
                             <field name="icon"/>
                             <field name="state"/>
                             <field name="summary"/>
@@ -35,25 +43,18 @@
                                 </templates>
                         </kanban>
                     </field>
-                    <h3>The following documents will be permanently lost</h3>
-                    <field name="model_ids" string="Models">
-                        <tree string="Models">
-                            <field name="name" string="Document"/>
-                            <field name="count"/>
-                        </tree>
-                    </field>
-                    <div class="alert alert-warning" role="alert">
-                        <p class="mt-3">
-                            Module uninstallation is not always consistent and can sometimes lead to issues,
-                            some data may be deleted, the database could be left in an unstable state,
-                            the server could crash, etc. While this is rare, we recommend testing
-                            the uninstallation procedure on a duplicate database to guarantee that
-                            it works and then doing it on your production database.
-                        </p>
-                    </div>
+                    <h3>Documents to Delete</h3>
+                    <group>
+                        <field name="model_ids" string="Models" nolabel="1">
+                            <tree string="Models">
+                                <field name="name" string="Document"/>
+                                <field name="count"/>
+                            </tree>
+                        </field>
+                    </group>
                     <footer>
-                        <button string="Cancel" class="btn-primary" special="cancel" data-hotkey="z"/>
-                        <button string="Confirm" class="btn-secondary" type="object" name="action_uninstall" data-hotkey="q"/>
+                        <button string="Uninstall" class="btn-secondary" type="object" name="action_uninstall" data-hotkey="q"/>
+                        <button string="Discard" class="btn-primary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>
