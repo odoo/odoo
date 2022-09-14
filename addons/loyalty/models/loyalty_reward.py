@@ -12,6 +12,21 @@ class LoyaltyReward(models.Model):
     _rec_name = 'description'
     _order = 'required_points asc'
 
+    @api.model
+    def default_get(self, fields_list):
+        # Try to copy the values of the program types default's
+        result = super().default_get(fields_list)
+        if 'program_type' in self.env.context:
+            program_type = self.env.context['program_type']
+            program_default_values = self.env['loyalty.program']._program_type_default_values()
+            if program_type in program_default_values and\
+                len(program_default_values[program_type]['reward_ids']) == 2 and\
+                isinstance(program_default_values[program_type]['reward_ids'][1][2], dict):
+                result.update({
+                    k: v for k, v in program_default_values[program_type]['reward_ids'][1][2].items() if k in fields_list
+                })
+        return result
+
     def _get_discount_mode_select(self):
         # The value is provided in the loyalty program's view since we may not have a program_id yet
         #  and makes sure to display the currency related to the program instead of the company's.
