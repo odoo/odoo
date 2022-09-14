@@ -263,7 +263,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
         },
     });
 
-    const activity = $(document);
+    const activity = $('.o_activity_view');
     var today = activity.find('table tbody tr:first td:nth-child(2).today');
     var dropdown = today.find('.dropdown-menu.o_activity');
 
