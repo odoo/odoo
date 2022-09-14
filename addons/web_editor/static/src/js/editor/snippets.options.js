@@ -1476,6 +1476,8 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
 
         await this._colorPaletteRenderPromise;
 
+        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
+        this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
         this.colorPreviewEl.style.removeProperty('background-image');
         const prefix = this.options.dataAttributes.colorPrefix || 'bg';
