@@ -13,6 +13,7 @@ import ajax from 'web.ajax';
 import {
     useBus,
     useService,
+    useSpellCheck,
 } from "@web/core/utils/hooks";
 import { getAdjacentPreviousSiblings, getAdjacentNextSiblings } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from 'web_editor.convertInline';
@@ -78,8 +79,15 @@ export class HtmlField extends Component {
         useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
         useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({detail}) => detail.proms.push(this.commitChanges()));
 
+        const spellCheckHook = useSpellCheck();
+
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
 
+        onMounted(() => {
+            // We must wait for the editor to add the contenteditable
+            // property to the root element to use this hook properly
+            setTimeout(() => spellCheckHook.enable(), 3000);
+        });
         onWillStart(async () => {
             this.Wysiwyg = await this._getWysiwygClass();
             if (this.props.cssReadonlyAssetId) {
