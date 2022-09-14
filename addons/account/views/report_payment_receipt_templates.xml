@@ -33,18 +33,26 @@
                          </div>
                     </div>
                 </div>
+
+                <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
+                <t t-set="invoices" t-value="{partial[2].move_id for partial in partials}"/>
+                <!-- Check if invoices include different currencies -->
+                <t t-foreach="invoices" t-as="inv">
+                    <t t-if="any(inv.currency_id != par[2].currency_id for par in inv._get_reconciled_invoices_partials()[0])" t-set="otherCurrency" t-value="True"/>
+                </t>
+
                 <table class="table table-sm">
                     <thead>
                         <tr>
                             <th><span>Invoice Date</span></th>
                             <th><span>Invoice Number</span></th>
                             <th><span>Reference</span></th>
+                            <!-- Add a column if there are different currencies -->
+                            <th t-if="otherCurrency" class="text-right"><span>Amount In Currency</span></th>
                             <th class="text-right"><span>Amount</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-set="partials" t-value="o.move_id._get_reconciled_invoices_partials()[0]"/>
-                        <t t-set="invoices" t-value="{partial[2].move_id for partial in partials}"/>
                         <t t-foreach="invoices" t-as="inv">
                             <!-- MOVE -->
                             <t t-if="inv.move_type != 'entry'">
@@ -52,22 +60,29 @@
                                     <td><span t-field="inv.invoice_date"/></td>
                                     <td><span t-field="inv.name"/></td>
                                     <td><span t-field="inv.ref"/></td>
+                                    <td t-if="otherCurrency"/>
                                     <td class="text-right"><span t-field="inv.amount_total"/></td>
                                 </tr>
                                 <!-- PAYMENTS/REVERSALS -->
                                 <tr t-foreach="inv._get_reconciled_invoices_partials()[0]" t-as="par">
-                                    <t t-set="amount" t-value="par[1]"/>
                                     <t t-set="payment" t-value="par[2].move_id"/>
                                     <td><span t-field="payment.date"/></td>
                                     <td><span t-field="payment.name"/></td>
                                     <td><span t-field="payment.ref"/></td>
-                                    <td class="text-right">-<span t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                    <t t-set="amountPayment" t-value="-payment.amount_total"/>
+                                    <t t-set="amountInvoice" t-value="-par[1]"/>
+                                    <t t-set="currencyPayment" t-value="payment.currency_id"/>
+                                    <t t-set="currencyInvoice" t-value="inv.currency_id"/>
+                                    <!-- Fill the column "Amount In Currency" only if necessary -->
+                                    <td t-if="otherCurrency" class="text-right"><span t-if="currencyPayment != currencyInvoice" t-esc="amountPayment" t-options="{'widget': 'monetary', 'display_currency': currencyPayment}"/></td>
+                                    <td class="text-right"><span t-esc="amountInvoice" t-options="{'widget': 'monetary', 'display_currency': currencyInvoice}"/></td>
                                 </tr>
                                 <!-- BALANCE -->
                                 <tr>
                                     <td/>
                                     <td><strong>Due Amount for <span t-field="inv.name"/></strong></td>
                                     <td/>
+                                    <td t-if="otherCurrency"/>
                                     <td class="text-right"><strong><span t-field="inv.amount_residual"/></strong></td>
                                 </tr>
                             </t>
