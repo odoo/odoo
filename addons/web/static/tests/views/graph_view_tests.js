@@ -3586,7 +3586,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("empty graph view with sample data", async function (assert) {
-        assert.expect(8);
         await makeView({
             serverData,
             type: "graph",
@@ -3609,24 +3608,19 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_graph_view .o_content"), "o_view_sample_data");
         assert.containsOnce(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.hasClass(target.querySelector(".o_graph_renderer"), "o_sample_data_disabled");
 
         await toggleFilterMenu(target);
         await toggleMenuItem(target, "False Domain");
+
         assert.doesNotHaveClass(
             target.querySelector(".o_graph_view .o_content"),
             "o_view_sample_data"
         );
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.doesNotHaveClass(
-            target.querySelector(".o_graph_renderer"),
-            "o_sample_data_disabled"
-        );
     });
 
     QUnit.test("non empty graph view with sample data", async function (assert) {
-        assert.expect(8);
         await makeView({
             serverData,
             type: "graph",
@@ -3647,18 +3641,12 @@ QUnit.module("Views", (hooks) => {
         assert.doesNotHaveClass(target, "o_view_sample_data");
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.doesNotHaveClass(
-            target.querySelector(".o_graph_canvas_container"),
-            "o_sample_data_disabled"
-        );
+
         await toggleFilterMenu(target);
         await toggleMenuItem(target, "False Domain");
+
         assert.doesNotHaveClass(target, "o_view_sample_data");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.doesNotHaveClass(
-            target.querySelector(".o_graph_canvas_container"),
-            "o_sample_data_disabled"
-        );
         assert.containsNone(target, ".o_view_nocontent");
     });
 
