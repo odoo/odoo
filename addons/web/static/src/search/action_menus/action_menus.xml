@@ -5,7 +5,7 @@
         <div class="o_cp_action_menus">
             <Dropdown t-if="printItems.length" class="'d-inline-block'" togglerClass="'btn btn-secondary'" tooltip="'Printing options'" hotkey="'shift+u'">
                 <t t-set-slot="toggler">
-                    <i class="small me-1 fa fa-print"/>
+                    <i class="me-md-1 fa fa-print"/>
                     <span class="o_dropdown_title">Print</span>
                 </t>
                 <t t-foreach="printItems" t-as="item" t-key="item.key">
@@ -17,7 +17,7 @@
 
             <Dropdown t-if="actionItems.length" class="'d-inline-block'" togglerClass="'btn btn-secondary'" tooltip="'Additional actions'" hotkey="'u'">
                 <t t-set-slot="toggler">
-                    <i class="small me-1 fa fa-cog"/>
+                    <i class="me-md-1 fa fa-cog"/>
                     <span class="o_dropdown_title">Action</span>
                 </t>
                 <t t-foreach="actionItems" t-as="item" t-key="item.key">

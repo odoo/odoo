@@ -13,7 +13,7 @@
                     </t>
                 </t>
                 <t t-set-slot="control-panel-bottom-left">
-                    <t t-if="props.info.actionMenus and !model.root.isVirtual">
+                    <t t-if="!env.isSmall and props.info.actionMenus and !model.root.isVirtual">
                         <ActionMenus
                             activeIds="[model.root.resId]"
                             context="props.context"
@@ -25,7 +25,19 @@
                         />
                     </t>
                 </t>
-                <t t-set-slot="control-panel-bottom-right"> </t>
+                <t t-set-slot="control-panel-bottom-right">
+                    <t t-if="env.isSmall and props.info.actionMenus and !model.root.isVirtual">
+                        <ActionMenus
+                            activeIds="[model.root.resId]"
+                            context="props.context"
+                            items="getActionMenuItems()"
+                            isDomainSelected="model.root.isDomainSelected"
+                            resModel="model.root.resModel"
+                            domain="props.domain"
+                            onActionExecuted="() => model.load()"
+                        />
+                    </t>
+                </t>
                 <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert"/>
             </Layout>
         </div>
