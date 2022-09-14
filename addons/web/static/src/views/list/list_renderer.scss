@@ -364,10 +364,10 @@
 
     .o_data_row.o_selected_row > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
         border-bottom: 1px solid $o-input-border-required;
+    }
 
-        &.o_invalid_cell {
-            border-bottom-color: 1px solid $danger;
-        }
+    .o_data_row.o_selected_row > .o_data_cell.o_invalid_cell:not(.o_readonly_modifier) {
+        border-bottom: 1px solid $danger;
     }
 
     /**
