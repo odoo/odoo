@@ -145,6 +145,13 @@ class PaymentLinkWizard(models.TransientModel):
             payment_link.link = f'{base_url}/payment/pay?{urls.url_encode(url_params)}'
 
     def _get_additional_link_values(self):
+        """ Return the additional values to append to the payment link.
+
+        Note: self.ensure_one()
+
+        :return: The additional payment link values.
+        :rtype: dict
+        """
         self.ensure_one()
         return {
             'currency_id': self.currency_id.id,
