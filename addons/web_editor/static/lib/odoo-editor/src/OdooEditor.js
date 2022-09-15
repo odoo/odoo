@@ -506,6 +506,7 @@ export class OdooEditor extends EventTarget {
             this.observer = new MutationObserver(records => {
                 records = this.filterMutationRecords(records);
                 if (!records.length) return;
+                this.dispatchEvent(new Event('contentChanged'));
                 clearTimeout(this.observerTimeout);
                 if (this._observerTimeoutUnactive.size === 0) {
                     this.observerTimeout = setTimeout(() => {
