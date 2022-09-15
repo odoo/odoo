@@ -2,7 +2,7 @@
 
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
- * @typedef {import("./filters_plugin").GlobalFilter} GlobalFilter
+ * @typedef {import("./global_filters_core_plugin").GlobalFilter} GlobalFilter
  */
 
 import { _t } from "@web/core/l10n/translation";
@@ -41,7 +41,7 @@ const MONTHS = {
 const { UuidGenerator } = spreadsheet.helpers;
 const uuidGenerator = new UuidGenerator();
 
-export default class FiltersEvaluationPlugin extends spreadsheet.UIPlugin {
+export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     constructor(getters, history, dispatch, config) {
         super(getters, history, dispatch, config);
         this.orm = config.evalContext.env ? config.evalContext.env.services.orm : undefined;
@@ -506,7 +506,7 @@ export default class FiltersEvaluationPlugin extends spreadsheet.UIPlugin {
     }
 }
 
-FiltersEvaluationPlugin.getters = [
+GlobalFiltersUIPlugin.getters = [
     "getFilterDisplayValue",
     "getGlobalFilterValue",
     "getActiveFilterCount",
