@@ -3998,6 +3998,24 @@ class AccountMove(models.Model):
         render_context['subtitles'] = subtitles
         return render_context
 
+    def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
+        """ This method extension ensures that, when using the "Send & Print" feature
+        if the user adds an attachment, the latter will be linked to the record. """
+        self.ensure_one()
+        message_values['model'] = self._name
+        message_values['res_id'] = self.id
+
+        if attachment_ids:
+            # taking advantage of cache looks better in this case, to check
+            filtered_attachment_ids = self.env['ir.attachment'].sudo().browse(attachment_ids).filtered(
+                lambda a: a.res_model == 'account.invoice.send' and a.create_uid.id == self._uid)
+            # link account.invoice.send attachments to mail.compose.message, so that it is then
+            # updated with respect to access rights records in base method
+            if filtered_attachment_ids:
+                filtered_attachment_ids.res_model = 'mail.compose.message'
+
+        return super()._message_post_process_attachments(attachments, attachment_ids, message_values)
+
     # -------------------------------------------------------------------------
     # HOOKS
     # -------------------------------------------------------------------------

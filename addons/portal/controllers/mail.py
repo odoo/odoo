@@ -153,12 +153,15 @@ class PortalChatter(http.Controller):
         result.update({'default_message_id': message.id})
 
         if attachment_ids:
-            # sudo write the attachment to bypass the read access
-            # verification in mail message
-            record = request.env[res_model].browse(res_id)
-            message_values = {'res_id': res_id, 'model': res_model}
-            attachments = record._message_post_process_attachments([], attachment_ids, message_values)
-
+            # _message_post_helper already checks for pid/hash/token -> use message
+            # environment to keep the sudo mode when activated
+            record = message.env[res_model].browse(res_id)
+            attachments = record._message_post_process_attachments(
+                [], attachment_ids,
+                {'res_id': res_id, 'model': res_model}
+            )
+            # sudo write the attachment to bypass the read access verification in
+            # mail message
             if attachments.get('attachment_ids'):
                 message.sudo().write(attachments)
 
