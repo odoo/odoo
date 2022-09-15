@@ -22,14 +22,18 @@
                             attrs="{'invisible':[('has_multiple_providers', '=', False)]}"/>
                     </group>
                 </group>
-                <group>
-                    <field name="link" readonly="1" widget="CopyClipboardChar"/>
-                </group>
                 <group attrs="{'invisible':[('partner_email', '!=', False)]}">
                     <p class="alert alert-warning fw-bold" role="alert">This partner has no email, which may cause issues with some payment providers. Setting an email for this partner is advised.</p>
                 </group>
                 <footer>
-                    <button string="Close" class="btn-primary" special="cancel" data-hotkey="z"/>
+                    <field name="link"
+                           readonly="1"
+                           widget="CopyClipboardButton"
+                           options="{'label': 'Generate and Copy Payment Link'}"/>
+                    <button string="Close"
+                            class="btn btn-secondary rounded-2"
+                            special="cancel"
+                            data-hotkey="z"/>
                 </footer>
             </form>
         </field>
