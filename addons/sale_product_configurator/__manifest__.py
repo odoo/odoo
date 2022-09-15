@@ -32,6 +32,5 @@ It also enables the "optional products" feature.
             'sale_product_configurator/static/tests/product_configurator.test.js',
         ],
     },
-    'auto_install': True,
     'license': 'LGPL-3',
 }

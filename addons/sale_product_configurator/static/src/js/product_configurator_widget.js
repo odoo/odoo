@@ -1,6 +1,6 @@
 /** @odoo-module */
 import ProductConfiguratorWidget from "sale.product_configurator";
-import { OptionalProductsModal } from "@sale_product_configurator/js/product_configurator_modal";
+import { ProductConfiguratorModal } from "@sale_product_configurator/js/product_configurator_modal";
 import {
     selectOrCreateProduct,
     getSelectedVariantValues,
@@ -105,15 +105,18 @@ ProductConfiguratorWidget.include({
         var parentList = self.getParent();
         var unselectRow = (parentList.unselectRow || function () {}).bind(parentList); // form view on mobile
         if (self.optionalProducts && self.optionalProducts.length !== 0) {
-            self.trigger_up("add_record", {
-                context: self._productsToRecords(self.optionalProducts),
-                forceEditable: "bottom",
-                allowWarning: true,
-                onSuccess: function () {
-                    // Leave edit mode of one2many list.
-                    unselectRow();
-                },
-            });
+            // TODO VFE how to propagate that information now?
+            // is there any way to send changes not targeting current record ?
+            unselectRow();
+            // self.trigger_up("add_record", {
+            //     context: self._productsToRecords(self.optionalProducts),
+            //     forceEditable: "bottom",
+            //     allowWarning: true,
+            //     onSuccess: function () {
+            //         // Leave edit mode of one2many list.
+            //         unselectRow();
+            //     },
+            // });
         } else if (!self._isConfigurableLine() && self._isConfigurableProduct()) {
             // Leave edit mode of current line if line was configured
             // only through the product configurator.
@@ -123,14 +126,16 @@ ProductConfiguratorWidget.include({
 
     _openConfigurator: function (result, productTemplateId, dataPointId) {
         if (!result.mode || result.mode === "configurator") {
-            this._openProductConfigurator(
-                {
-                    configuratorMode: result && result.has_optional_products ? "options" : "add",
-                    pricelist_id: this._getPricelistId(),
-                    product_template_id: productTemplateId,
-                },
-                dataPointId
-            );
+            if (!this.modalOpened) {
+                this._openProductConfigurator(
+                    {
+                        configuratorMode: result && result.has_optional_products ? "options" : "add",
+                        pricelist_id: this._getPricelistId(),
+                        product_template_id: productTemplateId,
+                    },
+                    dataPointId
+                );
+            }
             return Promise.resolve(true);
         }
         return Promise.resolve(false);
@@ -159,6 +164,7 @@ ProductConfiguratorWidget.include({
      */
     async _openProductConfigurator(data, dataPointId) {
         this.optionalProducts = undefined;
+        this.modalOpened = true;
         const optionalProductsModal = await this._openModal(data);
         // no optional products found for this product, only add the root product
         optionalProductsModal.on("options_empty", null, () =>
@@ -170,9 +176,9 @@ ProductConfiguratorWidget.include({
             confirmed = true;
             const [
                 mainProduct,
-                ...options
+                ...optionalProducts
             ] = await optionalProductsModal.getAndCreateSelectedProducts();
-            this._addProducts({ mainProduct, options }, dataPointId);
+            this._addProducts({ mainProduct, optionalProducts }, dataPointId);
         });
         optionalProductsModal.on("closed", null, () => {
             if (confirmed) {
@@ -245,7 +251,7 @@ ProductConfiguratorWidget.include({
             product_custom_attribute_values: product_custom_attribute_value_ids,
             no_variant_attribute_values: noVariantAttributeValues,
         };
-        return new OptionalProductsModal(null, {
+        return new ProductConfiguratorModal(null, {
             rootProduct: this.rootProduct,
             pricelistId: pricelist_id,
             okButtonText: _t("Confirm"),
