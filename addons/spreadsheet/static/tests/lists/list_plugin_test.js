@@ -125,6 +125,13 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         }
     );
 
+    QUnit.test("List datasource is loaded with correct linesNumber", async function (assert) {
+        const { model } = await createSpreadsheetWithList({ linesNumber: 2 });
+        const [listId] = model.getters.getListIds();
+        const dataSource = model.getters.getListDataSource(listId);
+        assert.strictEqual(dataSource.limit, 2);
+    });
+
     QUnit.test("can select a List from cell formula within a formula", async function (assert) {
         const { model } = await createSpreadsheetWithList();
         setCellContent(model, "A1", `=SUM(ODOO.LIST("1","1","foo"),1)`);
