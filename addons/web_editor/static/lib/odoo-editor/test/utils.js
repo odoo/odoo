@@ -337,6 +337,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
 
     if (spec.contentAfter) {
         renderTextualSelection();
+<<<<<<< HEAD
 
         // remove all check-ids (checklists, stars)
         if (spec.removeCheckIds) {
@@ -345,6 +346,17 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
             }
         }
 
+||||||| parent of 22f4624b38c4... temp
+=======
+
+        // remove all check-ids (checklists, stars)
+        if (spec.removeCheckIds) {
+            for (const li of document.querySelectorAll('#editor-test-container li[id^=checklist-id-')) {
+                li.removeAttribute('id');
+            }
+        }
+
+>>>>>>> 22f4624b38c4... temp
         const value = testNode.innerHTML;
         window.chai.expect(value).to.be.equal(
             spec.contentAfter,

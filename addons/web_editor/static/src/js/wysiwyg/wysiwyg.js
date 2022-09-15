@@ -195,6 +195,10 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.document.addEventListener("keydown", this._signalOnline, true);
             this.odooEditor.document.addEventListener("keyup", this._signalOnline, true);
         }
+        this.odooEditor.addEventListener('contentChanged', function () {
+            self.$editable.trigger('content_changed');
+            self.trigger_up('wysiwyg_change');
+        });
 
         this._initialValue = this.getValue();
         const $wrapwrap = $('#wrapwrap');

@@ -80,6 +80,7 @@ export function areSimilarElements(node, node2) {
 class Sanitize {
     constructor(root) {
         this.root = root;
+<<<<<<< HEAD
         const rootClosestBlock = closestBlock(root);
         if (rootClosestBlock) {
             // Remove unique ids from checklists and stars. These will be
@@ -88,13 +89,33 @@ class Sanitize {
                 node.removeAttribute('id');
             }
         }
+||||||| parent of 22f4624b38c4... temp
+=======
+        const rootClosestBlock = closestBlock(root);
+        if (rootClosestBlock) {
+            // Remove unique ids from checklists. These will be renewed afterwards.
+            for (const node of rootClosestBlock.querySelectorAll('[id^=checklist-id-]')) {
+                node.removeAttribute('id');
+            }
+        }
+>>>>>>> 22f4624b38c4... temp
         this.parse(root);
+<<<<<<< HEAD
         if (rootClosestBlock) {
             // Ensure unique ids on checklists and stars.
             for (const node of rootClosestBlock.querySelectorAll('.o_checklist > li, .o_stars')) {
                 node.setAttribute('id', `checkId-${Math.floor(new Date() * Math.random())}`);
             }
         }
+||||||| parent of 22f4624b38c4... temp
+=======
+        if (rootClosestBlock) {
+            // Ensure unique ids on checklists and stars.
+            for (const node of rootClosestBlock.querySelectorAll('.o_checklist > li')) {
+                node.setAttribute('id', `checklist-id-${Math.floor(new Date() * Math.random())}`);
+            }
+        }
+>>>>>>> 22f4624b38c4... temp
     }
 
     parse(node) {

@@ -254,8 +254,15 @@ describe('List', () => {
                         });
                     });
                     it('should turn a heading into a checklist', async () => {
+<<<<<<< HEAD
                         await testEditor(BasicEditor, {
                             removeCheckIds: true,
+||||||| parent of 22f4624b38c4... temp
+                        await testEditor(BasicEditor, {
+=======
+                            await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+>>>>>>> 22f4624b38c4... temp
                             contentBefore: '<h1>ab[]cd</h1>',
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<ul class="o_checklist"><li><h1>ab[]cd</h1></li></ul>',
@@ -387,6 +394,18 @@ describe('List', () => {
                                 );
                             },
                         });
+                    });
+                });
+                it('should add a unique id on a new checklist', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>ab[]cd</p>',
+                        stepFunction: editor => {
+                            toggleCheckList(editor);
+                            const id = editor.editable.querySelector('li[id^=checklist-id-]').getAttribute('id');
+                            window.chai.expect(editor.editable.innerHTML).to.be.equal(
+                                `<ul class="o_checklist"><li id="${id}">abcd</li></ul>`
+                            );
+                        },
                     });
                 });
                 describe('Remove', () => {
@@ -1077,8 +1096,15 @@ describe('List', () => {
     describe('toggleChecked', () => {
         it('should do nothing if do not click on the checkbox', async () => {
             await testEditor(BasicEditor, {
+<<<<<<< HEAD
                     removeCheckIds: true,
                     contentBefore: unformat(`
+||||||| parent of 22f4624b38c4... temp
+                contentBefore: unformat(`
+=======
+                removeCheckIds: true,
+                contentBefore: unformat(`
+>>>>>>> 22f4624b38c4... temp
                     <ul class="o_checklist">
                         <li>1</li>
                     </ul>`),
