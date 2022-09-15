@@ -235,7 +235,6 @@ export class KanbanRenderer extends Component {
             if (groups.length === 0) {
                 return !this.props.list.groupedBy("m2o");
             }
-            return this.props.list.records.length === 0;
         }
         return !model.hasData();
     }

@@ -11809,4 +11809,77 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(0), ["blip-4"]);
         assert.deepEqual(getCardTexts(1), ["yop10", "blip9", "gnap17", "cba13"]);
     });
+
+    QUnit.test("no sample data when all groups are folded then one is unfolded", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban sample="1">
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read_group") {
+                    const result = await performRPC(route, args);
+                    for (const group of result.groups) {
+                        group.__fold = true;
+                    }
+                    return result;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_column_folded", 2);
+
+        const groupHandle = target.querySelector(".o_kanban_group");
+        await click(groupHandle);
+
+        assert.containsOnce(target, ".o_column_folded");
+        assert.containsN(target, ".o_kanban_record", 2);
+        assert.containsNone(target, "o_view_sample_data");
+    });
+
+    QUnit.test(
+        "no content helper when all groups are folded but there are (unloaded) records",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+                groupBy: ["product_id"],
+                async mockRPC(route, args, performRPC) {
+                    if (args.method === "web_read_group") {
+                        const result = await performRPC(route, args);
+                        for (const group of result.groups) {
+                            group.__fold = true;
+                        }
+                        return result;
+                    }
+                },
+            });
+
+            assert.containsN(target, ".o_column_folded", 2);
+
+            assert.strictEqual(
+                getNodesTextContent(target.querySelectorAll("span.o_column_title")).join(" "),
+                "hello (2) xmo (2)"
+            );
+
+            assert.containsNone(target, ".o_nocontent_help");
+        }
+    );
 });
