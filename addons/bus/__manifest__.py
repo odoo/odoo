@@ -8,6 +8,7 @@
         'security/ir.model.access.csv',
     ],
     'installable': True,
+    'auto_install': True,
     'assets': {
         'web.assets_common': [
             'bus/static/src/*.js',
