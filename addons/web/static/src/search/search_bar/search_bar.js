@@ -10,14 +10,15 @@ import { fuzzyTest } from "@web/core/utils/search";
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 const parsers = registry.category("parsers");
 
-const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text"];
+const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
+const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
 
 let nextItemId = 1;
 
 export class SearchBar extends Component {
     setup() {
         this.fields = this.env.searchModel.searchViewFields;
-        this.searchItems = this.env.searchModel.getSearchItems((f) => f.type === "field");
+        this.searchItems = this.env.searchModel.getSearchItems((f) => ["field", "field_property"].includes(f.type));
         this.root = useRef("root");
 
         // core state
@@ -69,9 +70,16 @@ export class SearchBar extends Component {
         const subItems = "subItems" in options ? options.subItems : this.subItems;
 
         const tasks = [];
-        for (const id of expanded) {
-            if (!subItems[id]) {
-                tasks.push({ id, prom: this.computeSubItems(id, query) });
+        const expandedSearchItems = this.searchItems.filter((item) => expanded.includes(item.id));
+        for (const searchItem of expandedSearchItems) {
+            // expand a properties should lazily fetch the definition, and generate
+            // searchItems, so the normal field logic is used for properties
+            const field = this.fields[searchItem.fieldName];
+
+            if (field.type === "properties" && searchItem.type === "field") {
+                tasks.push({ id: searchItem.id, prom: this.insertPropertiesSearchItems(searchItem, field, query) });
+            } else if (!subItems[searchItem.id]) {
+                tasks.push({ id: searchItem.id, prom: this.computeSubItems(searchItem, query) });
             }
         }
 
@@ -80,7 +88,7 @@ export class SearchBar extends Component {
         if (tasks.length) {
             const taskResults = await prom;
             tasks.forEach((task, index) => {
-                subItems[task.id] = taskResults[index];
+                subItems[task.id] = taskResults[index] || [];
             });
         }
 
@@ -98,17 +106,40 @@ export class SearchBar extends Component {
             return;
         }
 
-        for (const searchItem of this.searchItems) {
-            const field = this.fields[searchItem.fieldName];
-            const type = field.type === "reference" ? "char" : field.type;
-            /** @todo do something with respect to localization (rtl) */
-            const preposition = this.env._t(["date", "datetime"].includes(type) ? "at" : "for");
+        // move properties under their related field
+        const searchItems = [...this.searchItems];
+        searchItems.sort((a, b) => (a.propertyItemId || a.id) - (b.propertyItemId || b.id));
 
-            if (["selection", "boolean"].includes(type)) {
-                const options = field.selection || [
-                    [true, this.env._t("Yes")],
-                    [false, this.env._t("No")],
-                ];
+        for (const searchItem of searchItems) {
+            const field = this.fields[searchItem.fieldName];
+            const isPropertyFieldAttribute = field.type === "properties" && searchItem.type === "field_property";
+            let fieldType = field.type === "reference" ? "char" : field.type;
+
+            if (isPropertyFieldAttribute) {
+                // take the definition type instead
+                if (!this.state.expanded.includes(searchItem.propertyItemId)) {
+                    // properties field not unfolded, do not show the option
+                    continue;
+                }
+                fieldType = searchItem.propertyFieldDefinition.type;
+            }
+
+            /** @todo do something with respect to localization (rtl) */
+            let preposition = this.env._t(["date", "datetime"].includes(fieldType) ? "at" : "for");
+
+            if (fieldType === "properties" || (isPropertyFieldAttribute && FOLDABLE_TYPES.includes(fieldType))) {
+                // Do not chose preposition for foldable properties
+                // or the properties item itself
+                preposition = null;
+            }
+
+            if (["selection", "boolean", "tags"].includes(fieldType)) {
+                const propertyDefinition = searchItem.propertyFieldDefinition || {};
+                const options = propertyDefinition.selection
+                    || propertyDefinition.tags
+                    || field.selection
+                    || [[true, this.env._t("Yes")], [false, this.env._t("No")]];
+
                 for (const [value, label] of options) {
                     if (fuzzyTest(trimmedQuery.toLowerCase(), label.toLowerCase())) {
                         this.items.push({
@@ -120,16 +151,17 @@ export class SearchBar extends Component {
                             /** @todo check if searchItem.operator is fine (here and elsewhere) */
                             operator: searchItem.operator || "=",
                             value,
+                            isPropertyFieldAttribute,
                         });
                     }
                 }
                 continue;
             }
 
-            const parser = parsers.contains(type) ? parsers.get(type) : (str) => str;
+            const parser = parsers.contains(fieldType) ? parsers.get(fieldType) : (str) => str;
             let value;
             try {
-                switch (type) {
+                switch (fieldType) {
                     case "date": {
                         value = serializeDate(parser(trimmedQuery));
                         break;
@@ -156,11 +188,20 @@ export class SearchBar extends Component {
                 preposition,
                 searchItemId: searchItem.id,
                 label: this.state.query,
-                operator: searchItem.operator || (CHAR_FIELDS.includes(type) ? "ilike" : "="),
+                operator: searchItem.operator || (CHAR_FIELDS.includes(fieldType) ? "ilike" : "="),
                 value,
+                isPropertyFieldAttribute,
             };
 
-            if (type === "many2one") {
+            if (fieldType === "properties" || isPropertyFieldAttribute) {
+                item.isParent = !isPropertyFieldAttribute || FOLDABLE_TYPES.includes(fieldType);
+                item.unselectable = (
+                    !isPropertyFieldAttribute
+                    || FOLDABLE_TYPES.includes(fieldType)
+                    || searchItem.propertyType === "many2one"
+                );
+                item.isExpanded = this.state.expanded.includes(item.searchItemId);
+            } else if (fieldType === "many2one") {
                 item.isParent = true;
                 item.isExpanded = this.state.expanded.includes(item.searchItemId);
             }
@@ -178,8 +219,7 @@ export class SearchBar extends Component {
      * @param {string} query
      * @returns {Object[]}
      */
-    async computeSubItems(searchItemId, query) {
-        const searchItem = this.searchItems.find((i) => i.id === searchItemId);
+    async computeSubItems(searchItem, query) {
         const field = this.fields[searchItem.fieldName];
         let domain = [];
         if (searchItem.domain) {
@@ -189,7 +229,9 @@ export class SearchBar extends Component {
                 // Pass
             }
         }
-        const options = await this.orm.call(field.relation, "name_search", [], {
+        const relation = field.relation || searchItem.propertyFieldDefinition.comodel;
+
+        const options = await this.orm.call(relation, "name_search", [], {
             args: domain,
             context: { ...this.env.searchModel.globalContext, ...field.context },
             limit: 8,
@@ -202,7 +244,7 @@ export class SearchBar extends Component {
                 subItems.push({
                     id: nextItemId++,
                     isChild: true,
-                    searchItemId,
+                    searchItemId: searchItem.id,
                     value,
                     label,
                     operator,
@@ -212,12 +254,36 @@ export class SearchBar extends Component {
             subItems.push({
                 id: nextItemId++,
                 isChild: true,
-                searchItemId,
+                searchItemId: searchItem.id,
                 label: this.env._t("(no result)"),
                 unselectable: true,
             });
         }
         return subItems;
+    }
+
+    /**
+     * Insert the properties items, only when we unfold the properties field
+     * (will fetch the properties definition on the parent to generate the items).
+     *
+     * Because it require a RPC call to get the properties search items,
+     * it's done lazily, only when we need them.
+     *
+     * @param {Object} searchItem
+     * @param {Object} field
+     */
+    async insertPropertiesSearchItems(searchItem, field) {
+        const definitionRecord = field.definition_record;
+        const definitionRecordModel = this.fields[definitionRecord].relation;
+        const definitionRecordField = field.definition_record_field;
+
+        const propertiesSearchItems = await this.env.searchModel.getSearchItemsProperty(
+            searchItem, definitionRecord, definitionRecordModel, definitionRecordField);
+
+        const searchItems = this.searchItems.filter(
+            item => item.propertyItemId !== searchItem.id);
+
+        this.searchItems = [...searchItems, ...propertiesSearchItems];
     }
 
     /**
@@ -251,6 +317,14 @@ export class SearchBar extends Component {
      * @param {Object} item
      */
     selectItem(item) {
+        const searchItem = this.searchItems.find(searchItem => searchItem.id === item.searchItemId);
+        if((searchItem.fieldType === "properties" && searchItem.type === "field")
+            || (searchItem.type === "field_property" && item.unselectable)) {
+            // click on the properties field itself or on a foldable property
+            this.toggleItem(item, !item.isExpanded);
+            return;
+        }
+
         if (!item.unselectable) {
             const { searchItemId, label, operator, value } = item;
             this.env.searchModel.addAutoCompletionValues(searchItemId, { label, operator, value });
