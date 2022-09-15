@@ -35,7 +35,11 @@ var RunningTourActionHelper = core.Class.extend({
         this._text_blur(this._get_action_values(element), text);
     },
     drag_and_drop: function (to, element) {
-        this._drag_and_drop(this._get_action_values(element), to);
+        this._drag_and_drop_jquery(this._get_action_values(element), to);
+    },
+    drag_and_drop_native: function (toSel, element) {
+        const to = get_jquery_element_from_selector(toSel)[0];
+        this._drag_and_drop(this._get_action_values(element).$element[0], to);
     },
     drag_move_and_drop: function (to, element) {
         this._drag_move_and_drop(this._get_action_values(element), to);
@@ -131,7 +135,7 @@ var RunningTourActionHelper = core.Class.extend({
         center.top += $el.outerHeight() / 2;
         return center;
     },
-    _drag_and_drop: function (values, to) {
+    _drag_and_drop_jquery: function (values, to) {
         var $to;
         const elementCenter = this._calculateCenter(values.$element);
         if (to) {
@@ -155,9 +159,30 @@ var RunningTourActionHelper = core.Class.extend({
         toCenter = this._calculateCenter($to, to);
         values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
     },
+    _drag_and_drop: function (element, to) {
+        const elementCenter = this._calculateCenter($(element));
+        const toCenter = this._calculateCenter($(to));
+        element.dispatchEvent(new Event("mouseenter"));
+        element.dispatchEvent(new MouseEvent("mousedown", {
+            bubbles: true,
+            cancelable: true,
+            button: 0,
+            which: 1,
+            clientX: elementCenter.left,
+            clientY: elementCenter.top,
+        }));
+        element.dispatchEvent(new Event("mousemove", { bubbles: true, cancelable: true }));
+        to.dispatchEvent(new Event("mouseenter", { clientX: toCenter.left, clientY: toCenter.top }));
+        element.dispatchEvent(new Event("mouseup", {
+            bubbles: true,
+            cancelable: true,
+            button: 0,
+            which: 1,
+        }));
+    },
     _drag_move_and_drop: function (values, params) {
         // Extract parameters from string: '[deltaX,deltaY]@from => actualTo'.
-        const parts = /^\[(.+),(.+)\]@(.+) => (.+)/.exec(params);            
+        const parts = /^\[(.+),(.+)\]@(.+) => (.+)/.exec(params);
         const initialMoveOffset = [parseInt(parts[1]), parseInt(parts[2])];
         const fromSelector = parts[3];
         const toSelector = parts[4];
