@@ -81,28 +81,11 @@
         <record id="hr_timesheet_report_search" model="ir.ui.view">
             <field name="name">timesheets.analysis.report.search</field>
             <field name="model">timesheets.analysis.report</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search_base"/>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <search string="Timesheet">
-                    <field name="date"/>
-                    <field name="employee_id"/>
-                    <field name="project_id"/>
-                    <field name="ancestor_task_id" groups="project.group_subtask_project"/>
-                    <field name="task_id"/>
-                    <field name="name"/>
-                    <field name="department_id"/>
-                    <field name="manager_id"/>
-                    <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter name="month" string="Date" date="date"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
-                        <filter string="Ancestor Task" name="groupby_parent_task" domain="[]" context="{'group_by': 'ancestor_task_id'}" groups="project.group_subtask_project"/>
-                        <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
-                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}" help="Timesheet by Date"/>
-                        <filter string="Department" name="groupby_department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter string="Manager" name="groupby_manager" domain="[]" context="{'group_by': 'manager_id'}"/>
-                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                    </group>
+                <search position="attributes">
+                    <attribute name="string">Timesheet Report</attribute>
                 </search>
             </field>
         </record>
