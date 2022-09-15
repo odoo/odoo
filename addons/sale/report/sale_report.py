@@ -62,7 +62,7 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         select_ = """
-            coalesce(min(l.id), -s.id) as id,
+            coalesce(min(l.id), -10*s.id-1) as id,
             l.product_id as product_id,
             t.uom_id as product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as product_uom_qty,
