@@ -32,31 +32,6 @@ registerModel({
         onClickCancel(ev) {
             this.follower.closeSubtypes();
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFollowerSubtypeViews() {
-            if (this.follower.subtypes.length === 0) {
-                return clear();
-            }
-            return this.follower.subtypes.map(subtype => ({ subtype }));
-        },
-        /**
-         * @private
-         * @returns {Array}
-         */
-        _sortFollowerSubtypeViews() {
-            return [
-                ['falsy-first', 'subtype.parentModel'],
-                ['case-insensitive-asc', 'subtype.parentModel'],
-                ['falsy-first', 'subtype.resModel'],
-                ['case-insensitive-asc', 'subtype.resModel'],
-                ['smaller-first', 'subtype.isInternal'],
-                ['smaller-first', 'subtype.sequence'],
-                ['smaller-first', 'subtype.id'],
-            ];
-        },
     },
     fields: {
         /**
@@ -76,9 +51,24 @@ registerModel({
             required: true,
         }),
         followerSubtypeViews: many('FollowerSubtypeView', {
-            compute: '_computeFollowerSubtypeViews',
+            compute() {
+                if (this.follower.subtypes.length === 0) {
+                    return clear();
+                }
+                return this.follower.subtypes.map(subtype => ({ subtype }));
+            },
             inverse: 'followerSubtypeListOwner',
-            sort: '_sortFollowerSubtypeViews',
+            sort() {
+                return [
+                    ['falsy-first', 'subtype.parentModel'],
+                    ['case-insensitive-asc', 'subtype.parentModel'],
+                    ['falsy-first', 'subtype.resModel'],
+                    ['case-insensitive-asc', 'subtype.resModel'],
+                    ['smaller-first', 'subtype.isInternal'],
+                    ['smaller-first', 'subtype.sequence'],
+                    ['smaller-first', 'subtype.id'],
+                ];
+            },
         }),
     },
 });

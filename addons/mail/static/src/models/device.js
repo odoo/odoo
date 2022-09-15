@@ -26,13 +26,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean}
-         */
-        _computeHasRtcSupport() {
-            return Boolean(window.RTCPeerConnection && window.MediaStream);
-        },
-        /**
-         * @private
          */
         _refresh() {
             this.update({
@@ -51,7 +44,9 @@ registerModel({
             default: typeof document.createElement('canvas').getContext('2d').filter !== 'undefined',
         }),
         hasRtcSupport: attr({
-            compute: '_computeHasRtcSupport',
+            compute() {
+                return Boolean(window.RTCPeerConnection && window.MediaStream);
+            },
         }),
         /**
          * States whether this device is an actual mobile device.

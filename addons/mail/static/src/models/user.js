@@ -153,26 +153,6 @@ registerModel({
             }
             return this.partner.openProfile();
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeDisplayName() {
-            if (this.display_name) {
-                return this.display_name;
-            }
-            if (this.partner && this.partner.displayName) {
-                return this.partner.displayName;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeNameOrDisplayName() {
-            return this.partner && this.partner.nameOrDisplayName || this.display_name;
-        },
     },
     fields: {
         activitiesAsAssignee: many('Activity', {
@@ -189,14 +169,24 @@ registerModel({
         isInternalUser: attr(),
         display_name: attr(),
         displayName: attr({
-            compute: '_computeDisplayName',
+            compute() {
+                if (this.display_name) {
+                    return this.display_name;
+                }
+                if (this.partner && this.partner.displayName) {
+                    return this.partner.displayName;
+                }
+                return clear();
+            },
             default: "",
         }),
         model: attr({
             default: 'res.user',
         }),
         nameOrDisplayName: attr({
-            compute: '_computeNameOrDisplayName',
+            compute() {
+                return this.partner && this.partner.nameOrDisplayName || this.display_name;
+            },
         }),
         partner: one('Partner', {
             inverse: 'user',

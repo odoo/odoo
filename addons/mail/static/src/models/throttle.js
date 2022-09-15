@@ -42,22 +42,6 @@ registerModel({
                 shouldInvoke: false,
             });
         },
-        /**
-         * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeDuration() {
-            if (this.emojiGridViewAsOnScroll) {
-                return 150;
-            }
-            if (this.threadAsThrottleNotifyCurrentPartnerTypingStatus) {
-                return 2.5 * 1000;
-            }
-            if (this.messagingAsUpdateImStatusRegister) {
-                return 10 * 1000;
-            }
-            return clear();
-        },
     },
     fields: {
         cooldownTimer: one('Timer', {
@@ -67,7 +51,18 @@ registerModel({
          * Duration, in milliseconds, of the cool down phase.
          */
         duration: attr({
-            compute: '_computeDuration',
+            compute() {
+                if (this.emojiGridViewAsOnScroll) {
+                    return 150;
+                }
+                if (this.threadAsThrottleNotifyCurrentPartnerTypingStatus) {
+                    return 2.5 * 1000;
+                }
+                if (this.messagingAsUpdateImStatusRegister) {
+                    return 10 * 1000;
+                }
+                return clear();
+            },
             required: true,
         }),
         emojiGridViewAsOnScroll: one('EmojiGridView', {
