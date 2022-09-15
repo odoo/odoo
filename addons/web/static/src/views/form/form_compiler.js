@@ -13,7 +13,6 @@ import { toStringExpression } from "@web/views/utils";
 import {
     copyAttributes,
     getModifier,
-    isAlwaysInvisible,
     isComponentNode,
     isTextNode,
     makeSeparator,
@@ -42,7 +41,7 @@ function appendToExpr(expr, string) {
  * @param {Record<string, any>} obj
  * @returns {string}
  */
-function objectToString(obj) {
+export function objectToString(obj) {
     return `{${Object.entries(obj)
         .map((t) => t.join(":"))
         .join(",")}}`;
@@ -138,16 +137,19 @@ export class FormCompiler extends ViewCompiler {
         let hasContent = false;
         for (const child of el.children) {
             const invisible = getModifier(child, "invisible");
-            if (isAlwaysInvisible(invisible, params)) {
+            if (this.isAlwaysInvisible(invisible, params)) {
                 continue;
             }
             hasContent = true;
+            let isVisibleExpr;
+            if (typeof invisible === "boolean") {
+                isVisibleExpr = `${invisible ? false : true}`;
+            } else {
+                isVisibleExpr = `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`;
+            }
             const mainSlot = createElement("t", {
                 "t-set-slot": `slot_${slotId++}`,
-                isVisible:
-                    invisible !== false
-                        ? `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`
-                        : true,
+                isVisible: isVisibleExpr,
             });
             if (child.tagName === "button" || child.children.tagName === "button") {
                 child.classList.add(
@@ -194,13 +196,10 @@ export class FormCompiler extends ViewCompiler {
         const labelsForAttr = el.getAttribute("id") || fieldName;
         const labels = this.getLabels(labelsForAttr);
         const dynamicLabel = (label) => {
-            const formLabel = this.createLabelFromField(
-                fieldId,
-                fieldName,
-                fieldString,
-                label,
-                params
-            );
+            const formLabel = this.createLabelFromField(fieldId, fieldName, fieldString, label, {
+                ...params,
+                currentFieldArchNode: el,
+            });
             if (formLabel) {
                 label.replaceWith(formLabel);
             } else {
@@ -298,7 +297,7 @@ export class FormCompiler extends ViewCompiler {
             }
 
             const invisible = getModifier(child, "invisible");
-            if (isAlwaysInvisible(invisible, params)) {
+            if (this.isAlwaysInvisible(invisible, params)) {
                 continue;
             }
 
@@ -328,7 +327,7 @@ export class FormCompiler extends ViewCompiler {
                 const addLabel = child.hasAttribute("nolabel")
                     ? child.getAttribute("nolabel") !== "1"
                     : true;
-                slotContent = this.compileNode(child, params, false);
+                slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
                 if (addLabel && !isOuterGroup && !isTextNode(slotContent)) {
                     itemSpan = itemSpan === 1 ? itemSpan + 1 : itemSpan;
                     const fieldName = child.getAttribute("name");
@@ -356,16 +355,19 @@ export class FormCompiler extends ViewCompiler {
                     mainSlot.setAttribute("subType", "'label'");
                     child.classList.remove("o_wrap_label");
                 }
-                slotContent = this.compileNode(child, params, false);
+                slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
             }
 
             if (slotContent && !isTextNode(slotContent)) {
-                if (invisible !== false) {
-                    mainSlot.setAttribute(
-                        "isVisible",
-                        `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`
-                    );
+                let isVisibleExpr;
+                if (typeof invisible === "boolean") {
+                    isVisibleExpr = `${invisible ? false : true}`;
+                } else {
+                    isVisibleExpr = `!evalDomainFromRecord(props.record,${JSON.stringify(
+                        invisible
+                    )})`;
                 }
+                mainSlot.setAttribute("isVisible", isVisibleExpr);
                 if (itemSpan > 0) {
                     mainSlot.setAttribute("itemSpan", `${itemSpan}`);
                 }
@@ -495,7 +497,7 @@ export class FormCompiler extends ViewCompiler {
                 continue;
             }
             const invisible = getModifier(child, "invisible");
-            if (isAlwaysInvisible(invisible, params)) {
+            if (this.isAlwaysInvisible(invisible, params)) {
                 continue;
             }
 
@@ -528,15 +530,15 @@ export class FormCompiler extends ViewCompiler {
             }
 
             let isVisible;
-            if (invisible === false) {
-                isVisible = "true";
+            if (typeof invisible === "boolean") {
+                isVisible = `${!invisible}`;
             } else {
                 isVisible = `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`;
             }
             pageSlot.setAttribute("isVisible", isVisible);
 
             for (const contents of child.children) {
-                append(pageSlot, this.compileNode(contents, params));
+                append(pageSlot, this.compileNode(contents, { ...params, currentSlot: pageSlot }));
             }
         }
 

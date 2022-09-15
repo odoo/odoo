@@ -18,8 +18,6 @@ import { toStringExpression } from "./utils";
 
 const { xml } = owl;
 
-const templateIds = Object.create(null);
-
 const BUTTON_CLICK_PARAMS = [
     "name",
     "type",
@@ -67,7 +65,7 @@ export function toInterpolatedStringExpression(str) {
  * @param {string} attr
  * @param {string} string
  */
-function appendAttr(el, attr, string) {
+export function appendAttr(el, attr, string) {
     const attrKey = `t-att-${attr}`;
     const attrVal = el.getAttribute(attrKey);
     el.setAttribute(attrKey, appendToStringifiedObject(attrVal, string));
@@ -176,15 +174,6 @@ function getTitleTag(node) {
 }
 
 /**
- * @param {any} invisibleModifer
- * @param {{ enableInvisible?: boolean }} params
- * @returns {boolean}
- */
-export function isAlwaysInvisible(invisibleModifer, params) {
-    return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
-}
-
-/**
  * @param {Node} node
  * @returns {boolean}
  */
@@ -250,20 +239,16 @@ export class ViewCompiler {
         if (!invisible) {
             return compiled;
         }
-        if (typeof invisible === "boolean" && !params.enableInvisible) {
+        if (typeof invisible === "boolean") {
             return;
         }
-        if (!params.enableInvisible) {
-            const recordExpr = params.recordExpr || "props.record";
-            let isVisileExpr = `!evalDomainFromRecord(${recordExpr},${JSON.stringify(invisible)})`;
-            if (compiled.hasAttribute("t-if")) {
-                const formerTif = compiled.getAttribute("t-if");
-                isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
-            }
-            compiled.setAttribute("t-if", isVisileExpr);
-        } else {
-            appendAttr(compiled, "class", `o_invisible_modifier:${invisible}`);
+        const recordExpr = params.recordExpr || "props.record";
+        let isVisileExpr = `!evalDomainFromRecord(${recordExpr},${JSON.stringify(invisible)})`;
+        if (compiled.hasAttribute("t-if")) {
+            const formerTif = compiled.getAttribute("t-if");
+            isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
         }
+        compiled.setAttribute("t-if", isVisileExpr);
         return compiled;
     }
 
@@ -294,7 +279,7 @@ export class ViewCompiler {
         let invisible;
         if (evalInvisible) {
             invisible = getModifier(node, "invisible");
-            if (isAlwaysInvisible(invisible, params)) {
+            if (this.isAlwaysInvisible(invisible, params)) {
                 return;
             }
         }
@@ -451,8 +436,18 @@ export class ViewCompiler {
         const widget = createElement("Widget", props);
         return assignOwlDirectives(widget, el);
     }
+
+    /**
+     * @param {any} invisibleModifer
+     * @param {{ enableInvisible?: boolean }} params
+     * @returns {boolean}
+     */
+    isAlwaysInvisible(invisibleModifer, params) {
+        return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
+    }
 }
 
+let templateIds = Object.create(null);
 /**
  * @param {typeof ViewCompiler} ViewCompiler
  * @param {string} rawArch
@@ -473,4 +468,16 @@ export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
         }
     }
     return { ...compiledTemplates };
+}
+
+/*
+ * clear the view compiler's cache.
+ * FIXME: that function only purges the compiler's cache and NOT the cache in owl's app.
+ * the owl.xml function creates an internal template each time, so the cache is here to prevent
+ * creating new owl templates every time. If we clear the cache, new templates WILL be created,
+ * even if the arch to compile is the same.
+ * This is how a memory leak occurs. :-)
+ */
+export function resetViewCompilerCache() {
+    templateIds = Object.create(null);
 }
