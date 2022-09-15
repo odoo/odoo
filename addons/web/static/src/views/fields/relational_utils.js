@@ -400,7 +400,7 @@ export function useOpenMany2XRecord({
 // X2Many
 //
 
-class X2ManyFieldDialog extends Component {
+export class X2ManyFieldDialog extends Component {
     setup() {
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
