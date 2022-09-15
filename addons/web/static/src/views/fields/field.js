@@ -56,7 +56,7 @@ function getFieldClassFromRegistry(fieldType, widget, viewType, jsClass) {
 export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo) {
     const modifiers = fieldInfo.modifiers || {};
     const readonly = evalDomain(modifiers.readonly, record.evalContext);
-    const inEdit = record.mode !== "readonly";
+    const inEdit = record.isInEdition;
 
     let empty = !record.isVirtual;
     if ("isEmpty" in FieldComponent) {
