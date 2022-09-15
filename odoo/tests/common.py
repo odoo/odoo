@@ -1764,7 +1764,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=120, cookies=None, error_checker=None, watch=False, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
