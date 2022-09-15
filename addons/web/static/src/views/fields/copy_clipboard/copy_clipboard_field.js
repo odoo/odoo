@@ -13,23 +13,32 @@ const { Component } = owl;
 
 class CopyClipboardField extends Component {
     setup() {
-        this.copyText = this.env._t("Copy");
+        this.copyText = this.props.label || this.env._t("Copy");
         this.successText = this.env._t("Copied");
     }
     get copyButtonClassName() {
-        return `o_btn_${this.props.type}_copy`;
+        return `o_btn_${this.props.type}_copy btn-sm`;
+    }
+    get fieldProps() {
+        const fieldProps = {...this.props};
+        delete fieldProps.label;
+        return fieldProps;
     }
 }
 CopyClipboardField.template = "web.CopyClipboardField";
 CopyClipboardField.props = {
     ...standardFieldProps,
+    label: { type: String, optional: true },
+};
+CopyClipboardField.extractProps = ({ attrs }) => {
+    return {
+        label: attrs.options.label,
+    };
 };
 
 export class CopyClipboardButtonField extends CopyClipboardField {
     get copyButtonClassName() {
-        const classNames = [super.copyButtonClassName];
-        classNames.push("rounded-2");
-        return classNames.join(" ");
+        return `o_btn_${this.props.type}_copy rounded-2`;
     }
 }
 CopyClipboardButtonField.template = "web.CopyClipboardButtonField";
