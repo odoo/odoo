@@ -309,6 +309,7 @@
                                             force_save="1"
                                             widget="many2one_barcode"
                                             />
+                                        <field name="product_type" invisible="1"/>
                                         <field name="invoice_status" invisible="1"/>
                                         <field name="qty_to_invoice" invisible="1"/>
                                         <field name="qty_delivered_method" invisible="1"/>
@@ -390,7 +391,7 @@
                                 <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
                                 <field name="display_type" invisible="1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-
+                                <field name="product_type" invisible="1"/>
                                 <field name="product_updatable" invisible="1"/>
                                 <field
                                     name="product_id"
@@ -409,7 +410,7 @@
                                         'default_description_sale': name
                                     }"
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                    widget="product_configurator"
+                                    widget="sol_product_many2one"
                                 />
                                 <field name="product_template_id"
                                     string="Product"
@@ -428,7 +429,7 @@
                                         'default_description_sale': name
                                     }"
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
-                                    widget="product_configurator"/>
+                                    widget="sol_product_many2one"/>
                                 <field name="name" widget="section_and_note_text" optional="show"/>
                                 <field
                                     name="analytic_tag_ids"

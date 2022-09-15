@@ -18,6 +18,7 @@
                 <field name="event_booth_category_id" optional="hide"/>
                 <field name="event_booth_pending_ids" optional="hide"/>
             </xpath>
+            <!-- TODO VFE product_uom_qty_updatable -->
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom_qty']" position="attributes">
                 <attribute name="attrs">{'readonly': [('is_event_booth', '=', True)]}</attribute>
             </xpath>

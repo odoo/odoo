@@ -6,7 +6,7 @@ import OwlDialog from 'web.OwlDialog';
 import ServicesMixin from 'web.ServicesMixin';
 import VariantMixin from 'sale.VariantMixin';
 
-export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
+export const ProductConfiguratorModal = Dialog.extend(ServicesMixin, VariantMixin, {
     events:  _.extend({}, Dialog.prototype.events, VariantMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
         'click button.js_add_cart_json': 'onClickAddCartJSON',

@@ -1674,6 +1674,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      * @private
      */
     _onAddRecord: function () {
+        debugger;
         // to implement
     },
     /**
