@@ -146,7 +146,7 @@ class Location(models.Model):
             else:
                 location.next_inventory_date = False
 
-    @api.depends('warehouse_view_ids')
+    @api.depends('warehouse_view_ids', 'location_id')
     def _compute_warehouse_id(self):
         warehouses = self.env['stock.warehouse'].search([('view_location_id', 'parent_of', self.ids)])
         view_by_wh = OrderedDict((wh.view_location_id.id, wh.id) for wh in warehouses)
