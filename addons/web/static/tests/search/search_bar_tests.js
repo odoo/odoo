@@ -38,6 +38,12 @@ QUnit.module("Search", (hooks) => {
                         birth_datetime: { string: "Birth DateTime", type: "datetime" },
                         foo: { string: "Foo", type: "char" },
                         bool: { string: "Bool", type: "boolean" },
+                        properties: {
+                            string: "Properties",
+                            type: "properties",
+                            definition_record: "bar",
+                            definition_record_field: "child_properties",
+                        },
                     },
                     records: [
                         {
@@ -897,5 +903,231 @@ QUnit.module("Search", (hooks) => {
         const searchInput = target.querySelector(".o_searchview input");
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowUp" });
         assert.containsOnce(target, ".focus");
+    });
+
+    QUnit.test("search a property: basic", async function (assert) {
+        assert.expect(29);
+
+        async function mockRPC(route, { method, model, args, kwargs }) {
+            if (method === "search_read" && model === "partner"
+                && args[1][0] === "display_name" && args[1][1] === "child_properties") {
+
+                const definition1 = [{
+                    'type': 'many2one',
+                    'string': 'My Partner',
+                    'name': 'my_partner',
+                    'comodel': 'partner',
+                }, {
+                    'type': 'many2many',
+                    'string': 'My Partners',
+                    'name': 'my_partners',
+                    'comodel': 'partner',
+                }, {
+                    'type': 'selection',
+                    'string': 'My Selection',
+                    'name': 'my_selection',
+                    'selection': [['a', 'A'], ['b', 'B'], ['c', 'C'], ['aa', 'AA']],
+                }, {
+                    'type': 'tags',
+                    'string': 'My Tags',
+                    'name': 'my_tags',
+                    'tags': [['a', 'A', 1], ['b', 'B', 5], ['c', 'C', 3], ['aa', 'AA', 2]],
+                }];
+
+                const definition2 = [{
+                    'type': 'char',
+                    'string': 'My Text',
+                    'name': 'my_text',
+                }];
+
+                return [
+                    {'id': 1, 'display_name': 'Bar 1', 'child_properties': definition1},
+                    {'id': 2, 'display_name': 'Bar 2', 'child_properties': definition2},
+                ];
+            } else if (method === "name_search" && model === "partner" && kwargs.name === "Bo") {
+                return [[5, "Bob"], [6, "Bobby"]];
+            } else if (method === "name_search" && model === "partner" && kwargs.name === "Ali") {
+                return [[9, "Alice"], [10, "Alicia"]];
+            }
+
+        }
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <field name="properties"/>
+                    </search>
+                `,
+            mockRPC,
+        });
+
+        // expand the properties field
+        await editSearch(target, "a");
+        await click(target.querySelector(".o_expand"));
+
+        let items = target.querySelectorAll('.o_searchview_input_container li');
+        assert.strictEqual(items.length, 6);
+        assert.strictEqual(items[1].innerText, 'My Partner (Bar 1)');
+        assert.strictEqual(items[3].innerText, 'My Selection (Bar 1)');
+        assert.strictEqual(items[5].innerText, 'My Text (Bar 2)');
+
+        // click again on the expand icon to hide the properties
+        await click(target.querySelector(".o_expand"));
+        items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 1, "Should have hidden the properties");
+
+        // search for a partner, and expand the many2many property
+        await editSearch(target, "Bo");
+        await click(target.querySelector(".o_expand"));
+        await click(target.querySelector("li:nth-child(3) .o_expand"));
+        items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 8);
+        assert.strictEqual(items[3].innerText, "Bob");
+        assert.strictEqual(items[4].innerText, "Bobby");
+
+        // fold all the properties (included the search result)
+        await click(target.querySelector(".o_expand"));
+        items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 1, "Should have folded the properties");
+
+        // unfold all the properties but fold the search result
+        await click(target.querySelector(".o_expand"));
+        await click(target.querySelector("li:nth-child(3) .o_expand"));
+        items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 6, "Should have folded the properties");
+        assert.strictEqual(items[2].innerText, "My Partners (Bar 1)");
+        assert.strictEqual(items[3].innerText, "My Selection (Bar 1)");
+
+        // select Bobby
+        await click(target.querySelector("li:nth-child(3) .o_expand"));
+        await click(target.querySelector(".o_searchview_input_container li:nth-child(5)"));
+        assert.deepEqual(getDomain(controlPanel), [["properties.my_partners", "in", 6]]);
+
+        // expand the selection properties
+        await click(target.querySelector(".o_control_panel"));
+        await editSearch(target, "a");
+        await click(target.querySelector(".o_expand"));
+        await click(target.querySelector("li:nth-child(4) .o_expand"));
+        items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 8, "Should have unfolded the selection properties");
+        assert.strictEqual(items[4].innerText, "A");
+        assert.strictEqual(items[5].innerText, "AA");
+
+        // select the selection option "AA"
+        await click(target.querySelector(".o_searchview_input_container li:nth-child(6)"));
+        let expectedDomain = ["&", ["properties.my_partners", "in", 6], ["properties.my_selection", "=", "aa"]];
+        assert.deepEqual(getDomain(controlPanel), expectedDomain);
+
+        // select the selection option "A"
+        await click(target.querySelector(".o_control_panel"));
+        await editSearch(target, "a");
+        await click(target.querySelector(".o_expand"));
+        await click(target.querySelector("li:nth-child(4) .o_expand"));
+        await click(target.querySelector(".o_searchview_input_container li:nth-child(5)"));
+        expectedDomain = [
+            "&",
+                ["properties.my_partners", "in", 6],
+            "|",
+                ["properties.my_selection", "=", "aa"],
+                ["properties.my_selection", "=", "a"],
+        ];
+        assert.deepEqual(getDomain(controlPanel), expectedDomain);
+
+        // reset the search
+        await click(target.querySelector('.o_facet_remove'));
+        await click(target.querySelector('.o_facet_remove'));
+
+        // search a many2one value
+        await click(target.querySelector(".o_control_panel"));
+        await editSearch(target, "Ali");
+        await click(target.querySelector(".o_expand"));
+        await click(target.querySelector("li:nth-child(2) .o_expand"));
+        items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 8, "Should show the search result");
+        assert.strictEqual(items[2].innerText, "Alice");
+        assert.strictEqual(items[3].innerText, "Alicia");
+        await click(target.querySelector(".o_searchview_input_container li:nth-child(4)"));
+        expectedDomain = [["properties.my_partner", "=", 10]];
+        assert.deepEqual(getDomain(controlPanel), expectedDomain);
+
+        // search a tag value
+        await click(target.querySelector(".o_control_panel"));
+        await editSearch(target, "A");
+        await click(target.querySelector(".o_expand"));
+        await click(target.querySelector("li:nth-child(5) .o_expand"));
+        items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 8, "Should show the search result");
+        assert.strictEqual(items[5].innerText, "A");
+        assert.strictEqual(items[6].innerText, "AA");
+        await click(target.querySelector(".o_searchview_input_container li:nth-child(7)"));
+        expectedDomain = ["&", ["properties.my_partner", "=", 10], ["properties.my_tags", "in", "aa"]];
+        assert.deepEqual(getDomain(controlPanel), expectedDomain);
+        // add the tab "B"
+        await click(target.querySelector(".o_control_panel"));
+        await editSearch(target, "B");
+        await click(target.querySelector(".o_expand"));
+        await click(target.querySelector("li:nth-child(5) .o_expand"));
+        items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 7, "Should show the search result");
+        assert.strictEqual(items[5].innerText, "B");
+        await click(target.querySelector(".o_searchview_input_container li:nth-child(6)"));
+        expectedDomain = [
+            "&",
+                ["properties.my_partner", "=", 10],
+            "|",
+                ["properties.my_tags", "in", "aa"],
+                ["properties.my_tags", "in", "b"]];
+        assert.deepEqual(getDomain(controlPanel), expectedDomain);
+    });
+
+    QUnit.test("search a property: definition record id in the context", async function (assert) {
+        assert.expect(3);
+
+        async function mockRPC(route, { method, model, args, kwargs }) {
+            if (method === "search_read" && model === "partner"
+                && args[1][0] === "display_name" && args[1][1] === "child_properties") {
+
+                assert.deepEqual(args[0], [["id", "=", 2]],
+                    "Should search only the active parent properties");
+
+                const definition2 = [{
+                    'type': 'char',
+                    'string': 'My Text',
+                    'name': 'my_text',
+                }];
+
+                return [
+                    {'id': 2, 'display_name': 'Bar 2', 'child_properties': definition2},
+                ];
+            }
+        }
+
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <field name="properties"/>
+                    </search>
+                `,
+            mockRPC,
+            context: {active_id: 2},
+        });
+
+        await click(target.querySelector(".o_control_panel"));
+        await editSearch(target, "a");
+        await click(target.querySelector(".o_expand"));
+
+        const items = target.querySelectorAll(".o_searchview_input_container li");
+        assert.strictEqual(items.length, 2, "Should show the search result");
+        assert.strictEqual(items[1].innerText, "My Text (Bar 2)");
     });
 });

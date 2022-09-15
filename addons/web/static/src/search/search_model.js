@@ -219,6 +219,7 @@ export class SearchModel extends EventBus {
         this.globalDomain = domain || [];
         this.globalGroupBy = groupBy || [];
         this.globalOrderBy = orderBy || [];
+        this.searchItemsProperties = {};
         this.hideCustomGroupBy = hideCustomGroupBy;
 
         this.searchMenuTypes = new Set(config.searchMenuTypes || ["filter", "groupBy", "favorite"]);
@@ -937,6 +938,60 @@ export class SearchModel extends EventBus {
             this.query.push({ searchItemId, intervalId });
         }
         this._notify();
+    }
+
+    /**
+     * Because it require a RPC call to get the properties search items,
+     * it's done lazily, only when we need them.
+     */
+    async fillSearchItemsProperty(searchItem, definitionRecordModel, definitionRecordField) {
+        if (this.searchItemsProperties[searchItem.id]) {
+            // we already fetched the properties definition
+            return;
+        }
+
+        let domain = [];
+        if (this._context.active_id) {
+            // assume the active id is the definition record
+            // and show only its properties
+            domain = [['id', '=', this._context.active_id]];
+        }
+
+        const result = await this.orm.call(
+            definitionRecordModel,
+            "search_read",
+            [domain, ["display_name", definitionRecordField]]);
+
+        for (const values of result) {
+            for (const definition of values[definitionRecordField]) {
+                const fieldName = `${searchItem.fieldName}.${definition.name}`;
+                if (Object.values(this.searchItems).find(item => item.fieldName === fieldName)) {
+                    // already in the list, can happen if we unfold the properties field
+                    // open a form view, create a new property
+                    // and then go back to the search view
+                    continue;
+                }
+
+                this.searchItems[this.nextId] = {
+                    "isActive": false,
+                    "type": "field",
+                    "fieldName": fieldName,
+                    "fieldType": "properties",
+                    "description": `${definition.string} (${values.display_name})`,
+                    "groupId": this.nextGroupId,
+                    "id": this.nextId,
+                    "autocompleteValues": [],
+                    "definition": definition,
+                    "isProperty": true,
+                    "propertyItemId": searchItem.id,
+                };
+
+                this.nextId++;
+                this.nextGroupId++;
+            }
+        }
+
+        this.searchItemsProperties[searchItem.id] = true;
     }
 
     //--------------------------------------------------------------------------

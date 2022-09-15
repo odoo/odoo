@@ -10,7 +10,8 @@ import { fuzzyTest } from "@web/core/utils/search";
 const { Component, useExternalListener, useRef, useState } = owl;
 const parsers = registry.category("parsers");
 
-const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text"];
+const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
+const FOLDABLE_PROPERTIES = ["many2one", "many2many", "selection", "tags"];
 
 let nextItemId = 1;
 
@@ -45,6 +46,25 @@ export class SearchBar extends Component {
 
         useExternalListener(window, "click", this.onWindowClick);
         useExternalListener(window, "keydown", this.onWindowKeydown);
+    }
+
+    get searchBarItems() {
+        const items = [...this.items];
+
+        // move properties under their related field
+        items.sort((a, b) =>
+            (a.propertySearchItemId || a.searchItemId)
+            - (b.propertySearchItemId || b.searchItemId)
+        );
+
+        // hide properties if their field is not expanded
+        return items.filter(item => {
+            if (!item.isProperty) {
+                return true;
+            }
+            const propertySearchItemId = item.propertySearchItemId;
+            return items.find(i => i.searchItemId === propertySearchItemId).isExpanded;
+        });
     }
 
     //---------------------------------------------------------------------
@@ -97,7 +117,7 @@ export class SearchBar extends Component {
         }
 
         for (const searchItem of this.searchItems) {
-            const field = this.fields[searchItem.fieldName];
+            const field = this.fields[searchItem.fieldName.split(".")[0]];
             const type = field.type === "reference" ? "char" : field.type;
             /** @todo do something with respect to localization (rtl) */
             const preposition = this.env._t(["date", "datetime"].includes(type) ? "at" : "for");
@@ -156,10 +176,15 @@ export class SearchBar extends Component {
                 label: this.state.query,
                 operator: searchItem.operator || (CHAR_FIELDS.includes(type) ? "ilike" : "="),
                 value,
+                propertySearchItemId: searchItem.propertyItemId,
+                isProperty: searchItem.isProperty,
             };
 
-            if (type === "many2one") {
-                item.isParent = true;
+            if (["many2one", "properties"].includes(type)) {
+                item.isParent = type === "many2one" || !searchItem.isProperty
+                    || FOLDABLE_PROPERTIES.includes(searchItem.definition.type);
+                item.unselectable = searchItem.isProperty
+                    && FOLDABLE_PROPERTIES.includes(searchItem.definition.type);
                 item.isExpanded = this.state.expanded.includes(item.searchItemId);
             }
 
@@ -178,7 +203,13 @@ export class SearchBar extends Component {
      */
     async computeSubItems(searchItemId, query) {
         const searchItem = this.searchItems.find((i) => i.id === searchItemId);
-        const field = this.fields[searchItem.fieldName];
+        const field = this.fields[searchItem.fieldName.split(".")[0]];
+        const operator = searchItem.operator || "=";
+
+        if (field.type === "properties") {
+            return await this._computeSubPropertiesItems(searchItem, field, query);
+        }
+
         let domain = [];
         if (searchItem.domain) {
             try {
@@ -194,7 +225,6 @@ export class SearchBar extends Component {
         });
         const subItems = [];
         if (options.length) {
-            const operator = searchItem.operator || "=";
             for (const [value, label] of options) {
                 subItems.push({
                     id: nextItemId++,
@@ -212,9 +242,85 @@ export class SearchBar extends Component {
                 searchItemId,
                 label: this.env._t("(no result)"),
                 unselectable: true,
+                propertySearchItemId: searchItem.propertyItemId,
             });
         }
         return subItems;
+    }
+
+    async _computeSubPropertiesItems(searchItem, field, query) {
+        // unfold a many2one / many2many / selection / tags properties
+        if (searchItem.isProperty) {
+            const definition = searchItem.definition;
+
+            let matches;
+            let operator = "=";
+            if (definition.type === "selection") {
+                // selection option use UUID, search on the label of the option
+                const options = definition.selection;
+                const searchOption = query.toLocaleLowerCase();
+                matches = options.filter(
+                    option => option[1].toLocaleLowerCase().includes(searchOption));
+            } else if (definition.type === "tags") {
+                const tags = definition.tags;
+                const searchOption = query.toLocaleLowerCase();
+                matches = tags.filter(
+                    option => option[1].toLocaleLowerCase().includes(searchOption));
+                matches = matches.map(tag => [tag[0], tag[1]]);
+                operator = "in";
+            } else {
+                // many2one / many2many
+                matches = await this.orm.call(
+                    definition.comodel,
+                    "name_search",
+                    [], {name: query, limit: 8});
+                if (definition.type === "many2many") {
+                    operator = "in";
+                }
+            }
+
+            const propertiesSubItems = [];
+
+            for (const option of matches) {
+                propertiesSubItems.push({
+                    id: nextItemId++,
+                    isChild: true,
+                    searchItemId: searchItem.id,
+                    propertySearchItemId: searchItem.propertyItemId,
+                    value: option[0],
+                    label: option[1],
+                    operator: operator,
+                    isProperty: true,
+                });
+            }
+
+            if (!propertiesSubItems.length) {
+                propertiesSubItems.push({
+                    id: nextItemId++,
+                    isChild: true,
+                    searchItemId: searchItem.id,
+                    propertySearchItemId: searchItem.propertyItemId,
+                    label: this.env._t("(no result)"),
+                    unselectable: true,
+                    isProperty: true,
+                });
+            }
+
+            return propertiesSubItems;
+        }
+
+        const definitionRecord = field.definition_record;
+        const definitionRecordModel = this.fields[definitionRecord].relation;
+        const definitionRecordField = field.definition_record_field;
+
+        await this.env.searchModel.fillSearchItemsProperty(
+            searchItem, definitionRecordModel, definitionRecordField);
+
+        // need to update searchItems because it might have been changed
+        // after fetching the properties definition
+        this.searchItems = this.env.searchModel.getSearchItems((f) => f.type === "field");
+
+        return [];
     }
 
     /**
