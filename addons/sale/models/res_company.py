@@ -96,7 +96,7 @@ class ResCompany(models.Model):
             mark_so_as_sent=True,
             default_email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             proforma=self.env.context.get('proforma', False),
-            force_email=True, mail_notify_author=True
+            force_email=True,
         ).create({
             'res_id': sample_sales_order.id,
             'template_id': template and template.id or False,
