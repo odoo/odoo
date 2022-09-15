@@ -63,7 +63,7 @@ class SaleReport(models.Model):
 
     def _select_sale(self):
         select_ = f"""
-            COALESCE(min(l.id), -s.id) AS id,
+            MIN(l.id) AS id,
             l.product_id AS product_id,
             t.uom_id AS product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS product_uom_qty,
@@ -141,7 +141,7 @@ class SaleReport(models.Model):
     def _from_sale(self):
         return """
             sale_order_line l
-            RIGHT OUTER JOIN sale_order s ON s.id=l.order_id
+            LEFT JOIN sale_order s ON s.id=l.order_id
             JOIN res_partner partner ON s.partner_id = partner.id
             LEFT JOIN product_product p ON l.product_id=p.id
             LEFT JOIN product_template t ON p.product_tmpl_id=t.id
