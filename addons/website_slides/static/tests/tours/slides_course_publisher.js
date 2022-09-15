@@ -57,6 +57,7 @@ tour.register('course_publisher', {
 }, {
     content: 'eLearning: click "Add URL" really adding image',
     trigger: '.o_upload_media_url_button',
+    extra_trigger: '.o_we_url_success',
 }, {
     content: 'eLearning: is the Corgi set ?',
     trigger: 'img.o_wslides_course_pict',
