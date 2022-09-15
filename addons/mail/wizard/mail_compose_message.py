@@ -329,6 +329,7 @@ class MailComposer(models.TransientModel):
 
                 result_mails_su += batch_mails_sudo
                 if wizard.composition_mode == 'mass_mail':
+                    ActiveModel.browse(res_ids)._message_mail_after_hook(batch_mails_sudo)
                     batch_mails_sudo.send(auto_commit=auto_commit)
 
         return result_mails_su, result_messages
