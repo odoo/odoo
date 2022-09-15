@@ -3722,4 +3722,38 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["Undefined", "red"]);
         checkLegend(assert, graph, "Revenue");
     });
+
+    QUnit.test("order='desc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="desc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [2, 2, 2, 1, 1],
+            label: "Count",
+        });
+    });
+
+    QUnit.test("order='asc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="asc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [1, 1, 2, 2, 2],
+            label: "Count",
+        });
+    });
 });
