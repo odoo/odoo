@@ -279,6 +279,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
             getUnremovableElements: this._getUnremovableElements.bind(this),
+            direction: this.websiteService.currentWebsite.metadata.direction,
             ...this.props.wysiwygOptions,
         };
     }

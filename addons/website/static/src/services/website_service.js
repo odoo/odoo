@@ -126,6 +126,7 @@ export const websiteService = {
                         editable: !!document.getElementById('wrapwrap'),
                         viewXmlid: viewXmlid,
                         lang: document.documentElement.getAttribute('lang').replace('-', '_'),
+                        direction: document.documentElement.querySelector('#wrapwrap.o_rtl') ? 'rtl' : 'ltr',
                     };
                 }
                 contentWindow = document.defaultView;
