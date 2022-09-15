@@ -43,7 +43,7 @@ export class CalendarYearRenderer extends Component {
             dayNames: luxon.Info.weekdays("long"),
             dayNamesShort: luxon.Info.weekdays("short"),
             dayRender: this.onDayRender,
-            defaultDate: this.props.model.date.toJSDate(),
+            defaultDate: this.props.model.date.toISO(),
             defaultView: "dayGridMonth",
             dir: localization.direction,
             droppable: true,
@@ -55,18 +55,19 @@ export class CalendarYearRenderer extends Component {
             firstDay: this.props.model.firstDayOfWeek,
             header: { left: false, center: "title", right: false },
             height: 0,
-            locale: "en-US",
+            locale: luxon.Settings.defaultLocale,
             longPressDelay: 500,
             monthNames: luxon.Info.months("long"),
             monthNamesShort: luxon.Info.months("short"),
             navLinks: false,
             nowIndicator: true,
-            plugins: ["dayGrid", "interaction"],
+            plugins: ["dayGrid", "interaction", "luxon"],
             select: this.onSelect,
             selectMinDistance: 5, // needed to not trigger select when click
             selectMirror: true,
             selectable: this.props.model.canCreate,
             showNonCurrentDates: false,
+            timeZone: luxon.Settings.defaultZone.name,
             titleFormat: { month: "short", year: "numeric" },
             unselectAuto: false,
             weekNumberCalculation: calculateWeekNumber,
@@ -82,14 +83,14 @@ export class CalendarYearRenderer extends Component {
         return {
             id: record.id,
             title: record.title,
-            start: record.start.startOf("day").toJSDate(),
-            end: record.end.startOf("day").plus({ days: 1 }).toJSDate(),
+            start: record.start.toISO(),
+            end: record.end.plus({ day: 1 }).toISO(),
             allDay: true,
             rendering: "background",
         };
     }
     getDateWithMonth(month) {
-        return this.props.model.date.set({ month: this.months.indexOf(month) + 1 }).toJSDate();
+        return this.props.model.date.set({ month: this.months.indexOf(month) + 1 }).toISO();
     }
     getOptionsForMonth(month) {
         return {

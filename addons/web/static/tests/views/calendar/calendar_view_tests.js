@@ -2292,6 +2292,9 @@ QUnit.module("Views", ({ beforeEach }) => {
                 </calendar>
             `,
             mockRPC(route, { method, model, kwargs }) {
+                if (route.startsWith("/web/static/lib/fullcalendar")) {
+                    return;
+                }
                 if (kwargs.fields) {
                     assert.step(`${method} (${model}) [${(kwargs.fields || []).join(", ")}]`);
                 } else {
@@ -3948,6 +3951,62 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         await click(target, ".o-calendar-quick-create--cancel-btn");
         assert.containsNone(target, ".fc-highlight", "should not highlight days");
+    });
+
+    QUnit.test(`create event in year view`, async (assert) => {
+        assert.expect(6);
+        let expectedEvent;
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="allday" mode="year" />
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "create") {
+                    assert.deepEqual(args[0], expectedEvent);
+                }
+            },
+        });
+
+        // Select the whole month of July
+        expectedEvent = {
+            allday: true,
+            start: "2016-07-01",
+            stop: "2016-07-31",
+            name: "Whole July",
+        };
+        await selectDateRange(target, "2016-07-01", "2016-07-31");
+        await editInput(target, ".o-calendar-quick-create--input[name=title]", "Whole July");
+        await click(target, ".o-calendar-quick-create--create-btn");
+
+        // get all rows for event 8
+        assert.containsN(target, ".o_event[data-event-id='8']", 6);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_event[data-event-id='8']")].map((cell) => cell.colSpan),
+            [2, 7, 7, 7, 7, 1],
+            "rows should highlight multiple days"
+        );
+
+        // Select the whole month of November
+        expectedEvent = {
+            allday: true,
+            start: "2016-11-01",
+            stop: "2016-11-30",
+            name: "Whole November",
+        };
+        await selectDateRange(target, "2016-11-01", "2016-11-30");
+        await editInput(target, ".o-calendar-quick-create--input[name=title]", "Whole November");
+        await click(target, ".o-calendar-quick-create--create-btn");
+
+        // get all rows for event 9
+        assert.containsN(target, ".o_event[data-event-id='9']", 5);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_event[data-event-id='9']")].map((cell) => cell.colSpan),
+            [5, 7, 7, 7, 4],
+            "rows should highlight multiple days"
+        );
     });
 
     QUnit.test(`popover ignores readonly field modifier`, async (assert) => {

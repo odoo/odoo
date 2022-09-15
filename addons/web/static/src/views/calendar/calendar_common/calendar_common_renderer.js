@@ -62,7 +62,7 @@ export class CalendarCommonRenderer extends Component {
             dayNames: luxon.Info.weekdays("long"),
             dayNamesShort: luxon.Info.weekdays("short"),
             dayRender: this.onDayRender,
-            defaultDate: this.props.model.date.toJSDate(),
+            defaultDate: this.props.model.date.toISO(),
             defaultView: SCALE_TO_FC_VIEW[this.props.model.scale],
             dir: localization.direction,
             droppable: true,
@@ -130,8 +130,8 @@ export class CalendarCommonRenderer extends Component {
         return {
             id: record.id,
             title: record.title,
-            start: record.start.toJSDate(),
-            end: record.end.toJSDate(),
+            start: record.start.toISO(),
+            end: record.end.toISO(),
             allDay: record.isAllDay,
         };
     }
