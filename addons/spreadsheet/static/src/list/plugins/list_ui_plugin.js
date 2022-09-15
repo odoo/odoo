@@ -6,10 +6,10 @@ import { getFirstListFunction } from "../list_helpers";
 const { astToFormula } = spreadsheet;
 
 /**
- * @typedef {import("./list_plugin").SpreadsheetList} SpreadsheetList
+ * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
  */
 
-export default class ListStructurePlugin extends spreadsheet.UIPlugin {
+export default class ListUIPlugin extends spreadsheet.UIPlugin {
     constructor(getters, history, dispatch, config, selection) {
         super(getters, history, dispatch, config, selection);
         /** @type {string} */
@@ -185,7 +185,7 @@ export default class ListStructurePlugin extends spreadsheet.UIPlugin {
     }
 }
 
-ListStructurePlugin.getters = [
+ListUIPlugin.getters = [
     "getListComputedDomain",
     "getListHeaderValue",
     "getListIdFromPosition",
