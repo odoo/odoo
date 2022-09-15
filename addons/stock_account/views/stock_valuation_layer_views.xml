@@ -41,7 +41,7 @@
         <field name="name">stock.valuation.layer.tree</field>
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
-            <tree default_order="create_date desc, id desc" create="0"
+            <tree default_order="id desc" create="0"
                   import="0" js_class="inventory_report_list"
                   action="action_open_reference" type="object">
                 <field name="create_date" string="Date" />
@@ -115,6 +115,9 @@
         <field name="inherit_id" ref="stock_valuation_layer_tree"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <field name="quantity" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
             <field name="unit_cost" position="after">
                 <field name="remaining_qty" sum="Total Remaining Quantity"/>
             </field>
@@ -131,6 +134,7 @@
         <field name="view_mode">tree,form,pivot</field>
         <field name="view_id" ref="stock_valuation_layer_report_tree"/>
         <field name="context">{'search_default_has_remaining_qty': 1}</field>
+        <field name="domain">[('product_id.type', '=', 'product')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face"/>
             <p>
