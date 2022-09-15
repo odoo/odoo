@@ -7,47 +7,14 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'SuggestedRecipientInfo',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeDialogText() {
-            return this.env._t("Please complete customer's information");
-        },
-        /**
-         * Prevents selecting a recipient that does not have a partner.
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsSelected() {
-            return this.partner ? this.isSelected : false;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeName() {
-            return this.partner && this.partner.nameOrDisplayName || this.name;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeTitleText() {
-            return sprintf(
-                this.env._t("Add as recipient and follower (reason: %s)"),
-                this.reason
-            );
-        },
-    },
     fields: {
         composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', {
             inverse: 'suggestedRecipientInfo',
         }),
         dialogText: attr({
-            compute: '_computeDialogText',
+            compute() {
+                return this.env._t("Please complete customer's information");
+            },
         }),
         /**
          * Determines the email of `this`. It serves as visual clue when
@@ -70,7 +37,12 @@ registerModel({
          * new message on `this.thread`.
          */
         isSelected: attr({
-            compute: '_computeIsSelected',
+            /**
+             * Prevents selecting a recipient that does not have a partner.
+             */
+            compute() {
+                return this.partner ? this.isSelected : false;
+            },
             default: true,
         }),
         /**
@@ -84,7 +56,9 @@ registerModel({
          * creating a new partner from `this`.
          */
         name: attr({
-            compute: '_computeName',
+            compute() {
+                return this.partner && this.partner.nameOrDisplayName || this.name;
+            },
         }),
         /**
          * Determines the optional `Partner` associated to `this`.
@@ -103,7 +77,12 @@ registerModel({
             required: true,
         }),
         titleText: attr({
-            compute: '_computeTitleText',
+            compute() {
+                return sprintf(
+                    this.env._t("Add as recipient and follower (reason: %s)"),
+                    this.reason
+                );
+            },
         }),
     },
 });

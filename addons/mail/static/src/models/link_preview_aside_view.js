@@ -14,26 +14,21 @@ registerModel({
         onClick() {
             this.update({ linkPreviewDeleteConfirmDialog: {} });
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLinkPreview() {
-            if (this.linkPreviewCardView) {
-                return this.linkPreviewCardView.linkPreview;
-            }
-            if (this.linkPreviewImageView) {
-                return this.linkPreviewImageView.linkPreview;
-            }
-            if (this.linkPreviewVideoView) {
-                return this.linkPreviewVideoView.linkPreview;
-            }
-            return clear();
-        }
     },
     fields: {
         linkPreview: one('LinkPreview', {
-            compute: '_computeLinkPreview',
+            compute() {
+                if (this.linkPreviewCardView) {
+                    return this.linkPreviewCardView.linkPreview;
+                }
+                if (this.linkPreviewImageView) {
+                    return this.linkPreviewImageView.linkPreview;
+                }
+                if (this.linkPreviewVideoView) {
+                    return this.linkPreviewVideoView.linkPreview;
+                }
+                return clear();
+            },
             required: true,
         }),
         linkPreviewCardView: one('LinkPreviewCardView', {

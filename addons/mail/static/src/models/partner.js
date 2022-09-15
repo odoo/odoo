@@ -265,54 +265,15 @@ registerModel({
                 model: 'res.partner',
             });
         },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeAvatarUrl() {
-            return `/web/image/res.partner/${this.id}/avatar_128`;
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeDisplayName() {
-            if (this.display_name) {
-                return this.display_name;
-            }
-            if (this.user && this.user.displayName) {
-                return this.user.displayName;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsImStatusSet() {
-            return Boolean(this.im_status && this.im_status !== 'im_partner');
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsOnline() {
-            return ['online', 'away'].includes(this.im_status);
-        },
-        /**
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeNameOrDisplayName() {
-            return this.name || this.displayName;
-        },
     },
     fields: {
         active: attr({
             default: true,
         }),
         avatarUrl: attr({
-            compute: '_computeAvatarUrl',
+            compute() {
+                return `/web/image/res.partner/${this.id}/avatar_128`;
+            },
         }),
         channelInvitationFormSelectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
             inverse: 'partner',
@@ -332,7 +293,15 @@ registerModel({
          */
         display_name: attr(),
         displayName: attr({
-            compute: '_computeDisplayName',
+            compute() {
+                if (this.display_name) {
+                    return this.display_name;
+                }
+                if (this.user && this.user.displayName) {
+                    return this.user.displayName;
+                }
+                return clear();
+            },
             default: "",
         }),
         dmChatWithCurrentPartner: one('Channel', {
@@ -351,13 +320,17 @@ registerModel({
         }),
         im_status: attr(),
         isImStatusSet: attr({
-            compute: '_computeIsImStatusSet',
+            compute() {
+                return Boolean(this.im_status && this.im_status !== 'im_partner');
+            },
         }),
         /**
          * States whether this partner is online.
          */
         isOnline: attr({
-            compute: '_computeIsOnline',
+            compute() {
+                return ['online', 'away'].includes(this.im_status);
+            },
         }),
         is_public: attr(),
         model: attr({
@@ -365,7 +338,9 @@ registerModel({
         }),
         name: attr(),
         nameOrDisplayName: attr({
-            compute: '_computeNameOrDisplayName',
+            compute() {
+                return this.name || this.displayName;
+            },
         }),
         persona: one('Persona', {
             default: {},

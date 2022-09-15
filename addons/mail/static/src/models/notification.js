@@ -38,111 +38,84 @@ registerModel({
             return data2;
         },
     },
-    recordMethods: {
-        /**
-         * @private
-         * @returns {string}
-         */
-         _computeIconClass() {
-            switch (this.notification_status) {
-                case 'sent':
-                    return 'fa fa-check';
-                case 'bounce':
-                    return 'fa fa-exclamation';
-                case 'exception':
-                    return 'fa fa-exclamation';
-                case 'ready':
-                    return 'fa fa-send-o';
-                case 'canceled':
-                    return 'fa fa-trash-o';
-            }
-            return '';
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeIconTitle() {
-            switch (this.notification_status) {
-                case 'sent':
-                    return this.env._t("Sent");
-                case 'bounce':
-                    return this.env._t("Bounced");
-                case 'exception':
-                    return this.env._t("Error");
-                case 'ready':
-                    return this.env._t("Ready");
-                case 'canceled':
-                    return this.env._t("Canceled");
-            }
-            return '';
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsFailure() {
-            return ['exception', 'bounce'].includes(this.notification_status);
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsFromCurrentUser() {
-            if (!this.messaging || !this.messaging.currentPartner || !this.message || !this.message.author) {
-                return clear();
-            }
-            return this.messaging.currentPartner === this.message.author;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeNotificationGroup() {
-            if (!this.isFailure || !this.isFromCurrentUser) {
-                return clear();
-            }
-            const thread = this.message.originThread;
-            // Notifications are grouped by model and notification_type.
-            // Except for channel where they are also grouped by id because
-            // we want to open the actual channel in discuss or chat window
-            // and not its kanban/list/form view.
-            return {
-                notification_type: this.notification_type,
-                res_id: thread.model === 'mail.channel' ? thread.id : null,
-                res_model: thread.model,
-                res_model_name: thread.model_name,
-            };
-        },
-    },
     fields: {
         failure_type: attr(),
         /**
          * Determines the classname of the icon for this notification.
          */
         iconClass: attr({
-            compute: '_computeIconClass',
+            compute() {
+                switch (this.notification_status) {
+                    case 'sent':
+                        return 'fa fa-check';
+                    case 'bounce':
+                        return 'fa fa-exclamation';
+                    case 'exception':
+                        return 'fa fa-exclamation';
+                    case 'ready':
+                        return 'fa fa-send-o';
+                    case 'canceled':
+                        return 'fa fa-trash-o';
+                }
+                return '';
+            },
         }),
         /**
          * Determines the text to display as title for this notification.
          */
         iconTitle: attr({
-            compute: '_computeIconTitle',
+            compute() {
+                switch (this.notification_status) {
+                    case 'sent':
+                        return this.env._t("Sent");
+                    case 'bounce':
+                        return this.env._t("Bounced");
+                    case 'exception':
+                        return this.env._t("Error");
+                    case 'ready':
+                        return this.env._t("Ready");
+                    case 'canceled':
+                        return this.env._t("Canceled");
+                }
+                return '';
+            },
         }),
         id: attr({
             identifying: true,
         }),
         isFailure: attr({
-            compute: '_computeIsFailure',
+            compute() {
+                return ['exception', 'bounce'].includes(this.notification_status);
+            },
         }),
         isFromCurrentUser: attr({
-            compute: '_computeIsFromCurrentUser',
+            compute() {
+                if (!this.messaging || !this.messaging.currentPartner || !this.message || !this.message.author) {
+                    return clear();
+                }
+                return this.messaging.currentPartner === this.message.author;
+            },
         }),
         message: one('Message', {
             inverse: 'notifications',
         }),
         notificationGroup: one('NotificationGroup', {
-            compute: '_computeNotificationGroup',
+            compute() {
+                if (!this.isFailure || !this.isFromCurrentUser) {
+                    return clear();
+                }
+                const thread = this.message.originThread;
+                // Notifications are grouped by model and notification_type.
+                // Except for channel where they are also grouped by id because
+                // we want to open the actual channel in discuss or chat window
+                // and not its kanban/list/form view.
+                return {
+                    notification_type: this.notification_type,
+                    res_id: thread.model === 'mail.channel' ? thread.id : null,
+                    res_model: thread.model,
+                    res_model_name: thread.model_name,
+                };
+            },
             inverse: 'notifications',
         }),
         notification_status: attr(),

@@ -25,31 +25,19 @@ registerModel({
             }
             this.update({ hasShowMoreButton: true });
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeComposerSuggestedRecipientViews() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (this.hasShowMoreButton) {
-                return this.thread.suggestedRecipientInfoList.map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
-            } else {
-                return this.thread.suggestedRecipientInfoList.slice(0, 3).map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
-            }
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            return this.composerViewOwner.composer.activeThread;
-        },
     },
     fields: {
         composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', {
-            compute: '_computeComposerSuggestedRecipientViews',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (this.hasShowMoreButton) {
+                    return this.thread.suggestedRecipientInfoList.map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
+                } else {
+                    return this.thread.suggestedRecipientInfoList.slice(0, 3).map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
+                }
+            },
             inverse: 'composerSuggestedRecipientListViewOwner',
         }),
         composerViewOwner: one('ComposerView', {
@@ -60,7 +48,9 @@ registerModel({
             default: false,
         }),
         thread: one('Thread', {
-            compute: '_computeThread',
+            compute() {
+                return this.composerViewOwner.composer.activeThread;
+            },
             required: true,
         }),
     },
