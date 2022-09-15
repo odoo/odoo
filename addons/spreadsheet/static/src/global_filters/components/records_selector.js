@@ -7,22 +7,20 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 const { Component, xml, onWillStart, onWillUpdateProps } = owl;
 
-export class X2ManyTagSelector extends Component {
+export class RecordsSelector extends Component {
     setup() {
         /** @type {Record<number, string>} */
         this.displayNames = {};
         /** @type {import("@web/core/orm_service").ORM}*/
         this.orm = useService("orm");
-        onWillStart(() =>
-            this.fetchMissingDisplayNames(this.props.relatedModel, this.props.selectedValues)
-        );
+        onWillStart(() => this.fetchMissingDisplayNames(this.props.resModel, this.props.resIds));
         onWillUpdateProps((nextProps) =>
-            this.fetchMissingDisplayNames(nextProps.relatedModel, nextProps.selectedValues)
+            this.fetchMissingDisplayNames(nextProps.resModel, nextProps.resIds)
         );
     }
 
     get tags() {
-        return this.props.selectedValues.map((id) => ({
+        return this.props.resIds.map((id) => ({
             text: this.displayNames[id],
             onDelete: () => this.removeRecord(id),
             displayBadge: true,
@@ -30,7 +28,7 @@ export class X2ManyTagSelector extends Component {
     }
 
     searchDomain() {
-        return Domain.not([["id", "in", this.props.selectedValues]]).toList();
+        return Domain.not([["id", "in", this.props.resIds]]).toList();
     }
 
     /**
@@ -38,7 +36,7 @@ export class X2ManyTagSelector extends Component {
      */
     removeRecord(recordId) {
         delete this.displayNames[recordId];
-        this.notifyChange(this.props.selectedValues.filter((id) => id !== recordId));
+        this.notifyChange(this.props.resIds.filter((id) => id !== recordId));
     }
 
     /**
@@ -48,7 +46,7 @@ export class X2ManyTagSelector extends Component {
         for (const record of records.filter((record) => record.name)) {
             this.displayNames[record.id] = record.name;
         }
-        this.notifyChange(this.props.selectedValues.concat(records.map(({ id }) => id)));
+        this.notifyChange(this.props.resIds.concat(records.map(({ id }) => id)));
     }
 
     /**
@@ -75,15 +73,15 @@ export class X2ManyTagSelector extends Component {
         }
     }
 }
-X2ManyTagSelector.components = { TagsList, Many2XAutocomplete };
-X2ManyTagSelector.template = xml/*xml*/ `
+RecordsSelector.components = { TagsList, Many2XAutocomplete };
+RecordsSelector.template = xml/*xml*/ `
     <div class="o_field_widget o_field_many2many_tags">
         <div class="o_field_tags d-inline-flex flex-wrap mw-100 o_tags_input o_input">
             <TagsList tags="tags"/>
             <div class="o_field_many2many_selection d-inline-flex w-100">
                 <Many2XAutocomplete
                     placeholder="props.placeholder"
-                    resModel="props.relatedModel"
+                    resModel="props.resModel"
                     fieldString="props.placeholder"
                     activeActions="{}"
                     update.bind="update"
@@ -93,17 +91,17 @@ X2ManyTagSelector.template = xml/*xml*/ `
             </div>
         </div>
     </div>`;
-X2ManyTagSelector.props = {
+RecordsSelector.props = {
     /**
      * Callback called when a record is selected or removed.
      * (selectedRecords: Array<{ id: number; display_name: string }>) => void
      **/
     onValueChanged: Function,
-    relatedModel: String,
+    resModel: String,
     /**
      * Array of selected record ids
      */
-    selectedValues: {
+    resIds: {
         optional: true,
         type: Array,
     },
@@ -112,6 +110,6 @@ X2ManyTagSelector.props = {
         type: String,
     },
 };
-X2ManyTagSelector.defaultProps = {
-    selectedValues: [],
+RecordsSelector.defaultProps = {
+    resIds: [],
 };
