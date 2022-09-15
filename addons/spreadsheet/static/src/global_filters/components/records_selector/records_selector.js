@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
-const { Component, xml, onWillStart, onWillUpdateProps } = owl;
+const { Component, onWillStart, onWillUpdateProps } = owl;
 
 export class RecordsSelector extends Component {
     setup() {
@@ -74,23 +74,7 @@ export class RecordsSelector extends Component {
     }
 }
 RecordsSelector.components = { TagsList, Many2XAutocomplete };
-RecordsSelector.template = xml/*xml*/ `
-    <div class="o_field_widget o_field_many2many_tags">
-        <div class="o_field_tags d-inline-flex flex-wrap mw-100 o_tags_input o_input">
-            <TagsList tags="tags"/>
-            <div class="o_field_many2many_selection d-inline-flex w-100">
-                <Many2XAutocomplete
-                    placeholder="props.placeholder"
-                    resModel="props.resModel"
-                    fieldString="props.placeholder"
-                    activeActions="{}"
-                    update.bind="update"
-                    getDomain.bind="searchDomain"
-                    isToMany="true"
-                />
-            </div>
-        </div>
-    </div>`;
+RecordsSelector.template = "spreadsheet.RecordsSelector";
 RecordsSelector.props = {
     /**
      * Callback called when a record is selected or removed.
