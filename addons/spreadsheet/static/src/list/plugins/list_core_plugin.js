@@ -332,11 +332,7 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
                         context: list.context,
                         orderBy: list.orderBy,
                     },
-                    /**
-                     * As we are not able to migrate the json, we have to fallback
-                     * in the case where the name is not yet present
-                     */
-                    name: list.name || list.model,
+                    name: list.name,
                 };
                 this._addList(id, definition, this.uuidGenerator.uuidv4());
             }

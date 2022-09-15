@@ -4,7 +4,7 @@ import spreadsheet from "./o_spreadsheet_extended";
 const { load, CorePlugin, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 3;
+export const ODOO_VERSION = 4;
 
 const MAP = {
     PIVOT: "ODOO.PIVOT",
@@ -28,6 +28,9 @@ export function migrate(data) {
     }
     if (version < 3) {
         _data = migrate2to3(_data);
+    }
+    if (version < 4) {
+        _data = migrate3to4(_data);
     }
     return _data;
 }
@@ -111,6 +114,23 @@ function migrate2to3(data) {
 }
 
 /**
+ * Migration of list/pivot names
+ */
+function migrate3to4(data) {
+    if (data.lists) {
+        for (const list of Object.values(data.lists)) {
+            list.name = list.name || list.model;
+        }
+    }
+    if (data.pivots) {
+        for (const pivot of Object.values(data.pivots)) {
+            pivot.name = pivot.name || pivot.model;
+        }
+    }
+    return data;
+}
+
+/**
  * Convert pivot formulas days parameters from day/month/year
  * format to the standard spreadsheet month/day/year format.
  * e.g. =PIVOT.HEADER(1,"create_date:day","30/07/2022") becomes =PIVOT.HEADER(1,"create_date:day","07/30/2022")
@@ -121,7 +141,7 @@ function migratePivotDaysParameters(formulaString) {
     const ast = parse(formulaString);
     const convertedAst = convertAstNodes(ast, "FUNCALL", (ast) => {
         if (["ODOO.PIVOT", "ODOO.PIVOT.HEADER"].includes(ast.value.toUpperCase())) {
-            for (let subAst of ast.args) {
+            for (const subAst of ast.args) {
                 if (subAst.type === "STRING") {
                     const date = subAst.value.match(dmyRegex);
                     if (date) {
