@@ -23,6 +23,15 @@ class PaymentLinkWizard(models.TransientModel):
         return super()._get_payment_provider_available(**kwargs)
 
     def _get_additional_link_values(self):
+        """ Override of `payment` to add `sale_order_id` to the payment link values.
+
+        The other values related to the sales order are directly read from the sales order.
+
+        Note: self.ensure_one()
+
+        :return: The additional payment link values.
+        :rtype: dict
+        """
         res = super()._get_additional_link_values()
         if self.res_model != 'sale.order':
             return res

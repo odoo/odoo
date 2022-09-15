@@ -7,6 +7,15 @@ class PaymentLinkWizard(models.TransientModel):
     _inherit = 'payment.link.wizard'
 
     def _get_additional_link_values(self):
+        """ Override of `payment` to add `invoice_id` to the payment link values.
+
+        The other values related to the invoice are directly read from the invoice.
+
+        Note: self.ensure_one()
+
+        :return: The additional payment link values.
+        :rtype: dict
+        """
         res = super()._get_additional_link_values()
         if self.res_model != 'account.move':
             return res
