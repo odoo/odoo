@@ -4,7 +4,7 @@
     <record id="timesheet_view_search" model="ir.ui.view">
             <field name="name">account.analytic.line.search</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search_base"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='task_id']" position="after">
                     <field name="order_id" string="Sales Order" groups="sales_team.group_sale_salesman"/>
