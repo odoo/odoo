@@ -125,6 +125,13 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         }
     );
 
+    QUnit.test("List datasource is loaded with correct linesNumber", async function (assert) {
+        const { model } = await createSpreadsheetWithList({ linesNumber: 2 });
+        const [listId] = model.getters.getListIds();
+        const dataSource = model.getters.getListDataSource(listId);
+        assert.strictEqual(dataSource.limit, 2);
+    });
+
     QUnit.test("can select a List from cell formula within a formula", async function (assert) {
         const { model } = await createSpreadsheetWithList();
         setCellContent(model, "A1", `=SUM(ODOO.LIST("1","1","foo"),1)`);
@@ -229,6 +236,13 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         });
         assert.verifySteps([]);
         model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: "sheet1", sheetIdTo: "sheet2" });
+        /*
+         * Ask a first time the value => It will trigger a loading of the data source.
+         * As the list index limit is to 0, there is loading.
+         */
+        assert.equal(getCellValue(model, "A1"), "Loading...");
+        await nextTick();
+        // Ask a second time the value => The list index limit is raised => reload
         assert.equal(getCellValue(model, "A1"), "Loading...");
         await nextTick();
         assert.equal(getCellValue(model, "A1"), 12);
