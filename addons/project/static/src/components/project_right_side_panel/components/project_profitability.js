@@ -12,7 +12,7 @@ export class ProjectProfitability extends Component {
     }
 
     get margin() {
-        const invoiced_billed = this.revenues.total.invoiced - this.costs.total.billed;
+        const invoiced_billed = this.revenues.total.invoiced + this.costs.total.billed;
         const to_invoice_to_bill = this.revenues.total.to_invoice - this.costs.total.to_bill;
         return {
             invoiced_billed,
