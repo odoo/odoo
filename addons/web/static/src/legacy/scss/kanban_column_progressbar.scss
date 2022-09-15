@@ -78,50 +78,6 @@
         }
     }
 
-    .o_legacy_kanban_counter {
-        position: relative;
-        display: flex;
-        align-items: center;
-        transition: opacity 0.3s ease 0s;
-        margin-bottom: $o-kanban-record-margin*2;
-
-        > .o_kanban_counter_progress {
-            width: 76%;
-            height: $font-size-sm;
-            margin-bottom: 0;
-            background-color: map-get($grays, '300');
-            box-shadow: none;
-
-            .progress-bar {
-                margin-bottom: 0;
-                box-shadow: none;
-                cursor: pointer;
-            }
-        }
-
-        > .o_kanban_counter_side {
-            width: 21%;
-            margin-left: 3%;
-            color: $headings-color;
-            text-align: right;
-            white-space: nowrap;
-            transform-origin: right center;
-
-            &.o_kanban_grow {
-                animation: legacy-kanban-counter-grow 1s ease 0s 1 normal none running;
-            }
-
-            &.o_kanban_grow_huge {
-                animation: legacy-kanban-counter-grow-huge 1s ease 0s 1 normal none running;
-            }
-
-            // Target currency icon
-            > span {
-                margin-left: 2px;
-            }
-        }
-    }
-
     .o_column_folded .o_legacy_kanban_counter {
         display: none;
     }
@@ -140,6 +96,51 @@
             > * {
                 flex: 0 0 auto;
             }
+        }
+    }
+}
+
+// Legacy progress bars
+.o_legacy_kanban_counter {
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.3s ease 0s;
+    margin-bottom: $o-kanban-record-margin*2;
+
+    > .o_kanban_counter_progress {
+        width: 76%;
+        height: $font-size-sm;
+        margin-bottom: 0;
+        background-color: map-get($grays, '300');
+        box-shadow: none;
+
+        .progress-bar {
+            margin-bottom: 0;
+            box-shadow: none;
+            cursor: pointer;
+        }
+    }
+
+    > .o_kanban_counter_side {
+        width: 21%;
+        margin-left: 3%;
+        color: $headings-color;
+        text-align: right;
+        white-space: nowrap;
+        transform-origin: right center;
+
+        &.o_kanban_grow {
+            animation: legacy-kanban-counter-grow 1s ease 0s 1 normal none running;
+        }
+
+        &.o_kanban_grow_huge {
+            animation: legacy-kanban-counter-grow-huge 1s ease 0s 1 normal none running;
+        }
+
+        // Target currency icon
+        > span {
+            margin-left: 2px;
         }
     }
 }
