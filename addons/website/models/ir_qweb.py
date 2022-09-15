@@ -157,12 +157,9 @@ class IrQWeb(models.AbstractModel):
     def _pregenerate_assets_bundles(self):
         # website is adding a website_id to the extra part of the attachement url (/1)
 
-        # /web/assets/2223-ee56665/1/web.assets_common.min.css
         # /web/assets/2224-47bce88/1/web.assets_frontend.min.css
-        # /web/assets/2225-8b64a2b/1/web.assets_common_minimal.min.js
         # /web/assets/2226-17d3428/1/web.assets_frontend_minimal.min.js
         # /web/assets/2227-b9cd4ba/1/web.assets_tests.min.js
-        # /web/assets/2228-7424684/1/web.assets_common_lazy.min.js
         # /web/assets/2229-25b1d52/1/web.assets_frontend_lazy.min.js
 
         # this means that the previously generated attachment wont be used on the website
@@ -179,7 +176,7 @@ class IrQWeb(models.AbstractModel):
             bundle_info = node[1]
             bundle_url = bundle_info.get('src', '') or bundle_info.get('href', '')
             if bundle_url.startswith('/web/assets/'):
-                # example: "/web/assets/2152-ee56665/web.assets_common.min.js"
+                # example: "/web/assets/2152-ee56665/web.assets_frontend_lazy.min.js"
                 _, _, _, id_unique, name = bundle_url.split('/')
                 attachment_id, unique = id_unique.split('-')
                 url_pattern = f'/web/assets/%s-%s/{website.id}/{name}'

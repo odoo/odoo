@@ -35,16 +35,17 @@ This module provides the core of the Odoo Web Client.
         # 2) the prefix "assets_"
         # 3) an arbitrary name, relevant to the content of the bundle.
         #
-        # Exemples:
-        #   > web.assets_common = assets common to both frontend and backend clients.
+        # Examples:
+        #   > web.assets_common = assets common to backend clients and others
+        #     (not frontend).
         #   > web_editor.assets_wysiwyg = assets needed by components defined in the "web_editor" module.
-        'web.assets_common_minimal': [
-            'web/static/src/legacy/js/promise_extension.js',
-            'web/static/src/boot.js',
-            'web/static/src/session.js',
-            'web/static/src/legacy/js/core/cookie_utils.js',
-            'web/static/src/legacy/js/core/menu.js',
-        ],
+
+        # Warning: Layouts using "assets_frontend" assets do not have the
+        # "assets_common" assets anymore. So, if it make sense, files added in
+        # "assets_common" should also be added in "assets_frontend".
+        # TODO in the future, probably remove "assets_common" definition
+        # entirely and let all "main" bundles evolve on their own, including the
+        # files they need in their bundle.
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
 
@@ -77,7 +78,11 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/web.zoomodoo.scss',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
 
-            ('include', 'web.assets_common_minimal'),
+            'web/static/src/legacy/js/promise_extension.js',
+            'web/static/src/boot.js',
+            'web/static/src/session.js',
+            'web/static/src/legacy/js/core/cookie_utils.js',
+            'web/static/src/legacy/js/core/menu.js',
 
             'web/static/lib/underscore/underscore.js',
             'web/static/lib/underscore.string/lib/underscore.string.js',
@@ -169,15 +174,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/colorpicker.xml',
             'web/static/src/legacy/js/widgets/translation_dialog.js',
             'web/static/src/legacy/xml/translation_dialog.xml',
-        ],
-        'web.assets_common_lazy': [
-            ('include', 'web.assets_common'),
-            # Remove assets_common_minimal
-            ('remove', 'web/static/src/legacy/js/promise_extension.js'),
-            ('remove', 'web/static/src/boot.js'),
-            ('remove', 'web/static/src/session.js'),
-            ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
-            ('remove', 'web/static/src/legacy/js/core/menu.js'),
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
@@ -310,9 +306,20 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/scss/_variables.scss',
         ],
         'web.assets_frontend_minimal': [
+            'web/static/src/legacy/js/promise_extension.js',
+            'web/static/src/boot.js',
+            'web/static/src/session.js',
+            'web/static/src/legacy/js/core/cookie_utils.js',
+            'web/static/src/legacy/js/core/menu.js',
             'web/static/src/legacy/js/public/lazyloader.js',
         ],
         'web.assets_frontend': [
+            # TODO the 'assets_frontend' bundle now includes 'assets_common'
+            # files directly. That work was however a good opportunity to start
+            # removing the files that are not needed anymore in frontend layouts
+            # but it was not done: all common files were simply put in this
+            # bundle. We'll have to optimize that.
+
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
 
@@ -322,17 +329,134 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web._assets_bootstrap'),
 
+            'web/static/src/legacy/scss/tempusdominus_overridden.scss',
+            'web/static/lib/tempusdominus/tempusdominus.scss',
+            'web/static/lib/jquery.ui/jquery-ui.css',
+            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/lib/odoo_ui_icons/*',
+            'web/static/lib/select2/select2.css',
+            'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
+            'web/static/lib/daterangepicker/daterangepicker.css',
+            'web/static/fonts/fonts.scss',
+            'web/static/src/webclient/navbar/navbar.scss',
+            'web/static/src/legacy/scss/ui.scss',
+            'web/static/src/legacy/scss/ui_extra.scss',
+            'web/static/src/legacy/scss/mimetypes.scss',
+            'web/static/src/legacy/scss/modal.scss',
+            'web/static/src/legacy/scss/animation.scss',
+            'web/static/src/legacy/scss/datepicker.scss',
+            'web/static/src/legacy/scss/daterangepicker.scss',
+            'web/static/src/legacy/scss/banner.scss',
+            'web/static/src/legacy/scss/colorpicker.scss',
+            'web/static/src/legacy/scss/popover.scss',
+            'web/static/src/legacy/scss/translation_dialog.scss',
+            'web/static/src/legacy/scss/keyboard.scss',
+            'web/static/src/legacy/scss/name_and_signature.scss',
+            'web/static/src/legacy/scss/web.zoomodoo.scss',
+            'web/static/src/legacy/scss/fontawesome_overridden.scss',
+
+            'web/static/src/legacy/scss/base_frontend.scss',
+            'web/static/src/legacy/scss/lazyloader.scss',
+
+            ('include', 'web.assets_frontend_minimal'),
+
+            'web/static/lib/underscore/underscore.js',
+            'web/static/lib/underscore.string/lib/underscore.string.js',
+            'web/static/lib/moment/moment.js',
+            'web/static/lib/owl/owl.js',
+            'web/static/src/owl2_compatibility/*.js',
+            'web/static/src/legacy/js/component_extension.js',
+            'web/static/src/legacy/legacy_component.js',
+            'web/static/lib/jquery/jquery.js',
+            'web/static/lib/jquery.ui/jquery-ui.js',
+            'web/static/lib/jquery/jquery.browser.js',
+            'web/static/lib/jquery.blockUI/jquery.blockUI.js',
+            'web/static/lib/jquery.hotkeys/jquery.hotkeys.js',
+            'web/static/lib/jquery.placeholder/jquery.placeholder.js',
+            'web/static/lib/jquery.form/jquery.form.js',
+            'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
+            'web/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js',
+            'web/static/lib/popper/popper.js',
+            'web/static/lib/bootstrap/js/dist/dom/data.js',
+            'web/static/lib/bootstrap/js/dist/dom/event-handler.js',
+            'web/static/lib/bootstrap/js/dist/dom/manipulator.js',
+            'web/static/lib/bootstrap/js/dist/dom/selector-engine.js',
+            'web/static/lib/bootstrap/js/dist/base-component.js',
+            'web/static/lib/bootstrap/js/dist/alert.js',
+            'web/static/lib/bootstrap/js/dist/button.js',
+            'web/static/lib/bootstrap/js/dist/carousel.js',
+            'web/static/lib/bootstrap/js/dist/collapse.js',
+            'web/static/lib/bootstrap/js/dist/dropdown.js',
+            'web/static/lib/bootstrap/js/dist/modal.js',
+            'web/static/lib/bootstrap/js/dist/offcanvas.js',
+            'web/static/lib/bootstrap/js/dist/tooltip.js',
+            'web/static/lib/bootstrap/js/dist/popover.js',
+            'web/static/lib/bootstrap/js/dist/scrollspy.js',
+            'web/static/lib/bootstrap/js/dist/tab.js',
+            'web/static/lib/bootstrap/js/dist/toast.js',
+            'web/static/lib/tempusdominus/tempusdominus.js',
+            'web/static/lib/select2/select2.js',
+            'web/static/lib/clipboard/clipboard.js',
+            'web/static/lib/jSignature/jSignatureCustom.js',
+            'web/static/lib/qweb/qweb2.js',
+            'web/static/src/legacy/js/assets.js',
+            'web/static/src/legacy/js/libs/autocomplete.js',
+            'web/static/src/legacy/js/libs/bootstrap.js',
+            'web/static/src/legacy/js/libs/content-disposition.js',
+            'web/static/src/legacy/js/libs/download.js',
+            'web/static/src/legacy/js/libs/fullcalendar.js',
+            'web/static/src/legacy/js/libs/jquery.js',
+            'web/static/src/legacy/js/libs/moment.js',
+            'web/static/src/legacy/js/libs/underscore.js',
+            'web/static/src/legacy/js/libs/pdfjs.js',
+            'web/static/src/legacy/js/libs/zoomodoo.js',
+            'web/static/src/legacy/js/libs/jSignatureCustom.js',
+            'web/static/src/legacy/js/core/abstract_service.js',
+            'web/static/src/legacy/js/core/abstract_storage_service.js',
+            'web/static/src/legacy/js/core/ajax.js',
+            'web/static/src/legacy/js/core/browser_detection.js',
+            'web/static/src/legacy/js/core/bus.js',
+            'web/static/src/legacy/js/core/class.js',
+            'web/static/src/legacy/js/core/collections.js',
+            'web/static/src/legacy/js/core/concurrency.js',
+            'web/static/src/legacy/js/core/dialog.js',
+            'web/static/src/legacy/xml/dialog.xml',
+            'web/static/src/legacy/js/core/owl_dialog.js',
+            'web/static/src/legacy/js/core/popover.js',
+            'web/static/src/legacy/js/core/dom.js',
+            'web/static/src/legacy/js/core/local_storage.js',
+            'web/static/src/legacy/js/core/mixins.js',
+            'web/static/src/legacy/js/core/qweb.js',
+            'web/static/src/legacy/js/core/ram_storage.js',
+            'web/static/src/legacy/js/core/registry.js',
+            'web/static/src/legacy/js/core/rpc.js',
+            'web/static/src/legacy/js/core/service_mixins.js',
+            'web/static/src/legacy/js/core/session.js',
+            'web/static/src/legacy/js/core/session_storage.js',
+            'web/static/src/legacy/js/core/time.js',
+            'web/static/src/legacy/js/core/translation.js',
+            'web/static/src/legacy/js/core/utils.js',
+            'web/static/src/legacy/js/core/widget.js',
+            'web/static/src/legacy/js/services/ajax_service.js',
+            'web/static/src/legacy/js/services/config.js',
+            'web/static/src/legacy/js/services/core.js',
+            'web/static/src/legacy/js/services/local_storage_service.js',
+            'web/static/src/legacy/js/services/session_storage_service.js',
+            'web/static/src/legacy/js/common_env.js',
+            'web/static/src/legacy/js/widgets/name_and_signature.js',
+            'web/static/src/legacy/xml/name_and_signature.xml',
+            'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
+            'web/static/src/legacy/js/widgets/colorpicker.js',
+            'web/static/src/legacy/xml/colorpicker.xml',
+            'web/static/src/legacy/js/widgets/translation_dialog.js',
+            'web/static/src/legacy/xml/translation_dialog.xml',
+
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/commands/**/*'),
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
             'web/static/src/public/error_notifications.js',
-
-            'web/static/src/legacy/scss/base_frontend.scss',
-            'web/static/src/legacy/scss/lazyloader.scss',
-
-            ('include', 'web.assets_frontend_minimal'),
 
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/js/core/misc.js',
@@ -351,7 +475,12 @@ This module provides the core of the Odoo Web Client.
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
             # Remove assets_frontend_minimal
-            ('remove', 'web/static/src/legacy/js/public/lazyloader.js')
+            ('remove', 'web/static/src/legacy/js/promise_extension.js'),
+            ('remove', 'web/static/src/boot.js'),
+            ('remove', 'web/static/src/session.js'),
+            ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
+            ('remove', 'web/static/src/legacy/js/core/menu.js'),
+            ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
         ],
         'web.assets_backend_prod_only': [
             'web/static/src/main.js',
@@ -406,7 +535,7 @@ This module provides the core of the Odoo Web Client.
         # with the addition of a prefixed underscore to reflect the "private"
         # aspect.
         #
-        # Exemples:
+        # Examples:
         #   > web._assets_helpers = define assets needed in most main bundles
 
         'web._assets_primary_variables': [

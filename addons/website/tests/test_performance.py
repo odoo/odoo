@@ -146,7 +146,7 @@ class TestWebsitePerformancePost(UtilPerf):
     @mute_logger('odoo.http')
     def test_50_perf_sql_web_assets(self):
         # assets route /web/assets/..
-        self.env['ir.qweb']._generate_asset_nodes('web.assets_common', css=False, js=True)
-        assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/web.assets_common%.js')], limit=1).url
+        self.env['ir.qweb']._generate_asset_nodes('web.assets_frontend_lazy', css=False, js=True)
+        assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/web.assets_frontend_lazy%.js')], limit=1).url
         self.assertEqual(self._get_url_hot_query(assets_url), 4)
         self.assertEqual(self._get_url_hot_query(assets_url, cache=False), 4)

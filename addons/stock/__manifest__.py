@@ -114,6 +114,9 @@
             'stock/static/src/scss/stock_empty_screen.scss',
             'stock/static/src/views/**/*',
         ],
+        'web.assets_frontend': [
+            'stock/static/src/scss/stock_traceability_report.scss',
+        ],
         'web.assets_tests': [
             'stock/static/tests/tours/stock_report_tests.js',
         ],
