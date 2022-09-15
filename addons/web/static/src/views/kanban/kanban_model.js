@@ -562,7 +562,9 @@ export class KanbanModel extends RelationalModel {
                 // example background. Return true so that we don't get sample data instead
                 return true;
             }
-            return this.root.groups.some((group) => group.list.records.length > 0);
+            return this.root.groups.some(
+                (group) => group.count > 0 || group.list.quickCreateRecord
+            );
         }
         return this.root.records.length > 0;
     }
