@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { X2ManyTagSelector } from "../tag_selector_widget";
+import { RecordsSelector } from "../records_selector";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { DateFilterValue } from "../filter_date_value/filter_date_value";
 
@@ -32,7 +32,7 @@ export class FilterValue extends Component {
     }
 }
 FilterValue.template = "spreadsheet_edition.FilterValue";
-FilterValue.components = { X2ManyTagSelector, DateFilterValue };
+FilterValue.components = { RecordsSelector, DateFilterValue };
 FilterValue.props = {
     filter: Object,
     model: Object,
