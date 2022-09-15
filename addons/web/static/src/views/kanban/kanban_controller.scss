@@ -22,6 +22,8 @@
 
     --KanbanColumn__highlight-background: #{rgba($o-info, 0.05)};
     --KanbanColumn__highlight-border: #{$o-info};
+
+    $kanban-column-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
     // ----------------------------------------------------------------------------
 
     .dropdown,
@@ -474,7 +476,8 @@
         }
 
         &.o_kanban_small_column .o_kanban_group:not(.o_column_folded) {
-            flex-basis: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+            flex-basis: $kanban-column-width;
+            max-width: $kanban-column-width;
         }
     }
 
@@ -547,7 +550,8 @@
 
     // Kanban Grouped Layout - "Create new column" column
     .o_column_quick_create {
-        flex: 0 0 calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+        flex: 0 0 $kanban-column-width;
+        max-width: $kanban-column-width;
     }
 
     @include media-breakpoint-down(md) {
