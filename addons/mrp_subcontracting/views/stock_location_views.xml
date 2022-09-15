@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.view_location_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='return_location']" position='after'>
-                <field name="is_subcontracting_location" attrs="{'invisible': [('usage', '!=', 'internal')]}" readonly="context.get('default_is_subcontracting_location', False)"/>
+                <field name="is_subcontracting_location" groups="base.group_no_one" attrs="{'invisible': [('usage', '!=', 'internal')]}" readonly="context.get('default_is_subcontracting_location', False)"/>
             </xpath>
         </field>
     </record>
