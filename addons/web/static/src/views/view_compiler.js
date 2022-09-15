@@ -8,6 +8,7 @@ import {
     getTag,
 } from "@web/core/utils/xml";
 import { toStringExpression } from "./utils";
+import { registry } from "@web/core/registry";
 
 /**
  * @typedef Compiler
@@ -17,8 +18,6 @@ import { toStringExpression } from "./utils";
  */
 
 const { xml } = owl;
-
-const templateIds = Object.create(null);
 
 const BUTTON_CLICK_PARAMS = [
     "name",
@@ -67,7 +66,7 @@ export function toInterpolatedStringExpression(str) {
  * @param {string} attr
  * @param {string} string
  */
-function appendAttr(el, attr, string) {
+export function appendAttr(el, attr, string) {
     const attrKey = `t-att-${attr}`;
     const attrVal = el.getAttribute(attrKey);
     el.setAttribute(attrKey, appendToStringifiedObject(attrVal, string));
@@ -176,15 +175,6 @@ function getTitleTag(node) {
 }
 
 /**
- * @param {any} invisibleModifer
- * @param {{ enableInvisible?: boolean }} params
- * @returns {boolean}
- */
-export function isAlwaysInvisible(invisibleModifer, params) {
-    return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
-}
-
-/**
  * @param {Node} node
  * @returns {boolean}
  */
@@ -250,20 +240,16 @@ export class ViewCompiler {
         if (!invisible) {
             return compiled;
         }
-        if (typeof invisible === "boolean" && !params.enableInvisible) {
+        if (typeof invisible === "boolean") {
             return;
         }
-        if (!params.enableInvisible) {
-            const recordExpr = params.recordExpr || "props.record";
-            let isVisileExpr = `!evalDomainFromRecord(${recordExpr},${JSON.stringify(invisible)})`;
-            if (compiled.hasAttribute("t-if")) {
-                const formerTif = compiled.getAttribute("t-if");
-                isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
-            }
-            compiled.setAttribute("t-if", isVisileExpr);
-        } else {
-            appendAttr(compiled, "class", `o_invisible_modifier:${invisible}`);
+        const recordExpr = params.recordExpr || "props.record";
+        let isVisileExpr = `!evalDomainFromRecord(${recordExpr},${JSON.stringify(invisible)})`;
+        if (compiled.hasAttribute("t-if")) {
+            const formerTif = compiled.getAttribute("t-if");
+            isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
         }
+        compiled.setAttribute("t-if", isVisileExpr);
         return compiled;
     }
 
@@ -294,7 +280,7 @@ export class ViewCompiler {
         let invisible;
         if (evalInvisible) {
             invisible = getModifier(node, "invisible");
-            if (isAlwaysInvisible(invisible, params)) {
+            if (this.isAlwaysInvisible(invisible, params)) {
                 return;
             }
         }
@@ -451,8 +437,18 @@ export class ViewCompiler {
         const widget = createElement("Widget", props);
         return assignOwlDirectives(widget, el);
     }
+
+    /**
+     * @param {any} invisibleModifer
+     * @param {{ enableInvisible?: boolean }} params
+     * @returns {boolean}
+     */
+    isAlwaysInvisible(invisibleModifer, params) {
+        return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
+    }
 }
 
+let templateIds = Object.create(null);
 /**
  * @param {typeof ViewCompiler} ViewCompiler
  * @param {string} rawArch
@@ -474,3 +470,7 @@ export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
     }
     return { ...compiledTemplates };
 }
+
+registry.category("owl_templates_cleanup").add("view_compiler", () => {
+    templateIds = Object.create(null);
+});
