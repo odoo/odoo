@@ -164,6 +164,42 @@ QUnit.test("Global filters: list and graph fields are added", (assert) => {
     });
 });
 
+QUnit.test("List name default is model name", (assert) => {
+    const data = {
+        lists: {
+            1: {
+                name: "Name",
+                model: "Model",
+            },
+            2: {
+                model: "Model",
+            },
+        },
+    };
+    const migratedData = migrate(data);
+    assert.strictEqual(Object.values(migratedData.lists).length, 2);
+    assert.strictEqual(migratedData.lists["1"].name, "Name");
+    assert.strictEqual(migratedData.lists["2"].name, "Model");
+});
+
+QUnit.test("Pivot name default is model name", (assert) => {
+    const data = {
+        pivots: {
+            1: {
+                name: "Name",
+                model: "Model",
+            },
+            2: {
+                model: "Model",
+            },
+        },
+    };
+    const migratedData = migrate(data);
+    assert.strictEqual(Object.values(migratedData.pivots).length, 2);
+    assert.strictEqual(migratedData.pivots["1"].name, "Name");
+    assert.strictEqual(migratedData.pivots["2"].name, "Model");
+});
+
 QUnit.test("Odoo version is exported", (assert) => {
     const model = new Model();
     assert.strictEqual(model.exportData().odooVersion, ODOO_VERSION);

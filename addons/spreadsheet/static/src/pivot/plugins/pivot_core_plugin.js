@@ -443,11 +443,7 @@ export default class PivotCorePlugin extends CorePlugin {
                         domain: pivot.domain,
                         context: pivot.context,
                     },
-                    /**
-                     * As we are not able to migrate the json, we have to fallback
-                     * in the case where the name is not yet present
-                     */
-                    name: pivot.name || pivot.model,
+                    name: pivot.name,
                 };
                 this._addPivot(id, definition, this.uuidGenerator.uuidv4());
             }
