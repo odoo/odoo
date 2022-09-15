@@ -94,6 +94,32 @@ export class WebsitePreview extends Component {
             this.websiteService.pageDocument = null;
         });
 
+        /**
+         * This removes the 'Odoo' prefix of the title service to display
+         * cleanly the frontend's document title (see _replaceBrowserUrl), and
+         * replaces the backend favicon with the frontend's one.
+         * These changes are reverted when the component is unmounted.
+         */
+        useEffect(() => {
+            const backendIconEl = document.querySelector("link[rel~='icon']");
+            // Save initial backend values.
+            const backendIconHref = backendIconEl.href;
+            const { zopenerp } = this.title.getParts();
+            this.iframe.el.addEventListener('load', () => {
+                // Replace backend values with frontend's ones.
+                this.title.setParts({ zopenerp: null });
+                const frontendIconEl = this.iframe.el.contentDocument.querySelector("link[rel~='icon']");
+                if (frontendIconEl) {
+                    backendIconEl.href = frontendIconEl.href;
+                }
+            }, { once: true });
+            return () => {
+                // Restore backend initial values when leaving.
+                this.title.setParts({ zopenerp, action: null });
+                backendIconEl.href = backendIconHref;
+            };
+        }, () => []);
+
         useEffect(() => {
             // When reaching a "regular" url of the webclient's router, an
             // hashchange event should be dispatched to properly display the
