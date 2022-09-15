@@ -18,7 +18,7 @@
                 </div>
             </div>
             <ListRenderer t-if="viewMode === 'list'" t-props="rendererProps" />
-            <KanbanRenderer t-else="" t-props="rendererProps" />
+            <KanbanRenderer t-elif="viewMode" t-props="rendererProps" />
         </div>
     </t>
 
