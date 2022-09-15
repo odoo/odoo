@@ -11,10 +11,7 @@ export class SaleOrderLineProductField extends Many2OneField {
     setup() {
         super.setup();
         // TODO see with SAD for a better hook to catch field updates
-        // TODO inheritance (cf event_sale)
         // TODO how to trigger updates on all lines/parent record (matrix)
-        // TODO how to customize return information from wizard ?
-        //      can't we have a generic way to avoid the need of custom controller/code ???
 
         onWillUpdateProps(async (nextProps) => {
             if (
@@ -24,9 +21,9 @@ export class SaleOrderLineProductField extends Many2OneField {
                     this.props.value[0] != nextProps.value[0]
                 )
             ) {
-                // Field was updated if line was open in edit mode
-                // field is not emptied
-                // new value is different than existing value.
+                // Field was updated if line was open in edit mode,
+                //      field is not emptied,
+                //      new value is different than existing value.
                 this._onFieldUpdate();
             }
         });
