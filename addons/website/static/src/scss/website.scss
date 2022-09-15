@@ -973,6 +973,12 @@ header {
                 } @else {
                     max-width: 560px;
                     text-align: left !important;
+                    // Prevent #top_menu from overflowing the page below the
+                    // maximum width. (e.g. if contains an inline language
+                    // switcher with many elements.)
+                    @media(max-width: 560px) {
+                        max-width: 100%;
+                    }
                 }
                 min-width: 250px;
                 margin: 0 !important;
@@ -1022,6 +1028,11 @@ header {
                 .dropdown-item {
                     padding-left: .5em;
                     padding-right: .5em;
+                }
+                .js_language_selector .dropdown-toggle {
+                    // Hide the language switcher button because it does not
+                    // make sense to show it if the dropdown is always open.
+                    display: none;
                 }
             }
         }
