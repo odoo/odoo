@@ -52,7 +52,7 @@
         <field name="domain_force">[
             '|',
                 ('job_id.interviewer_ids', 'in', user.id),
-                ('interviewer_id', '=', user.id),
+                ('interviewer_ids', 'in', user.id),
         ]</field>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
