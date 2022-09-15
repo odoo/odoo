@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10nee_chart_template" model="account.chart.template">
+        <field name="name">Estonian Chart of Accounts</field>
+        <field name="code_digits">6</field>
+        <field name="cash_account_code_prefix">1000</field>
+        <field name="bank_account_code_prefix">1001</field>
+        <field name="transfer_account_code_prefix">1008</field>
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="country_id" ref="base.ee"/>
+        <field name="spoken_languages" eval="'et_EE'"/>
+    </record>
+</odoo>
