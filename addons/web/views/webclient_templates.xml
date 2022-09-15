@@ -33,7 +33,6 @@
       </xpath>
       <xpath expr="//head/link[last()]" position="after">
         <link rel="preload" href="/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
-        <t t-call-assets="web.assets_common" t-js="false"/>
         <t t-call-assets="web.assets_frontend" t-js="false"/>
       </xpath>
       <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
@@ -44,10 +43,8 @@
                 document.cookie = `tz=${userTZ}; path=/`;
             }
         </script>
-        <t t-call-assets="web.assets_common_minimal" t-css="false" defer_load="True"/>
         <t t-call-assets="web.assets_frontend_minimal" t-css="false" defer_load="True"/>
         <t t-call="web.conditional_assets_tests"/>
-        <t t-call-assets="web.assets_common_lazy" t-css="false" lazy_load="True"/>
         <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
       </xpath>
         <xpath expr="//t[@t-out='0']" position="replace">

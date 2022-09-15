@@ -16,6 +16,12 @@
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
         ],
+        'web.assets_frontend': [
+            'bus/static/src/*.js',
+            'bus/static/src/services/**/*.js',
+            'bus/static/src/workers/websocket_worker.js',
+            'bus/static/src/workers/websocket_worker_utils.js',
+        ],
         'web.qunit_suite_tests': [
             'bus/static/tests/**/*.js',
         ],
