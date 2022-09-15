@@ -49,8 +49,7 @@ registerModel({
             const employeesData = await this.messaging.rpc({
                 model: 'hr.employee.public',
                 method: 'read',
-                args: [ids],
-                fields: fields,
+                args: [ids, fields],
                 kwargs: {
                     context,
                 },

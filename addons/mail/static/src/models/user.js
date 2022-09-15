@@ -42,10 +42,9 @@ registerModel({
             const usersData = await this.messaging.rpc({
                 model: 'res.users',
                 method: 'read',
-                args: [ids],
+                args: [ids, fields],
                 kwargs: {
                     context,
-                    fields,
                 },
             }, { shadow: true });
             return this.messaging.models['User'].insert(usersData.map(userData =>
