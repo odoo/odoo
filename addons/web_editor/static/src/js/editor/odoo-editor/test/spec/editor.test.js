@@ -5122,4 +5122,58 @@ X[]
             });
         });
     });
+
+    describe('markdown', () => {
+        describe('inline code', () => {
+            it('should convert text into inline code (start)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>`ab[]cd</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>\u200B<code class="o_inline_code">ab</code>\u200B[]cd</p>',
+                });
+            });
+            it('should convert text into inline code (middle)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab`cd[]ef</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>ab<code class="o_inline_code">cd</code>\u200B[]ef</p>',
+                });
+            });
+            it('should convert text into inline code (end)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab`cd[]</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>ab<code class="o_inline_code">cd</code>\u200B[]</p>',
+                });
+            });
+            it('should convert text into inline code and leave an earlier and a later backtick alone', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a`b`cd[]e`f</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>a`b<code class="o_inline_code">cd</code>\u200B[]e`f</p>',
+                });
+            });
+            it('should not convert text into inline code when traversing HTMLElements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab`c<strong>d</strong>e[]fg</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>ab`c<strong>d</strong>e`[]fg</p>',
+                });
+            });
+            it('should not convert text into inline code when interrupted by linebreak', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab`c<br>d[]ef</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>ab`c<br>d`[]ef</p>',
+                });
+            });
+            it('should not convert text into inline code when inside inline code', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<code class="o_inline_code">b`cd[]e</code>f</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>a<code class="o_inline_code">b`cd`[]e</code>f</p>',
+                });
+            });
+        });
+    });
 });
