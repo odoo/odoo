@@ -2297,6 +2297,26 @@ export class DynamicGroupList extends DynamicList {
         return group;
     }
 
+    /**
+     * @param {Object} groupData
+     * @param {string} fieldName
+     * @returns {any}
+     */
+    _getValueFromGroupData(groupData, fieldName) {
+        const field = this.fields[fieldName.split(":")[0]];
+        if (["date", "datetime"].includes(field.type)) {
+            const range = groupData.__range[fieldName];
+            if (!range) {
+                return false;
+            }
+            const dateValue = this._parseServerValue(field, range.to);
+            return dateValue.minus({ [field.type === "date" ? "day" : "second"]: 1 });
+        } else {
+            const value = this._parseServerValue(field, groupData[fieldName]);
+            return Array.isArray(value) ? value[0] : value;
+        }
+    }
+
     async _loadGroups() {
         const firstGroupByName = this.firstGroupBy.split(":")[0];
         const _orderBy = this.orderBy.filter(
@@ -2332,14 +2352,7 @@ export class DynamicGroupList extends DynamicList {
                 const value = data[key];
                 switch (key) {
                     case this.firstGroupBy: {
-                        if (value && ["date", "datetime"].includes(groupByField.type)) {
-                            const dateString = data.__range[this.firstGroupBy].to;
-                            const dateValue = this._parseServerValue(groupByField, dateString);
-                            const granularity = groupByField.type === "date" ? "day" : "second";
-                            groupParams.value = dateValue.minus({ [granularity]: 1 });
-                        } else {
-                            groupParams.value = Array.isArray(value) ? value[0] : value;
-                        }
+                        groupParams.value = this._getValueFromGroupData(data, key);
                         if (groupByField.type === "selection") {
                             groupParams.displayName = Object.fromEntries(groupByField.selection)[
                                 groupParams.value
