@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { sprintf } from "@web/core/utils/strings";
-import { computeScore, Policy } from "./password_policy";
+import { computeScore } from "./password_policy";
 
 const { Component, xml } = owl;
 
@@ -26,6 +26,6 @@ Meter.template = xml`
 `;
 Meter.props = {
     password: { type: String },
-    required: Policy,
-    recommended: Policy,
+    required: Object,
+    recommended: Object,
 };
