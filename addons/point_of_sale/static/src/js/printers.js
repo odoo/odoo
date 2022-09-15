@@ -45,20 +45,17 @@ class PrintResultGenerator {
     }
 }
 
-var PrinterMixin = {
-    init: function (pos) {
+const PrinterMixin = (Class) => class WithPrinterMixin extends Class {
+    /**
+     * @param {{ pos: PosGlobalState }} params
+     */
+    constructor(params) {
+        super(params);
         this.receipt_queue = [];
         this.printResultGenerator = new PrintResultGenerator();
-        this.pos = pos;
-    },
-
-    /**
-     * Add the receipt to the queue of receipts to be printed and process it.
-     * We clear the print queue if printing is not successful.
-     * @param {String} receipt: The receipt to be printed, in HTML
-     * @returns {PrintResult}
-     */
-    print_receipt: async function(receipt) {
+        this.pos = params.pos;
+    }
+    async print_receipt(receipt) {
         if (receipt) {
             this.receipt_queue.push(receipt);
         }
@@ -81,21 +78,21 @@ var PrinterMixin = {
             }
         }
         return this.printResultGenerator.Successful();
-    },
+    }
 
     /**
      * Generate a jpeg image from a canvas
      * @param {DOMElement} canvas
      */
-    process_canvas: function (canvas) {
+    process_canvas(canvas) {
         return canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,','');
-    },
+    }
 
     /**
      * Renders the html as an image to print it
      * @param {String} receipt: The receipt to be printed, in HTML
      */
-    htmlToImg: function (receipt) {
+    htmlToImg(receipt) {
         $('.pos-receipt-print').html(receipt);
         this.receipt = $('.pos-receipt-print>.pos-receipt');
         // Odoo RTL support automatically flip left into right but html2canvas
@@ -110,39 +107,41 @@ var PrinterMixin = {
             $('.pos-receipt-print').empty();
             return this.process_canvas(canvas);
         });
-    },
+    }
 
-    _onIoTActionResult: function (data){
+    _onIoTActionResult(data) {
         if (this.pos && (data === false || data.result === false)) {
             Gui.showPopup('ErrorPopup',{
                 'title': _t('Connection to the printer failed'),
                 'body':  _t('Please check if the printer is still connected.'),
             });
         }
-    },
+    }
 
-    _onIoTActionFail: function () {
+    _onIoTActionFail() {
         if (this.pos) {
             Gui.showPopup('ErrorPopup',{
                 'title': _t('Connection to IoT Box failed'),
                 'body':  _t('Please check if the IoT Box is still connected.'),
             });
         }
-    },
-}
+    }
+};
 
-var Printer = core.Class.extend(PrinterMixin, {
-    init: function (url, pos) {
-        PrinterMixin.init.call(this, pos);
-        this.connection = new Session(undefined, url || 'http://localhost:8069', { use_cors: true});
-    },
-
+class Printer extends PrinterMixin(class {}) {
+    /**
+     * @param {{ url: string, pos: PosGlobalState }} params
+     */
+    constructor(params) {
+        super(params);
+        this.connection = new Session(undefined, params.url || 'http://localhost:8069', { use_cors: true });
+    }
     /**
      * Sends a command to the connected proxy to open the cashbox
      * (the physical box where you store the cash). Updates the status of
      * the printer with the answer from the proxy.
      */
-    open_cashbox: function () {
+    open_cashbox() {
         var self = this;
         return this.connection.rpc('/hw_proxy/default_printer_action', {
             data: {
@@ -150,21 +149,21 @@ var Printer = core.Class.extend(PrinterMixin, {
             }
         }).then(self._onIoTActionResult.bind(self))
             .guardedCatch(self._onIoTActionFail.bind(self));
-    },
+    }
 
     /**
      * Sends the printing command the connected proxy
      * @param {String} img : The receipt to be printed, as an image
      */
-    send_printing_job: function (img) {
+    send_printing_job(img) {
         return this.connection.rpc('/hw_proxy/default_printer_action', {
             data: {
                 action: 'print_receipt',
                 receipt: img,
             }
         });
-    },
-});
+    }
+}
 
 return {
     PrinterMixin: PrinterMixin,

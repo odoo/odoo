@@ -14,7 +14,7 @@ require('pos_restaurant.models');
 const PosEpsonResPosGlobalState = (PosGlobalState) => class PosEpsonResPosGlobalState extends PosGlobalState {
     create_printer(config) {
         if (config.printer_type === "epson_epos") {
-            return new EpsonPrinter(config.epson_printer_ip, this);
+            return new EpsonPrinter({ ip: config.epson_printer_ip, pos: this });
         } else {
             return super.create_printer(...arguments);
         }

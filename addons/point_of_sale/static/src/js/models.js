@@ -1166,31 +1166,6 @@ class PosGlobalState extends PosModel {
         return _.uniq(mappedTaxes, (tax) => tax.id);
       }
 
-    /**
-     * TODO: This can be removed when DeviceProxy is converted to use the new services API.
-     * And that somewhere else becomes the parent of the proxy.
-     * Directly calls the requested service, instead of triggering a
-     * 'call_service' event up, which wouldn't work as services have no parent
-     *
-     * @param {OdooEvent} ev
-     */
-    _trigger_up (ev) {
-        if (ev.is_stopped()) {
-            return;
-        }
-        const payload = ev.data;
-        if (ev.name === 'call_service') {
-            let args = payload.args || [];
-            if (payload.service === 'ajax' && payload.method === 'rpc') {
-                // ajax service uses an extra 'target' argument for rpc
-                args = args.concat(ev.target);
-            }
-            const service = this.env.services[payload.service];
-            const result = service[payload.method].apply(service, args);
-            payload.callback(result);
-        }
-    }
-
     isProductQtyZero(qty) {
         return utils.float_is_zero(qty, this.dp['Product Unit of Measure']);
     }

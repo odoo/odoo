@@ -259,7 +259,7 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         if(url.indexOf(':', url.indexOf('//') + 2) < 0 && window.location.protocol !== 'https:') {
             url = url + ':8069';
         }
-        return new Printer(url, this);
+        return new Printer({ url, pos: this });
     }
 }
 Registries.Model.extend(PosGlobalState, PosRestaurantPosGlobalState);

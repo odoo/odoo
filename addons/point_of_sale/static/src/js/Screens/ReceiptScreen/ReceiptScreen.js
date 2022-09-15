@@ -114,7 +114,7 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 return this.env.proxy.printer && this.env.pos.config.iface_print_skip_screen && invoiced_finalized;
             }
             async _sendReceiptToCustomer() {
-                const printer = new Printer(null, this.env.pos);
+                const printer = new Printer({ url: null, pos: this.env.pos });
                 const receiptString = this.orderReceipt.el.innerHTML;
                 const ticketImage = await printer.htmlToImg(receiptString);
                 const order = this.currentOrder;
