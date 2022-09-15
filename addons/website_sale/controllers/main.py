@@ -504,7 +504,7 @@ class WebsiteSale(http.Controller):
         revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
         """
         order = request.website.sale_get_order()
-        if order and order.state != 'draft':
+        if order and not order.is_cart_editable:
             request.session['sale_order_id'] = None
             order = request.website.sale_get_order()
         values = {}

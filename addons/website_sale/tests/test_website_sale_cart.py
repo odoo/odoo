@@ -3,10 +3,10 @@
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, tagged
-
+from odoo.tests.common import tagged
+from odoo.addons.payment.tests.common import PaymentCommon
 @tagged('post_install', '-at_install')
-class WebsiteSaleCart(TransactionCase):
+class WebsiteSaleCart(PaymentCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -75,3 +75,22 @@ class WebsiteSaleCart(TransactionCase):
                 })]
             })
             website.sale_get_order(update_pricelist=True)
+
+    # test that changing the cart while there is a pending transaction or while
+    # the cart is done raises an error
+    def test_is_cart_editable(self):
+        with MockRequest(self.env, website=self.website):
+            order = self.website.sale_get_order(force_create=True)
+            # Create a published product then unlink it
+            product = self.env['product.product'].create({
+                'name': 'Test Product',
+                'sale_ok': True,
+                'website_published': True,
+            })
+            order.transaction_ids = self.create_transaction(flow='redirect', state='pending')
+            with self.assertRaises(UserError):
+                order._cart_update(product_id=product.id)
+            order.transaction_ids = None
+            order.state = 'done'
+            with self.assertRaises(UserError):
+                order._cart_update(product_id=product.id)

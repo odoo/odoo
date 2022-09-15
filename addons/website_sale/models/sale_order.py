@@ -25,6 +25,7 @@ class SaleOrder(models.Model):
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
     is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
+    is_cart_editable = fields.Boolean('Is cart editable', compute='_compute_is_cart_editable')
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
@@ -79,6 +80,16 @@ class SaleOrder(models.Model):
         if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
             return abandoned_domain
         return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
+
+    @api.depends('state', 'transaction_ids.state')
+    def _compute_is_cart_editable(self):
+        """ Compute if a cart can be edited by customers.
+            We consider a cart to editable if it is in draft mode and have no pending/done/autorized
+            payments transaction linked to it (c.f: commit message for more info).
+        """
+        for cart in self:
+            transaction_in_progress = any(tx.state in ('pending', 'done', 'authorized') for tx in cart.transaction_ids)
+            cart.is_cart_editable = cart.state == 'draft' and not transaction_in_progress
 
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         """Find the cart line matching the given parameters.
@@ -181,9 +192,9 @@ class SaleOrder(models.Model):
             set_qty = 0
         quantity = 0
         order_line = False
-        if self.state != 'draft':
+        if not self.is_cart_editable:
             request.session['sale_order_id'] = None
-            raise UserError(_('It is forbidden to modify a sales order which is not in draft status.'))
+            raise UserError(_('You can not modify a cart that is in draft or that has a transaction in progress'))
         if line_id is not False:
             order_line = self._cart_find_product_line(product_id, line_id, **kwargs)[:1]
 

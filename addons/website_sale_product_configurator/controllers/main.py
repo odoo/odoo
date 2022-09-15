@@ -64,7 +64,7 @@ class WebsiteSale(main.WebsiteSale):
             request.website = request.website.with_context(lang=lang)
 
         order = request.website.sale_get_order(force_create=True)
-        if order.state != 'draft':
+        if not order.is_cart_editable:
             request.session['sale_order_id'] = None
             order = request.website.sale_get_order(force_create=True)
 

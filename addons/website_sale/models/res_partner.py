@@ -16,10 +16,11 @@ class ResPartner(models.Model):
             is_public = any(u._is_public() for u in partner.with_context(active_test=False).user_ids)
             website = ir_http.get_request_website()
             if website and not is_public:
-                partner.last_website_so_id = SaleOrder.search([
+                last_website_so_id = SaleOrder.search([
                     ('partner_id', '=', partner.id),
                     ('website_id', '=', website.id),
                     ('state', '=', 'draft'),
                 ], order='write_date desc', limit=1)
+                partner.last_website_so_id = last_website_so_id if last_website_so_id.is_cart_editable else SaleOrder
             else:
                 partner.last_website_so_id = SaleOrder  # Not in a website context or public User
