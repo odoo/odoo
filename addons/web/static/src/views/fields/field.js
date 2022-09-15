@@ -275,7 +275,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
                 viewMode = "list";
             } else if (!views.list && views.kanban) {
                 viewMode = "kanban";
-            } else {
+            } else if (views.list && views.kanban) {
                 viewMode = "list,kanban";
             }
         } else {

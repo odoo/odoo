@@ -35,7 +35,12 @@ export class X2ManyField extends Component {
             this.isMany2Many
         );
 
-        const archInfo = this.activeField.views[this.viewMode];
+        let archInfo;
+        if (this.viewMode) {
+            archInfo = this.activeField.views[this.viewMode];
+        } else {
+            archInfo = {};
+        }
         const subViewActiveActions = archInfo.activeActions;
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.activeField.options, {
