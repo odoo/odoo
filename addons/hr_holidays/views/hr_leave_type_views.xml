@@ -63,7 +63,7 @@
                         <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
                             <field name="active" invisible="1"/>
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
-                            <field name="responsible_id" domain="[('share', '=', False)]"
+                            <field name="responsible_id"
                                 attrs="{
                                 'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')],
                                 'required': ['|',('leave_validation_type', 'in', ['both', 'hr']), ('requires_allocation', '=', 'yes'), ('allocation_validation_type', '=', 'officer')]}"/>
