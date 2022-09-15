@@ -101,7 +101,6 @@ export class MassMailingHtmlField extends HtmlField {
         this.wysiwyg.odooEditor.resetContent(initialHtml);
 
         const fieldName = this.props.inlineField;
-        this.wysiwyg.softUpdate = true;
         return this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});
     }
     async startWysiwyg(...args) {
