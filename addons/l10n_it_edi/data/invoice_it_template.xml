@@ -44,7 +44,7 @@
         <DatiTrasmissione>
             <IdTrasmittente>
                 <IdPaese t-esc="get_vat_country(sender.vat)"/>
-                <IdCodice t-esc="normalize_codice_fiscale(sender.l10n_it_codice_fiscale) or get_vat_number(sender.vat)"/>
+                <IdCodice t-esc="normalize_codice_fiscale(sender.company_registry) or get_vat_number(sender.vat)"/>
             </IdTrasmittente>
             <ProgressivoInvio t-esc="format_alphanumeric(record.name.replace('/','')[-10:])"/>
             <FormatoTrasmissione t-esc="formato_trasmissione"/>
@@ -62,7 +62,7 @@
                     <IdPaese t-esc="get_vat_country(seller.vat)"/>
                     <IdCodice t-esc="get_vat_number(seller.vat)"/>
                 </IdFiscaleIVA>
-                <CodiceFiscale t-if="seller.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(seller.l10n_it_codice_fiscale)"/>
+                <CodiceFiscale t-if="seller.company_registry" t-esc="normalize_codice_fiscale(seller.company_registry)"/>
                 <Anagrafica>
                     <Denominazione t-esc="format_alphanumeric(seller_partner.display_name[:80])"/>
                 </Anagrafica>
@@ -93,8 +93,8 @@
                     <IdPaese t-esc="buyer.country_id.code"/>
                     <IdCodice t-esc="'0000000'"/>
                 </IdFiscaleIVA>
-                <CodiceFiscale t-if="not buyer.vat and buyer.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(buyer.l10n_it_codice_fiscale)"/>
-                <CodiceFiscale t-elif="not buyer.vat and not buyer.l10n_it_codice_fiscale" t-esc="99999999999"/>
+                <CodiceFiscale t-if="not buyer.vat and buyer.company_registry" t-esc="normalize_codice_fiscale(buyer.company_registry)"/>
+                <CodiceFiscale t-elif="not buyer.vat and not buyer.company_registry" t-esc="99999999999"/>
                 <Anagrafica>
                     <t t-if="buyer_is_company">
                         <Denominazione t-esc="format_alphanumeric(buyer.display_name[:80])"/>
@@ -115,7 +115,7 @@
                     <IdPaese t-esc="get_vat_country(representative.vat)"/>
                     <IdCodice t-esc="get_vat_number(representative.vat)"/>
                 </IdFiscaleIVA>
-                <CodiceFiscale t-if="representative.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(representative.l10n_it_codice_fiscale)"/>
+                <CodiceFiscale t-if="representative.company_registry" t-esc="normalize_codice_fiscale(representative.company_registry)"/>
                 <Anagrafica>
                 <t t-if="representative.is_company">
                     <Denominazione t-esc="format_alphanumeric(representative.display_name[:80])"/>

@@ -76,8 +76,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         for vals in vals_list:
             vals.pop('registration_address_vals', None)
-            if partner.country_code == 'NL' and 'l10n_nl_oin' in partner._fields:
-                endpoint = partner.l10n_nl_oin or partner.l10n_nl_kvk
+            if partner.country_code == 'NL':
+                endpoint = partner.l10n_nl_oin or partner.company_registry
                 scheme = '0190' if partner.l10n_nl_oin else '0106'
                 vals.update({
                     'company_id': endpoint,
@@ -101,9 +101,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals['endpoint_id'] = partner.vat
         vals['endpoint_id_attrs'] = {'schemeID': COUNTRY_EAS.get(partner.country_id.code)}
 
-        if partner.country_code == 'NO' and 'l10n_no_bronnoysund_number' in partner._fields:
+        if partner.country_code == 'NO':
             vals.update({
-                'endpoint_id': partner.l10n_no_bronnoysund_number,
+                'endpoint_id': partner.company_registry,
                 'endpoint_id_attrs': {'schemeID': '0192'},
             })
         # [BR-NL-1] Dutch supplier registration number ( AccountingSupplierParty/Party/PartyLegalEntity/CompanyID );
@@ -111,20 +111,20 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # [BR-NL-10] At a Dutch supplier, for a Dutch customer ( AccountingCustomerParty ) the customer registration
         # number must be filled with Chamber of Commerce or OIN. SchemeID may only contain 106 (Chamber of
         # Commerce number) or 190 (OIN number).
-        if partner.country_code == 'NL' and 'l10n_nl_oin' in partner._fields:
-            if partner.l10n_nl_oin:
+        if partner.country_code == 'NL':
+            if 'l10n_nl_oin' in partner._fields and partner.l10n_nl_oin:
                 vals.update({
                     'endpoint_id': partner.l10n_nl_oin,
                     'endpoint_id_attrs': {'schemeID': '0190'},
                 })
-            elif partner.l10n_nl_kvk:
+            elif partner.company_registry:
                 vals.update({
-                    'endpoint_id': partner.l10n_nl_kvk,
+                    'endpoint_id': partner.company_registry,
                     'endpoint_id_attrs': {'schemeID': '0106'},
                 })
-        if partner.country_id.code == 'SG' and 'l10n_sg_unique_entity_number' in partner._fields:
+        if partner.country_id.code == 'SG':
             vals.update({
-                'endpoint_id': partner.l10n_sg_unique_entity_number,
+                'endpoint_id': partner.company_registry,
                 'endpoint_id_attrs': {'schemeID': '0195'},
             })
 
@@ -134,8 +134,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_party_identification_vals_list(partner)
 
-        if partner.country_code == 'NL' and 'l10n_nl_oin' in partner._fields:
-            endpoint = partner.l10n_nl_oin or partner.l10n_nl_kvk
+        if partner.country_code == 'NL':
+            endpoint = partner.l10n_nl_oin or partner.company_registry
             vals.append({
                 'id': endpoint,
             })
@@ -389,7 +389,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'nl_r_003': _(
                     "The supplier %s must have a KVK or OIN number.",
                     vals['supplier'].display_name
-                ) if 'l10n_nl_oin' not in vals['supplier']._fields or 'l10n_nl_kvk' not in vals['supplier']._fields else '',
+                ) if 'l10n_nl_oin' not in vals['supplier']._fields or not vals['supplier'].company_registry else '',
 
                 # [NL-R-007] For suppliers in the Netherlands, the supplier MUST provide a means of payment
                 # (cac:PaymentMeans) if the payment is from customer to supplier
@@ -410,7 +410,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'nl_r_005': _(
                         "The customer %s must have a KVK or OIN number.",
                         vals['customer'].display_name
-                    ) if 'l10n_nl_oin' not in vals['customer']._fields or 'l10n_nl_kvk' not in vals['customer']._fields else '',
+                    ) if 'l10n_nl_oin' not in vals['customer']._fields or not vals['supplier'].company_registry else '',
                 })
 
         if vals['supplier'].country_id.code == 'NO':
@@ -426,14 +426,14 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'no_supplier_bronnoysund': _(
                     "The supplier %s must have a Bronnoysund company registry.",
                     vals['supplier'].display_name
-                ) if 'l10n_no_bronnoysund_number' not in vals['supplier']._fields or not vals['supplier'].l10n_no_bronnoysund_number else "",
+                ) if not vals['supplier'].company_registry else "",
             })
         if vals['customer'].country_id.code == 'NO':
             constraints.update({
                 'no_customer_bronnoysund': _(
                     "The supplier %s must have a Bronnoysund company registry.",
                     vals['customer'].display_name
-                ) if 'l10n_no_bronnoysund_number' not in vals['customer']._fields or not vals['customer'].l10n_no_bronnoysund_number else "",
+                ) if not vals['customer'].company_registry else "",
             })
 
         return constraints

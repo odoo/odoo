@@ -21,8 +21,6 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
              'data/account.account.template.csv',
              'data/account_tax_data.xml',
              'data/account_chart_template_data.xml',
-             'views/res_partner_views.xml',
-             'views/res_company_views.xml',
              ],
      'demo': [
          'demo/demo_company.xml',

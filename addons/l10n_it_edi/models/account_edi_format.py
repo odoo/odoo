@@ -54,7 +54,7 @@ class AccountEdiFormat(models.Model):
 
         return '%(country_code)s%(codice)s_%(progressive_number)s.xml' % {
             'country_code': invoice.company_id.country_id.code,
-            'codice': self.env['res.partner']._l10n_it_normalize_codice_fiscale(invoice.company_id.l10n_it_codice_fiscale),
+            'codice': self.env['res.partner']._l10n_it_normalize_codice_fiscale(invoice.company_id.company_registry),
             'progressive_number': progressive_number.zfill(5),
         }
 
@@ -102,7 +102,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
 
         # <1.2.1.2>
-        if not is_self_invoice and not seller.l10n_it_codice_fiscale:
+        if not is_self_invoice and not seller.company_registry:
             errors.append(_("%s must have a codice fiscale number", seller.display_name))
 
         # <1.2.1.8>
@@ -125,7 +125,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_("Tax representative partner %s of %s must have a tax number.", seller.l10n_it_tax_representative_partner_id.display_name, seller.display_name))
 
         # <1.4.1>
-        if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code == 'IT':
+        if not buyer.vat and not buyer.company_registry and buyer.country_id.code == 'IT':
             errors.append(_("The buyer, %s, or his company must have a VAT number and/or a tax code (Codice Fiscale).", buyer.display_name))
 
         if is_self_invoice and self._l10n_it_edi_services_or_goods(invoice) == 'both':
@@ -161,7 +161,7 @@ class AccountEdiFormat(models.Model):
             not self._l10n_it_edi_is_self_invoice(invoice),
             self._l10n_it_edi_check_buyer_invoice_configuration(invoice),
             not buyer.country_id or buyer.country_id.code == 'IT',
-            buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())),
+            buyer.company_registry or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())),
             invoice.amount_total <= 400,
         ])
 
@@ -283,7 +283,7 @@ class AccountEdiFormat(models.Model):
             company = proxy_user.company_id
             try:
                 res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
-                                               params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
+                                               params={'recipient_codice_fiscale': company.company_registry})
             except AccountEdiProxyError as e:
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
 
@@ -399,11 +399,11 @@ class AccountEdiFormat(models.Model):
             elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
             if elements:
                 codice = elements[0].text
-                domains = [[('l10n_it_codice_fiscale', '=', codice)]]
+                domains = [[('company_registry', '=', codice)]]
                 if re.match(r'^[0-9]{11}$', codice):
-                    domains.append([('l10n_it_codice_fiscale', '=', 'IT' + codice)])
+                    domains.append([('company_registry', '=', 'IT' + codice)])
                 elif re.match(r'^IT[0-9]{11}$', codice):
-                    domains.append([('l10n_it_codice_fiscale', '=',
+                    domains.append([('company_registry', '=',
                                      self.env['res.partner']._l10n_it_normalize_codice_fiscale(codice))])
                 partner = elements and self.env['res.partner'].search(
                     AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
@@ -438,7 +438,7 @@ class AccountEdiFormat(models.Model):
             company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
             if not company:
                 elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
-                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
+                company = elements and self.env['res.company'].search([('company_registry', 'ilike', elements[0].text)], limit=1)
                 if not company:
                     # Only invoices with a correct VAT or Codice Fiscale can be imported
                     _logger.warning('No company found with VAT or Codice Fiscale like %r.', elements[0].text)
@@ -1054,10 +1054,10 @@ class AccountEdiFormat(models.Model):
         if self.code != 'fattura_pa':
             return super()._get_proxy_identification()
 
-        if not company.l10n_it_codice_fiscale:
+        if not company.company_registry:
             raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
 
-        return self.env['res.partner']._l10n_it_normalize_codice_fiscale(company.l10n_it_codice_fiscale)
+        return self.env['res.partner']._l10n_it_normalize_codice_fiscale(company.company_registry)
 
     def _l10n_it_edi_upload(self, files, proxy_user):
         '''Upload files to fatturapa.
