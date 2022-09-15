@@ -202,7 +202,7 @@ const Wysiwyg = Widget.extend({
             commands: powerboxOptions.commands,
             categories: powerboxOptions.categories,
             plugins: options.editorPlugins,
-            direction: localization.direction || 'ltr',
+            direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
         }, editorCollaborationOptions));
 
