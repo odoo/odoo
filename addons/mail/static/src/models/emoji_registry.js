@@ -1,19 +1,38 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
+import { attr, many } from '@mail/model/model_field';
 import { insert } from '@mail/model/model_field_command';
-import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
 
 registerModel({
     name: 'EmojiRegistry',
     lifecycleHooks: {
         _created() {
-            this._populateFromEmojiData(emojiCategoriesData, emojisData);
-        },
+            if (!this.messaging.isInQUnitTest && !this.hasEmojiDataLoaded && !this.isFetchingEmojiData) {
+                this.fetchEmojiData();
+            }
+        }
     },
     recordMethods: {
-        async _populateFromEmojiData(dataCategories, dataEmojis) {
+        async fetchEmojiData() {
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ isFetchingEmojiData: true });
+            const response = await fetch('/mail/emoji/get_data');
+            if (!this.exists()) {
+                return;
+            }
+            const emojiDataJSContent = await response.text();
+            if (!this.exists()) {
+                return;
+            }
+            const script = document.createElement('script');
+            script.innerHTML = emojiDataJSContent;
+            document.head.appendChild(script);
+            this.update({ isFetchingEmojiData: false });
+        },
+        async populateFromEmojiData(dataCategories, dataEmojis) {
             await this.messaging.executeGracefully(dataCategories.map(category => () => {
                 if (!this.exists()) {
                     return;
@@ -44,6 +63,7 @@ registerModel({
                     emojiDataCategory: { name: emojiData.category },
                 });
             }));
+            this.update({ hasEmojiDataLoaded: true });
         },
         _sortAllCategories() {
             return [['smaller-first', 'sortId']];
@@ -65,5 +85,11 @@ registerModel({
             sort: '_sortAllEmojis'
         }),
         dataCategories: many('EmojiCategory'),
+        hasEmojiDataLoaded: attr({
+            default: false,
+        }),
+        isFetchingEmojiData: attr({
+            default: false,
+        }),
     },
 });

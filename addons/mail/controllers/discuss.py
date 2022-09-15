@@ -564,6 +564,17 @@ class DiscussController(http.Controller):
             ]
         )
 
+    @http.route('/mail/emoji/get_data', methods=['GET'], type='http', auth='public', cors="*")
+    def get_emoji_data(self):
+        """ Returns a JS file containing emoji data for emoji picker
+        """
+        return request.make_response(
+            file_open('mail/static/src/models_data/emoji_data.js', 'rb').read(),
+            headers=[
+                ('Content-Type', 'application/javascript'),
+            ]
+        )
+
     # --------------------------------------------------------------------------
     # Guest API
     # --------------------------------------------------------------------------

@@ -1,22 +1,23 @@
 /** @odoo-module **/
 
-import { patchRecordMethods } from '@mail/model/model_core';
+import { patchLifecycleHooks } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/throttle';
 
-patchRecordMethods('EmojiRegistry', {
-    async _populateFromEmojiData() {
+patchLifecycleHooks('EmojiRegistry', {
+    _created() {
         const dataEmojiCategories = [
-        {
-            "name": "Smileys & Emotion",
-            "title": "🤠",
-            "sortId": 1
-        },
-        {
-            "name": "People & Body",
-            "title": "🤟",
-            "sortId": 2
-        }];
+            {
+                "name": "Smileys & Emotion",
+                "title": "🤠",
+                "sortId": 1
+            },
+            {
+                "name": "People & Body",
+                "title": "🤟",
+                "sortId": 2
+            }
+        ];
         const dataEmojis = [
             {
                 "codepoints": "😀",
@@ -95,6 +96,6 @@ patchRecordMethods('EmojiRegistry', {
                 ]
             },
         ];
-        this._super(dataEmojiCategories, dataEmojis);
-    },
+        this.populateFromEmojiData(dataEmojiCategories, dataEmojis);
+    }
 });
