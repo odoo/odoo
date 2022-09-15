@@ -4430,7 +4430,7 @@ registry.sizing = SnippetOptionWidget.extend({
 
         const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < 768;
         const isGrid = this.$target[0].classList.contains('o_grid_item');
-        if (this.$target[0].parentNode.classList.contains('row')) {
+        if (this.$target[0].parentNode && this.$target[0].parentNode.classList.contains('row')) {
             // Hiding/showing the correct resize handles if we are in grid mode
             // or not.
             for (const handleEl of this.$handles) {
