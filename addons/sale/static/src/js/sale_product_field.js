@@ -44,13 +44,7 @@ export class SaleOrderLineProductField extends Many2OneField {
         return 'btn btn-secondary fa fa-pencil';
     }
 
-    _onFieldUpdate(nextProps) {
-        if (this.configuratorFeedback) {
-            this.configuratorFeedback = false;
-        } else if (nextProps.record.data.product_type === 'event') {
-            this._openEventConfigurator(nextProps);
-        }
-    }
+    _onFieldUpdate(nextProps) { }
 
     onEditConfiguration() {
         if (this.isConfigurableLine) {
@@ -59,70 +53,11 @@ export class SaleOrderLineProductField extends Many2OneField {
             this._editProductConfiguration();
         }
     }
-
-    get isConfigurableLine() {
-        // TODO TEST configuration update
-        //this.props.record.data ?
-        const event_sale_value = Boolean(this.props.record.data.event_ticket_id)
-        return false || event_sale_value;
-    }
-
-    get isConfigurableTemplate() {
-        return false;
-    }
-
-    _editLineConfiguration() {
-        // event_sale, sale_renting
-        if (this.isEventLine) {
-            this._openEventConfigurator(this.props);
-        }
-    }
-
+    _editLineConfiguration() { } // event_sale, sale_renting
     _editProductConfiguration() { } // sale_product_configurator, sale_product_matrix
 
-    // event_sale logic
-    get isEventLine() {
-        return Boolean(this.props.record.data.product_type === 'event');
-    }
-
-    async _openEventConfigurator(props) {
-        let actionContext = {
-            'default_product_id': props.record.data.product_id[0],
-        };
-        if (props.record.data.event_id) {
-            actionContext['default_event_id'] = props.record.data.event_id[0];
-        }
-        if (props.record.data.event_ticket_id) {
-            actionContext['default_event_ticket_id'] = props.record.data.event_ticket_id[0];
-        }
-        this.action.doAction(
-            // TODO VFE see if we can drop the action record
-            // and use static values here.
-            'event_sale.event_configurator_action',
-            {
-                additionalContext: actionContext,
-                onClose: async (closeInfo) => {
-                    if (!closeInfo || closeInfo.special) {
-                        // wizard popup closed or 'Cancel' button triggered
-                        if (!props.record.data.event_ticket_id) {
-                            // remove product if event configuration was cancelled.
-                            this.props.record.update({
-                                [props.name]: undefined,
-                            });
-                        }
-                    } else {
-                        // do not reopen the wizard because of the record update.
-                        this.configuratorFeedback = true;
-                        const eventConfiguration = closeInfo.eventConfiguration;
-                        this.props.record.update({
-                            'event_id': [eventConfiguration.event_id.id, 'dunno'],
-                            'event_ticket_id': [eventConfiguration.event_ticket_id.id, 'don\'t care'],
-                        });
-                    }
-                }
-            }
-        );
-    }
+    get isConfigurableLine() { return false; }
+    get isConfigurableTemplate() { return false; }
 }
 
 SaleOrderLineProductField.template = "sale.SaleProductField";
