@@ -97,31 +97,6 @@ registerModel({
                 track.stop();
             }
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeDoesBrowserSupportMediaDevices() {
-            return Boolean(
-                navigator.mediaDevices &&
-                navigator.mediaDevices.getUserMedia &&
-                window.MediaStream
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsMicrophoneEnabled() {
-            return this.audioStream !== null;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsVideoEnabled() {
-            return this.videoStream !== null;
-        },
     },
     fields: {
         /**
@@ -142,19 +117,29 @@ registerModel({
          * microphone/camera recording.
          */
         doesBrowserSupportMediaDevices: attr({
-            compute: '_computeDoesBrowserSupportMediaDevices',
+            compute() {
+                return Boolean(
+                    navigator.mediaDevices &&
+                    navigator.mediaDevices.getUserMedia &&
+                    window.MediaStream
+                );
+            },
         }),
         /**
          * States if the user's microphone is currently recording.
          */
         isMicrophoneEnabled: attr({
-            compute: '_computeIsMicrophoneEnabled',
+            compute() {
+                return this.audioStream !== null;
+            },
         }),
         /**
          * States if the user's camera is currently recording.
          */
         isVideoEnabled: attr({
-            compute: '_computeIsVideoEnabled',
+            compute() {
+                return this.videoStream !== null;
+            },
         }),
         /**
          * Ref to the video element used for the video feedback.

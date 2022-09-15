@@ -266,340 +266,44 @@ registerModel({
             }
             this.messaging.models['Message'].insert(messageData);
         },
-        /**
-         * @returns {string|FieldCommand}
-         */
-        _computeAuthorName() {
-            if (this.author) {
-                return this.author.nameOrDisplayName;
-            }
-            if (this.guestAuthor) {
-                return this.guestAuthor.name;
-            }
-            if (this.email_from) {
-                return this.email_from;
-            }
-            return this.env._t("Anonymous");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeAvatarUrl() {
-            if (this.author && (!this.originThread || this.originThread.model !== 'mail.channel')) {
-                // TODO FIXME for public user this might not be accessible. task-2223236
-                // we should probably use the correspondig attachment id + access token
-                // or create a dedicated route to get message image, checking the access right of the message
-                return this.author.avatarUrl;
-            } else if (this.author && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/partner/${this.author.id}/avatar_128`;
-            } else if (this.guestAuthor && (!this.originThread || this.originThread.model !== 'mail.channel')) {
-                return this.guestAuthor.avatarUrl;
-            } else if (this.guestAuthor && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/guest/${this.guestAuthor.id}/avatar_128?unique=${this.guestAuthor.name}`;
-            } else if (this.message_type === 'email') {
-                return '/mail/static/src/img/email_icon.png';
-            }
-            return '/mail/static/src/img/smiley/avatar.jpg';
-        },
-        /**
-         * @returns {boolean}
-         */
-        _computeCanBeDeleted() {
-            if (!session.is_admin && !this.isCurrentUserOrGuestAuthor) {
-                return false;
-            }
-            if (!this.originThread) {
-                return false;
-            }
-            if (this.trackingValues.length > 0) {
-                return false;
-            }
-            if (this.message_type !== 'comment') {
-                return false;
-            }
-            if (this.originThread.model === 'mail.channel') {
-                return true;
-            }
-            return this.is_note;
-        },
-        /**
-         * @returns {boolean}
-         */
-        _computeCanStarBeToggled() {
-            return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
-        },
-        /**
-         * @returns {string}
-         */
-        _computeDateDay() {
-            if (!this.date) {
-                // Without a date, we assume that it's a today message. This is
-                // mainly done to avoid flicker inside the UI.
-                return this.env._t("Today");
-            }
-            const date = this.date.format('YYYY-MM-DD');
-            if (date === moment().format('YYYY-MM-DD')) {
-                return this.env._t("Today");
-            } else if (
-                date === moment()
-                    .subtract(1, 'days')
-                    .format('YYYY-MM-DD')
-            ) {
-                return this.env._t("Yesterday");
-            }
-            return this.date.format('LL');
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeDatetime() {
-            if (!this.date) {
-                return clear();
-            }
-            return this.date.format(getLangDatetimeFormat());
-        },
-        /**
-         * @returns {boolean}
-         */
-        _computeFailureNotifications() {
-            return this.notifications.filter(notifications => notifications.isFailure);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasAttachments() {
-            return this.attachments.length > 0;
-        },
-        /**
-         * @returns {boolean}
-         */
-        _computeHasReactionIcon() {
-            return !this.isTemporary && !this.isTransient;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsCurrentUserOrGuestAuthor() {
-            return !!(
-                this.author &&
-                this.messaging.currentPartner &&
-                this.messaging.currentPartner === this.author
-            ) || !!(
-                this.guestAuthor &&
-                this.messaging.currentGuest &&
-                this.messaging.currentGuest === this.guestAuthor
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsBodyEmpty() {
-            return (
-                !this.body ||
-                [
-                    '',
-                    '<p></p>',
-                    '<p><br></p>',
-                    '<p><br/></p>',
-                ].includes(this.body.replace(/\s/g, ''))
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsBodyEqualSubtypeDescription() {
-            if (!this.body || !this.subtype_description) {
-                return false;
-            }
-            const inlineBody = htmlToTextContentInline(this.body);
-            return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsCurrentPartnerMentioned() {
-            return this.recipients.includes(this.messaging.currentPartner);
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsDiscussionOrNotification() {
-            if (this.is_discussion || this.is_notification) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * The method does not attempt to cover all possible cases of empty
-         * messages, but mostly those that happen with a standard flow. Indeed
-         * it is preferable to be defensive and show an empty message sometimes
-         * instead of hiding a non-empty message.
-         *
-         * The main use case for when a message should become empty is for a
-         * message posted with only an attachment (no body) and then the
-         * attachment is deleted.
-         *
-         * The main use case for being defensive with the check is when
-         * receiving a message that has no textual content but has other
-         * meaningful HTML tags (eg. just an <img/>).
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsEmpty() {
-            return (
-                this.isBodyEmpty &&
-                !this.hasAttachments &&
-                this.trackingValues.length === 0 &&
-                !this.subtype_description
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsHighlighted() {
-            return (
-                this.isCurrentPartnerMentioned &&
-                this.originThread &&
-                this.originThread.model === 'mail.channel'
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsSubjectSimilarToOriginThreadName() {
-            if (
-                !this.subject ||
-                !this.originThread ||
-                !this.originThread.name
-            ) {
-                return false;
-            }
-            const threadName = this.originThread.name.toLowerCase().trim();
-            const prefixList = ['re:', 'fw:', 'fwd:'];
-            let cleanedSubject = this.subject.toLowerCase();
-            let wasSubjectCleaned = true;
-            while (wasSubjectCleaned) {
-                wasSubjectCleaned = false;
-                if (threadName === cleanedSubject) {
-                    return true;
-                }
-                for (const prefix of prefixList) {
-                    if (cleanedSubject.startsWith(prefix)) {
-                        cleanedSubject = cleanedSubject.replace(prefix, '').trim();
-                        wasSubjectCleaned = true;
-                        break;
-                    }
-                }
-            }
-            return false;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLastTrackingValue() {
-            const {
-                length: l,
-                [l - 1]: lastTrackingValue,
-            } = this.trackingValues;
-            if (lastTrackingValue) {
-                return lastTrackingValue;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeMessageTypeText() {
-            if (this.message_type === 'notification') {
-                return this.env._t("System notification");
-            }
-            if (!this.is_discussion && !this.is_notification) {
-                return this.env._t("Note");
-            }
-            return this.env._t("Message");
-        },
-        /**
-         * This value is meant to be based on field body which is
-         * returned by the server (and has been sanitized before stored into db).
-         * Do not use this value in a 't-raw' if the message has been created
-         * directly from user input and not from server data as it's not escaped.
-         *
-         * @private
-         * @returns {string}
-         */
-        _computePrettyBody() {
-            if (!this.body) {
-                // body null in db, body will be false instead of empty string
-                return clear();
-            }
-            // add anchor tags to urls
-            return parseAndTransform(this.body, addLink);
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeShortTime() {
-            if (!this.date) {
-                return clear();
-            }
-            return this.date.format('hh:mm');
-        },
-        /**
-         * @returns {Markup}
-         */
-        _computePrettyBodyAsMarkup() {
-            return markup(this.prettyBody);
-        },
-        /**
-         * @private
-         * @returns {Thread[]}
-         */
-        _computeThreads() {
-            const threads = [];
-            if (this.isHistory && this.messaging.history) {
-                threads.push(this.messaging.history.thread);
-            }
-            if (this.isNeedaction && this.messaging.inbox) {
-                threads.push(this.messaging.inbox.thread);
-            }
-            if (this.isStarred && this.messaging.starred) {
-                threads.push(this.messaging.starred.thread);
-            }
-            if (this.originThread) {
-                threads.push(this.originThread);
-            }
-            return threads;
-        },
-        _sortTrackingValues() {
-            return [
-                ['smaller-first', 'id'],
-            ];
-        }
     },
     fields: {
         authorName: attr({
-            compute: '_computeAuthorName',
+            compute() {
+                if (this.author) {
+                    return this.author.nameOrDisplayName;
+                }
+                if (this.guestAuthor) {
+                    return this.guestAuthor.name;
+                }
+                if (this.email_from) {
+                    return this.email_from;
+                }
+                return this.env._t("Anonymous");
+            },
         }),
         attachments: many('Attachment', {
             inverse: 'messages',
         }),
         author: one('Partner'),
         avatarUrl: attr({
-            compute: '_computeAvatarUrl'
+            compute() {
+                if (this.author && (!this.originThread || this.originThread.model !== 'mail.channel')) {
+                    // TODO FIXME for public user this might not be accessible. task-2223236
+                    // we should probably use the correspondig attachment id + access token
+                    // or create a dedicated route to get message image, checking the access right of the message
+                    return this.author.avatarUrl;
+                } else if (this.author && this.originThread && this.originThread.model === 'mail.channel') {
+                    return `/mail/channel/${this.originThread.id}/partner/${this.author.id}/avatar_128`;
+                } else if (this.guestAuthor && (!this.originThread || this.originThread.model !== 'mail.channel')) {
+                    return this.guestAuthor.avatarUrl;
+                } else if (this.guestAuthor && this.originThread && this.originThread.model === 'mail.channel') {
+                    return `/mail/channel/${this.originThread.id}/guest/${this.guestAuthor.id}/avatar_128?unique=${this.guestAuthor.name}`;
+                } else if (this.message_type === 'email') {
+                    return '/mail/static/src/img/email_icon.png';
+                }
+                return '/mail/static/src/img/smiley/avatar.jpg';
+            },
         }),
         /**
          * This value is meant to be returned by the server
@@ -614,13 +318,32 @@ registerModel({
          * Whether this message can be deleted.
          */
         canBeDeleted: attr({
-            compute: '_computeCanBeDeleted',
+            compute() {
+                if (!session.is_admin && !this.isCurrentUserOrGuestAuthor) {
+                    return false;
+                }
+                if (!this.originThread) {
+                    return false;
+                }
+                if (this.trackingValues.length > 0) {
+                    return false;
+                }
+                if (this.message_type !== 'comment') {
+                    return false;
+                }
+                if (this.originThread.model === 'mail.channel') {
+                    return true;
+                }
+                return this.is_note;
+            },
         }),
         /**
          * Whether this message can be starred/unstarred.
          */
         canStarBeToggled: attr({
-            compute: '_computeCanStarBeToggled',
+            compute() {
+                return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
+            },
         }),
         /**
          * Determines the date of the message as a moment object.
@@ -631,17 +354,41 @@ registerModel({
          * in the near past or an actual date for older dates).
          */
         dateDay: attr({
-            compute: '_computeDateDay',
+            compute() {
+                if (!this.date) {
+                    // Without a date, we assume that it's a today message. This is
+                    // mainly done to avoid flicker inside the UI.
+                    return this.env._t("Today");
+                }
+                const date = this.date.format('YYYY-MM-DD');
+                if (date === moment().format('YYYY-MM-DD')) {
+                    return this.env._t("Today");
+                } else if (
+                    date === moment()
+                        .subtract(1, 'days')
+                        .format('YYYY-MM-DD')
+                ) {
+                    return this.env._t("Yesterday");
+                }
+                return this.date.format('LL');
+            },
         }),
         /**
          * The date time of the message at current user locale time.
          */
         datetime: attr({
-            compute: '_computeDatetime',
+            compute() {
+                if (!this.date) {
+                    return clear();
+                }
+                return this.date.format(getLangDatetimeFormat());
+            },
         }),
         email_from: attr(),
         failureNotifications: many('Notification', {
-            compute: '_computeFailureNotifications',
+            compute() {
+                return this.notifications.filter(notifications => notifications.isFailure);
+            },
         }),
         guestAuthor: one('Guest', {
             inverse: 'authoredMessages',
@@ -650,19 +397,33 @@ registerModel({
          * States whether the message has some attachments.
          */
         hasAttachments: attr({
-            compute: '_computeHasAttachments',
+            compute() {
+                return this.attachments.length > 0;
+            },
         }),
         /**
          * Determines whether the message has a reaction icon.
          */
         hasReactionIcon: attr({
-            compute: '_computeHasReactionIcon',
+            compute() {
+                return !this.isTemporary && !this.isTransient;
+            },
         }),
         id: attr({
             identifying: true,
         }),
         isCurrentUserOrGuestAuthor: attr({
-            compute: '_computeIsCurrentUserOrGuestAuthor',
+            compute() {
+                return !!(
+                    this.author &&
+                    this.messaging.currentPartner &&
+                    this.messaging.currentPartner === this.author
+                ) || !!(
+                    this.guestAuthor &&
+                    this.messaging.currentGuest &&
+                    this.messaging.currentGuest === this.guestAuthor
+                );
+            },
             default: false,
         }),
         /**
@@ -671,7 +432,17 @@ registerModel({
          * `isEmpty`.
          */
         isBodyEmpty: attr({
-            compute: '_computeIsBodyEmpty',
+            compute() {
+                return (
+                    !this.body ||
+                    [
+                        '',
+                        '<p></p>',
+                        '<p><br></p>',
+                        '<p><br/></p>',
+                    ].includes(this.body.replace(/\s/g, ''))
+                );
+            },
         }),
         /**
          * States whether `body` and `subtype_description` contain similar
@@ -694,11 +465,22 @@ registerModel({
          * - Their content might be mostly but not exactly the same.
          */
         isBodyEqualSubtypeDescription: attr({
-            compute: '_computeIsBodyEqualSubtypeDescription',
+            compute() {
+                if (!this.body || !this.subtype_description) {
+                    return false;
+                }
+                const inlineBody = htmlToTextContentInline(this.body);
+                return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
+            },
             default: false,
         }),
         isDiscussionOrNotification: attr({
-            compute: '_computeIsDiscussionOrNotification',
+            compute() {
+                if (this.is_discussion || this.is_notification) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
         }),
         /**
@@ -707,7 +489,28 @@ registerModel({
          * An empty message has no text, no attachment and no tracking value.
          */
         isEmpty: attr({
-            compute: '_computeIsEmpty',
+            /**
+             * The method does not attempt to cover all possible cases of empty
+             * messages, but mostly those that happen with a standard flow. Indeed
+             * it is preferable to be defensive and show an empty message sometimes
+             * instead of hiding a non-empty message.
+             *
+             * The main use case for when a message should become empty is for a
+             * message posted with only an attachment (no body) and then the
+             * attachment is deleted.
+             *
+             * The main use case for being defensive with the check is when
+             * receiving a message that has no textual content but has other
+             * meaningful HTML tags (eg. just an <img/>).
+             */
+            compute() {
+                return (
+                    this.isBodyEmpty &&
+                    !this.hasAttachments &&
+                    this.trackingValues.length === 0 &&
+                    !this.subtype_description
+                );
+            },
         }),
         /**
          * States whether `originThread.name` and `subject` contain similar
@@ -718,7 +521,33 @@ registerModel({
          * the subject is same as threadname.
          */
         isSubjectSimilarToOriginThreadName: attr({
-            compute: '_computeIsSubjectSimilarToOriginThreadName',
+            compute() {
+                if (
+                    !this.subject ||
+                    !this.originThread ||
+                    !this.originThread.name
+                ) {
+                    return false;
+                }
+                const threadName = this.originThread.name.toLowerCase().trim();
+                const prefixList = ['re:', 'fw:', 'fwd:'];
+                let cleanedSubject = this.subject.toLowerCase();
+                let wasSubjectCleaned = true;
+                while (wasSubjectCleaned) {
+                    wasSubjectCleaned = false;
+                    if (threadName === cleanedSubject) {
+                        return true;
+                    }
+                    for (const prefix of prefixList) {
+                        if (cleanedSubject.startsWith(prefix)) {
+                            cleanedSubject = cleanedSubject.replace(prefix, '').trim();
+                            wasSubjectCleaned = true;
+                            break;
+                        }
+                    }
+                }
+                return false;
+            },
         }),
         isTemporary: attr({
             default: false,
@@ -753,14 +582,22 @@ registerModel({
          * Determine whether the current partner is mentioned.
          */
         isCurrentPartnerMentioned: attr({
-            compute: '_computeIsCurrentPartnerMentioned',
+            compute() {
+                return this.recipients.includes(this.messaging.currentPartner);
+            },
             default: false,
         }),
         /**
          * Determine whether the message is highlighted.
          */
         isHighlighted: attr({
-            compute: '_computeIsHighlighted',
+            compute() {
+                return (
+                    this.isCurrentPartnerMentioned &&
+                    this.originThread &&
+                    this.originThread.model === 'mail.channel'
+                );
+            },
         }),
         /**
          * Determine whether the message is starred. Useful to make it present
@@ -773,7 +610,16 @@ registerModel({
          * Last tracking value of the message.
          */
         lastTrackingValue: one('TrackingValue', {
-            compute: '_computeLastTrackingValue',
+            compute() {
+                const {
+                    length: l,
+                    [l - 1]: lastTrackingValue,
+                } = this.trackingValues;
+                if (lastTrackingValue) {
+                    return lastTrackingValue;
+                }
+                return clear();
+            },
         }),
         linkPreviews: many('LinkPreview', {
             inverse: 'message',
@@ -786,7 +632,15 @@ registerModel({
             inverse: 'message',
         }),
         messageTypeText: attr({
-            compute: '_computeMessageTypeText',
+            compute() {
+                if (this.message_type === 'notification') {
+                    return this.env._t("System notification");
+                }
+                if (!this.is_discussion && !this.is_notification) {
+                    return this.env._t("Note");
+                }
+                return this.env._t("Message");
+            },
         }),
         message_type: attr(),
         notificationMessageViews: many('NotificationMessageView', {
@@ -827,15 +681,35 @@ registerModel({
          * directly from user input and not from server data as it's not escaped.
          */
         prettyBody: attr({
-            compute: '_computePrettyBody',
+            /**
+             * This value is meant to be based on field body which is
+             * returned by the server (and has been sanitized before stored into db).
+             * Do not use this value in a 't-raw' if the message has been created
+             * directly from user input and not from server data as it's not escaped.
+             */
+            compute() {
+                if (!this.body) {
+                    // body null in db, body will be false instead of empty string
+                    return clear();
+                }
+                // add anchor tags to urls
+                return parseAndTransform(this.body, addLink);
+            },
             default: "",
         }),
         prettyBodyAsMarkup: attr({
-            compute: '_computePrettyBodyAsMarkup',
+            compute() {
+                return markup(this.prettyBody);
+            },
         }),
         recipients: many('Partner'),
         shortTime: attr({
-            compute: '_computeShortTime',
+            compute() {
+                if (!this.date) {
+                    return clear();
+                }
+                return this.date.format('hh:mm');
+            },
         }),
         subject: attr(),
         subtype_description: attr(),
@@ -844,13 +718,32 @@ registerModel({
          * All threads that this message is linked to. This field is read-only.
          */
         threads: many('Thread', {
-            compute: '_computeThreads',
+            compute() {
+                const threads = [];
+                if (this.isHistory && this.messaging.history) {
+                    threads.push(this.messaging.history.thread);
+                }
+                if (this.isNeedaction && this.messaging.inbox) {
+                    threads.push(this.messaging.inbox.thread);
+                }
+                if (this.isStarred && this.messaging.starred) {
+                    threads.push(this.messaging.starred.thread);
+                }
+                if (this.originThread) {
+                    threads.push(this.originThread);
+                }
+                return threads;
+            },
             inverse: 'messages',
         }),
         trackingValues: many('TrackingValue', {
             inverse: 'messageOwner',
             isCausal: true,
-            sort: '_sortTrackingValues',
+            sort() {
+                return [
+                    ['smaller-first', 'id'],
+                ];
+            },
         }),
     },
 });

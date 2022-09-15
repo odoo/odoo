@@ -236,72 +236,12 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Object} browser
-         */
-        _computeBrowser() {
-            return browser;
-        },
-        /**
-         * @private
-         * @returns {Promise}
-         */
-        _computeInitializedPromise() {
-            return makeDeferred();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsCurrentUserGuest() {
-            return Boolean(!this.currentPartner && this.currentGuest);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsNotificationBlocked() {
-            const windowNotification = this.browser.Notification;
-            return (
-                windowNotification &&
-                windowNotification.permission !== 'granted' &&
-                !this.isNotificationPermissionDefault
-            );
-        },
-        /**
-         * @private
-         * @returns {EventBus}
-         */
-        _computeMessagingBus() {
-            if (this.messagingBus) {
-                return; // avoid overwrite if already provided (example in tests)
-            }
-            return new EventBus();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallInviteRequestPopups() {
-            if (this.ringingThreads.length === 0) {
-                return clear();
-            }
-            return this.ringingThreads.map(thread => thread.callInviteRequestPopup);
-        },
-        /**
-         * @private
          */
         _handleGlobalWindowFocus() {
             this.update({ outOfFocusUnreadMessageCounter: 0 });
             this.env.bus.trigger('set_title_part', {
                 part: '_chat',
             });
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeNotificationHandler() {
-            return {};
         },
         /**
          * @private
@@ -352,7 +292,9 @@ registerModel({
             inverse: 'messagingAsAllCurrentClientThreads',
         }),
         browser: attr({
-            compute: '_computeBrowser',
+            compute() {
+                return browser;
+            },
         }),
         cannedResponses: many('CannedResponse'),
         chatWindowManager: one('ChatWindowManager', {
@@ -410,7 +352,9 @@ registerModel({
          * Promise that will be resolved when messaging is initialized.
          */
         initializedPromise: attr({
-            compute: '_computeInitializedPromise',
+            compute() {
+                return makeDeferred();
+            },
             required: true,
         }),
         initializer: one('MessagingInitializer', {
@@ -420,7 +364,9 @@ registerModel({
         }),
         internalUserGroupId: attr(),
         isCurrentUserGuest: attr({
-            compute: '_computeIsCurrentUserGuest',
+            compute() {
+                return Boolean(!this.currentPartner && this.currentGuest);
+            },
         }),
         isInitialized: attr({
             default: false,
@@ -429,7 +375,14 @@ registerModel({
             default: false,
         }),
         isNotificationBlocked: attr({
-            compute: '_computeIsNotificationBlocked',
+            compute() {
+                const windowNotification = this.browser.Notification;
+                return (
+                    windowNotification &&
+                    windowNotification.permission !== 'granted' &&
+                    !this.isNotificationPermissionDefault
+                );
+            },
         }),
         /**
          * States whether browser Notification Permission is currently in its
@@ -453,7 +406,12 @@ registerModel({
          * Determines the bus that is used to communicate messaging events.
          */
         messagingBus: attr({
-            compute: '_computeMessagingBus',
+            compute() {
+                if (this.messagingBus) {
+                    return; // avoid overwrite if already provided (example in tests)
+                }
+                return new EventBus();
+            },
             required: true,
         }),
         messagingMenu: one('MessagingMenu', {
@@ -461,7 +419,9 @@ registerModel({
             isCausal: true,
         }),
         notificationHandler: one('MessagingNotificationHandler', {
-            compute: '_computeNotificationHandler',
+            compute() {
+                return {};
+            },
             isCausal: true,
         }),
         outOfFocusUnreadMessageCounter: attr({
@@ -486,7 +446,12 @@ registerModel({
             readonly: true,
         }),
         callInviteRequestPopups: many('CallInviteRequestPopup', {
-            compute: '_computeCallInviteRequestPopups',
+            compute() {
+                if (this.ringingThreads.length === 0) {
+                    return clear();
+                }
+                return this.ringingThreads.map(thread => thread.callInviteRequestPopup);
+            },
             isCausal: true,
         }),
         soundEffects: one('SoundEffects', {

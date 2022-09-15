@@ -408,49 +408,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAvatarUrl() {
-            if (this.messaging.isCurrentUserGuest) {
-                if (!this.thread) {
-                    return '';
-                }
-                return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
-            }
-            if (this.messaging.currentPartner) {
-                return this.messaging.currentPartner.avatarUrl;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasGuestNameChanged() {
-            return Boolean(
-                this.messaging.currentGuest &&
-                this.pendingGuestName !== this.messaging.currentGuest.name
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasDescriptionArea() {
-            return Boolean(this.thread && (this.thread.description || this.thread.isDescriptionEditableByCurrentUser));
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsDescriptionHighlighted() {
-            return Boolean(
-                this.isMouseOverThreadDescription &&
-                this.thread.isDescriptionEditableByCurrentUser
-            );
-        },
-        /**
-         * @private
          */
         _discardThreadRename() {
             this.update({
@@ -501,7 +458,18 @@ registerModel({
          * States the URL of the profile picture of the current user.
          */
         avatarUrl: attr({
-            compute: '_computeAvatarUrl',
+            compute() {
+                if (this.messaging.isCurrentUserGuest) {
+                    if (!this.thread) {
+                        return '';
+                    }
+                    return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
+                }
+                if (this.messaging.currentPartner) {
+                    return this.messaging.currentPartner.avatarUrl;
+                }
+                return clear();
+            },
             default: '',
         }),
         /**
@@ -600,13 +568,20 @@ registerModel({
          * server side.
          */
         hasGuestNameChanged: attr({
-            compute: '_computeHasGuestNameChanged',
+            compute() {
+                return Boolean(
+                    this.messaging.currentGuest &&
+                    this.pendingGuestName !== this.messaging.currentGuest.name
+                );
+            },
         }),
         /**
          * Determines whether description area should display on top bar.
          */
         hasDescriptionArea: attr({
-            compute: '_computeHasDescriptionArea',
+            compute() {
+                return Boolean(this.thread && (this.thread.description || this.thread.isDescriptionEditableByCurrentUser));
+            },
         }),
         /**
          * Determines whether the guest is currently being renamed.
@@ -630,7 +605,12 @@ registerModel({
          * States whether this thread description is highlighted.
          */
         isDescriptionHighlighted: attr({
-            compute: '_computeIsDescriptionHighlighted'
+            compute() {
+                return Boolean(
+                    this.isMouseOverThreadDescription &&
+                    this.thread.isDescriptionEditableByCurrentUser
+                );
+            },
         }),
         /**
          * Determines whether this thread is currently being renamed.

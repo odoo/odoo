@@ -351,284 +351,134 @@ registerModel({
                 }
             }
         },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeAwaitUserInputDebounceTime() {
-            return 10000;
-        },
-        /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computeData() {
-            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
-                return this.messaging.publicLivechatGlobal.testChatbotData.chatbot;
-            }
-            if (this.state === 'init') {
-                return this.messaging.publicLivechatGlobal.rule.chatbot;
-            }
-            if (this.state === 'welcome') {
-                return this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot;
-            }
-            if (
-                this.state === 'restore_session' &&
-                this.localStorageState
-            ) {
-                return this.localStorageState._chatbot;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {function}
-         */
-        _computeDebouncedAwaitUserInput() {
-            // debounced to let the user type several sentences, see 'Chatbot/awaitUserInput' for details
-            return _.debounce(
-                this.awaitUserInput,
-                this.awaitUserInputDebounceTime,
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsActive() {
-            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
-                return true;
-            }
-            if (this.messaging.publicLivechatGlobal.rule && this.messaging.publicLivechatGlobal.rule.chatbot) {
-                return true;
-            }
-            if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
-                return true;
-            }
-            if (this.state === 'welcome') {
-                return true;
-            }
-            if (this.localStorageState) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsExpectingUserInput() {
-            if (!this.currentStep) {
-                return clear();
-            }
-            return [
-                'question_phone',
-                'question_email',
-                'free_input_single',
-                'free_input_multi',
-            ].includes(this.currentStep.data.chatbot_step_type);
-        },
-        /**
-         * @private
-         * @returns {FieldCommand|Object}
-         */
-        _computeLocalStorageState() {
-            if (!this.messaging.publicLivechatGlobal.sessionCookie) {
-                return clear();
-            }
-            const data = localStorage.getItem(this.sessionCookieKey);
-            if (!data) {
-                return clear();
-            }
-            return JSON.parse(data);
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeName() {
-            if (!this.data) {
-                return clear();
-            }
-            return this.data.name;
-        },
-        /**
-         * Will display a "Restart script" button in the conversation toolbar.
-         *
-         * Side-case: if the conversation has been forwarded to a human operator, we don't want to
-         * display that restart button.
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasRestartButton() {
-            return Boolean(
-                !this.currentStep ||
-                (
-                    this.currentStep.data.chatbot_step_type !== 'forward_operator' ||
-                    !this.currentStep.data.chatbot_operator_found
-                )
-            );
-        },
-        /**
-         * @private
-         * @returns {Array|FieldCommand}
-         */
-        _computeLastWelcomeStep() {
-            if (!this.welcomeSteps) {
-                return clear();
-            }
-            return this.welcomeSteps[this.welcomeSteps.length - 1];
-        },
-        /**
-         * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeMessageDelay() {
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeScriptId() {
-            if (!this.data) {
-                return clear();
-            }
-            return this.data.chatbot_script_id;
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeSessionCookieKey() {
-            if (!this.messaging.publicLivechatGlobal.sessionCookie) {
-                return clear();
-            }
-            return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.messaging.publicLivechatGlobal.sessionCookie).uuid;
-        },
-        /**
-         * Helper method that checks if the script should be ended or not.
-         * If the user has closed the conversation -> script has ended.
-         *
-         * Otherwise, there are 2 use cases where we want to end the script:
-         *
-         * If the current step is the last one AND the conversation was not taken over by a human operator
-         *   1. AND we expect a user input (or we are on a selection)
-         *       AND the user has already answered
-         *   2. AND we don't expect a user input
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _computeShouldEndScript() {
-            if (!this.currentStep) {
-                return clear();
-            }
-            if (this.currentStep.data.conversation_closed) {
-                return true;
-            }
-            if (this.currentStep.data.chatbot_step_is_last &&
-                (this.currentStep.data.chatbot_step_type !== 'forward_operator' ||
-                !this.currentStep.data.chatbot_operator_found)
-            ) {
-                if (this.currentStep.data.chatbot_step_type === 'question_email'
-                    && !this.currentStep.data.is_email_valid
-                ) {
-                    // email is not (yet) valid, let the user answer / try again
-                    return false;
-                } else if (
-                    (this.isExpectingUserInput ||
-                    this.currentStep.data.chatbot_step_type === 'question_selection') &&
-                    this.messaging.publicLivechatGlobal.messages.length !== 0
-                ) {
-                    if (this.messaging.publicLivechatGlobal.lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
-                        // we are on the last step of the script, expect a user input and the user has
-                        // already answered
-                        // -> end the script
-                        return true;
-                    }
-                } else if (!this.isExpectingUserInput) {
-                    // we are on the last step of the script and we do not expect a user input
-                    // -> end the script
-                    return true;
-                }
-            }
-            return false;
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeState() {
-            if (this.messaging.publicLivechatGlobal.rule && !!this.messaging.publicLivechatGlobal.rule.chatbot) {
-                return 'init';
-            }
-            if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
-                return 'welcome';
-            }
-            if (
-                !this.messaging.publicLivechatGlobal.rule && 
-                this.messaging.publicLivechatGlobal.history !== null &&
-                this.messaging.publicLivechatGlobal.history.length !== 0 &&
-                this.sessionCookieKey &&
-                localStorage.getItem(this.sessionCookieKey)
-            ) {
-                return 'restore_session';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Array|FieldCommand}
-         */
-        _computeWelcomeSteps() {
-            if (!this.data) {
-                return clear();
-            }
-            return this.data.chatbot_welcome_steps;
-        },
     },
     fields: {
         awaitUserInputDebounceTime: attr({
-            compute: '_computeAwaitUserInputDebounceTime',
+            compute() {
+                return 10000;
+            },
         }),
         data: attr({
-            compute: '_computeData',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.isTestChatbot) {
+                    return this.messaging.publicLivechatGlobal.testChatbotData.chatbot;
+                }
+                if (this.state === 'init') {
+                    return this.messaging.publicLivechatGlobal.rule.chatbot;
+                }
+                if (this.state === 'welcome') {
+                    return this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot;
+                }
+                if (
+                    this.state === 'restore_session' &&
+                    this.localStorageState
+                ) {
+                    return this.localStorageState._chatbot;
+                }
+                return clear();
+            },
         }),
         currentStep: one('ChatbotStep', {
             inverse: 'chabotOwner',
         }),
         debouncedAwaitUserInput: attr({
-            compute: '_computeDebouncedAwaitUserInput',
+            compute() {
+                // debounced to let the user type several sentences, see 'Chatbot/awaitUserInput' for details
+                return _.debounce(
+                    this.awaitUserInput,
+                    this.awaitUserInputDebounceTime,
+                );
+            },
         }),
         hasRestartButton: attr({
-            compute: '_computeHasRestartButton',
+            /**
+             * Will display a "Restart script" button in the conversation toolbar.
+             *
+             * Side-case: if the conversation has been forwarded to a human operator, we don't want to
+             * display that restart button.
+             */
+            compute() {
+                return Boolean(
+                    !this.currentStep ||
+                    (
+                        this.currentStep.data.chatbot_step_type !== 'forward_operator' ||
+                        !this.currentStep.data.chatbot_operator_found
+                    )
+                );
+            },
             default: false,
         }),
         isActive: attr({
-            compute: '_computeIsActive',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.isTestChatbot) {
+                    return true;
+                }
+                if (this.messaging.publicLivechatGlobal.rule && this.messaging.publicLivechatGlobal.rule.chatbot) {
+                    return true;
+                }
+                if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
+                    return true;
+                }
+                if (this.state === 'welcome') {
+                    return true;
+                }
+                if (this.localStorageState) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
         }),
         isExpectingUserInput: attr({
-            compute: '_computeIsExpectingUserInput',
+            compute() {
+                if (!this.currentStep) {
+                    return clear();
+                }
+                return [
+                    'question_phone',
+                    'question_email',
+                    'free_input_single',
+                    'free_input_multi',
+                ].includes(this.currentStep.data.chatbot_step_type);
+            },
             default: false,
         }),
         isRedirecting: attr({
             default: false,
         }),
         lastWelcomeStep: attr({
-            compute: '_computeLastWelcomeStep',
+            compute() {
+                if (!this.welcomeSteps) {
+                    return clear();
+                }
+                return this.welcomeSteps[this.welcomeSteps.length - 1];
+            },
         }),
         localStorageState: attr({
-            compute: '_computeLocalStorageState',
+            compute() {
+                if (!this.messaging.publicLivechatGlobal.sessionCookie) {
+                    return clear();
+                }
+                const data = localStorage.getItem(this.sessionCookieKey);
+                if (!data) {
+                    return clear();
+                }
+                return JSON.parse(data);
+            },
         }),
         name: attr({
-            compute: '_computeName',
+            compute() {
+                if (!this.data) {
+                    return clear();
+                }
+                return this.data.name;
+            },
         }),
         nextStepTimeout: attr(),
         messageDelay: attr({
-            compute: '_computeMessageDelay',
+            compute() {
+                return clear();
+            },
             default: 3500, // in milliseconds
         }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
@@ -636,22 +486,99 @@ registerModel({
             inverse: 'chatbot',
         }),
         scriptId: attr({
-            compute: '_computeScriptId',
+            compute() {
+                if (!this.data) {
+                    return clear();
+                }
+                return this.data.chatbot_script_id;
+            },
         }),
         serverUrl: attr(),
         sessionCookieKey: attr({
-            compute: '_computeSessionCookieKey',
+            compute() {
+                if (!this.messaging.publicLivechatGlobal.sessionCookie) {
+                    return clear();
+                }
+                return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.messaging.publicLivechatGlobal.sessionCookie).uuid;
+            },
         }),
         shouldEndScript: attr({
-            compute: '_computeShouldEndScript',
+            /**
+             * Compute method that checks if the script should be ended or not.
+             * If the user has closed the conversation -> script has ended.
+             *
+             * Otherwise, there are 2 use cases where we want to end the script:
+             *
+             * If the current step is the last one AND the conversation was not taken over by a human operator
+             *   1. AND we expect a user input (or we are on a selection)
+             *       AND the user has already answered
+             *   2. AND we don't expect a user input
+             */
+            compute() {
+                if (!this.currentStep) {
+                    return clear();
+                }
+                if (this.currentStep.data.conversation_closed) {
+                    return true;
+                }
+                if (this.currentStep.data.chatbot_step_is_last &&
+                    (this.currentStep.data.chatbot_step_type !== 'forward_operator' ||
+                    !this.currentStep.data.chatbot_operator_found)
+                ) {
+                    if (this.currentStep.data.chatbot_step_type === 'question_email'
+                        && !this.currentStep.data.is_email_valid
+                    ) {
+                        // email is not (yet) valid, let the user answer / try again
+                        return false;
+                    } else if (
+                        (this.isExpectingUserInput ||
+                        this.currentStep.data.chatbot_step_type === 'question_selection') &&
+                        this.messaging.publicLivechatGlobal.messages.length !== 0
+                    ) {
+                        if (this.messaging.publicLivechatGlobal.lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
+                            // we are on the last step of the script, expect a user input and the user has
+                            // already answered
+                            // -> end the script
+                            return true;
+                        }
+                    } else if (!this.isExpectingUserInput) {
+                        // we are on the last step of the script and we do not expect a user input
+                        // -> end the script
+                        return true;
+                    }
+                }
+                return false;
+            },
             default: false,
         }),
         state: attr({
-            compute: '_computeState',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.rule && !!this.messaging.publicLivechatGlobal.rule.chatbot) {
+                    return 'init';
+                }
+                if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
+                    return 'welcome';
+                }
+                if (
+                    !this.messaging.publicLivechatGlobal.rule && 
+                    this.messaging.publicLivechatGlobal.history !== null &&
+                    this.messaging.publicLivechatGlobal.history.length !== 0 &&
+                    this.sessionCookieKey &&
+                    localStorage.getItem(this.sessionCookieKey)
+                ) {
+                    return 'restore_session';
+                }
+                return clear();
+            },
         }),
         welcomeMessageTimeout: attr(),
         welcomeSteps: attr({
-            compute: '_computeWelcomeSteps',
+            compute() {
+                if (!this.data) {
+                    return clear();
+                }
+                return this.data.chatbot_welcome_steps;
+            },
         }),
     },
 });

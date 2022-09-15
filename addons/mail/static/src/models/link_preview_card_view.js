@@ -19,22 +19,6 @@ registerModel({
         onMouseLeave() {
             this.update({ isHovered: false });
         },
-        /**
-         * @private
-         * @returns {LinkPreviewAsideView|FieldCommand}
-         */
-        _computeLinkPreviewAsideView() {
-            if (!this.linkPreview.isDeletable) {
-                return clear();
-            }
-            if (this.messaging.device.isMobileDevice) {
-                return {};
-            }
-            if (this.isHovered || (this.linkPreviewAsideView && this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)) {
-                return {};
-            }
-            return clear();
-        },
     },
     fields: {
         isHovered: attr({
@@ -45,7 +29,18 @@ registerModel({
             inverse: 'linkPreviewCardView',
         }),
         linkPreviewAsideView: one('LinkPreviewAsideView', {
-            compute: '_computeLinkPreviewAsideView',
+            compute() {
+                if (!this.linkPreview.isDeletable) {
+                    return clear();
+                }
+                if (this.messaging.device.isMobileDevice) {
+                    return {};
+                }
+                if (this.isHovered || (this.linkPreviewAsideView && this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'linkPreviewCardView',
         }),
         linkPreviewListViewOwner: one('LinkPreviewListView', {
