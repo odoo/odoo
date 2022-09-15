@@ -28,6 +28,18 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             self.assertEqual(holiday_status.virtual_remaining_leaves, vrl,
                              'hr_holidays: wrong type days computation')
 
+    def _check_holidays_count(self, holidays_count_result, ml, lt, rl, vrl, vlt):
+        self.assertEqual(
+            holidays_count_result,
+            {
+                'max_leaves': ml,
+                'leaves_taken': lt,
+                'remaining_leaves': rl,
+                'virtual_remaining_leaves': vrl,
+                'virtual_leaves_taken': vlt,
+            }
+        )
+
     def setUp(self):
         super(TestLeaveRequests, self).setUp()
 
@@ -681,15 +693,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'number_of_days': 3,
             })
 
-            self.assertEqual(
+            self._check_holidays_count(
                 self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                {
-                    'max_leaves': 5,
-                    'leaves_taken': 0,
-                    'remaining_leaves': 5,
-                    'virtual_remaining_leaves': 2,
-                    'virtual_leaves_taken': 3,
-                }
+                ml=5, lt=0, rl=5, vrl=2, vlt=3,
             )
 
             self.holidays_type_2.requires_allocation = 'no'
@@ -704,28 +710,113 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
             # The 5 allocation days are not consumed anymore
             # virtual_remaining_leaves reflect the total number of leave days taken
-            self.assertEqual(
+            self._check_holidays_count(
                 self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                {
-                    'max_leaves': 5,
-                    'leaves_taken': 0,
-                    'remaining_leaves': 5,
-                    'virtual_remaining_leaves': 5,
-                    'virtual_leaves_taken': 6,
-                }
+                ml=5, lt=0, rl=5, vrl=5, vlt=6,
             )
 
             leave1.with_user(self.user_hrmanager_id).action_approve()
             leave2.with_user(self.user_hrmanager_id).action_approve()
 
             # leaves_taken and virtual_leaves_taken reflect the total number of leave days taken
-            self.assertEqual(
+            self._check_holidays_count(
                 self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                {
-                    'max_leaves': 5,
-                    'leaves_taken': 6,
-                    'remaining_leaves': 5,
-                    'virtual_remaining_leaves': 5,
-                    'virtual_leaves_taken': 6,
-                }
+                ml=5, lt=6, rl=5, vrl=5, vlt=6,
+            )
+
+    def test_archived_allocation(self):
+        with freeze_time('2022-09-15'):
+            allocation_2021 = self.env['hr.leave.allocation'].create({
+                'name': 'Annual Time Off 2021',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'number_of_days': 10,
+                'state': 'confirm',
+                'date_from': '2021-06-01',
+                'date_to': '2021-12-31',
+            })
+            allocation_2022 = self.env['hr.leave.allocation'].create({
+                'name': 'Annual Time Off 2022',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'number_of_days': 20,
+                'state': 'confirm',
+                'date_from': '2022-01-01',
+                'date_to': '2022-12-31',
+            })
+            allocation_2021.action_validate()
+            allocation_2022.action_validate()
+
+            # Leave taken in 2021
+            leave_2021 = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'holiday_type': 'employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'date_from': datetime(2021, 8, 9, 0, 0, 0),
+                'date_to': datetime(2021, 8, 13, 23, 59, 59),
+            })
+            leave_2021.with_user(self.user_hrmanager_id).action_approve()
+
+            # The holidays count only takes into account the valid allocations at that date
+            self._check_holidays_count(
+                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
+                ml=10, lt=5, rl=5, vrl=5, vlt=5,
+            )
+
+            # Virtual remaining leave is equal to 1 because there is only one day remaining in the allocation based on its validity
+            self._check_holidays_count(
+                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 31))[self.employee_emp_id][self.holidays_type_2.id],
+                ml=10, lt=5, rl=5, vrl=1, vlt=5,
+            )
+
+            leave_2022 = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'holiday_type': 'employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'date_from': datetime(2022, 8, 9, 0, 0, 0),
+                'date_to': datetime(2022, 8, 13, 23, 59, 59),
+            })
+            leave_2022.with_user(self.user_hrmanager_id).action_approve()
+
+            # The holidays count in 2022 is not affected by the first leave taken in 2021
+            self._check_holidays_count(
+                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
+                ml=20, lt=4, rl=16, vrl=16, vlt=4,
+            )
+
+            # The holidays count in 2021 is not affected by the leave taken in 2022
+            self._check_holidays_count(
+                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
+                ml=10, lt=5, rl=5, vrl=5, vlt=5,
+            )
+
+            allocation_2021.active = False
+
+            # If the allocation is archived, the leaves taken are still counted on this allocation
+            # but the max leaves and remaining leaves are not counted anymore
+            self._check_holidays_count(
+                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
+                ml=0, lt=5, rl=0, vrl=0, vlt=5,
+            )
+
+            # The holidays count in 2022 is not affected by the archived allocation in 2021
+            self._check_holidays_count(
+                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
+                ml=20, lt=4, rl=16, vrl=16, vlt=4,
+            )
+
+            allocation_2021.active = True
+
+            # The holidays count in 2021 is back to what it was when the allocation was active
+            self._check_holidays_count(
+                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
+                ml=10, lt=5, rl=5, vrl=5, vlt=5,
+            )
+
+            # The holidays count in 2022 is still not affected by the allocation in 2021
+            self._check_holidays_count(
+                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
+                ml=20, lt=4, rl=16, vrl=16, vlt=4,
             )
