@@ -1,46 +1,68 @@
 /** @odoo-module **/
 
+import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 
+export const UPDATE_BUS_PRESENCE_DELAY = 60000;
 /**
  * This service updates periodically the user presence in order for the
  * im_status to be up to date.
+ *
+ * In order to receive bus notifications related to im_status, one must
+ * register model/ids to monitor to this service.
  */
 export const imStatusService = {
     dependencies: ['bus_service', 'multi_tab', 'presence'],
 
     start(env, { bus_service, multi_tab, presence }) {
-        const UPDATE_BUS_PRESENCE_DELAY = 30000;
-        let updateBusPresenceInterval;
+        const imStatusModelToIds = {};
+        let updateBusPresenceTimeout;
 
         function updateBusPresence() {
-            const now = new Date().getTime();
-            bus_service.send("update_presence", now - presence.getLastPresence());
-        }
-
-        function stopUpdatingBusPresence() {
-            clearInterval(updateBusPresenceInterval);
-            updateBusPresenceInterval = null;
-        }
-
-        function startUpdatingBusPresence() {
-            if (updateBusPresenceInterval || !multi_tab.isOnMainTab()) {
+            clearTimeout(updateBusPresenceTimeout);
+            if (!multi_tab.isOnMainTab()) {
                 return;
             }
-            updateBusPresence();
-            updateBusPresenceInterval = setInterval(
-                updateBusPresence,
-                UPDATE_BUS_PRESENCE_DELAY,
-            );
+            const now = new Date().getTime();
+            bus_service.send("update_presence", {
+                inactivity_period: now - presence.getLastPresence(),
+                im_status_ids_by_model: { ...imStatusModelToIds },
+            });
+            updateBusPresenceTimeout = browser.setTimeout(updateBusPresence, UPDATE_BUS_PRESENCE_DELAY);
         }
+        // wait for im_status model/ids to be registered before starting.
+        browser.setTimeout(updateBusPresence, 250);
+        multi_tab.bus.addEventListener('become_main_tab', updateBusPresence);
+        bus_service.addEventListener('reconnect', updateBusPresence);
+        multi_tab.bus.addEventListener('no_longer_main_tab', () => clearTimeout(updateBusPresenceTimeout));
+        bus_service.addEventListener('disconnect', () => clearTimeout(updateBusPresenceTimeout));
 
-        if (multi_tab.isOnMainTab()) {
-            startUpdatingBusPresence();
-        }
-        multi_tab.bus.addEventListener('become_main_tab', startUpdatingBusPresence);
-        bus_service.addEventListener('reconnect', startUpdatingBusPresence);
-        multi_tab.bus.addEventListener('no_longer_main_tab', stopUpdatingBusPresence);
-        bus_service.addEventListener('disconnect', stopUpdatingBusPresence);
+        return {
+            /**
+             * Register model/ids whose im_status should be monitored.
+             * Notification related to the im_status are then sent
+             * through the bus. Overwrite registration if already
+             * present.
+             *
+             * @param {string} model model related to the given ids.
+             * @param {Number[]} ids ids whose im_status should be
+             * monitored.
+             */
+            registerToImStatus(model, ids) {
+                if (!ids.length) {
+                    return this.unregisterFromImStatus(model);
+                }
+                imStatusModelToIds[model] = ids;
+            },
+            /**
+             * Unregister model from im_status notifications.
+             *
+             * @param {string} model model to unregister.
+             */
+            unregisterFromImStatus(model) {
+                delete imStatusModelToIds[model];
+            },
+        };
     },
 };
 

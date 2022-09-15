@@ -60,6 +60,11 @@ registerModel({
         im_status: attr({
             compute: '_computeImStatus',
         }),
+        messagingAsAnyPersona: one('Messaging', {
+            default: {},
+            inverse: 'allPersonas',
+        }),
+
         name: attr({
             compute: '_computeName',
         }),

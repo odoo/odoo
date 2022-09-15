@@ -17,6 +17,8 @@ registerModel({
             this.refreshIsNotificationPermissionDefault();
         },
         _willDelete() {
+            this.env.services['im_status'].unregisterFromImStatus('res.partner');
+            this.env.services['im_status'].unregisterFromImStatus('mail.guest');
             this.env.bus.removeEventListener('window_focus', this._handleGlobalWindowFocus);
             delete odoo.__DEBUG__.messaging;
         },
@@ -92,9 +94,6 @@ registerModel({
         notify(params) {
             const { message, ...options } = params;
             return this.env.services.notification.add(message, options);
-        },
-        onFetchImStatusTimerTimeout() {
-            this.startFetchImStatus();
         },
         /**
          * Opens a chat with the provided person and returns it.
@@ -221,36 +220,19 @@ registerModel({
                 isNotificationPermissionDefault: Boolean(browserNotification) && browserNotification.permission === 'default',
             });
         },
-        async startFetchImStatus() {
-            this.update({
-                fetchImStatusTimer: { doReset: this.fetchImStatusTimer ? true : undefined },
-            });
+        updateImStatusRegistration() {
             const partnerIds = [];
             for (const partner of this.models['Partner'].all()) {
                 if (partner.im_status !== 'im_partner' && !partner.is_public) {
                     partnerIds.push(partner.id);
                 }
             }
-            if (partnerIds.length === 0) {
-                return;
-            }
             const guestIds = [];
             for (const guest of this.models['Guest'].all()) {
                 guestIds.push(guest.id);
             }
-            if (partnerIds.length !== 0 || guestIds.length !== 0) {
-                const dataList = await this.messaging.rpc({
-                    route: '/bus/im_status',
-                    params: {
-                        partner_ids: partnerIds,
-                        guest_ids: guestIds,
-                    },
-                }, { shadow: true });
-                this.models['Partner'].insert(dataList.partners);
-                if (dataList.guests) {
-                    this.models['Guest'].insert(dataList.guests);
-                }
-            }
+            this.env.services['im_status'].registerToImStatus('res.partner', partnerIds);
+            this.env.services['im_status'].registerToImStatus('mail.guest', guestIds);
         },
         /**
          * @private
@@ -332,6 +314,14 @@ registerModel({
         /**
          * @private
          */
+        _onChangeAllPersonas() {
+            if (this.isInitialized) {
+                this.updateImStatusRegisterThrottle.do();
+            }
+        },
+        /**
+         * @private
+         */
         _onChangeRingingThreads() {
             if (this.ringingThreads && this.ringingThreads.length > 0) {
                 this.soundEffects.incomingCall.play({ loop: true });
@@ -343,6 +333,9 @@ registerModel({
     fields: {
         allMailboxes: many('Mailbox', {
             inverse: 'messagingAsAnyMailbox',
+        }),
+        allPersonas: many('Persona', {
+            inverse: 'messagingAsAnyPersona',
         }),
         /**
          * Inverse of the messaging field present on all models. This field
@@ -403,12 +396,6 @@ registerModel({
             default: {},
             isCausal: true,
             readonly: true,
-        }),
-        fetchImStatusTimer: one('Timer', {
-            inverse: 'messagingOwnerAsFetchImStatusTimer',
-        }),
-        fetchImStatusTimerDuration: attr({
-            default: 50 * 1000,
         }),
         hasLinkPreviewFeature: attr(),
         history: one('Mailbox', {
@@ -516,6 +503,12 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        updateImStatusRegisterThrottle: one('Throttle', {
+            compute() {
+                return { func: this.updateImStatusRegistration };
+            },
+            inverse: 'messagingAsUpdateImStatusRegister',
+        }),
         userSetting: one('UserSetting', {
             default: {},
             isCausal: true,
@@ -529,6 +522,10 @@ registerModel({
         {
             dependencies: ['allCurrentClientThreads'],
             methodName: '_onChangeAllCurrentClientThreads',
+        },
+        {
+            dependencies: ['allPersonas'],
+            methodName: '_onChangeAllPersonas',
         },
     ],
 });

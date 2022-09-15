@@ -12,7 +12,13 @@ patch(MockServer.prototype, 'bus', {
     init() {
         this._super(...arguments);
         Object.assign(this, TEST_USER_IDS);
-        this.websocketWorker = patchWebsocketWorkerWithCleanup();
+        const self = this;
+        this.websocketWorker = patchWebsocketWorkerWithCleanup({
+            _sendToServer(message) {
+                self._performWebsocketRequest(message);
+                this._super(message);
+            },
+        });
         this.pendingLongpollingPromise = null;
         this.notificationsToBeResolved = [];
         this.lastBusNotificationId = 0;
@@ -21,6 +27,19 @@ patch(MockServer.prototype, 'bus', {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * @param {Object} message Message sent through the websocket to the
+     * server.
+     * @param {string} [message.event_name]
+     * @param {any} [message.data]
+     */
+    _performWebsocketRequest({ event_name, data }) {
+        if (event_name === 'update_presence') {
+            const { inactivity_period, im_status_ids_by_model } = data;
+            this._mockIrWebsocket__updatePresence(inactivity_period, im_status_ids_by_model);
+        }
+    },
 
     /**
      * @override
@@ -71,7 +90,6 @@ patch(MockServer.prototype, 'bus', {
         this.websocketWorker.broadcast('notification', values);
 
     },
-
     /**
      * Simulate the lost of the connection by simulating a closeEvent on
      * the worker websocket.

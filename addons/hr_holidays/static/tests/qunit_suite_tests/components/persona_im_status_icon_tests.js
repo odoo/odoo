@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { UPDATE_BUS_PRESENCE_DELAY } from '@bus/im_status_service';
+
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('hr_holidays', {}, function () {
@@ -18,7 +20,7 @@ QUnit.test('on leave & online', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+    const { advanceTime, afterNextRender, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId,
@@ -27,7 +29,7 @@ QUnit.test('on leave & online', async function (assert) {
         hasTimeControl: true,
     });
     await openDiscuss();
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.hasClass(
         document.querySelector('.o_PersonaImStatusIcon_icon'),
         'o-online',
@@ -52,7 +54,7 @@ QUnit.test('on leave & away', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+    const { advanceTime, afterNextRender, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId,
@@ -61,7 +63,7 @@ QUnit.test('on leave & away', async function (assert) {
         hasTimeControl: true,
     });
     await openDiscuss();
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.hasClass(
         document.querySelector('.o_PersonaImStatusIcon_icon'),
         'o-away',
@@ -86,7 +88,7 @@ QUnit.test('on leave & offline', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+    const { advanceTime, afterNextRender, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId,
@@ -95,7 +97,7 @@ QUnit.test('on leave & offline', async function (assert) {
         hasTimeControl: true,
     });
     await openDiscuss();
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.hasClass(
         document.querySelector('.o_PersonaImStatusIcon_icon'),
         'o-offline',

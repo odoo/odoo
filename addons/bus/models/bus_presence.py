@@ -6,11 +6,11 @@ from psycopg2 import OperationalError
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.addons.bus.models.bus import TIMEOUT
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
-DISCONNECTION_TIMER = TIMEOUT + 5
+UPDATE_PRESENCE_DELAY = 60
+DISCONNECTION_TIMER = UPDATE_PRESENCE_DELAY + 5
 AWAY_TIMER = 1800  # 30 minutes
 
 

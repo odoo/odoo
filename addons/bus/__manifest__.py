@@ -26,7 +26,7 @@
             'bus/static/tests/**/*.js',
         ],
         'web.qunit_mobile_suite_tests': [
-            'bus/static/tests/helpers/*.js',
+            'bus/static/tests/helpers/**/*.js',
         ],
         'bus.websocket_worker_assets': [
             'web/static/src/legacy/js/promise_extension.js',

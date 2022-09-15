@@ -33,7 +33,7 @@ registerModel({
                 discuss.openInitThread();
             }
             if (this.messaging.currentUser) {
-                this.messaging.startFetchImStatus();
+                this.messaging.updateImStatusRegistration();
                 this._loadMessageFailures();
             }
         },

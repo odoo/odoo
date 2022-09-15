@@ -8,6 +8,14 @@ class IrWebsocket(models.AbstractModel):
     _name = 'ir.websocket'
     _description = 'websocket message handling'
 
+    def _get_im_status(self, im_status_ids_by_model):
+        im_status = {}
+        if 'res.partner' in im_status_ids_by_model:
+            im_status['partners'] = self.env['res.partner'].with_context(active_test=False).search(
+                [('id', 'in', im_status_ids_by_model['res.partner'])]).read(['im_status']
+            )
+        return im_status
+
     def _build_bus_channel_list(self, channels):
         """
             Return the list of channels to subscribe to. Override this
@@ -25,13 +33,16 @@ class IrWebsocket(models.AbstractModel):
         channels = set(self._build_bus_channel_list(data['channels']))
         dispatch.subscribe(channels, data['last'], self.env.registry.db_name, wsrequest.ws)
 
-    def _update_bus_presence(self, inactivity_period):
+    def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
         if self.env.uid:
             self.env['bus.presence'].update(
                 inactivity_period,
                 identity_field='user_id',
                 identity_value=self.env.uid
             )
+            im_status_notification = self._get_im_status(im_status_ids_by_model)
+            if im_status_ids_by_model:
+                self.env['bus.bus']._sendone(self.env.user.partner_id, 'bus/im_status', im_status_notification)
 
     @classmethod
     def _authenticate(cls):
