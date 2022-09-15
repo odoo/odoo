@@ -6,77 +6,17 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelMember',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAvatarUrl() {
-            if (this.persona.partner) {
-                return `/mail/channel/${this.channel.id}/partner/${this.persona.partner.id}/avatar_128`;
-            }
-            if (this.persona.guest) {
-                return `/mail/channel/${this.channel.id}/guest/${this.persona.guest.id}/avatar_128?unique=${this.persona.guest.name}`;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computeChannelAsMemberOfCurrentUser() {
-            return this.isMemberOfCurrentUser ? this.channel : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChannelAsOfflineMember() {
-            if (this.persona.partner) {
-                return !this.persona.partner.isOnline ? this.channel : clear();
-            }
-            if (this.persona.guest) {
-                return !this.persona.guest.isOnline ? this.channel : clear();
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChannelAsOnlineMember() {
-            if (this.persona.partner) {
-                return this.persona.partner.isOnline ? this.channel : clear();
-            }
-            if (this.persona.guest) {
-                return this.persona.guest.isOnline ? this.channel : clear();
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsMemberOfCurrentUser() {
-            if (this.messaging.currentPartner) {
-                return this.messaging.currentPartner.persona === this.persona;
-            }
-            if (this.messaging.currentGuest) {
-                return this.messaging.currentGuest.persona === this.persona;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsStreaming() {
-            return Boolean(this.rtcSession && this.rtcSession.videoStream);
-        },
-    },
     fields: {
         avatarUrl: attr({
-            compute: '_computeAvatarUrl',
+            compute() {
+                if (this.persona.partner) {
+                    return `/mail/channel/${this.channel.id}/partner/${this.persona.partner.id}/avatar_128`;
+                }
+                if (this.persona.guest) {
+                    return `/mail/channel/${this.channel.id}/guest/${this.persona.guest.id}/avatar_128?unique=${this.persona.guest.name}`;
+                }
+                return clear();
+            },
         }),
         callParticipantCards: many('CallParticipantCard', {
             inverse: 'channelMember',
@@ -88,15 +28,33 @@ registerModel({
             required: true,
         }),
         channelAsMemberOfCurrentUser: one('Channel', {
-            compute: '_computeChannelAsMemberOfCurrentUser',
+            compute() {
+                return this.isMemberOfCurrentUser ? this.channel : clear();
+            },
             inverse: 'memberOfCurrentUser',
         }),
         channelAsOfflineMember: one('Channel', {
-            compute: '_computeChannelAsOfflineMember',
+            compute() {
+                if (this.persona.partner) {
+                    return !this.persona.partner.isOnline ? this.channel : clear();
+                }
+                if (this.persona.guest) {
+                    return !this.persona.guest.isOnline ? this.channel : clear();
+                }
+                return clear();
+            },
             inverse: 'orderedOfflineMembers',
         }),
         channelAsOnlineMember: one('Channel', {
-            compute: '_computeChannelAsOnlineMember',
+            compute() {
+                if (this.persona.partner) {
+                    return this.persona.partner.isOnline ? this.channel : clear();
+                }
+                if (this.persona.guest) {
+                    return this.persona.guest.isOnline ? this.channel : clear();
+                }
+                return clear();
+            },
             inverse: 'orderedOnlineMembers',
         }),
         channelMemberViews: many('ChannelMemberView', {
@@ -106,11 +64,21 @@ registerModel({
             identifying: true,
         }),
         isMemberOfCurrentUser: attr({
-            compute: '_computeIsMemberOfCurrentUser',
+            compute() {
+                if (this.messaging.currentPartner) {
+                    return this.messaging.currentPartner.persona === this.persona;
+                }
+                if (this.messaging.currentGuest) {
+                    return this.messaging.currentGuest.persona === this.persona;
+                }
+                return clear();
+            },
             default: false,
         }),
         isStreaming: attr({
-            compute: '_computeIsStreaming',
+            compute() {
+                return Boolean(this.rtcSession && this.rtcSession.videoStream);
+            },
         }),
         isTyping: attr({
             default: false,

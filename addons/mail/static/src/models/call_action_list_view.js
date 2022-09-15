@@ -79,79 +79,19 @@ registerModel({
                 startWithVideo: true,
             });
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeCallButtonTitle() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (this.thread.rtc) {
-                return this.env._t("Disconnect");
-            } else {
-                return this.env._t("Join Call");
-            }
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeCameraButtonTitle() {
-            if (this.messaging.rtc.sendUserVideo) {
-                return this.env._t("Stop camera");
-            } else {
-                return this.env._t("Turn camera on");
-            }
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeHeadphoneButtonTitle() {
-            if (!this.messaging.rtc.currentRtcSession) {
-                return clear();
-            }
-            if (this.messaging.rtc.currentRtcSession.isDeaf) {
-                return this.env._t("Undeafen");
-            } else {
-                return this.env._t("Deafen");
-            }
-        },
-        /**
-         * @private
-         */
-        _computeIsSmall() {
-            return Boolean(this.callView && this.callView.threadView.compact && !this.callView.isFullScreen);
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeMicrophoneButtonTitle() {
-            if (!this.messaging.rtc.currentRtcSession) {
-                return clear();
-            }
-            if (this.messaging.rtc.currentRtcSession.isMute) {
-                return this.env._t("Unmute");
-            } else {
-                return this.env._t("Mute");
-            }
-        },
-        /**
-         * @returns {string}
-         */
-        _computeScreenSharingButtonTitle() {
-            if (this.messaging.rtc.sendDisplay) {
-                return this.env._t("Stop screen sharing");
-            } else {
-                return this.env._t("Share screen");
-            }
-        },
     },
     fields: {
         callButtonTitle: attr({
-            compute: '_computeCallButtonTitle',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (this.thread.rtc) {
+                    return this.env._t("Disconnect");
+                } else {
+                    return this.env._t("Join Call");
+                }
+            },
             default: '',
         }),
         callMainView: one('CallMainView', {
@@ -163,25 +103,57 @@ registerModel({
             required: true,
         }),
         cameraButtonTitle: attr({
-            compute: '_computeCameraButtonTitle',
+            compute() {
+                if (this.messaging.rtc.sendUserVideo) {
+                    return this.env._t("Stop camera");
+                } else {
+                    return this.env._t("Turn camera on");
+                }
+            },
             default: '',
         }),
         headphoneButtonTitle: attr({
-            compute: '_computeHeadphoneButtonTitle',
+            compute() {
+                if (!this.messaging.rtc.currentRtcSession) {
+                    return clear();
+                }
+                if (this.messaging.rtc.currentRtcSession.isDeaf) {
+                    return this.env._t("Undeafen");
+                } else {
+                    return this.env._t("Deafen");
+                }
+            },
             default: '',
         }),
         isSmall: attr({
-            compute: '_computeIsSmall',
+            compute() {
+                return Boolean(this.callView && this.callView.threadView.compact && !this.callView.isFullScreen);
+            },
         }),
         microphoneButtonTitle: attr({
-            compute: '_computeMicrophoneButtonTitle',
+            compute() {
+                if (!this.messaging.rtc.currentRtcSession) {
+                    return clear();
+                }
+                if (this.messaging.rtc.currentRtcSession.isMute) {
+                    return this.env._t("Unmute");
+                } else {
+                    return this.env._t("Mute");
+                }
+            },
         }),
         moreButtonRef: attr(),
         moreMenuPopoverView: one('PopoverView', {
             inverse: 'callActionListViewOwnerAsMoreMenu',
         }),
         screenSharingButtonTitle: attr({
-            compute: '_computeScreenSharingButtonTitle',
+            compute() {
+                if (this.messaging.rtc.sendDisplay) {
+                    return this.env._t("Stop screen sharing");
+                } else {
+                    return this.env._t("Share screen");
+                }
+            },
             default: '',
         }),
         thread: one('Thread', {

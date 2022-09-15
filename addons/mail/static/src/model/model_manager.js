@@ -483,12 +483,8 @@ export class ModelManager {
                 }
                 // 4. Computed field.
                 if (field.compute) {
-                    if (typeof field.compute === 'string') {
-                        if (!model.prototype[field.compute]) {
-                            throw new Error(`Property "compute" of field(${fieldName}) on ${model} does not refer to an instance method of this model.`);
-                        }
-                    } else if (typeof field.compute !== 'function') {
-                        throw new Error(`Property "compute" of field(${fieldName}) on ${model} must be a string (instance method name) or a function (the actual compute).`);
+                    if (typeof field.compute !== 'function') {
+                        throw new Error(`Property "compute" of field(${fieldName}) on ${model} must be a function (the actual compute).`);
                     }
                     if ('readonly' in field) {
                         throw new Error(`Computed field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicit for computed fields).`);

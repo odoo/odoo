@@ -26,147 +26,6 @@ registerModel({
             return Boolean(this.record && this.record.containsElement(element));
         },
         /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeAttachmentDeleteConfirmView() {
-            if (this.attachmentCardOwnerAsAttachmentDeleteConfirm) {
-                return {};
-            }
-            if (this.attachmentImageOwnerAsAttachmentDeleteConfirm) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeAttachmentViewer() {
-            if (this.attachmentListOwnerAsAttachmentView) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {number}
-         */
-        _computeBackgroundOpacity() {
-            if (this.attachmentViewer) {
-                return 0.7;
-            }
-            return 0.5;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeComponentClassName() {
-            if (this.attachmentDeleteConfirmView) {
-                return 'o_Dialog_componentMediumSize align-self-start mt-5';
-            }
-            if (this.deleteMessageConfirmView) {
-                return 'o_Dialog_componentLargeSize align-self-start mt-5';
-            }
-            return '';
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeComponentName() {
-            if (this.attachmentViewer) {
-                return 'AttachmentViewer';
-            }
-            if (this.attachmentDeleteConfirmView) {
-                return 'AttachmentDeleteConfirm';
-            }
-            if (this.deleteMessageConfirmView) {
-                return 'DeleteMessageConfirm';
-            }
-            if (this.followerSubtypeList) {
-                return 'FollowerSubtypeList';
-            }
-            if (this.linkPreviewDeleteConfirmView) {
-                return 'LinkPreviewDeleteConfirmView';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeDeleteMessageConfirmView() {
-            return this.messageActionViewOwnerAsDeleteConfirm ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFollowerSubtypeList() {
-            return this.followerOwnerAsSubtypeList ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsCloseable() {
-            if (this.attachmentViewer) {
-                /**
-                 * Prevent closing the dialog when clicking on the mask when the user is
-                 * currently dragging the image.
-                 */
-                return !this.attachmentViewer.isDragging;
-            }
-            return true;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLinkPreviewDeleteConfirmView() {
-            return this.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeManager() {
-            if (this.messaging.dialogManager) {
-                return this.messaging.dialogManager;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeRecord() {
-            if (this.attachmentViewer) {
-                return this.attachmentViewer;
-            }
-            if (this.attachmentDeleteConfirmView) {
-                return this.attachmentDeleteConfirmView;
-            }
-            if (this.deleteMessageConfirmView) {
-                return this.deleteMessageConfirmView;
-            }
-            if (this.linkPreviewDeleteConfirmView) {
-                return this.linkPreviewDeleteConfirmView;
-            }
-            if (this.followerSubtypeList) {
-                return this.followerSubtypeList;
-            }
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeStyle() {
-            return `background-color: rgba(0, 0, 0, ${this.backgroundOpacity});`;
-        },
-        /**
          * Closes the dialog when clicking outside.
          * Does not work with attachment viewer because it takes the whole space.
          *
@@ -198,7 +57,15 @@ registerModel({
             inverse: 'attachmentDeleteConfirmDialog',
         }),
         attachmentDeleteConfirmView: one('AttachmentDeleteConfirmView', {
-            compute: '_computeAttachmentDeleteConfirmView',
+            compute() {
+                if (this.attachmentCardOwnerAsAttachmentDeleteConfirm) {
+                    return {};
+                }
+                if (this.attachmentImageOwnerAsAttachmentDeleteConfirm) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'dialogOwner',
         }),
         attachmentImageOwnerAsAttachmentDeleteConfirm: one('AttachmentImage', {
@@ -210,21 +77,58 @@ registerModel({
             inverse: 'attachmentListViewDialog',
         }),
         attachmentViewer: one('AttachmentViewer', {
-            compute: '_computeAttachmentViewer',
+            compute() {
+                if (this.attachmentListOwnerAsAttachmentView) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'dialogOwner',
         }),
         backgroundOpacity: attr({
-            compute: '_computeBackgroundOpacity',
+            compute() {
+                if (this.attachmentViewer) {
+                    return 0.7;
+                }
+                return 0.5;
+            },
         }),
         componentClassName: attr({
-            compute: '_computeComponentClassName',
+            compute() {
+                if (this.attachmentDeleteConfirmView) {
+                    return 'o_Dialog_componentMediumSize align-self-start mt-5';
+                }
+                if (this.deleteMessageConfirmView) {
+                    return 'o_Dialog_componentLargeSize align-self-start mt-5';
+                }
+                return '';
+            },
         }),
         componentName: attr({
-            compute: '_computeComponentName',
+            compute() {
+                if (this.attachmentViewer) {
+                    return 'AttachmentViewer';
+                }
+                if (this.attachmentDeleteConfirmView) {
+                    return 'AttachmentDeleteConfirm';
+                }
+                if (this.deleteMessageConfirmView) {
+                    return 'DeleteMessageConfirm';
+                }
+                if (this.followerSubtypeList) {
+                    return 'FollowerSubtypeList';
+                }
+                if (this.linkPreviewDeleteConfirmView) {
+                    return 'LinkPreviewDeleteConfirmView';
+                }
+                return clear();
+            },
             required: true,
         }),
         deleteMessageConfirmView: one('DeleteMessageConfirmView', {
-            compute: '_computeDeleteMessageConfirmView',
+            compute() {
+                return this.messageActionViewOwnerAsDeleteConfirm ? {} : clear();
+            },
             inverse: 'dialogOwner',
         }),
         linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm: one('LinkPreviewAsideView', {
@@ -232,7 +136,9 @@ registerModel({
             readonly: true,
         }),
         linkPreviewDeleteConfirmView: one('LinkPreviewDeleteConfirmView', {
-            compute: '_computeLinkPreviewDeleteConfirmView',
+            compute() {
+                return this.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm ? {} : clear();
+            },
             inverse: 'dialogOwner',
         }),
         followerOwnerAsSubtypeList: one('Follower', {
@@ -240,15 +146,31 @@ registerModel({
             inverse: 'followerSubtypeListDialog',
         }),
         followerSubtypeList: one('FollowerSubtypeList', {
-            compute: '_computeFollowerSubtypeList',
+            compute() {
+                return this.followerOwnerAsSubtypeList ? {} : clear();
+            },
             inverse: 'dialogOwner',
         }),
         isCloseable: attr({
-            compute: '_computeIsCloseable',
+            compute() {
+                if (this.attachmentViewer) {
+                    /**
+                     * Prevent closing the dialog when clicking on the mask when the user is
+                     * currently dragging the image.
+                     */
+                    return !this.attachmentViewer.isDragging;
+                }
+                return true;
+            },
             default: true,
         }),
         manager: one('DialogManager', {
-            compute: '_computeManager',
+            compute() {
+                if (this.messaging.dialogManager) {
+                    return this.messaging.dialogManager;
+                }
+                return clear();
+            },
             inverse: 'dialogs',
         }),
         messageActionViewOwnerAsDeleteConfirm: one('MessageActionView', {
@@ -261,12 +183,30 @@ registerModel({
          * created from @see `DialogManager:open()`.
          */
         record: one('Record', {
-            compute: '_computeRecord',
+            compute() {
+                if (this.attachmentViewer) {
+                    return this.attachmentViewer;
+                }
+                if (this.attachmentDeleteConfirmView) {
+                    return this.attachmentDeleteConfirmView;
+                }
+                if (this.deleteMessageConfirmView) {
+                    return this.deleteMessageConfirmView;
+                }
+                if (this.linkPreviewDeleteConfirmView) {
+                    return this.linkPreviewDeleteConfirmView;
+                }
+                if (this.followerSubtypeList) {
+                    return this.followerSubtypeList;
+                }
+            },
             isCausal: true,
             required: true,
         }),
         style: attr({
-            compute: '_computeStyle',
+            compute() {
+                return `background-color: rgba(0, 0, 0, ${this.backgroundOpacity});`;
+            },
         }),
     },
 });

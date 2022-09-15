@@ -25,20 +25,6 @@ registerModel({
                 body: '',
             });
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessage() {
-            return this.dialogOwner.messageActionViewOwnerAsDeleteConfirm.messageAction.messageActionListOwner.message;
-        },
-        /**
-         * @private
-         * @returns {MessageView}
-         */
-        _computeMessageView() {
-            return this.message ? { message: this.message } : clear();
-        },
     },
     fields: {
         component: attr(),
@@ -47,7 +33,9 @@ registerModel({
             inverse: 'deleteMessageConfirmView',
         }),
         message: one('Message', {
-            compute: '_computeMessage',
+            compute() {
+                return this.dialogOwner.messageActionViewOwnerAsDeleteConfirm.messageAction.messageActionListOwner.message;
+            },
             required: true,
         }),
         /**
@@ -55,7 +43,9 @@ registerModel({
          * will use to display this message.
          */
         messageView: one('MessageView', {
-            compute: '_computeMessageView',
+            compute() {
+                return this.message ? { message: this.message } : clear();
+            },
             inverse: 'deleteMessageConfirmViewOwner',
             required: true,
         }),

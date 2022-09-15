@@ -8,16 +8,6 @@ registerModel({
     name: 'FollowButtonView',
     recordMethods: {
         /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsDisabled() {
-            if (!this.chatterOwner) {
-                return clear();
-            }
-            return !this.chatterOwner.hasReadAccess;
-        },
-        /**
          * @param {MouseEvent} ev
          */
         onClickFollow(ev) {
@@ -67,7 +57,12 @@ registerModel({
             inverse: 'followButtonView',
         }),
         isDisabled: attr({
-            compute: '_computeIsDisabled',
+            compute() {
+                if (!this.chatterOwner) {
+                    return clear();
+                }
+                return !this.chatterOwner.hasReadAccess;
+            },
         }),
         isUnfollowButtonHighlighted: attr({
             default: false,

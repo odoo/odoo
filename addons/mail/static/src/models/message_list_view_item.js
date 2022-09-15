@@ -10,28 +10,6 @@ import { clear } from '@mail/model/model_field_command';
  */
 registerModel({
     name: 'MessageListViewItem',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeNotificationMessageView() {
-            if (this.message.message_type === 'notification' && this.message.originThread.channel) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessageView() {
-            if (this.message.message_type !== 'notification' || !this.message.originThread.channel) {
-                return {};
-            }
-            return clear();
-        },
-    },
     fields: {
         isSquashed: attr({
             required: true,
@@ -45,11 +23,21 @@ registerModel({
             inverse: 'messageListViewItems',
         }),
         notificationMessageView: one('NotificationMessageView', {
-            compute: '_computeNotificationMessageView',
+            compute() {
+                if (this.message.message_type === 'notification' && this.message.originThread.channel) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageListViewItemOwner',
         }),
         messageView: one('MessageView', {
-            compute: '_computeMessageView',
+            compute() {
+                if (this.message.message_type !== 'notification' || !this.message.originThread.channel) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageListViewItemOwner',
         }),
     },
