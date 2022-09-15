@@ -91,7 +91,7 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
         for (const program of this.programs) {
             this.program_by_id[program.id] = program;
             if (program.date_to) {
-                program.date_to = new Date(program.date_to);
+                program.date_to = new Date(program.date_to.replace(/ /g, 'T').concat('Z'));
             }
             program.rules = [];
             program.rewards = [];
