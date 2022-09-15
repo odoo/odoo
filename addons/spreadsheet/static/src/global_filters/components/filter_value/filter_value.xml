@@ -11,7 +11,7 @@
                 t-att-value="filterValue"
                 t-on-change="(e) => this.onTextInput(filter.id, e.target.value)"/>
         </div>
-        <span t-if="filter.type === 'relation'" t-on-click.stop="">
+        <span t-if="filter.type === 'relation'">
             <X2ManyTagSelector
                 placeholder="filter.label"
                 relatedModel="filter.modelName"
