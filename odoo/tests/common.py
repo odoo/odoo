@@ -960,7 +960,7 @@ class ChromeBrowser:
         self._open_websocket()
         self._request_id = itertools.count()
         self._result = Future()
-        self.failure_message = ''
+        self.error_checker = None
         self.had_failure = False
         # maps request_id to Futures
         self._responses = {}
@@ -1278,7 +1278,7 @@ class ChromeBrowser:
 
         if log_type == 'error':
             self.had_failure = True
-            if self.failure_message in message:
+            if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
                 self._save_screencast()
                 try:
@@ -1476,8 +1476,8 @@ which leads to stray network requests and inconsistencies."""))
         self._logger.info('Ready code last try result: %s', result)
         return False
 
-    def _wait_code_ok(self, code, timeout, failure_message=''):
-        self.failure_message = failure_message
+    def _wait_code_ok(self, code, timeout, error_checker=None):
+        self.error_checker = error_checker
         self._logger.info('Evaluate test code "%s"', code)
         start = time.time()
         res = self._websocket_request('Runtime.evaluate', params={
@@ -1764,7 +1764,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, failure_message='', watch=False, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -1773,8 +1773,8 @@ class HttpCase(TransactionCase):
         - open another chrome window to watch code execution if watch is True
 
         To signal success test do: console.log('test successful')
-        To signal test failure raise an exception or
-        call console.error with a message containing the failure_message
+        To signal test failure raise an exception or call console.error with a message.
+        Test will stop when a failure occurs if error_checker is not defined or returns True for this message
 
         """
         if not self.env.registry.loaded:
@@ -1822,7 +1822,7 @@ class HttpCase(TransactionCase):
 
             error = False
             try:
-                self.browser._wait_code_ok(code, timeout, failure_message=failure_message)
+                self.browser._wait_code_ok(code, timeout, error_checker=error_checker)
             except ChromeBrowserException as chrome_browser_exception:
                 error = chrome_browser_exception
             if error:  # dont keep initial traceback, keep that outside of except
