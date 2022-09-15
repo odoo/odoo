@@ -3,8 +3,8 @@
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import "@spreadsheet/pivot"; // filter depends on pivot and lists for its getters
 import "@spreadsheet/list"; // filter depends on pivot and lists for its getters
-import FiltersEvaluationPlugin from "./plugins/filters_evaluation_plugin";
-import FiltersPlugin from "./plugins/filters_plugin";
+import GlobalFiltersUIPlugin from "./plugins/global_filters_ui_plugin";
+import GlobalFiltersCorePlugin from "./plugins/global_filters_core_plugin";
 const { inverseCommandRegistry } = spreadsheet.registries;
 
 function identity(cmd) {
@@ -14,8 +14,8 @@ function identity(cmd) {
 const { coreTypes, invalidateEvaluationCommands, readonlyAllowedCommands } = spreadsheet;
 const { corePluginRegistry, uiPluginRegistry } = spreadsheet.registries;
 
-corePluginRegistry.add("odooFiltersPlugin", FiltersPlugin);
-uiPluginRegistry.add("odooFiltersEvaluationPlugin", FiltersEvaluationPlugin);
+corePluginRegistry.add("OdooGlobalFiltersCorePlugin", GlobalFiltersCorePlugin);
+uiPluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 
 coreTypes.add("ADD_GLOBAL_FILTER");
 coreTypes.add("EDIT_GLOBAL_FILTER");

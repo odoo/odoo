@@ -27,7 +27,7 @@ import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
 
-export default class FiltersPlugin extends spreadsheet.CorePlugin {
+export default class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     constructor() {
         super(...arguments);
         /** @type {Object.<string, GlobalFilter>} */
@@ -302,7 +302,7 @@ export default class FiltersPlugin extends spreadsheet.CorePlugin {
     }
 }
 
-FiltersPlugin.getters = [
+GlobalFiltersCorePlugin.getters = [
     "getGlobalFilter",
     "getGlobalFilters",
     "getGlobalFilterDefaultValue",

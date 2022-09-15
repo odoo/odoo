@@ -11,7 +11,7 @@ const { DateTime } = luxon;
 /**
  * Convert pivot period to the related filter value
  *
- * @param {import("@spreadsheet/global_filters/plugins/filters_plugin").RangeType} timeRange
+ * @param {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").RangeType} timeRange
  * @param {string} value
  * @returns {object}
  */

@@ -31,7 +31,7 @@ import {
     assertDateDomainEqual,
     getDateDomainDurationInDays,
 } from "@spreadsheet/../tests/utils/date_domain";
-import FiltersEvaluationPlugin from "@spreadsheet/global_filters/plugins/filters_evaluation_plugin";
+import GlobalFiltersUIPlugin from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 
 const { Model, DispatchResult } = spreadsheet;
@@ -1172,7 +1172,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         await addGlobalFilter(model, THIS_YEAR_FILTER);
         const [filter] = model.getters.getGlobalFilters();
         const filterPlugin = model["handlers"].find(
-            (handler) => handler instanceof FiltersEvaluationPlugin
+            (handler) => handler instanceof GlobalFiltersUIPlugin
         );
         const exportData = { styles: [], sheets: [] };
         filterPlugin.exportForExcel(exportData);
