@@ -622,9 +622,45 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
 
 publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
     selector: 'header#top',
+    disabledInEditableMode: false,
     events: {
         'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        // This is a fix in stable to move the language switcher in the navbar
+        // when the "off-canvas" mobile menu is enabled. Without this the
+        // language switcher is inaccessible in the "off-canvas" mobile menu.
+        // TODO: Remove this in master and make the adaptations only in the XML
+        // templates.
+        this.languageSelectorMustBeMoved = false;
+        // If mobile menu is "off-canvas".
+        if (this.$target[0].querySelector('.o_offcanvas_menu_toggler')) {
+            this.navbarEl = this.$target[0].querySelector('#top_menu');
+            this.languageSelectorEl = this.$target[0].querySelectorAll('#top_menu_collapse .js_language_selector');
+            // As there are 2 language selectors in 'template_header_vertical',
+            // we have to do this to be sure to move the last of the 2 (the one
+            // displayed on mobile).
+            this.languageSelectorEl = this.languageSelectorEl[this.languageSelectorEl.length - 1];
+            this.languageSelectorMustBeMoved = this.languageSelectorEl
+                && !this.navbarEl.contains(this.languageSelectorEl);
+            // Specific case with the "hamburger full" header template where
+            // there is the same bug with the call to action.
+            if (this.$target[0].querySelector('.o_header_hamburger_full_toggler')) {
+                const callToActionEl = this.$target[0].querySelector('.oe_structure_solo');
+                if (callToActionEl) {
+                    this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+                    callToActionEl.classList.add('nav-item');
+                    this.navbarEl.append(callToActionEl);
+                    this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+                }
+            }
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -636,12 +672,24 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
      */
     _onCollapseShow() {
         this.el.classList.add('o_top_menu_collapse_shown');
+        if (this.languageSelectorMustBeMoved) {
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+            this.languageSelectorEl.classList.add('nav-item');
+            this.navbarEl.append(this.languageSelectorEl);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
     },
     /**
      * @private
      */
     _onCollapseHidden() {
         this.el.classList.remove('o_top_menu_collapse_shown');
+        if (this.languageSelectorMustBeMoved) {
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+            this.languageSelectorEl.classList.remove('nav-item');
+            this.navbarEl.after(this.languageSelectorEl);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
     },
 });
 
