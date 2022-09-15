@@ -40,7 +40,7 @@ function pivotPeriodToFilterValue(timeRange, value) {
     }
 }
 
-export default class PivotStructurePlugin extends spreadsheet.UIPlugin {
+export default class PivotUIPlugin extends spreadsheet.UIPlugin {
     constructor() {
         super(...arguments);
         /** @type {string} */
@@ -275,7 +275,7 @@ export default class PivotStructurePlugin extends spreadsheet.UIPlugin {
     }
 }
 
-PivotStructurePlugin.getters = [
+PivotUIPlugin.getters = [
     "getSelectedPivotId",
     "getPivotComputedDomain",
     "getDisplayedPivotHeaderValue",

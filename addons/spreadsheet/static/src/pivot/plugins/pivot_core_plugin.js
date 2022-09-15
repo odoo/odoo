@@ -27,7 +27,7 @@ import CommandResult from "../../o_spreadsheet/cancelled_reason";
 
 const { CorePlugin } = spreadsheet;
 
-export default class PivotPlugin extends CorePlugin {
+export default class PivotCorePlugin extends CorePlugin {
     constructor(getters, history, range, dispatch, config, uuidGenerator) {
         super(getters, history, range, dispatch, config, uuidGenerator);
         this.dataSources = config.dataSources;
@@ -469,7 +469,7 @@ export default class PivotPlugin extends CorePlugin {
     }
 }
 
-PivotPlugin.getters = [
+PivotCorePlugin.getters = [
     "getNextPivotId",
     "getPivotDefinition",
     "getPivotDisplayName",
