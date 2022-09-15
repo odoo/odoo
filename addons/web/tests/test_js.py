@@ -7,13 +7,27 @@ import odoo.tests
 RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')
 
 
+def qunit_error_checker(message):
+    # We don't want to stop qunit if a qunit is breaking.
+
+    # '%s/%s test failed.' case: end message when all tests are finished
+    if  'tests failed.' in message:
+        return True
+
+    # "QUnit test failed" case: one qunit failed. don't stop in this case
+    if "QUnit test failed:" in message:
+        return False
+
+    return True  # in other cases, always stop (missing dependency, ...)
+
+
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(odoo.tests.HttpCase):
 
     @odoo.tests.no_retry
     def test_js(self):
         # webclient desktop test suite
-        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, failure_message=' tests failed.')
+        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
 
     def test_check_suite(self):
         # verify no js test is using `QUnit.only` as it forbid any other test to be executed
@@ -45,4 +59,4 @@ class MobileWebSuite(odoo.tests.HttpCase):
 
     def test_mobile_js(self):
         # webclient mobile test suite
-        self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800, failure_message=' tests failed.')
+        self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
