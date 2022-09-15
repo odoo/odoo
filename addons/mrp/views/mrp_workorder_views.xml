@@ -419,7 +419,7 @@
                                 <div class="o_kanban_workorder_date">
                                     <h5><span class="d-flex" t-esc="record.date_planned_start.value or record.production_date.value"/></h5>
                                 </div>
-                                <div class="o_kanban_manage_button_section">
+                                <div>
                                     <h2 class="ml8">
                                         <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
                                             <t t-out="record.state.value"/>
