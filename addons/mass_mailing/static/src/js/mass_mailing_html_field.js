@@ -95,7 +95,10 @@ export class MassMailingHtmlField extends HtmlField {
 
         const $editorEnable = $editable.closest('.editor_enable');
         $editorEnable.removeClass('editor_enable');
+        // Prevent history reverts.
+        this.wysiwyg.odooEditor.observerUnactive('toInline');
         await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
+        this.wysiwyg.odooEditor.observerActive('toInline');
         const inlineHtml = $editable.html();
         $editorEnable.addClass('editor_enable');
         this.wysiwyg.odooEditor.resetContent(initialHtml);
