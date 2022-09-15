@@ -86,16 +86,16 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
         const expected = /*xml*/ `
             <OuterGroup>
-               <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" itemSpan="1">
+               <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
-                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'display_name',fieldName:'display_name',record:props.record,string:props.record.fields.display_name.string,fieldInfo:props.archInfo.fieldNodes['display_name']}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
+                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'display_name',fieldName:'display_name',record:props.record,string:props.record.fields.display_name.string,fieldInfo:props.archInfo.fieldNodes['display_name']}" Component="constructor.components.FormLabel" subType="'item_component'" isVisible="true" itemSpan="2">
                         <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" class="scope &amp;&amp; scope.className" />
                      </t>
                   </InnerGroup>
                </t>
-               <t t-set-slot="item_1" type="'item'" sequence="1" t-slot-scope="scope" itemSpan="1">
+               <t t-set-slot="item_1" type="'item'" sequence="1" t-slot-scope="scope" isVisible="true" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
-                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'charfield',fieldName:'charfield',record:props.record,string:props.record.fields.charfield.string,fieldInfo:props.archInfo.fieldNodes['charfield']}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
+                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'charfield',fieldName:'charfield',record:props.record,string:props.record.fields.charfield.string,fieldInfo:props.archInfo.fieldNodes['charfield']}" Component="constructor.components.FormLabel" subType="'item_component'" isVisible="true" itemSpan="2">
                         <Field id="'charfield'" name="'charfield'" record="props.record" fieldInfo="props.archInfo.fieldNodes['charfield']" class="scope &amp;&amp; scope.className" />
                      </t>
                   </InnerGroup>
