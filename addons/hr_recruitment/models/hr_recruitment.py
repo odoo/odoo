@@ -190,8 +190,8 @@ class Applicant(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
-    interviewer_id = fields.Many2one(
-        'res.users', string='Interviewer', index=True, tracking=True,
+    interviewer_ids = fields.Many2many('res.users', 'hr_applicant_res_users_interviewers_rel',
+        string='Interviewers', index=True, tracking=True,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     linkedin_profile = fields.Char('LinkedIn Profile')
     application_status = fields.Selection([
@@ -391,7 +391,7 @@ class Applicant(models.Model):
             if vals.get('email_from'):
                 vals['email_from'] = vals['email_from'].strip()
         applicants = super().create(vals_list)
-        applicants.sudo().interviewer_id._create_recruitment_interviewers()
+        applicants.sudo().interviewer_ids._create_recruitment_interviewers()
         # Record creation through calendar, creates the calendar event directly, it will also create the activity.
         if 'default_activity_date_deadline' in self.env.context:
             deadline = fields.Datetime.to_datetime(self.env.context.get('default_activity_date_deadline'))
@@ -415,7 +415,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if vals.get('email_from'):
             vals['email_from'] = vals['email_from'].strip()
-        old_interviewers = self.interviewer_id
+        old_interviewers = self.interviewer_ids
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -426,10 +426,10 @@ class Applicant(models.Model):
                 res = super(Applicant, self).write(vals)
         else:
             res = super(Applicant, self).write(vals)
-        if 'interviewer_id' in vals:
-            interviewers_to_clean = old_interviewers - self.interviewer_id
+        if 'interviewer_ids' in vals:
+            interviewers_to_clean = old_interviewers - self.interviewer_ids
             interviewers_to_clean._remove_recruitment_interviewers()
-            self.sudo().interviewer_id._create_recruitment_interviewers()
+            self.sudo().interviewer_ids._create_recruitment_interviewers()
         return res
 
     def get_empty_list_help(self, help):
