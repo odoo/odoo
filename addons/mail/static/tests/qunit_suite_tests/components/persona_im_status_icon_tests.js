@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { UPDATE_BUS_PRESENCE_DELAY } from '@bus/im_status_service';
+
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -18,7 +20,7 @@ QUnit.test('initially online', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+    const { advanceTime, afterNextRender, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId,
@@ -27,7 +29,7 @@ QUnit.test('initially online', async function (assert) {
         hasTimeControl: true,
     });
     await openDiscuss();
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.strictEqual(
         document.querySelectorAll(`.o_PersonaImStatusIcon.o-online`).length,
         1,
@@ -47,7 +49,7 @@ QUnit.test('initially offline', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+    const { advanceTime, afterNextRender, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId,
@@ -56,7 +58,7 @@ QUnit.test('initially offline', async function (assert) {
         hasTimeControl: true,
     });
     await openDiscuss();
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.strictEqual(
         document.querySelectorAll(`.o_PersonaImStatusIcon.o-offline`).length,
         1,
@@ -76,7 +78,7 @@ QUnit.test('initially away', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+    const { advanceTime, afterNextRender, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId,
@@ -85,7 +87,7 @@ QUnit.test('initially away', async function (assert) {
         hasTimeControl: true,
     });
     await openDiscuss();
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.strictEqual(
         document.querySelectorAll(`.o_PersonaImStatusIcon.o-away`).length,
         1,
@@ -105,7 +107,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId,
     });
-    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+    const { advanceTime, afterNextRender, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: mailChannelId,
@@ -114,7 +116,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
         hasTimeControl: true,
     });
     await openDiscuss();
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.strictEqual(
         document.querySelectorAll(`.o_PersonaImStatusIcon.o-online`).length,
         1,
@@ -122,7 +124,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
     );
 
     pyEnv['res.partner'].write([partnerId], { im_status: 'offline' });
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.strictEqual(
         document.querySelectorAll(`.o_PersonaImStatusIcon.o-offline`).length,
         1,
@@ -130,7 +132,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
     );
 
     pyEnv['res.partner'].write([partnerId], { im_status: 'away' });
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.strictEqual(
         document.querySelectorAll(`.o_PersonaImStatusIcon.o-away`).length,
         1,
@@ -138,7 +140,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
     );
 
     pyEnv['res.partner'].write([partnerId], { im_status: 'online' });
-    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
+    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.strictEqual(
         document.querySelectorAll(`.o_PersonaImStatusIcon.o-online`).length,
         1,

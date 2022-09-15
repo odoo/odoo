@@ -33,9 +33,6 @@ registerModel({
             if (this.messageViewOwnerAsHighlight) {
                 return 2 * 1000;
             }
-            if (this.messagingOwnerAsFetchImStatusTimer) {
-                return this.messagingOwnerAsFetchImStatusTimer.fetchImStatusTimerDuration;
-            }
             if (this.rtcSessionOwnerAsBroadcast) {
                 return 3 * 1000;
             }
@@ -72,10 +69,6 @@ registerModel({
             }
             if (this.messageViewOwnerAsHighlight) {
                 this.messageViewOwnerAsHighlight.onHighlightTimerTimeout();
-                return;
-            }
-            if (this.messagingOwnerAsFetchImStatusTimer) {
-                this.messagingOwnerAsFetchImStatusTimer.onFetchImStatusTimerTimeout();
                 return;
             }
             if (this.rtcSessionOwnerAsBroadcast) {
@@ -133,10 +126,6 @@ registerModel({
         duration: attr({
             compute: '_computeDuration',
             required: true,
-        }),
-        messagingOwnerAsFetchImStatusTimer: one('Messaging', {
-            identifying: true,
-            inverse: 'fetchImStatusTimer',
         }),
         messageViewOwnerAsHighlight: one('MessageView', {
             identifying: true,

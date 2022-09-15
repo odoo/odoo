@@ -766,7 +766,7 @@ class WebsocketRequest:
         if event_name == 'subscribe':
             ir_websocket._subscribe(data)
         if event_name == 'update_presence':
-            ir_websocket._update_bus_presence(data)
+            ir_websocket._update_bus_presence(**data)
 
     def _get_session(self):
         session = root.session_store.get(self.ws._session.sid)

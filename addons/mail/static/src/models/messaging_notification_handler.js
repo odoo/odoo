@@ -48,6 +48,8 @@ registerModel({
             const proms = notifications.map(message => {
                 if (typeof message === 'object') {
                     switch (message.type) {
+                        case 'bus/im_status':
+                            return this._handleNotificationBusImStatus(message.payload);
                         case 'ir.attachment/delete':
                             return this._handleNotificationAttachmentDelete(message.payload);
                         case 'mail.channel.member/seen':
@@ -149,6 +151,20 @@ registerModel({
          * @param {Object} message
          */
         _handleNotification(message) {},
+        /**
+         * @private
+         * @param {Object} payload
+         * @param {Object[]} [payload.partners]
+         * @param {Object[]|undefined} [payload.guests]
+         */
+        _handleNotificationBusImStatus({ partners, guests }) {
+            if (partners) {
+                this.models['Partner'].insert(partners);
+            }
+            if (guests) {
+                this.models['Guest'].insert(guests);
+            }
+        },
         /**
          * @private
          * @param {Object} payload

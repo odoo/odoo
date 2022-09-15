@@ -6,6 +6,12 @@ from odoo.addons.bus.websocket import wsrequest
 class IrWebsocket(models.AbstractModel):
     _inherit = 'ir.websocket'
 
+    def _get_im_status(self, data):
+        im_status = super()._get_im_status(data)
+        if 'mail.guest' in data:
+            im_status['guests'] = self.env['mail.guest'].sudo().with_context(active_test=False).search([('id', 'in', data['mail.guest'])]).read(['im_status'])
+        return im_status
+
     def _build_bus_channel_list(self, channels):
         #  This method can either be called due to an http or a
         #  websocket request. The request itself is necessary to
@@ -26,8 +32,8 @@ class IrWebsocket(models.AbstractModel):
             channels.append(mail_channel)
         return super()._build_bus_channel_list(channels)
 
-    def _update_bus_presence(self, inactivity_period):
-        super()._update_bus_presence(inactivity_period)
+    def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
+        super()._update_bus_presence(inactivity_period, im_status_ids_by_model)
         if not self.env.uid:
             #  This method can either be called due to an http or a
             #  websocket request. The request itself is necessary to
