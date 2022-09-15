@@ -53,6 +53,9 @@ registerModel({
             if (this.threadAsThrottleNotifyCurrentPartnerTypingStatus) {
                 return 2.5 * 1000;
             }
+            if (this.messagingAsUpdateImStatusRegister) {
+                return 10 * 1000;
+            }
             return clear();
         },
     },
@@ -75,6 +78,10 @@ registerModel({
          * Inner function to be invoked and throttled.
          */
         func: attr(),
+        messagingAsUpdateImStatusRegister: one('Messaging', {
+            identifying: true,
+            inverse: 'updateImStatusRegisterThrottle',
+        }),
         shouldInvoke: attr({
             default: false,
         }),

@@ -62,12 +62,6 @@ patch(MockServer.prototype, 'mail', {
      */
     async _performRPC(route, args) {
         // routes
-        if (route === '/bus/im_status') {
-            const { partner_ids } = args;
-            return {
-                'partners': this.pyEnv['res.partner'].searchRead([['id', 'in', partner_ids]], { context: { 'active_test': false }, fields: ['im_status'] })
-            };
-        }
         if (route === '/mail/message/post') {
             if (args.thread_model === 'mail.channel') {
                 return this._mockMailChannelMessagePost(args.thread_id, args.post_data, args.context);
