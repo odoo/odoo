@@ -1121,6 +1121,7 @@ class HrExpenseSheet(models.Model):
         return res
 
     def action_unpost(self):
+        self = self.with_context(clean_context(self.env.context))
         for sheet in self:
             move = sheet.account_move_id
             sheet.account_move_id = False
