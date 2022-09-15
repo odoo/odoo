@@ -5,7 +5,7 @@
         <field name="name">chatbot.script.step.view.form</field>
         <field name="model">chatbot.script.step</field>
         <field name="arch" type="xml">
-            <form>
+            <form disable_autofocus="1">
                 <field name="is_forward_operator_child" invisible="1"/>
                 <div class="alert alert-info text-center mb-0" role="alert" attrs="{'invisible': [('is_forward_operator_child', '=', False)]}">
                     <span>Reminder: This step will only be played if no operator is available.</span>
@@ -21,7 +21,12 @@
                         <field name="chatbot_script_id" invisible="1"/>
                         <field name="step_type"/>
                         <field name="triggering_answer_ids" widget="chatbot_triggering_answers_widget"
-                                options="{'no_create': True}"/>
+                                options="{'no_create': True}">
+                            <tree>
+                                <!-- added only to correctly fetch the display_name for the tag display -->
+                                <field name="display_name" invisible="1"/>
+                            </tree>
+                        </field>
                     </group>
                     <group>
                         <field name="answer_ids" attrs="{'invisible': [('step_type', '!=', 'question_selection')]}" nolabel="1">
