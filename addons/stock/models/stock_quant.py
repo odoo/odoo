@@ -3,6 +3,7 @@
 
 import logging
 
+from itertools import chain
 from psycopg2 import Error, OperationalError
 
 from odoo import _, api, fields, models
@@ -539,7 +540,7 @@ The correction could unreserve some operations with problematics products.""", p
                                 SUM(reserved_quantity) as reserved_quantity,
                                 SUM(quantity) as quantity,
                                 MIN(in_date) as in_date
-                            FROM stock_quant
+                            FROM stock_quant %s
                             GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
                             HAVING count(id) > 1
                         ),
@@ -553,9 +554,21 @@ The correction could unreserve some operations with problematics products.""", p
                         )
                    DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
         """
+        params = []
+        # Quants tuples here should be a list of tuples with (product_id,location_id,company_id)
+        # of the quants that were updated and where a merge is required, e.g. after an unpack
+        # operation
+        quant_tuples_to_merge = self.env.context.get("_quant_tuples_to_merge")
+        where_clause = ""
+        if quant_tuples_to_merge:
+            where_clause = """WHERE %s """ % """ OR """.join(
+                ["""(product_id = %s AND location_id = %s AND company_id = %s)"""]  * len(quant_tuples_to_merge)
+            )
+            params = list(chain.from_iterable(quant_tuples_to_merge))
+        query = query % where_clause
         try:
             with self.env.cr.savepoint():
-                self.env.cr.execute(query)
+                self.env.cr.execute(query, tuple(params))
         except Error as e:
             _logger.info('an error occured while merging quants: %s', e.pgerror)
 
@@ -733,6 +746,7 @@ class QuantPackage(models.Model):
             return [('id', '=', False)]
 
     def unpack(self):
+        quants_tuples = set()
         for package in self:
             move_line_to_modify = self.env['stock.move.line'].search([
                 ('package_id', '=', package.id),
@@ -740,11 +754,14 @@ class QuantPackage(models.Model):
                 ('product_qty', '!=', 0),
             ])
             move_line_to_modify.write({'package_id': False})
+            # Limit merging of quants to those impacted by the unpack
+            for quant in package.mapped('quant_ids'):
+                quants_tuples.add((quant.product_id.id, quant.location_id.id, quant.company_id.id))
             package.mapped('quant_ids').sudo().write({'package_id': False})
 
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
         # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant'].with_context(_quant_tuples_to_merge=quants_tuples)._merge_quants()
         self.env['stock.quant']._unlink_zero_quants()
 
     def action_view_picking(self):
