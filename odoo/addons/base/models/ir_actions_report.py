@@ -392,6 +392,7 @@ class IrActionsReport(models.Model):
     def _run_wkhtmltopdf(
             self,
             bodies,
+            report_ref=False,
             header=None,
             footer=None,
             landscape=False,
@@ -401,6 +402,7 @@ class IrActionsReport(models.Model):
         document.
 
         :param list[str] bodies: The html bodies of the report, one per page.
+        :param report_ref: report reference that is needed to get report paperformat.
         :param str header: The html header of the report containing all headers.
         :param str footer: The html footer of the report containing all footers.
         :param landscape: Force the pdf to be rendered under a landscape format.
@@ -409,7 +411,7 @@ class IrActionsReport(models.Model):
         :return: Content of the pdf as bytes
         :rtype: bytes
         '''
-        paperformat_id = self.get_paperformat()
+        paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
 
         # Build the base command args for wkhtmltopdf bin
         command_args = self._build_wkhtmltopdf_args(
@@ -709,6 +711,7 @@ class IrActionsReport(models.Model):
 
             pdf_content = self._run_wkhtmltopdf(
                 bodies,
+                report_ref=report_ref,
                 header=header,
                 footer=footer,
                 landscape=self._context.get('landscape'),
