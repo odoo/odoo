@@ -3,6 +3,8 @@
 
 import {qweb} from 'web.core';
 const rowSize = 50; // 50px.
+// Maximum number of rows that can be added when dragging a grid item.
+export const additionalRowLimit = 10;
 
 /**
  * Returns the grid properties: rowGap, rowSize, columnGap and columnSize.

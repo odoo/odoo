@@ -1537,11 +1537,20 @@ var SnippetEditor = Widget.extend({
         const dropzoneEl = this.dragState.dropzoneEl;
         const rowOverflow = Math.round((bottom - currentHeight) / (gridProp.rowSize + gridProp.rowGap));
         const updateRows = bottom > currentHeight || bottom <= currentHeight && bottom > startingHeight;
+        const rowCount = Math.max(rowEl.dataset.rowCount, this.dragState.columnRowCount);
+        const maxRowEnd = rowCount + gridUtils.additionalRowLimit + 1;
         if (Math.abs(rowOverflow) >= 1 && updateRows) {
-            const dropzoneEnd = parseInt(dropzoneEl.style.gridRowEnd);
-            dropzoneEl.style.gridRowEnd = dropzoneEnd + rowOverflow;
-            backgroundGridEl.style.gridRowEnd = dropzoneEnd + rowOverflow;
-            this.dragState.currentHeight += rowOverflow * (gridProp.rowSize + gridProp.rowGap);
+            if (rowEnd <= maxRowEnd) {
+                const dropzoneEnd = parseInt(dropzoneEl.style.gridRowEnd);
+                dropzoneEl.style.gridRowEnd = dropzoneEnd + rowOverflow;
+                backgroundGridEl.style.gridRowEnd = dropzoneEnd + rowOverflow;
+                this.dragState.currentHeight += rowOverflow * (gridProp.rowSize + gridProp.rowGap);
+            } else {
+                // Don't add new rows if we have reached the limit.
+                dropzoneEl.style.gridRowEnd = maxRowEnd;
+                backgroundGridEl.style.gridRowEnd = maxRowEnd;
+                this.dragState.currentHeight = (maxRowEnd - 1) * (gridProp.rowSize + gridProp.rowGap) - gridProp.rowGap;
+            }
         }
     }
 });
