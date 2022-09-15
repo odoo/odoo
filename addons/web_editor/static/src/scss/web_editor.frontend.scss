@@ -1,6 +1,8 @@
 @include media-breakpoint-down(md) {
     img, .media_iframe_video, span.fa, i.fa {
-        transform: none !important;
+        &:not(.o_animate) {
+            transform: none !important;
+        }
     }
 }
 
