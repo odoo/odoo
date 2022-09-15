@@ -55,20 +55,18 @@
                     t-on-mousemove="() => this.onItemMousemove(item_index)"
                     >
                     <t t-if="item.isParent">
-                        <a class="o_expand"
+                        <a t-att-class="{ o_expand: true, 'ms-4': item.isFieldProperty}"
                             href="#"
                             t-on-click.stop.prevent="() => this.toggleItem(item, !item.isExpanded)"
                             >
                             <i t-attf-class="fa fa-caret-{{ item.isExpanded ? 'down' : 'right' }}"/>
                         </a>
                     </t>
-                    <a href="#" t-on-click.prevent="">
+                    <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
                         <t t-if="item.isChild">
                             <t t-esc="item.label"/>
                         </t>
-                        <t t-else="">
-                            Search <b t-esc="item.searchItemDescription"/> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/>
-                        </t>
+                        <t t-elif="!item.isFieldProperty" > Search </t> <b t-esc="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/> </t>
                     </a>
                 </li>
             </t>
