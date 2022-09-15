@@ -8,82 +8,6 @@ registerModel({
     name: 'Mailbox',
     identifyingMode: 'xor',
     recordMethods: {
-        /**
-         * @returns {string|FieldCommand}
-         */
-        _computeFetchMessagesUrl() {
-            switch (this) {
-                case this.messaging.history:
-                    return '/mail/history/messages';
-                case this.messaging.inbox:
-                    return '/mail/inbox/messages';
-                case this.messaging.starred:
-                    return '/mail/starred/messages';
-                default:
-                    return clear();
-            }
-        },
-        /**
-         * @returns {FieldCommand}
-         */
-        _computeMessagingAsAnyMailbox() {
-            if (!this.messaging) {
-                return clear();
-            }
-            return this.messaging;
-        },
-        /**
-         * @returns {string|FieldCommand}
-         */
-        _computeName() {
-            switch (this) {
-                case this.messaging.history:
-                    return this.env._t("History");
-                case this.messaging.inbox:
-                    return this.env._t("Inbox");
-                case this.messaging.starred:
-                    return this.env._t("Starred");
-                default:
-                    return clear();
-            }
-        },
-        /**
-         * @returns {integer|FieldCommand}
-         */
-        _computeSequence() {
-            switch (this) {
-                case this.messaging.history:
-                    return 2;
-                case this.messaging.inbox:
-                    return 0;
-                case this.messaging.starred:
-                    return 1;
-                default:
-                    return clear();
-            }
-        },
-        /**
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            const threadId = (() => {
-                switch (this) {
-                    case this.messaging.history:
-                        return 'history';
-                    case this.messaging.inbox:
-                        return 'inbox';
-                    case this.messaging.starred:
-                        return 'starred';
-                }
-            })();
-            if (!threadId) {
-                return clear();
-            }
-            return {
-                id: threadId,
-                model: 'mail.box',
-            };
-        },
         _onChangeCounter() {
             if (this !== this.messaging.inbox) {
                 return;
@@ -105,13 +29,29 @@ registerModel({
             default: 0,
         }),
         fetchMessagesUrl: attr({
-            compute: '_computeFetchMessagesUrl',
+            compute() {
+                switch (this) {
+                    case this.messaging.history:
+                        return '/mail/history/messages';
+                    case this.messaging.inbox:
+                        return '/mail/inbox/messages';
+                    case this.messaging.starred:
+                        return '/mail/starred/messages';
+                    default:
+                        return clear();
+                }
+            },
         }),
         /**
          * Useful to fill its inverse `Messaging/allMailboxes`.
          */
         messagingAsAnyMailbox: one('Messaging', {
-            compute: '_computeMessagingAsAnyMailbox',
+            compute() {
+                if (!this.messaging) {
+                    return clear();
+                }
+                return this.messaging;
+            },
             inverse: 'allMailboxes',
         }),
         messagingAsHistory: one('Messaging', {
@@ -127,7 +67,18 @@ registerModel({
             inverse: 'starred',
         }),
         name: attr({
-            compute: '_computeName',
+            compute() {
+                switch (this) {
+                    case this.messaging.history:
+                        return this.env._t("History");
+                    case this.messaging.inbox:
+                        return this.env._t("Inbox");
+                    case this.messaging.starred:
+                        return this.env._t("Starred");
+                    default:
+                        return clear();
+                }
+            },
         }),
         /**
          * Useful to display rainbow man on inbox.
@@ -136,10 +87,39 @@ registerModel({
             default: 0,
         }),
         sequence: attr({
-            compute: '_computeSequence',
+            compute() {
+                switch (this) {
+                    case this.messaging.history:
+                        return 2;
+                    case this.messaging.inbox:
+                        return 0;
+                    case this.messaging.starred:
+                        return 1;
+                    default:
+                        return clear();
+                }
+            },
         }),
         thread: one('Thread', {
-            compute: '_computeThread',
+            compute() {
+                const threadId = (() => {
+                    switch (this) {
+                        case this.messaging.history:
+                            return 'history';
+                        case this.messaging.inbox:
+                            return 'inbox';
+                        case this.messaging.starred:
+                            return 'starred';
+                    }
+                })();
+                if (!threadId) {
+                    return clear();
+                }
+                return {
+                    id: threadId,
+                    model: 'mail.box',
+                };
+            },
             inverse: 'mailbox',
         }),
     },

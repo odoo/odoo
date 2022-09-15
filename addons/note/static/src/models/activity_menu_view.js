@@ -58,13 +58,6 @@ addRecordMethods('ActivityMenuView', {
         });
         this.fetchData();
     },
-    /**
-     * @private
-     * @returns {string}
-     */
-    _computeAddingNoteDatePlaceholder() {
-        return this.env._t("Today");
-    },
 });
 
 patchFields('ActivityMenuView', {
@@ -106,7 +99,9 @@ addFields('ActivityMenuView', {
         default: false,
     }),
     addingNoteDatePlaceholder: attr({
-        compute: '_computeAddingNoteDatePlaceholder',
+        compute() {
+            return this.env._t("Today");
+        },
     }),
     isAddingNote: attr({
         default: false,

@@ -47,53 +47,31 @@ registerModel({
             return data2;
         },
     },
-    recordMethods: {
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeAvatarUrl() {
-            if (!this.partner) {
-                return '/mail/static/src/img/smiley/avatar.jpg';
-            }
-            return this.partner.avatarUrl;
-        },
-        /**
-         * @private
-         * @returns {Country|FieldCommand}
-         */
-        _computeCountry() {
-            if (this.partner && this.partner.country) {
-                return this.partner.country;
-            }
-            if (this.serverCountry) {
-                return this.serverCountry;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeNameOrDisplayName() {
-            if (this.partner) {
-                return this.partner.nameOrDisplayName;
-            }
-            return this.display_name;
-        },
-    },
     fields: {
         /**
          * Url to the avatar of the visitor.
          */
         avatarUrl: attr({
-            compute: '_computeAvatarUrl',
+            compute() {
+                if (!this.partner) {
+                    return '/mail/static/src/img/smiley/avatar.jpg';
+                }
+                return this.partner.avatarUrl;
+            },
         }),
         /**
          * Country of the visitor.
          */
         country: one('Country', {
-            compute: '_computeCountry',
+            compute() {
+                if (this.partner && this.partner.country) {
+                    return this.partner.country;
+                }
+                if (this.serverCountry) {
+                    return this.serverCountry;
+                }
+                return clear();
+            },
         }),
         /**
          * Display name of the visitor.
@@ -118,7 +96,12 @@ registerModel({
          */
         lang_name: attr(),
         nameOrDisplayName: attr({
-            compute: '_computeNameOrDisplayName',
+            compute() {
+                if (this.partner) {
+                    return this.partner.nameOrDisplayName;
+                }
+                return this.display_name;
+            },
         }),
         /**
          * Partner linked to this visitor, if any.

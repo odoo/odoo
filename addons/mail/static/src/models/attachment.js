@@ -94,196 +94,6 @@ registerModel({
             this.messaging.messagingBus.trigger('o-attachment-deleted', { attachment: this });
             this.delete();
         },
-        /**
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeDefaultSource() {
-            if (this.isImage) {
-                return `/web/image/${this.id}?signature=${this.checksum}`;
-            }
-            if (this.isPdf) {
-                const pdf_lib = `/web/static/lib/pdfjs/web/viewer.html?file=`
-                if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
-                    return `${pdf_lib}/mail/channel/${this.originThread.id}/attachment/${this.id}`;
-                }
-                const accessToken = this.accessToken ? `?access_token%3D${this.accessToken}` : '';
-                return `${pdf_lib}/web/content/${this.id}${accessToken}`;
-            }
-            if (this.isUrlYoutube) {
-                const urlArr = this.url.split('/');
-                let token = urlArr[urlArr.length - 1];
-                if (token.includes('watch')) {
-                    token = token.split('v=')[1];
-                    const amp = token.indexOf('&');
-                    if (amp !== -1) {
-                        token = token.substring(0, amp);
-                    }
-                }
-                return `https://www.youtube.com/embed/${token}`;
-            }
-            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/attachment/${this.id}`;
-            }
-            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
-            return `/web/content/${this.id}${accessToken}`;
-        },
-        /**
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeDisplayName() {
-            const displayName = this.name || this.filename;
-            if (displayName) {
-                return displayName;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeDownloadUrl() {
-            if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/attachment/${this.id}?download=true`;
-            }
-            const accessToken = this.accessToken ? `access_token=${this.accessToken}&` : '';
-            return `/web/content/ir.attachment/${this.id}/datas?${accessToken}download=true`;
-        },
-        /**
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeExtension() {
-            const extension = this.filename && this.filename.split('.').pop();
-            if (extension) {
-                return extension;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsDeletable() {
-            if (!this.messaging) {
-                return false;
-            }
-
-            if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
-                return this.messages.some(message => (
-                    message.canBeDeleted ||
-                    (message.author && message.author === this.messaging.currentPartner) ||
-                    (message.guestAuthor && message.guestAuthor === this.messaging.currentGuest)
-                ));
-            }
-            return true;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsPdf() {
-            return this.mimetype === 'application/pdf';
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsImage() {
-            const imageMimetypes = [
-                'image/bmp',
-                'image/gif',
-                'image/jpeg',
-                'image/png',
-                'image/svg+xml',
-                'image/tiff',
-                'image/x-icon',
-            ];
-            return imageMimetypes.includes(this.mimetype);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsText() {
-            const textMimeType = [
-                'application/javascript',
-                'application/json',
-                'text/css',
-                'text/html',
-                'text/plain',
-            ];
-            return textMimeType.includes(this.mimetype);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsVideo() {
-            const videoMimeTypes = [
-                'audio/mpeg',
-                'video/x-matroska',
-                'video/mp4',
-                'video/webm',
-            ];
-            return videoMimeTypes.includes(this.mimetype);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsUrl() {
-            return this.type === 'url' && this.url;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsViewable() {
-            return this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsUrlYoutube() {
-            return !!this.url && this.url.includes('youtu');
-        },
-        /**
-         * @deprecated
-         * @private
-         * @returns {string}
-         */
-        _computeMediaType() {
-            return this.mimetype && this.mimetype.split('/').shift();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThreadsAsAttachmentsInWebClientView() {
-            return (this.isPdf || this.isImage) && !this.isUploading ? this.allThreads : clear();
-        },
-        /**
-         * @private
-         * @returns {AbortController|undefined}
-         */
-        _computeUploadingAbortController() {
-            if (this.isUploading) {
-                if (!this.uploadingAbortController) {
-                    const abortController = new AbortController();
-                    abortController.signal.onabort = () => {
-                        this.messaging.messagingBus.trigger('o-attachment-upload-abort', {
-                            attachment: this
-                        });
-                    };
-                    return abortController;
-                }
-                return this.uploadingAbortController;
-            }
-            return;
-        },
     },
     fields: {
         accessToken: attr(),
@@ -311,20 +121,67 @@ registerModel({
             inverse: 'attachments',
         }),
         defaultSource: attr({
-            compute: '_computeDefaultSource',
+            compute() {
+                if (this.isImage) {
+                    return `/web/image/${this.id}?signature=${this.checksum}`;
+                }
+                if (this.isPdf) {
+                    const pdf_lib = `/web/static/lib/pdfjs/web/viewer.html?file=`
+                    if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                        return `${pdf_lib}/mail/channel/${this.originThread.id}/attachment/${this.id}`;
+                    }
+                    const accessToken = this.accessToken ? `?access_token%3D${this.accessToken}` : '';
+                    return `${pdf_lib}/web/content/${this.id}${accessToken}`;
+                }
+                if (this.isUrlYoutube) {
+                    const urlArr = this.url.split('/');
+                    let token = urlArr[urlArr.length - 1];
+                    if (token.includes('watch')) {
+                        token = token.split('v=')[1];
+                        const amp = token.indexOf('&');
+                        if (amp !== -1) {
+                            token = token.substring(0, amp);
+                        }
+                    }
+                    return `https://www.youtube.com/embed/${token}`;
+                }
+                if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                    return `/mail/channel/${this.originThread.id}/attachment/${this.id}`;
+                }
+                const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
+                return `/web/content/${this.id}${accessToken}`;
+            },
         }),
         /**
          * States the OWL ref of the "dialog" window.
          */
         dialogRef: attr(),
         displayName: attr({
-            compute: '_computeDisplayName',
+            compute() {
+                const displayName = this.name || this.filename;
+                if (displayName) {
+                    return displayName;
+                }
+                return clear();
+            },
         }),
         downloadUrl: attr({
-           compute: '_computeDownloadUrl',
+            compute() {
+                if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
+                    return `/mail/channel/${this.originThread.id}/attachment/${this.id}?download=true`;
+                }
+                const accessToken = this.accessToken ? `access_token=${this.accessToken}&` : '';
+                return `/web/content/ir.attachment/${this.id}/datas?${accessToken}download=true`;
+            },
         }),
         extension: attr({
-            compute: '_computeExtension',
+            compute() {
+                const extension = this.filename && this.filename.split('.').pop();
+                if (extension) {
+                    return extension;
+                }
+                return clear();
+            },
         }),
         filename: attr(),
         id: attr({
@@ -334,25 +191,60 @@ registerModel({
          * States whether this attachment is deletable.
          */
         isDeletable: attr({
-            compute: '_computeIsDeletable',
+            compute() {
+                if (!this.messaging) {
+                    return false;
+                }
+
+                if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
+                    return this.messages.some(message => (
+                        message.canBeDeleted ||
+                        (message.author && message.author === this.messaging.currentPartner) ||
+                        (message.guestAuthor && message.guestAuthor === this.messaging.currentGuest)
+                    ));
+                }
+                return true;
+            },
         }),
         /**
          * States id the attachment is an image.
          */
         isImage: attr({
-            compute: '_computeIsImage',
+            compute() {
+                const imageMimetypes = [
+                    'image/bmp',
+                    'image/gif',
+                    'image/jpeg',
+                    'image/png',
+                    'image/svg+xml',
+                    'image/tiff',
+                    'image/x-icon',
+                ];
+                return imageMimetypes.includes(this.mimetype);
+            },
         }),
         /**
          * States if the attachment is a PDF file.
          */
         isPdf: attr({
-            compute: '_computeIsPdf',
+            compute() {
+                return this.mimetype === 'application/pdf';
+            },
         }),
         /**
          * States if the attachment is a text file.
          */
         isText: attr({
-            compute: '_computeIsText',
+            compute() {
+                const textMimeType = [
+                    'application/javascript',
+                    'application/json',
+                    'text/css',
+                    'text/html',
+                    'text/plain',
+                ];
+                return textMimeType.includes(this.mimetype);
+            },
         }),
         /**
          * True if an unlink RPC is pending, used to prevent multiple unlink attempts.
@@ -367,28 +259,44 @@ registerModel({
          * States if the attachment is an url.
          */
         isUrl: attr({
-            compute: '_computeIsUrl',
+            compute() {
+                return this.type === 'url' && this.url;
+            },
         }),
         /**
          * Determines if the attachment is a youtube url.
          */
         isUrlYoutube: attr({
-            compute: '_computeIsUrlYoutube',
+            compute() {
+                return !!this.url && this.url.includes('youtu');
+            },
         }),
         /**
          * States if the attachment is a video.
          */
         isVideo: attr({
-            compute: '_computeIsVideo',
+            compute() {
+                const videoMimeTypes = [
+                    'audio/mpeg',
+                    'video/x-matroska',
+                    'video/mp4',
+                    'video/webm',
+                ];
+                return videoMimeTypes.includes(this.mimetype);
+            },
         }),
         isViewable: attr({
-            compute: '_computeIsViewable',
+            compute() {
+                return this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube;
+            },
         }),
         /**
          * @deprecated
          */
         mediaType: attr({
-            compute: '_computeMediaType',
+            compute() {
+                return this.mimetype && this.mimetype.split('/').shift();
+            },
         }),
         messages: many('Message', {
             inverse: 'attachments',
@@ -405,7 +313,9 @@ registerModel({
             inverse: 'attachments',
         }),
         threadsAsAttachmentsInWebClientView: many('Thread', {
-            compute: '_computeThreadsAsAttachmentsInWebClientView',
+            compute() {
+                return (this.isPdf || this.isImage) && !this.isUploading ? this.allThreads : clear();
+            },
             inverse: 'attachmentsInWebClientView',
         }),
         type: attr(),
@@ -414,7 +324,21 @@ registerModel({
          * Useful in order to cancel the in-progress uploading of this attachment.
          */
         uploadingAbortController: attr({
-            compute: '_computeUploadingAbortController',
+            compute() {
+                if (this.isUploading) {
+                    if (!this.uploadingAbortController) {
+                        const abortController = new AbortController();
+                        abortController.signal.onabort = () => {
+                            this.messaging.messagingBus.trigger('o-attachment-upload-abort', {
+                                attachment: this
+                            });
+                        };
+                        return abortController;
+                    }
+                    return this.uploadingAbortController;
+                }
+                return;
+            },
         }),
         url: attr(),
     },

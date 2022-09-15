@@ -6,15 +6,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'TrackingValue',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeFormattedChangedField() {
-            return sprintf(this.env._t("%s"), this.changedField);
-        },
-    },
     fields: {
         /**
          * States the original field of changed tracking value, such as "Status", "Date".
@@ -26,7 +17,9 @@ registerModel({
          * The translated `changedFiled` according to the language setting.
          */
         formattedChangedField: attr({
-            compute: '_computeFormattedChangedField',
+            compute() {
+                return sprintf(this.env._t("%s"), this.changedField);
+            },
         }),
         id: attr({
             identifying: true,

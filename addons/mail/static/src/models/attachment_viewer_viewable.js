@@ -15,76 +15,6 @@ registerModel({
         download() {
             return this.attachmentOwner.download();
         },
-        /**
-         * @private
-         */
-        _computeDefaultSource() {
-            return this.attachmentOwner.defaultSource;
-        },
-        /**
-         * @private
-         */
-        _computeDisplayName() {
-            return this.attachmentOwner.displayName;
-        },
-        /**
-         * @private
-         */
-        _computeImageUrl() {
-            if (
-                !this.attachmentOwner.accessToken &&
-                this.attachmentOwner.originThread &&
-                this.attachmentOwner.originThread.model === "mail.channel"
-            ) {
-                return `/mail/channel/${this.attachmentOwner.originThread.id}/image/${this.attachmentOwner.id}`;
-            }
-            const accessToken = this.attachmentOwner.accessToken
-                ? `?access_token=${this.attachmentOwner.accessToken}`
-                : "";
-            return `/web/image/${this.attachmentOwner.id}${accessToken}`;
-        },
-        /**
-         * @private
-         */
-        _computeIsImage() {
-            return this.attachmentOwner.isImage;
-        },
-        /**
-         * @private
-         */
-        _computeIsPdf() {
-            return this.attachmentOwner.isPdf;
-        },
-        /**
-         * @private
-         */
-        _computeIsText() {
-            return this.attachmentOwner.isText;
-        },
-        /**
-         * @private
-         */
-        _computeIsUrlYoutube() {
-            return this.attachmentOwner.isUrlYoutube;
-        },
-        /**
-         * @private
-         */
-        _computeIsVideo() {
-            return this.attachmentOwner.isVideo;
-        },
-        /**
-         * @private
-         */
-        _computeIsViewable() {
-            return this.attachmentOwner.isViewable;
-        },
-        /**
-         * @private
-         */
-        _computeMimetype() {
-            return this.attachmentOwner.mimetype;
-        },
     },
     fields: {
         attachmentOwner: one("Attachment", {
@@ -92,34 +22,64 @@ registerModel({
             inverse: 'attachmentViewerViewable',
         }),
         defaultSource: attr({
-            compute: "_computeDefaultSource",
+            compute() {
+                return this.attachmentOwner.defaultSource;
+            },
         }),
         displayName: attr({
-            compute: "_computeDisplayName",
+            compute() {
+                return this.attachmentOwner.displayName;
+            },
         }),
         imageUrl: attr({
-            compute: "_computeImageUrl",
+            compute() {
+                if (
+                    !this.attachmentOwner.accessToken &&
+                    this.attachmentOwner.originThread &&
+                    this.attachmentOwner.originThread.model === "mail.channel"
+                ) {
+                    return `/mail/channel/${this.attachmentOwner.originThread.id}/image/${this.attachmentOwner.id}`;
+                }
+                const accessToken = this.attachmentOwner.accessToken
+                    ? `?access_token=${this.attachmentOwner.accessToken}`
+                    : "";
+                return `/web/image/${this.attachmentOwner.id}${accessToken}`;
+            },
         }),
         isImage: attr({
-            compute: "_computeIsImage",
+            compute() {
+                return this.attachmentOwner.isImage;
+            },
         }),
         isPdf: attr({
-            compute: "_computeIsPdf",
+            compute() {
+                return this.attachmentOwner.isPdf;
+            },
         }),
         isText: attr({
-            compute: "_computeIsText",
+            compute() {
+                return this.attachmentOwner.isText;
+            },
         }),
         isUrlYoutube: attr({
-            compute: "_computeIsUrlYoutube",
+            compute() {
+                return this.attachmentOwner.isUrlYoutube;
+            },
         }),
         isVideo: attr({
-            compute: "_computeIsVideo",
+            compute() {
+                return this.attachmentOwner.isVideo;
+            },
         }),
         isViewable: attr({
-            compute: "_computeIsViewable",
+            compute() {
+                return this.attachmentOwner.isViewable;
+            },
         }),
         mimetype: attr({
-            compute: "_computeMimetype",
+            compute() {
+                return this.attachmentOwner.mimetype;
+            },
         }),
     },
 });
