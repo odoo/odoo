@@ -551,10 +551,6 @@ async function toInline($editable, cssRules, $iframe) {
     $editable.removeClass('odoo-editor-editable');
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
-    const wysiwyg = $editable.data('wysiwyg');
-    if (wysiwyg) {
-        wysiwyg.odooEditor.historyPauseSteps(); // Prevent history reverts.
-    }
     const doc = editable.ownerDocument;
     cssRules = cssRules || doc._rulesCache;
     if (!cssRules) {
