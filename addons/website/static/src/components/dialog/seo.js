@@ -4,7 +4,7 @@ import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 
-const { Component, useState, reactive, onMounted, onWillStart } = owl;
+const { Component, useState, reactive, onMounted, onWillStart, useEffect } = owl;
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
@@ -267,6 +267,17 @@ class TitleDescription extends Component {
 
         this.maxRecommendedDescriptionSize = 300;
         this.minRecommendedDescriptionSize = 50;
+
+        // Update the title when its input value changes
+        useEffect(() => {
+            document.title = this.title;
+        }, () => [this.seoContext.title]);
+
+        // Restore the original title when unmounting the component
+        useEffect(() => {
+            const initialTitle = document.title;
+            return () => document.title = initialTitle;
+        }, () => []);
     }
 
     get seoNameUrl() {
