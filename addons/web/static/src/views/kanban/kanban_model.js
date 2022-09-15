@@ -336,6 +336,18 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         });
     }
 
+    get sumFields() {
+        const { sumField } = this.model.progressAttributes;
+        return sumField ? [sumField.name] : [];
+    }
+
+    /**
+     * @override
+     */
+    get fieldNames() {
+        return [...super.fieldNames, ...this.sumFields];
+    }
+
     /**
      * After a reload, empty groups are expcted to disappear from the web_read_group.
      * However, if the parameters are the same (domain + groupBy), we want to
@@ -357,24 +369,20 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             return;
         }
 
-        const { fieldName, sumField } = this.model.progressAttributes;
-        const fieldNames = [];
         const gbFieldName = this.groupByField.name;
         const promises = {};
 
         if (withProgressBars) {
             const domain = Domain.or(groups.map((g) => g.groupDomain)).toList();
-            fieldNames.push(fieldName);
             promises.readProgressBar = this._fetchProgressData(domain);
         }
         // If we have a sumField, the aggregates must be re-fetched
-        if (sumField) {
+        if (this.sumFields.length) {
             const domain = Domain.or(groups.map((g) => g.getProgressBarDomain())).toList();
-            fieldNames.push(sumField.name);
             promises.webReadGroup = this.model.orm.webReadGroup(
                 this.resModel,
                 domain,
-                fieldNames,
+                this.sumFields,
                 this.groupBy,
                 { lazy: true }
             );
@@ -387,9 +395,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             const result = await promises.webReadGroup;
             const groupData = result.groups.map((group) => ({
                 ...group,
-                [gbFieldName]: Array.isArray(group[gbFieldName])
-                    ? group[gbFieldName][0]
-                    : group[gbFieldName],
+                [gbFieldName]: this._getValueFromGroupData(group, this.firstGroupBy),
             }));
             for (const group of groups) {
                 group.updateAggregates(groupData);
@@ -485,16 +491,11 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
      * @returns {Promise<Object>}
      */
     async _fetchProgressData(domain) {
-        const { colors, fieldName, help, sumField } = this.model.progressAttributes;
+        const { colors, fieldName, help } = this.model.progressAttributes;
         return this.model.orm.call(this.resModel, "read_progress_bar", [], {
             domain,
             group_by: this.firstGroupBy,
-            progress_bar: {
-                colors,
-                field: fieldName,
-                help,
-                sum_field: sumField && sumField.name,
-            },
+            progress_bar: { colors, field: fieldName, help },
             context: this.context,
         });
     }

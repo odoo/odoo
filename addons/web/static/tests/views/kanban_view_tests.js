@@ -4666,6 +4666,82 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("Move record in grouped by date, progress bars and sum field", async (assert) => {
+        serverData.models.partner.records[0].date = "2017-01-08";
+        serverData.models.partner.records[1].date = "2017-01-09";
+        serverData.models.partner.records[2].date = "2017-02-08";
+        serverData.models.partner.records[3].date = "2017-02-10";
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <field name="date" allow_group_range_value="true" />
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field" />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["date:month"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsN(
+            target,
+            ".o_kanban_group:first-child .o_kanban_record",
+            2,
+            "1st column should contain 2 records of January month"
+        );
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            2,
+            "2nd column should contain 2 records of February month"
+        );
+
+        assert.deepEqual(
+            getProgressBars(0).map((pb) => pb.style.width),
+            ["50%", "50%"]
+        );
+        assert.deepEqual(
+            getProgressBars(1).map((pb) => pb.style.width),
+            ["50%", "50%"]
+        );
+        assert.deepEqual(getCounters(), ["19", "13"]);
+
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.containsOnce(
+            target,
+            ".o_kanban_group:first-child .o_kanban_record",
+            "Should only have one record remaining"
+        );
+        assert.containsN(
+            target,
+            ".o_kanban_group:nth-child(2) .o_kanban_record",
+            3,
+            "Should now have 3 records"
+        );
+
+        assert.deepEqual(
+            getProgressBars(0).map((pb) => pb.style.width),
+            ["100%"]
+        );
+        assert.deepEqual(
+            getProgressBars(1).map((pb) => pb.style.width),
+            ["33.3333%", "33.3333%", "33.3333%"] // abridged to e-4
+        );
+        assert.deepEqual(getCounters(), ["9", "23"]);
+    });
+
     QUnit.test(
         "completely prevent drag and drop if records_draggable set to false",
         async (assert) => {
