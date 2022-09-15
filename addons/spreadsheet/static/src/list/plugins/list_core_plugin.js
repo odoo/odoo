@@ -17,7 +17,7 @@ import { TOP_LEVEL_STYLE } from "../../helpers/constants";
  * @property {Array<string>} orderBy
  *
  */
-export default class ListPlugin extends spreadsheet.CorePlugin {
+export default class ListCorePlugin extends spreadsheet.CorePlugin {
     constructor(getters, history, range, dispatch, config, uuidGenerator) {
         super(getters, history, range, dispatch, config, uuidGenerator);
         this.dataSources = config.dataSources;
@@ -357,7 +357,7 @@ export default class ListPlugin extends spreadsheet.CorePlugin {
     }
 }
 
-ListPlugin.getters = [
+ListCorePlugin.getters = [
     "getListDataSource",
     "getListDisplayName",
     "getAsyncListDataSource",

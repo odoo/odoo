@@ -6,8 +6,8 @@ import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 
 import "./list_functions";
 
-import ListPlugin from "@spreadsheet/list/plugins/list_plugin";
-import ListStructurePlugin from "@spreadsheet/list/plugins/list_structure_plugin";
+import ListCorePlugin from "@spreadsheet/list/plugins/list_core_plugin";
+import ListUIPlugin from "@spreadsheet/list/plugins/list_ui_plugin";
 
 import { SEE_RECORD_LIST, SEE_RECORD_LIST_VISIBLE } from "./list_actions";
 const { inverseCommandRegistry } = spreadsheet.registries;
@@ -19,9 +19,9 @@ function identity(cmd) {
 const { coreTypes, readonlyAllowedCommands, invalidateEvaluationCommands } = spreadsheet;
 const { corePluginRegistry, uiPluginRegistry, cellMenuRegistry } = spreadsheet.registries;
 
-corePluginRegistry.add("odooListPlugin", ListPlugin);
+corePluginRegistry.add("OdooListCorePlugin", ListCorePlugin);
 
-uiPluginRegistry.add("odooListStructurePlugin", ListStructurePlugin);
+uiPluginRegistry.add("OdooListUIPlugin", ListUIPlugin);
 
 coreTypes.add("INSERT_ODOO_LIST");
 coreTypes.add("RENAME_ODOO_LIST");
