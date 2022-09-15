@@ -435,6 +435,21 @@ class AccountMove(models.Model):
         self.edi_document_ids.write({'error': False, 'blocking_level': False})
         self.action_process_edi_web_services()
 
+    ####################################################
+    # Mailing
+    ####################################################
+
+    def _process_attachments_for_template_post(self, mail_template):
+        """ Add Edi attachments to templates. """
+        result = super()._process_attachments_for_template_post(mail_template)
+        for move in self.filtered('edi_document_ids'):
+            move_result = result.setdefault(move.id, {})
+            for edi_doc in move.edi_document_ids:
+                edi_attachments = edi_doc._filter_edi_attachments_for_mailing()
+                move_result.setdefault('attachment_ids', []).extend(edi_attachments.get('attachment_ids', []))
+                move_result.setdefault('attachments', []).extend(edi_attachments.get('attachments', []))
+        return result
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

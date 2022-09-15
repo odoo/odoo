@@ -2036,6 +2036,20 @@ class MailThread(models.AbstractModel):
         return_values['attachment_ids'] = m2m_attachment_ids
         return return_values
 
+    def _process_attachments_for_template_post(self, mail_template):
+        """ Model specific management of attachments used with template attachments
+        generation in addition to reports. Only usage currently is for EDI in
+        accounting.
+
+        :param mail.template mail_template: a mail.template record used to generate
+          message or emails on self;
+
+        :return dict: a dictionary based on self.ids (optional). For each given
+          key, value should be a dict holding 'attachments' and 'attachment_ids'
+          keys;
+        """
+        return {}
+
     # ------------------------------------------------------------
     # MESSAGE POST API / WRAPPERS
     # ------------------------------------------------------------
