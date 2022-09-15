@@ -33,6 +33,8 @@ class WebsocketController(Controller):
 
     @route('/websocket/peek_notifications', type='json', auth='public', cors='*')
     def peek_notifications(self, channels, last):
+        if not all(isinstance(c, str) for c in channels):
+            raise ValueError("bus.Bus only string channels are allowed.")
         channels = list(set(
             channel_with_db(request.db, c)
             for c in request.env['ir.websocket']._build_bus_channel_list(channels)

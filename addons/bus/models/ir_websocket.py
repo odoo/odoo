@@ -20,6 +20,8 @@ class IrWebsocket(models.AbstractModel):
         return channels
 
     def _subscribe(self, data):
+        if not all(isinstance(c, str) for c in data['channels']):
+            raise ValueError("bus.Bus only string channels are allowed.")
         channels = set(self._build_bus_channel_list(data['channels']))
         dispatch.subscribe(channels, data['last'], self.env.registry.db_name, wsrequest.ws)
 
