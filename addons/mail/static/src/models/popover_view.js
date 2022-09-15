@@ -27,187 +27,6 @@ registerModel({
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActivityMarkDonePopoverContentView() {
-            if (this.activityViewOwnerAsMarkDone) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Ref}
-         */
-        _computeAnchorRef() {
-            if (this.activityViewOwnerAsMarkDone) {
-                return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
-            }
-            if (this.callActionListViewOwnerAsMoreMenu) {
-                return this.callActionListViewOwnerAsMoreMenu.moreButtonRef;
-            }
-            if (this.callParticipantCardOwner) {
-                return this.callParticipantCardOwner.volumeMenuAnchorRef;
-            }
-            if (this.threadViewTopbarOwnerAsInvite) {
-                return this.threadViewTopbarOwnerAsInvite.inviteButtonRef;
-            }
-            if (this.composerViewOwnerAsEmoji) {
-                return this.composerViewOwnerAsEmoji.buttonEmojisRef;
-            }
-            if (this.messageActionViewOwnerAsReaction) {
-                return this.messageActionViewOwnerAsReaction.actionRef;
-            }
-            if (this.messageViewOwnerAsNotificationContent) {
-                return this.messageViewOwnerAsNotificationContent.notificationIconRef;
-            }
-            return clear();
-        },
-        _computeCallOptionMenuView() {
-            if (this.callActionListViewOwnerAsMoreMenu) {
-                return {};
-            }
-            return clear();
-        },
-        _computeCallParticipantCardPopoverContentView() {
-            if (this.callParticipantCardOwner) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChannelInvitationForm() {
-            if (this.threadViewTopbarOwnerAsInvite) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeContent() {
-            if (this.activityMarkDonePopoverContentView) {
-                return this.activityMarkDonePopoverContentView;
-            }
-            if (this.callOptionMenuView) {
-                return this.callOptionMenuView;
-            }
-            if (this.callParticipantCardPopoverContentView) {
-                return this.callParticipantCardPopoverContentView;
-            }
-            if (this.channelInvitationForm) {
-                return this.channelInvitationForm;
-            }
-            if (this.emojiPickerView) {
-                return this.emojiPickerView;
-            }
-            if (this.messageNotificationPopoverContentView) {
-                return this.messageNotificationPopoverContentView;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeContentClassName() {
-            if (this.channelInvitationForm) {
-                return 'o_PopoverView_channelInvitationForm';
-            }
-            if (this.emojiPickerView) {
-                return 'o_PopoverView_emojiPickerView';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeContentComponentName() {
-            if (this.activityMarkDonePopoverContentView) {
-                return 'ActivityMarkDonePopoverContent';
-            }
-            if (this.callOptionMenuView) {
-                return 'CallOptionMenu';
-            }
-            if (this.callParticipantCardPopoverContentView) {
-                return 'CallParticipantCardPopoverContentView';
-            }
-            if (this.channelInvitationForm) {
-                return 'ChannelInvitationForm';
-            }
-            if (this.emojiPickerView) {
-                return 'EmojiPickerView';
-            }
-            if (this.messageNotificationPopoverContentView) {
-                return 'MessageNotificationPopoverContent';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeEmojiPickerView() {
-            if (this.composerViewOwnerAsEmoji) {
-                return {};
-            }
-            if (this.messageActionViewOwnerAsReaction) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeManager() {
-            if (this.messaging.popoverManager) {
-                return this.messaging.popoverManager;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computeMessageNotificationPopoverContentView() {
-            if (this.messageViewOwnerAsNotificationContent) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computePosition() {
-            if (this.activityViewOwnerAsMarkDone) {
-                return 'right';
-            }
-            if (this.callActionListViewOwnerAsMoreMenu) {
-                return 'top';
-            }
-            if (this.callParticipantCardOwner) {
-                return 'bottom';
-            }
-            if (this.threadViewTopbarOwnerAsInvite) {
-                return 'bottom';
-            }
-            if (this.composerViewOwnerAsEmoji) {
-                return 'top';
-            }
-            if (this.messageActionViewOwnerAsReaction) {
-                return 'top';
-            }
-            return clear();
-        },
-        /**
          * Closes the popover when clicking outside, if appropriate.
          *
          * @private
@@ -228,7 +47,12 @@ registerModel({
     },
     fields: {
         activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
-            compute: '_computeActivityMarkDonePopoverContentView',
+            compute() {
+                if (this.activityViewOwnerAsMarkDone) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'popoverViewOwner',
         }),
         activityViewOwnerAsMarkDone: one('ActivityView', {
@@ -239,7 +63,30 @@ registerModel({
          * HTML element that is used as anchor position for this popover view.
          */
         anchorRef: attr({
-            compute: '_computeAnchorRef',
+            compute() {
+                if (this.activityViewOwnerAsMarkDone) {
+                    return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
+                }
+                if (this.callActionListViewOwnerAsMoreMenu) {
+                    return this.callActionListViewOwnerAsMoreMenu.moreButtonRef;
+                }
+                if (this.callParticipantCardOwner) {
+                    return this.callParticipantCardOwner.volumeMenuAnchorRef;
+                }
+                if (this.threadViewTopbarOwnerAsInvite) {
+                    return this.threadViewTopbarOwnerAsInvite.inviteButtonRef;
+                }
+                if (this.composerViewOwnerAsEmoji) {
+                    return this.composerViewOwnerAsEmoji.buttonEmojisRef;
+                }
+                if (this.messageActionViewOwnerAsReaction) {
+                    return this.messageActionViewOwnerAsReaction.actionRef;
+                }
+                if (this.messageViewOwnerAsNotificationContent) {
+                    return this.messageViewOwnerAsNotificationContent.notificationIconRef;
+                }
+                return clear();
+            },
             required: true,
         }),
         callActionListViewOwnerAsMoreMenu: one('CallActionListView', {
@@ -247,7 +94,12 @@ registerModel({
             inverse: 'moreMenuPopoverView',
         }),
         callOptionMenuView: one('CallOptionMenu', {
-            compute: '_computeCallOptionMenuView',
+            compute() {
+                if (this.callActionListViewOwnerAsMoreMenu) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'popoverViewOwner',
         }),
         callParticipantCardOwner: one('CallParticipantCard', {
@@ -255,14 +107,24 @@ registerModel({
             inverse: 'callParticipantCardPopoverView',
         }),
         callParticipantCardPopoverContentView: one('CallParticipantCardPopoverContentView', {
-            compute: '_computeCallParticipantCardPopoverContentView',
+            compute() {
+                if (this.callParticipantCardOwner) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'popoverViewOwner',
         }),
         /**
          * The record that represents the content inside the popover view.
          */
         channelInvitationForm: one('ChannelInvitationForm', {
-            compute: '_computeChannelInvitationForm',
+            compute() {
+                if (this.threadViewTopbarOwnerAsInvite) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'popoverViewOwner',
         }),
         /**
@@ -280,7 +142,27 @@ registerModel({
          * Determines the record that is content of this popover view.
          */
         content: one('Record', {
-            compute: '_computeContent',
+            compute() {
+                if (this.activityMarkDonePopoverContentView) {
+                    return this.activityMarkDonePopoverContentView;
+                }
+                if (this.callOptionMenuView) {
+                    return this.callOptionMenuView;
+                }
+                if (this.callParticipantCardPopoverContentView) {
+                    return this.callParticipantCardPopoverContentView;
+                }
+                if (this.channelInvitationForm) {
+                    return this.channelInvitationForm;
+                }
+                if (this.emojiPickerView) {
+                    return this.emojiPickerView;
+                }
+                if (this.messageNotificationPopoverContentView) {
+                    return this.messageNotificationPopoverContentView;
+                }
+                return clear();
+            },
             required: true,
         }),
         /**
@@ -288,14 +170,42 @@ registerModel({
          * that is content of this popover view.
          */
         contentClassName: attr({
-            compute: '_computeContentClassName',
+            compute() {
+                if (this.channelInvitationForm) {
+                    return 'o_PopoverView_channelInvitationForm';
+                }
+                if (this.emojiPickerView) {
+                    return 'o_PopoverView_emojiPickerView';
+                }
+                return clear();
+            },
             default: '',
         }),
         /**
          * Determines the component name of the content.
          */
         contentComponentName: attr({
-            compute: '_computeContentComponentName',
+            compute() {
+                if (this.activityMarkDonePopoverContentView) {
+                    return 'ActivityMarkDonePopoverContent';
+                }
+                if (this.callOptionMenuView) {
+                    return 'CallOptionMenu';
+                }
+                if (this.callParticipantCardPopoverContentView) {
+                    return 'CallParticipantCardPopoverContentView';
+                }
+                if (this.channelInvitationForm) {
+                    return 'ChannelInvitationForm';
+                }
+                if (this.emojiPickerView) {
+                    return 'EmojiPickerView';
+                }
+                if (this.messageNotificationPopoverContentView) {
+                    return 'MessageNotificationPopoverContent';
+                }
+                return clear();
+            },
             default: '',
             required: true,
         }),
@@ -303,11 +213,24 @@ registerModel({
          * If set, the content of this popover view is a list of emojis.
          */
         emojiPickerView: one('EmojiPickerView', {
-            compute: '_computeEmojiPickerView',
+            compute() {
+                if (this.composerViewOwnerAsEmoji) {
+                    return {};
+                }
+                if (this.messageActionViewOwnerAsReaction) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'popoverViewOwner',
         }),
         manager: one('PopoverManager', {
-            compute: '_computeManager',
+            compute() {
+                if (this.messaging.popoverManager) {
+                    return this.messaging.popoverManager;
+                }
+                return clear();
+            },
             inverse: 'popoverViews',
         }),
         /**
@@ -318,7 +241,12 @@ registerModel({
             inverse: 'reactionPopoverView',
         }),
         messageNotificationPopoverContentView: one('MessageNotificationPopoverContentView', {
-            compute: '_computeMessageNotificationPopoverContentView',
+            compute() {
+                if (this.messageViewOwnerAsNotificationContent) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'popoverViewOwner',
         }),
         messageViewOwnerAsNotificationContent: one('MessageView', {
@@ -330,7 +258,27 @@ registerModel({
          * Valid values: 'top', 'right', 'bottom', 'left'
          */
         position: attr({
-            compute: '_computePosition',
+            compute() {
+                if (this.activityViewOwnerAsMarkDone) {
+                    return 'right';
+                }
+                if (this.callActionListViewOwnerAsMoreMenu) {
+                    return 'top';
+                }
+                if (this.callParticipantCardOwner) {
+                    return 'bottom';
+                }
+                if (this.threadViewTopbarOwnerAsInvite) {
+                    return 'bottom';
+                }
+                if (this.composerViewOwnerAsEmoji) {
+                    return 'top';
+                }
+                if (this.messageActionViewOwnerAsReaction) {
+                    return 'top';
+                }
+                return clear();
+            },
             default: 'top',
         }),
         /**

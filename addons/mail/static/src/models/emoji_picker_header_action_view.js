@@ -29,8 +29,8 @@ registerModel({
             compute() {
                 return clear();
             },
-            required: true,
             inverse: 'actionViews',
+            required: true,
         }),
         sequence: attr({
             default: 0,

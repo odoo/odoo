@@ -6,114 +6,6 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageActionList',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActionDelete() {
-            if (this.message && this.message.canBeDeleted) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActionEdit() {
-            if (this.message && this.message.canBeDeleted) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActionMarkAsRead() {
-            if (
-                this.messaging && this.messaging.inbox &&
-                this.messageView && this.messageView.messageListViewItemOwner && this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread
-            ) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActionReaction() {
-            if (this.message && this.message.hasReactionIcon) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActionReplyTo() {
-            if (
-                this.messaging && this.messaging.inbox &&
-                this.message && !this.message.isTemporary && !this.message.isTransient &&
-                this.messageView && this.messageView.messageListViewItemOwner && this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread && (
-                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread ||
-                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel
-                )
-            ) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActionToggleCompact() {
-            if (this.messageView.isInChatWindow && (this.actionsWithoutCompactCount > this.compactThreshold)) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActionToggleStar() {
-            if (this.message && this.message.canStarBeToggled) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFirstActionView() {
-            if (this.actionViewsCount === 0) {
-                return clear();
-            }
-            return this.messageActionViews[0];
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLastActionView() {
-            if (this.actionViewsCount === 0) {
-                return clear();
-            }
-            return this.messageActionViews[this.actionViewsCount - 1];
-        },
-        _sortMessageActionViews() {
-            return [
-                ['smaller-first', 'messageAction.sequence'],
-            ];
-        }
-    },
     fields: {
         actionViewsCount: attr({
             default: 0,
@@ -126,31 +18,77 @@ registerModel({
             sum: 'messageActions.isNonCompactActionContribution',
         }),
         actionDelete: one('MessageAction', {
-            compute: '_computeActionDelete',
+            compute() {
+                if (this.message && this.message.canBeDeleted) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageActionListOwnerAsDelete',
         }),
         actionEdit: one('MessageAction', {
-            compute: '_computeActionEdit',
+            compute() {
+                if (this.message && this.message.canBeDeleted) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageActionListOwnerAsEdit',
         }),
         actionMarkAsRead: one('MessageAction', {
-            compute: '_computeActionMarkAsRead',
+            compute() {
+                if (
+                    this.messaging && this.messaging.inbox &&
+                    this.messageView && this.messageView.messageListViewItemOwner && this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
+                    this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread
+                ) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageActionListOwnerAsMarkAsRead',
         }),
         actionReaction: one('MessageAction', {
-            compute: '_computeActionReaction',
+            compute() {
+                if (this.message && this.message.hasReactionIcon) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageActionListOwnerAsReaction',
         }),
         actionReplyTo: one('MessageAction', {
-            compute: '_computeActionReplyTo',
+            compute() {
+                if (
+                    this.messaging && this.messaging.inbox &&
+                    this.message && !this.message.isTemporary && !this.message.isTransient &&
+                    this.messageView && this.messageView.messageListViewItemOwner && this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread && (
+                        this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread ||
+                        this.messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel
+                    )
+                ) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageActionListOwnerAsReplyTo',
         }),
         actionToggleCompact: one('MessageAction', {
-            compute: '_computeActionToggleCompact',
+            compute() {
+                if (this.messageView.isInChatWindow && (this.actionsWithoutCompactCount > this.compactThreshold)) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageActionListOwnerAsToggleCompact',
         }),
         actionToggleStar: one('MessageAction', {
-            compute: '_computeActionToggleStar',
+            compute() {
+                if (this.message && this.message.canStarBeToggled) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageActionListOwnerAsToggleStar',
         }),
         compactThreshold: attr({
@@ -158,13 +96,23 @@ registerModel({
             readonly: true,
         }),
         firstActionView: one('MessageActionView', {
-            compute: '_computeFirstActionView',
+            compute() {
+                if (this.actionViewsCount === 0) {
+                    return clear();
+                }
+                return this.messageActionViews[0];
+            },
         }),
         isCompact: attr({
             default: true,
         }),
         lastActionView: one('MessageActionView', {
-            compute: '_computeLastActionView',
+            compute() {
+                if (this.actionViewsCount === 0) {
+                    return clear();
+                }
+                return this.messageActionViews[this.actionViewsCount - 1];
+            },
         }),
         /**
          * States the message on which this action message list operates.
@@ -178,7 +126,11 @@ registerModel({
         }),
         messageActionViews: many('MessageActionView', {
             related: 'messageActions.messageActionView',
-            sort: '_sortMessageActionViews',
+            sort() {
+                return [
+                    ['smaller-first', 'messageAction.sequence'],
+                ];
+            },
         }),
         /**
          * States the message view that controls this message action list.

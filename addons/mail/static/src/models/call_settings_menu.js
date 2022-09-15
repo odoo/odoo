@@ -80,24 +80,6 @@ registerModel({
                 isRegisteringKey: !this.isRegisteringKey,
             });
         },
-        _computeCallView() {
-            if (this.threadViewOwner) {
-                return this.threadViewOwner.callView;
-            }
-            if (this.chatWindowOwner && this.chatWindowOwner.threadView) {
-                return this.chatWindowOwner.threadView.callView;
-            }
-            return clear();
-        },
-        _computeThread() {
-            if (this.threadViewOwner) {
-                return this.threadViewOwner.thread;
-            }
-            if (this.chatWindowOwner) {
-                return this.chatWindowOwner.thread;
-            }
-            return clear();
-        },
         _onKeyDown(ev) {
             if (!this.userSetting.isRegisteringKey) {
                 return;
@@ -119,14 +101,30 @@ registerModel({
     },
     fields: {
         callView: one('CallView', {
-            compute: '_computeCallView',
+            compute() {
+                if (this.threadViewOwner) {
+                    return this.threadViewOwner.callView;
+                }
+                if (this.chatWindowOwner && this.chatWindowOwner.threadView) {
+                    return this.chatWindowOwner.threadView.callView;
+                }
+                return clear();
+            },
         }),
         chatWindowOwner: one('ChatWindow', {
             identifying: true,
             inverse: 'callSettingsMenu',
         }),
         thread: one('Thread', {
-            compute: '_computeThread',
+            compute() {
+                if (this.threadViewOwner) {
+                    return this.threadViewOwner.thread;
+                }
+                if (this.chatWindowOwner) {
+                    return this.chatWindowOwner.thread;
+                }
+                return clear();
+            },
         }),
         threadViewOwner: one('ThreadView', {
             identifying: true,

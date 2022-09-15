@@ -10,113 +10,6 @@ registerModel({
     name: 'DiscussSidebarCategoryItem',
     recordMethods: {
         /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAvatarUrl() {
-            switch (this.channel.channel_type) {
-                case 'channel':
-                case 'group':
-                    return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
-                case 'chat':
-                    if (this.channel.correspondent) {
-                        return this.channel.correspondent.avatarUrl;
-                    }
-            }
-            return '/mail/static/src/img/smiley/avatar.jpg';
-        },
-        /**
-         * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeCategoryCounterContribution() {
-            if (!this.thread) {
-                return clear();
-            }
-            switch (this.channel.channel_type) {
-                case 'channel':
-                    return this.thread.message_needaction_counter > 0 ? 1 : 0;
-                case 'chat':
-                case 'group':
-                    return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
-            }
-        },
-        /**
-         * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeCounter() {
-            if (!this.thread) {
-                return clear();
-            }
-            switch (this.channel.channel_type) {
-                case 'channel':
-                    return this.thread.message_needaction_counter;
-                case 'chat':
-                case 'group':
-                    return this.channel.localMessageUnreadCounter;
-            }
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasLeaveCommand() {
-            if (!this.thread) {
-                return clear();
-            }
-            return (
-                ['channel', 'group'].includes(this.channel.channel_type) &&
-                !this.thread.message_needaction_counter &&
-                !this.thread.group_based_subscription
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasSettingsCommand() {
-            return this.channel.channel_type === 'channel';
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasUnpinCommand() {
-            return this.channel.channel_type === 'chat' && !this.channel.localMessageUnreadCounter;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsActive() {
-            return this.messaging.discuss && this.thread === this.messaging.discuss.activeThread;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsUnread() {
-            return this.channel.localMessageUnreadCounter > 0;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasThreadIcon() {
-            if (!this.thread) {
-                return clear();
-            }
-            switch (this.channel.channel_type) {
-                case 'channel':
-                    return !Boolean(this.thread.authorizedGroupFullName);
-                case 'chat':
-                    return true;
-                case 'group':
-                    return false;
-            }
-        },
-        /**
          * @param {MouseEvent} ev
          */
         onClick(ev) {
@@ -213,7 +106,18 @@ registerModel({
          * Image URL for the related channel thread.
          */
         avatarUrl: attr({
-            compute: '_computeAvatarUrl',
+            compute() {
+                switch (this.channel.channel_type) {
+                    case 'channel':
+                    case 'group':
+                        return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
+                    case 'chat':
+                        if (this.channel.correspondent) {
+                            return this.channel.correspondent.avatarUrl;
+                        }
+                }
+                return '/mail/static/src/img/smiley/avatar.jpg';
+            },
         }),
         /**
          * Determines the discuss sidebar category displaying this item.
@@ -227,7 +131,18 @@ registerModel({
          * the counter of this category.
          */
         categoryCounterContribution: attr({
-            compute: '_computeCategoryCounterContribution',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                switch (this.channel.channel_type) {
+                    case 'channel':
+                        return this.thread.message_needaction_counter > 0 ? 1 : 0;
+                    case 'chat':
+                    case 'group':
+                        return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
+                }
+            },
         }),
         channel: one('Channel', {
             identifying: true,
@@ -237,43 +152,83 @@ registerModel({
          * Amount of unread/action-needed messages
          */
         counter: attr({
-            compute: '_computeCounter',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                switch (this.channel.channel_type) {
+                    case 'channel':
+                        return this.thread.message_needaction_counter;
+                    case 'chat':
+                    case 'group':
+                        return this.channel.localMessageUnreadCounter;
+                }
+            },
         }),
         /**
          * Boolean determines whether the item has a "leave" command
          */
         hasLeaveCommand: attr({
-            compute: '_computeHasLeaveCommand',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                return (
+                    ['channel', 'group'].includes(this.channel.channel_type) &&
+                    !this.thread.message_needaction_counter &&
+                    !this.thread.group_based_subscription
+                );
+            },
         }),
         /**
          * Boolean determines whether the item has a "settings" command.
          */
         hasSettingsCommand: attr({
-            compute: '_computeHasSettingsCommand',
+            compute() {
+                return this.channel.channel_type === 'channel';
+            },
         }),
         /**
          * Boolean determines whether ThreadIcon will be displayed in UI.
          */
         hasThreadIcon: attr({
-            compute: '_computeHasThreadIcon',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                switch (this.channel.channel_type) {
+                    case 'channel':
+                        return !Boolean(this.thread.authorizedGroupFullName);
+                    case 'chat':
+                        return true;
+                    case 'group':
+                        return false;
+                }
+            },
         }),
         /**
          * Boolean determines whether the item has a "unpin" command.
          */
         hasUnpinCommand: attr({
-            compute: '_computeHasUnpinCommand',
+            compute() {
+                return this.channel.channel_type === 'chat' && !this.channel.localMessageUnreadCounter;
+            },
         }),
         /**
          * Boolean determines whether the item is currently active in discuss.
          */
         isActive: attr({
-            compute: '_computeIsActive',
+            compute() {
+                return this.messaging.discuss && this.thread === this.messaging.discuss.activeThread;
+            },
         }),
         /**
          * Boolean determines whether the item has any unread messages.
          */
         isUnread: attr({
-            compute: '_computeIsUnread',
+            compute() {
+                return this.channel.localMessageUnreadCounter > 0;
+            },
         }),
         /**
          * The related thread.

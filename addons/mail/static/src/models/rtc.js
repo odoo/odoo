@@ -412,13 +412,7 @@ registerModel({
                 this._callPeer(rtcSession);
             }
         },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computePingInterval() {
-            return this.messaging.browser.setInterval(this._onPingInterval, 30000); // 30 seconds
-        },
+
         /**
          * Creates and setup a RTCPeerConnection.
          *
@@ -1223,7 +1217,9 @@ registerModel({
          *   established but failed or timed out.
          */
         pingInterval: attr({
-            compute: '_computePingInterval',
+            compute() {
+                return this.messaging.browser.setInterval(this._onPingInterval, 30000); // 30 seconds
+            },
         }),
         /**
          * The protocols for each RTC ICE candidate types.

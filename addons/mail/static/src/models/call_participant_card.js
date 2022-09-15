@@ -59,57 +59,18 @@ registerModel({
             }
             this.volumeMenuAnchorRef.el.click();
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallView() {
-            if (this.sidebarViewTileOwner) {
-                return this.sidebarViewTileOwner.callSidebarViewOwner.callView;
-            }
-            return this.mainViewTileOwner.callMainViewOwner.callView;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-         _computeChannelMember() {
-            if (this.sidebarViewTileOwner) {
-                return this.sidebarViewTileOwner.channelMember;
-            }
-            return this.mainViewTileOwner.channelMember;
-         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsMinimized() {
-            return Boolean(this.callView && this.callView.isMinimized);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsTalking() {
-            return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute);
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallParticipantVideoView() {
-            if (this.rtcSession && this.rtcSession.videoStream) {
-                return {};
-            }
-            return clear();
-        },
     },
     fields: {
         callParticipantCardPopoverView: one('PopoverView', {
             inverse: 'callParticipantCardOwner',
         }),
         channelMember: one('ChannelMember', {
-            compute: '_computeChannelMember',
+            compute() {
+                if (this.sidebarViewTileOwner) {
+                    return this.sidebarViewTileOwner.channelMember;
+                }
+                return this.mainViewTileOwner.channelMember;
+            },
             inverse: 'callParticipantCards',
         }),
         mainViewTileOwner: one('CallMainViewTile', {
@@ -120,21 +81,30 @@ registerModel({
          * Determines if this card has to be displayed in a minimized form.
          */
         isMinimized: attr({
+            compute() {
+                return Boolean(this.callView && this.callView.isMinimized);
+            },
             default: false,
-            compute: '_computeIsMinimized',
         }),
         /**
          * Determines if the rtcSession is in a valid "talking" state.
          */
         isTalking: attr({
+            compute() {
+                return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute);
+            },
             default: false,
-            compute: '_computeIsTalking',
         }),
         /**
          * The callView that displays this card.
          */
         callView: one('CallView', {
-            compute: '_computeCallView',
+            compute() {
+                if (this.sidebarViewTileOwner) {
+                    return this.sidebarViewTileOwner.callSidebarViewOwner.callView;
+                }
+                return this.mainViewTileOwner.callMainViewOwner.callView;
+            },
             inverse: 'participantCards',
         }),
         rtcSession: one('RtcSession', {
@@ -146,7 +116,12 @@ registerModel({
             inverse: 'participantCard',
         }),
         callParticipantVideoView: one('CallParticipantVideoView', {
-            compute: '_computeCallParticipantVideoView',
+            compute() {
+                if (this.rtcSession && this.rtcSession.videoStream) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'callParticipantCardOwner',
         }),
         volumeMenuAnchorRef: attr(),

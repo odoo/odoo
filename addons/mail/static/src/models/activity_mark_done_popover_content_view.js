@@ -71,35 +71,25 @@ registerModel({
             this._backupFeedback();
             this.activityViewOwner.update({ markDonePopoverView: clear() });
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActivityViewOwner() {
-            if (this.popoverViewOwner.activityViewOwnerAsMarkDone) {
-                return this.popoverViewOwner.activityViewOwnerAsMarkDone;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeHeaderText() {
-            if (this.activityViewOwner) {
-                return this.activityViewOwner.markDoneText;
-            }
-            return clear();
-        },
     },
     fields: {
         activityViewOwner: one('ActivityView', {
-            compute: '_computeActivityViewOwner',
+            compute() {
+                if (this.popoverViewOwner.activityViewOwnerAsMarkDone) {
+                    return this.popoverViewOwner.activityViewOwnerAsMarkDone;
+                }
+                return clear();
+            },
         }),
         component: attr(),
         feedbackTextareaRef: attr(),
         headerText: attr({
-            compute: '_computeHeaderText',
+            compute() {
+                if (this.activityViewOwner) {
+                    return this.activityViewOwner.markDoneText;
+                }
+                return clear();
+            },
             default: '',
         }),
         popoverViewOwner: one('PopoverView', {

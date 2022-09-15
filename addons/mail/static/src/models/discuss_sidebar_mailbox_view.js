@@ -7,24 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'DiscussSidebarMailboxView',
     identifyingMode: 'xor',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {Mailbox}
-         */
-        _computeMailbox() {
-            if (this.discussViewOwnerAsHistory) {
-                return this.messaging.history;
-            }
-            if (this.discussViewOwnerAsInbox) {
-                return this.messaging.inbox;
-            }
-            if (this.discussViewOwnerAsStarred) {
-                return this.messaging.starred;
-            }
-            return clear();
-        },
-    },
     fields: {
         discussViewOwnerAsHistory: one('DiscussView', {
             identifying: true,
@@ -39,7 +21,18 @@ registerModel({
             inverse: 'starredView',
         }),
         mailbox: one('Mailbox', {
-            compute: '_computeMailbox',
+            compute() {
+                if (this.discussViewOwnerAsHistory) {
+                    return this.messaging.history;
+                }
+                if (this.discussViewOwnerAsInbox) {
+                    return this.messaging.inbox;
+                }
+                if (this.discussViewOwnerAsStarred) {
+                    return this.messaging.starred;
+                }
+                return clear();
+            },
             required: true,
         }),
     },
