@@ -30,47 +30,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Thread|undefined}
-         */
-        _computeThread() {
-            const notificationsThreadIds = this.notifications
-                  .filter(notification => notification.message && notification.message.originThread)
-                  .map(notification => notification.message.originThread.id);
-            const threadIds = new Set(notificationsThreadIds);
-            if (threadIds.size !== 1) {
-                return clear();
-            }
-            return insert({
-                id: notificationsThreadIds[0],
-                model: this.res_model,
-            });
-        },
-        /**
-         * Compute the most recent date inside the notification messages.
-         *
-         * @private
-         * @returns {moment|undefined}
-         */
-        _computeDate() {
-            const dates = this.notifications
-                  .filter(notification => notification.message && notification.message.date)
-                  .map(notification => notification.message.date);
-            if (dates.length === 0) {
-                return clear();
-            }
-            return moment.max(dates);
-        },
-        /**
-         * Compute the position of the group inside the notification list.
-         *
-         * @private
-         * @returns {number}
-         */
-        _computeSequence() {
-            return -Math.max(...this.notifications.map(notification => notification.message.id));
-        },
-        /**
-         * @private
          */
         _onChangeNotifications() {
             if (this.notifications.length === 0) {
@@ -108,7 +67,18 @@ registerModel({
          * States the most recent date of all the notification message.
          */
         date: attr({
-            compute: '_computeDate',
+            /**
+             * Compute the most recent date inside the notification messages.
+             */
+            compute() {
+                const dates = this.notifications
+                    .filter(notification => notification.message && notification.message.date)
+                    .map(notification => notification.message.date);
+                if (dates.length === 0) {
+                    return clear();
+                }
+                return moment.max(dates);
+            },
         }),
         notification_type: attr({
             identifying: true,
@@ -130,14 +100,31 @@ registerModel({
          * States the position of the group inside the notification list.
          */
         sequence: attr({
-            compute: '_computeSequence',
+            /**
+             * Compute the position of the group inside the notification list.
+             */
+            compute() {
+                return -Math.max(...this.notifications.map(notification => notification.message.id));
+            },
             default: 0,
         }),
         /**
          * Related thread when the notification group concerns a single thread.
          */
         thread: one('Thread', {
-            compute: '_computeThread',
+            compute() {
+                const notificationsThreadIds = this.notifications
+                    .filter(notification => notification.message && notification.message.originThread)
+                    .map(notification => notification.message.originThread.id);
+                const threadIds = new Set(notificationsThreadIds);
+                if (threadIds.size !== 1) {
+                    return clear();
+                }
+                return insert({
+                    id: notificationsThreadIds[0],
+                    model: this.res_model,
+                });
+            },
         }),
     },
     onChanges: [

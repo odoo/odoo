@@ -20,15 +20,6 @@ registerModel({
             return transceivers[this.messaging.rtc.orderedTransceiverNames.indexOf(trackKind)];
         },
         /**
-         * The download is allowed when there are views that display the video stream.
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _computeAcceptsVideoStream() {
-            return Boolean(this.rtcSession.callParticipantCards && this.rtcSession.callParticipantCards.length > 0);
-        },
-        /**
          * @private
          */
         _onChangeAcceptsVideoStream() {
@@ -49,7 +40,12 @@ registerModel({
          * Determines whether the video stream receiver accepts video stream download.
          */
         acceptsVideoStream: attr({
-            compute: '_computeAcceptsVideoStream',
+            /**
+             * The download is allowed when there are views that display the video stream.
+             */
+            compute() {
+                return Boolean(this.rtcSession.callParticipantCards && this.rtcSession.callParticipantCards.length > 0);
+            },
         }),
         /**
          * Contains the browser.RTCPeerConnection instance of this RTC Session.

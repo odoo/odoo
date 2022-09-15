@@ -16,21 +16,14 @@ registerModel({
             this.widget.destroy();
         },
     },
-    recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand|integer}
-         */
-        _computeAuthorId() {
-            if (this.data.author && this.data.author.id) {
-                return this.data.author.id;
-            }
-            return clear();
-        },
-    },
     fields: {
         authorId: attr({
-            compute: '_computeAuthorId',
+            compute() {
+                if (this.data.author && this.data.author.id) {
+                    return this.data.author.id;
+                }
+                return clear();
+            },
         }),
         data: attr(),
         id: attr({

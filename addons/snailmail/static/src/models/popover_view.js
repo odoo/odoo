@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { addFields, addRecordMethods, patchRecordMethods } from '@mail/model/model_core';
+import { addFields, patchFields } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
@@ -12,50 +12,39 @@ addFields('PopoverView', {
         inverse: 'snailmailNotificationPopoverView',
     }),
     snailmailNotificationPopoverContentView: one('SnailmailNotificationPopoverContentView', {
-        compute: '_computeSnailmailNotificationPopoverContentView',
+        compute() {
+            if (this.messageViewOwnerAsSnailmailNotificationContent) {
+                return {};
+            }
+            return clear();
+        },
         inverse: 'popoverViewOwner',
     }),
 });
 
-addRecordMethods('PopoverView', {
-    /**
-     * @private
-     * @returns {Object|FieldCommand}
-     */
-    _computeSnailmailNotificationPopoverContentView() {
-        if (this.messageViewOwnerAsSnailmailNotificationContent) {
-            return {};
-        }
-        return clear();
+patchFields('PopoverView', {
+    anchorRef: {
+        compute() {
+            if (this.messageViewOwnerAsSnailmailNotificationContent) {
+                return this.messageViewOwnerAsSnailmailNotificationContent.notificationIconRef;
+            }
+            return this._super();
+        },
     },
-});
-
-patchRecordMethods('PopoverView', {
-    /**
-     * @override
-     */
-    _computeAnchorRef() {
-        if (this.messageViewOwnerAsSnailmailNotificationContent) {
-            return this.messageViewOwnerAsSnailmailNotificationContent.notificationIconRef;
-        }
-        return this._super();
+    content: {
+        compute() {
+            if (this.snailmailNotificationPopoverContentView) {
+                return this.snailmailNotificationPopoverContentView;
+            }
+            return this._super();
+        },
     },
-    /**
-     * @override
-     */
-     _computeContent() {
-        if (this.snailmailNotificationPopoverContentView) {
-            return this.snailmailNotificationPopoverContentView;
-        }
-        return this._super();
-    },
-    /**
-     * @override
-     */
-    _computeContentComponentName() {
-        if (this.snailmailNotificationPopoverContentView) {
-            return 'SnailmailNotificationPopoverContentView';
-        }
-        return this._super();
+    contentComponentName: {
+        compute() {
+            if (this.snailmailNotificationPopoverContentView) {
+                return 'SnailmailNotificationPopoverContentView';
+            }
+            return this._super();
+        },
     },
 });

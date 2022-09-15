@@ -177,111 +177,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
-         */
-        _computeButtonBackgroundColor() {
-            return this.messaging.publicLivechatGlobal.options.button_background_color;
-        },
-        /**
-         * @returns {string}
-         */
-        _computeButtonText() {
-            if (this.messaging.publicLivechatGlobal.options.button_text) {
-                return this.messaging.publicLivechatGlobal.options.button_text;
-            }
-            return this.env._t("Chat with one of our collaborators");
-        },
-        /**
-         * @returns {string}
-         */
-        _computeButtonTextColor() {
-            return this.messaging.publicLivechatGlobal.options.button_text_color;
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeCurrentPartnerId() {
-            if (!this.messaging.publicLivechatGlobal.isAvailable) {
-                return clear();
-            }
-            return this.messaging.publicLivechatGlobal.options.current_partner_id;
-        },
-        /**
-        * @private
-        * @returns {string}
-        */
-        _computeDefaultMessage() {
-            if (this.messaging.publicLivechatGlobal.options.default_message) {
-                return this.messaging.publicLivechatGlobal.options.default_message;
-            }
-            return this.env._t("How may I help you?");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeDefaultUsername() {
-            if (this.messaging.publicLivechatGlobal.options.default_username) {
-                return this.messaging.publicLivechatGlobal.options.default_username;
-            }
-            return this.env._t("Visitor");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeHeaderBackgroundColor() {
-            return this.messaging.publicLivechatGlobal.options.header_background_color;
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeInputPlaceholder() {
-            if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
-                // void the default livechat placeholder in the user input
-                // as we use it for specific things (e.g: showing "please select an option above")
-                return clear();
-            }
-            if (this.messaging.publicLivechatGlobal.options.input_placeholder) {
-                return this.messaging.publicLivechatGlobal.options.input_placeholder;
-            }
-            return this.env._t("Ask something ...");
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeIsOpenChatDebounced() {
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {_.debounce}
-         */
-        _computeOpenChatDebounced() {
-            return _.debounce(this._openChat, 200, true);
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeServerUrl() {
-            if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
-                return this.messaging.publicLivechatGlobal.chatbot.serverUrl;
-            }
-            return this.messaging.publicLivechatGlobal.serverUrl;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeTitleColor() {
-            return this.messaging.publicLivechatGlobal.options.title_color;
-        },
-        /**
-         * @private
          */
         _openChat() {
             if (this.isOpeningChat) {
@@ -466,34 +361,72 @@ registerModel({
     fields: {
         autoOpenChatTimeout: attr(),
         buttonBackgroundColor: attr({
-            compute: '_computeButtonBackgroundColor',
+            compute() {
+                return this.messaging.publicLivechatGlobal.options.button_background_color;
+            },
         }),
         buttonText: attr({
-            compute: '_computeButtonText',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.options.button_text) {
+                    return this.messaging.publicLivechatGlobal.options.button_text;
+                }
+                return this.env._t("Chat with one of our collaborators");
+            },
         }),
         buttonTextColor: attr({
-            compute: '_computeButtonTextColor',
+            compute() {
+                return this.messaging.publicLivechatGlobal.options.button_text_color;
+            },
         }),
         chatbotNextStepTimeout: attr(),
         chatbotWelcomeMessageTimeout: attr(),
         currentPartnerId: attr({
-            compute: '_computeCurrentPartnerId',
+            compute() {
+                if (!this.messaging.publicLivechatGlobal.isAvailable) {
+                    return clear();
+                }
+                return this.messaging.publicLivechatGlobal.options.current_partner_id;
+            },
         }),
         defaultMessage: attr({
-            compute: '_computeDefaultMessage',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.options.default_message) {
+                    return this.messaging.publicLivechatGlobal.options.default_message;
+                }
+                return this.env._t("How may I help you?");
+            },
         }),
         defaultUsername: attr({
-            compute: '_computeDefaultUsername',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.options.default_username) {
+                    return this.messaging.publicLivechatGlobal.options.default_username;
+                }
+                return this.env._t("Visitor");
+            },
         }),
         headerBackgroundColor: attr({
-            compute: '_computeHeaderBackgroundColor',
+            compute() {
+                return this.messaging.publicLivechatGlobal.options.header_background_color;
+            },
         }),
         inputPlaceholder: attr({
-            compute: '_computeInputPlaceholder',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
+                    // void the default livechat placeholder in the user input
+                    // as we use it for specific things (e.g: showing "please select an option above")
+                    return clear();
+                }
+                if (this.messaging.publicLivechatGlobal.options.input_placeholder) {
+                    return this.messaging.publicLivechatGlobal.options.input_placeholder;
+                }
+                return this.env._t("Ask something ...");
+            },
             default: '',
         }),
         isOpenChatDebounced: attr({
-            compute: '_computeIsOpenChatDebounced',
+            compute() {
+                return clear();
+            },
             default: true,
         }),
         isOpeningChat: attr({
@@ -501,17 +434,26 @@ registerModel({
         }),
         isTypingTimeout: attr(),
         openChatDebounced: attr({
-            compute: '_computeOpenChatDebounced',
+            compute() {
+                return _.debounce(this._openChat, 200, true);
+            },
         }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'livechatButtonView',
         }),
         serverUrl: attr({
-            compute: '_computeServerUrl',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
+                    return this.messaging.publicLivechatGlobal.chatbot.serverUrl;
+                }
+                return this.messaging.publicLivechatGlobal.serverUrl;
+            },
         }),
         titleColor: attr({
-            compute: '_computeTitleColor',
+            compute() {
+                return this.messaging.publicLivechatGlobal.options.title_color;
+            },
         }),
         widget: attr(),
     },

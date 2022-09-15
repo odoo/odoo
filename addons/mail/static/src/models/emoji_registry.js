@@ -45,12 +45,6 @@ registerModel({
                 });
             }));
         },
-        _sortAllCategories() {
-            return [['smaller-first', 'sortId']];
-        },
-        _sortAllEmojis() {
-            return [['smaller-first', 'codepoints']];
-        }
     },
     fields: {
         allCategories: many('EmojiCategory', {
@@ -58,11 +52,15 @@ registerModel({
                 return this.dataCategories;
             },
             inverse: 'emojiRegistry',
-            sort: '_sortAllCategories',
+            sort() {
+                return [['smaller-first', 'sortId']];
+            },
         }),
         allEmojis: many('Emoji', {
             inverse: 'emojiRegistry',
-            sort: '_sortAllEmojis'
+            sort() {
+                return [['smaller-first', 'codepoints']];
+            }
         }),
         dataCategories: many('EmojiCategory'),
     },

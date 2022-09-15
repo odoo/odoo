@@ -24,105 +24,6 @@ registerModel({
             const prevIndex = index === 0 ? this.attachments.length - 1 : index - 1;
             this.update({ selectedAttachment: this.attachments[prevIndex] });
         },
-        _computeAttachmentImages() {
-            return this.imageAttachments.map(attachment => ({ attachment }));
-        },
-        _computeAttachmentCards() {
-            return this.nonImageAttachments.map(attachment => ({ attachment }));
-        },
-        /**
-         * @returns {FieldCommand}
-         */
-        _computeAttachments() {
-            if (this.messageViewOwner) {
-                return this.messageViewOwner.message.attachments;
-            }
-            if (this.attachmentBoxViewOwner) {
-                return this.attachmentBoxViewOwner.chatter.thread.allAttachments;
-            }
-            if (this.composerViewOwner && this.composerViewOwner.composer) {
-                return this.composerViewOwner.composer.attachments;
-            }
-            return clear();
-        },
-        /**
-         * @returns {Attachment[]}
-         */
-        _computeImageAttachments() {
-            return this.attachments.filter(attachment => attachment.isImage);
-        },
-        /**
-         * @returns {Attachment[]}
-         */
-        _computeNonImageAttachments() {
-            return this.attachments.filter(attachment => !attachment.isImage);
-        },
-        /**
-         * @returns {Attachment[]}
-         */
-        _computeViewableAttachments() {
-            return this.attachments.filter(attachment => attachment.isViewable);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInDiscuss() {
-            return Boolean(
-                (this.messageViewOwner && this.messageViewOwner.isInDiscuss) ||
-                (this.composerViewOwner && this.composerViewOwner.isInDiscuss)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInChatWindow() {
-            return Boolean(
-                (this.messageViewOwner && this.messageViewOwner.isInChatWindow) ||
-                (this.composerViewOwner && this.composerViewOwner.isInChatWindow)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInChatter() {
-            return Boolean(
-                (this.messageViewOwner && this.messageViewOwner.isInChatter) ||
-                (this.composerViewOwner && this.composerViewOwner.isInChatter)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsCurrentUserOrGuestAuthor() {
-            return Boolean(
-                this.composerViewOwner ||
-                (this.messageViewOwner && this.messageViewOwner.message.isCurrentUserOrGuestAuthor)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-         _computeIsInChatWindowAndIsAlignedRight() {
-            return Boolean(
-                this.isInChatWindow &&
-                this.isCurrentUserOrGuestAuthor
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-         _computeIsInChatWindowAndIsAlignedLeft() {
-            return Boolean(
-                this.isInChatWindow &&
-                !this.isCurrentUserOrGuestAuthor
-            );
-        },
     },
     fields: {
         /**
@@ -136,14 +37,18 @@ registerModel({
          * States the attachment cards that are displaying this nonImageAttachments.
          */
         attachmentCards: many('AttachmentCard', {
-            compute: '_computeAttachmentCards',
+            compute() {
+                return this.nonImageAttachments.map(attachment => ({ attachment }));
+            },
             inverse: 'attachmentList',
         }),
         /**
          * States the attachment images that are displaying this imageAttachments.
          */
         attachmentImages: many('AttachmentImage', {
-            compute: '_computeAttachmentImages',
+            compute() {
+                return this.imageAttachments.map(attachment => ({ attachment }));
+            },
             inverse: 'attachmentList',
         }),
         attachmentListViewDialog: one('Dialog', {
@@ -153,7 +58,18 @@ registerModel({
          * States the attachments to be displayed by this attachment list.
          */
         attachments: many('Attachment', {
-            compute: '_computeAttachments',
+            compute() {
+                if (this.messageViewOwner) {
+                    return this.messageViewOwner.message.attachments;
+                }
+                if (this.attachmentBoxViewOwner) {
+                    return this.attachmentBoxViewOwner.chatter.thread.allAttachments;
+                }
+                if (this.composerViewOwner && this.composerViewOwner.composer) {
+                    return this.composerViewOwner.composer.attachments;
+                }
+                return clear();
+            },
             inverse: 'attachmentLists',
         }),
         /**
@@ -167,43 +83,75 @@ registerModel({
          * States the attachment that are an image.
          */
         imageAttachments: many('Attachment', {
-            compute: '_computeImageAttachments',
+            compute() {
+                return this.attachments.filter(attachment => attachment.isImage);
+            },
         }),
         /**
          * Determines if we are in the Discuss view.
          */
         isInDiscuss: attr({
-            compute: '_computeIsInDiscuss',
+            compute() {
+                return Boolean(
+                    (this.messageViewOwner && this.messageViewOwner.isInDiscuss) ||
+                    (this.composerViewOwner && this.composerViewOwner.isInDiscuss)
+                );
+            },
         }),
         /**
          * Determines if we are in the ChatWindow view.
          */
         isInChatWindow: attr({
-            compute: '_computeIsInChatWindow',
+            compute() {
+                return Boolean(
+                    (this.messageViewOwner && this.messageViewOwner.isInChatWindow) ||
+                    (this.composerViewOwner && this.composerViewOwner.isInChatWindow)
+                );
+            },
         }),
         /**
          * Determines if we are in the Chatter view.
          */
         isInChatter: attr({
-            compute: '_computeIsInChatter',
+            compute() {
+                return Boolean(
+                    (this.messageViewOwner && this.messageViewOwner.isInChatter) ||
+                    (this.composerViewOwner && this.composerViewOwner.isInChatter)
+                );
+            },
         }),
         /**
          * Determines if it comes from the current user.
          */
         isCurrentUserOrGuestAuthor: attr({
-            compute: '_computeIsCurrentUserOrGuestAuthor',
+            compute() {
+                return Boolean(
+                    this.composerViewOwner ||
+                    (this.messageViewOwner && this.messageViewOwner.message.isCurrentUserOrGuestAuthor)
+                );
+            },
         }),
         /**
          * Determines if we are in the ChatWindow view AND if the message is right aligned
          */
         isInChatWindowAndIsAlignedRight: attr({
-            compute: '_computeIsInChatWindowAndIsAlignedRight',
+            compute() {
+                return Boolean(
+                    this.isInChatWindow &&
+                    this.isCurrentUserOrGuestAuthor
+                );
+            },
         }),
         /**
          * Determines if we are in the ChatWindow view AND if the message is left aligned
          */
         isInChatWindowAndIsAlignedLeft: attr({
-            compute: '_computeIsInChatWindowAndIsAlignedLeft',
+            compute() {
+                return Boolean(
+                    this.isInChatWindow &&
+                    !this.isCurrentUserOrGuestAuthor
+                );
+            },
         }),
         /**
          * Link with a message view to handle attachments.
@@ -216,14 +164,18 @@ registerModel({
          * States the attachment that are not an image.
          */
         nonImageAttachments: many('Attachment', {
-            compute: '_computeNonImageAttachments',
+            compute() {
+                return this.attachments.filter(attachment => !attachment.isImage);
+            },
         }),
         selectedAttachment: one('Attachment'),
         /**
          * States the attachments that can be viewed inside the browser.
          */
         viewableAttachments: many('Attachment', {
-            compute: '_computeViewableAttachments',
+            compute() {
+                return this.attachments.filter(attachment => attachment.isViewable);
+            },
         }),
     },
 });

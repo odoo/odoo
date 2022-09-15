@@ -44,33 +44,6 @@ registerModel({
             }
         },
         /**
-         * @private
-         * @returns {HTMLAudioElement}
-         */
-        _computeAudio() {
-            if (!this.canPlayAudio) {
-                return clear();
-            }
-            const audioElement = new Audio();
-            audioElement.src = audioElement.canPlayType("audio/ogg; codecs=vorbis")
-                ? url('/mail/static/src/audio/ting.ogg')
-                : url('mail/static/src/audio/ting.mp3');
-            return audioElement;
-        },
-        /**
-         * Determines whether or not sending native notification is
-         * allowed.
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _computeCanSendNativeNotification() {
-            return Boolean(
-                this.messaging.browser.Notification &&
-                this.messaging.browser.Notification.permission === 'granted'
-            );
-        },
-        /**
          * Method to be called when the users click on a notification.
          *
          * @param {Event} ev
@@ -124,13 +97,31 @@ registerModel({
          * sent.
          */
         audio: attr({
-            compute: '_computeAudio',
+            compute() {
+                if (!this.canPlayAudio) {
+                    return clear();
+                }
+                const audioElement = new Audio();
+                audioElement.src = audioElement.canPlayType("audio/ogg; codecs=vorbis")
+                    ? url('/mail/static/src/audio/ting.ogg')
+                    : url('mail/static/src/audio/ting.mp3');
+                return audioElement;
+            },
         }),
         canPlayAudio: attr({
             default: typeof(Audio) !== 'undefined',
         }),
         canSendNativeNotification: attr({
-            compute: '_computeCanSendNativeNotification',
+            /**
+             * Determines whether or not sending native notification is
+             * allowed.
+             */
+            compute() {
+                return Boolean(
+                    this.messaging.browser.Notification &&
+                    this.messaging.browser.Notification.permission === 'granted'
+                );
+            },
         }),
         /**
          * Icon to be displayed by the notification.

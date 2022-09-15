@@ -34,13 +34,6 @@ registerModel({
                 this.update({ attachmentDeleteConfirmDialog: {} });
             }
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasMultipleActions() {
-            return this.attachment.isDeletable && !this.attachmentList.composerViewOwner;
-        },
     },
     fields: {
         /**
@@ -60,7 +53,9 @@ registerModel({
             inverse: 'attachmentCards',
         }),
         hasMultipleActions: attr({
-            compute: '_computeHasMultipleActions',
+            compute() {
+                return this.attachment.isDeletable && !this.attachmentList.composerViewOwner;
+            },
         }),
     },
 });

@@ -173,104 +173,15 @@ registerModel({
             }
             this.update({ sidebarQuickSearchValue: value });
         },
-        /**
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeActiveId() {
-            if (!this.activeThread) {
-                return clear();
-            }
-            return this.threadToActiveId(this.activeThread);
-        },
-        /**
-         * Only mailboxes and pinned channels are allowed in Discuss.
-         *
-         * @private
-         * @returns {FieldCommand|Thread}
-         */
-        _computeActiveThread() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (this.thread.channel && this.thread.isPinned) {
-                return this.thread;
-            }
-            if (this.thread.mailbox) {
-                return this.thread;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeAddChannelInputPlaceholder() {
-            return this.env._t("Create or search channel...");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeAddChatInputPlaceholder() {
-            return this.env._t("Search user...");
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasThreadView() {
-            if (!this.activeThread || !this.discussView) {
-                return false;
-            }
-            if (
-                this.messaging.device.isSmall &&
-                (
-                    this.activeMobileNavbarTabId !== 'mailbox' ||
-                    !this.activeThread.mailbox
-                )
-            ) {
-                return false;
-            }
-            return true;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMobileMessagingNavbarView() {
-            if (
-                this.messaging.device &&
-                this.messaging.device.isSmall &&
-                !(this.threadView && this.threadView.replyingToMessageView)
-            ) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeNotificationListView() {
-            return (this.messaging.device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {ThreadViewer}
-         */
-        _computeThreadViewer() {
-            return {
-                hasMemberList: true,
-                hasThreadView: this.hasThreadView,
-                hasTopbar: true,
-                thread: this.activeThread ? this.activeThread : clear(),
-            };
-        },
     },
     fields: {
         activeId: attr({
-            compute: '_computeActiveId',
+            compute() {
+                if (!this.activeThread) {
+                    return clear();
+                }
+                return this.threadToActiveId(this.activeThread);
+            },
         }),
         /**
          * Active mobile navbar tab, either 'mailbox', 'chat', or 'channel'.
@@ -282,13 +193,31 @@ registerModel({
          * Determines the `Thread` that should be displayed by `this`.
          */
         activeThread: one('Thread', {
-            compute: '_computeActiveThread',
+            /**
+             * Only mailboxes and pinned channels are allowed in Discuss.
+             */
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (this.thread.channel && this.thread.isPinned) {
+                    return this.thread;
+                }
+                if (this.thread.mailbox) {
+                    return this.thread;
+                }
+                return clear();
+            },
         }),
         addChannelInputPlaceholder: attr({
-            compute: '_computeAddChannelInputPlaceholder',
+            compute() {
+                return this.env._t("Create or search channel...");
+            },
         }),
         addChatInputPlaceholder: attr({
-            compute: '_computeAddChatInputPlaceholder',
+            compute() {
+                return this.env._t("Search user...");
+            },
         }),
         /**
          * Discuss sidebar category for `channel` type channel threads.
@@ -311,7 +240,21 @@ registerModel({
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
-            compute: '_computeHasThreadView',
+            compute() {
+                if (!this.activeThread || !this.discussView) {
+                    return false;
+                }
+                if (
+                    this.messaging.device.isSmall &&
+                    (
+                        this.activeMobileNavbarTabId !== 'mailbox' ||
+                        !this.activeThread.mailbox
+                    )
+                ) {
+                    return false;
+                }
+                return true;
+            },
         }),
         /**
          * Formatted init thread on opening discuss for the first time,
@@ -340,7 +283,9 @@ registerModel({
             default: null,
         }),
         notificationListView: one('NotificationListView', {
-            compute: '_computeNotificationListView',
+            compute() {
+                return (this.messaging.device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? {} : clear();
+            },
             inverse: 'discussOwner',
         }),
         /**
@@ -348,7 +293,16 @@ registerModel({
          * replying to a message from inbox.
          */
         mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
-            compute: '_computeMobileMessagingNavbarView',
+            compute() {
+                if (
+                    this.messaging.device &&
+                    this.messaging.device.isSmall &&
+                    !(this.threadView && this.threadView.replyingToMessageView)
+                ) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'discuss',
         }),
         /**
@@ -369,7 +323,14 @@ registerModel({
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
         threadViewer: one('ThreadViewer', {
-            compute: '_computeThreadViewer',
+            compute() {
+                return {
+                    hasMemberList: true,
+                    hasThreadView: this.hasThreadView,
+                    hasTopbar: true,
+                    thread: this.activeThread ? this.activeThread : clear(),
+                };
+            },
             inverse: 'discuss',
             required: true,
         }),

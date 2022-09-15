@@ -8,38 +8,26 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'NotificationRequestView',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeHeaderText() {
-            if (!this.messaging.partnerRoot) {
-                return clear();
-            }
-            return sprintf(
-                this.env._t("%(odoobotName)s has a request"),
-                { odoobotName: this.messaging.partnerRoot.nameOrDisplayName },
-            );
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            return this.messaging.partnerRoot && this.messaging.partnerRoot.isImStatusSet ? {} : clear();
-        },
-    },
     fields: {
         headerText: attr({
-            compute: '_computeHeaderText',
+            compute() {
+                if (!this.messaging.partnerRoot) {
+                    return clear();
+                }
+                return sprintf(
+                    this.env._t("%(odoobotName)s has a request"),
+                    { odoobotName: this.messaging.partnerRoot.nameOrDisplayName },
+                );
+            },
         }),
         notificationListViewOwner: one('NotificationListView', {
             identifying: true,
             inverse: 'notificationRequestView',
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
+            compute() {
+                return this.messaging.partnerRoot && this.messaging.partnerRoot.isImStatusSet ? {} : clear();
+            },
             inverse: 'notificationRequestViewOwner',
         }),
     },

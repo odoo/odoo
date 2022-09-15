@@ -150,54 +150,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string|FieldCommand}
-         */
-        _computePushToTalkKey() {
-            if (this.localPushToTalkKey !== undefined) {
-                return this.localPushToTalkKey;
-            }
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.push_to_talk_key;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeUsePushToTalk() {
-            if (this.localUsePushToTalk !== undefined) {
-                return this.localUsePushToTalk;
-            }
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.use_push_to_talk;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeVoiceActiveDuration() {
-            if (this.localVoiceActiveDuration !== undefined) {
-                return this.localVoiceActiveDuration;
-            }
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.voice_active_duration;
-        },
-        /**
-         * @private
          */
         _loadLocalSettings() {
             const voiceActivationThresholdString = browser.localStorage.getItem(
@@ -317,7 +269,18 @@ registerModel({
          * String that encodes the push-to-talk key with its modifiers.
          */
         pushToTalkKey: attr({
-            compute: '_computePushToTalkKey',
+            compute() {
+                if (this.localPushToTalkKey !== undefined) {
+                    return this.localPushToTalkKey;
+                }
+                if (!this.messaging.currentUser) {
+                    return clear();
+                }
+                if (!this.messaging.currentUser.res_users_settings_id) {
+                    return clear();
+                }
+                return this.messaging.currentUser.res_users_settings_id.push_to_talk_key;
+            },
             default: '',
         }),
         useBlur: attr({
@@ -327,7 +290,18 @@ registerModel({
          * If true, push-to-talk will be used over voice activation.
          */
         usePushToTalk: attr({
-            compute: '_computeUsePushToTalk',
+            compute() {
+                if (this.localUsePushToTalk !== undefined) {
+                    return this.localUsePushToTalk;
+                }
+                if (!this.messaging.currentUser) {
+                    return clear();
+                }
+                if (!this.messaging.currentUser.res_users_settings_id) {
+                    return clear();
+                }
+                return this.messaging.currentUser.res_users_settings_id.use_push_to_talk;
+            },
             default: false,
         }),
         /**
@@ -341,7 +315,18 @@ registerModel({
          * push-to-talk key.
          */
         voiceActiveDuration: attr({
-            compute: '_computeVoiceActiveDuration',
+            compute() {
+                if (this.localVoiceActiveDuration !== undefined) {
+                    return this.localVoiceActiveDuration;
+                }
+                if (!this.messaging.currentUser) {
+                    return clear();
+                }
+                if (!this.messaging.currentUser.res_users_settings_id) {
+                    return clear();
+                }
+                return this.messaging.currentUser.res_users_settings_id.voice_active_duration;
+            },
             default: 0,
         }),
         volumeSettingsTimeouts: attr({

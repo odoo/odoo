@@ -19,30 +19,6 @@ registerModel({
             }
             this.channelMember.persona.partner.openChat();
         },
-        /**
-         * @private
-         * @returns {Boolean}
-         */
-        _computeHasOpenChat() {
-            return this.channelMember.persona.partner ? true : false;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeMemberTitleText() {
-            return this.hasOpenChat ? this.env._t("Open chat") : '';
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            if (this.channelMember.persona.guest && this.channelMember.persona.guest.im_status) {
-                return {};
-            }
-            return this.channelMember.persona.partner && this.channelMember.persona.partner.isImStatusSet ? {} : clear();
-        },
     },
     fields: {
         channelMemberListCategoryViewOwner: one('ChannelMemberListCategoryView', {
@@ -54,13 +30,22 @@ registerModel({
             inverse: 'channelMemberViews',
         }),
         hasOpenChat: attr({
-            compute: '_computeHasOpenChat',
+            compute() {
+                return this.channelMember.persona.partner ? true : false;
+            },
         }),
         memberTitleText: attr({
-            compute: '_computeMemberTitleText',
+            compute() {
+                return this.hasOpenChat ? this.env._t("Open chat") : '';
+            },
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
+            compute() {
+                if (this.channelMember.persona.guest && this.channelMember.persona.guest.im_status) {
+                    return {};
+                }
+                return this.channelMember.persona.partner && this.channelMember.persona.partner.isImStatusSet ? {} : clear();
+            },
             inverse: 'channelMemberViewOwner',
         }),
     },

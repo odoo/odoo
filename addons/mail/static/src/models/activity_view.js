@@ -66,98 +66,6 @@ registerModel({
         onClickUploadDocument() {
             this.fileUploader.openBrowserFileUploader();
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAssignedUserText() {
-            if (!this.activity.assignee) {
-                return clear();
-            }
-            return sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeDelayLabel() {
-            if (!this.activity.dateDeadline) {
-                return clear();
-            }
-            if (!this.clockWatcher.clock.date) {
-                return clear();
-            }
-            const today = moment(this.clockWatcher.clock.date.getTime()).startOf('day');
-            const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
-            // true means no rounding
-            const diff = momentDeadlineDate.diff(today, 'days', true);
-            if (diff === 0) {
-                return this.env._t("Today:");
-            } else if (diff === -1) {
-                return this.env._t("Yesterday:");
-            } else if (diff < 0) {
-                return sprintf(this.env._t("%s days overdue:"), Math.round(Math.abs(diff)));
-            } else if (diff === 1) {
-                return this.env._t("Tomorrow:");
-            } else {
-                return sprintf(this.env._t("Due in %s days:"), Math.round(Math.abs(diff)));
-            }
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFileUploader() {
-            return this.activity.category === 'upload_file' ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeFormattedCreateDatetime() {
-            if (!this.activity.dateCreate) {
-                return clear();
-            }
-            const momentCreateDate = moment(auto_str_to_date(this.activity.dateCreate));
-            const datetimeFormat = getLangDatetimeFormat();
-            return momentCreateDate.format(datetimeFormat);
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeFormattedDeadlineDate() {
-            if (!this.activity.dateDeadline) {
-                return clear();
-            }
-            const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
-            const datetimeFormat = getLangDateFormat();
-            return momentDeadlineDate.format(datetimeFormat);
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMailTemplateViews() {
-            return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeMarkDoneText() {
-            return this.env._t("Mark Done");
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeSummary() {
-            if (!this.activity.summary) {
-                return clear();
-            }
-            return sprintf(this.env._t("“%s”"), this.activity.summary);
-        },
     },
     fields: {
         activity: one('Activity', {
@@ -178,7 +86,12 @@ registerModel({
          * Compute the string for the assigned user.
          */
         assignedUserText: attr({
-            compute: '_computeAssignedUserText',
+            compute() {
+                if (!this.activity.assignee) {
+                    return clear();
+                }
+                return sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
+            },
         }),
         clockWatcher: one('ClockWatcher', {
             default: {
@@ -196,26 +109,66 @@ registerModel({
          * Compute the label for "when" the activity is due.
          */
         delayLabel: attr({
-            compute: '_computeDelayLabel',
+            compute() {
+                if (!this.activity.dateDeadline) {
+                    return clear();
+                }
+                if (!this.clockWatcher.clock.date) {
+                    return clear();
+                }
+                const today = moment(this.clockWatcher.clock.date.getTime()).startOf('day');
+                const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
+                // true means no rounding
+                const diff = momentDeadlineDate.diff(today, 'days', true);
+                if (diff === 0) {
+                    return this.env._t("Today:");
+                } else if (diff === -1) {
+                    return this.env._t("Yesterday:");
+                } else if (diff < 0) {
+                    return sprintf(this.env._t("%s days overdue:"), Math.round(Math.abs(diff)));
+                } else if (diff === 1) {
+                    return this.env._t("Tomorrow:");
+                } else {
+                    return sprintf(this.env._t("Due in %s days:"), Math.round(Math.abs(diff)));
+                }
+            },
         }),
         fileUploader: one('FileUploader', {
-            compute: '_computeFileUploader',
+            compute() {
+                return this.activity.category === 'upload_file' ? {} : clear();
+            },
             inverse: 'activityView',
         }),
         /**
          * Format the create date to something human reabable.
          */
         formattedCreateDatetime: attr({
-            compute: '_computeFormattedCreateDatetime',
+            compute() {
+                if (!this.activity.dateCreate) {
+                    return clear();
+                }
+                const momentCreateDate = moment(auto_str_to_date(this.activity.dateCreate));
+                const datetimeFormat = getLangDatetimeFormat();
+                return momentCreateDate.format(datetimeFormat);
+            },
         }),
         /**
          * Format the deadline date to something human reabable.
          */
         formattedDeadlineDate: attr({
-            compute: '_computeFormattedDeadlineDate',
+            compute() {
+                if (!this.activity.dateDeadline) {
+                    return clear();
+                }
+                const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
+                const datetimeFormat = getLangDateFormat();
+                return momentDeadlineDate.format(datetimeFormat);
+            },
         }),
         mailTemplateViews: many('MailTemplateView', {
-            compute: '_computeMailTemplateViews',
+            compute() {
+                return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
+            },
             inverse: 'activityViewOwner',
         }),
         markDoneButtonRef: attr(),
@@ -226,13 +179,20 @@ registerModel({
          * Label for mark as done. This is just for translations purpose.
          */
         markDoneText: attr({
-            compute: '_computeMarkDoneText',
+            compute() {
+                return this.env._t("Mark Done");
+            },
         }),
         /**
          * Format the summary.
          */
         summary: attr({
-            compute: '_computeSummary',
+            compute() {
+                if (!this.activity.summary) {
+                    return clear();
+                }
+                return sprintf(this.env._t("“%s”"), this.activity.summary);
+            },
         }),
     },
 });

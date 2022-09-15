@@ -62,84 +62,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand|Message[]}
-         */
-        _computeFetchedMessages() {
-            if (!this.thread) {
-                return clear();
-            }
-            return this.rawFetchedMessages.filter(m => this.thread.messages.includes(m));
-        },
-        /**
-         * @private
-         * @returns {Message|undefined}
-         */
-        _computeLastFetchedMessage() {
-            const {
-                length: l,
-                [l - 1]: lastFetchedMessage,
-            } = this.orderedFetchedMessages;
-            if (!lastFetchedMessage) {
-                return clear();
-            }
-            return lastFetchedMessage;
-        },
-        /**
-         * @private
-         * @returns {Message|undefined}
-         */
-        _computeLastMessage() {
-            const {
-                length: l,
-                [l - 1]: lastMessage,
-            } = this.orderedMessages;
-            if (!lastMessage) {
-                return clear();
-            }
-            return lastMessage;
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeMessages() {
-            if (!this.thread) {
-                return clear();
-            }
-            let newerMessages;
-            if (!this.lastFetchedMessage) {
-                newerMessages = this.thread.messages;
-            } else {
-                newerMessages = this.thread.messages.filter(message =>
-                    message.id > this.lastFetchedMessage.id
-                );
-            }
-            return [...this.fetchedMessages, ...this.temporaryMessages, ...newerMessages];
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeOrderedFetchedMessages() {
-            return this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeOrderedMessages() {
-            return this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
-        },
-        /**
-         *
-         * @private
-         * @returns {Message[]}
-         */
-        _computeOrderedNonEmptyMessages() {
-            return this.orderedMessages.filter(message => !message.isEmpty);
-        },
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeHasToLoadMessages() {
@@ -274,7 +196,12 @@ registerModel({
          * new messages on main cache of thread in real-time.
          */
         fetchedMessages: many('Message', {
-            compute: '_computeFetchedMessages',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                return this.rawFetchedMessages.filter(m => this.thread.messages.includes(m));
+            },
         }),
         /**
          * Determines whether the last message fetch failed.
@@ -317,16 +244,47 @@ registerModel({
          * for a deeper explanation about "fetched" messages.
          */
         lastFetchedMessage: one('Message', {
-            compute: '_computeLastFetchedMessage',
+            compute() {
+                const {
+                    length: l,
+                    [l - 1]: lastFetchedMessage,
+                } = this.orderedFetchedMessages;
+                if (!lastFetchedMessage) {
+                    return clear();
+                }
+                return lastFetchedMessage;
+            },
         }),
         lastMessage: one('Message', {
-            compute: '_computeLastMessage',
+            compute() {
+                const {
+                    length: l,
+                    [l - 1]: lastMessage,
+                } = this.orderedMessages;
+                if (!lastMessage) {
+                    return clear();
+                }
+                return lastMessage;
+            },
         }),
         /**
          * List of messages linked to this cache.
          */
         messages: many('Message', {
-            compute: '_computeMessages',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                let newerMessages;
+                if (!this.lastFetchedMessage) {
+                    newerMessages = this.thread.messages;
+                } else {
+                    newerMessages = this.thread.messages.filter(message =>
+                        message.id > this.lastFetchedMessage.id
+                    );
+                }
+                return [...this.fetchedMessages, ...this.temporaryMessages, ...newerMessages];
+            },
         }),
         /**
          * Ordered list of messages that have been fetched by this cache.
@@ -336,19 +294,25 @@ registerModel({
          * field for deeper explanation about "fetched" messages.
          */
         orderedFetchedMessages: many('Message', {
-            compute: '_computeOrderedFetchedMessages',
+            compute() {
+                return this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
+            },
         }),
         /**
          * Ordered list of messages linked to this cache.
          */
         orderedMessages: many('Message', {
-            compute: '_computeOrderedMessages',
+            compute() {
+                return this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
+            },
         }),
         /**
          * List of ordered non empty messages linked to this cache.
          */
         orderedNonEmptyMessages: many('Message', {
-            compute: '_computeOrderedNonEmptyMessages',
+            compute() {
+                return this.orderedMessages.filter(message => !message.isEmpty);
+            },
         }),
         rawFetchedMessages: many('Message'),
         temporaryMessages: many('Message'),

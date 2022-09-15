@@ -49,209 +49,6 @@ registerModel({
             });
         },
         /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computeActiveItem() {
-            const channel = this.messaging.discuss.activeThread && this.messaging.discuss.activeThread.channel;
-            if (channel && this.supportedChannelTypes.includes(channel.channel_type)) {
-                return {
-                    category: this,
-                    channel,
-                };
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeAddingItemAutocompleteInputView() {
-            if (this.isOpen && this.isAddingItem) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAutocompleteMethod() {
-            if (this.discussAsChannel) {
-                return 'channel';
-            }
-            if (this.discussAsChat) {
-                return 'chat';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeCommandAddTitleText() {
-            if (this.discussAsChannel) {
-                return this.env._t("Add or join a channel");
-            }
-            if (this.discussAsChat) {
-                return this.env._t("Start a conversation");
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFilteredCategoryItems() {
-            let categoryItems = this.categoryItems;
-            const searchValue = this.messaging.discuss.sidebarQuickSearchValue;
-            if (searchValue) {
-                const qsVal = searchValue.toLowerCase();
-                categoryItems = categoryItems.filter(categoryItem => {
-                    const nameVal = categoryItem.channel.displayName.toLowerCase();
-                    return nameVal.includes(qsVal);
-                });
-            }
-            return categoryItems;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasAddCommand() {
-            if (this.discussAsChannel) {
-                return true;
-            }
-            if (this.discussAsChat) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasViewCommand() {
-            if (this.discussAsChannel) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsOpen() {
-            return this.isPendingOpen !== undefined ? this.isPendingOpen : this.isServerOpen;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsServerOpen() {
-            // there is no server state for non-users (guests)
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            if (this.discussAsChannel) {
-                return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_channel_open;
-            }
-            if (this.discussAsChat) {
-                return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_chat_open;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeName() {
-            if (this.discussAsChannel) {
-                return this.env._t("Channels");
-            }
-            if (this.discussAsChat) {
-                return this.env._t("Direct Messages");
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeNewItemPlaceholderText() {
-            if (this.discussAsChannel) {
-                return this.env._t("Find or create a channel...");
-            }
-            if (this.discussAsChat) {
-                return this.env._t("Find or start a conversation...");
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeServerStateKey() {
-            if (this.discussAsChannel) {
-                return 'is_discuss_sidebar_category_channel_open';
-            }
-            if (this.discussAsChat) {
-                return 'is_discuss_sidebar_category_chat_open';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeSortComputeMethod() {
-            if (this.discussAsChannel) {
-                return 'name';
-            }
-            if (this.discussAsChat) {
-                return 'last_action';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string[]|FieldCommand}
-         */
-        _computeSupportedChannelTypes() {
-            if (this.discussAsChannel) {
-                return ['channel'];
-            }
-            if (this.discussAsChat) {
-                return ['chat', 'group'];
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortDefinitionCategoryItems() {
-            switch (this.sortComputeMethod) {
-                case 'name':
-                    return [
-                        ['truthy-first', 'thread'],
-                        ['truthy-first', 'thread.displayName'],
-                        ['case-insensitive-asc', 'thread.displayName'],
-                        ['smaller-first', 'channel.id'],
-                    ];
-                case 'last_action':
-                    return [
-                        ['truthy-first', 'thread'],
-                        ['truthy-first', 'thread.lastInterestDateTime'],
-                        ['most-recent-first', 'thread.lastInterestDateTime'],
-                        ['greater-first', 'channel.id'],
-                    ];
-            }
-        },
-        /**
          * Changes the category open states when clicked.
          */
         async onClick() {
@@ -335,10 +132,24 @@ registerModel({
          * to the category.
          */
         activeItem: one('DiscussSidebarCategoryItem', {
-            compute: '_computeActiveItem',
+            compute() {
+                const channel = this.messaging.discuss.activeThread && this.messaging.discuss.activeThread.channel;
+                if (channel && this.supportedChannelTypes.includes(channel.channel_type)) {
+                    return {
+                        category: this,
+                        channel,
+                    };
+                }
+                return clear();
+            },
         }),
         addingItemAutocompleteInputView: one('AutocompleteInputView', {
-            compute: '_computeAddingItemAutocompleteInputView',
+            compute() {
+                if (this.isOpen && this.isAddingItem) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'discussSidebarCategoryOwnerAsAddingItem',
         }),
         /**
@@ -346,14 +157,30 @@ registerModel({
          * Must be one of: 'channel', 'chat'.
          */
         autocompleteMethod: attr({
-            compute: '_computeAutocompleteMethod',
+            compute() {
+                if (this.discussAsChannel) {
+                    return 'channel';
+                }
+                if (this.discussAsChat) {
+                    return 'chat';
+                }
+                return clear();
+            },
             default: '',
         }),
         /**
          * The title text in UI for command `add`
          */
         commandAddTitleText: attr({
-            compute: '_computeCommandAddTitleText',
+            compute() {
+                if (this.discussAsChannel) {
+                    return this.env._t("Add or join a channel");
+                }
+                if (this.discussAsChat) {
+                    return this.env._t("Start a conversation");
+                }
+                return clear();
+            },
             default: '',
         }),
         /**
@@ -362,7 +189,24 @@ registerModel({
          */
         categoryItems: many('DiscussSidebarCategoryItem', {
             inverse: 'category',
-            sort: '_sortDefinitionCategoryItems',
+            sort() {
+                switch (this.sortComputeMethod) {
+                    case 'name':
+                        return [
+                            ['truthy-first', 'thread'],
+                            ['truthy-first', 'thread.displayName'],
+                            ['case-insensitive-asc', 'thread.displayName'],
+                            ['smaller-first', 'channel.id'],
+                        ];
+                    case 'last_action':
+                        return [
+                            ['truthy-first', 'thread'],
+                            ['truthy-first', 'thread.lastInterestDateTime'],
+                            ['most-recent-first', 'thread.lastInterestDateTime'],
+                            ['greater-first', 'channel.id'],
+                        ];
+                }
+            },
         }),
         /**
          * States the total amount of unread/action-needed threads in this
@@ -386,27 +230,59 @@ registerModel({
          * that are displayed by this discuss sidebar category.
          */
         filteredCategoryItems: many('DiscussSidebarCategoryItem', {
-            compute: '_computeFilteredCategoryItems',
+            compute() {
+                let categoryItems = this.categoryItems;
+                const searchValue = this.messaging.discuss.sidebarQuickSearchValue;
+                if (searchValue) {
+                    const qsVal = searchValue.toLowerCase();
+                    categoryItems = categoryItems.filter(categoryItem => {
+                        const nameVal = categoryItem.channel.displayName.toLowerCase();
+                        return nameVal.includes(qsVal);
+                    });
+                }
+                return categoryItems;
+            },
         }),
         /**
          * Display name of the category.
          */
         name: attr({
-            compute: '_computeName',
+            compute() {
+                if (this.discussAsChannel) {
+                    return this.env._t("Channels");
+                }
+                if (this.discussAsChat) {
+                    return this.env._t("Direct Messages");
+                }
+                return clear();
+            },
             default: '',
         }),
         /**
          * Boolean that determines whether this category has a 'add' command.
          */
         hasAddCommand: attr({
-            compute: '_computeHasAddCommand',
+            compute() {
+                if (this.discussAsChannel) {
+                    return true;
+                }
+                if (this.discussAsChat) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
         }),
         /**
          * Boolean that determines whether this category has a 'view' command.
          */
         hasViewCommand: attr({
-            compute: '_computeHasViewCommand',
+            compute() {
+                if (this.discussAsChannel) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
         }),
         /**
@@ -419,7 +295,9 @@ registerModel({
          * Boolean that determines whether this category is open.
          */
         isOpen: attr({
-            compute: '_computeIsOpen',
+            compute() {
+                return this.isPendingOpen !== undefined ? this.isPendingOpen : this.isServerOpen;
+            },
         }),
         /**
          * Boolean that determines if there is a pending open state change,
@@ -433,34 +311,81 @@ registerModel({
          * Boolean that determines the last open state known by the server.
          */
         isServerOpen: attr({
-            compute: '_computeIsServerOpen',
+            compute() {
+                // there is no server state for non-users (guests)
+                if (!this.messaging.currentUser) {
+                    return clear();
+                }
+                if (!this.messaging.currentUser.res_users_settings_id) {
+                    return clear();
+                }
+                if (this.discussAsChannel) {
+                    return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_channel_open;
+                }
+                if (this.discussAsChat) {
+                    return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_chat_open;
+                }
+                return clear();
+            },
             default: false,
         }),
         /**
          * The placeholder text used when a new item is being added in UI.
          */
         newItemPlaceholderText: attr({
-            compute: '_computeNewItemPlaceholderText',
+            compute() {
+                if (this.discussAsChannel) {
+                    return this.env._t("Find or create a channel...");
+                }
+                if (this.discussAsChat) {
+                    return this.env._t("Find or start a conversation...");
+                }
+                return clear();
+            },
         }),
         /**
          * The key used in the server side for the category state
          */
         serverStateKey: attr({
-            compute: '_computeServerStateKey',
+            compute() {
+                if (this.discussAsChannel) {
+                    return 'is_discuss_sidebar_category_channel_open';
+                }
+                if (this.discussAsChat) {
+                    return 'is_discuss_sidebar_category_chat_open';
+                }
+                return clear();
+            },
         }),
         /**
          * Determines the sorting method of channels in this category.
          * Must be one of: 'name', 'last_action'.
          */
         sortComputeMethod: attr({
-            compute: '_computeSortComputeMethod',
+            compute() {
+                if (this.discussAsChannel) {
+                    return 'name';
+                }
+                if (this.discussAsChat) {
+                    return 'last_action';
+                }
+                return clear();
+            },
             required: true,
         }),
         /**
          * Channel type which is supported by the category.
          */
         supportedChannelTypes: attr({
-            compute: '_computeSupportedChannelTypes',
+            compute() {
+                if (this.discussAsChannel) {
+                    return ['channel'];
+                }
+                if (this.discussAsChat) {
+                    return ['chat', 'group'];
+                }
+                return clear();
+            },
             required: true,
         }),
     },

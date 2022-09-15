@@ -194,272 +194,6 @@ registerModel({
                 composerViewInEditing: clear(),
             });
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeAttachmentList() {
-            return (this.message && this.message.attachments.length > 0)
-                ? {}
-                : clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeAuthorTitleText() {
-            return this.hasAuthorOpenChat ? this.env._t("Open chat") : '';
-        },
-        /**
-         * @returns {string}
-         */
-        _computeDateFromNow() {
-            if (!this.message) {
-                return clear();
-            }
-            if (!this.message.date) {
-                return clear();
-            }
-            if (!this.clockWatcher.clock.date) {
-                return clear();
-            }
-            const now = moment(this.clockWatcher.clock.date.getTime());
-            if (now.diff(this.message.date, 'seconds') < 45) {
-                return this.env._t("now");
-            }
-            return this.message.date.fromNow();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeExtraClass() {
-            if (this.messageListViewItemOwner) {
-                return 'o_MessageList_item o_MessageList_message';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFailureNotificationIconClassName() {
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFailureNotificationIconLabel() {
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasAuthorOpenChat() {
-            if (this.messaging.currentGuest) {
-                return false;
-            }
-            if (!this.message) {
-                return clear();
-            }
-            if (!this.message.author) {
-                return false;
-            }
-            if (
-                this.messageListViewItemOwner &&
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel &&
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel.correspondent === this.message.author
-            ) {
-                return false;
-            }
-            return true;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsActive() {
-            return Boolean(
-                this.isHovered ||
-                this.messagingAsClickedMessageView ||
-                (this.messageActionList && this.messageActionList.actionReaction && this.messageActionList.actionReaction.messageActionView && this.messageActionList.actionReaction.messageActionView.reactionPopoverView) ||
-                (this.messageActionList && this.messageActionList.actionDelete && this.messageActionList.actionDelete.messageActionView && this.messageActionList.actionDelete.messageActionView.deleteConfirmDialog)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInDiscuss() {
-            return Boolean(
-                this.messageListViewItemOwner &&
-                (
-                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discuss ||
-                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discussPublicView
-                )
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInChatWindow() {
-            return Boolean(
-                this.messageListViewItemOwner &&
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatWindow
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInChatter() {
-            return Boolean(
-                this.messageListViewItemOwner &&
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatter
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInChatWindowAndIsAlignedRight() {
-            return Boolean(
-                this.isInChatWindow &&
-                this.message &&
-                this.message.isCurrentUserOrGuestAuthor
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-         _computeIsInChatWindowAndIsAlignedLeft() {
-            return Boolean(
-                this.isInChatWindow &&
-                this.message &&
-                !this.message.isCurrentUserOrGuestAuthor
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsShowingAuthorName() {
-            return Boolean(
-                !(
-                    this.isInChatWindow &&
-                    (
-                        (
-                            this.message &&
-                            this.message.isCurrentUserOrGuestAuthor
-                        ) ||
-                        (
-                            this.messageListViewItemOwner &&
-                            this.messageListViewItemOwner.messageListViewOwner.thread.channel &&
-                            this.messageListViewItemOwner.messageListViewOwner.thread.channel.channel_type === 'chat'
-                        )
-                    )
-                )
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsSelected() {
-            return Boolean(
-                this.messageListViewItemOwner &&
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsSquashed() {
-            if (this.messageListViewItemOwner) {
-                return this.messageListViewItemOwner.isSquashed;
-            }
-            return clear();
-        },
-        _computeLinkPreviewListView() {
-            return (this.message && this.message.linkPreviews.length > 0) ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessage() {
-            if (this.messageListViewItemOwner) {
-                return this.messageListViewItemOwner.message;
-            }
-            if (this.deleteMessageConfirmViewOwner) {
-                return this.deleteMessageConfirmViewOwner.message;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessageActionList() {
-            return this.deleteMessageConfirmViewOwner ? clear() : {};
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessageInReplyToView() {
-            return (
-                this.message &&
-                this.message.originThread &&
-                this.message.originThread.model === 'mail.channel' &&
-                this.message.parentMessage
-            ) ? {} : clear();
-        },
-        /**
-         * @private
-         * @retuns {FieldCommand}
-         */
-        _computeMessageSeenIndicatorView() {
-            if (
-                this.message.isCurrentUserOrGuestAuthor &&
-                this.messageListViewItemOwner &&
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.hasSeenIndicators
-            ) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeNotificationIconClassName() {
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeNotificationIconLabel() {
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            if (this.message.guestAuthor && this.message.guestAuthor.im_status) {
-                return {};
-            }
-            return this.message.author && this.message.author.isImStatusSet ? {} : clear();
-        },
     },
     fields: {
         /**
@@ -467,11 +201,17 @@ registerModel({
          * message (if any).
          */
         attachmentList: one('AttachmentList', {
-            compute: '_computeAttachmentList',
+            compute() {
+                return (this.message && this.message.attachments.length > 0)
+                    ? {}
+                    : clear();
+            },
             inverse: 'messageViewOwner',
         }),
         authorTitleText: attr({
-            compute: '_computeAuthorTitleText',
+            compute() {
+                return this.hasAuthorOpenChat ? this.env._t("Open chat") : '';
+            },
         }),
         clockWatcher: one('ClockWatcher', {
             default: {
@@ -498,7 +238,22 @@ registerModel({
          * States the time elapsed since date up to now.
          */
         dateFromNow: attr({
-            compute: '_computeDateFromNow',
+            compute() {
+                if (!this.message) {
+                    return clear();
+                }
+                if (!this.message.date) {
+                    return clear();
+                }
+                if (!this.clockWatcher.clock.date) {
+                    return clear();
+                }
+                const now = moment(this.clockWatcher.clock.date.getTime());
+                if (now.diff(this.message.date, 'seconds') < 45) {
+                    return this.env._t("now");
+                }
+                return this.message.date.fromNow();
+            },
         }),
         /**
          * States the delete message confirm view that is displaying this
@@ -517,22 +272,50 @@ registerModel({
          * Determines which extra class this message view component should have.
          */
         extraClass: attr({
-            compute: '_computeExtraClass',
+            compute() {
+                if (this.messageListViewItemOwner) {
+                    return 'o_MessageList_item o_MessageList_message';
+                }
+                return clear();
+            },
             default: '',
         }),
         failureNotificationIconClassName: attr({
-            compute: '_computeFailureNotificationIconClassName',
+            compute() {
+                return clear();
+            },
             default: 'fa fa-envelope',
         }),
         failureNotificationIconLabel: attr({
-            compute: '_computeFailureNotificationIconLabel',
+            compute() {
+                return clear();
+            },
             default: '',
         }),
         /**
          * Determines whether author open chat feature is enabled on message.
          */
         hasAuthorOpenChat: attr({
-            compute: '_computeHasAuthorOpenChat',
+            compute() {
+                if (this.messaging.currentGuest) {
+                    return false;
+                }
+                if (!this.message) {
+                    return clear();
+                }
+                if (!this.message.author) {
+                    return false;
+                }
+                if (
+                    this.messageListViewItemOwner &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel.correspondent === this.message.author
+                ) {
+                    return false;
+                }
+                return true;
+            },
         }),
         /**
          * Current timer that will reset isHighlighted to false.
@@ -545,7 +328,14 @@ registerModel({
          * display additional things (date in sidebar, message actions, etc.)
          */
         isActive: attr({
-            compute: '_computeIsActive',
+            compute() {
+                return Boolean(
+                    this.isHovered ||
+                    this.messagingAsClickedMessageView ||
+                    (this.messageActionList && this.messageActionList.actionReaction && this.messageActionList.actionReaction.messageActionView && this.messageActionList.actionReaction.messageActionView.reactionPopoverView) ||
+                    (this.messageActionList && this.messageActionList.actionDelete && this.messageActionList.actionDelete.messageActionView && this.messageActionList.actionDelete.messageActionView.deleteConfirmDialog)
+                );
+            },
         }),
         /**
          * Whether the message should be forced to be isHighlighted. Should only
@@ -563,68 +353,137 @@ registerModel({
          * Determines if we are in the Discuss view.
          */
         isInDiscuss: attr({
-            compute: '_computeIsInDiscuss',
+            compute() {
+                return Boolean(
+                    this.messageListViewItemOwner &&
+                    (
+                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discuss ||
+                        this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discussPublicView
+                    )
+                );
+            },
         }),
         /**
          * Determines if we are in the ChatWindow view.
          */
         isInChatWindow: attr({
-            compute: '_computeIsInChatWindow',
+            compute() {
+                return Boolean(
+                    this.messageListViewItemOwner &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatWindow
+                );
+            },
         }),
         /**
          * Determines if we are in the Chatter view.
          */
         isInChatter: attr({
-            compute: '_computeIsInChatter',
+            compute() {
+                return Boolean(
+                    this.messageListViewItemOwner &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatter
+                );
+            },
         }),
         /**
          * Determines if we are in the ChatWindow view AND if the message is right aligned
          */
         isInChatWindowAndIsAlignedRight: attr({
-            compute: '_computeIsInChatWindowAndIsAlignedRight',
+            compute() {
+                return Boolean(
+                    this.isInChatWindow &&
+                    this.message &&
+                    this.message.isCurrentUserOrGuestAuthor
+                );
+            },
         }),
         /**
          * Determines if we are in the ChatWindow view AND if the message is left aligned
          */
         isInChatWindowAndIsAlignedLeft: attr({
-            compute: '_computeIsInChatWindowAndIsAlignedLeft',
+            compute() {
+                return Boolean(
+                    this.isInChatWindow &&
+                    this.message &&
+                    !this.message.isCurrentUserOrGuestAuthor
+                );
+            },
         }),
         /**
          * Determines if the author name is displayed.
          */
         isShowingAuthorName: attr({
-            compute: '_computeIsShowingAuthorName',
+            compute() {
+                return Boolean(
+                    !(
+                        this.isInChatWindow &&
+                        (
+                            (
+                                this.message &&
+                                this.message.isCurrentUserOrGuestAuthor
+                            ) ||
+                            (
+                                this.messageListViewItemOwner &&
+                                this.messageListViewItemOwner.messageListViewOwner.thread.channel &&
+                                this.messageListViewItemOwner.messageListViewOwner.thread.channel.channel_type === 'chat'
+                            )
+                        )
+                    )
+                );
+            },
         }),
         /**
          * Tells whether the message is selected in the current thread viewer.
          */
         isSelected: attr({
-            compute: '_computeIsSelected',
+            compute() {
+                return Boolean(
+                    this.messageListViewItemOwner &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this
+                );
+            },
             default: false,
         }),
         /**
          * Determines whether this message view should be squashed visually.
          */
         isSquashed: attr({
-            compute: '_computeIsSquashed',
+            compute() {
+                if (this.messageListViewItemOwner) {
+                    return this.messageListViewItemOwner.isSquashed;
+                }
+                return clear();
+            },
             default: false,
         }),
         linkPreviewListView: one('LinkPreviewListView', {
-            compute: '_computeLinkPreviewListView',
+            compute() {
+                return (this.message && this.message.linkPreviews.length > 0) ? {} : clear();
+            },
             inverse: 'messageViewOwner',
         }),
         /**
          * Determines the message action list of this message view (if any).
          */
         messageActionList: one('MessageActionList', {
-            compute: '_computeMessageActionList',
+            compute() {
+                return this.deleteMessageConfirmViewOwner ? clear() : {};
+            },
             inverse: 'messageView',
         }),
         /**
          * Determines the message that is displayed by this message view.
          */
         message: one('Message', {
-            compute: '_computeMessage',
+            compute() {
+                if (this.messageListViewItemOwner) {
+                    return this.messageListViewItemOwner.message;
+                }
+                if (this.deleteMessageConfirmViewOwner) {
+                    return this.deleteMessageConfirmViewOwner.message;
+                }
+                return clear();
+            },
             inverse: 'messageViews',
             required: true,
         }),
@@ -633,7 +492,14 @@ registerModel({
          * which this message is a reply to (if any).
          */
         messageInReplyToView: one('MessageInReplyToView', {
-            compute: '_computeMessageInReplyToView',
+            compute() {
+                return (
+                    this.message &&
+                    this.message.originThread &&
+                    this.message.originThread.model === 'mail.channel' &&
+                    this.message.parentMessage
+                ) ? {} : clear();
+            },
             inverse: 'messageView',
         }),
         messageListViewItemOwner: one('MessageListViewItem', {
@@ -641,18 +507,32 @@ registerModel({
             inverse: 'messageView',
         }),
         messageSeenIndicatorView: one('MessageSeenIndicatorView', {
-            compute: '_computeMessageSeenIndicatorView',
+            compute() {
+                if (
+                    this.message.isCurrentUserOrGuestAuthor &&
+                    this.messageListViewItemOwner &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.hasSeenIndicators
+                ) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'messageViewOwner',
         }),
         messagingAsClickedMessageView: one('Messaging', {
             inverse: 'clickedMessageView',
         }),
         notificationIconClassName: attr({
-            compute: '_computeNotificationIconClassName',
+            compute() {
+                return clear();
+            },
             default: 'fa fa-envelope-o',
         }),
         notificationIconLabel: attr({
-            compute: '_computeNotificationIconLabel',
+            compute() {
+                return clear();
+            },
             default: '',
         }),
         notificationIconRef: attr(),
@@ -660,7 +540,12 @@ registerModel({
             inverse: 'messageViewOwnerAsNotificationContent',
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
+            compute() {
+                if (this.message.guestAuthor && this.message.guestAuthor.im_status) {
+                    return {};
+                }
+                return this.message.author && this.message.author.isImStatusSet ? {} : clear();
+            },
             inverse: 'messageViewOwner',
         }),
         /**

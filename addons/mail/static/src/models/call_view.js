@@ -68,66 +68,6 @@ registerModel({
         /**
          * @private
          */
-        _computeAspectRatio() {
-            const rtcAspectRatio = this.messaging.rtc.videoConfig && this.messaging.rtc.videoConfig.aspectRatio;
-            const aspectRatio = rtcAspectRatio || 16 / 9;
-            // if we are in minimized mode (round avatar frames), we treat the cards like squares.
-            return this.isMinimized ? 1 : aspectRatio;
-        },
-        /**
-         * @private
-         */
-        _computeCallSideBarView() {
-            if (this.activeRtcSession && this.isSidebarOpen && !this.threadView.compact) {
-                return {};
-            }
-            return clear();
-        },
-        _computeFilteredChannelMembers() {
-            if (!this.channel) {
-                return clear();
-            }
-            const channelMembers = [];
-            for (const channelMember of this.channel.callParticipants) {
-                if (this.channel.showOnlyVideo && this.thread.videoCount > 0 && !channelMember.isStreaming) {
-                    continue;
-                }
-                channelMembers.push(channelMember);
-            }
-            return channelMembers;
-        },
-        /**
-         * @private
-         */
-        _computeIsMinimized() {
-            if (!this.threadView || !this.thread) {
-                return true;
-            }
-            if (this.isFullScreen || this.threadView.compact) {
-                return false;
-            }
-            if (this.activeRtcSession) {
-                return false;
-            }
-            return !this.thread.rtc || this.thread.videoCount === 0;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-         _computeLayoutSettingsTitle() {
-            return this.env._t("Change Layout");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeSettingsTitle() {
-            return this.env._t("Settings");
-        },
-        /**
-         * @private
-         */
         _onChangeRtcChannel() {
             this.deactivateFullScreen();
             if (!this.thread && !this.thread.rtc) {
@@ -165,8 +105,13 @@ registerModel({
          * The aspect ratio of the tiles.
          */
         aspectRatio: attr({
+            compute() {
+                const rtcAspectRatio = this.messaging.rtc.videoConfig && this.messaging.rtc.videoConfig.aspectRatio;
+                const aspectRatio = rtcAspectRatio || 16 / 9;
+                // if we are in minimized mode (round avatar frames), we treat the cards like squares.
+                return this.isMinimized ? 1 : aspectRatio;
+            },
             default: 16 / 9,
-            compute: '_computeAspectRatio',
         }),
         callMainView: one('CallMainView', {
             default: {},
@@ -174,14 +119,31 @@ registerModel({
             readonly: true,
         }),
         callSidebarView: one('CallSidebarView', {
-            compute: '_computeCallSideBarView',
+            compute() {
+                if (this.activeRtcSession && this.isSidebarOpen && !this.threadView.compact) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'callView',
         }),
         channel: one('Channel', {
             related: 'thread.channel',
         }),
         filteredChannelMembers: many('ChannelMember', {
-            compute: '_computeFilteredChannelMembers',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                const channelMembers = [];
+                for (const channelMember of this.channel.callParticipants) {
+                    if (this.channel.showOnlyVideo && this.thread.videoCount > 0 && !channelMember.isStreaming) {
+                        continue;
+                    }
+                    channelMembers.push(channelMember);
+                }
+                return channelMembers;
+            },
         }),
         /**
          * Determines if the viewer should be displayed fullScreen.
@@ -194,8 +156,19 @@ registerModel({
          * small circles instead of cards, smaller display area.
          */
         isMinimized: attr({
+            compute() {
+                if (!this.threadView || !this.thread) {
+                    return true;
+                }
+                if (this.isFullScreen || this.threadView.compact) {
+                    return false;
+                }
+                if (this.activeRtcSession) {
+                    return false;
+                }
+                return !this.thread.rtc || this.thread.videoCount === 0;
+            },
             default: false,
-            compute: '_computeIsMinimized',
         }),
         isSidebarOpen: attr({
             default: true,
@@ -204,7 +177,9 @@ registerModel({
          * Text content that is displayed on title of the layout settings dialog.
          */
         layoutSettingsTitle: attr({
-            compute: '_computeLayoutSettingsTitle',
+            compute() {
+                return this.env._t("Change Layout");
+            },
         }),
         /**
          * All the participant cards of the call viewer (main card and tile cards).
@@ -218,7 +193,9 @@ registerModel({
          * Text content that is displayed on title of the settings dialog.
          */
         settingsTitle: attr({
-            compute: '_computeSettingsTitle',
+            compute() {
+                return this.env._t("Settings");
+            },
         }),
         thread: one('Thread', {
             related: 'threadView.thread',

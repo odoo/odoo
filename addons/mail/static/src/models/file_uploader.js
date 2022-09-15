@@ -49,40 +49,6 @@ registerModel({
             this.messaging.messagingBus.trigger('o-file-uploader-upload', { files });
         },
         /**
-         * Create an HTML element that will serve as file input.
-         * This element does not need to be inserted in the DOM since it's just
-         * use to trigger the file browser and start the upload process.
-         *
-         * @private
-         * @returns {HTMLElement}
-         */
-        _computeFileInput() {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.multiple = true;
-            fileInput.onchange = this.onChangeAttachment;
-            return fileInput;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            if (this.activityView) {
-                return this.activityView.activity.thread;
-            }
-            if (this.attachmentBoxView) {
-                return this.attachmentBoxView.chatter.thread;
-            }
-            if (this.chatterOwner) {
-                return this.chatterOwner.thread;
-            }
-            if (this.composerView) {
-                return this.composerView.composer.activeThread;
-            }
-            return clear();
-        },
-        /**
          * @private
          * @param {Object} param0
          * @param {Composer} param0.composer
@@ -205,10 +171,35 @@ registerModel({
             inverse: 'fileUploader',
         }),
         fileInput: attr({
-            compute: '_computeFileInput',
+            /**
+             * Create an HTML element that will serve as file input.
+             * This element does not need to be inserted in the DOM since it's just
+             * use to trigger the file browser and start the upload process.
+             */
+            compute() {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.multiple = true;
+                fileInput.onchange = this.onChangeAttachment;
+                return fileInput;
+            },
         }),
         thread: one('Thread', {
-            compute: '_computeThread',
+            compute() {
+                if (this.activityView) {
+                    return this.activityView.activity.thread;
+                }
+                if (this.attachmentBoxView) {
+                    return this.attachmentBoxView.chatter.thread;
+                }
+                if (this.chatterOwner) {
+                    return this.chatterOwner.thread;
+                }
+                if (this.composerView) {
+                    return this.composerView.composer.activeThread;
+                }
+                return clear();
+            },
             required: true,
         })
     },

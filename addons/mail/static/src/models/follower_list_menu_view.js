@@ -27,20 +27,6 @@ registerModel({
                     break;
             }
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFollowerViews() {
-            return this.chatterOwner.thread.followers.map(follower => ({ follower }));
-        },
-        /**
-         * @private
-         * @returns {Boolean}
-         */
-        _computeIsDisabled() {
-            return !this.chatterOwner.hasReadAccess;
-        }
     },
     fields: {
         chatterOwner: one('Chatter', {
@@ -48,11 +34,15 @@ registerModel({
             inverse: 'followerListMenuView',
         }),
         followerViews: many('FollowerView', {
-            compute: '_computeFollowerViews',
+            compute() {
+                return this.chatterOwner.thread.followers.map(follower => ({ follower }));
+            },
             inverse: 'followerListMenuViewOwner',
         }),
         isDisabled: attr({
-            compute: '_computeIsDisabled',
+            compute() {
+                return !this.chatterOwner.hasReadAccess;
+            }
         }),
         isDropdownOpen: attr({
             default: false,

@@ -21,48 +21,6 @@ registerModel({
                 this.message.addReaction(this.content);
             }
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasUserReacted() {
-            return Boolean(
-                (this.messaging.currentPartner && this.partners.includes(this.messaging.currentPartner)) ||
-                (this.messaging.currentGuest && this.guests.includes(this.messaging.currentGuest))
-            );
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeSummary() {
-            const {
-                length,
-                0: firstUser,
-                1: secondUser,
-                2: thirdUser,
-            } = [
-                ...this.partners.map(partner => {
-                    if (this.message.originThread) {
-                        return this.message.originThread.getMemberName(partner.persona);
-                    }
-                    return partner.nameOrDisplayName;
-                }),
-                ...this.guests.map(guest => guest.name),
-            ];
-            switch (length) {
-                case 1:
-                    return sprintf(this.env._t('%s has reacted with %s'), firstUser, this.content);
-                case 2:
-                    return sprintf(this.env._t('%s and %s have reacted with %s'), firstUser, secondUser, this.content);
-                case 3:
-                    return sprintf(this.env._t('%s, %s, %s have reacted with %s'), firstUser, secondUser, thirdUser, this.content);
-                case 4:
-                    return sprintf(this.env._t('%s, %s, %s and 1 other person have reacted with %s'), firstUser, secondUser, thirdUser, this.content);
-                default:
-                    return sprintf(this.env._t('%s, %s, %s and %s other persons have reacted with %s'), firstUser, secondUser, thirdUser, length - 3, this.content);
-            }
-        },
     },
     fields: {
         content: attr({
@@ -76,7 +34,12 @@ registerModel({
          */
         guests: many('Guest'),
         hasUserReacted: attr({
-            compute: '_computeHasUserReacted',
+            compute() {
+                return Boolean(
+                    (this.messaging.currentPartner && this.partners.includes(this.messaging.currentPartner)) ||
+                    (this.messaging.currentGuest && this.guests.includes(this.messaging.currentGuest))
+                );
+            },
             default: false,
         }),
         message: one('Message', {
@@ -88,7 +51,34 @@ registerModel({
          */
         partners: many('Partner'),
         summary: attr({
-            compute: '_computeSummary',
+            compute() {
+                const {
+                    length,
+                    0: firstUser,
+                    1: secondUser,
+                    2: thirdUser,
+                } = [
+                    ...this.partners.map(partner => {
+                        if (this.message.originThread) {
+                            return this.message.originThread.getMemberName(partner.persona);
+                        }
+                        return partner.nameOrDisplayName;
+                    }),
+                    ...this.guests.map(guest => guest.name),
+                ];
+                switch (length) {
+                    case 1:
+                        return sprintf(this.env._t('%s has reacted with %s'), firstUser, this.content);
+                    case 2:
+                        return sprintf(this.env._t('%s and %s have reacted with %s'), firstUser, secondUser, this.content);
+                    case 3:
+                        return sprintf(this.env._t('%s, %s, %s have reacted with %s'), firstUser, secondUser, thirdUser, this.content);
+                    case 4:
+                        return sprintf(this.env._t('%s, %s, %s and 1 other person have reacted with %s'), firstUser, secondUser, thirdUser, this.content);
+                    default:
+                        return sprintf(this.env._t('%s, %s, %s and %s other persons have reacted with %s'), firstUser, secondUser, thirdUser, length - 3, this.content);
+                }
+            },
         }),
     },
 });

@@ -32,7 +32,7 @@ export class ModelField {
     } = {}) {
         /**
          * If set, this field acts as a computed field, and this prop
-         * contains the name of the instance method that computes the value
+         * contains the function that computes the value
          * for this field. This compute method is called on creation of record
          * and whenever some of its dependencies change.
          */
@@ -159,18 +159,6 @@ export class ModelField {
         if (this.compute) {
             // Automatically make computes readonly.
             this.readonly = true;
-            // If the compute function is not inlined, retrieve it from model
-            // methods.
-            if (typeof this.compute === 'string') {
-                this.compute = this.model.prototype[this.compute];
-            }
-        }
-        if (this.sort) {
-            // If the sort function is not inlined, retrieve it from model
-            // methods.
-            if (typeof this.sort === 'string') {
-                this.sort = this.model.prototype[this.sort];
-            }
         }
     }
 

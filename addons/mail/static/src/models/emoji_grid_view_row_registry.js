@@ -54,11 +54,6 @@ registerModel({
             }
             return value;
         },
-        _sortRows() {
-            return [
-                ['smaller-first', 'index'],
-            ];
-        },
     },
     fields: {
         rows: many('EmojiGridRowView', {
@@ -75,7 +70,11 @@ registerModel({
                 return clear();
             },
             inverse: 'emojiGridViewRowRegistryOwner',
-            sort: '_sortRows',
+            sort() {
+                return [
+                    ['smaller-first', 'index'],
+                ];
+            },
         }),
         emojiGridViewOwner: one('EmojiGridView', {
             compute() {

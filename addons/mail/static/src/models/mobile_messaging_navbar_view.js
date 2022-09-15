@@ -37,56 +37,6 @@ registerModel({
                 this.messagingMenu.update({ activeTabId: tabId });
             }
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeActiveTabId() {
-            if (this.discuss) {
-                return this.discuss.activeMobileNavbarTabId;
-            }
-            if (this.messagingMenu) {
-                return this.messagingMenu.activeTabId;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Object[]}
-         */
-        _computeTabs() {
-            if (this.discuss) {
-                return [{
-                    icon: 'fa fa-inbox',
-                    id: 'mailbox',
-                    label: this.env._t("Mailboxes"),
-                }, {
-                    icon: 'fa fa-user',
-                    id: 'chat',
-                    label: this.env._t("Chat"),
-                }, {
-                    icon: 'fa fa-users',
-                    id: 'channel',
-                    label: this.env._t("Channel"),
-                }];
-            }
-            if (this.messagingMenu) {
-                return [{
-                    icon: 'fa fa-envelope',
-                    id: 'all',
-                    label: this.env._t("All"),
-                }, {
-                    icon: 'fa fa-user',
-                    id: 'chat',
-                    label: this.env._t("Chat"),
-                }, {
-                    icon: 'fa fa-users',
-                    id: 'channel',
-                    label: this.env._t("Channel"),
-                }];
-            }
-            return [];
-        },
     },
     fields: {
         /**
@@ -94,7 +44,15 @@ registerModel({
          * Either 'all', 'mailbox', 'chat' or 'channel'.
          */
         activeTabId: attr({
-            compute: '_computeActiveTabId',
+            compute() {
+                if (this.discuss) {
+                    return this.discuss.activeMobileNavbarTabId;
+                }
+                if (this.messagingMenu) {
+                    return this.messagingMenu.activeTabId;
+                }
+                return clear();
+            },
         }),
         discuss: one('Discuss', {
             identifying: true,
@@ -114,7 +72,39 @@ registerModel({
          * }
          */
         tabs: attr({
-            compute: '_computeTabs',
+            compute() {
+                if (this.discuss) {
+                    return [{
+                        icon: 'fa fa-inbox',
+                        id: 'mailbox',
+                        label: this.env._t("Mailboxes"),
+                    }, {
+                        icon: 'fa fa-user',
+                        id: 'chat',
+                        label: this.env._t("Chat"),
+                    }, {
+                        icon: 'fa fa-users',
+                        id: 'channel',
+                        label: this.env._t("Channel"),
+                    }];
+                }
+                if (this.messagingMenu) {
+                    return [{
+                        icon: 'fa fa-envelope',
+                        id: 'all',
+                        label: this.env._t("All"),
+                    }, {
+                        icon: 'fa fa-user',
+                        id: 'chat',
+                        label: this.env._t("Chat"),
+                    }, {
+                        icon: 'fa fa-users',
+                        id: 'channel',
+                        label: this.env._t("Channel"),
+                    }];
+                }
+                return [];
+            },
         }),
     },
 });

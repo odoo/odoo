@@ -120,29 +120,6 @@ registerModel({
         //----------------------------------------------------------------------
 
         /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasSidebarButton() {
-            return Boolean(this.callView.activeRtcSession && this.showOverlay && !this.callView.threadView.compact);
-        },
-        /**
-         * @private
-         */
-        _computeIsControllerFloating() {
-            return Boolean(this.callView.isFullScreen || this.callView.activeRtcSession && !this.callView.threadView.compact);
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMainTiles() {
-            if (this.callView.activeRtcSession) {
-                return [{ channelMember: this.callView.activeRtcSession.channelMember }];
-            }
-            return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
-        },
-        /**
          * Shows the overlay (buttons) for a set a mount of time.
          *
          * @private
@@ -168,17 +145,26 @@ registerModel({
             inverse: 'callMainView',
         }),
         hasSidebarButton: attr({
-            compute: '_computeHasSidebarButton',
+            compute() {
+                return Boolean(this.callView.activeRtcSession && this.showOverlay && !this.callView.threadView.compact);
+            },
         }),
         /**
          * Determines if the controller is an overlay or a bottom bar.
          */
         isControllerFloating: attr({
+            compute() {
+                return Boolean(this.callView.isFullScreen || this.callView.activeRtcSession && !this.callView.threadView.compact);
+            },
             default: false,
-            compute: '_computeIsControllerFloating',
         }),
         mainTiles: many('CallMainViewTile', {
-            compute: '_computeMainTiles',
+            compute() {
+                if (this.callView.activeRtcSession) {
+                    return [{ channelMember: this.callView.activeRtcSession.channelMember }];
+                }
+                return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
+            },
             inverse: 'callMainViewOwner',
         }),
         /**

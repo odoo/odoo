@@ -180,48 +180,6 @@ registerModel({
         rotate() {
             this.update({ angle: this.angle + 90 });
         },
-        /**
-         * @private
-         */
-        _computeAttachmentViewerViewable() {
-            if (this.attachmentList) {
-                return {
-                    attachmentOwner: this.attachmentList.selectedAttachment,
-                };
-            }
-            return clear();
-        },
-        /**
-         * @private
-         */
-        _computeAttachmentViewerViewables() {
-            if (this.attachmentList) {
-                return this.attachmentList.viewableAttachments.map(attachment => {
-                    return { attachmentOwner: attachment };
-                });
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeImageStyle() {
-            let style = `transform: ` +
-                `scale3d(${this.scale}, ${this.scale}, 1) ` +
-                `rotate(${this.angle}deg);`;
-
-            if (this.angle % 180 !== 0) {
-                style += `` +
-                    `max-height: ${window.innerWidth}px; ` +
-                    `max-width: ${window.innerHeight}px;`;
-            } else {
-                style += `` +
-                    `max-height: 100%; ` +
-                    `max-width: 100%;`;
-            }
-            return style;
-        },
     },
     fields: {
         /**
@@ -234,10 +192,24 @@ registerModel({
             related: 'dialogOwner.attachmentListOwnerAsAttachmentView',
         }),
         attachmentViewerViewable: one("AttachmentViewerViewable", {
-            compute: "_computeAttachmentViewerViewable",
+            compute() {
+                if (this.attachmentList) {
+                    return {
+                        attachmentOwner: this.attachmentList.selectedAttachment,
+                    };
+                }
+                return clear();
+            },
         }),
         attachmentViewerViewables: many("AttachmentViewerViewable", {
-            compute: "_computeAttachmentViewerViewables",
+            compute() {
+                if (this.attachmentList) {
+                    return this.attachmentList.viewableAttachments.map(attachment => {
+                        return { attachmentOwner: attachment };
+                    });
+                }
+                return clear();
+            },
         }),
         /**
          * States the OWL component of this attachment viewer.
@@ -255,7 +227,22 @@ registerModel({
          * Style of the image (scale + rotation).
          */
         imageStyle: attr({
-            compute: '_computeImageStyle',
+            compute() {
+                let style = `transform: ` +
+                    `scale3d(${this.scale}, ${this.scale}, 1) ` +
+                    `rotate(${this.angle}deg);`;
+
+                if (this.angle % 180 !== 0) {
+                    style += `` +
+                        `max-height: ${window.innerWidth}px; ` +
+                        `max-width: ${window.innerHeight}px;`;
+                } else {
+                    style += `` +
+                        `max-height: 100%; ` +
+                        `max-width: 100%;`;
+                }
+                return style;
+            },
         }),
         /**
          * Determine whether the user is currently dragging the image.

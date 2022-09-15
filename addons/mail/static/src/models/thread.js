@@ -973,485 +973,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAccessRestrictedToGroupText() {
-            if (!this.authorizedGroupFullName) {
-                return clear();
-            }
-            return sprintf(
-                this.env._t('Access restricted to group "%(groupFullName)s"'),
-                { 'groupFullName': this.authorizedGroupFullName }
-            );
-        },
-        /**
-         * @private
-         * @returns {Attachment[]}
-         */
-        _computeAllAttachments() {
-            const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
-                .sort((a1, a2) => {
-                    // "uploading" before "uploaded" attachments.
-                    if (!a1.isUploading && a2.isUploading) {
-                        return 1;
-                    }
-                    if (a1.isUploading && !a2.isUploading) {
-                        return -1;
-                    }
-                    // "most-recent" before "oldest" attachments.
-                    return Math.abs(a2.id) - Math.abs(a1.id);
-                });
-            return allAttachments;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeComposer() {
-            if (this.mailbox) {
-                return clear();
-            }
-            return {};
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeDisplayName() {
-            if (this.channel) {
-                return this.channel.displayName;
-            }
-            if (this.mailbox) {
-                return this.mailbox.name;
-            }
-            return this.name;
-        },
-        /**
-         * @private
-         * @returns {Object}
-         */
-        _computeFetchMessagesParams() {
-            if (this.model === 'mail.channel') {
-                return { 'channel_id': this.id };
-            }
-            if (this.mailbox) {
-                return {};
-            }
-            return {
-                'thread_id': this.id,
-                'thread_model': this.model,
-            };
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeFetchMessagesUrl() {
-            if (this.model === 'mail.channel') {
-                return `/mail/channel/messages`;
-            }
-            if (this.mailbox) {
-                return this.mailbox.fetchMessagesUrl;
-            }
-            return `/mail/thread/messages`;
-        },
-        /**
-         * @private
-         * @returns {Activity[]}
-         */
-        _computeFutureActivities() {
-            return this.activities.filter(activity => activity.state === 'planned');
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasCallFeature() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['channel', 'chat', 'group'].includes(this.channel.channel_type);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasInviteFeature() {
-            return this.model === 'mail.channel';
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasSeenIndicators() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['chat', 'livechat'].includes(this.channel.channel_type);
-        },
-        /**
-        * @private
-        * @returns {boolean|FieldCommand}
-        */
-        _computeIsChannelDescriptionChangeable() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['channel', 'group'].includes(this.channel.channel_type);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsDescriptionEditableByCurrentUser() {
-            return Boolean(
-                this.messaging &&
-                this.messaging.currentUser &&
-                this.messaging.currentUser.isInternalUser &&
-                this.isChannelDescriptionChangeable
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsChannelRenamable() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['chat', 'channel', 'group'].includes(this.channel.channel_type);
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasMemberListFeature() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['channel', 'group'].includes(this.channel.channel_type);
-        },
-        /**
-         * @returns {string|FieldCommand}
-         */
-        _computeInvitationLink() {
-            if (!this.channel) {
-                return clear();
-            }
-            if (!this.uuid || !this.channel.channel_type || this.channel.channel_type === 'chat') {
-                return clear();
-            }
-            return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsChatChannel() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['chat', 'group'].includes(this.channel.channel_type);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsCurrentPartnerFollowing() {
-            return this.followers.some(follower =>
-                follower.partner && follower.partner === this.messaging.currentPartner
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsPinned() {
-            return this.isPendingPinned !== undefined ? this.isPendingPinned : this.isServerPinned;
-        },
-        /**
-         * @private
-         * @returns {Message}
-         */
-        _computeLastCurrentPartnerMessageSeenByEveryone() {
-            const otherPartnerSeenInfos =
-                this.partnerSeenInfos.filter(partnerSeenInfo =>
-                    partnerSeenInfo.partner !== this.messaging.currentPartner);
-            if (otherPartnerSeenInfos.length === 0) {
-                return clear();
-            }
-
-            const otherPartnersLastSeenMessageIds =
-                otherPartnerSeenInfos.map(partnerSeenInfo =>
-                    partnerSeenInfo.lastSeenMessage ? partnerSeenInfo.lastSeenMessage.id : 0
-                );
-            if (otherPartnersLastSeenMessageIds.length === 0) {
-                return clear();
-            }
-            const lastMessageSeenByAllId = Math.min(
-                ...otherPartnersLastSeenMessageIds
-            );
-            const currentPartnerOrderedSeenMessages =
-                this.orderedNonTransientMessages.filter(message =>
-                    message.author === this.messaging.currentPartner &&
-                    message.id <= lastMessageSeenByAllId);
-
-            if (
-                !currentPartnerOrderedSeenMessages ||
-                currentPartnerOrderedSeenMessages.length === 0
-            ) {
-                return clear();
-            }
-            return currentPartnerOrderedSeenMessages.slice().pop();
-        },
-        /**
-         * @private
-         * @returns {Message|undefined}
-         */
-        _computeLastMessage() {
-            const {
-                length: l,
-                [l - 1]: lastMessage,
-            } = this.orderedMessages;
-            if (lastMessage) {
-                return lastMessage;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Message|undefined}
-         */
-        _computeLastNonTransientMessage() {
-            const {
-                length: l,
-                [l - 1]: lastMessage,
-            } = this.orderedNonTransientMessages;
-            if (lastMessage) {
-                return lastMessage;
-            }
-            return clear();
-        },
-        /**
-         * Adjusts the last seen message received from the server to consider
-         * the following messages also as read if they are either transient
-         * messages or messages from the current partner.
-         *
-         * @private
-         * @returns {integer}
-         */
-        _computeLastSeenByCurrentPartnerMessageId() {
-            const firstMessage = this.orderedMessages[0];
-            if (
-                firstMessage &&
-                this.rawLastSeenByCurrentPartnerMessageId &&
-                this.rawLastSeenByCurrentPartnerMessageId < firstMessage.id
-            ) {
-                // no deduction can be made if there is a gap
-                return this.rawLastSeenByCurrentPartnerMessageId;
-            }
-            let lastSeenByCurrentPartnerMessageId = this.rawLastSeenByCurrentPartnerMessageId;
-            for (const message of this.orderedMessages) {
-                if (message.id <= this.rawLastSeenByCurrentPartnerMessageId) {
-                    continue;
-                }
-                if (
-                    (message.author && this.messaging.currentPartner && message.author === this.messaging.currentPartner) ||
-                    (message.guestAuthor && this.messaging.currentGuest && message.guestAuthor === this.messaging.currentGuest) ||
-                    message.isTransient
-                ) {
-                    lastSeenByCurrentPartnerMessageId = message.id;
-                    continue;
-                }
-                return lastSeenByCurrentPartnerMessageId;
-            }
-            return lastSeenByCurrentPartnerMessageId;
-        },
-        /**
-         * @private
-         * @returns {Message|undefined}
-         */
-        _computeLastNeedactionMessageAsOriginThread() {
-            const orderedNeedactionMessagesAsOriginThread = this.needactionMessagesAsOriginThread.sort(
-                (m1, m2) => m1.id < m2.id ? -1 : 1
-            );
-            const {
-                length: l,
-                [l - 1]: lastNeedactionMessageAsOriginThread,
-            } = orderedNeedactionMessagesAsOriginThread;
-            if (lastNeedactionMessageAsOriginThread) {
-                return lastNeedactionMessageAsOriginThread;
-            }
-            return clear();
-        },
-        /**
-         * @private
-        /**
-         * @private
-         * @return {FieldCommand}
-         */
-         _computeMessagingAsAllCurrentClientThreads() {
-            if (!this.messaging || !this.channel || !this.channel.memberOfCurrentUser || !this.isServerPinned) {
-                return clear();
-            }
-            return this.messaging;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessagingAsRingingThread() {
-            if (this.rtcInvitingSession) {
-                return this.messaging;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {MessagingMenu|FieldCommand}
-         */
-        _computeMessagingMenuAsPinnedAndUnreadChannel() {
-            if (!this.messaging || !this.messaging.messagingMenu) {
-                return clear();
-            }
-            if (this.channel && this.isPinned && this.channel.localMessageUnreadCounter > 0) {
-                return this.messaging.messagingMenu;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeNeedactionMessagesAsOriginThread() {
-            return this.messagesAsOriginThread.filter(message => message.isNeedaction);
-        },
-        /**
-         * @private
-         * @returns {Message|undefined}
-         */
-        _computeMessageAfterNewMessageSeparator() {
-            if (!this.channel) {
-                return clear();
-            }
-            if (this.channel.localMessageUnreadCounter === 0) {
-                return clear();
-            }
-            const index = this.orderedMessages.findIndex(message =>
-                message.id === this.lastSeenByCurrentPartnerMessageId
-            );
-            if (index === -1) {
-                return clear();
-            }
-            const message = this.orderedMessages[index + 1];
-            if (!message) {
-                return clear();
-            }
-            return message;
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeOrderedMessages() {
-            return this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeOrderedNonTransientMessages() {
-            return this.orderedMessages.filter(m => !m.isTransient);
-        },
-        /**
-         * @private
-         * @returns {Partner[]}
-         */
-        _computeOrderedOtherTypingMembers() {
-            return this.orderedTypingMembers.filter(member => !member.isMemberOfCurrentUser);
-        },
-        /**
-         * @private
-         * @returns {Activity[]}
-         */
-        _computeOverdueActivities() {
-            return this.activities.filter(activity => activity.state === 'overdue');
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallInviteRequestPopup() {
-            if (this.rtcInvitingSession) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Throttle}
-         */
-        _computeThrottleNotifyCurrentPartnerTypingStatus() {
-            return {
-                func: () => this._notifyCurrentPartnerTypingStatus(),
-            };
-        },
-        /**
-         * @private
-         * @returns {Activity[]}
-         */
-        _computeTodayActivities() {
-            return this.activities.filter(activity => activity.state === 'today');
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeTypingStatusText() {
-            if (this.orderedOtherTypingMembers.length === 0) {
-                return clear();
-            }
-            if (this.orderedOtherTypingMembers.length === 1) {
-                return sprintf(
-                    this.env._t("%s is typing..."),
-                    this.getMemberName(this.orderedOtherTypingMembers[0].persona)
-                );
-            }
-            if (this.orderedOtherTypingMembers.length === 2) {
-                return sprintf(
-                    this.env._t("%s and %s are typing..."),
-                    this.getMemberName(this.orderedOtherTypingMembers[0].persona),
-                    this.getMemberName(this.orderedOtherTypingMembers[1].persona)
-                );
-            }
-            return sprintf(
-                this.env._t("%s, %s and more are typing..."),
-                this.getMemberName(this.orderedOtherTypingMembers[0].persona),
-                this.getMemberName(this.orderedOtherTypingMembers[1].persona)
-            );
-        },
-        /**
-         * Compute an url string that can be used inside a href attribute
-         *
-         * @private
-         * @returns {string}
-         */
-        _computeUrl() {
-            const baseHref = url('/web');
-            if (this.model === 'mail.channel') {
-                return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
-            }
-            return `${baseHref}#model=${this.model}&id=${this.id}`;
-        },
-        /**
-         * @private
-         * @returns {number}
-         */
-        _computeVideoCount() {
-            return this.rtcSessions.filter(session => session.videoStream).length;
-        },
-        /**
-         * @private
          */
         async _notifyCurrentPartnerTypingStatus() {
             if (
@@ -1525,15 +1046,6 @@ registerModel({
             }
         },
         /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortAttachmentsInWebClientView() {
-            return [
-                ['greater-first', 'id'],
-            ];
-        },
-        /**
          * Event handler for clicking thread in discuss app.
          */
         async onClick() {
@@ -1558,7 +1070,15 @@ registerModel({
     },
     fields: {
         accessRestrictedToGroupText: attr({
-            compute: '_computeAccessRestrictedToGroupText',
+            compute() {
+                if (!this.authorizedGroupFullName) {
+                    return clear();
+                }
+                return sprintf(
+                    this.env._t('Access restricted to group "%(groupFullName)s"'),
+                    { 'groupFullName': this.authorizedGroupFullName }
+                );
+            },
             default: '',
         }),
         /**
@@ -1569,7 +1089,21 @@ registerModel({
             inverse: 'thread',
         }),
         allAttachments: many('Attachment', {
-            compute: '_computeAllAttachments',
+            compute() {
+                const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
+                    .sort((a1, a2) => {
+                        // "uploading" before "uploaded" attachments.
+                        if (!a1.isUploading && a2.isUploading) {
+                            return 1;
+                        }
+                        if (a1.isUploading && !a2.isUploading) {
+                            return -1;
+                        }
+                        // "most-recent" before "oldest" attachments.
+                        return Math.abs(a2.id) - Math.abs(a1.id);
+                    });
+                return allAttachments;
+            },
             inverse: 'allThreads',
         }),
         areAttachmentsLoaded: attr({
@@ -1581,7 +1115,11 @@ registerModel({
         attachmentsInWebClientView: many('Attachment', {
             inverse: 'threadsAsAttachmentsInWebClientView',
             readonly: true,
-            sort: '_sortAttachmentsInWebClientView',
+            sort() {
+                return [
+                    ['greater-first', 'id'],
+                ];
+            },
         }),
         authorizedGroupFullName: attr(),
         cache: one('ThreadCache', {
@@ -1605,7 +1143,12 @@ registerModel({
          * Determines the composer state of this thread.
          */
         composer: one('Composer', {
-            compute: '_computeComposer',
+            compute() {
+                if (this.mailbox) {
+                    return clear();
+                }
+                return {};
+            },
             inverse: 'thread',
         }),
         creator: one('User'),
@@ -1657,13 +1200,40 @@ registerModel({
          */
         description: attr(),
         displayName: attr({
-            compute: '_computeDisplayName',
+            compute() {
+                if (this.channel) {
+                    return this.channel.displayName;
+                }
+                if (this.mailbox) {
+                    return this.mailbox.name;
+                }
+                return this.name;
+            },
         }),
         fetchMessagesParams: attr({
-            compute: '_computeFetchMessagesParams',
+            compute() {
+                if (this.model === 'mail.channel') {
+                    return { 'channel_id': this.id };
+                }
+                if (this.mailbox) {
+                    return {};
+                }
+                return {
+                    'thread_id': this.id,
+                    'thread_model': this.model,
+                };
+            },
         }),
         fetchMessagesUrl: attr({
-            compute: '_computeFetchMessagesUrl',
+            compute() {
+                if (this.model === 'mail.channel') {
+                    return `/mail/channel/messages`;
+                }
+                if (this.mailbox) {
+                    return this.mailbox.fetchMessagesUrl;
+                }
+                return `/mail/thread/messages`;
+            },
         }),
         followerOfCurrentPartner: one('Follower', {
             inverse: 'followedThreadAsFollowerOfCurrentPartner',
@@ -1690,7 +1260,9 @@ registerModel({
          * planned in the future (due later than today).
          */
         futureActivities: many('Activity', {
-            compute: '_computeFutureActivities',
+            compute() {
+                return this.activities.filter(activity => activity.state === 'planned');
+            },
         }),
         group_based_subscription: attr({
             default: false,
@@ -1709,20 +1281,32 @@ registerModel({
          * Determines whether the RTC call feature should be displayed.
          */
         hasCallFeature: attr({
-            compute: '_computeHasCallFeature',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                return ['channel', 'chat', 'group'].includes(this.channel.channel_type);
+            },
         }),
         /**
          * States whether this thread should has the invite feature. Only makes
          * sense for channels.
          */
         hasInviteFeature: attr({
-            compute: '_computeHasInviteFeature',
+            compute() {
+                return this.model === 'mail.channel';
+            },
         }),
         /**
          * Determines whether it makes sense for this thread to have a member list.
          */
         hasMemberListFeature: attr({
-            compute: '_computeHasMemberListFeature',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                return ['channel', 'group'].includes(this.channel.channel_type);
+            },
         }),
         /**
          * States whether there is a server request for joining or leaving the RTC session.
@@ -1736,7 +1320,12 @@ registerModel({
          * enabled or not.
          */
         hasSeenIndicators: attr({
-            compute: '_computeHasSeenIndicators',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                return ['chat', 'livechat'].includes(this.channel.channel_type);
+            },
             default: false,
         }),
         /**
@@ -1750,7 +1339,15 @@ registerModel({
             identifying: true,
         }),
         invitationLink: attr({
-            compute: '_computeInvitationLink',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                if (!this.uuid || !this.channel.channel_type || this.channel.channel_type === 'chat') {
+                    return clear();
+                }
+                return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
+            },
         }),
         /**
          * List of members that have been invited to the RTC call of this channel.
@@ -1761,14 +1358,24 @@ registerModel({
          * Only makes sense for channels.
          */
         isChannelDescriptionChangeable: attr({
-            compute: '_computeIsChannelDescriptionChangeable',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                return ['channel', 'group'].includes(this.channel.channel_type);
+            },
         }),
         /**
          * Determines whether this thread can be renamed.
          * Only makes sense for channels.
          */
         isChannelRenamable: attr({
-            compute: '_computeIsChannelRenamable',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                return ['chat', 'channel', 'group'].includes(this.channel.channel_type);
+            },
         }),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.
@@ -1777,11 +1384,20 @@ registerModel({
          * 'chat'.
          */
         isChatChannel: attr({
-            compute: '_computeIsChatChannel',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                return ['chat', 'group'].includes(this.channel.channel_type);
+            },
             default: false,
         }),
         isCurrentPartnerFollowing: attr({
-            compute: '_computeIsCurrentPartnerFollowing',
+            compute() {
+                return this.followers.some(follower =>
+                    follower.partner && follower.partner === this.messaging.currentPartner
+                );
+            },
             default: false,
         }),
         isCurrentPartnerTyping: attr({
@@ -1791,7 +1407,14 @@ registerModel({
          * States whether this thread description is editable by the current user.
          */
         isDescriptionEditableByCurrentUser: attr({
-            compute: '_computeIsDescriptionEditableByCurrentUser',
+            compute() {
+                return Boolean(
+                    this.messaging &&
+                    this.messaging.currentUser &&
+                    this.messaging.currentUser.isInternalUser &&
+                    this.isChannelDescriptionChangeable
+                );
+            },
         }),
         /**
          * States whether `this` is currently loading attachments.
@@ -1813,7 +1436,9 @@ registerModel({
          * in discuss and present in the messaging menu.
          */
         isPinned: attr({
-            compute: '_computeIsPinned',
+            compute() {
+                return this.isPendingPinned !== undefined ? this.isPendingPinned : this.isServerPinned;
+            },
         }),
         /**
          * Determine the last pin state known by the server, which is the pin
@@ -1837,25 +1462,85 @@ registerModel({
          */
         lastInterestDateTime: attr(),
         lastCurrentPartnerMessageSeenByEveryone: one('Message', {
-            compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
+            compute() {
+                const otherPartnerSeenInfos =
+                    this.partnerSeenInfos.filter(partnerSeenInfo =>
+                        partnerSeenInfo.partner !== this.messaging.currentPartner);
+                if (otherPartnerSeenInfos.length === 0) {
+                    return clear();
+                }
+
+                const otherPartnersLastSeenMessageIds =
+                    otherPartnerSeenInfos.map(partnerSeenInfo =>
+                        partnerSeenInfo.lastSeenMessage ? partnerSeenInfo.lastSeenMessage.id : 0
+                    );
+                if (otherPartnersLastSeenMessageIds.length === 0) {
+                    return clear();
+                }
+                const lastMessageSeenByAllId = Math.min(
+                    ...otherPartnersLastSeenMessageIds
+                );
+                const currentPartnerOrderedSeenMessages =
+                    this.orderedNonTransientMessages.filter(message =>
+                        message.author === this.messaging.currentPartner &&
+                        message.id <= lastMessageSeenByAllId);
+
+                if (
+                    !currentPartnerOrderedSeenMessages ||
+                    currentPartnerOrderedSeenMessages.length === 0
+                ) {
+                    return clear();
+                }
+                return currentPartnerOrderedSeenMessages.slice().pop();
+            },
         }),
         /**
          * Last message of the thread, could be a transient one.
          */
         lastMessage: one('Message', {
-            compute: '_computeLastMessage',
+            compute() {
+                const {
+                    length: l,
+                    [l - 1]: lastMessage,
+                } = this.orderedMessages;
+                if (lastMessage) {
+                    return lastMessage;
+                }
+                return clear();
+            },
         }),
         /**
          * States the last known needaction message having this thread as origin.
          */
         lastNeedactionMessageAsOriginThread: one('Message', {
-            compute: '_computeLastNeedactionMessageAsOriginThread',
+            compute() {
+                const orderedNeedactionMessagesAsOriginThread = this.needactionMessagesAsOriginThread.sort(
+                    (m1, m2) => m1.id < m2.id ? -1 : 1
+                );
+                const {
+                    length: l,
+                    [l - 1]: lastNeedactionMessageAsOriginThread,
+                } = orderedNeedactionMessagesAsOriginThread;
+                if (lastNeedactionMessageAsOriginThread) {
+                    return lastNeedactionMessageAsOriginThread;
+                }
+                return clear();
+            },
         }),
         /**
          * Last non-transient message.
          */
         lastNonTransientMessage: one('Message', {
-            compute: '_computeLastNonTransientMessage',
+            compute() {
+                const {
+                    length: l,
+                    [l - 1]: lastMessage,
+                } = this.orderedNonTransientMessages;
+                if (lastMessage) {
+                    return lastMessage;
+                }
+                return clear();
+            },
         }),
         /**
          * Last seen message id of the channel by current partner.
@@ -1865,7 +1550,38 @@ registerModel({
          * messages are before or after it.
          */
         lastSeenByCurrentPartnerMessageId: attr({
-            compute: '_computeLastSeenByCurrentPartnerMessageId',
+            /**
+             * Adjusts the last seen message received from the server to consider
+             * the following messages also as read if they are either transient
+             * messages or messages from the current partner.
+             */
+            compute() {
+                const firstMessage = this.orderedMessages[0];
+                if (
+                    firstMessage &&
+                    this.rawLastSeenByCurrentPartnerMessageId &&
+                    this.rawLastSeenByCurrentPartnerMessageId < firstMessage.id
+                ) {
+                    // no deduction can be made if there is a gap
+                    return this.rawLastSeenByCurrentPartnerMessageId;
+                }
+                let lastSeenByCurrentPartnerMessageId = this.rawLastSeenByCurrentPartnerMessageId;
+                for (const message of this.orderedMessages) {
+                    if (message.id <= this.rawLastSeenByCurrentPartnerMessageId) {
+                        continue;
+                    }
+                    if (
+                        (message.author && this.messaging.currentPartner && message.author === this.messaging.currentPartner) ||
+                        (message.guestAuthor && this.messaging.currentGuest && message.guestAuthor === this.messaging.currentGuest) ||
+                        message.isTransient
+                    ) {
+                        lastSeenByCurrentPartnerMessageId = message.id;
+                        continue;
+                    }
+                    return lastSeenByCurrentPartnerMessageId;
+                }
+                return lastSeenByCurrentPartnerMessageId;
+            },
             default: 0,
         }),
         mailbox: one('Mailbox', {
@@ -1887,7 +1603,25 @@ registerModel({
          * be positioned, if any.
          */
         messageAfterNewMessageSeparator: one('Message', {
-            compute: '_computeMessageAfterNewMessageSeparator',
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                if (this.channel.localMessageUnreadCounter === 0) {
+                    return clear();
+                }
+                const index = this.orderedMessages.findIndex(message =>
+                    message.id === this.lastSeenByCurrentPartnerMessageId
+                );
+                if (index === -1) {
+                    return clear();
+                }
+                const message = this.orderedMessages[index + 1];
+                if (!message) {
+                    return clear();
+                }
+                return message;
+            },
         }),
         message_needaction_counter: attr({
             default: 0,
@@ -1915,15 +1649,33 @@ registerModel({
             inverse: 'thread',
         }),
         messagingAsAllCurrentClientThreads: one('Messaging', {
-            compute: '_computeMessagingAsAllCurrentClientThreads',
+            compute() {
+                if (!this.messaging || !this.channel || !this.channel.memberOfCurrentUser || !this.isServerPinned) {
+                    return clear();
+                }
+                return this.messaging;
+            },
             inverse: 'allCurrentClientThreads',
         }),
         messagingAsRingingThread: one('Messaging', {
-            compute: '_computeMessagingAsRingingThread',
+            compute() {
+                if (this.rtcInvitingSession) {
+                    return this.messaging;
+                }
+                return clear();
+            },
             inverse: 'ringingThreads',
         }),
         messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', {
-            compute: '_computeMessagingMenuAsPinnedAndUnreadChannel',
+            compute() {
+                if (!this.messaging || !this.messaging.messagingMenu) {
+                    return clear();
+                }
+                if (this.channel && this.isPinned && this.channel.localMessageUnreadCounter > 0) {
+                    return this.messaging.messagingMenu;
+                }
+                return clear();
+            },
             inverse: 'pinnedAndUnreadChannels',
         }),
         model: attr({
@@ -1936,26 +1688,34 @@ registerModel({
          * States all known needaction messages having this thread as origin.
          */
         needactionMessagesAsOriginThread: many('Message', {
-            compute: '_computeNeedactionMessagesAsOriginThread',
+            compute() {
+                return this.messagesAsOriginThread.filter(message => message.isNeedaction);
+            },
         }),
         /**
          * All messages ordered like they are displayed.
          */
         orderedMessages: many('Message', {
-            compute: '_computeOrderedMessages',
+            compute() {
+                return this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
+            },
         }),
         /**
          * All messages ordered like they are displayed. This field does not
          * contain transient messages which are not "real" records.
          */
         orderedNonTransientMessages: many('Message', {
-            compute: '_computeOrderedNonTransientMessages',
+            compute() {
+                return this.orderedMessages.filter(m => !m.isTransient);
+            },
         }),
         /**
          * Ordered typing members on this thread, excluding the current partner.
          */
         orderedOtherTypingMembers: many('ChannelMember', {
-            compute: '_computeOrderedOtherTypingMembers',
+            compute() {
+                return this.orderedTypingMembers.filter(member => !member.isMemberOfCurrentUser);
+            },
         }),
         /**
          * Ordered list of typing members.
@@ -1984,7 +1744,9 @@ registerModel({
          * overdue (due earlier than today).
          */
         overdueActivities: many('Activity', {
-            compute: '_computeOverdueActivities',
+            compute() {
+                return this.activities.filter(activity => activity.state === 'overdue');
+            },
         }),
         /**
          * Contains the seen information for all members of the thread.
@@ -2009,7 +1771,12 @@ registerModel({
             inverse: 'channel',
         }),
         callInviteRequestPopup: one('CallInviteRequestPopup', {
-            compute: '_computeCallInviteRequestPopup',
+            compute() {
+                if (this.rtcInvitingSession) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'thread',
         }),
         /**
@@ -2098,7 +1865,11 @@ registerModel({
          * @see _notifyCurrentPartnerTypingStatus
          */
         throttleNotifyCurrentPartnerTypingStatus: one('Throttle', {
-            compute: '_computeThrottleNotifyCurrentPartnerTypingStatus',
+            compute() {
+                return {
+                    func: () => this._notifyCurrentPartnerTypingStatus(),
+                };
+            },
             inverse: 'threadAsThrottleNotifyCurrentPartnerTypingStatus',
         }),
         /**
@@ -2106,7 +1877,9 @@ registerModel({
          * specifically today.
          */
         todayActivities: many('Activity', {
-            compute: '_computeTodayActivities',
+            compute() {
+                return this.activities.filter(activity => activity.state === 'today');
+            },
         }),
         threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
             inverse: 'thread',
@@ -2120,14 +1893,45 @@ registerModel({
          * Text that represents the status on this thread about typing members.
          */
         typingStatusText: attr({
-            compute: '_computeTypingStatusText',
+            compute() {
+                if (this.orderedOtherTypingMembers.length === 0) {
+                    return clear();
+                }
+                if (this.orderedOtherTypingMembers.length === 1) {
+                    return sprintf(
+                        this.env._t("%s is typing..."),
+                        this.getMemberName(this.orderedOtherTypingMembers[0].persona)
+                    );
+                }
+                if (this.orderedOtherTypingMembers.length === 2) {
+                    return sprintf(
+                        this.env._t("%s and %s are typing..."),
+                        this.getMemberName(this.orderedOtherTypingMembers[0].persona),
+                        this.getMemberName(this.orderedOtherTypingMembers[1].persona)
+                    );
+                }
+                return sprintf(
+                    this.env._t("%s, %s and more are typing..."),
+                    this.getMemberName(this.orderedOtherTypingMembers[0].persona),
+                    this.getMemberName(this.orderedOtherTypingMembers[1].persona)
+                );
+            },
             default: '',
         }),
         /**
          * URL to access to the conversation.
          */
         url: attr({
-            compute: '_computeUrl',
+            /**
+             * Compute an url string that can be used inside a href attribute
+             */
+            compute() {
+                const baseHref = url('/web');
+                if (this.model === 'mail.channel') {
+                    return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
+                }
+                return `${baseHref}#model=${this.model}&id=${this.id}`;
+            },
             default: '',
         }),
         uuid: attr(),
@@ -2135,7 +1939,9 @@ registerModel({
          * The amount of videos broadcast in the current Rtc call
          */
         videoCount: attr({
-            compute: '_computeVideoCount',
+            compute() {
+                return this.rtcSessions.filter(session => session.videoStream).length;
+            },
             default: 0,
         }),
     },

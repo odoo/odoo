@@ -21,71 +21,15 @@ registerModel({
             this.widget.destroy();
         },
     },
-    recordMethods: {
-        /**
-         * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeId() {
-            if (!this.data) {
-                return clear();
-            }
-            return this.data.id;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand|string}
-         */
-        _computeName() {
-            if (!this.data) {
-                return clear();
-            }
-            return this.data.name;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeOperator() {
-            if (!this.data) {
-                return clear();
-            }
-            if (!this.data.operator_pid) {
-                return clear();
-            }
-            if (!this.data.operator_pid[0]) {
-                return clear();
-            }
-            return {
-                id: this.data.operator_pid[0],
-                name: this.data.operator_pid[1],
-            };
-        },
-        /**
-         * @private
-         * @returns {FieldCommand|string}
-         */
-        _computeStatus() {
-            if (!this.data) {
-                return clear();
-            }
-            return this.data.status || '';
-        },
-        /**
-         * @private
-         * @returns {FieldCommand|string}
-         */
-        _computeUuid() {
-            if (!this.data) {
-                return clear();
-            }
-            return this.data.uuid;
-        },
-    },
     fields: {
         data: attr(),
         id: attr({
-            compute: '_computeId',
+            compute() {
+                if (!this.data) {
+                    return clear();
+                }
+                return this.data.id;
+            },
         }),
         isFolded: attr({
             default: false,
@@ -95,20 +39,49 @@ registerModel({
             inverse: 'publicLivechat',
         }),
         name: attr({
-            compute: '_computeName',
+            compute() {
+                if (!this.data) {
+                    return clear();
+                }
+                return this.data.name;
+            },
         }),
         operator: one('LivechatOperator', {
-            compute: '_computeOperator',
+            compute() {
+                if (!this.data) {
+                    return clear();
+                }
+                if (!this.data.operator_pid) {
+                    return clear();
+                }
+                if (!this.data.operator_pid[0]) {
+                    return clear();
+                }
+                return {
+                    id: this.data.operator_pid[0],
+                    name: this.data.operator_pid[1],
+                };
+            },
         }),
         status: attr({
-            compute: '_computeStatus',
+            compute() {
+                if (!this.data) {
+                    return clear();
+                }
+                return this.data.status || '';
+            },
         }),
         // amount of messages that have not yet been read on this chat
         unreadCounter: attr({
             default: 0,
         }),
         uuid: attr({
-            compute: '_computeUuid',
+            compute() {
+                if (!this.data) {
+                    return clear();
+                }
+                return this.data.uuid;
+            },
         }),
         widget: attr(),
     },

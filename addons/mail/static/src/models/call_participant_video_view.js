@@ -24,16 +24,6 @@ registerModel({
                 throw error;
             }
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeRtcSession() {
-            if (this.callParticipantCardOwner.rtcSession) {
-                return this.callParticipantCardOwner.rtcSession;
-            }
-            return clear();
-        },
     },
     fields: {
         callParticipantCardOwner: one('CallParticipantCard', {
@@ -41,7 +31,12 @@ registerModel({
             inverse: 'callParticipantVideoView',
         }),
         rtcSession: one('RtcSession', {
-            compute: '_computeRtcSession',
+            compute() {
+                if (this.callParticipantCardOwner.rtcSession) {
+                    return this.callParticipantCardOwner.rtcSession;
+                }
+                return clear();
+            },
         }),
     },
 });

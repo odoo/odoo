@@ -104,19 +104,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
-         */
-        _computeMobileAddItemHeaderAutocompleteInputView() {
-            if (
-                this.messaging.device.isSmall &&
-                (this.isAddingChannel || this.isAddingChat)
-            ) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
          */
         _onDiscussActiveThreadChanged() {
             this.env.services.router.pushState({
@@ -162,7 +149,15 @@ registerModel({
             default: false,
         }),
         mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
-            compute: '_computeMobileAddItemHeaderAutocompleteInputView',
+            compute() {
+                if (
+                    this.messaging.device.isSmall &&
+                    (this.isAddingChannel || this.isAddingChat)
+                ) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'discussViewOwnerAsMobileAddItemHeader',
         }),
         orderedMailboxes: many('Mailbox', {

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { addFields, patchRecordMethods } from '@mail/model/model_core';
+import { addFields, patchFields } from '@mail/model/model_core';
 import { many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
@@ -19,14 +19,13 @@ addFields('Messaging', {
     }),
 });
 
-patchRecordMethods('Messaging', {
-    /**
-     * @override
-     */
-    _computeNotificationHandler() {
-        if (this.publicLivechatGlobal) {
-            return clear();
-        }
-        return this._super();
+patchFields('Messaging', {
+    notificationHandler: {
+        compute() {
+            if (this.publicLivechatGlobal) {
+                return clear();
+            }
+            return this._super();
+        },
     },
 });

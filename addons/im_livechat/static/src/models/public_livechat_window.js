@@ -72,20 +72,15 @@ registerModel({
                 }
             }
         },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeInputPlaceholder() {
-            if (this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder) {
-                return this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder;
-            }
-            return this.env._t("Say something");
-        },
     },
     fields: {
         inputPlaceholder: attr({
-            compute: '_computeInputPlaceholder',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder) {
+                    return this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder;
+                }
+                return this.env._t("Say something");
+            },
         }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,

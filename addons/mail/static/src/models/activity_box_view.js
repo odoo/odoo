@@ -13,19 +13,14 @@ registerModel({
             ev.preventDefault();
             this.update({ isActivityListVisible: !this.isActivityListVisible });
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActivityViews() {
-            return this.chatter.thread.activities.map(activity => {
-                return { activity };
-            });
-        },
     },
     fields: {
         activityViews: many('ActivityView', {
-            compute: '_computeActivityViews',
+            compute() {
+                return this.chatter.thread.activities.map(activity => {
+                    return { activity };
+                });
+            },
             inverse: 'activityBoxView',
         }),
         chatter: one('Chatter', {

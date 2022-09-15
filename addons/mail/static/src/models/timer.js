@@ -18,40 +18,6 @@ registerModel({
     recordMethods: {
         /**
          * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeDuration() {
-            if (this.blurManagerOwnerAsFrameRequest) {
-                return Math.floor(1000 / 30); // 30 fps
-            }
-            if (this.callMainViewAsShowOverlay) {
-                return 3 * 1000;
-            }
-            if (this.chatterOwnerAsAttachmentsLoader) {
-                return this.messaging.loadingBaseDelayDuration;
-            }
-            if (this.messageViewOwnerAsHighlight) {
-                return 2 * 1000;
-            }
-            if (this.rtcSessionOwnerAsBroadcast) {
-                return 3 * 1000;
-            }
-            if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
-                return 5 * 1000;
-            }
-            if (this.threadAsCurrentPartnerLongTypingTimerOwner) {
-                return 50 * 1000;
-            }
-            if (this.otherMemberLongTypingInThreadTimerOwner) {
-                return 60 * 1000;
-            }
-            if (this.throttleOwner) {
-                return this.throttleOwner.duration;
-            }
-            return clear();
-        },
-        /**
-         * @private
          */
         _onTimeout() {
             this.update({ timeoutId: clear() });
@@ -124,7 +90,36 @@ registerModel({
          * timeout function.
          */
         duration: attr({
-            compute: '_computeDuration',
+            compute() {
+                if (this.blurManagerOwnerAsFrameRequest) {
+                    return Math.floor(1000 / 30); // 30 fps
+                }
+                if (this.callMainViewAsShowOverlay) {
+                    return 3 * 1000;
+                }
+                if (this.chatterOwnerAsAttachmentsLoader) {
+                    return this.messaging.loadingBaseDelayDuration;
+                }
+                if (this.messageViewOwnerAsHighlight) {
+                    return 2 * 1000;
+                }
+                if (this.rtcSessionOwnerAsBroadcast) {
+                    return 3 * 1000;
+                }
+                if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
+                    return 5 * 1000;
+                }
+                if (this.threadAsCurrentPartnerLongTypingTimerOwner) {
+                    return 50 * 1000;
+                }
+                if (this.otherMemberLongTypingInThreadTimerOwner) {
+                    return 60 * 1000;
+                }
+                if (this.throttleOwner) {
+                    return this.throttleOwner.duration;
+                }
+                return clear();
+            },
             required: true,
         }),
         messageViewOwnerAsHighlight: one('MessageView', {

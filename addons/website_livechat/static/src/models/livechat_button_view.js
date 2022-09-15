@@ -1,11 +1,22 @@
 /** @odoo-module **/
 
-import { patchRecordMethods } from '@mail/model/model_core';
+import { patchFields, patchRecordMethods } from '@mail/model/model_core';
 import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@im_livechat/models/livechat_button_view';
 
 import { set_cookie, unaccent } from 'web.utils';
+
+patchFields('LivechatButtonView', {
+    isOpenChatDebounced: {
+        compute() {
+            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
+                return false;
+            }
+            return this._super();
+        },
+    },
+});
 
 patchRecordMethods('LivechatButtonView', {
     /**
@@ -21,15 +32,6 @@ patchRecordMethods('LivechatButtonView', {
             this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
         }
         return this._super(ev);
-    },
-    /**
-     * @override
-     */
-    _computeIsOpenChatDebounced() {
-        if (this.messaging.publicLivechatGlobal.isTestChatbot) {
-            return false;
-        }
-        return this._super();
     },
     /**
      * Overridden to avoid calling the "get_session" endpoint as it requires a im_livechat.channel

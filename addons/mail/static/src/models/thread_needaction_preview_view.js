@@ -35,71 +35,29 @@ registerModel({
                 ['res_id', '=', this.thread.id],
             ]);
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeInlineLastNeedactionMessageAsOriginThreadBody() {
-            if (!this.thread.lastNeedactionMessageAsOriginThread) {
-                return clear();
-            }
-            return htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsEmpty() {
-            return !this.inlineLastNeedactionMessageAsOriginThreadBody && !this.lastTrackingValue;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLastTrackingValue() {
-            if (this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
-                return this.thread.lastMessage.lastTrackingValue;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessageAuthorPrefixView() {
-            if (
-                this.thread.lastNeedactionMessageAsOriginThread &&
-                this.thread.lastNeedactionMessageAsOriginThread.author
-            ) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            if (
-                this.thread.channel &&
-                this.thread.channel.correspondent &&
-                this.thread.channel.correspondent.isImStatusSet
-            ) {
-                return {};
-            }
-            return clear();
-        },
     },
     fields: {
         inlineLastNeedactionMessageAsOriginThreadBody: attr({
-            compute: '_computeInlineLastNeedactionMessageAsOriginThreadBody',
+            compute() {
+                if (!this.thread.lastNeedactionMessageAsOriginThread) {
+                    return clear();
+                }
+                return htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
+            },
             default: "",
         }),
         isEmpty: attr({
-            compute: '_computeIsEmpty',
+            compute() {
+                return !this.inlineLastNeedactionMessageAsOriginThreadBody && !this.lastTrackingValue;
+            },
         }),
         lastTrackingValue: one('TrackingValue', {
-            compute: '_computeLastTrackingValue',
+            compute() {
+                if (this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
+                    return this.thread.lastMessage.lastTrackingValue;
+                }
+                return clear();
+            },
         }),
         /**
          * Reference of the "mark as read" button. Useful to disable the
@@ -107,7 +65,15 @@ registerModel({
          */
         markAsReadRef: attr(),
         messageAuthorPrefixView: one('MessageAuthorPrefixView', {
-            compute: '_computeMessageAuthorPrefixView',
+            compute() {
+                if (
+                    this.thread.lastNeedactionMessageAsOriginThread &&
+                    this.thread.lastNeedactionMessageAsOriginThread.author
+                ) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'threadNeedactionPreviewViewOwner',
         }),
         notificationListViewOwner: one('NotificationListView', {
@@ -115,7 +81,16 @@ registerModel({
             inverse: 'threadNeedactionPreviewViews',
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
+            compute() {
+                if (
+                    this.thread.channel &&
+                    this.thread.channel.correspondent &&
+                    this.thread.channel.correspondent.isImStatusSet
+                ) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'threadNeedactionPreviewViewOwner',
         }),
         thread: one('Thread', {

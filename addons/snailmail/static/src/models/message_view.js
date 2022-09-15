@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { addFields, patchRecordMethods } from '@mail/model/model_core';
+import { addFields, patchFields, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
@@ -13,6 +13,25 @@ addFields('MessageView', {
     snailmailNotificationPopoverView: one('PopoverView', {
         inverse: 'messageViewOwnerAsSnailmailNotificationContent',
     }),
+});
+
+patchFields('MessageView', {
+    failureNotificationIconClassName: {
+        compute() {
+            if (this.message && this.message.message_type === 'snailmail') {
+                return 'fa fa-paper-plane';
+            }
+            return this._super();
+        },
+    },
+    notificationIconClassName: {
+        compute() {
+            if (this.message && this.message.message_type === 'snailmail') {
+                return 'fa fa-paper-plane';
+            }
+            return this._super();
+        },
+    },
 });
 
 patchRecordMethods('MessageView', {
@@ -59,24 +78,6 @@ patchRecordMethods('MessageView', {
         if (this.message && this.message.message_type === 'snailmail') {
             this.update({ snailmailNotificationPopoverView: this.snailmailNotificationPopoverView ? clear() : {} });
             return;
-        }
-        return this._super();
-    },
-    /**
-     * @override
-     */
-    _computeFailureNotificationIconClassName() {
-        if (this.message && this.message.message_type === 'snailmail') {
-            return 'fa fa-paper-plane';
-        }
-        return this._super();
-    },
-    /**
-     * @override
-     */
-    _computeNotificationIconClassName() {
-        if (this.message && this.message.message_type === 'snailmail') {
-            return 'fa fa-paper-plane';
         }
         return this._super();
     },

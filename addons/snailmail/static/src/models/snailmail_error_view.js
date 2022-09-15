@@ -26,33 +26,6 @@ registerModel({
             this.message.resendLetter();
             this.dialogOwner.delete();
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasCreditsError() {
-            return Boolean(
-                this.notification &&
-                (
-                    this.notification.failure_type === 'sn_credit' ||
-                    this.notification.failure_type === 'sn_trial'
-                )
-            );
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessage() {
-            return this.dialogOwner.messageViewOwnerAsSnailmailError.message;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeNotification() {
-            return this.message.notifications[0];
-        },
     },
     fields: {
         component: attr(),
@@ -61,17 +34,29 @@ registerModel({
             inverse: 'snailmailErrorView',
         }),
         hasCreditsError: attr({
-            compute: '_computeHasCreditsError',
+            compute() {
+                return Boolean(
+                    this.notification &&
+                    (
+                        this.notification.failure_type === 'sn_credit' ||
+                        this.notification.failure_type === 'sn_trial'
+                    )
+                );
+            },
         }),
         message: one('Message', {
-            compute: '_computeMessage',
+            compute() {
+                return this.dialogOwner.messageViewOwnerAsSnailmailError.message;
+            },
             required: true,
         }),
         /**
          * Messages from snailmail are considered to have at most one notification.
          */
         notification: one('Notification', {
-            compute: '_computeNotification',
+            compute() {
+                return this.message.notifications[0];
+            },
             required: true,
         }),
     },

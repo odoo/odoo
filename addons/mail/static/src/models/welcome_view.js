@@ -69,36 +69,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
-         */
-        _computeGuestNameInputUniqueId() {
-            return `o_WelcomeView_guestNameInput_${getNextGuestNameInputId()}`;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasGuestNameChanged() {
-            return Boolean(this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsJoinButtonDisabled() {
-            return Boolean(this.messaging.currentGuest && this.pendingGuestName.trim() === '');
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallDemoView() {
-            return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
-                ? {}
-                : clear();
-        },
-        /**
-         * @private
          */
         _handleFocus() {
             if (this.isDoFocusGuestNameInput) {
@@ -150,7 +120,9 @@ registerModel({
          * Necessary to ensure the uniqueness.
          */
         guestNameInputUniqueId: attr({
-            compute: '_computeGuestNameInputUniqueId',
+            compute() {
+                return `o_WelcomeView_guestNameInput_${getNextGuestNameInputId()}`;
+            },
         }),
         /**
          * Determines whether the guest's name has been updated.
@@ -159,7 +131,9 @@ registerModel({
          * server side.
          */
         hasGuestNameChanged: attr({
-            compute: '_computeHasGuestNameChanged',
+            compute() {
+                return Boolean(this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
+            },
         }),
         /**
          * Determines whether the 'guestNameInput' should be focused the next
@@ -173,13 +147,19 @@ registerModel({
          * the current user is a guest.
          */
         isJoinButtonDisabled: attr({
-            compute: '_computeIsJoinButtonDisabled'
+            compute() {
+                return Boolean(this.messaging.currentGuest && this.pendingGuestName.trim() === '');
+            },
         }),
         /**
          * States the media preview embedded in this welcome view.
          */
         callDemoView: one('CallDemoView', {
-            compute: '_computeCallDemoView',
+            compute() {
+                return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
+                    ? {}
+                    : clear();
+            },
             inverse: 'welcomeView',
         }),
         /**

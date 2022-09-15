@@ -364,189 +364,6 @@ registerModel({
             }
         },
         /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallSettingsMenu() {
-            if (this.isCallSettingsMenuOpen) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChannelMemberListView() {
-            if (this.thread && this.thread.hasMemberListFeature && this.isMemberListOpened) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-          * @private
-          * @returns {string}
-          */
-        _computeComponentStyle() {
-            const textDirection = this.messaging.locale.textDirection;
-            const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
-            const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
-            return `${offsetFrom}: ${this.visibleOffset}px; ${oppositeFrom}: auto`;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasCallButtons() {
-            if (!this.thread || !this.thread.channel) {
-                return clear();
-            }
-            return this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel.channel_type);
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasCloseAsBackButton() {
-            if (this.isVisible && this.messaging.device.isSmall) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasInviteFeature() {
-            return Boolean(
-                this.thread && this.thread.hasInviteFeature &&
-                this.messaging && this.messaging.device && this.messaging.device.isSmall
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasNewMessageForm() {
-            return this.isVisible && !this.isFolded && !this.thread;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasThreadView() {
-            return this.isVisible && !this.isFolded && !!this.thread && !this.isMemberListOpened && !this.channelInvitationForm && !this.isCallSettingsMenuOpen;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsExpandable() {
-            if (this.isVisible && !this.messaging.device.isSmall && this.thread) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsFolded() {
-            const thread = this.thread;
-            if (thread) {
-                return thread.foldState === 'folded';
-            }
-            return this.isFolded;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsFullscreen() {
-            if (this.isVisible && this.messaging.device.isSmall) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsVisible() {
-            if (!this.manager) {
-                return false;
-            }
-            return this.manager.allOrderedVisible.includes(this);
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeName() {
-            if (this.thread) {
-                return this.thread.displayName;
-            }
-            return this.env._t("New message");
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeNewMessageAutocompleteInputView() {
-            if (this.hasNewMessageForm) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeNewMessageFormInputPlaceholder() {
-            return this.env._t("Search user...");
-        },
-        /**
-         * @private
-         * @returns {ThreadViewer}
-         */
-        _computeThreadViewer() {
-            return {
-                compact: true,
-                hasThreadView: this.hasThreadView,
-                thread: this.thread ? this.thread : clear(),
-            };
-        },
-        /**
-         * @private
-         * @returns {integer|undefined}
-         */
-        _computeVisibleIndex() {
-            if (!this.manager) {
-                return clear();
-            }
-            const visible = this.manager.visual.visible;
-            const index = visible.findIndex(visible => visible.chatWindow === this);
-            if (index === -1) {
-                return clear();
-            }
-            return index;
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeVisibleOffset() {
-            if (!this.manager) {
-                return 0;
-            }
-            const visible = this.manager.visual.visible;
-            const index = visible.findIndex(visible => visible.chatWindow === this);
-            if (index === -1) {
-                return 0;
-            }
-            return visible[index].offset;
-        },
-        /**
          * Cycles to the next possible visible and unfolded chat window starting
          * from the `currentChatWindow`, following the natural order based on the
          * current text direction, and with the possibility to `reverse` based on
@@ -594,7 +411,12 @@ registerModel({
          * Model for the component with the controls for RTC related settings.
          */
         callSettingsMenu: one('CallSettingsMenu', {
-            compute: '_computeCallSettingsMenu',
+            compute() {
+                if (this.isCallSettingsMenuOpen) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'chatWindowOwner',
         }),
         /**
@@ -605,7 +427,12 @@ registerModel({
             inverse: 'chatWindow',
         }),
         channelMemberListView: one('ChannelMemberListView', {
-            compute: '_computeChannelMemberListView',
+            compute() {
+                if (this.thread && this.thread.hasMemberListFeature && this.isMemberListOpened) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'chatWindowOwner',
         }),
         chatWindowHeaderView: one('ChatWindowHeaderView', {
@@ -613,36 +440,60 @@ registerModel({
             inverse: 'chatWindowOwner',
         }),
         componentStyle: attr({
-            compute: '_computeComponentStyle',
+            compute() {
+                const textDirection = this.messaging.locale.textDirection;
+                const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
+                const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
+                return `${offsetFrom}: ${this.visibleOffset}px; ${oppositeFrom}: auto`;
+            },
         }),
         /**
          * Determines whether the buttons to start a RTC call should be displayed.
          */
         hasCallButtons: attr({
-            compute: '_computeHasCallButtons',
+            compute() {
+                if (!this.thread || !this.thread.channel) {
+                    return clear();
+                }
+                return this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel.channel_type);
+            },
             default: false,
         }),
         hasCloseAsBackButton: attr({
-            compute: '_computeHasCloseAsBackButton',
+            compute() {
+                if (this.isVisible && this.messaging.device.isSmall) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
         }),
         /**
          * States whether this chat window has the invite feature.
          */
         hasInviteFeature: attr({
-            compute: '_computeHasInviteFeature',
+            compute() {
+                return Boolean(
+                    this.thread && this.thread.hasInviteFeature &&
+                    this.messaging && this.messaging.device && this.messaging.device.isSmall
+                );
+            },
         }),
         /**
          * Determines whether "new message form" should be displayed.
          */
         hasNewMessageForm: attr({
-            compute: '_computeHasNewMessageForm',
+            compute() {
+                return this.isVisible && !this.isFolded && !this.thread;
+            },
         }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
-            compute: '_computeHasThreadView',
+            compute() {
+                return this.isVisible && !this.isFolded && !!this.thread && !this.isMemberListOpened && !this.channelInvitationForm && !this.isCallSettingsMenuOpen;
+            },
         }),
         isCallSettingsMenuOpen: attr({
             default: false,
@@ -657,8 +508,13 @@ registerModel({
             default: false,
         }),
         isExpandable: attr({
+            compute() {
+                if (this.isVisible && !this.messaging.device.isSmall && this.thread) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
-            compute: '_computeIsExpandable',
         }),
         /**
          * States whether `this` is focused. Useful for visual clue.
@@ -673,8 +529,13 @@ registerModel({
             default: false,
         }),
         isFullscreen: attr({
+            compute() {
+                if (this.isVisible && this.messaging.device.isSmall) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
-            compute: '_computeIsFullscreen',
         }),
         /**
          * Determines whether the member list of this chat window is opened.
@@ -689,7 +550,12 @@ registerModel({
          * @see `makeVisible`
          */
         isVisible: attr({
-            compute: '_computeIsVisible',
+            compute() {
+                if (!this.manager) {
+                    return false;
+                }
+                return this.manager.allOrderedVisible.includes(this);
+            },
         }),
         manager: one('ChatWindowManager', {
             inverse: 'chatWindows',
@@ -700,10 +566,20 @@ registerModel({
             inverse: 'newMessageChatWindow',
         }),
         name: attr({
-            compute: '_computeName',
+            compute() {
+                if (this.thread) {
+                    return this.thread.displayName;
+                }
+                return this.env._t("New message");
+            },
         }),
         newMessageAutocompleteInputView: one('AutocompleteInputView', {
-            compute: '_computeNewMessageAutocompleteInputView',
+            compute() {
+                if (this.hasNewMessageForm) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'chatWindowOwnerAsNewMessage',
         }),
         /**
@@ -711,7 +587,9 @@ registerModel({
          * 'new_message' chat window.
          */
         newMessageFormInputPlaceholder: attr({
-            compute: '_computeNewMessageFormInputPlaceholder',
+            compute() {
+                return this.env._t("Search user...");
+            },
         }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
@@ -731,7 +609,13 @@ registerModel({
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
         threadViewer: one('ThreadViewer', {
-            compute: '_computeThreadViewer',
+            compute() {
+                return {
+                    compact: true,
+                    hasThreadView: this.hasThreadView,
+                    thread: this.thread ? this.thread : clear(),
+                };
+            },
             inverse: 'chatWindow',
             required: true,
         }),
@@ -742,10 +626,30 @@ registerModel({
          * Using RTL, the left-most chat window has index 0, and the number is incrementing from left to right.
          */
         visibleIndex: attr({
-            compute: '_computeVisibleIndex',
+            compute() {
+                if (!this.manager) {
+                    return clear();
+                }
+                const visible = this.manager.visual.visible;
+                const index = visible.findIndex(visible => visible.chatWindow === this);
+                if (index === -1) {
+                    return clear();
+                }
+                return index;
+            },
         }),
         visibleOffset: attr({
-            compute: '_computeVisibleOffset',
+            compute() {
+                if (!this.manager) {
+                    return 0;
+                }
+                const visible = this.manager.visual.visible;
+                const index = visible.findIndex(visible => visible.chatWindow === this);
+                if (index === -1) {
+                    return 0;
+                }
+                return visible[index].offset;
+            },
         }),
     },
 });
