@@ -62,7 +62,7 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         select_ = """
-            coalesce(min(l.id), -s.id) as id,
+            min(l.id) as id,
             l.product_id as product_id,
             t.uom_id as product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as product_uom_qty,
@@ -107,7 +107,7 @@ class SaleReport(models.Model):
     def _from_sale(self, from_clause=''):
         from_ = """
                 sale_order_line l
-                      right outer join sale_order s on (s.id=l.order_id)
+                      left join sale_order s on (s.id=l.order_id)
                       join res_partner partner on s.partner_id = partner.id
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
