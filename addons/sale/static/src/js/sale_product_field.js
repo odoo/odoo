@@ -27,7 +27,7 @@ export class SaleOrderLineProductField extends Many2OneField {
                 // Field was updated if line was open in edit mode
                 // field is not emptied
                 // new value is different than existing value.
-                this._onFieldUpdate(nextProps);
+                this._onFieldUpdate();
             }
         });
     }
@@ -44,7 +44,7 @@ export class SaleOrderLineProductField extends Many2OneField {
         return 'btn btn-secondary fa fa-pencil';
     }
 
-    _onFieldUpdate(nextProps) { }
+    _onFieldUpdate() { }
 
     onEditConfiguration() {
         if (this.isConfigurableLine) {
