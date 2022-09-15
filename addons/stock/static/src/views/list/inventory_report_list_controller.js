@@ -35,6 +35,21 @@ export class InventoryReportListController extends ListController {
         });
     }
 
+    getActionMenuItems() {
+        const actionMenus = super.getActionMenuItems();
+        if (this.props.resModel === "stock.quant" && (!this.props.context.inventory_mode || this.props.context.inventory_report_mode)) {
+            // hack so we don't show some of the default actions when it's inappropriate to
+            const {print, action, other} = actionMenus;
+            return Object.assign(
+                {},
+                print.filter(a => a.name !== 'Count Sheet'),
+                action.filter(a => a.name !== 'Set'),
+                { other: other },
+                );
+        }
+        return actionMenus;
+    }
+
     /**
      * Handler called when a record has been created or updated.
      * We need to detect when the user added to the list a quant which already exists
