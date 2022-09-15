@@ -78,7 +78,9 @@ class HolidaysType(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     responsible_id = fields.Many2one(
         'res.users', 'Responsible Time Off Officer',
-        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)],
+        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
+                             ('share', '=', False),
+                             ('company_ids', 'in', self.env.company.id)],
         help="Choose the Time Off Officer who will be notified to approve allocation or Time Off request")
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
@@ -142,7 +144,7 @@ class HolidaysType(models.Model):
             alloc.employee_id = %s AND
             alloc.active = True AND alloc.state = 'validate' AND
             (alloc.date_to >= %s OR alloc.date_to IS NULL) AND
-            alloc.date_from <= %s 
+            alloc.date_from <= %s
         '''
 
         self._cr.execute(query, (employee_id or None, date_to, date_from))
