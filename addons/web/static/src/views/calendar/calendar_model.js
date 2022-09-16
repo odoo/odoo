@@ -501,7 +501,6 @@ export class CalendarModel extends Model {
             end = start.plus({ hours: duration });
         }
         if (isAllDay && ["week", "month"].includes(scale)) {
-            // TODO: a test in year view ?
             end = end.plus({ days: 1 });
         }
 
