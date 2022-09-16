@@ -44,9 +44,6 @@ registerModel({
         onClickToggler(ev) {
             // avoid following dummy href
             ev.preventDefault();
-            if (!this.exists()) {
-                return;
-            }
             this.toggleOpen();
         },
         onHideMobileNewMessage() {
@@ -109,9 +106,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         _onClickCaptureGlobal(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (!this.component) {
                 return;
             }

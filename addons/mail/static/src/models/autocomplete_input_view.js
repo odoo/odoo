@@ -9,9 +9,6 @@ registerModel({
     identifyingMode: 'xor',
     recordMethods: {
         onBlur() {
-            if (!this.exists()) {
-                return;
-            }
             if (this.discussSidebarCategoryOwnerAsAddingItem) {
                 this.discussSidebarCategoryOwnerAsAddingItem.onHideAddingItem();
                 return;
@@ -29,9 +26,6 @@ registerModel({
          * @param {FocusEvent} ev
          */
         onFocusin(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (this.chatWindowOwnerAsNewMessage) {
                 this.chatWindowOwnerAsNewMessage.onFocusInNewMessageFormInput(ev);
                 return;
@@ -41,9 +35,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onKeydown(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (ev.key === 'Escape') {
                 this.onBlur();
             }
@@ -52,9 +43,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onSelect(ev, ui) {
-            if (!this.exists()) {
-                return;
-            }
             if (this.chatWindowOwnerAsNewMessage) {
                 this.chatWindowOwnerAsNewMessage.onAutocompleteSelect(ev, ui);
                 return;
@@ -77,9 +65,6 @@ registerModel({
          * @param {function} res
          */
         onSource(req, res) {
-            if (!this.exists()) {
-                return;
-            }
             if (this.chatWindowOwnerAsNewMessage) {
                 this.chatWindowOwnerAsNewMessage.onAutocompleteSource(req, res);
                 return;

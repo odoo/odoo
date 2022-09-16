@@ -17,7 +17,7 @@ registerModel({
             return this.component.root.el;
         },
         onClickRetryLoadMoreMessages() {
-            if (!this.exists() || !this.thread) {
+            if (!this.thread) {
                 return;
             }
             this.thread.cache.update({ hasLoadingFailed: false });
@@ -28,7 +28,7 @@ registerModel({
          */
         onClickLoadMore(ev) {
             ev.preventDefault();
-            if (!this.exists() || !this.thread) {
+            if (!this.thread) {
                 return;
             }
             this.thread.cache.loadMoreMessages();

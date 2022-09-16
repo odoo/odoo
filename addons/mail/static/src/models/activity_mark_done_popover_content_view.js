@@ -11,7 +11,7 @@ registerModel({
          * Handles blur on this feedback textarea.
          */
         onBlur() {
-            if (!this.exists() || !this.feedbackTextareaRef || !this.feedbackTextareaRef.el) {
+            if (!this.feedbackTextareaRef || !this.feedbackTextareaRef.el) {
                 return;
             }
             this._backupFeedback();

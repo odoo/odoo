@@ -11,9 +11,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (
                 isEventHandled(ev, 'ChatWindow.onClickCommand') ||
                 isEventHandled(ev, 'ChatWindow.onClickHideMemberList') ||

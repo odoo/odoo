@@ -13,24 +13,15 @@ registerModel({
             this._handleFocus();
         },
         onFocusinInput() {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isFocused: true });
         },
         onFocusoutInput() {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isFocused: false });
         },
         /**
          * @public
          */
         onInput() {
-            if (!this.exists()) {
-                return;
-            }
             this.update({
                 currentSearch: this.inputRef.el.value,
             });

@@ -384,7 +384,18 @@ export class ModelManager {
     _applyModelDefinition(model) {
         const definition = registry.get(model.name);
         Object.assign(model, Object.fromEntries(definition.get('modelMethods')));
-        Object.assign(model.prototype, Object.fromEntries(definition.get('recordMethods')));
+        const recordMethods = Object.fromEntries(definition.get('recordMethods'));
+        for (const recordMethodName in recordMethods) {
+            const ogRecordMethod = recordMethods[recordMethodName];
+            const self = this;
+            recordMethods[recordMethodName] = function (...args) {
+                if (!self.exists(model, this)) {
+                    return;
+                }
+                return ogRecordMethod.call(this, ...args);
+            };
+        }
+        Object.assign(model.prototype, recordMethods);
         for (const [getterName, getter] of definition.get('modelGetters')) {
             Object.defineProperty(model, getterName, { get: getter });
         }

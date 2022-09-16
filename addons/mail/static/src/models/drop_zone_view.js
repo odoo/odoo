@@ -14,9 +14,6 @@ registerModel({
          * @param {DragEvent} ev
          */
         onDragenter(ev) {
-            if (!this.exists()) {
-                return;
-            }
             ev.preventDefault();
             if (this.dragCount === 0) {
                 this.update({ isDraggingInside: true });
@@ -29,9 +26,6 @@ registerModel({
          * @param {DragEvent} ev
          */
         onDragleave(ev) {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ dragCount: decrement() });
             if (this.dragCount === 0) {
                 this.update({ isDraggingInside: false });
@@ -57,9 +51,6 @@ registerModel({
           * @param {DragEvent} ev
           */
         async onDrop(ev) {
-            if (!this.exists()) {
-                return;
-            }
             ev.preventDefault();
             this.update({ isDraggingInside: false });
             if (this._isDragSourceExternalFile(ev.dataTransfer)) {

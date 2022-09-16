@@ -11,9 +11,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            if (!this.exists()) {
-                return;
-            }
             const markAsRead = this.markAsReadRef.el;
             if (markAsRead && markAsRead.contains(ev.target)) {
                 // handled in `_onClickMarkAsRead`

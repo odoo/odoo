@@ -15,9 +15,6 @@ registerModel({
          */
         onClickDownload(ev) {
             markEventHandled(ev, 'AttachmentImage.onClickDownload');
-            if (!this.exists()) {
-                return;
-            }
             this.attachment.download();
         },
         /**
@@ -47,9 +44,6 @@ registerModel({
          */
         onClickUnlink(ev) {
             markEventHandled(ev, 'AttachmentImage.onClickUnlink');
-            if (!this.exists()) {
-                return;
-            }
             if (this.attachmentList.composerViewOwner) {
                 this.attachment.remove();
             } else {

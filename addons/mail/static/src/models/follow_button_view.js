@@ -11,9 +11,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickFollow(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (!this.chatterOwner || !this.chatterOwner.thread) {
                 return;
             }
@@ -23,9 +20,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickUnfollow(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (!this.chatterOwner || !this.chatterOwner.thread) {
                 return;
             }
@@ -36,18 +30,12 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseEnterUnfollow(ev) {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isUnfollowButtonHighlighted: true });
         },
         /**
          * @param {MouseEvent} ev
          */
         onMouseleaveUnfollow(ev) {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isUnfollowButtonHighlighted: false });
         },
     },

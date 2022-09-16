@@ -117,9 +117,6 @@ registerModel({
          * @private
          */
         _onSelfieSegmentationResults(results) {
-            if (!this.exists()) {
-                return;
-            }
             drawAndBlurImageOnCanvas(
                 results.image,
                 this.userSetting.backgroundBlurAmount,

@@ -166,18 +166,12 @@ registerModel({
          */
         onClickClose(ev) {
             ev.stopPropagation();
-            if (!this.exists()) {
-                return;
-            }
             this.close();
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickExpand(ev) {
-            if (!this.exists()) {
-                return;
-            }
             ev.stopPropagation();
             this.expand();
         },
@@ -186,7 +180,7 @@ registerModel({
          * window.
          */
         onClickHeader(ev) {
-            if (!this.exists() || this.messaging.device.isSmall) {
+            if (this.messaging.device.isSmall) {
                 return;
             }
             if (this.isFolded) {
@@ -275,27 +269,18 @@ registerModel({
          * @param {Event} ev
          */
         onFocusInNewMessageFormInput(ev) {
-            if (this.exists()) {
-                this.update({ isFocused: true });
-            }
+            this.update({ isFocused: true });
         },
         /**
          * Focus out the chat window.
          */
         onFocusout() {
-            if (!this.exists()) {
-                // ignore focus out due to record being deleted
-                return;
-            }
             this.update({ isFocused: false });
         },
         /**
          * @param {KeyboardEvent} ev
          */
         onKeydown(ev) {
-            if (!this.exists()) {
-                return;
-            }
             switch (ev.key) {
                 case 'Tab':
                     ev.preventDefault();

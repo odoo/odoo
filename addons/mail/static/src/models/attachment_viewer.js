@@ -134,9 +134,6 @@ registerModel({
          * @param {Event} ev
          */
         onLoadImage(ev) {
-            if (!this.exists()) {
-                return;
-            }
             ev.stopPropagation();
             this.update({ isImageLoading: false });
         },
