@@ -1,16 +1,19 @@
 /** @odoo-module **/
 
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
-import { click } from "../../helpers/utils";
-import { FAKE_DATE, makeEnv, makeFakeModel, mountComponent } from "./calendar_helpers";
+import { click, getFixture } from "../../helpers/utils";
+import { makeEnv, makeFakeModel, mountComponent } from "./calendar_helpers";
+
+let target;
+let fakeDate;
 
 function makeFakeRecord(data = {}) {
     return {
         id: 5,
         title: "Meeting",
         isAllDay: false,
-        start: FAKE_DATE,
-        end: FAKE_DATE.plus({ hours: 3, minutes: 15 }),
+        start: fakeDate, //luxon.DateTime.local
+        end: fakeDate.plus({ hours: 3, minutes: 15 }),
         colorIndex: 0,
         isTimeHidden: false,
         rawRecord: {
@@ -30,210 +33,207 @@ async function start(params = {}) {
         createRecord() {},
         deleteRecord() {},
         editRecord() {},
+        close() {},
         ...props,
     });
 }
 
 /** @todo Add tests for fields **/
 
-QUnit.module("CalendarCommonPopover");
-
-QUnit.skipWOWL("mount a CalendarCommonPopover", async (assert) => {
-    const popover = await start({});
-    assert.containsOnce(popover.el, ".popover-header");
-    assert.strictEqual(popover.el.querySelector(".popover-header").textContent, "Meeting");
-    assert.containsN(popover.el, ".list-group", 2);
-    assert.containsOnce(popover.el, ".list-group.o_cw_popover_fields_secondary");
-    assert.containsOnce(popover.el, ".card-footer .o_cw_popover_edit");
-    assert.containsOnce(popover.el, ".card-footer .o_cw_popover_delete");
-});
-
-QUnit.skipWOWL("date duration: is all day and is same day", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({ isAllDay: true, isTimeHidden: true }),
-        },
+QUnit.module("CalendarCommonPopover", ({ beforeEach }) => {
+    beforeEach(() => {
+        target = getFixture();
+        fakeDate = luxon.DateTime.local(2021, 7, 16, 8, 0, 0, 0);
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "Friday, July 16, 2021 (All day)");
-});
 
-QUnit.skipWOWL("date duration: is all day but 1 day diff", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({
-                end: FAKE_DATE.plus({ days: 1 }),
-                isAllDay: true,
-                isTimeHidden: true,
-            }),
-        },
+    QUnit.test("mount a CalendarCommonPopover", async (assert) => {
+        await start({});
+        assert.containsOnce(target, ".popover-header");
+        assert.strictEqual(target.querySelector(".popover-header").textContent, "Meeting");
+        assert.containsN(target, ".list-group", 2);
+        assert.containsOnce(target, ".list-group.o_cw_popover_fields_secondary");
+        assert.containsOnce(target, ".card-footer .o_cw_popover_edit");
+        assert.containsOnce(target, ".card-footer .o_cw_popover_delete");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "July 16-17, 2021 (1 day)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("date duration: is all day but 2 days diff", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({
-                end: FAKE_DATE.plus({ days: 2 }),
-                isAllDay: true,
-                isTimeHidden: true,
-            }),
-        },
+    QUnit.test("date duration: is all day and is same day", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({ isAllDay: true, isTimeHidden: true }),
+            },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "Friday, July 16, 2021 (All day)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "July 16-18, 2021 (2 days)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("time duration: 1 hour diff", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({ end: FAKE_DATE.plus({ hours: 1 }) }),
-        },
-        model: { isDateHidden: true },
+    QUnit.test("date duration: is all day but 1 day diff", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({
+                    end: fakeDate.plus({ days: 1 }),
+                    isAllDay: true,
+                    isTimeHidden: true,
+                }),
+            },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "July 16-17, 2021 (1 day)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "10:00 - 11:00 (1 hour)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("time duration: 2 hours diff", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({ end: FAKE_DATE.plus({ hours: 2 }) }),
-        },
-        model: { isDateHidden: true },
+    QUnit.test("date duration: is all day but 2 days diff", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({
+                    end: fakeDate.plus({ days: 2 }),
+                    isAllDay: true,
+                    isTimeHidden: true,
+                }),
+            },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "July 16-18, 2021 (2 days)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "10:00 - 12:00 (2 hours)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("time duration: 1 minute diff", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({ end: FAKE_DATE.plus({ minutes: 1 }) }),
-        },
-        model: { isDateHidden: true },
+    QUnit.test("time duration: 1 hour diff", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({ end: fakeDate.plus({ hours: 1 }) }),
+            },
+            model: { isDateHidden: true },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "08:00 - 09:00 (1 hour)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "10:00 - 10:01 (1 minute)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("time duration: 2 minutes diff", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({ end: FAKE_DATE.plus({ minutes: 2 }) }),
-        },
-        model: { isDateHidden: true },
+    QUnit.test("time duration: 2 hours diff", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({ end: fakeDate.plus({ hours: 2 }) }),
+            },
+            model: { isDateHidden: true },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "08:00 - 10:00 (2 hours)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "10:00 - 10:02 (2 minutes)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("time duration: 3 hours and 15 minutes diff", async (assert) => {
-    const popover = await start({
-        model: { isDateHidden: true },
+    QUnit.test("time duration: 1 minute diff", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({ end: fakeDate.plus({ minutes: 1 }) }),
+            },
+            model: { isDateHidden: true },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "08:00 - 08:01 (1 minute)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "10:00 - 13:15 (3 hours, 15 minutes)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("isDateHidden is true", async (assert) => {
-    const popover = await start({
-        model: { isDateHidden: true },
+    QUnit.test("time duration: 2 minutes diff", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({ end: fakeDate.plus({ minutes: 2 }) }),
+            },
+            model: { isDateHidden: true },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "08:00 - 08:02 (2 minutes)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "10:00 - 13:15 (3 hours, 15 minutes)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("isDateHidden is false", async (assert) => {
-    const popover = await start({
-        model: { isDateHidden: false },
+    QUnit.test("time duration: 3 hours and 15 minutes diff", async (assert) => {
+        await start({
+            model: { isDateHidden: true },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "08:00 - 11:15 (3 hours, 15 minutes)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "Friday, July 16, 2021 10:00 - 13:15 (3 hours, 15 minutes)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("isTimeHidden is true", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({ isTimeHidden: true }),
-        },
+    QUnit.test("isDateHidden is true", async (assert) => {
+        await start({
+            model: { isDateHidden: true },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "08:00 - 11:15 (3 hours, 15 minutes)");
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "Friday, July 16, 2021");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("isTimeHidden is false", async (assert) => {
-    const popover = await start({
-        props: {
-            record: makeFakeRecord({ isTimeHidden: false }),
-        },
+    QUnit.test("isDateHidden is false", async (assert) => {
+        await start({
+            model: { isDateHidden: false },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(
+            dateTimeLabels,
+            "Friday, July 16, 2021 08:00 - 11:15 (3 hours, 15 minutes)"
+        );
     });
-    const dateTimeGroup = popover.el.querySelector(`.list-group`);
-    const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-    assert.strictEqual(dateTimeLabels, "Friday, July 16, 2021 10:00 - 13:15 (3 hours, 15 minutes)");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("canDelete is true", async (assert) => {
-    const popover = await start({
-        model: { canDelete: true },
+    QUnit.test("isTimeHidden is true", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({ isTimeHidden: true }),
+            },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(dateTimeLabels, "Friday, July 16, 2021");
     });
-    assert.containsOnce(popover.el, ".o_cw_popover_delete");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("canDelete is false", async (assert) => {
-    const popover = await start({
-        model: { canDelete: false },
+    QUnit.test("isTimeHidden is false", async (assert) => {
+        await start({
+            props: {
+                record: makeFakeRecord({ isTimeHidden: false }),
+            },
+        });
+        const dateTimeGroup = target.querySelector(`.list-group`);
+        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
+        assert.strictEqual(
+            dateTimeLabels,
+            "Friday, July 16, 2021 08:00 - 11:15 (3 hours, 15 minutes)"
+        );
     });
-    assert.containsNone(popover.el, ".o_cw_popover_delete");
-    popover.destroy();
-});
 
-QUnit.skipWOWL("click on delete button", async (assert) => {
-    assert.expect(2);
-    const popover = await start({
-        model: { canDelete: true },
-        props: {
-            deleteRecord: () => assert.step("delete"),
-        },
+    QUnit.test("canDelete is true", async (assert) => {
+        await start({
+            model: { canDelete: true },
+        });
+        assert.containsOnce(target, ".o_cw_popover_delete");
     });
-    await click(popover.el, ".o_cw_popover_delete");
-    assert.verifySteps(["delete"]);
-    popover.destroy();
-});
 
-QUnit.skipWOWL("click on edit button", async (assert) => {
-    assert.expect(2);
-    const popover = await start({
-        props: {
-            editRecord: () => assert.step("edit"),
-        },
+    QUnit.test("canDelete is false", async (assert) => {
+        await start({
+            model: { canDelete: false },
+        });
+        assert.containsNone(target, ".o_cw_popover_delete");
     });
-    await click(popover.el, ".o_cw_popover_edit");
-    assert.verifySteps(["edit"]);
-    popover.destroy();
+
+    QUnit.test("click on delete button", async (assert) => {
+        assert.expect(2);
+        await start({
+            model: { canDelete: true },
+            props: {
+                deleteRecord: () => assert.step("delete"),
+            },
+        });
+        await click(target, ".o_cw_popover_delete");
+        assert.verifySteps(["delete"]);
+    });
+
+    QUnit.test("click on edit button", async (assert) => {
+        assert.expect(2);
+        await start({
+            props: {
+                editRecord: () => assert.step("edit"),
+            },
+        });
+        await click(target, ".o_cw_popover_edit");
+        assert.verifySteps(["edit"]);
+    });
 });

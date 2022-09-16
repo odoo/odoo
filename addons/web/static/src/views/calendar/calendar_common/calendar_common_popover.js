@@ -64,7 +64,7 @@ export class CalendarCommonPopover extends Component {
     }
     getFormattedDate(start, end, isAllDay) {
         if (isAllDay) {
-            end = end.minus({ days: 1 });
+            //end = end.minus({ days: 1 });
         }
         const isSameDay = start.hasSame(end, "day");
         if (!isSameDay && start.hasSame(end, "month")) {

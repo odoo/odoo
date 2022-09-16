@@ -1,25 +1,22 @@
 /** @odoo-module **/
 
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { uiService } from "@web/core/ui/ui_service";
-import { ormService } from "@web/core/orm_service";
-import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
-import { registerCleanup } from "../../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
-import { makeFakeLocalizationService } from "../../helpers/mock_services";
-import { click, getFixture, nextTick, triggerEvent } from "../../helpers/utils";
+import { click, getFixture, mount, nextTick, triggerEvent } from "../../helpers/utils";
+import { setupViewRegistries } from "@web/../tests/views/helpers";
 
 export function makeEnv(services = {}) {
     clearRegistryWithCleanup(registry.category("main_components"));
+    setupViewRegistries();
     services = Object.assign(
         {
-            localization: makeFakeLocalizationService(),
-            orm: ormService,
-            popover: popoverService,
+            //  localization: makeFakeLocalizationService(),
+            //  orm: ormService,
+            // popover: popoverService,
             ui: uiService,
-            hotkey: hotkeyService,
+            //      hotkey: hotkeyService,
         },
         services
     );
@@ -53,15 +50,17 @@ Wrapper.template = owl.xml`
 
 export async function mountComponent(C, env, props) {
     const target = getFixture();
-    const component = await owl.mount(Wrapper, {
-        target,
-        env,
-        props: {
-            Component: C,
-            props,
-        },
-    });
-    registerCleanup(() => component.destroy());
+    const component = await mount(C, target, { env, props });
+    //debugger;
+    // const component = await owl.mount(Wrapper, {
+    //     target,
+    //     env,
+    //     props: {
+    //         Component: C,
+    //         props,
+    //     },
+    // });
+    // registerCleanup(() => component.destroy());
     return component;
 }
 
@@ -73,37 +72,37 @@ export const FAKE_RECORDS = {
     1: {
         id: 1,
         title: "1 day, all day in July",
-        start: FAKE_DATE,
+        start: FAKE_DATE.toSQL(),
         isAllDay: true,
-        end: FAKE_DATE,
+        end: FAKE_DATE.toSQL(),
     },
     2: {
         id: 2,
         title: "3 days, all day in July",
-        start: FAKE_DATE.plus({ days: 2 }),
+        start: FAKE_DATE.plus({ days: 2 }).toSQL(),
         isAllDay: true,
-        end: FAKE_DATE.plus({ days: 4 }),
+        end: FAKE_DATE.plus({ days: 4 }).toSQL(),
     },
     3: {
         id: 3,
         title: "1 day, all day in June",
-        start: FAKE_DATE.plus({ months: -1 }),
+        start: FAKE_DATE.plus({ months: -1 }).toSQL(),
         isAllDay: true,
-        end: FAKE_DATE.plus({ months: -1 }),
+        end: FAKE_DATE.plus({ months: -1 }).toSQL(),
     },
     4: {
         id: 4,
         title: "3 days, all day in June",
-        start: FAKE_DATE.plus({ months: -1, days: 2 }),
+        start: FAKE_DATE.plus({ months: -1, days: 2 }).toSQL(),
         isAllDay: true,
-        end: FAKE_DATE.plus({ months: -1, days: 4 }),
+        end: FAKE_DATE.plus({ months: -1, days: 4 }).toSQL(),
     },
     5: {
         id: 5,
         title: "Over June and July",
-        start: FAKE_DATE.startOf("month").plus({ days: -2 }),
+        start: FAKE_DATE.startOf("month").plus({ days: -2 }).toSQL(),
         isAllDay: true,
-        end: FAKE_DATE.startOf("month").plus({ days: 2 }),
+        end: FAKE_DATE.startOf("month").plus({ days: 2 }).toSQL(),
     },
 };
 
@@ -233,7 +232,7 @@ export const FAKE_FIELDS = {
 };
 
 export const FAKE_POPOVER_FIELDS = {
-    name: { attrs: {} },
+    name: { rawAttrs: {}, options: {} },
 };
 
 export const FAKE_MODEL_STATE = {
