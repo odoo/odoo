@@ -9,3 +9,4 @@ from . import product_template
 from . import res_config_settings
 from . import account_journal_dashboard
 from . import res_company
+from . import analytic

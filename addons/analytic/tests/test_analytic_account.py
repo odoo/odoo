@@ -82,12 +82,12 @@ class TestAnalyticAccount(TransactionCase):
 
     def test_get_plans_with_option(self):
         """ Test the plans returned with applicability rules and options """
-        kwargs = {'business_domain': 'sale'}
+        kwargs = {'business_domain': 'general'}
         plans_json = self.env['account.analytic.plan'].get_relevant_plans(**kwargs)
         self.assertEqual(1, len(plans_json), "Only the Default plan should be available")
 
         applicability = self.env['account.analytic.applicability'].create({
-            'business_domain': 'sale',
+            'business_domain': 'general',
             'analytic_plan_id': self.analytic_plan_1.id,
             'applicability': 'mandatory'
         })
