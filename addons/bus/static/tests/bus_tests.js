@@ -287,16 +287,20 @@ QUnit.module('Bus', {
         patchWithCleanup(window, {
             setTimeout: fn => fn(),
         });
+        const firstSubscribeDeferred = makeDeferred();
         const worker = patchWebsocketWorkerWithCleanup({
             _sendToServer({ event_name, data }) {
                 assert.step(`${event_name} - [${data.channels.toString()}]`);
+                if (event_name === 'subscribe') {
+                    firstSubscribeDeferred.resolve();
+                }
             },
         });
 
         await makeTestEnv();
         // wait for the websocket to connect and the first subscription
         // to occur.
-        await nextTick();
+        await firstSubscribeDeferred;
         worker.websocket.close(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
         // wait for the websocket to re-connect.
         await nextTick();
