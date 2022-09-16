@@ -2,9 +2,9 @@
 
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
 import { _t } from "@web/core/l10n/translation";
-import { GraphModel } from "@web/views/graph/graph_model";
+import { GraphModel as ChartModel} from "@web/views/graph/graph_model";
 
-export default class GraphDataSource extends OdooViewsDataSource {
+export default class ChartDataSource extends OdooViewsDataSource {
     /**
      * @override
      * @param {Object} services Services (see DataSource)
@@ -22,7 +22,7 @@ export default class GraphDataSource extends OdooViewsDataSource {
             fieldAttrs: {},
             ...this._metaData,
         };
-        this._model = new GraphModel(
+        this._model = new ChartModel(
             {
                 _t,
             },

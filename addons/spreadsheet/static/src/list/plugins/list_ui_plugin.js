@@ -2,6 +2,7 @@
 
 import spreadsheet from "../../o_spreadsheet/o_spreadsheet_extended";
 import { getFirstListFunction } from "../list_helpers";
+import { Domain } from "@web/core/domain";
 
 const { astToFormula } = spreadsheet;
 
@@ -17,6 +18,16 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
         this.env = config.evalContext.env;
     }
 
+    beforeHandle(cmd) {
+        switch (cmd.type) {
+            case "START":
+                // make sure the domains are correctly set before
+                // any evaluation
+                this._addDomains();
+                break;
+        }
+    }
+
     /**
      * Handle a spreadsheet command
      * @param {Object} cmd Command
@@ -26,15 +37,17 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
             case "SELECT_ODOO_LIST":
                 this._selectList(cmd.listId);
                 break;
-            case "ADD_LIST_DOMAIN":
-                this._addDomain(cmd.id, cmd.domain);
-                break;
             case "REFRESH_ODOO_LIST":
                 this._refreshOdooList(cmd.listId);
                 break;
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooLists();
                 break;
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+            case "SET_GLOBAL_FILTER_VALUE":
+            case "CLEAR_GLOBAL_FILTER_VALUE":
+                this._addDomains();
         }
     }
 
@@ -47,11 +60,30 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
      *
      * @private
      *
-     * @param {string} listId pivot id
-     * @param {Array<Array<any>>} domain
+     * @param {string} listId list id
+     *
      */
-    _addDomain(listId, domain) {
+    _addDomain(listId) {
+        const domainList = [];
+        for (const [filterId, fieldMatch] of Object.entries(
+            this.getters.getListFieldMatch(listId)
+        )) {
+            domainList.push(this.getters.getGlobalFilterDomain(filterId, fieldMatch));
+        }
+        const domain = Domain.combine(domainList, "AND").toString();
         this.getters.getListDataSource(listId).addDomain(domain);
+    }
+
+    /**
+     * Add an additional domain to all lists
+     *
+     * @private
+     *
+     */
+    _addDomains() {
+        for (const listId of this.getters.getListIds()) {
+            this._addDomain(listId);
+        }
     }
 
     /**

@@ -13,21 +13,21 @@
  * @property {string} id
  * @property {string} label
  * @property {string} type "text" | "date" | "relation"
- * @property {RangeType} rangeType
- * @property {Record<string, FilterMatchingField>} pivotFields
- * @property {Record<string, FilterMatchingField>} listFields
- * @property {Record<string, FilterMatchingField>} graphFields
+ * @property {RangeType} [rangeType]
+ * @property {boolean} [defaultsToCurrentPeriod]
  * @property {string|Array<string>|Object} defaultValue Default Value
  * @property {number} [modelID] ID of the related model
  * @property {string} [modelName] Name of the related model
  */
+
+export const globalFiltersFieldMatchers = {};
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
 
-export default class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
+export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     constructor() {
         super(...arguments);
         /** @type {Object.<string, GlobalFilter>} */
@@ -78,15 +78,6 @@ export default class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
             case "REMOVE_GLOBAL_FILTER":
                 this._removeGlobalFilter(cmd.id);
                 break;
-            case "REMOVE_PIVOT":
-                this._removeMatchingField("pivot", cmd.pivotId);
-                break;
-            case "REMOVE_ODOO_LIST":
-                this._removeMatchingField("list", cmd.listId);
-                break;
-            case "DELETE_FIGURE":
-                this._removeMatchingField("graph", cmd.id);
-                break;
         }
     }
 
@@ -102,39 +93,6 @@ export default class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
      */
     getGlobalFilter(id) {
         return this.globalFilters[id];
-    }
-
-    /**
-     * Get the field name on which the global filter is applied for a pivot
-     *
-     * @param {string} filterId Id of the filter
-     * @param {string} pivotId Id of the pivot
-     * @returns {FilterMatchingField|undefined}
-     */
-    getGlobalFilterFieldPivot(filterId, pivotId) {
-        return this.getGlobalFilter(filterId).pivotFields[pivotId];
-    }
-
-    /**
-     * Get the field name on which the global filter is applied for a list
-     *
-     * @param {string} filterId Id of the filter
-     * @param {string} listId Id of the list
-     * @returns {FilterMatchingField|undefined}
-     */
-    getGlobalFilterFieldList(filterId, listId) {
-        return this.getGlobalFilter(filterId).listFields[listId];
-    }
-
-    /**
-     * Get the field name on which the global filter is applied for a graph
-     *
-     * @param {string} filterId Id of the filter
-     * @param {string} graphId Id of the Graph
-     * @returns {FilterMatchingField|undefined}
-     */
-    getGlobalFilterFieldGraph(filterId, graphId) {
-        return this.getGlobalFilter(filterId).graphFields[graphId];
     }
 
     /**
@@ -207,22 +165,6 @@ export default class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
         const newLabel = this.getGlobalFilter(id).label;
         if (currentLabel !== newLabel) {
             this._updateFilterLabelInFormulas(currentLabel, newLabel);
-        }
-    }
-
-    /**
-     * @param {"pivot" | "list" | "graph"} dataSourceType
-     * @param {string} dataSourceId
-     */
-    _removeMatchingField(dataSourceType, dataSourceId) {
-        for (const filter of this.getGlobalFilters()) {
-            this.history.update(
-                "globalFilters",
-                filter.id,
-                `${dataSourceType}Fields`,
-                dataSourceId,
-                undefined
-            );
         }
     }
 
@@ -307,7 +249,4 @@ GlobalFiltersCorePlugin.getters = [
     "getGlobalFilters",
     "getGlobalFilterDefaultValue",
     "getGlobalFilterLabel",
-    "getGlobalFilterFieldPivot",
-    "getGlobalFilterFieldList",
-    "getGlobalFilterFieldGraph",
 ];
