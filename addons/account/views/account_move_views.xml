@@ -169,8 +169,8 @@
                     <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
                     <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
                     <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_readonly"/>
-                    <field name="partner_id" optional="show" attrs="{'readonly':[('account_type','in', ('liability_payable','asset_receivable'))]}"/>
-                    <field name="ref" optional="hide"/>
+                    <field name="partner_id" optional="show" attrs="{'readonly':[('move_type', '!=', 'entry')]}"/>
+                    <field name="ref" optional="hide" readonly="False"/>
                     <field name="product_id" readonly="1" optional="hide"/>
                     <field name="name" optional="show"/>
                     <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" readonly="1"/>
@@ -195,6 +195,7 @@
                            options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"
                            />
 
+                    <field name="move_type" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                     <field name="account_type" invisible="1"/>
                     <field name="statement_line_id" invisible="1"/>
