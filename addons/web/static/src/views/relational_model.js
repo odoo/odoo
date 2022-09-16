@@ -555,7 +555,7 @@ export class Record extends DataPoint {
     async urgentSave() {
         this._urgentSave = true;
         this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
-        this._save();
+        this._save({ stayInEdition: true, noReload: true });
     }
 
     async archive() {
@@ -1414,7 +1414,7 @@ class DynamicList extends DataPoint {
                 this.editedRecord = record;
             }
             if (params.onRecordWillSwitchMode) {
-                params.onRecordWillSwitchMode(record, mode);
+                await params.onRecordWillSwitchMode(record, mode);
             }
         };
     }
