@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
-import GraphDataSource from "../data_source/graph_data_source";
+import ChartDataSource from "../data_source/chart_data_source";
 
 const { AbstractChart, CommandResult } = spreadsheet;
 
@@ -123,11 +123,11 @@ export class OdooChart extends AbstractChart {
     }
 
     setDataSource(dataSource) {
-        if (dataSource instanceof GraphDataSource) {
+        if (dataSource instanceof ChartDataSource) {
             this.dataSource = dataSource;
         }
         else {
-            throw new Error("Only GraphDataSources can be added.");
+            throw new Error("Only ChartDataSources can be added.");
         }
     }
 }

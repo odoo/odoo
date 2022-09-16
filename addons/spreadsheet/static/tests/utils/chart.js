@@ -11,7 +11,7 @@ const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
  *
  * @param {Model} model
  */
-export function insertGraphInSpreadsheet(model, type = "odoo_bar") {
+export function insertChartInSpreadsheet(model, type = "odoo_bar") {
     const definition = getChartDefinition(type);
     model.dispatch("CREATE_CHART", {
         sheetId: model.getters.getActiveSheetId(),
@@ -31,12 +31,12 @@ export function insertGraphInSpreadsheet(model, type = "odoo_bar") {
  *
  * @returns { Promise<{ model: Model, env: Object }>}
  */
-export async function createSpreadsheetWithGraph(params = {}) {
+export async function createSpreadsheetWithChart(params = {}) {
     const model = await createModelWithDataSource({
         mockRPC: params.mockRPC,
     });
 
-    insertGraphInSpreadsheet(model, params.type);
+    insertChartInSpreadsheet(model, params.type);
 
     const env = model.config.evalContext.env;
     env.model = model;

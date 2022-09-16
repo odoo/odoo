@@ -3,6 +3,12 @@
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
  * @typedef {import("./global_filters_core_plugin").GlobalFilter} GlobalFilter
+ *
+ * @typedef {Object} FieldMatching
+ * @property {string} chain
+ * @property {string} type Type of the last field of the chain
+ * @property {number} [offset] offset to apply to the field (for date filters)
+ *
  */
 
 import { _t } from "@web/core/l10n/translation";
@@ -73,16 +79,6 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         return CommandResult.Success;
     }
 
-    beforeHandle(cmd) {
-        switch (cmd.type) {
-            case "START":
-                // make sure the domains are correctly set before
-                // any evaluation
-                this._updateAllDomains();
-                break;
-        }
-    }
-
     /**
      * Handle a spreadsheet command
      *
@@ -124,20 +120,30 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 this._clearGlobalFilterValue(cmd.id);
                 break;
         }
-        switch (cmd.type) {
-            case "ADD_GLOBAL_FILTER":
-            case "EDIT_GLOBAL_FILTER":
-            case "SET_GLOBAL_FILTER_VALUE":
-            case "REMOVE_GLOBAL_FILTER":
-            case "CLEAR_GLOBAL_FILTER_VALUE":
-                this._updateAllDomains();
-                break;
-        }
     }
 
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
+
+    /**
+     * @param {string} filterId
+     * @param {FieldMatching} fieldMatching
+     *
+     * @return {Domain}
+     */
+    getGlobalFilterDomain(filterId, fieldMatching) {
+        /** @type {GlobalFilter} */
+        const filter = this.getters.getGlobalFilter(filterId);
+        switch (filter.type) {
+            case "text":
+                return this._getTextDomain(filter, fieldMatching);
+            case "date":
+                return this._getDateDomain(filter, fieldMatching);
+            case "relation":
+                return this._getRelationDomain(filter, fieldMatching);
+        }
+    }
 
     /**
      * Get the current value of a global filter
@@ -301,32 +307,6 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         this.values[id] = { value, rangeType };
     }
 
-    /**
-     * Update the domain of all pivots and all lists
-     *
-     * @private
-     */
-    _updateAllDomains() {
-        for (const pivotId of this.getters.getPivotIds()) {
-            const domain = this._getComputedDomain((filterId) =>
-                this.getters.getGlobalFilterFieldPivot(filterId, pivotId)
-            );
-            this.dispatch("ADD_PIVOT_DOMAIN", { id: pivotId, domain });
-        }
-        for (const listId of this.getters.getListIds()) {
-            const domain = this._getComputedDomain((filterId) =>
-                this.getters.getGlobalFilterFieldList(filterId, listId)
-            );
-            this.dispatch("ADD_LIST_DOMAIN", { id: listId, domain });
-        }
-        for (const chartId of this.getters.getOdooChartIds()) {
-            const domain = this._getComputedDomain((filterId) =>
-                this.getters.getGlobalFilterFieldGraph(filterId, chartId)
-            );
-            this.dispatch("ADD_GRAPH_DOMAIN", { id: chartId, domain });
-        }
-    }
-
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
@@ -337,19 +317,19 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      * @private
      *
      * @param {GlobalFilter} filter
-     * @param {Field} fieldDesc
+     * @param {FieldMatching} fieldMatching
      *
      * @returns {Domain|undefined}
      */
-    _getDateDomain(filter, fieldDesc) {
+    _getDateDomain(filter, fieldMatching) {
         if (!this.isFilterActive(filter.id)) {
             return undefined;
         }
         let granularity;
         const value = this.getGlobalFilterValue(filter.id);
-        const field = fieldDesc.field;
-        const type = fieldDesc.type;
-        const offset = fieldDesc.offset || 0;
+        const field = fieldMatching.chain;
+        const type = fieldMatching.type;
+        const offset = fieldMatching.offset || 0;
         const now = DateTime.local();
 
         if (filter.rangeType === "relative") {
@@ -393,16 +373,16 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      * @private
      *
      * @param {GlobalFilter} filter
-     * @param {Field} fieldDesc
+     * @param {FieldMatching} fieldMatching
      *
      * @returns {Domain|undefined}
      */
-    _getTextDomain(filter, fieldDesc) {
+    _getTextDomain(filter, fieldMatching) {
         const value = this.getGlobalFilterValue(filter.id);
-        if (!value) {
+        if (!value || !fieldMatching.chain) {
             return undefined;
         }
-        const field = fieldDesc.field;
+        const field = fieldMatching.chain;
         return new Domain([[field, "ilike", value]]);
     }
 
@@ -412,54 +392,17 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
      * @private
      *
      * @param {GlobalFilter} filter
-     * @param {Field} fieldDesc
+     * @param {FieldMatching} fieldMatching
      *
      * @returns {Domain|undefined}
      */
-    _getRelationDomain(filter, fieldDesc) {
+    _getRelationDomain(filter, fieldMatching) {
         const values = this.getGlobalFilterValue(filter.id);
-        if (!values || values.length === 0) {
+        if (!values || values.length === 0 || !fieldMatching.chain) {
             return undefined;
         }
-        const field = fieldDesc.field;
+        const field = fieldMatching.chain;
         return new Domain([[field, "in", values]]);
-    }
-
-    /**
-     * Get the computed domain of a global filters applied to the field given
-     * by the callback
-     *
-     * @private
-     *
-     * @param {Function<Field>} getFieldDesc Callback to get the field description
-     * on which the global filters is applied
-     *
-     * @returns {string}
-     */
-    _getComputedDomain(getFieldDesc) {
-        let domain = new Domain([]);
-        for (const filter of this.getters.getGlobalFilters()) {
-            const fieldDesc = getFieldDesc(filter.id);
-            if (!fieldDesc || !fieldDesc.field) {
-                continue;
-            }
-            let domainToAdd = undefined;
-            switch (filter.type) {
-                case "date":
-                    domainToAdd = this._getDateDomain(filter, fieldDesc);
-                    break;
-                case "text":
-                    domainToAdd = this._getTextDomain(filter, fieldDesc);
-                    break;
-                case "relation":
-                    domainToAdd = this._getRelationDomain(filter, fieldDesc);
-                    break;
-            }
-            if (domainToAdd) {
-                domain = Domain.and([domain, domainToAdd]);
-            }
-        }
-        return domain.toString();
     }
 
     /**
@@ -508,6 +451,7 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
 
 GlobalFiltersUIPlugin.getters = [
     "getFilterDisplayValue",
+    "getGlobalFilterDomain",
     "getGlobalFilterValue",
     "getActiveFilterCount",
     "isFilterActive",

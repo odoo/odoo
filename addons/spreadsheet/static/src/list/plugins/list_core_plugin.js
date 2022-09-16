@@ -6,6 +6,8 @@ import { getMaxObjectId } from "../../helpers/helpers";
 import ListDataSource from "../list_data_source";
 import { TOP_LEVEL_STYLE } from "../../helpers/constants";
 import { _t } from "@web/core/l10n/translation";
+import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
+import { sprintf } from "@web/core/utils/strings";
 
 /**
  * @typedef {Object} ListDefinition
@@ -17,15 +19,35 @@ import { _t } from "@web/core/l10n/translation";
  * @property {string} name Name of the list
  * @property {Array<string>} orderBy
  *
+ * @typedef {Object} List
+ * @property {string} id
+ * @property {string} dataSourceId
+ * @property {ListDefinition} definition
+ * @property {Object} fieldMatching
+ *
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_ui_plugin").FieldMatching} FieldMatching
  */
-export default class ListCorePlugin extends spreadsheet.CorePlugin {
+
+const { CorePlugin } = spreadsheet;
+
+export default class ListCorePlugin extends CorePlugin {
     constructor(getters, history, range, dispatch, config, uuidGenerator) {
         super(getters, history, range, dispatch, config, uuidGenerator);
         this.dataSources = config.dataSources;
 
         this.nextId = 1;
-        /** @type {Object.<number, Pivot>} */
+        /** @type {Object.<string, List>} */
         this.lists = {};
+
+        globalFiltersFieldMatchers["list"] = {
+            geIds: () => this.getters.getListIds(),
+            getDisplayName: (listId) => this.getters.getListName(listId),
+            getTag: (listId) => sprintf(_t("List #%s"), listId),
+            getFieldMatching: (listId, filterId) => this.getListFieldMatching(listId, filterId),
+            waitForReady: () => this.getListsWaitForReady(),
+            getModel: (listId) => this.getListDefinition(listId).model,
+            getFields: (listId) => this.getListDataSource(listId).getFields(),
+        };
     }
 
     allowDispatch(cmd) {
@@ -114,6 +136,15 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
                 }
                 break;
             }
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+                if (cmd.list) {
+                    this._setListFieldMatching(cmd.filter.id, cmd.list);
+                }
+                break;
+            case "REMOVE_GLOBAL_FILTER":
+                this._onFilterDeletion(cmd.id);
+                break;
         }
     }
 
@@ -122,8 +153,8 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
     // -------------------------------------------------------------------------
 
     /**
-     * @param {number} id
-     * @returns {import("@spreadsheet/list/list_data_source").ListDataSource|undefined}
+     * @param {string} id
+     * @returns {import("@spreadsheet/list/list_data_source").default|undefined}
      */
     getListDataSource(id) {
         const dataSourceId = this.lists[id].dataSourceId;
@@ -131,7 +162,7 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
     }
 
     /**
-     * @param {number} id
+     * @param {string} id
      * @returns {string}
      */
     getListDisplayName(id) {
@@ -139,7 +170,7 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
     }
 
     /**
-     * @param {number} id
+     * @param {string} id
      * @returns {string}
      */
     getListName(id) {
@@ -147,8 +178,16 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
     }
 
     /**
-     * @param {number} id
-     * @returns {Promise<import("@spreadsheet/list/list_data_source").ListDataSource>}
+     * @param {string} id
+     * @returns {string}
+     */
+    getListFieldMatch(id) {
+        return this.lists[id].fieldMatching;
+    }
+
+    /**
+     * @param {string} id
+     * @returns {Promise<import("@spreadsheet/list/list_data_source").default>}
      */
     async getAsyncListDataSource(id) {
         const dataSourceId = this.lists[id].dataSourceId;
@@ -175,7 +214,7 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
     }
 
     /**
-     * @param {number} id
+     * @param {string} id
      * @returns {ListDefinition}
      */
     getListDefinition(id) {
@@ -194,7 +233,7 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
     /**
      * Check if an id is an id of an existing list
      *
-     * @param {number} id Id of the list
+     * @param {string} id Id of the list
      *
      * @returns {boolean}
      */
@@ -206,12 +245,53 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
     // Private
     // ---------------------------------------------------------------------
 
-    _addList(id, definition, dataSourceId, limit) {
+    /**
+     *
+     * @return {Promise[]}
+     */
+    getListsWaitForReady() {
+        return this.getListIds().map((ListId) => this.getListDataSource(ListId).loadMetadata());
+    }
+
+    /**
+     * Get the current FieldMatching on a list
+     *
+     * @param {string} listId
+     * @param {string} filterId
+     */
+    getListFieldMatching(listId, filterId) {
+        return this.lists[listId].fieldMatching[filterId];
+    }
+
+    /**
+     * Sets the current FieldMatching on a list
+     *
+     * @param {string} listId
+     * @param {string} filterId
+     * @param {FieldMatching} fieldMatching
+     */
+    _setListFieldMatching(filterId, listFieldMatches) {
+        const lists = { ...this.lists };
+        for (const [listId, fieldMatch] of Object.entries(listFieldMatches)) {
+            lists[listId].fieldMatching[filterId] = fieldMatch;
+        }
+        this.history.update("lists", lists);
+    }
+
+    _onFilterDeletion(filterId) {
+        const lists = { ...this.lists };
+        for (const listId in lists) {
+            this.history.update("lists", listId, "fieldMatching", filterId, undefined);
+        }
+    }
+
+    _addList(id, definition, dataSourceId, limit, fieldMatching = {}) {
         const lists = { ...this.lists };
         lists[id] = {
             id,
             definition,
             dataSourceId,
+            fieldMatching,
         };
 
         if (!this.dataSources.contains(dataSourceId)) {
@@ -338,7 +418,7 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
                     },
                     name: list.name,
                 };
-                this._addList(id, definition, this.uuidGenerator.uuidv4(), 0);
+                this._addList(id, definition, this.uuidGenerator.uuidv4(), 0, list.fieldMatching);
             }
         }
         this.nextId = data.listNextId || getMaxObjectId(this.lists) + 1;
@@ -352,6 +432,7 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
         data.lists = {};
         for (const id in this.lists) {
             data.lists[id] = JSON.parse(JSON.stringify(this.getListDefinition(id)));
+            data.lists[id].fieldMatching = this.lists[id].fieldMatching;
         }
         data.listNextId = this.nextId;
     }
@@ -366,4 +447,6 @@ ListCorePlugin.getters = [
     "getListName",
     "getNextListId",
     "isExistingList",
+    "getListFieldMatch",
+    "getListFieldMatching",
 ];

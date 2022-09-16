@@ -537,6 +537,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     },
                     name: "A pivot",
                     context: {},
+                    fieldMatching: {},
                 },
             },
         };

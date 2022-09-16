@@ -149,7 +149,7 @@ export class ServerData {
      * Returns the request result if cached or the associated promise
      * @param {string} resModel
      * @param {string} method
-     * @param  {unknown[]} args
+     * @param  {unknown[]} [args]
      * @returns {Promise<any>}
      */
     async fetch(resModel, method, args) {
