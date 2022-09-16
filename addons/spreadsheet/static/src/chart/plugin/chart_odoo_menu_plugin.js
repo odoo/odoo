@@ -21,7 +21,7 @@ export default class ChartOdooMenuPlugin extends spreadsheet.CorePlugin {
                 this.history.update("odooMenuReference", cmd.chartId, cmd.odooMenuId);
                 break;
             case "DELETE_FIGURE":
-                this.history.update("odooMenuReference", cmd.chartId, undefined);
+                this.history.update("odooMenuReference", cmd.id, undefined);
                 break;
         }
     }
