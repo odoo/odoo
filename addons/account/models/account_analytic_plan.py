@@ -7,6 +7,16 @@ class AccountAnalyticApplicability(models.Model):
     _inherit = 'account.analytic.applicability'
     _description = "Analytic Plan's Applicabilities"
 
+    business_domain = fields.Selection(
+        selection_add=[
+            ('invoice', 'Invoice'),
+            ('bill', 'Vendor Bill'),
+        ],
+        ondelete={
+            'invoice': 'cascade',
+            'bill': 'cascade',
+        },
+    )
     account_prefix = fields.Char(
         string='Financial Accounts Prefix',
         help="Prefix that defines which accounts from the financial accounting this applicability should apply on.",

@@ -238,12 +238,10 @@
                                     <field name="name" widget="section_and_note_text"/>
                                     <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}" force_save="1"/>
                                     <field name="analytic_distribution_stored_char" invisible="1"/>
-                                    <!-- TODO widget="analytic_distribution" -->
-                                    <field name="analytic_distribution"
-                                           optional="hide" invisible="1"
+                                    <field name="analytic_distribution" widget="analytic_distribution"
+                                           optional="hide"
                                            groups="analytic.group_analytic_accounting"
-                                           options="{'product_field': 'product_id'}"
-                                           business_domain_compute="'purchase'"/>
+                                           options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                                     <field name="product_qty"/>
                                     <field name="qty_received_manual" invisible="1"/>
                                     <field name="qty_received_method" invisible="1"/>
@@ -288,11 +286,9 @@
                                             <group>
                                                 <field name="date_planned" widget="date" attrs="{'required': [('display_type', '=', False)]}"/>
                                                 <field name="analytic_distribution_stored_char" invisible="1"/>
-                                                <!-- TODO widget="analytic_distribution" -->
-                                                <field name="analytic_distribution"
-                                                       groups="analytic.group_analytic_accounting" invisible="1"
-                                                       options="{'product_field': 'product_id'}"
-                                                       business_domain_compute="'purchase'"/>
+                                                <field name="analytic_distribution" widget="analytic_distribution"
+                                                       groups="analytic.group_analytic_accounting"
+                                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                                             </group>
                                             <group colspan="12">
                                             <notebook>
@@ -743,11 +739,9 @@
                                 <field name="date_planned" widget="date" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="analytic_distribution_stored_char" invisible="1"/>
-                                <!-- TODO widget="analytic_distribution" -->
-                                <field name="analytic_distribution"
-                                       groups="analytic.group_analytic_accounting" invisible="1"
-                                       options="{'product_field': 'product_id'}"
-                                       business_domain_compute="'purchase'"/>
+                                <field name="analytic_distribution" widget="analytic_distribution"
+                                       groups="analytic.group_analytic_accounting"
+                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                             </group>
                         </group>
                         <field name="name"/>
