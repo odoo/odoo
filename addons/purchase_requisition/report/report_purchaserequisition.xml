@@ -8,11 +8,11 @@
                 <div class="page">
                     <div class="oe_structure"/>
 
-                    <h2>Call for Tenders <span t-field="o.name"/></h2>
+                    <h2><span t-field="o.type_id.name"/> <span t-field="o.name"/></h2>
 
                     <div class="row mt32 mb32">
                         <div class="col-3">
-                            <strong>Call for Tender Reference:</strong><br/>
+                            <strong><span t-field="o.type_id.name"/> Reference:</strong><br/>
                             <span t-field="o.name"/>
                         </div>
                         <div class="col-3">
