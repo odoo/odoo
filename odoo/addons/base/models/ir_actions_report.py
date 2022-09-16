@@ -799,7 +799,7 @@ class IrActionsReport(models.Model):
         report_sudo = self._get_report(report_ref)
 
         # Generate the ir.attachment if needed.
-        if self.attachment:
+        if report_sudo.attachment:
             attachment_vals_list = []
             for res_id, stream_data in collected_streams.items():
                 # An attachment already exists.
