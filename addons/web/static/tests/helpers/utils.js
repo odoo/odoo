@@ -437,7 +437,11 @@ export async function editInput(el, selector, value) {
     if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)) {
         throw new Error("Only 'input' and 'textarea' elements can be edited with 'editInput'.");
     }
-    if (!["text", "textarea", "email", "search", "color", "number", "file"].includes(input.type)) {
+    if (
+        !["text", "textarea", "email", "search", "color", "number", "file", "tel"].includes(
+            input.type
+        )
+    ) {
         throw new Error(`Type "${input.type}" not supported by 'editInput'.`);
     }
 
