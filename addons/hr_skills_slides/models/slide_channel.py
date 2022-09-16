@@ -58,22 +58,33 @@ class Channel(models.Model):
 
     def _action_add_members(self, target_partners, **member_values):
         res = super()._action_add_members(target_partners, **member_values)
-
-        if self.env.user.employee_ids:
-            msg = _('The employee subscribed to the course <a href="%(link)s">%(course)s</a>',
-                link=self.website_url,
-                course=self.name)
-            self.env.user.employee_id.message_post(body=msg)
-
+        for channel in self:
+            channel._message_employee_chatter(
+                _('The employee subscribed to the course <a href="%(link)s">%(course)s</a>', link=channel.website_url, course=channel.name),
+                target_partners)
         return res
 
     def _remove_membership(self, partner_ids):
         res = super()._remove_membership(partner_ids)
 
-        if self.env.user.employee_ids:
-            msg = _('The employee left the course <a href="%(link)s">%(course)s</a>',
-                link=self.website_url,
-                course=self.name)
-            self.env.user.employee_id.message_post(body=msg)
+        partners = self.env['res.partner'].browse(partner_ids)
 
+        for channel in self:
+            channel._message_employee_chatter(
+                _('The employee left the course <a href="%(link)s">%(course)s</a>', link=channel.website_url, course=channel.name),
+                partners)
         return res
+
+    def _message_employee_chatter(self, msg, partners):
+        for partner in partners:
+            employee = self.env['hr.employee']
+            if partner.employee:
+                employee = partner.employee
+            elif partner.user_ids:
+                # If the partner is related to a company, we need the employee who belongs to that same company.
+                employee = partner.user_ids.sudo().filtered(
+                    lambda u: u.employee_id and (not partner.company_id or u.employee_id.company_id == partner.company_id)
+                ).employee_id
+
+            if employee:
+                employee.sudo().message_post(body=msg)
