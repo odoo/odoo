@@ -21,14 +21,15 @@ export class ProductDiscountField extends FloatField {
     }
 
     onChange(ev) {
-        const orderLines = this.env.x2mList.records.filter(line => !line.data.display_type);
+        const x2mList = this.env.x2mList;
+        const orderLines = x2mList.records.filter(line => !line.data.display_type);
 
         if (orderLines.length < 3) {
             return; // nothing to do here
         }
 
         const isFirstOrderLine = this.props.record.data.id === orderLines[0].data.id;
-        
+
         if (isFirstOrderLine && sameValue(orderLines)) {
             const body = _lt("Do you want to apply this value to all lines ?");
 
@@ -43,9 +44,8 @@ export class ProductDiscountField extends FloatField {
                         };
                     });
 
-                    this.env.x2mList.applyBatchedCommands(commands);
+                    x2mList.applyBatchedCommands(commands);
                 },
-                cancel: () => {},
             });
         }
     }
