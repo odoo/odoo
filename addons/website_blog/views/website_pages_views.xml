@@ -49,31 +49,41 @@
     <field name="name">blog.post.kanban</field>
     <field name="model">blog.post</field>
     <field name="arch" type="xml">
-        <kanban class="o_kanban_mobile" sample="1">
+        <kanban js_class="website_pages_kanban" class="o_kanban_mobile" action="open_website_url" type="object" sample="1">
             <field name="name"/>
             <field name="blog_id"/>
             <field name="author_id"/>
             <field name="post_date"/>
+            <field name="website_url"/>
             <templates>
                 <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click">
-                        <div class="row mb4">
+                    <div class="oe_kanban_global_click d-flex flex-column">
+                        <div class="row mb-auto">
                             <strong class="col-8">
-                                <span t-esc="record.name.value"/>
+                                <span class="o_text_overflow" t-esc="record.name.value"/>
+                                <div class="text-muted" t-if="record.website_id.value">
+                                    <i class="fa fa-globe me-1" title="Website"/>
+                                    <field name="website_id" groups="website.group_multi_website"/>
+                                </div>
                             </strong>
                             <strong class="col-4 text-end">
                                 <span t-esc="record.blog_id.value"/>
                             </strong>
                             <div class="col-8">
-                                <i class="fa fa-clock-o" role="img" aria-label="Post date" title="Post date"/><span t-esc="record.post_date.value"/>
+                                <i class="fa fa-clock-o me-1" role="img" aria-label="Post date" title="Post date"/><span t-esc="record.post_date.value"/>
                             </div>
                             <div class="col-4 text-end">
                                 <img t-if="record.author_id.raw_value"
                                      t-att-title="record.author_id.value"
                                      t-att-alt="record.author_id.value"
-                                     class="oe_kanban_avatar o_image_24_cover"
+                                     class="oe_kanban_avatar o_image_24_cover rounded-circle"
                                      t-att-src="kanban_image('res.partner', 'avatar_128', record.author_id.raw_value)"/>
                             </div>
+                        </div>
+                        <div class="border-top mt-2 pt-2">
+                            <field name="is_published" widget="boolean_toggle"/>
+                            <t t-if="record.is_published.raw_value">Published</t>
+                            <t t-else="">Not Published</t>
                         </div>
                     </div>
                 </t>
