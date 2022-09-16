@@ -189,11 +189,11 @@ class Users(models.Model):
         super(Users, self)._deactivate_portal_user(**post)
 
         for user in users_to_blacklist:
-            blacklist = self.env['mail.blacklist']._add(user.email)
-            blacklist._message_log(
-                body=_('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
-                       user_name=current_user.name, user_id=current_user.id,
-                       portal_user_name=user.name),
+            self.env['mail.blacklist']._add(
+                user.email,
+                message=_('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
+                          user_name=current_user.name, user_id=current_user.id,
+                          portal_user_name=user.name)
             )
 
     # ------------------------------------------------------------
