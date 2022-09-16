@@ -15,4 +15,3 @@ class AccountChartTemplate(models.Model):
                  {"name": "IFRS 16", "company_id": company.id, "code": "IFRS", "type": "general", "favorite": True,
                   "sequence": 10}])
         return super()._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict)
-   
