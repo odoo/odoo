@@ -147,6 +147,40 @@ export class MockServer {
         // def.abort = abort;
     }
 
+    _getViewFields(modelName, viewType, models) {
+        if (["kanban", "list", "form"].includes(viewType)) {
+            for (const fieldNames of Object.values(models)) {
+                fieldNames.add("id");
+                fieldNames.add("__last_update");
+            }
+        } else if (viewType === "search") {
+            models[modelName] = Object.keys(this.models[modelName].fields);
+        } else if (viewType === "graph") {
+            for (const [fieldName, field] of Object.entries(this.models[modelName].fields)) {
+                if (["integer", "float"].includes(field.type)) {
+                    models[modelName].add(fieldName);
+                }
+            }
+        } else if (viewType === "pivot") {
+            for (const [fieldName, field] of Object.entries(this.models[modelName].fields)) {
+                if (
+                    [
+                        "many2one",
+                        "many2many",
+                        "char",
+                        "boolean",
+                        "selection",
+                        "date",
+                        "datetime",
+                    ].includes(field.type)
+                ) {
+                    models[modelName].add(fieldName);
+                }
+            }
+        }
+        return models;
+    }
+
     getView(modelName, args, kwargs) {
         if (!(modelName in this.models)) {
             throw new Error(`Model ${modelName} was not defined in mock server data`);
@@ -208,7 +242,7 @@ export class MockServer {
         const onchanges = params.models[modelName].onchanges || {};
         const fieldNodes = {};
         const groupbyNodes = {};
-        const relatedModels = new Set([modelName]);
+        const relatedModels = { [modelName]: new Set() };
         let doc;
         if (typeof arch === "string") {
             doc = domParser.parseFromString(arch, "text/xml").documentElement;
@@ -316,6 +350,7 @@ export class MockServer {
             }
             return !isField;
         });
+        Object.keys(fieldNodes).forEach((field) => relatedModels[modelName].add(field));
         let relModel, relFields;
         Object.entries(fieldNodes).forEach(([name, { node, isInvisible }]) => {
             const field = fields[name];
@@ -327,7 +362,6 @@ export class MockServer {
             }
             if (field.type === "one2many" || field.type === "many2many") {
                 relModel = field.relation;
-                relatedModels.add(relModel);
                 // inline subviews: in forms if field is visible and has no widget (1st level only)
                 if (inFormView && level === 0 && !node.getAttribute("widget") && !isInvisible) {
                     const inlineViewTypes = Array.from(node.children).map((c) => c.tagName);
@@ -368,7 +402,10 @@ export class MockServer {
                             processedNodes,
                             level: level + 1,
                         });
-                        [...models].forEach((modelName) => relatedModels.add(modelName));
+                        Object.entries(models).forEach(([modelName, fields]) => {
+                            relatedModels[modelName] = relatedModels[modelName] || new Set();
+                            fields.forEach((field) => relatedModels[modelName].add(field));
+                        });
                     }
                 });
             }
@@ -384,7 +421,6 @@ export class MockServer {
             }
             field.views = {};
             relModel = field.relation;
-            relatedModels.add(relModel);
             relFields = Object.assign({}, params.models[relModel].fields);
             processedNodes.push(node);
             // postprocess simulation
@@ -396,7 +432,10 @@ export class MockServer {
                 context,
                 processedNodes,
             });
-            [...models].forEach((modelName) => relatedModels.add(modelName));
+            Object.entries(models).forEach(([modelName, fields]) => {
+                relatedModels[modelName] = relatedModels[modelName] || new Set();
+                fields.forEach((field) => relatedModels[modelName].add(field));
+            });
         });
         const processedArch = xmlSerializer.serializeToString(doc);
         const fieldsInView = {};
@@ -405,11 +444,12 @@ export class MockServer {
                 fieldsInView[fname] = field;
             }
         });
+        const viewType = doc.tagName === "tree" ? "list" : doc.tagName;
         return {
             arch: processedArch,
             model: modelName,
-            type: doc.tagName === "tree" ? "list" : doc.tagName,
-            models: relatedModels,
+            type: viewType,
+            models: this._getViewFields(modelName, viewType, relatedModels),
         };
     }
 
@@ -492,7 +532,7 @@ export class MockServer {
             case "create":
                 return this.mockCreate(args.model, args.args[0], args.kwargs);
             case "fields_get":
-                return this.mockFieldsGet(args.model);
+                return this.mockFieldsGet(args.model, args.fields);
             case "get_views":
                 return this.mockGetViews(args.model, args.kwargs);
             case "name_create":
@@ -607,8 +647,12 @@ export class MockServer {
         return result;
     }
 
-    mockFieldsGet(modelName) {
-        return this.models[modelName].fields;
+    mockFieldsGet(modelName, fieldNames) {
+        let fields = this.models[modelName].fields;
+        if (fieldNames) {
+            fields = _.pick(this.models[modelName].fields, fieldNames);
+        }
+        return fields;
     }
 
     mockLoadAction(kwargs) {
@@ -637,16 +681,26 @@ export class MockServer {
     mockGetViews(modelName, kwargs) {
         const views = {};
         const models = {};
-        models[modelName] = this.mockFieldsGet(modelName);
+
+        // Determine all the models/fields used in the views
+        // modelFields = {modelName: Set([...fieldNames])}
+        const modelFields = {};
         kwargs.views.forEach(([viewId, viewType]) => {
             views[viewType] = this.getView(modelName, [viewId, viewType], kwargs);
-            if (kwargs.options.load_filters && viewType === "search") {
-                views[viewType].filters = this.models[modelName].filters || [];
-            }
-            for (const modelName of views[viewType].models) {
-                models[modelName] = models[modelName] || this.mockFieldsGet(modelName);
-            }
+            Object.entries(views[viewType].models).forEach(([modelName, fields]) => {
+                modelFields[modelName] = modelFields[modelName] || new Set();
+                fields.forEach((field) => modelFields[modelName].add(field));
+            });
         });
+
+        // For each model, fetch the information of the fields used in the views only
+        Object.entries(modelFields).forEach(([modelName, fields]) => {
+            models[modelName] = this.mockFieldsGet(modelName, [...fields]);
+        });
+
+        if (kwargs.options.load_filters && "search" in views) {
+            views["search"].filters = this.models[modelName].filters || [];
+        }
         return { models, views };
     }
 
