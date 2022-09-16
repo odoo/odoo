@@ -9,6 +9,7 @@ import { Layout } from "@web/search/layout";
 import { useModel } from "../model";
 import { FormViewDialog } from "../view_dialogs/form_view_dialog";
 import { useSetupView } from "../view_hook";
+import { CalendarContainer } from "./container/calendar_container";
 import { CalendarDatePicker } from "./date_picker/calendar_date_picker";
 import { CalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
@@ -59,6 +60,11 @@ export class CalendarController extends Component {
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),
             displayName: this.displayName,
+        };
+    }
+    get containerProps() {
+        return {
+            model: this.model,
         };
     }
     get datePickerProps() {
@@ -173,6 +179,7 @@ export class CalendarController extends Component {
     }
 }
 CalendarController.components = {
+    CalendarContainer,
     DatePicker: CalendarDatePicker,
     FilterPanel: CalendarFilterPanel,
     QuickCreate: CalendarQuickCreate,

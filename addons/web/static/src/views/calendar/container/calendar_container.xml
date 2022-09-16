@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarContainer" owl="1">
+        <div class="o_calendar_container">
+            <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
+            <t t-slot="default" showCalendar="showCalendar" showSideBar="showSideBar" />
+        </div>
+    </t>
+
+</templates>

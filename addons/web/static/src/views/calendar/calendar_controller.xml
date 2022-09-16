@@ -6,21 +6,21 @@
             <t t-set-slot="layout-buttons">
                 <t t-call="{{ props.buttonTemplate }}"/>
             </t>
-            <div class="o_calendar_container">
-                <t t-component="props.Renderer" t-props="rendererProps" />
-                <div class="o_calendar_sidebar_container d-none d-md-block">
+            <CalendarContainer t-slot-scope="container" t-props="containerProps">
+                <t t-if="container.showCalendar" t-component="props.Renderer" t-props="rendererProps" />
+                <div t-if="container.showSideBar" class="o_calendar_sidebar_container d-md-block">
                     <div class="o_calendar_sidebar">
-                        <DatePicker t-props="datePickerProps" />
+                        <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
                         <FilterPanel t-props="filterPanelProps" />
                     </div>
                 </div>
-            </div>
+            </CalendarContainer>
         </Layout>
     </t>
 
     <t t-name="web.CalendarController.controlButtons" owl="1">
         <div class="o_calendar_buttons">
-            <span class="o_calendar_navigation_buttons">
+            <span t-if="!env.isSmall" class="o_calendar_navigation_buttons">
                 <button
                     class="btn btn-primary o_calendar_button_prev"
                     title="Previous"
