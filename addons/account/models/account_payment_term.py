@@ -138,7 +138,12 @@ class AccountPaymentTerm(models.Model):
             if line.value == 'fixed':
                 term_vals['company_amount'] = sign * company_currency.round(line.value_amount)
                 term_vals['foreign_amount'] = sign * currency.round(line.value_amount)
-                line_tax_amount = line_tax_amount_currency = line_untaxed_amount = line_untaxed_amount_currency = 0.0
+                company_proportion = tax_amount/untaxed_amount if untaxed_amount else 1
+                foreign_proportion = tax_amount_currency/untaxed_amount_currency if untaxed_amount_currency else 1
+                line_tax_amount = company_currency.round(line.value_amount * company_proportion) * sign
+                line_tax_amount_currency = currency.round(line.value_amount * foreign_proportion) * sign
+                line_untaxed_amount = term_vals['company_amount'] - line_tax_amount
+                line_untaxed_amount_currency = term_vals['foreign_amount'] - line_tax_amount_currency
             elif line.value == 'percent':
                 term_vals['company_amount'] = company_currency.round(total_amount * (line.value_amount / 100.0))
                 term_vals['foreign_amount'] = currency.round(total_amount_currency * (line.value_amount / 100.0))
