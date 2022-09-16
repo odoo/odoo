@@ -388,9 +388,20 @@ export function formatText(value) {
     return value || "";
 }
 
+/**
+ * Returns the value or an empty string if it's an object.
+ *
+ * @param {Object|String|null} value
+ * @returns {string}
+ */
+export function formatBinary(value) {
+    return typeof(value) === "object" ? "" : value;
+}
+
 registry
     .category("formatters")
     .add("boolean", formatBoolean)
+    .add("binary", formatBinary)
     .add("char", formatChar)
     .add("date", formatDate)
     .add("datetime", formatDateTime)
