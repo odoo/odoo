@@ -29,11 +29,39 @@
     </field>
 </record>
 
+<record id="job_pages_kanban_view" model="ir.ui.view">
+    <field name="name">Job Pages Kanban</field>
+    <field name="model">hr.job</field>
+    <field name="priority">99</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="hr_job_website_inherit"/>
+    <field name="arch" type="xml">
+        <kanban position="attributes">
+            <attribute name="js_class">website_pages_kanban</attribute>
+            <attribute name="type">object</attribute>
+            <attribute name="action">open_website_url</attribute>
+        </kanban>
+        <xpath expr="//div[hasclass('o_kanban_card_header_title')]" position="inside">
+            <div class="text-muted fw-bold ps-3">
+                <span class="me-3" t-if="record.website_id.value" groups="website.group_multi_website">
+                    <i class="fa fa-globe me-1" title="Website"/>
+                    <field name="website_id"/>
+                </span>
+                <field name="is_seo_optimized" widget="boolean"/> SEO Optimized
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_link_trackers')]" position="replace"/>
+    </field>
+</record>
+
 <record id="action_job_pages_list" model="ir.actions.act_window">
     <field name="name">Job Pages</field>
     <field name="res_model">hr.job</field>
-    <field name="view_mode">tree</field>
-    <field name="view_id" ref="job_pages_tree_view"/>
+    <field name="view_mode">tree,kanban</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('job_pages_tree_view')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('job_pages_kanban_view')}),
+    ]"/>
     <field name="context">{'create_action': '/jobs/add'}</field>
 </record>
 

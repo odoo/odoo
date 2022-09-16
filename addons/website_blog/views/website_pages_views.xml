@@ -61,9 +61,9 @@
                         <div class="row mb-auto">
                             <strong class="col-8">
                                 <span class="o_text_overflow" t-esc="record.name.value"/>
-                                <div class="text-muted" t-if="record.website_id.value">
+                                <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
                                     <i class="fa fa-globe me-1" title="Website"/>
-                                    <field name="website_id" groups="website.group_multi_website"/>
+                                    <field name="website_id"/>
                                 </div>
                             </strong>
                             <strong class="col-4 text-end">
