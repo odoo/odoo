@@ -1161,16 +1161,26 @@
             <field name="code">502005</field>
             <field name="account_type">expense</field>
             <field name="chart_template_id" ref="sg_chart_template"/>
-            <field name="reconcile" eval="False" />
+            <field name="reconcile" eval="False"/>
+        </record>
+
+        <record model="account.account.template" id="account_account_856">
+            <field name="name">Discounts Taken</field>
+            <field name="code">502006</field>
+            <field name="account_type">expense</field>
+            <field name="chart_template_id" ref="sg_chart_template"/>
+            <field name="reconcile" eval="False"/>
         </record>
 
     <record id="sg_chart_template" model="account.chart.template">
-        <field name="property_account_receivable_id" ref="account_account_735" />
-        <field name="property_account_payable_id" ref="account_account_777" />
-        <field name="property_account_expense_categ_id" ref="account_account_819" />
-        <field name="property_account_income_categ_id" ref="account_account_803" />
+        <field name="property_account_receivable_id" ref="account_account_735"/>
+        <field name="property_account_payable_id" ref="account_account_777"/>
+        <field name="property_account_expense_categ_id" ref="account_account_819"/>
+        <field name="property_account_income_categ_id" ref="account_account_803"/>
         <field name="income_currency_exchange_account_id" ref="account_account_853"/>
         <field name="expense_currency_exchange_account_id" ref="account_account_853"/>
-        <field name="default_pos_receivable_account_id" ref="account_account_737" />
+        <field name="default_pos_receivable_account_id" ref="account_account_737"/>
+        <field name="account_journal_early_pay_discount_loss_account_id" ref="account_account_800"/>
+        <field name="account_journal_early_pay_discount_gain_account_id" ref="account_account_856"/>
     </record>
 </odoo>

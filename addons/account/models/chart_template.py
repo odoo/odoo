@@ -213,8 +213,8 @@ class AccountChartTemplate(models.Model):
     @api.model
     def _create_cash_discount_loss_account(self, company, code_digits):
         return self.env['account.account'].create({
-            'name': _("Cash Discount Write-Off Loss Account"),
-            'code': 999997,
+            'name': _("Cash Discount Loss"),
+            'code': 999998,
             'account_type': 'expense',
             'company_id': company.id,
         })
@@ -222,8 +222,8 @@ class AccountChartTemplate(models.Model):
     @api.model
     def _create_cash_discount_gain_account(self, company, code_digits):
         return self.env['account.account'].create({
-            'name': _("Cash Discount Write-Off Gain Account"),
-            'code': 999998,
+            'name': _("Cash Discount Gain"),
+            'code': 999997,
             'account_type': 'income_other',
             'company_id': company.id,
         })
@@ -649,6 +649,8 @@ class AccountChartTemplate(models.Model):
         accounts = {
             'default_cash_difference_income_account_id': self.default_cash_difference_income_account_id,
             'default_cash_difference_expense_account_id': self.default_cash_difference_expense_account_id,
+            'account_journal_early_pay_discount_loss_account_id': self.account_journal_early_pay_discount_loss_account_id,
+            'account_journal_early_pay_discount_gain_account_id': self.account_journal_early_pay_discount_gain_account_id,
             'account_journal_suspense_account_id': self.account_journal_suspense_account_id,
             'account_journal_payment_debit_account_id': self.account_journal_payment_debit_account_id,
             'account_journal_payment_credit_account_id': self.account_journal_payment_credit_account_id,

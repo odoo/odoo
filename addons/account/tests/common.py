@@ -220,11 +220,13 @@ class AccountTestInvoicingCommon(TransactionCase):
             'currency': company.currency_id,
             'default_account_revenue': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
-                    ('account_type', '=', 'income')
+                    ('account_type', '=', 'income'),
+                    ('id', '!=', company.account_journal_early_pay_discount_gain_account_id.id)
                 ], limit=1),
             'default_account_expense': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
-                    ('account_type', '=', 'expense')
+                    ('account_type', '=', 'expense'),
+                    ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id)
                 ], limit=1),
             'default_account_receivable': search_account(company, chart_template, 'property_account_receivable_id', [
                 ('account_type', '=', 'asset_receivable')
