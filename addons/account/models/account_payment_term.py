@@ -48,11 +48,11 @@ class AccountPaymentTerm(models.Model):
                     untaxed_amount=record.example_amount,
                     untaxed_amount_currency=record.example_amount,
                     sign=1)
-                for i, info_by_dates in enumerate(record._get_amount_by_date(terms, currency).items()):
-                    date = info_by_dates[1]['date']
-                    discount_date = info_by_dates[1]['discount_date']
-                    amount = info_by_dates[1]['amount']
-                    discount_amount = info_by_dates[1]['discounted_amount'] or 0.0
+                for i, info_by_dates in enumerate(record._get_amount_by_date(terms, currency).values()):
+                    date = info_by_dates['date']
+                    discount_date = info_by_dates['discount_date']
+                    amount = info_by_dates['amount']
+                    discount_amount = info_by_dates['discounted_amount'] or 0.0
                     example_preview += f"""
                         <div style='margin-left: 20px;'>
                             <b>{i+1}#</b>
@@ -84,20 +84,14 @@ class AccountPaymentTerm(models.Model):
                 'discount_date': term['discount_date'],
                 'discount_percentage': term['discount_percentage'],
             })
-            if not amount_by_date.get(key):
-                amount_by_date[key] = {
-                    'date': format_date(self.env, term['date']),
-                    'amount': 0.0,
-                    'discounted_amount': 0.0,
-                }
-            if not currency.round(term['company_amount']) > 0.0:
-                amount_by_date[key]['amount'] += term['company_amount']
-
-            amount_by_date[key]['discount_date'] = format_date(self.env, term['discount_date']) or False
-            if currency.round(term['discount_amount_currency']) > 0.0:
-                amount_by_date[key]['discounted_amount'] += term.get('discount_amount_currency')
-            else:
-                amount_by_date[key]['discounted_amount'] = 0.0
+            results = amount_by_date.setdefault(key, {
+                'date': format_date(self.env, term['date']),
+                'amount': 0.0,
+                'discounted_amount': 0.0,
+                'discount_date': format_date(self.env, term['discount_date']),
+            })
+            results['amount'] += term['foreign_amount']
+            results['discounted_amount'] += term['discount_amount_currency']
         return amount_by_date
 
     @api.constrains('line_ids')
