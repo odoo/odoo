@@ -788,13 +788,17 @@ export class Record extends DataPoint {
      * @param {Object} [params.changes]
      */
     async load(params = {}) {
-        this.data = {};
         this._cache = {};
         for (const fieldName in this.activeFields) {
             const field = this.fields[fieldName];
             if (isX2Many(field)) {
                 const staticList = this._createStaticList(fieldName);
                 this._cache[fieldName] = staticList;
+            }
+        }
+        for (const fieldName in this.data) {
+            if (!(fieldName in this.activeFields)) {
+                delete this.data[fieldName];
             }
         }
 
