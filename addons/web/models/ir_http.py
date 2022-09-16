@@ -104,7 +104,7 @@ class Http(models.AbstractModel):
             "max_file_upload_size": max_file_upload_size,
             "home_action_id": user.action_id.id,
             "cache_hashes": {
-                "translations": request.env['ir.translation'].sudo().get_web_translations_hash(
+                "translations": request.env['ir.http'].sudo().get_web_translations_hash(
                     mods, request.session.context['lang']
                 ) if session_uid else None,
             },

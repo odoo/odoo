@@ -436,6 +436,20 @@ $o-form-label-margin-right: 0px;
             padding-right: 25px;
         }
     }
+    .oe_no_translation_content {
+        :not(.btn) {
+            display: none;
+        }
+        .btn {
+            width: 100% !important;
+            margin-left: 0px;
+            visibility: hidden;
+        }
+        .btn:after {
+            content: 'EN';
+            visibility: visible;
+        }
+    }
     iframe.wysiwyg_iframe + .o_field_translate {
         right: 30px !important;
         top: 7px !important;

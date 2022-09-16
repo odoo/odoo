@@ -56,15 +56,16 @@ def table_kind(cr, tablename):
 # prescribed column order by type: columns aligned on 4 bytes, columns aligned
 # on 1 byte, columns aligned on 8 bytes(values have been chosen to minimize
 # padding in rows; unknown column types are put last)
-SQL_ORDER_BY_TYPE = defaultdict(lambda: 9, {
+SQL_ORDER_BY_TYPE = defaultdict(lambda: 16, {
     'int4': 1,          # 4 bytes aligned on 4 bytes
     'varchar': 2,       # variable aligned on 4 bytes
     'date': 3,          # 4 bytes aligned on 4 bytes
-    'text': 4,          # variable aligned on 4 bytes
-    'numeric': 5,       # variable aligned on 4 bytes
-    'bool': 6,          # 1 byte aligned on 1 byte
-    'timestamp': 7,     # 8 bytes aligned on 8 bytes
-    'float8': 8,        # 8 bytes aligned on 8 bytes
+    'jsonb': 4,         # jsonb
+    'text': 5,          # variable aligned on 4 bytes
+    'numeric': 6,       # variable aligned on 4 bytes
+    'bool': 7,          # 1 byte aligned on 1 byte
+    'timestamp': 8,     # 8 bytes aligned on 8 bytes
+    'float8': 9,        # 8 bytes aligned on 8 bytes
 })
 
 def create_model_table(cr, tablename, comment=None, columns=()):
@@ -121,20 +122,55 @@ def rename_column(cr, tablename, columnname1, columnname2):
 
 def convert_column(cr, tablename, columnname, columntype):
     """ Convert the column to the given type. """
+    using = f'"{columnname}"::{columntype}'
+    _convert_column(cr, tablename, columnname, columntype, using)
+
+def convert_column_translatable(cr, tablename, columnname, columntype):
+    """ Convert the column from/to a 'jsonb' translated field column. """
+    drop_index(cr, f"{tablename}_{columnname}_index", tablename)
+    if columntype == "jsonb":
+        using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
+    else:
+        using = f""""{columnname}"->>'en_US'"""
+    _convert_column(cr, tablename, columnname, columntype, using)
+
+def _convert_column(cr, tablename, columnname, columntype, using):
+    query = f'''
+        ALTER TABLE "{tablename}"
+        ALTER COLUMN "{columnname}" DROP DEFAULT,
+        ALTER COLUMN "{columnname}" TYPE {columntype} USING {using}
+    '''
     try:
         with cr.savepoint(flush=False):
-            cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
-                       log_exceptions=False)
+            cr.execute(query, log_exceptions=False)
     except psycopg2.NotSupportedError:
-        # can't do inplace change -> use a casted temp column
-        query = '''
-            ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast;
-            ALTER TABLE "{0}" ADD COLUMN "{1}" {2};
-            UPDATE "{0}" SET "{1}"= __temp_type_cast::{2};
-            ALTER TABLE "{0}" DROP COLUMN  __temp_type_cast CASCADE;
-        '''
-        cr.execute(query.format(tablename, columnname, columntype))
+        drop_depending_views(cr, tablename, columnname)
+        cr.execute(query)
     _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
+
+def drop_depending_views(cr, table, column):
+    """drop views depending on a field to allow the ORM to resize it in-place"""
+    for v, k in get_depending_views(cr, table, column):
+        cr.execute("DROP {0} VIEW IF EXISTS {1} CASCADE".format("MATERIALIZED" if k == "m" else "", v))
+        _schema.debug("Drop view %r", v)
+
+def get_depending_views(cr, table, column):
+    # http://stackoverflow.com/a/11773226/75349
+    q = """
+        SELECT distinct quote_ident(dependee.relname), dependee.relkind
+        FROM pg_depend
+        JOIN pg_rewrite ON pg_depend.objid = pg_rewrite.oid
+        JOIN pg_class as dependee ON pg_rewrite.ev_class = dependee.oid
+        JOIN pg_class as dependent ON pg_depend.refobjid = dependent.oid
+        JOIN pg_attribute ON pg_depend.refobjid = pg_attribute.attrelid
+            AND pg_depend.refobjsubid = pg_attribute.attnum
+        WHERE dependent.relname = %s
+        AND pg_attribute.attnum > 0
+        AND pg_attribute.attname = %s
+        AND dependee.relkind in ('v', 'm')
+    """
+    cr.execute(q, [table, column])
+    return cr.fetchall()
 
 def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """

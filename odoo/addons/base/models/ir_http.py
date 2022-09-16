@@ -4,6 +4,7 @@
 #----------------------------------------------------------
 import base64
 import hashlib
+import json
 import logging
 import mimetypes
 import os
@@ -22,6 +23,7 @@ from odoo.exceptions import AccessDenied, AccessError, MissingError
 from odoo.http import request, Response, ROUTING_KEYS, Stream
 from odoo.service import security
 from odoo.tools import consteq, submap
+from odoo.tools.translate import code_translations
 from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
@@ -198,3 +200,45 @@ class IrHttp(models.AbstractModel):
     @api.autovacuum
     def _gc_sessions(self):
         http.root.session_store.vacuum()
+
+    @api.model
+    def get_translations_for_webclient(self, modules, lang):
+        if not modules:
+            modules = self.pool._init_modules
+        if not lang:
+            lang = self._context.get("lang")
+        langs = self.env['res.lang']._lang_get(lang)
+        lang_params = None
+        if langs:
+            lang_params = {
+                "name": langs.name,
+                "direction": langs.direction,
+                "date_format": langs.date_format,
+                "time_format": langs.time_format,
+                "grouping": langs.grouping,
+                "decimal_point": langs.decimal_point,
+                "thousands_sep": langs.thousands_sep,
+                "week_start": langs.week_start,
+            }
+            lang_params['week_start'] = int(lang_params['week_start'])
+            lang_params['code'] = lang
+
+        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
+        # done server-side when the language is loaded, so we only need to load the user's lang.
+        translations_per_module = {}
+        for module in modules:
+            translations_per_module[module] = code_translations.get_web_translations(module, lang)
+
+        return translations_per_module, lang_params
+
+    @api.model
+    @tools.ormcache('frozenset(modules)', 'lang')
+    def get_web_translations_hash(self, modules, lang):
+        translations, lang_params = self.get_translations_for_webclient(modules, lang)
+        translation_cache = {
+            'lang_parameters': lang_params,
+            'modules': translations,
+            'lang': lang,
+            'multi_lang': len(self.env['res.lang'].sudo().get_installed()) > 1,
+        }
+        return hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()

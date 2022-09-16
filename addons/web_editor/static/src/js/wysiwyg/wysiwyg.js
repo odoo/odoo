@@ -1016,7 +1016,7 @@ const Wysiwyg = Widget.extend({
                 observerData.observer.observe(observerData.field, observerOptions);
             }
         } else {
-            const odooFieldSelector = '[data-oe-model], [data-oe-translation-id]';
+            const odooFieldSelector = '[data-oe-model], [data-oe-translation-initial-sha]';
             const $odooFields = this.$editable.find(odooFieldSelector);
             this.odooFieldObservers = [];
 
@@ -1032,8 +1032,8 @@ const Wysiwyg = Widget.extend({
                             .filter('[data-oe-field="' + $node.data('oe-field') + '"]');
                     }
 
-                    if ($node.data('oe-translation-id')) {
-                        $nodes = $nodes.filter('[data-oe-translation-id="' + $node.data('oe-translation-id') + '"]');
+                    if ($node.data('oe-translation-initial-sha')) {
+                        $nodes = $nodes.filter('[data-oe-translation-initial-sha="' + $node.data('oe-translation-initial-sha') + '"]');
                     }
                     if ($node.data('oe-type')) {
                         $nodes = $nodes.filter('[data-oe-type="' + $node.data('oe-type') + '"]');
@@ -1922,13 +1922,21 @@ const Wysiwyg = Widget.extend({
      * @override
      */
     _saveTranslationElement: function ($el, context, withLang = true) {
-        if ($el.data('oe-translation-id')) {
+        if ($el.data('oe-translation-initial-sha')) {
+            const $els = $el;
+            const translations = {};
+            translations[context.lang] = Object.assign({}, ...$els.toArray().map(
+                (x) => ({
+                    [$(x).data('oe-translation-initial-sha')]: this._getEscapedElement($(x)).html()
+                })
+            ));
             return this._rpc({
-                model: 'ir.translation',
-                method: 'save_html',
+                model: $els.data('oe-model'),
+                method: 'update_field_translations_sha',
                 args: [
-                    [+$el.data('oe-translation-id')],
-                    this._getEscapedElement($el).html()
+                    [+$els.data('oe-id')],
+                    $els.data('oe-field'),
+                    translations,
                 ],
                 context: context,
             });
@@ -2151,10 +2159,13 @@ const Wysiwyg = Widget.extend({
         $('.o_editable')
             .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
 
-        const defs = _.map($allBlocks, (el) => {
-            const $el = $(el);
+        const defs = _.map(_.groupBy($allBlocks.toArray(),
+            function($obj) {
+            return $obj.dataset['oe-model'] + $obj.dataset['oe-field'] + $obj.dataset['oe-id']
+        }), (els) => {
+            const $els = $(els);
 
-            $el.find('[class]').filter(function () {
+            $els.find('[class]').filter(function () {
                 if (!this.getAttribute('class').match(/\S/)) {
                     this.removeAttribute('class');
                 }
@@ -2166,16 +2177,16 @@ const Wysiwyg = Widget.extend({
                 if (this.options.enableTranslation) {
                     saveElement = '_saveTranslationElement';
                 }
-                return this[saveElement]($el, context || this.options.context)
+                return this[saveElement]($els, context || this.options.context)
                 .then(function () {
-                    $el.removeClass('o_dirty');
+                    $els.removeClass('o_dirty');
                 }).guardedCatch(function (response) {
                     // because ckeditor regenerates all the dom, we can't just
                     // setup the popover here as everything will be destroyed by
                     // the DOM regeneration. Add markings instead, and returns a
                     // new rejection with all relevant info
                     var id = _.uniqueId('carlos_danger_');
-                    $el.addClass('o_dirty o_editable oe_carlos_danger ' + id);
+                    $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
                     $('.o_editable.' + id)
                         .removeClass(id)
                         .popover({

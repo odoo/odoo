@@ -140,19 +140,6 @@ QUnit.module('LegacyViews', {
                     {id: 14, display_name: "silver", color: 5},
                 ]
             },
-            "ir.translation": {
-                fields: {
-                    lang_code: {type: "char"},
-                    value: {type: "char"},
-                    res_id: {type: "integer"}
-                },
-                records: [{
-                    id: 99,
-                    res_id: 12,
-                    value: '',
-                    lang_code: 'en_US'
-                }]
-            },
             user: {
                 fields: {
                     name: {string: "Name", type: "char"},
@@ -7382,16 +7369,7 @@ QUnit.module('LegacyViews', {
     });
 
     QUnit.test('translation alerts preserved on reverse breadcrumb', async function (assert) {
-        assert.expect(2);
-
-        serverData.models['ir.translation'] = {
-            fields: {
-                name: { string: "name", type: "char" },
-                source: {string: "Source", type: "char"},
-                value: {string: "Value", type: "char"},
-            },
-            records: [],
-        };
+        assert.expect(1);
 
         serverData.models.partner.fields.foo.translate = true;
 
@@ -7402,12 +7380,6 @@ QUnit.module('LegacyViews', {
                     '</sheet>' +
                 '</form>',
             'partner,false,search': '<search></search>',
-            'ir.translation,false,list': '<tree>' +
-                        '<field name="name"/>' +
-                        '<field name="source"/>' +
-                        '<field name="value"/>' +
-                    '</tree>',
-            'ir.translation,false,search': '<search></search>',
         };
 
         serverData.actions = {
@@ -7418,14 +7390,6 @@ QUnit.module('LegacyViews', {
                 type: 'ir.actions.act_window',
                 views: [[false, 'form']],
             },
-            2: {
-                id: 2,
-                name: 'Translate',
-                res_model: 'ir.translation',
-                type: 'ir.actions.act_window',
-                views: [[false, 'list']],
-                target: 'current',
-            }
         };
 
         const webClient = await createWebClient({ serverData });
@@ -7438,13 +7402,6 @@ QUnit.module('LegacyViews', {
         await testUtils.dom.click(target.querySelector('.o_form_button_save'));
         await legacyExtraNextTick();
 
-        assert.containsOnce(target, '.o_legacy_form_view .alert > div',
-            "should have a translation alert");
-
-        await doAction(webClient, 2);
-
-        await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
-        await legacyExtraNextTick();
         assert.containsOnce(target, '.o_legacy_form_view .alert > div',
             "should have a translation alert");
     });
@@ -7485,16 +7442,16 @@ QUnit.module('LegacyViews', {
                 if (route === '/web/dataset/call_kw/product/get_formview_id') {
                     return Promise.resolve(false);
                 }
-                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["product",37,"name"], 'should call "call_button" route');
+                if (route === "/web/dataset/call_kw/product/get_field_translations") {
+                    assert.deepEqual(args.args, [[37],"name"], "should translate the name field of the record");
                     nbTranslateCalls++;
-                    return Promise.resolve({
-                        domain: [],
-                        context: {search_default_name: 'partnes,foo'},
-                    });
+                    return Promise.resolve([
+                        [{lang: "en_US", source: "yop", value: "yop"}, {lang: "fr_BE", source: "yop", value: "valeur français"}],
+                        {translation_type: "char", translation_show_source: false},
+                    ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
-                    return Promise.resolve([["en_US"], ["fr_BE"]]);
+                    return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
                 }
                 return this._super.apply(this, arguments);
             },

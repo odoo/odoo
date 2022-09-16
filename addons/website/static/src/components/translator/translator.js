@@ -53,13 +53,13 @@ export class TranslatorInfoDialog extends Component {
 TranslatorInfoDialog.components = { WebsiteDialog };
 TranslatorInfoDialog.template = 'website.TranslatorInfoDialog';
 
-const savableSelector = '[data-oe-translation-id], ' +
+const savableSelector = '[data-oe-translation-initial-sha], ' +
     '[data-oe-model][data-oe-id][data-oe-field], ' +
-    '[placeholder*="data-oe-translation-id="], ' +
-    '[title*="data-oe-translation-id="], ' +
-    '[value*="data-oe-translation-id="], ' +
-    'textarea:contains(data-oe-translation-id), ' +
-    '[alt*="data-oe-translation-id="]';
+    '[placeholder*="data-oe-translation-initial-sha="], ' +
+    '[title*="data-oe-translation-initial-sha="], ' +
+    '[value*="data-oe-translation-initial-sha="], ' +
+    'textarea:contains(data-oe-translation-initial-sha), ' +
+    '[alt*="data-oe-translation-initial-sha="]';
 
 export class WebsiteTranslator extends WebsiteEditorComponent {
     setup() {
@@ -110,11 +110,8 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
     }
 
     getTranslationObject(nodeEl) {
-        let { oeTranslationId: id } = nodeEl.dataset;
-        if (!id) {
-            const { oeModel, oeId, oeField } = nodeEl.dataset;
-            id = [oeModel, oeId, oeField].join(',');
-        }
+        const { oeModel, oeId, oeField, oeTranslationInitialMd5 } = nodeEl.dataset;
+        const id = [oeModel, oeId, oeField, oeTranslationInitialMd5].join(',');
         let translation = this.translations.filter(t => t.id === id)[0];
         if (!translation) {
             translation = { id };
@@ -128,10 +125,10 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const self = this;
         var attrs = ['placeholder', 'title', 'alt', 'value'];
         const $editable = this.getEditableArea();
-        const translationRegex = /<span [^>]*data-oe-translation-id="([0-9]+)"[^>]*>(.*)<\/span>/;
+        const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>(.*)<\/span>/;
         let $edited = $();
         _.each(attrs, function (attr) {
-            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img');
+            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
             attrEdit.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
@@ -147,7 +144,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             });
             $edited = $edited.add(attrEdit);
         });
-        const textEdit = $editable.filter('textarea:contains(data-oe-translation-id)');
+        const textEdit = $editable.filter('textarea:contains(data-oe-translation-initial-sha)');
         textEdit.each(function () {
             var $node = $(this);
             var translation = $node.data('translation') || {};

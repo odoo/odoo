@@ -179,7 +179,7 @@ class ir_cron(models.Model):
     def _get_all_ready_jobs(cls, cr):
         """ Return a list of all jobs that are ready to be executed """
         cr.execute("""
-            SELECT *
+            SELECT *, cron_name->>'en_US' as cron_name
             FROM ir_cron
             WHERE active = true
               AND numbercall != 0
@@ -241,7 +241,7 @@ class ir_cron(models.Model):
         # Learn more: https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS
 
         query = """
-            SELECT *
+            SELECT *, cron_name->>'en_US' as cron_name
             FROM ir_cron
             WHERE active = true
               AND numbercall != 0

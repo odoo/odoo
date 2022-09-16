@@ -3,7 +3,7 @@
 
 import logging
 import os
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict
 
 from odoo import api, fields, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -188,14 +188,31 @@ class IrModuleModule(models.Model):
     def _post_copy(self, old_rec, new_rec):
         self.ensure_one()
         translated_fields = self._theme_translated_fields.get(old_rec._name, [])
+        cur_lang = self.env.lang or 'en_US'
+        old_rec.flush_recordset()
         for (src_field, dst_field) in translated_fields:
-            self._cr.execute("""INSERT INTO ir_translation (lang, src, name, res_id, state, value, type, module)
-                                SELECT t.lang, t.src, %s, %s, t.state, t.value, t.type, t.module
-                                FROM ir_translation t
-                                WHERE name = %s
-                                  AND res_id = %s
-                                ON CONFLICT DO NOTHING""",
-                             (dst_field, new_rec.id, src_field, old_rec.id))
+            __, src_fname = src_field.split(',')
+            dst_mname, dst_fname = dst_field.split(',')
+            if dst_mname != new_rec._name:
+                continue
+            old_field = old_rec._fields[src_fname]
+            old_translations = old_field._get_stored_translations(old_rec)
+            if not old_translations:
+                continue
+            if not callable(old_field.translate):
+                if old_rec[src_fname] == new_rec[dst_fname]:
+                    new_rec.update_field_translations(dst_fname, old_translations)
+            else:
+                old_translation_lang = old_translations.get(cur_lang) or old_translations.get('en_US')
+                # {from_lang_term: {lang: to_lang_term}
+                translation_dictionary = old_field.get_translation_dictionary(old_translation_lang, {
+                    lang: value for lang, value in old_translations.items() if lang != cur_lang})
+                # {lang: {old_term: new_term}
+                translations = defaultdict(dict)
+                for from_lang_term, to_lang_terms in translation_dictionary.items():
+                    for lang, to_lang_term in to_lang_terms.items():
+                        translations[lang][from_lang_term] = to_lang_term
+                new_rec.with_context(install_filename='dummy').update_field_translations(dst_fname, translations)
 
     def _theme_load(self, website):
         """
@@ -456,3 +473,70 @@ class IrModuleModule(models.Model):
                 cow_view = View.browse(view_replay[0])
                 View._load_records_write_on_cow(cow_view, view_replay[1], view_replay[2])
             self.pool.website_views_to_adapt.clear()
+
+    @api.model
+    def _load_module_terms(self, modules, langs, overwrite=False):
+        """ Add missing website specific translation """
+        res = super()._load_module_terms(modules, langs, overwrite=overwrite)
+
+        if not langs or langs == ['en_US'] or not modules:
+            return res
+
+        # Add specific view translations
+
+        # use the translation dic of the generic to translate the specific
+        self.env.cr.flush()
+        cache = self.env.cache
+        View = self.env['ir.ui.view']
+        field = self.env['ir.ui.view']._fields['arch_db']
+        # assume there are not too many records
+        self.env.cr.execute(""" SELECT generic.arch_db, specific.arch_db, specific.id
+                          FROM ir_ui_view generic
+                         INNER JOIN ir_ui_view specific
+                            ON generic.key = specific.key
+                         WHERE generic.website_id IS NULL AND generic.type = 'qweb'
+                         AND specific.website_id IS NOT NULL
+            """)
+        for generic_arch_db, specific_arch_db, specific_id in self.env.cr.fetchall():
+            if not generic_arch_db:
+                continue
+            langs_update = (langs & generic_arch_db.keys()) - {'en_US'}
+            generic_arch_db_en = generic_arch_db.pop('en_US')
+            specific_arch_db_en = specific_arch_db.pop('en_US')
+            generic_arch_db = {k: generic_arch_db[k] for k in langs_update}
+            specific_arch_db = {k: specific_arch_db.get(k, specific_arch_db_en) for k in langs_update}
+            generic_translation_dictionary = field.get_translation_dictionary(generic_arch_db_en, generic_arch_db)
+            specific_translation_dictionary = field.get_translation_dictionary(specific_arch_db_en, specific_arch_db)
+            # update specific_translation_dictionary
+            for term_en, specific_term_langs in specific_translation_dictionary.items():
+                if term_en not in generic_translation_dictionary:
+                    continue
+                for lang, generic_term_lang in generic_translation_dictionary[term_en].items():
+                    if overwrite or term_en == specific_term_langs[lang]:
+                        specific_term_langs[lang] = generic_term_lang
+            for lang in langs_update:
+                specific_arch_db[lang] = field.translate(
+                    lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
+            specific_arch_db['en_US'] = specific_arch_db_en
+            cache.update_raw(View.browse(specific_id), field, [specific_arch_db], dirty=True)
+
+        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        if not default_menu:
+            return res
+
+        o_menu_name = [f"'{lang}', o_menu.name->>'{lang}'" for lang in langs if lang != 'en_US']
+        o_menu_name = 'jsonb_build_object(' + ', '.join(o_menu_name) + ')'
+        self.env.cr.execute(f"""
+                        UPDATE website_menu menu
+                           SET name = {'menu.name || ' + o_menu_name if overwrite else o_menu_name + ' || menu.name'}
+                          FROM website_menu o_menu
+                         INNER JOIN website_menu s_menu
+                            ON o_menu.name->>'en_US' = s_menu.name->>'en_US' AND o_menu.url = s_menu.url
+                         INNER JOIN website_menu root_menu
+                            ON s_menu.parent_id = root_menu.id AND root_menu.parent_id IS NULL
+                         WHERE o_menu.website_id IS NULL AND o_menu.parent_id = %s
+                           AND s_menu.website_id IS NOT NULL
+                           AND menu.id = s_menu.id
+            """, (default_menu.id,))
+
+        return res

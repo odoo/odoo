@@ -3818,8 +3818,8 @@ var SnippetsMenu = Widget.extend({
         }
         if (!range ||
             !$currentSelectionTarget.parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
-            $(selection.anchorNode).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-id])').length ||
-            $(selection.focusNode).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-id])').length ||
+            $(selection.anchorNode).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])').length ||
+            $(selection.focusNode).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])').length ||
             (e && $(e.target).closest('.fa, img').length ||
             this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img')) ||
             (this.options.wysiwyg.lastElement && !this.options.wysiwyg.lastElement.isContentEditable)

@@ -1117,84 +1117,11 @@ class MailCommon(common.TransactionCase, MailCase):
 
         # Make sure Spanish translations have not been altered
         if test_record:
-            description_translations = cls.env['ir.translation'].search([
-                ('module', '=', 'test_mail'),
-                ('src', '=', test_record._description),
-                ('lang', '=', lang_code)
-            ])
-            if description_translations:
-                description_translations.update({'value': 'Spanish description'})
-            else:
-                description_translations.create({
-                    'lang': lang_code,
-                    'module': 'test_mail',
-                    'name': 'ir.model,name',
-                    'res_id': cls.env['ir.model']._get_id(test_record._name),
-                    'src': test_record._description,
-                    'state': 'translated',
-                    'type': 'model',
-                    'value': 'Spanish description',
-                })
-
-        translations_tocreate = []
-        # Have a TestStuff always available
-        test_stuff_translations = cls.env['ir.translation'].search([
-            ('module', '=', 'test_mail'),
-            ('src', '=', 'TestStuff'),
-            ('lang', '=', lang_code)
-        ])
-        if test_stuff_translations:
-            test_stuff_translations.update({'value': 'TestSpanishStuff'})
-        else:
-            translations_tocreate.append({
-                'lang': lang_code,
-                'name': 'idontknow',
-                'module': 'test_mail',
-                'res_id': False,
-                'src': 'TestStuff',
-                'state': 'translated',
-                'type': 'code',
-                'value': 'TestSpanishStuff',
-            })
-
-        view_translations = cls.env['ir.translation'].search([
-            ('module', '=', 'mail'),
-            ('src', '=', 'View %s'),
-            ('lang', '=', lang_code)
-        ])
-        if view_translations:
-            view_translations.update({'value': 'SpanishView'})
-        else:
-            translations_tocreate.append({
-                'lang': lang_code,
-                'name': 'idontknow',
-                'module': 'mail',
-                'res_id': False,
-                'src': 'View %s',
-                'state': 'translated',
-                'type': 'code',
-                'value': 'SpanishView %s',
-            })
+            cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish description'
 
         # Prepare some translated value for template if given
-        if test_template:
-            translations_tocreate += [{
-                'lang': lang_code,
-                'module': 'mail',
-                'name': 'mail.template,subject',
-                'res_id': test_template.id,
-                'state': 'translated',
-                'type': 'model',
-                'value': 'SpanishSubject for {{ object.name }}',
-            }, {
-                'lang': lang_code,
-                'module': 'mail',
-                'name': 'mail.template,body_html',
-                'res_id': test_template.id,
-                'state': 'translated',
-                'type': 'model',
-                'value': '<p>SpanishBody for <t t-out="object.name" /></p>',
-            }]
+        test_template.with_context(lang=lang_code).subject = 'SpanishSubject for {{ object.name }}'
+        test_template.with_context(lang=lang_code).body_html = '<p>SpanishBody for <t t-out="object.name" /></p>'
 
         # create a custom layout for email notification
         if not layout_arch_db:
@@ -1233,17 +1160,11 @@ class MailCommon(common.TransactionCase, MailCase):
             'name': 'test_layout',
             'res_id': view.id
         })
-        translations_tocreate.append({
-            'lang': lang_code,
-            'module': 'mail',
-            'name': 'ir.ui.view,arch_db',
-            'res_id': view.id,
-            'src': 'English Layout for',
-            'state': 'translated',
-            'type': 'model_terms',
-            'value': 'Spanish Layout para',
+        view.update_field_translations('arch_db', {
+            lang_code: {
+                'English Layout for': 'Spanish Layout para'
+            }
         })
-        cls.env['ir.translation'].create(translations_tocreate)
 
     def _generate_attachments_data(self, count, res_model=None, res_id=None, attach_values=None):
         # attachment visibility depends on what they are attached to
