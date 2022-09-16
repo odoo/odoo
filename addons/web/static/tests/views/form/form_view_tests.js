@@ -174,6 +174,7 @@ QUnit.module("Views", (hooks) => {
                     fields: {
                         name: { string: "Partner Type", type: "char" },
                         color: { string: "Color index", type: "integer" },
+                        foo: { string: "Foo", type: "char" },
                     },
                     records: [
                         { id: 12, display_name: "gold", color: 2 },
@@ -624,6 +625,53 @@ QUnit.module("Views", (hooks) => {
         );
         assert.hasClass(target.querySelector('.o_field_widget[name="foo"]'), "text-danger");
     });
+
+    QUnit.test(
+        "form with o2m having a many2many fields using the many2many_tags widget along the color_field option",
+        async function (assert) {
+            // In this scenario, the x2many form view isn't inline, so when we click on the record,
+            // it does an independant getView, which doesn't return all fields of the model. In the
+            // x2many list view, there's a field with a many2many_tags widget with the color option,
+            // and the color field (color) in our case, isn't in the form view.
+            // This test ensures that we can open the form view in this situation.
+            serverData.models.partner.records[0].timmy = [12, 14];
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <field name="display_name"/>
+                    <field name="timmy" widget="one2many">
+                        <tree string="Values">
+                            <field name="display_name"/>
+                            <!--
+                                Required to add at least one different field than the fields read
+                                to display <field name="timmy" widget="many2many_tags"/> below.
+                                To force to re-read the record with more fields.
+                            -->
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "user",
+                serverData,
+                arch: `
+                <form>
+                    <field name="partner_ids">
+                        <tree editable="top">
+                            <field name="display_name"/>
+                            <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 17,
+            });
+            assert.containsOnce(target, ".o_field_widget[name=timmy] .o_field_tags");
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.containsOnce(target, ".modal .o_form_view .o_field_widget[name=timmy]");
+        }
+    );
 
     QUnit.test("decoration-bf works on fields", async function (assert) {
         await makeView({

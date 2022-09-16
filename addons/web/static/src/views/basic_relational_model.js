@@ -1264,6 +1264,7 @@ export class RelationalModel extends Model {
                             const fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
                             const defaultFieldInfo = legRec.data[name].fieldsInfo.default;
                             _.each(fieldViews, function (fieldView) {
+                                _.defaults(fieldView.fields, defaultFieldInfo);
                                 _.each(fieldView.fieldsInfo, function (x2mFieldInfo) {
                                     _.defaults(x2mFieldInfo, defaultFieldInfo);
                                 });
