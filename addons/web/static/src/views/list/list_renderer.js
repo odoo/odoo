@@ -66,9 +66,7 @@ export class ListRenderer extends Component {
         this.cellClassByColumn = {};
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         this.state = useState({
-            columns: this.allColumns.filter(
-                (col) => !col.optional || this.optionalActiveFields[col.name]
-            ),
+            columns: this.getActiveColumns(this.props.list),
         });
         this.withHandleColumn = this.state.columns.some((col) => col.widget === "handle");
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
@@ -92,9 +90,7 @@ export class ListRenderer extends Component {
         });
         onWillUpdateProps((nextProps) => {
             this.allColumns = nextProps.archInfo.columns;
-            this.state.columns = this.allColumns.filter(
-                (col) => !col.optional || this.optionalActiveFields[col.name]
-            );
+            this.state.columns = this.getActiveColumns(nextProps.list);
         });
         onPatched(() => {
             const editedRecord = this.props.list.editedRecord;
@@ -186,6 +182,15 @@ export class ListRenderer extends Component {
         useExternalListener(window, "resize", () => {
             this.columnWidths = null;
             this.freezeColumnWidths();
+        });
+    }
+
+    getActiveColumns(list) {
+        return this.allColumns.filter((col) => {
+            if (list.isGrouped && col.widget === "handle") {
+                return false; // no handle column if the list is grouped
+            }
+            return !col.optional || this.optionalActiveFields[col.name];
         });
     }
 
@@ -1560,9 +1565,7 @@ export class ListRenderer extends Component {
     async toggleOptionalField(fieldName) {
         await this.props.list.unselectRecord(true);
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
-        this.state.columns = this.allColumns.filter(
-            (col) => !col.optional || this.optionalActiveFields[col.name]
-        );
+        this.state.columns = this.getActiveColumns(this.props.list);
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
