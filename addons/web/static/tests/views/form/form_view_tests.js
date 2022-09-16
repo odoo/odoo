@@ -673,6 +673,38 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("form with o2m having a field with fieldDependencies", async function (assert) {
+        // In this scenario, the x2many form view isn't inline, so when we click on the record,
+        // it does an independant getView, which doesn't return all fields of the model. In the
+        // x2many list view, there's a field with fieldDependencies, and the dependency field
+        // (int_field) in our case, isn't in the form view. This test ensures that we can open
+        // the form view in this situation.
+        class MyField extends CharField {}
+        MyField.fieldDependencies = {
+            int_field: { type: "integer" },
+        };
+        fieldRegistry.add("my_widget", MyField);
+        serverData.models.partner.records[1].p = [1];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="foo" widget="my_widget"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, ".o_field_widget[name=p] .o_data_row");
+        await click(target.querySelector(".o_field_widget[name=p] .o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".modal .o_form_view .o_field_widget[name=p]");
+    });
+
     QUnit.test("decoration-bf works on fields", async function (assert) {
         await makeView({
             type: "form",
