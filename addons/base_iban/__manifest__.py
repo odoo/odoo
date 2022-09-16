@@ -18,8 +18,8 @@ with a single statement.
     'demo': ['data/res_partner_bank_demo.xml'],
     'assets': {
         'web.assets_backend': [
-            'base_iban/static/src/js/iban_widget.js',
-            'base_iban/static/src/scss/iban_widget_view.scss',
+            'base_iban/static/src/components/**/*',
+            'base_iban/static/src/js/*.js',
         ],
         'web.qunit_suite_tests': [
             'base_iban/static/src/tests/**/*',
