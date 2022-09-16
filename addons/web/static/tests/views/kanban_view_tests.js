@@ -11882,4 +11882,47 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(target, ".o_nocontent_help");
         }
     );
+
+    QUnit.test("Move multiple records in different columns simultaneously", async (assert) => {
+        let def;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["state"],
+            async mockRPC(_route, { method }) {
+                if (method === "read") {
+                    await def;
+                }
+            },
+        });
+
+        def = makeDeferred();
+
+        assert.deepEqual(getCardTexts(), ["1", "2", "3", "4"]);
+
+        // Move 3 at end of 1st column
+        await dragAndDrop(".o_kanban_group:last-of-type .o_kanban_record", ".o_kanban_group");
+
+        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+
+        // Move 4 at end of 1st column
+        await dragAndDrop(".o_kanban_group:last-of-type .o_kanban_record", ".o_kanban_group");
+
+        assert.deepEqual(getCardTexts(), ["1", "3", "4", "2"]);
+
+        def.resolve();
+        await nextTick();
+
+        assert.deepEqual(getCardTexts(), ["1", "3", "4", "2"]);
+    });
 });
