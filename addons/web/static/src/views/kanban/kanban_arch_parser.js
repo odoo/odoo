@@ -84,11 +84,19 @@ export class KanbanArchParser extends XMLParser {
                 if (fieldInfo.widget === "handle") {
                     handleField = name;
                 }
-                addFieldDependencies(activeFields, fieldInfo.FieldComponent.fieldDependencies);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    fieldInfo.FieldComponent.fieldDependencies
+                );
             }
             if (node.tagName === "widget") {
                 const { WidgetComponent } = Widget.parseWidgetNode(node);
-                addFieldDependencies(activeFields, WidgetComponent.fieldDependencies);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    WidgetComponent.fieldDependencies
+                );
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.

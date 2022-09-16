@@ -86,7 +86,11 @@ export class ListArchParser extends XMLParser {
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
                 }
-                addFieldDependencies(activeFields, fieldInfo.FieldComponent.fieldDependencies);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    fieldInfo.FieldComponent.fieldDependencies
+                );
                 if (fieldInfo.modifiers.column_invisible !== true) {
                     const label = fieldInfo.FieldComponent.label;
                     columns.push({
