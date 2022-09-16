@@ -186,7 +186,6 @@ class TestPage(common.TransactionCase):
 
         self.env['website'].create({
             'name': 'My Second Website',
-            'domain': '',
         })
 
         # currently the view unlink of website.page can't handle views with inherited views
