@@ -52,20 +52,29 @@
         Hello,
         <br/><br/>
         <t t-set="transaction" t-value="object.get_portal_last_transaction()"/>
-        Your order <strong t-out="object.name or ''">S00049</strong> amounting in <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</strong>
-        <t t-if="object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))">
-            has been confirmed.<br/>
-            Thank you for your trust!
+        <t t-if="object.state != 'sale' and transaction and transaction.state in ('done', 'authorized') and object.amount_total != transaction.amount">
+            A payment was received for you order <strong t-out="object.name or ''">S00049</strong>
+            but its amount (<strong t-out="format_amount(transaction.amount, object.currency_id) or ''">$ 20.00</strong>)
+            does not match the order amount (<strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</strong>).
+            Please contact customer service.
+            <br/><br/>
         </t>
-        <t t-elif="transaction and transaction.state == 'pending'">
-            is pending. It will be confirmed when the payment is received.
-            <t t-if="object.reference">
-                Your payment reference is <strong t-out="object.reference or ''"></strong>.
+        <t t-else="">
+            Your order <strong t-out="object.name or ''">S00049</strong> amounting in <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</strong>
+            <t t-if="object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized') and object.amount_total == transaction.amount)">
+                has been confirmed.<br/>
+                Thank you for your trust!
             </t>
+            <t t-elif="transaction and transaction.state == 'pending'">
+                is pending. It will be confirmed when the payment is received.
+                <t t-if="object.reference">
+                    Your payment reference is <strong t-out="object.reference or ''"></strong>.
+                </t>
+            </t>
+            <br/><br/>
+            Do not hesitate to contact us if you have any questions.
+            <br/><br/>
         </t>
-        <br/><br/>
-        Do not hesitate to contact us if you have any questions.
-        <br/><br/>
     </p>
 <t t-if="hasattr(object, 'website_id') and object.website_id">
     <div style="margin: 0px; padding: 0px;">
