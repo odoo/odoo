@@ -3,6 +3,7 @@
 import { append, createElement } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { getModifier } from "@web/views/view_compiler";
+import { registry } from "@web/core/registry";
 
 function compileSettingsPage(el, params) {
     const settingsPage = createElement("SettingsPage");
@@ -33,9 +34,9 @@ function compileSettingsPage(el, params) {
 }
 
 function getAppIconUrl(module) {
-    return module === "general_settings"
-        ? "/base/static/description/settings.png"
-        : "/" + module + "/static/description/icon.png";
+    return registry
+        .category("settings_icon")
+        .get(module, "/" + module + "/static/description/icon.png");
 }
 
 function compileSettingsApp(el, params) {

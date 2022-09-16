@@ -17,6 +17,11 @@ Shows you a list of applications features to install from.
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         ],
+    'assets': {
+        'web.assets_backend': [
+            'base_setup/static/src/**/*.js',
+        ],
+    },
     'installable': True,
 
     'license': 'LGPL-3',
