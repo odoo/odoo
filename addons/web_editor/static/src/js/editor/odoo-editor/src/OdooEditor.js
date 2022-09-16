@@ -78,6 +78,7 @@ import {
     getDeepestPosition,
     leftPos,
     isNotAllowedContent,
+    isEditorTab,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
