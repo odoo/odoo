@@ -1046,6 +1046,7 @@ class Meeting(models.Model):
             for attendee in meeting.attendee_ids:
                 attendee_add = event.add('attendee')
                 attendee_add.value = u'MAILTO:' + (attendee.email or u'')
+            event.add('organizer').value = u'MAILTO:' + (meeting.user_id.email or u'')
             result[meeting.id] = cal.serialize().encode('utf-8')
 
         return result
