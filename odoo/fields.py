@@ -2790,6 +2790,7 @@ class Many2one(_Relational):
     """
     type = 'many2one'
     column_type = ('int4', 'int4')
+    index = 'btree_not_null'
 
     ondelete = None                     # what to do when value is deleted
     auto_join = False                   # whether joins are generated upon search
