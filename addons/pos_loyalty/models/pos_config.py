@@ -82,7 +82,7 @@ class PosConfig(models.Model):
             }
         check_date = fields.Date.from_string(creation_date[:11])
         if (coupon.expiration_date and coupon.expiration_date < check_date) or\
-            (coupon.program_id.date_to and coupon.program_id.date_to <= fields.Date.context_today(self)) or\
+            (coupon.program_id.date_to and coupon.program_id.date_to < fields.Date.context_today(self)) or\
             (coupon.program_id.limit_usage and coupon.program_id.total_order_count >= coupon.program_id.max_usage):
             return {
                 'successful': False,
