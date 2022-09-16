@@ -59,7 +59,8 @@
                     <field name="analytic_distribution_stored_char" invisible="1"/>
                     <field name="analytic_distribution" widget="analytic_distribution"
                            optional="show"
-                           groups="analytic.group_analytic_accounting"/>
+                           groups="analytic.group_analytic_accounting"
+                           options="{'product_field': 'product_id', 'business_domain': 'expense'}"/>
                     <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="1"/>
                     <field name="unit_amount_display" string="Unit Price" optional="hide" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
@@ -191,10 +192,8 @@
                             <field name="analytic_distribution_stored_char" invisible="1"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
                                 groups="analytic.group_analytic_accounting"
-                                options="{'product_field': 'product_id', 'account_field': 'account_id'}"
-                                business_domain_compute="'purchase'"
-                                attrs="{'readonly': [('is_editable', '=', False)]}"
-                                   />
+                                options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"
+                                attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
                             <label id="lo" for="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
@@ -753,8 +752,7 @@
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
                                            optional="show"
-                                           options="{'product_field': 'product_id', 'account_field': 'account_id'}"
-                                           business_domain_compute="'purchase'"/>
+                                           options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"/>
                                     <field name="account_id" optional="hide" readonly="True"/>
                                     <field name="product_has_cost" invisible="True"/>
                                     <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'currency_id'}"/>

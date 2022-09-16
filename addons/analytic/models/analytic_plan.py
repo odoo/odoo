@@ -197,8 +197,6 @@ class AccountAnalyticApplicability(models.Model):
     analytic_plan_id = fields.Many2one('account.analytic.plan')
     business_domain = fields.Selection(
         selection=[
-            ('sale', 'Sales'),
-            ('purchase', 'Purchase'),
             ('general', 'Miscellaneous'),
         ],
         required=True,
