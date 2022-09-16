@@ -18,17 +18,7 @@
     </xpath>
     <xpath expr="//Layout" position="inside">
         <t t-set-slot="control-panel-website-extra-actions">
-            <div class="btn-group" role="toolbar" aria-label="Main actions">
-                <button class="btn btn-light dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="me-1 fa fa-globe"/><span t-esc="state.activeWebsite.name"/>
-                </button>
-                <div class="dropdown-menu">
-                    <t t-foreach="websiteSelection" t-as="website" t-key="website">
-                        <a role="menuitem" href="#" class="dropdown-item" t-on-click="() => this.onSelectWebsite(website)"><t t-esc="website.name"/></a>
-                        <div t-if="!website.id" class="dropdown-divider"/>
-                    </t>
-                </div>
-            </div>
+            <t t-call="website.RecordFilter"/>
         </t>
     </xpath>
 </t>
@@ -43,6 +33,20 @@
     <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
         <t t-call="website.ControlPanel.Regular"/>
     </xpath>
+</t>
+
+<t t-name="website.RecordFilter" owl="1">
+    <div class="btn-group" role="toolbar" aria-label="Main actions" t-if="'website_id' in props.archInfo.fieldNodes">
+        <button class="btn btn-light dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="me-1 fa fa-globe"/><span t-esc="state.activeWebsite.name"/>
+        </button>
+        <div class="dropdown-menu">
+            <t t-foreach="websiteSelection" t-as="website" t-key="website">
+                <a role="menuitem" href="#" class="dropdown-item" t-on-click="() => this.onSelectWebsite(website)"><t t-esc="website.name"/></a>
+                <div t-if="!website.id" class="dropdown-divider"/>
+            </t>
+        </div>
+    </div>
 </t>
 
 </templates>
