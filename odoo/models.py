@@ -1659,14 +1659,9 @@ class BaseModel(metaclass=MetaModel):
         models = {}
         for view in result['views'].values():
             for model, model_fields in view.pop('models').items():
-                models.setdefault(model, {'id', self.CONCURRENCY_CHECK_FIELD}).update(model_fields)
+                models.setdefault(model, set()).update(model_fields)
 
         result['models'] = {}
-
-        if 'search' in result['views']:
-            # If the search view is requested, all fields of the main model must be passed.
-            result['models'][self._name] = self.fields_get(attributes=self._get_view_field_attributes())
-            models.pop(self._name)
 
         for model, model_fields in models.items():
             result['models'][model] = self.env[model].fields_get(
@@ -1797,6 +1792,7 @@ class BaseModel(metaclass=MetaModel):
 
         # Apply post processing, groups and modifiers etc...
         arch, models = view.postprocess_and_fields(arch, model=self._name, **options)
+        models = self._get_view_fields(view_type or view.type, models)
         result = {
             'arch': arch,
             # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
@@ -1839,6 +1835,29 @@ class BaseModel(metaclass=MetaModel):
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result
+
+    @api.model
+    def _get_view_fields(self, view_type, models):
+        """ Returns the field names required by the web client to load the views according to the view type.
+
+        The method is meant to be overridden by modules extending web client features and requiring additional
+        fields.
+
+        :param string view_type: type of the view
+        :param dict models: dict holding the models and fields used in the view architecture.
+        :return: dict holding the models and field required by the web client given the view type.
+        :rtype: list
+        """
+        if view_type in ('kanban', 'list', 'form'):
+            for model_fields in models.values():
+                model_fields.update({'id', self.CONCURRENCY_CHECK_FIELD})
+        elif view_type == 'search':
+            models[self._name] = list(self._fields.keys())
+        elif view_type == 'graph':
+            models[self._name].union(fname for fname, field in self._fields.items() if field.type in ('integer', 'float'))
+        elif view_type == 'pivot':
+            models[self._name].union(fname for fname, field in self._fields.items() if field.groupable)
+        return models
 
     @api.model
     def _get_view_field_attributes(self):
