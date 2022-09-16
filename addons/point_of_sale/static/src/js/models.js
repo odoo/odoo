@@ -1409,7 +1409,11 @@ class Product extends PosModel {
             }
 
             if (rule.base === 'pricelist') {
-                price = self.get_price(rule.base_pricelist, quantity);
+                let base_pricelist = _.find(self.pos.pricelists, function (pricelist) {
+                    return pricelist.id === rule.base_pricelist_id[0];});
+                if (base_pricelist) {
+                    price = self.get_price(base_pricelist, quantity);
+                }
             } else if (rule.base === 'standard_price') {
                 price = self.standard_price;
             }
