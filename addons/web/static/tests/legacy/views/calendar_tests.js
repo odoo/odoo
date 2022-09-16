@@ -208,7 +208,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length,
+        assert.ok(calendar.$('.o_legacy_calendar_view').find('.fc-view-container').length,
             "should instance of fullcalendar");
 
         var $sidebar = calendar.$('.o_calendar_sidebar');
@@ -3769,7 +3769,7 @@ QUnit.module('LegacyViews', {
                 initialDate: initDate,
             },
         });
-        assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length, "should display in the calendar"); // OK
+        assert.ok(calendar.$('.o_legacy_calendar_view').find('.fc-view-container').length, "should display in the calendar"); // OK
         // Testing the order of the events: by start date
         assert.strictEqual(calendar.$('.o_event_title').length, 3, "3 events should be available"); // OK
         assert.strictEqual(calendar.$('.o_event_title').first().text(), 'First event', "First event should be on top");
