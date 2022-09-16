@@ -51,7 +51,7 @@ class TestWebsiteResetPassword(HttpCase):
             user.action_reset_password()
             self.assertIn(website_1.domain, user.signup_url)
 
-            (website_1 + website_2).domain = ""
+            (website_1 + website_2).domain = False
 
             user.action_reset_password()
             self.env.invalidate_all()

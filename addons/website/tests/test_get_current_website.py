@@ -28,7 +28,7 @@ class TestGetCurrentWebsite(TransactionCase):
 
         # clean initial state
         website1 = self.website
-        website1.domain = ''
+        website1.domain = False
 
         website2 = Website.create({'name': 'My Website 2'})
 
