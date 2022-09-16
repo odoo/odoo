@@ -45,7 +45,7 @@ $-mini-nav-size: 40px;
         overflow: auto;
     }
 
-    @each $-name, $-color in ('edit': $o-enterprise-primary-color, 'apps': $o-enterprise-color) {
+    @each $-name, $-color in ('apps': $o-enterprise-color, 'edit': $o-we-bg-lighter) {
         .o_frontend_to_backend_#{$-name}_btn {
             background-color: $-color;
 
@@ -53,6 +53,12 @@ $-mini-nav-size: 40px;
                 background-color: darken($-color, 5%);
             }
         }
+    }
+
+    .o_frontend_to_backend_edit_btn > img {
+        height: 1.8em;
+        margin-right: 0.5em;
+        border-radius: 0.25rem;
     }
 
     &:hover {
