@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -423,6 +423,8 @@ msgstr "Brouillon"
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
 msgstr ""
+"Les brouillons de factures pour cette commande seront annulés. Confirmez-"
+"vous l'action ?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1373,6 +1375,8 @@ msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
 msgstr ""
+"Vous ne pouvez pas supprimer un ordre de réparation une fois qu'il a été "
+"confirmé. Vous devez d'abord l'annuler."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1381,6 +1385,8 @@ msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
 msgstr ""
+"Vous ne pouvez pas supprimer un ordre de réparation qui est lié à une "
+"facture qui a été comptabilisée une fois."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0

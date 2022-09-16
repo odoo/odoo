@@ -337,6 +337,14 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
 
     if (spec.contentAfter) {
         renderTextualSelection();
+
+        // remove all check-ids (checklists, stars)
+        if (spec.removeCheckIds) {
+            for (const li of document.querySelectorAll('#editor-test-container li[id^=checklist-id-')) {
+                li.removeAttribute('id');
+            }
+        }
+
         const value = testNode.innerHTML;
         window.chai.expect(value).to.be.equal(
             spec.contentAfter,

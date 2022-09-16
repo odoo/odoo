@@ -14,44 +14,17 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         constructor() {
             super(...arguments);
             this.manualInputCashCount = false;
-            this.cashControl = this.env.pos.config.cash_control;
             this.moneyDetailsRef = useRef('moneyDetails');
             this.closeSessionClicked = false;
             this.moneyDetails = null;
             this.state = useState({});
+            Object.assign(this, this.props.info);
         }
+        /**
+         * @deprecated Don't remove. There might be overrides.
+         */
         async willStart() {
-            try {
-                const closingData = await this.rpc({
-                    model: 'pos.session',
-                    method: 'get_closing_control_data',
-                    args: [[this.env.pos.pos_session.id]]
-                });
-                this.ordersDetails = closingData.orders_details;
-                this.paymentsAmount = closingData.payments_amount;
-                this.payLaterAmount = closingData.pay_later_amount;
-                this.openingNotes = closingData.opening_notes;
-                this.defaultCashDetails = closingData.default_cash_details;
-                this.otherPaymentMethods = closingData.other_payment_methods;
-                this.isManager = closingData.is_manager;
-                this.amountAuthorizedDiff = closingData.amount_authorized_diff;
 
-                // component state and refs definition
-                const state = {notes: '', acceptClosing: false, payments: {}};
-                if (this.cashControl) {
-                    state.payments[this.defaultCashDetails.id] = {counted: 0, difference: -this.defaultCashDetails.amount, number: 0};
-                }
-                if (this.otherPaymentMethods.length > 0) {
-                    this.otherPaymentMethods.forEach(pm => {
-                        if (pm.type === 'bank') {
-                            state.payments[pm.id] = {counted: this.env.pos.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
-                        }
-                    })
-                }
-                Object.assign(this.state, state);
-            } catch (error) {
-                this.error = error;
-            }
         }
         /*
          * Since this popup need to be self dependent, in case of an error, the popup need to be closed on its own.

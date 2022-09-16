@@ -1139,7 +1139,7 @@ msgstr "Goedgekeurd verlof"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__officer
 msgid "Approved by Time Off Officer"
-msgstr "Goedgekeurd door Time Off Officer"
+msgstr "Goedgekeurd door verlofbeheerder"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__apr
@@ -1270,12 +1270,13 @@ msgstr "Per werknemer label"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Approver"
-msgstr "Door de goedkeuring van de werknemer"
+msgstr "Door de verlofgoedkeurder ingesteld bij de werknemer"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr "Door de goedkeurder en verloffunctionaris van de werknemer"
+msgstr ""
+"Door de verlofgoedkeurder ingesteld bij de werknemer en de verlofbeheerder "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1289,7 +1290,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Door de verlofaanvraag beheerder"
+msgstr "Door de verlofbeheerder"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_approve
@@ -1345,8 +1346,8 @@ msgid ""
 "Choose the Time Off Officer who will be notified to approve allocation or "
 "Time Off request"
 msgstr ""
-"Kies de verloffunctionaris die op de hoogte wordt gesteld om de toewijzing "
-"of het verlofverzoek goed te keuren"
+"Kies de verlofbeheerder die op de hoogte wordt gesteld om de toewijzing of "
+"het verlofverzoek goed te keuren"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -2777,8 +2778,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
-"Alleen een Personeelsverantwoordelijke of managers kunnen verlofaanvragen "
-"goedkeuren of weigeren."
+"Alleen een verlofbeheerder of managers kunnen verlofaanvragen goedkeuren of "
+"afkeuren."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__is_based_on_worked_time
@@ -2871,7 +2872,7 @@ msgstr "Algemene verlofdagen"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
-msgstr "Wisselkoers"
+msgstr "Ratio"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__notes
@@ -3002,7 +3003,7 @@ msgstr "Resource verlof detail"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
 msgid "Responsible Time Off Officer"
-msgstr "Verantwoordelijke vrijetijdsfunctionaris"
+msgstr "Verantwoordelijke verlofbeheerder"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -3112,7 +3113,7 @@ msgstr "De volgorde wordt automatisch gegenereerd door de starttijddelta."
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__set
 msgid "Set by Time Off Officer"
-msgstr "Ingesteld door Personeelsverantwoordelijke"
+msgstr "Ingesteld door de verlofbeheerder"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3543,7 +3544,7 @@ msgstr "Verlof notificatie subsoort"
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
 msgid "Time Off Officer"
-msgstr "Verlof manager"
+msgstr "Verlofbeheerder"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
@@ -3553,7 +3554,7 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"Verlofbeheerder wijzen vrije dagen toe aan werknemers (bijv. Betaald verlof).<br>\n"
+"Verlofbeheerders wijzen vrije dagen toe aan werknemers (bijv. Betaald verlof).<br>\n"
 "Werknemers vragen toewijzingen aan verlofbeheerders (bijv. vakantiedagen)."
 
 #. module: hr_holidays

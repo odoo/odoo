@@ -98,7 +98,7 @@ msgstr "<span>‎运输重量：‎</span>"
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr "<strong>物流商:</strong>"
+msgstr "<strong>承运商:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -185,7 +185,7 @@ msgstr "已归档"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr "可用的物流商"
+msgstr "可用的承运商"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
@@ -216,12 +216,12 @@ msgstr "取消"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "物流商"
+msgstr "承运商"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr "物流商代码"
+msgstr "承运商代码"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
@@ -300,12 +300,12 @@ msgstr "定义新交货方式"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr "发货物流商"
+msgstr "发货承运商"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "物流商选择向导"
+msgstr "承运商选择向导"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -414,7 +414,7 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"每一个物流商(例如UPS)能有几种不同的运输方式(例如UPS快运, UPS 标准)\n"
+"每一个承运商(例如UPS)能有几种不同的运输方式(例如UPS快运, UPS 标准)\n"
 "并且每种方式都相应的一套定价规则"
 
 #. module: delivery
@@ -607,7 +607,7 @@ msgstr "名称"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr "无物流商集成"
+msgstr "无承运商集成"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:0
@@ -796,7 +796,7 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
-"‎寄送承运人的货件‎%(carrier_name)s‎用于带跟踪号码的运输‎%(ref)s<br/>‎成本：‎%(price).2f%(currency)s"
+"‎寄送承运人的货件‎%(承运商_name)s‎用于带跟踪号码的运输‎%(ref)s<br/>‎成本：‎%(price).2f%(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -914,7 +914,7 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "这些运费模板能根据你的设定，自动的计算显示给用户的运输价格；\n"
-"显示在销售订单中（基于报价单）或者结算单中（基于发货单）"
+"显示在销售订单中（基于报价）或者结算单中（基于发货单）"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
