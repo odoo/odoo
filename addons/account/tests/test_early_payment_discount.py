@@ -217,9 +217,9 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
-            {'amount_currency': -2902.50},
+            {'amount_currency': -2913.75},
             {'amount_currency': -225.0},
-            {'amount_currency': 3127.50},
+            {'amount_currency': 3138.75},
         ])
 
     def test_register_discounted_payment_multi_line_multi_discount_tax_mixed_too_late(self):
