@@ -1992,7 +1992,7 @@ patch(MockServer.prototype, 'mail', {
      * Simulates `_message_track` on `mail.thread`
      */
     _mockMailThread_MessageTrack(modelName, trackedFieldNames, initialTrackedFieldValuesByRecordId) {
-        const trackFieldNamesToField = this.mockFieldsGet(modelName, [trackedFieldNames]);
+        const trackFieldNamesToField = this.mockFieldsGet(modelName, trackedFieldNames);
         const tracking = {};
         const records = this.models[modelName].records;
         for (const record of records) {

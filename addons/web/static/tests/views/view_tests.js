@@ -124,7 +124,7 @@ QUnit.module("Views", (hooks) => {
                 this._super();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,false,toy"]);
-                assert.deepEqual(fields, serverData.models.animal.fields);
+                assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, false);
             },
@@ -162,7 +162,7 @@ QUnit.module("Views", (hooks) => {
                 this._super();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
-                assert.deepEqual(fields, serverData.models.animal.fields);
+                assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, 1);
             },
@@ -199,7 +199,7 @@ QUnit.module("Views", (hooks) => {
                 this._super();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
-                assert.deepEqual(fields, serverData.models.animal.fields);
+                assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, 1);
             },
@@ -240,7 +240,7 @@ QUnit.module("Views", (hooks) => {
                     this._super();
                     const { arch, fields, info } = this.props;
                     assert.strictEqual(arch, serverData.views["animal,false,toy"]);
-                    assert.deepEqual(fields, serverData.models.animal.fields);
+                    assert.deepEqual(fields, {});
                     assert.strictEqual(info.actionMenus, undefined);
                     assert.strictEqual(this.env.config.viewId, false);
                 },
@@ -283,7 +283,7 @@ QUnit.module("Views", (hooks) => {
                 this._super();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,1,toy"]);
-                assert.deepEqual(fields, serverData.models.animal.fields);
+                assert.deepEqual(fields, {});
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, 1);
             },
@@ -362,7 +362,7 @@ QUnit.module("Views", (hooks) => {
                 this._super();
                 const { arch, fields, info } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,false,toy"]);
-                assert.deepEqual(fields, serverData.models.animal.fields);
+                assert.deepEqual(fields, {});
                 assert.deepEqual(info.actionMenus, {});
                 assert.strictEqual(this.env.config.viewId, false);
             },
