@@ -2361,7 +2361,9 @@ class Order extends PosModel {
      */
     init_from_JSON(json) {
         let partner;
-        if (json.pos_session_id !== this.pos.pos_session.id) {
+        if (json.state && ['done', 'invoiced', 'paid'].includes(json.state)) {
+            this.sequence_number = json.sequence_number;
+        } else if (json.pos_session_id !== this.pos.pos_session.id) {
             this.sequence_number = this.pos.pos_session.sequence_number++;
         } else {
             this.sequence_number = json.sequence_number;
