@@ -4468,7 +4468,79 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_notification_manager .o_notification");
     });
 
-    QUnit.test("keynav switching to another record from a dirty one", async function (assert) {
+    QUnit.test("keynav: switching to another record from an invalid one", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="foo" required="1"/></form>',
+            resIds: [1, 2],
+            resId: 1,
+            mockRPC(route) {
+                if (route === "/web/dataset/call_kw/partner/write") {
+                    throw new Error("Shouldn't call write as the record is invalid");
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name=foo] input", "");
+        triggerHotkey("alt+n");
+        await nextTick();
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
+        assert.containsOnce(target, ".o_notification_manager .o_notification");
+    });
+
+    QUnit.test("switching to another record from an invalid one (2)", async function (assert) {
+        // in this scenario, the record is already invalid in db, so we should be allowed to
+        // leave it
+        serverData.models.partner.records[0].foo = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" required="1"/>
+                </form>`,
+            resIds: [1, 2],
+            resId: 1,
+        });
+
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+
+        await click(target.querySelector(".o_pager_next"));
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "second record");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
+
+        await click(target.querySelector(".o_pager_previous"));
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+
+        // same, but in edit mode
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.containsOnce(target, ".o_form_editable");
+
+        await click(target.querySelector(".o_pager_next"));
+        assert.containsOnce(target, ".o_form_editable");
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "second record");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
+    });
+
+    QUnit.test("keynav: switching to another record from a dirty one", async function (assert) {
         let nbWrite = 0;
         await makeView({
             type: "form",
@@ -4508,7 +4580,7 @@ QUnit.module("Views", (hooks) => {
         input.value = "new value";
         await triggerEvent(input, null, "input");
 
-        // click on the pager to switch to the next record (will save record)
+        // trigger the pager hotkey to switch to the next record (will save record)
         triggerHotkey("alt+n");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
