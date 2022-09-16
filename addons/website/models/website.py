@@ -1379,12 +1379,13 @@ class Website(models.Model):
     def _get_cached(self, field):
         return self._get_cached_values()[field]
 
-    def _get_html_fields(self):
-        html_fields = [('ir_ui_view', 'arch_db')]
+    def _get_html_fields_attributes(self):
+        html_fields = [('ir_ui_view', 'arch_db', True)]
         cr = self.env.cr
         cr.execute(r"""
             SELECT f.model,
-                   f.name
+                   f.name,
+                   f.translate
               FROM ir_model_fields f
               JOIN ir_model m
                 ON m.id = f.model_id
@@ -1394,10 +1395,10 @@ class Website(models.Model):
                AND f.model NOT LIKE 'ir.actions%'
                AND f.model != 'mail.message'
         """)
-        for model, name in cr.fetchall():
+        for model, name, translate in cr.fetchall():
             table = self.env[model]._table
             if tools.table_exists(cr, table) and tools.column_exists(cr, table, name):
-                html_fields.append((table, name))
+                html_fields.append((table, name, translate))
         return html_fields
 
     def _get_snippets_assets(self):
@@ -1428,7 +1429,7 @@ class Website(models.Model):
         """)
         return self.env.cr.fetchall()
 
-    def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields):
+    def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields_attributes):
         snippet_occurences = []
         # Check snippet template definition to avoid disabling its related assets.
         # This special case is needed because snippet template definitions do not
@@ -1440,11 +1441,12 @@ class Website(models.Model):
 
         # As well as every snippet dropped in html fields
         self.env.cr.execute(sql.SQL(" UNION ").join(
-            sql.SQL("SELECT regexp_matches({}, {}, 'g') FROM {}").format(
+            sql.SQL("SELECT regexp_matches({}{}, {}, 'g') FROM {}").format(
                 sql.Identifier(column),
+                sql.SQL("->>'en_US'" if translate else ''),
                 sql.Placeholder('snippet_regex'),
                 sql.Identifier(table)
-            ) for table, column in html_fields
+            ) for table, column, translate in html_fields_attributes
         ), {'snippet_regex': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'})
         results = self.env.cr.fetchall()
         for r in results:
@@ -1461,10 +1463,10 @@ class Website(models.Model):
 
     def _disable_unused_snippets_assets(self):
         snippets_assets = self._get_snippets_assets()
-        html_fields = self._get_html_fields()
+        html_fields_attributes = self._get_html_fields_attributes()
 
         for snippet_module, snippet_id, asset_version, asset_type, _asset_id in snippets_assets:
-            is_snippet_used = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields)
+            is_snippet_used = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields_attributes)
 
             # The regex catches XXX.scss, XXX.js and XXX_variables.scss
             assets_regex = f'{snippet_id}/{asset_version}.+{asset_type}'
@@ -1652,6 +1654,7 @@ class Website(models.Model):
         """
         match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
         similarity_threshold = 0.3
+        lang = self.env.lang or 'en_US'
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
             model = self.env[model_name]
@@ -1668,6 +1671,11 @@ class Website(models.Model):
                 field=unaccent(sql.SQL("{table}.{field}").format(
                     table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._table),
                     field=sql.Identifier(field)
+                )) if not (self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._fields[field].translate else
+                unaccent(sql.SQL("COALESCE({table}.{field}->>{lang}, {table}.{field}->>'en_US')").format(
+                    table=sql.Identifier((self.env['ir.ui.view'] if field == 'arch_db' or (field == 'name' and 'arch_db' in fields) else model)._table),
+                    field=sql.Identifier(field),
+                    lang=sql.Literal(lang)
                 ))
             ) for field in fields]
             best_similarity = sql.SQL('GREATEST({similarities})').format(
@@ -1698,55 +1706,6 @@ class Website(models.Model):
             )
             self.env.cr.execute(query, {'search': search})
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
-            if self.env.lang:
-                # Specific handling for website.page that inherits its arch_db and name fields
-                # TODO make more generic
-                if 'arch_db' in fields:
-                    # Look for partial translations
-                    similarity = sql.SQL("word_similarity({search}, {field})").format(
-                        search=unaccent(sql.Placeholder('search')),
-                        field=unaccent(sql.SQL('t.value'))
-                    )
-                    names = ['%s,%s' % (self.env['ir.ui.view']._name, field) for field in fields]
-                    query = sql.SQL("""
-                        SELECT {table}.id, {similarity} AS _similarity
-                        FROM {table}
-                        LEFT JOIN ir_ui_view v ON {table}.view_id = v.id
-                        LEFT JOIN ir_translation t ON v.id = t.res_id
-                        WHERE t.lang = {lang}
-                        AND t.name = ANY({names})
-                        AND t.type = 'model_terms'
-                        AND t.value IS NOT NULL
-                        ORDER BY _similarity desc
-                        LIMIT 1000
-                    """).format(
-                        table=sql.Identifier(model._table),
-                        similarity=similarity,
-                        lang=sql.Placeholder('lang'),
-                        names=sql.Placeholder('names'),
-                    )
-                else:
-                    similarity = sql.SQL("word_similarity({search}, {field})").format(
-                        search=unaccent(sql.Placeholder('search')),
-                        field=unaccent(sql.SQL('value'))
-                    )
-                    names = ['%s,%s' % (model._name, field) for field in fields]
-                    query = sql.SQL("""
-                        SELECT res_id, {similarity} AS _similarity
-                        FROM ir_translation
-                        WHERE lang = {lang}
-                        AND name = ANY({names})
-                        AND type = 'model'
-                        AND value IS NOT NULL
-                        ORDER BY _similarity desc
-                        LIMIT 1000
-                    """).format(
-                        similarity=similarity,
-                        lang=sql.Placeholder('lang'),
-                        names=sql.Placeholder('names'),
-                    )
-                self.env.cr.execute(query, {'lang': self.env.lang, 'names': names, 'search': search})
-                ids.update(row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold)
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
             records = model.search_read(domain, fields, limit=limit)

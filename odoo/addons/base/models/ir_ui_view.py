@@ -320,6 +320,9 @@ actual arch.
                     data['arch_fs'] = '/'.join(path_info[0:2])
                     data['arch_updated'] = False
             view.write(data)
+            # the xml_translate will clean the arch_db when write (e.g. ('<div>') -> ('<div></div>'))
+            # view.arch should be reassigned here
+            view.arch = view.arch_db
         # the field 'arch' depends on the context and has been implicitly
         # modified in all languages; the invalidation below ensures that the
         # field does not keep an old value in another environment
@@ -565,6 +568,12 @@ actual arch.
         if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
         return super(View, self).unlink()
+
+    def _update_field_translations(self, fname, translations, digest=None):
+        res = super()._update_field_translations(fname, translations, digest)
+        if fname == 'arch_db' and 'install_filename' not in self._context:
+            self.write({'arch_updated': True})
+        return res
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -2027,10 +2036,6 @@ actual arch.
     #------------------------------------------------------
     # Misc
     #------------------------------------------------------
-
-    def open_translations(self):
-        """ Open a view for editing the translations of field 'arch_db'. """
-        return self.env['ir.translation'].translate_fields('ir.ui.view', self.id, 'arch_db')
 
     @api.model
     def _validate_custom_views(self, model):

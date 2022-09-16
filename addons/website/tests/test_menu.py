@@ -69,7 +69,7 @@ class TestMenu(common.TransactionCase):
         self.assertEqual(total_menus + 4, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Contactus/Sub Default Menu)")
 
     def test_04_specific_menu_translation(self):
-        Translation = self.env['ir.translation']
+        IrModuleModule = self.env['ir.module.module']
         Menu = self.env['website.menu']
         existing_menus = Menu.search([])
 
@@ -85,9 +85,6 @@ class TestMenu(common.TransactionCase):
         # create fr_FR translation for template menu
         self.env.ref('base.lang_fr').active = True
         template_menu.with_context(lang='fr_FR').name = 'Menu en français'
-        Translation.search([
-            ('name', '=', 'website.menu,name'), ('res_id', '=', template_menu.id),
-        ]).module = 'website'
         self.assertEqual(specific1.name, 'Menu in english',
                          'Translating template menu does not translate specific menu')
 
@@ -95,7 +92,7 @@ class TestMenu(common.TransactionCase):
         specific1.name = 'Menu in french'
 
         # loading translation add missing specific translation
-        Translation._load_module_terms(['website'], ['fr_FR'])
+        IrModuleModule._load_module_terms(['website'], ['fr_FR'])
         Menu.invalidate_model(['name'])
         self.assertEqual(specific1.name, 'Menu in french',
                          'Load translation without overwriting keep existing translation')
@@ -103,7 +100,7 @@ class TestMenu(common.TransactionCase):
                          'Load translation add missing translation from template menu')
 
         # loading translation with overwrite sync all translations from menu template
-        Translation._load_module_terms(['website'], ['fr_FR'], overwrite=True)
+        IrModuleModule._load_module_terms(['website'], ['fr_FR'], overwrite=True)
         Menu.invalidate_model(['name'])
         self.assertEqual(specific1.name, 'Menu en français',
                          'Load translation with overwriting update existing menu from template')

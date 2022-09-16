@@ -11,7 +11,7 @@ from odoo.modules import get_module_resource
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.tools.convert import xml_import
 from odoo.tools.misc import file_open
-from odoo.tools.translate import TranslationFileReader
+from odoo.tools.translate import TranslationFileReader, _trans_load_data
 
 
 class TemplateResetMixin(models.AbstractModel):
@@ -62,10 +62,8 @@ class TemplateResetMixin(models.AbstractModel):
 
     def _override_translation_term(self, module_name, xml_ids):
         processed_base_langs = []
-        trans_to_remove = []
         for code, _ in self.env['res.lang'].get_installed():
             lang_code = tools.get_iso_codes(code)
-            translation_processed = False
             # In case of sub languages (e.g fr_BE), load the base language first, (e.g fr.po) and
             # then load the main translation file (e.g fr_BE.po)
 
@@ -76,28 +74,17 @@ class TemplateResetMixin(models.AbstractModel):
                 if base_trans_file:
                     if base_lang_code not in processed_base_langs:
                         processed_base_langs.append(base_lang_code)
-                        translation_processed = self._process_translation_data(base_trans_file, code, xml_ids)
+                        self._process_translation_data(base_trans_file, code, xml_ids)
 
             # Step 2: reset translation file with main language file (can possibly override the
             # terms coming from the base language)
             trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
             if trans_file:
-                translation_processed = self._process_translation_data(trans_file, code, xml_ids)
+                self._process_translation_data(trans_file, code, xml_ids)
 
-            # If no translation data available to update, unlink custom translated terms linked to template
-            if not translation_processed:
-                trans_to_remove.append(code)
-
-        if trans_to_remove:
-            self.env['ir.translation'].search([
-                ('name', 'like', f'{self._name},%'),
-                ('res_id', '=', self.id),
-                ('lang', 'in', trans_to_remove),
-                ('module', 'in', [module_name, False]),
-            ]).unlink()
 
     def _process_translation_data(self, trans_file, lang, xml_ids):
-        """Populates the ir_translation table.
+        """Load translations.
 
         :param trans_file: path to a translation file to open, e.g. {addon_path}/mail/i18n/es.po
         :param lang: language code of the translations contained in `trans_file`
@@ -106,17 +93,9 @@ class TemplateResetMixin(models.AbstractModel):
         :return Boolean: True if translation data is available and processed, False otherwise
         """
         with file_open(trans_file, mode='rb', filter_ext=(".po",)) as fileobj:
-            translation_processed = False
             reader = TranslationFileReader(fileobj)
             # Process a single PO entry
-            for row in reader:
-                if row.get('imd_name') in xml_ids:
-                    translation_processed = True
-                    # copy Translation from Source to Destination object
-                    self.env['ir.translation']._set_ids(
-                        row['name'], 'model', lang, self._ids, row.get('value', ''), row['src'],
-                    )
-            return translation_processed
+            _trans_load_data(self.env.cr, reader, lang, overwrite=True, force_overwrite=True, xml_ids=xml_ids)
 
     def reset_template(self):
         """Resets the Template with values given in source file. We ignore the case of

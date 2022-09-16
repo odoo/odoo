@@ -94,33 +94,7 @@ class SaleOrderTemplate(models.Model):
         for lang in languages:
             for line in self.sale_order_template_line_ids:
                 if line.name == line.product_id.get_product_multiline_description_sale():
-                    self.create_or_update_translations(
-                        model_name='sale.order.template.line,name', lang_code=lang.code,
-                        res_id=line.id, src=line.name,
-                        value=line.product_id.with_context(lang=lang.code).get_product_multiline_description_sale())
+                    line.with_context(lang=lang.code).name = line.product_id.with_context(lang=lang.code).get_product_multiline_description_sale()
             for option in self.sale_order_template_option_ids:
                 if option.name == option.product_id.get_product_multiline_description_sale():
-                    self.create_or_update_translations(
-                        model_name='sale.order.template.option,name', lang_code=lang.code,
-                        res_id=option.id, src=option.name,
-                        value=option.product_id.with_context(lang=lang.code).get_product_multiline_description_sale())
-
-    def create_or_update_translations(self, model_name, lang_code, res_id, src, value):
-        data = {
-            'type': 'model',
-            'name': model_name,
-            'lang': lang_code,
-            'res_id': res_id,
-            'src': src,
-            'value': value,
-            'state': 'inprogress',
-        }
-        existing_trans = self.env['ir.translation'].search([
-            ('name', '=', model_name),
-            ('res_id', '=', res_id),
-            ('lang', '=', lang_code)
-        ])
-        if not existing_trans:
-            self.env['ir.translation'].create(data)
-        else:
-            existing_trans.write(data)
+                    option.with_context(lang=lang.code).name = option.product_id.with_context(lang=lang.code).get_product_multiline_description_sale()

@@ -995,29 +995,25 @@ class TestCowViewSaving(TestViewSavingCommon):
             View.pool._init = original_pool_init
 
     def test_specific_view_translation(self):
-        Translation = self.env['ir.translation']
-
-        Translation.insert_missing(self.base_view._fields['arch_db'], self.base_view)
-        translation = Translation.search([
-            ('res_id', '=', self.base_view.id), ('name', '=', 'ir.ui.view,arch_db')
-        ])
-        translation.value = 'hello'
-        translation.module = 'website'
-
+        self.env['res.lang']._activate_lang('fr_BE')
+        self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+        self.assertEqual(self.base_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>')
         self.base_view.with_context(website_id=1).write({'active': True})
         specific_view = self.base_view._get_specific_views() - self.base_view
 
-        self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hello</div>',
+        self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
                          "copy on write (COW) also copy existing translations")
 
-        translation.value = 'hi'
-        self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hello</div>',
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'bonjour': 'salut'}})
+        self.assertEqual(self.base_view.with_context(lang='fr_BE').arch, '<div>salut</div>')
+        self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
                          "updating translation of base view doesn't update specific view")
 
-        Translation._load_module_terms(['website'], ['en_US'], overwrite=True)
+        self.env['ir.module.module']._load_module_terms(['website'], ['en_US', 'fr_BE'], overwrite=True)
 
         specific_view.invalidate_model(['arch_db', 'arch'])
-        self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hi</div>',
+        self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salut</div>',
                          "loading module translation copy translation from base to specific view")
 
     def test_soc_complete_flow(self):

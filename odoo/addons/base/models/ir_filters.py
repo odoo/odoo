@@ -11,7 +11,7 @@ class IrFilters(models.Model):
     _description = 'Filters'
     _order = 'model_id, name, id desc'
 
-    name = fields.Char(string='Filter Name', translate=True, required=True)
+    name = fields.Char(string='Filter Name', required=True)
     user_id = fields.Many2one('res.users', string='User', ondelete='cascade',
                               help="The user this filter is private to. When left empty the filter is public "
                                    "and available to all users.")
@@ -28,7 +28,11 @@ class IrFilters(models.Model):
 
     @api.model
     def _list_all_models(self):
-        self._cr.execute("SELECT model, name FROM ir_model ORDER BY name")
+        lang = self.env.lang or 'en_US'
+        self._cr.execute(
+            "SELECT model, COALESCE(name->>%s, name->>'en_US') FROM ir_model ORDER BY 2",
+            [lang],
+        )
         return self._cr.fetchall()
 
     def copy(self, default=None):

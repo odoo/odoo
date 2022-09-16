@@ -123,21 +123,6 @@ QUnit.module("Fields", (hooks) => {
                         },
                     ],
                 },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        res_id: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            res_id: 37,
-                            value: "",
-                            lang: "en_US",
-                        },
-                    ],
-                },
             },
         };
 
@@ -301,7 +286,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("char field translatable", async function (assert) {
-        assert.expect(13);
+        assert.expect(11);
 
         serverData.models.partner.fields.foo.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -325,33 +310,25 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args, method, model }) {
-                if (route === "/web/dataset/call_button" && method === "translate_fields") {
-                    assert.deepEqual(
-                        args,
-                        ["partner", 1, "foo"],
-                        'should call "call_button" route'
-                    );
-                    return Promise.resolve({
-                        domain: [],
-                        context: { search_default_name: "partnes,foo" },
-                    });
-                }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([
                         ["en_US", "English"],
                         ["fr_BE", "French (Belgium)"],
                     ]);
                 }
-                if (method === "search_read" && model === "ir.translation") {
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
                     return Promise.resolve([
-                        { lang: "en_US", src: "yop", value: "yop", id: 42 },
-                        { lang: "fr_BE", src: "yop", value: "valeur français", id: 43 },
+                        [
+                            { lang: "en_US", source: "yop", value: "yop" },
+                            { lang: "fr_BE", source: "yop", value: "valeur français" },
+                        ],
+                        { translation_type: "char", translation_show_source: false },
                     ]);
                 }
-                if (method === "write" && model === "ir.translation") {
+                if (route === "/web/dataset/call_kw/partner/update_field_translations") {
                     assert.deepEqual(
-                        args[1],
-                        { value: "english value" },
+                        args[2],
+                        { en_US: "english value" },
                         "the new translation value should be written"
                     );
                     return Promise.resolve(null);
@@ -417,7 +394,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("html field translatable", async function (assert) {
-        assert.expect(6);
+        assert.expect(5);
 
         serverData.models.partner.fields.foo.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
@@ -441,55 +418,48 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args, method, model }) {
-                if (route === "/web/dataset/call_button" && method === "translate_fields") {
-                    assert.deepEqual(
-                        args,
-                        ["partner", 1, "foo"],
-                        `should call "call_button" route`
-                    );
-                    return Promise.resolve({
-                        domain: [],
-                        context: {
-                            search_default_name: "partner,foo",
-                            translation_type: "char",
-                            translation_show_src: true,
-                        },
-                    });
-                }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([
                         ["en_US", "English"],
                         ["fr_BE", "French (Belgium)"],
                     ]);
                 }
-                if (method === "search_read" && model === "ir.translation") {
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
                     return Promise.resolve([
-                        { lang: "en_US", src: "first paragraph", value: "first paragraph", id: 42 },
+                        [
+                            {
+                                lang: "en_US",
+                                source: "first paragraph",
+                                value: "first paragraph",
+                            },
+                            {
+                                lang: "en_US",
+                                source: "second paragraph",
+                                value: "second paragraph",
+                            },
+                            {
+                                lang: "fr_BE",
+                                source: "first paragraph",
+                                value: "premier paragraphe",
+                            },
+                            {
+                                lang: "fr_BE",
+                                source: "second paragraph",
+                                value: "deuxième paragraphe",
+                            },
+                        ],
                         {
-                            lang: "en_US",
-                            src: "second paragraph",
-                            value: "second paragraph",
-                            id: 43,
-                        },
-                        {
-                            lang: "fr_BE",
-                            src: "first paragraph",
-                            value: "premier paragraphe",
-                            id: 44,
-                        },
-                        {
-                            lang: "fr_BE",
-                            src: "second paragraph",
-                            value: "deuxième paragraphe",
-                            id: 45,
+                            translation_type: "char",
+                            translation_show_source: true,
                         },
                     ]);
                 }
-                if (method === "write" && model === "ir.translation") {
+
+                if (route === "/web/dataset/call_kw/partner/update_field_translations") {
                     assert.deepEqual(
-                        args[1],
-                        { value: "first paragraph modified" },
-                        "Wrong update on translation"
+                        args[2],
+                        { en_US: { "first paragraph": "first paragraph modified" } },
+                        "the new translation value should be written"
                     );
                     return Promise.resolve(null);
                 }

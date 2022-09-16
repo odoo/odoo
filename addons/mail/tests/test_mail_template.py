@@ -107,62 +107,29 @@ class TestMailTemplate(MailCommon):
             'body_html': '<p>foo</p>',
         })
 
-        Translation = self.env['ir.translation']
-
         ### check qweb dynamic
-        Translation.insert_missing(employee_template._fields['body_html'], employee_template)
-        employee_translations_of_body = Translation.with_user(self.user_employee).search(
-            [('res_id', '=', employee_template.id), ('name', '=', 'mail.template,body_html'), ('lang', '=', 'fr_FR')],
-            limit=1
-        )
-        # keep a copy to create new translation later
-        body_translation_vals = employee_translations_of_body.read([])[0]
-
         # write on translation for template without dynamic code is allowed
-        employee_translations_of_body.value = 'non-qweb'
+        employee_template.with_context(lang='fr_FR').body_html = 'non-qweb'
 
         # cannot write dynamic code on mail_template translation for employee without the group mail_template_editor.
         with self.assertRaises(AccessError):
-            employee_translations_of_body.value = '<t t-esc="foo"/>'
+            employee_template.with_context(lang='fr_FR').body_html = '<t t-esc="foo"/>'
 
-        employee_translations_of_body.unlink()  # delete old translation, to test the creation now
-        body_translation_vals['value'] = '<p t-esc="foo"/>'
+        employee_template.with_context(lang='fr_FR').sudo().body_html = '<t t-esc="foo"/>'
 
-        # admin can create
-        new = Translation.create(body_translation_vals)
-        new.unlink()
-
-        # Employee without mail_template_editor group cannot create dynamic translation for mail.render.mixin
-        with self.assertRaises(AccessError):
-            Translation.with_user(self.user_employee).create(body_translation_vals)
-
+        # reset the body_html to static
+        employee_template.body_html = False
+        employee_template.body_html = '<p>foo</p>'
 
         ### check qweb inline dynamic
-        Translation.insert_missing(employee_template._fields['subject'], employee_template)
-        employee_translations_of_subject = Translation.with_user(self.user_employee).search(
-            [('res_id', '=', employee_template.id), ('name', '=', 'mail.template,subject'), ('lang', '=', 'fr_FR')],
-            limit=1
-        )
-        # keep a copy to create new translation later
-        subject_translation_vals = employee_translations_of_subject.read([])[0]
-
         # write on translation for template without dynamic code is allowed
-        employee_translations_of_subject.value = 'non-qweb'
+        employee_template.with_context(lang='fr_FR').subject = 'non-qweb'
 
         # cannot write dynamic code on mail_template translation for employee without the group mail_template_editor.
         with self.assertRaises(AccessError):
-            employee_translations_of_subject.value = '{{ object.foo }}'
+            employee_template.with_context(lang='fr_FR').subject = '{{ object.foo }}'
 
-        employee_translations_of_subject.unlink()  # delete old translation, to test the creation now
-        subject_translation_vals['value'] = '{{ object.foo }}'
-
-        # admin can create
-        new = Translation.create(subject_translation_vals)
-        new.unlink()
-
-        # Employee without mail_template_editor group cannot create dynamic translation for mail.render.mixin
-        with self.assertRaises(AccessError):
-            Translation.with_user(self.user_employee).create(subject_translation_vals)
+        employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.foo }}'
 
     def test_server_archived_usage_protection(self):
         """ Test the protection against using archived server (servers used cannot be archived) """

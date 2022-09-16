@@ -5,6 +5,7 @@ import logging
 
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tools.translate import html_translate
 
 
 class Category(models.Model):
@@ -1649,10 +1650,10 @@ class Prefetch(models.Model):
     _description = 'A model to check the prefetching of fields (translated and group)'
 
     name = fields.Char('Name', translate=True)
-    description = fields.Char('Description', translate=True, prefetch=True)
-    html_description = fields.Html('Styled description', translate=True, prefetch=True)
-    rare_description = fields.Char('Rare Description', translate=True)
-    rare_html_description = fields.Html('Rare Styled description', translate=True)
+    description = fields.Char('Description', translate=True)
+    html_description = fields.Html('Styled description', translate=True)
+    rare_description = fields.Char('Rare Description', translate=True, prefetch=False)
+    rare_html_description = fields.Html('Rare Styled description', translate=True, prefetch=False)
     harry = fields.Integer('Harry Potter', prefetch='Harry Potter')
     hermione = fields.Char('Hermione Granger', prefetch='Harry Potter')
     ron = fields.Float('Ron Weasley', prefetch='Harry Potter')
@@ -1697,3 +1698,29 @@ class ModifiedLine(models.Model):
     def _compute_total_price_quantity(self):
         for rec in self:
             rec.total_price_quantity = rec.total_price * rec.quantity
+
+
+class RelatedTranslation(models.Model):
+    _name = 'test_new_api.related_translation_1'
+    _description = 'A model to test translation for related fields'
+
+    name = fields.Char('Name', translate=True)
+    html = fields.Html('HTML', translate=html_translate)
+
+
+class RelatedTranslation2(models.Model):
+    _name = 'test_new_api.related_translation_2'
+    _description = 'A model to test translation for related fields'
+
+    parent_id = fields.Many2one('test_new_api.related_translation_1', string='Parent Model')
+    name = fields.Char('Name Related', related='parent_id.name', readonly=False)
+    html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+
+
+class RelatedTranslation3(models.Model):
+    _name = 'test_new_api.related_translation_3'
+    _description = 'A model to test translation for related fields'
+
+    parent_id = fields.Many2one('test_new_api.related_translation_2', string='Parent Model')
+    name = fields.Char('Name Related', related='parent_id.name', readonly=False)
+    html = fields.Html('HTML Related', related='parent_id.html', readonly=False)

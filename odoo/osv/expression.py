@@ -959,7 +959,7 @@ class expression(object):
                         expr, params = self.__leaf_to_sql(leaf, model, alias)
                         push_result(expr, params)
 
-                elif field.translate is True and right:
+                elif field.translate and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
@@ -968,8 +968,12 @@ class expression(object):
                         right = tuple(right)
 
                     unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
-
-                    left = unaccent(model._generate_translated_field(alias, left, self.query))
+                    if need_wildcard:
+                        # Inactive languages are not removed in DB and can be searched by using this function
+                        left = unaccent(f'jsonb_path_query_array("{alias}"."{left}", \'$.*\')::text')
+                    else:
+                        lang = model.env.lang or 'en_US'
+                        left = unaccent(f'COALESCE("{alias}"."{left}"->>\'{lang}\', "{alias}"."{left}"->>\'en_US\')')
                     instr = unaccent('%s')
                     push_result(f"{left} {sql_operator} {instr}", [right])
 
