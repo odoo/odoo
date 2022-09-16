@@ -66,4 +66,29 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
         assert.equal(computedDomain.length, 3);
         assert.equal(computedDomain[0], "&");
     });
+
+    QUnit.test("field matching is removed when chart is deleted", async function (assert) {
+        const { model } = await createSpreadsheetWithGraph();
+        await addChartGlobalFilter(model);
+        const [filter] = model.getters.getGlobalFilters();
+        const [chartId] = model.getters.getChartIds(model.getters.getActiveSheetId());
+        const matching = {
+            field: "date",
+            type: "date",
+        };
+        assert.deepEqual(model.getters.getGlobalFilterFieldGraph(filter.id, chartId), matching);
+        model.dispatch("DELETE_FIGURE", {
+            sheetId: model.getters.getActiveSheetId(),
+            id: chartId,
+        });
+        assert.strictEqual(
+            model.getters.getGlobalFilterFieldGraph(filter.id, chartId),
+            undefined,
+            "it should have removed the field matching with the chart"
+        );
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getGlobalFilterFieldGraph(filter.id, chartId), matching);
+        model.dispatch("REQUEST_REDO");
+        assert.strictEqual(model.getters.getGlobalFilterFieldGraph(filter.id, chartId), undefined);
+    });
 });

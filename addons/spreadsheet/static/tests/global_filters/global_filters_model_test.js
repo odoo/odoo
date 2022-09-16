@@ -1534,4 +1534,40 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             assert.deepEqual(filters, [{ filterId: "42", value: [41] }]);
         }
     );
+
+    QUnit.test("field matching is removed when pivot is deleted", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        await addGlobalFilter(model, LAST_YEAR_FILTER);
+        const [pivotId] = model.getters.getPivotIds();
+        const [filter] = model.getters.getGlobalFilters();
+        const matching = {
+            field: "date",
+            type: "date",
+        };
+        assert.deepEqual(model.getters.getGlobalFilterFieldPivot(filter.id, pivotId), matching);
+        model.dispatch("REMOVE_PIVOT", { pivotId });
+        assert.strictEqual(model.getters.getGlobalFilterFieldPivot(filter.id, pivotId), undefined);
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getGlobalFilterFieldPivot(filter.id, pivotId), matching);
+        model.dispatch("REQUEST_REDO");
+        assert.strictEqual(model.getters.getGlobalFilterFieldPivot(filter.id, pivotId), undefined);
+    });
+
+    QUnit.test("field matching is removed when list is deleted", async function (assert) {
+        const { model } = await createSpreadsheetWithList();
+        await addGlobalFilter(model, LAST_YEAR_FILTER);
+        const [listId] = model.getters.getListIds();
+        const [filter] = model.getters.getGlobalFilters();
+        const matching = {
+            field: "date",
+            type: "date",
+        };
+        assert.deepEqual(model.getters.getGlobalFilterFieldList(filter.id, listId), matching);
+        model.dispatch("REMOVE_ODOO_LIST", { listId });
+        assert.strictEqual(model.getters.getGlobalFilterFieldList(filter.id, listId), undefined);
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getGlobalFilterFieldList(filter.id, listId), matching);
+        model.dispatch("REQUEST_REDO");
+        assert.strictEqual(model.getters.getGlobalFilterFieldList(filter.id, listId), undefined);
+    });
 });

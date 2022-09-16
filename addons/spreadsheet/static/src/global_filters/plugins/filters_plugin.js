@@ -26,7 +26,6 @@ import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/helpers";
 
-
 export default class FiltersPlugin extends spreadsheet.CorePlugin {
     constructor() {
         super(...arguments);
@@ -77,6 +76,15 @@ export default class FiltersPlugin extends spreadsheet.CorePlugin {
                 break;
             case "REMOVE_GLOBAL_FILTER":
                 this._removeGlobalFilter(cmd.id);
+                break;
+            case "REMOVE_PIVOT":
+                this._removeMatchingField("pivot", cmd.pivotId);
+                break;
+            case "REMOVE_ODOO_LIST":
+                this._removeMatchingField("list", cmd.listId);
+                break;
+            case "DELETE_FIGURE":
+                this._removeMatchingField("graph", cmd.id);
                 break;
         }
     }
@@ -201,6 +209,22 @@ export default class FiltersPlugin extends spreadsheet.CorePlugin {
         }
     }
 
+    /**
+     * @param {"pivot" | "list" | "graph"} dataSourceType
+     * @param {string} dataSourceId
+     */
+    _removeMatchingField(dataSourceType, dataSourceId) {
+        for (const filter of this.getGlobalFilters()) {
+            this.history.update(
+                "globalFilters",
+                filter.id,
+                `${dataSourceType}Fields`,
+                dataSourceId,
+                undefined
+            );
+        }
+    }
+
     // ---------------------------------------------------------------------
     // Import/Export
     // ---------------------------------------------------------------------
@@ -240,8 +264,8 @@ export default class FiltersPlugin extends spreadsheet.CorePlugin {
     _updateFilterLabelInFormulas(currentLabel, newLabel) {
         const sheetIds = this.getters.getSheetIds();
         currentLabel = currentLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        for (let sheetId of sheetIds) {
-            for (let cell of Object.values(this.getters.getCells(sheetId))) {
+        for (const sheetId of sheetIds) {
+            for (const cell of Object.values(this.getters.getCells(sheetId))) {
                 if (cell.isFormula()) {
                     const newContent = cell.content.replace(
                         new RegExp(`FILTER\\.VALUE\\(\\s*"${currentLabel}"\\s*\\)`, "g"),
