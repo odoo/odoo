@@ -215,6 +215,26 @@ class Groups(models.Model):
             self.env['ir.model.access'].call_cache_clearing_methods()
         return super(Groups, self).write(vals)
 
+    def _ensure_xml_id(self):
+        """Return the groups external identifiers, creating the external identifier for groups missing one"""
+        result = self.get_external_id()
+        missings = {group_id: f'__custom__.group_{group_id}' for group_id, ext_id in result.items() if not ext_id}
+        if missings:
+            self.env['ir.model.data'].create(
+                [
+                    {
+                        'name': name.split('.')[1],
+                        'model': 'res.groups',
+                        'res_id': group_id,
+                        'module': name.split('.')[0],
+                    }
+                    for group_id, name in missings.items()
+                ]
+            )
+            result.update(missings)
+
+        return result
+
 
 class ResUsersLog(models.Model):
     _name = 'res.users.log'
@@ -244,7 +264,7 @@ class Users(models.Model):
         avatar, ... The user model is now dedicated to technical data.
     """
     _name = "res.users"
-    _description = 'Users'
+    _description = 'User'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
 
@@ -440,8 +460,9 @@ class Users(models.Model):
 
     def _read(self, fields):
         super(Users, self)._read(fields)
-        canwrite = self.check_access_rights('write', raise_exception=False)
-        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(fields):
+        if set(USER_PRIVATE_FIELDS).intersection(fields):
+            if self.check_access_rights('write', raise_exception=False):
+                return
             for record in self:
                 for f in USER_PRIVATE_FIELDS:
                     try:
@@ -801,17 +822,28 @@ class Users(models.Model):
         """
         if not old_passwd:
             raise AccessDenied()
-        if not new_passwd:
-            raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
 
         # alternatively: use identitycheck wizard?
         self._check_credentials(old_passwd, {'interactive': True})
 
-        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
-        _logger.info("Password change for '%s' (#%s) from %s", self.env.user.login, self.env.uid, ip)
-
         # use self.env.user here, because it has uid=SUPERUSER_ID
-        return self.env.user.write({'password': new_passwd})
+        self.env.user._change_password(new_passwd)
+        return True
+
+    def _change_password(self, new_passwd):
+        new_passwd = new_passwd.strip()
+        if not new_passwd:
+            raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
+
+        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        _logger.info(
+            "Password change for %r (#%d) by %r (#%d) from %s",
+             self.login, self.id,
+             self.env.user.login, self.env.user.id,
+             ip
+        )
+
+        self.password = new_passwd
 
     def _deactivate_portal_user(self, **post):
         """Try to remove the current portal user.
@@ -874,11 +906,13 @@ class Users(models.Model):
             'tag': 'reload_context',
         }
 
+    @check_identity
     def preference_change_password(self):
         return {
-            'type': 'ir.actions.client',
-            'tag': 'change_password',
+            'type': 'ir.actions.act_window',
             'target': 'new',
+            'res_model': 'change.password.own',
+            'view_mode': 'form',
         }
 
     @api.model
@@ -1728,9 +1762,30 @@ class ChangePasswordUser(models.TransientModel):
         for line in self:
             if not line.new_passwd:
                 raise UserError(_("Before clicking on 'Change Password', you have to write a new password."))
-            line.user_id.write({'password': line.new_passwd})
+            line.user_id._change_password(line.new_passwd)
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
+
+class ChangePasswordOwn(models.TransientModel):
+    _name = "change.password.own"
+    _description = "User, change own password wizard"
+    _transient_max_hours = 0.1
+
+    new_password = fields.Char(string="New Password")
+    confirm_password = fields.Char(string="New Password (Confirmation)")
+
+    @api.constrains('new_password', 'confirm_password')
+    def _check_password_confirmation(self):
+        if self.confirm_password != self.new_password:
+            raise ValidationError(_("The new password and its confirmation must be identical."))
+
+    @check_identity
+    def change_password(self):
+        self.env.user._change_password(self.new_password)
+        self.unlink()
+        # reload to avoid a session expired error
+        # would be great to update the session id in-place, but it seems dicey
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
 # API keys support
 API_KEY_SIZE = 20 # in bytes

@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="view_blog_post_form" model="ir.ui.view">
+    <field name="name">blog.post.form</field>
+    <field name="model">blog.post</field>
+    <field name="arch" type="xml">
+        <form string="Blog Post">
+            <sheet>
+                <div class="oe_button_box" name="button_box" attrs="{'invisible': [('active', '=', False)]}">
+                    <field name="is_published" widget="website_redirect_button"/>
+                </div>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <group name="blog_details">
+                    <field name="blog_id"/>
+                    <field name="active" invisible="1"/>
+                    <field name="name" placeholder="Blog Post Title"/>
+                    <field name="subtitle" placeholder="Blog Subtitle"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
+                </group>
+                <group name="publishing_details" string="Publishing Options">
+                    <field name="author_id"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="visits"/>
+                    <field name="post_date"/>
+                    <field name="write_uid"/>
+                    <field name="write_date"/>
+                </group>
+                <notebook>
+                    <page name="seo" string="SEO" groups="base.group_no_one">
+                        <group name="default_opengraph">
+                            <field name="website_meta_title" string="Meta Title"/>
+                            <field name="website_meta_description" string="Meta Description"/>
+                            <field name="website_meta_keywords" string="Meta Keywords" help="Separate every keyword with a comma"/>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" groups="base.group_user"/>
+                <field name="message_ids"/>
+            </div>
+        </form>
+    </field>
+</record>
+
+<record id="blog_post_view_kanban" model="ir.ui.view">
+    <field name="name">blog.post.kanban</field>
+    <field name="model">blog.post</field>
+    <field name="arch" type="xml">
+        <kanban class="o_kanban_mobile" sample="1">
+            <field name="name"/>
+            <field name="blog_id"/>
+            <field name="author_id"/>
+            <field name="post_date"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="row mb4">
+                            <strong class="col-8">
+                                <span t-esc="record.name.value"/>
+                            </strong>
+                            <strong class="col-4 text-end">
+                                <span t-esc="record.blog_id.value"/>
+                            </strong>
+                            <div class="col-8">
+                                <i class="fa fa-clock-o" role="img" aria-label="Post date" title="Post date"/><span t-esc="record.post_date.value"/>
+                            </div>
+                            <div class="col-4 text-end">
+                                <img t-if="record.author_id.raw_value"
+                                     t-att-title="record.author_id.value"
+                                     t-att-alt="record.author_id.value"
+                                     class="oe_kanban_avatar o_image_24_cover"
+                                     t-att-src="kanban_image('res.partner', 'avatar_128', record.author_id.raw_value)"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+<record id="view_blog_post_search" model="ir.ui.view">
+    <field name="name">blog.post.search</field>
+    <field name="model">blog.post</field>
+    <field name="arch" type="xml">
+        <search string="Blog Post">
+            <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
+            <field name="write_uid"/>
+            <field name="blog_id"/>
+            <group expand="0" string="Group By">
+                <filter string="Blog" name="group_by_blog" domain="[]" context="{'group_by': 'blog_id'}"/>
+                <filter string="Author" name="group_by_author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                <filter string="Last Contributor" name="last_contributor" domain="[]" context="{'group_by': 'write_uid'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="view_blog_post_list" model="ir.ui.view">
+    <field name="name">Blog Post Pages Tree</field>
+    <field name="model">blog.post</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <tree js_class="website_pages_list" type="object" action="open_website_url">
+            <field name="active" invisible="1"/>
+            <field name="name"/>
+            <field name="website_url"/>
+
+            <field name="author_id" optional="show"/>
+            <field name="blog_id" optional="hide"/>
+            <field name="create_uid" optional="hide"/>
+            <field name="write_uid" optional="hide"/>
+            <field name="write_date" optional="hide"/>
+
+            <field name="is_seo_optimized"/>
+            <field name="is_published"/>
+
+            <field name="website_id" groups="website.group_multi_website"/>
+        </tree>
+    </field>
+</record>
+
+<record id="action_blog_post" model="ir.actions.act_window">
+    <field name="name">Blog Post Pages</field>
+    <field name="res_model">blog.post</field>
+    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_id" ref="view_blog_post_list"/>
+    <field name="search_view_id" ref="view_blog_post_search"/>
+    <field name="context">{'create_action': 'website_blog.blog_post_action_add'}</field>
+</record>
+
+<menuitem id="menu_blog_post_pages"
+    parent="website.menu_content"
+    sequence="20"
+    name="Blog Posts"
+    action="action_blog_post"/>
+
+</odoo>

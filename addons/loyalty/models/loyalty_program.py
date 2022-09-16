@@ -24,21 +24,31 @@ class LoyaltyProgram(models.Model):
 
     total_order_count = fields.Integer("Total Order Count", compute="_compute_total_order_count")
 
-    rule_ids = fields.One2many('loyalty.rule', 'program_id', 'Triggers', copy=True,
+    rule_ids = fields.One2many('loyalty.rule', 'program_id', 'Conditional rules', copy=True,
          compute='_compute_from_program_type', readonly=False, store=True)
     reward_ids = fields.One2many('loyalty.reward', 'program_id', 'Rewards', copy=True,
          compute='_compute_from_program_type', readonly=False, store=True)
     communication_plan_ids = fields.One2many('loyalty.mail', 'program_id', copy=True,
          compute='_compute_from_program_type', readonly=False, store=True)
+
+    # These fields are used for the simplified view of gift_card and ewallet
+    mail_template_id = fields.Many2one('mail.template', compute='_compute_mail_template_id', inverse='_inverse_mail_template_id', string="Email template", readonly=False)
+    trigger_product_ids = fields.Many2many(related='rule_ids.product_ids', readonly=False)
+
     coupon_ids = fields.One2many('loyalty.card', 'program_id')
     coupon_count = fields.Integer(compute='_compute_coupon_count')
+    coupon_count_display = fields.Char(compute='_compute_coupon_count_display', string="Items")
 
     program_type = fields.Selection([
         ('coupons', 'Coupons'),
         ('gift_card', 'Gift Card'),
         ('loyalty', 'Loyalty Cards'),
         ('promotion', 'Promotions'),
-        ('ewallet', 'eWallet')], default='promotion', required=True,
+        ('ewallet', 'eWallet'),
+        ('promo_code', 'Discount Code'),
+        ('buy_x_get_y', 'Buy X Get Y'),
+        ('next_order_coupons', 'Next Order Coupons')],
+        default='promotion', required=True,
     )
     date_to = fields.Date(string='Validity')
     limit_usage = fields.Boolean(string='Limit Usage')
@@ -67,8 +77,16 @@ class LoyaltyProgram(models.Model):
         Show in web portal, PoS customer ticket, eCommerce checkout, the number of points available and used by reward.
         """)
     portal_point_name = fields.Char(default='Points', translate=True,
-         compute='_compute_from_program_type', readonly=False, store=True)
+         compute='_compute_portal_point_name', readonly=False, store=True)
     is_nominative = fields.Boolean(compute='_compute_is_nominative')
+    is_payment_program = fields.Boolean(compute='_compute_is_payment_program')
+
+    # Technical field used for a label
+    available_on = fields.Boolean("Available On", store=False,
+        help="""
+        Manage where your program should be available for use.
+        """
+    )
 
     _sql_constraints = [
         ('check_max_usage', 'CHECK (limit_usage = False OR max_usage > 0)',
@@ -77,11 +95,42 @@ class LoyaltyProgram(models.Model):
 
     @api.constrains('reward_ids')
     def _constrains_reward_ids(self):
+        if self.env.context.get('loyalty_skip_reward_check'):
+            return
         if any(not program.reward_ids for program in self):
             raise ValidationError(_('A program must have at least one reward.'))
 
     def _compute_total_order_count(self):
         self.total_order_count = 0
+
+    @api.depends('coupon_count', 'program_type')
+    def _compute_coupon_count_display(self):
+        program_items_name = self._program_items_name()
+        for program in self:
+            program.coupon_count_display = "%i %s" % (program.coupon_count or 0, program_items_name[program.program_type] or '')
+
+    @api.depends("communication_plan_ids.mail_template_id")
+    def _compute_mail_template_id(self):
+        for program in self:
+            program.mail_template_id = program.communication_plan_ids.mail_template_id[:1]
+
+    def _inverse_mail_template_id(self):
+        for program in self:
+            if program.program_type not in ("gift_card", "ewallet"):
+                continue
+            if not program.mail_template_id:
+                program.communication_plan_ids = [(5, 0, 0)]
+            elif not program.communication_plan_ids:
+                program.communication_plan_ids = self.env['loyalty.mail'].create({
+                    'program_id': program.id,
+                    'trigger': 'create',
+                    'mail_template_id': program.mail_template_id.id,
+                })
+            else:
+                program.communication_plan_ids.write({
+                    'trigger': 'create',
+                    'mail_template_id': program.mail_template_id.id,
+                })
 
     @api.depends('company_id')
     def _compute_currency_id(self):
@@ -101,17 +150,35 @@ class LoyaltyProgram(models.Model):
             program.is_nominative = program.applies_on == 'both' or\
                 (program.program_type == 'ewallet' and program.applies_on == 'future')
 
+    @api.depends('program_type')
+    def _compute_is_payment_program(self):
+        for program in self:
+            program.is_payment_program = program.program_type in ('gift_card', 'ewallet')
+
+    @api.model
+    def _program_items_name(self):
+        return {
+            'coupons': _('Coupons'),
+            'promotion': _('Promos'),
+            'gift_card': _('Gift Cards'),
+            'loyalty': _('Loyalty Cards'),
+            'ewallet': _('eWallets'),
+            'promo_code': _('Discounts'),
+            'buy_x_get_y': _('Promos'),
+            'next_order_coupons': _('Coupons'),
+        }
+
     @api.model
     def _program_type_default_values(self):
         # All values to change when program_type changes
         # NOTE: any field used in `rule_ids`, `reward_ids` and `communication_plan_ids` MUST be present in the kanban view for it to work properly.
+        first_sale_product = self.env['product.product'].search([('sale_ok', '=', True)], limit=1)
         return {
             'coupons': {
                 'applies_on': 'current',
                 'trigger': 'with_code',
                 'portal_visible': False,
-                'portal_point_name': _('Points'),
-                # Coupons don't use rules by default
+                'portal_point_name': _('Coupon point(s)'),
                 'rule_ids': [(5, 0, 0)],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'required_points': 1,
@@ -126,11 +193,12 @@ class LoyaltyProgram(models.Model):
                 'applies_on': 'current',
                 'trigger': 'auto',
                 'portal_visible': False,
-                'portal_point_name': _('Points'),
+                'portal_point_name': _('Promo point(s)'),
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_amount': 1,
                     'reward_point_mode': 'order',
                     'minimum_amount': 50,
+                    'minimum_qty': 0,
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'required_points': 1,
@@ -148,6 +216,7 @@ class LoyaltyProgram(models.Model):
                     'reward_point_mode': 'money',
                     'reward_point_split': True,
                     'product_ids': self.env.ref('loyalty.gift_card_product_50', raise_if_not_found=False),
+                    'minimum_qty': 0,
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'reward_type': 'discount',
@@ -155,7 +224,7 @@ class LoyaltyProgram(models.Model):
                     'discount': 1,
                     'discount_applicability': 'order',
                     'required_points': 1,
-                    'description': _('Pay With Gift Card'),
+                    'description': _('Gift Card'),
                 })],
                 'communication_plan_ids': [(5, 0, 0), (0, 0, {
                     'trigger': 'create',
@@ -166,7 +235,7 @@ class LoyaltyProgram(models.Model):
                 'applies_on': 'both',
                 'trigger': 'auto',
                 'portal_visible': True,
-                'portal_point_name': _('Loyalty Points'),
+                'portal_point_name': _('Loyalty point(s)'),
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_mode': 'money',
                 })],
@@ -177,8 +246,8 @@ class LoyaltyProgram(models.Model):
                 'communication_plan_ids': [(5, 0, 0)],
             },
             'ewallet': {
-                'applies_on': 'future',
                 'trigger': 'auto',
+                'applies_on': 'future',
                 'portal_visible': True,
                 'portal_point_name': self.env.company.currency_id.symbol,
                 'rule_ids': [(5, 0, 0), (0, 0, {
@@ -192,8 +261,64 @@ class LoyaltyProgram(models.Model):
                     'discount': 1,
                     'discount_applicability': 'order',
                     'required_points': 1,
+                    'description': _('eWallet'),
                 })],
                 'communication_plan_ids': [(5, 0, 0)],
+            },
+            'promo_code': {
+                'applies_on': 'current',
+                'trigger': 'with_code',
+                'portal_visible': False,
+                'portal_point_name': _('Discount point(s)'),
+                'rule_ids': [(5, 0, 0), (0, 0, {
+                    'mode': 'with_code',
+                    'code': 'PROMO_CODE_' + str(uuid4())[:4], # We should try not to trigger any unicity constraint
+                    'minimum_qty': 0,
+                })],
+                'reward_ids': [(5, 0, 0), (0, 0, {
+                    'discount_applicability': 'specific',
+                    'discount_product_ids': first_sale_product,
+                    'discount_mode': 'percent',
+                    'discount': 10,
+                })],
+                'communication_plan_ids': [(5, 0, 0)],
+            },
+            'buy_x_get_y': {
+                'applies_on': 'current',
+                'trigger': 'auto',
+                'portal_visible': False,
+                'portal_point_name': _('Credit(s)'),
+                'rule_ids': [(5, 0, 0), (0, 0, {
+                    'reward_point_mode': 'unit',
+                    'product_ids': first_sale_product,
+                    'minimum_qty': 2,
+                })],
+                'reward_ids': [(5, 0, 0), (0, 0, {
+                    'reward_type': 'product',
+                    'reward_product_id': first_sale_product.id,
+                    'required_points': 2,
+                })],
+                'communication_plan_ids': [(5, 0, 0)],
+            },
+            'next_order_coupons': {
+                'applies_on': 'future',
+                'trigger': 'auto',
+                'portal_visible': True,
+                'portal_point_name': _('Coupon point(s)'),
+                'rule_ids': [(5, 0, 0), (0, 0, {
+                    'minimum_amount': 100,
+                    'minimum_qty': 0,
+                })],
+                'reward_ids': [(5, 0, 0), (0, 0, {
+                    'reward_type': 'discount',
+                    'discount_mode': 'percent',
+                    'discount': 15,
+                    'discount_applicability': 'order',
+                })],
+                'communication_plan_ids': [(5, 0, 0), (0, 0, {
+                    'trigger': 'create',
+                    'mail_template_id': (self.env.ref('loyalty.mail_template_gift_card', raise_if_not_found=False) or self.env['mail.template']).id,
+                })],
             },
         }
 
@@ -207,6 +332,13 @@ class LoyaltyProgram(models.Model):
             if program_type in program_type_defaults:
                 programs.write(program_type_defaults[program_type])
 
+    @api.depends("currency_id", "program_type")
+    def _compute_portal_point_name(self):
+        for program in self:
+            if program.program_type not in ('ewallet', 'gift_card'):
+                continue
+            program.portal_point_name = program.currency_id.symbol or ''
+
     def _get_valid_products(self, products):
         '''
         Returns a dict containing the products that match per rule of the program
@@ -219,6 +351,21 @@ class LoyaltyProgram(models.Model):
             else:
                 rule_products[rule] = products
         return rule_products
+
+    def action_open_loyalty_cards(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id("loyalty.loyalty_card_action")
+        action['name'] = self._program_items_name()[self.program_type]
+        action['display_name'] = action['name']
+        action['context'] = {
+            'create': False,
+            'program_type': self.program_type,
+            'program_item_name': self._program_items_name()[self.program_type],
+            'default_program_id': self.id,
+            # For the wizard
+            'default_mode': self.program_type == 'ewallet' and 'selected' or 'anonymous',
+        }
+        return action
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active(self):
@@ -234,21 +381,38 @@ class LoyaltyProgram(models.Model):
             program.communication_plan_ids.active = program.active
             program.reward_ids.discount_line_product_id.active = program.active
 
+    def write(self, vals):
+        # There is an issue when we change the program type, since we clear the rewards and create new ones.
+        # The orm actually does it in this order upon writing, triggering the constraint before creating the new rewards.
+        # However we can check that the result of reward_ids would actually be empty or not, and if not, skip the constraint.
+        if 'reward_ids' in vals and self._fields['reward_ids'].convert_to_cache(vals['reward_ids'], self):
+            self = self.with_context(loyalty_skip_reward_check=True)
+        return super().write(vals)
+
     @api.model
     def get_program_templates(self):
         '''
         Returns the templates to be used for promotional programs.
         '''
+        ctx_menu_type = self.env.context.get('menu_type')
+        if ctx_menu_type == 'gift_ewallet':
+            return {
+                'gift_card': {
+                    'title': _('Gift Card'),
+                    'description': _('Sell Gift Cards, that can be used to purchase products'),
+                    'icon': 'gift_card',
+                },
+                'ewallet': {
+                    'title': _('eWallet'),
+                    'description': _('Fill in your eWallet, and use it to pay future orders'),
+                    'icon': 'ewallet',
+                },
+            }
         return {
             'promo_code': {
                 'title': _('Promo Code'),
                 'description': _('Get a code to receive 10% discount on specific products'),
                 'icon': 'promo_code',
-            },
-            'gift_card': {
-                'title': _('Gift Card'),
-                'description': _('Sell Gift Cards, that can be used to purchase products'),
-                'icon': 'gift_card',
             },
             'loyalty': {
                 'title': _('Loyalty Cards'),
@@ -270,15 +434,15 @@ class LoyaltyProgram(models.Model):
                 'description': _('Send unique coupons that give access to rewards'),
                 'icon': 'coupons',
             },
-            'buy_two_get_one': {
+            'buy_x_get_y': {
                 'title': _('2+1 Free'),
                 'description': _('Buy 2 products and get a third one for free'),
                 'icon': '2_plus_1',
             },
-            'ewallet': {
-                'title': _('eWallet'),
-                'description': _('Fill in your eWallet, and use it to pay future orders'),
-                'icon': 'ewallet',
+            'next_order_coupons': {
+                'title': _('Next Order Coupons'),
+                'description': _('Send unique, single-use coupon code for the next purchase'),
+                'icon': 'coupons',
             },
         }
 
@@ -293,7 +457,11 @@ class LoyaltyProgram(models.Model):
         if template_id not in template_values:
             return False
         program = self.create(template_values[template_id])
-        action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_action')
+        action = {}
+        if self.env.context.get('menu_type') == 'gift_ewallet':
+            action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_discount_loyalty_action')
+        else:
+            action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_program_gift_ewallet_action')
         action['views'] = [[False, 'form']]
         action['view_mode'] = 'form'
         action['res_id'] = program.id
@@ -334,20 +502,19 @@ class LoyaltyProgram(models.Model):
                 **program_type_defaults['promotion'],
             },
             'promo_code': {
-                'name': _('Promo Code'),
-                'program_type': 'promotion',
-                'applies_on': 'current',
-                'trigger': 'with_code',
-                'rule_ids': [(0, 0, {
-                    'mode': 'with_code',
-                    'code': '10PERCENT_' + str(uuid4())[:4], # Require a random code in case a user creates multiple program using this template
-                })],
-                'reward_ids': [(0, 0, {
-                    'discount_applicability': 'specific',
-                    'discount_product_ids': product,
-                    'discount_mode': 'percent',
-                    'discount': 10,
-                })]
+                'name': _('Discount code'),
+                'program_type': 'promo_code',
+                **program_type_defaults['promo_code'],
+            },
+            'buy_x_get_y': {
+                'name': _('2+1 Free'),
+                'program_type': 'buy_x_get_y',
+                **program_type_defaults['buy_x_get_y'],
+            },
+            'next_order_coupons': {
+                'name': _('Next Order Coupons'),
+                'program_type': 'next_order_coupons',
+                **program_type_defaults['next_order_coupons'],
             },
             'fidelity': {
                 'name': _('Fidelity Cards'),
@@ -364,21 +531,6 @@ class LoyaltyProgram(models.Model):
                     'discount_applicability': 'specific',
                     'discount_product_ids': product,
                     'discount': 10,
-                })]
-            },
-            'buy_two_get_one': {
-                'name': _('2+1 Free'),
-                'program_type': 'promotion',
-                'applies_on': 'current',
-                'trigger': 'auto',
-                'rule_ids': [(0, 0, {
-                    'reward_point_mode': 'unit',
-                    'product_ids': product,
-                })],
-                'reward_ids': [(0, 0, {
-                    'reward_type': 'product',
-                    'reward_product_id': product and product.id or False,
-                    'required_points': 2,
                 })]
             },
         }

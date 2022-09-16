@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.modules
 import logging
+from enum import IntEnum
+
+import odoo.modules
 
 _logger = logging.getLogger(__name__)
 
@@ -137,15 +139,34 @@ def create_categories(cr, categories):
         categories = categories[1:]
     return p_id
 
+class FunctionStatus(IntEnum):
+    MISSING = 0  # function is not present (falsy)
+    PRESENT = 1  # function is present but not indexable (not immutable)
+    INDEXABLE = 2  # function is present and indexable (immutable)
+
 def has_unaccent(cr):
-    """ Test if the database has an unaccent function.
+    """ Test whether the database has function 'unaccent' and return its status.
 
     The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
     module but any similar function will be picked by OpenERP.
 
+    :rtype: FunctionStatus
     """
-    cr.execute("SELECT proname FROM pg_proc WHERE proname='unaccent'")
-    return len(cr.fetchall()) > 0
+    cr.execute("""
+        SELECT p.provolatile
+        FROM pg_proc p
+            LEFT JOIN pg_catalog.pg_namespace ns ON p.pronamespace = ns.oid
+        WHERE p.proname = 'unaccent'
+              AND p.pronargs = 1
+              AND ns.nspname = 'public'
+    """)
+    result = cr.fetchone()
+    if not result:
+        return FunctionStatus.MISSING
+    # The `provolatile` of unaccent allows to know whether the unaccent function
+    # can be used to create index (it should be 'i' - means immutable), see
+    # https://www.postgresql.org/docs/current/catalog-pg-proc.html.
+    return FunctionStatus.INDEXABLE if result[0] == 'i' else FunctionStatus.PRESENT
 
 def has_trigram(cr):
     """ Test if the database has the a word_similarity function.

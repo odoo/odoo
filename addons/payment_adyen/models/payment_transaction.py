@@ -23,11 +23,11 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one() from `_get_processing_values`
 
         :param dict processing_values: The generic processing values of the transaction
-        :return: The dict of acquirer-specific processing values
+        :return: The dict of provider-specific processing values
         :rtype: dict
         """
         res = super()._get_specific_processing_values(processing_values)
-        if self.provider != 'adyen':
+        if self.provider_code != 'adyen':
             return res
 
         converted_amount = payment_utils.to_minor_currency_units(
@@ -51,7 +51,7 @@ class PaymentTransaction(models.Model):
         :raise: UserError if the transaction is not linked to a token
         """
         super()._send_payment_request()
-        if self.provider != 'adyen':
+        if self.provider_code != 'adyen':
             return
 
         # Prepare the payment request to Adyen
@@ -62,14 +62,14 @@ class PaymentTransaction(models.Model):
             self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
         )
         data = {
-            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'merchantAccount': self.provider_id.adyen_merchant_account,
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
             },
             'reference': self.reference,
             'paymentMethod': {
-                'recurringDetailReference': self.token_id.acquirer_ref,
+                'recurringDetailReference': self.token_id.provider_ref,
             },
             'shopperReference': self.token_id.adyen_shopper_reference,
             'recurringProcessingModel': 'Subscription',
@@ -77,18 +77,18 @@ class PaymentTransaction(models.Model):
             'shopperInteraction': 'ContAuth',
         }
 
-        # Force the capture delay on Adyen side if the acquirer is not configured for capturing
+        # Force the capture delay on Adyen side if the provider is not configured for capturing
         # payments manually. This is necessary because it's not possible to distinguish
         # 'AUTHORISATION' events sent by Adyen with the merchant account's capture delay set to
         # 'manual' from events with the capture delay set to 'immediate' or a number of hours. If
-        # the merchant account is configured to capture payments with a delay but the acquirer is
+        # the merchant account is configured to capture payments with a delay but the provider is
         # not, we force the immediate capture to avoid considering authorized transactions as
         # captured on Odoo.
-        if not self.acquirer_id.capture_manually:
+        if not self.provider_id.capture_manually:
             data.update(captureDelayHours=0)
 
         # Make the payment request to Adyen
-        response_content = self.acquirer_id._adyen_make_request(
+        response_content = self.provider_id._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments',
             payload=data,
@@ -112,7 +112,7 @@ class PaymentTransaction(models.Model):
         :return: The refund transaction if any
         :rtype: recordset of `payment.transaction`
         """
-        if self.provider != 'adyen':
+        if self.provider_code != 'adyen':
             return super()._send_refund_request(
                 amount_to_refund=amount_to_refund,
                 create_refund_transaction=create_refund_transaction
@@ -128,17 +128,17 @@ class PaymentTransaction(models.Model):
             arbitrary_decimal_number=CURRENCY_DECIMALS.get(refund_tx.currency_id.name)
         )
         data = {
-            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'merchantAccount': self.provider_id.adyen_merchant_account,
             'amount': {
                 'value': converted_amount,
                 'currency': refund_tx.currency_id.name,
             },
             'reference': refund_tx.reference,
         }
-        response_content = refund_tx.acquirer_id._adyen_make_request(
+        response_content = refund_tx.provider_id._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments/{}/refunds',
-            endpoint_param=self.acquirer_reference,
+            endpoint_param=self.provider_reference,
             payload=data,
             method='POST'
         )
@@ -153,7 +153,7 @@ class PaymentTransaction(models.Model):
         if psp_reference and status == 'received':
             # The PSP reference associated with this /refunds request is different from the psp
             # reference associated with the original payment request.
-            refund_tx.acquirer_reference = psp_reference
+            refund_tx.provider_reference = psp_reference
 
         return refund_tx
 
@@ -165,24 +165,24 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_capture_request()
-        if self.provider != 'adyen':
+        if self.provider_code != 'adyen':
             return
 
         converted_amount = payment_utils.to_minor_currency_units(
             self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
         )
         data = {
-            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'merchantAccount': self.provider_id.adyen_merchant_account,
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
             },
             'reference': self.reference,
         }
-        response_content = self.acquirer_id._adyen_make_request(
+        response_content = self.provider_id._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments/{}/captures',
-            endpoint_param=self.acquirer_reference,
+            endpoint_param=self.provider_reference,
             payload=data,
             method='POST',
         )
@@ -193,7 +193,7 @@ class PaymentTransaction(models.Model):
         if status == 'received':
             self._log_message_on_linked_documents(_(
                 "The capture of the transaction with reference %s has been requested (%s).",
-                self.reference, self.acquirer_id.name
+                self.reference, self.provider_id.name
             ))
 
     def _send_void_request(self):
@@ -204,17 +204,17 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_void_request()
-        if self.provider != 'adyen':
+        if self.provider_code != 'adyen':
             return
 
         data = {
-            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'merchantAccount': self.provider_id.adyen_merchant_account,
             'reference': self.reference,
         }
-        response_content = self.acquirer_id._adyen_make_request(
+        response_content = self.provider_id._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments/{}/cancels',
-            endpoint_param=self.acquirer_reference,
+            endpoint_param=self.provider_reference,
             payload=data,
             method='POST',
         )
@@ -225,21 +225,21 @@ class PaymentTransaction(models.Model):
         if status == 'received':
             self._log_message_on_linked_documents(_(
                 "A request was sent to void the transaction with reference %s (%s).",
-                self.reference, self.acquirer_id.name
+                self.reference, self.provider_id.name
             ))
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Adyen data.
 
-        :param str provider: The provider of the acquirer that handled the transaction
+        :param str provider_code: The code of the provider that handled the transaction
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'adyen' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'adyen' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('merchantReference')
@@ -247,28 +247,28 @@ class PaymentTransaction(models.Model):
             raise ValidationError("Adyen: " + _("Received data with missing merchant reference"))
 
         event_code = notification_data.get('eventCode', 'AUTHORISATION')  # Fallback on auth if S2S.
-        acquirer_reference = notification_data.get('pspReference')
+        provider_reference = notification_data.get('pspReference')
         source_reference = notification_data.get('originalReference')
         if event_code == 'AUTHORISATION':
-            tx = self.search([('reference', '=', reference), ('provider', '=', 'adyen')])
+            tx = self.search([('reference', '=', reference), ('provider_code', '=', 'adyen')])
         elif event_code in ['CAPTURE', 'CANCELLATION']:
             # The capture/void may be initiated from Adyen, so we can't trust the reference.
-            # We find the transaction based on the original acquirer reference since Adyen will have
+            # We find the transaction based on the original provider reference since Adyen will have
             # two different references: one for the original transaction and one for the capture.
             tx = self.search(
-                [('acquirer_reference', '=', source_reference), ('provider', '=', 'adyen')]
+                [('provider_reference', '=', source_reference), ('provider_code', '=', 'adyen')]
             )
         else:  # 'REFUND'
             # The refund may be initiated from Adyen, so we can't trust the reference, which could
             # be identical to another existing transaction. We find the transaction based on the
-            # acquirer reference.
+            # provider reference.
             tx = self.search(
-                [('acquirer_reference', '=', acquirer_reference), ('provider', '=', 'adyen')]
+                [('provider_reference', '=', provider_reference), ('provider_code', '=', 'adyen')]
             )
             if not tx:  # The refund was initiated from Adyen
                 # Find the source transaction based on the original reference
                 source_tx = self.search(
-                    [('acquirer_reference', '=', source_reference), ('provider', '=', 'adyen')]
+                    [('provider_reference', '=', source_reference), ('provider_code', '=', 'adyen')]
                 )
                 if source_tx:
                     # Manually create a refund transaction with a new reference. The reference of
@@ -296,9 +296,9 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         """
-        refund_acquirer_reference = notification_data.get('pspReference')
+        refund_provider_reference = notification_data.get('pspReference')
         amount_to_refund = notification_data.get('amount', {}).get('value')
-        if not refund_acquirer_reference or not amount_to_refund:
+        if not refund_provider_reference or not amount_to_refund:
             raise ValidationError(
                 "Adyen: " + _("Received refund data with missing transaction values")
             )
@@ -307,7 +307,7 @@ class PaymentTransaction(models.Model):
             amount_to_refund, source_tx.currency_id
         )
         return source_tx._create_refund_transaction(
-            amount_to_refund=converted_amount, acquirer_reference=refund_acquirer_reference
+            amount_to_refund=converted_amount, provider_reference=refund_provider_reference
         )
 
     def _process_notification_data(self, notification_data):
@@ -320,7 +320,7 @@ class PaymentTransaction(models.Model):
         :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'adyen':
+        if self.provider_code != 'adyen':
             return
 
         # Extract or assume the event code. If none is provided, the feedback data originate from a
@@ -328,10 +328,10 @@ class PaymentTransaction(models.Model):
         # webhook notification.
         event_code = notification_data.get('eventCode', 'AUTHORISATION')
 
-        # Handle the acquirer reference. If the event code is 'CAPTURE' or 'CANCELLATION', we
+        # Handle the provider reference. If the event code is 'CAPTURE' or 'CANCELLATION', we
         # discard the pspReference as it is different from the original pspReference of the tx.
         if 'pspReference' in notification_data and event_code in ['AUTHORISATION', 'REFUND']:
-            self.acquirer_reference = notification_data.get('pspReference')
+            self.provider_reference = notification_data.get('pspReference')
 
         # Handle the payment state
         payment_state = notification_data.get('resultCode')
@@ -347,7 +347,7 @@ class PaymentTransaction(models.Model):
             if self.tokenize and has_token_data:
                 self._adyen_tokenize_from_notification_data(notification_data)
 
-            if not self.acquirer_id.capture_manually:
+            if not self.provider_id.capture_manually:
                 self._set_done()
             else:  # The payment was configured for manual capture.
                 # Differentiate the state based on the event code.
@@ -414,10 +414,10 @@ class PaymentTransaction(models.Model):
 
         additional_data = notification_data['additionalData']
         token = self.env['payment.token'].create({
-            'acquirer_id': self.acquirer_id.id,
+            'provider_id': self.provider_id.id,
             'payment_details': additional_data.get('cardSummary'),
             'partner_id': self.partner_id.id,
-            'acquirer_ref': additional_data['recurring.recurringDetailReference'],
+            'provider_ref': additional_data['recurring.recurringDetailReference'],
             'adyen_shopper_reference': additional_data['recurring.shopperReference'],
             'verified': True,  # The payment is authorized, so the payment method is valid
         })

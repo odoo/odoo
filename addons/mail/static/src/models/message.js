@@ -51,6 +51,7 @@ registerModel({
             if ('is_notification' in data) {
                 data2.is_notification = data.is_notification;
             }
+            data2.linkPreviews = data.linkPreviews;
             if ('messageReactionGroups' in data) {
                 data2.messageReactionGroups = data.messageReactionGroups;
             }
@@ -544,29 +545,8 @@ registerModel({
                 // body null in db, body will be false instead of empty string
                 return clear();
             }
-            let prettyBody = this.body;
-            for (const emoji of this.messaging.emojiRegistry.allEmojis) {
-                const { unicode } = emoji;
-                const regexp = new RegExp(
-                    `(?:^|\\s|<[a-z]*>)(${unicode})(?=\\s|$|</[a-z]*>)`,
-                    "g"
-                );
-                const originalBody = this.body;
-                prettyBody = this.body.replace(
-                    regexp,
-                    ` <span class="o_mail_emoji">${unicode}</span> `
-                );
-                // Idiot-proof limit. If the user had the amazing idea of
-                // copy-pasting thousands of emojis, the image rendering can lead
-                // to memory overflow errors on some browsers (e.g. Chrome). Set an
-                // arbitrary limit to 200 from which we simply don't replace them
-                // (anyway, they are already replaced by the unicode counterpart).
-                if (_.str.count(prettyBody, "o_mail_emoji") > 200) {
-                    prettyBody = originalBody;
-                }
-            }
             // add anchor tags to urls
-            return parseAndTransform(prettyBody, addLink);
+            return parseAndTransform(this.body, addLink);
         },
         /**
          * @private
@@ -795,13 +775,15 @@ registerModel({
         lastTrackingValue: one('TrackingValue', {
             compute: '_computeLastTrackingValue',
         }),
+        linkPreviews: many('LinkPreview', {
+            inverse: 'message',
+        }),
         /**
          * Groups of reactions per content allowing to know the number of
          * reactions for each.
          */
         messageReactionGroups: many('MessageReactionGroup', {
             inverse: 'message',
-            isCausal: true,
         }),
         messageTypeText: attr({
             compute: '_computeMessageTypeText',
@@ -820,7 +802,6 @@ registerModel({
         }),
         messageListViewItems: many('MessageListViewItem', {
             inverse: 'message',
-            isCausal: true,
         }),
         notifications: many('Notification', {
             inverse: 'message',

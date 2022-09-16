@@ -25,9 +25,10 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
 SkillsListRenderer.template = 'hr_skills.SkillsListRenderer';
 
 export class SkillsX2ManyField extends X2ManyField {
-    async onAdd({ context } = {}) {
+    async onAdd({ context, editable } = {}) {
         const employeeId = this.props.record.resId;
         return super.onAdd({
+            editable,
             context: {
                 ...context,
                 default_employee_id: employeeId,

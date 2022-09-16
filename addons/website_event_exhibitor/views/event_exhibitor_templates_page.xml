@@ -30,7 +30,7 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_main" name="Exhibitor: Main Content">
-    <div t-att-class="'col-12 o_wevent_online_page_main o_wesponsor_exhibitor_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+    <div t-att-class="'col-12 o_wevent_online_page_main o_wesponsor_exhibitor_main p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not sponsor.event_id.is_ongoing">
             <div t-if="sponsor.event_id.is_done" class="alert alert-warning rounded-0 text-center" role="alert">
@@ -168,7 +168,7 @@
 
 <template id="exhibitor_aside" name="Exhibitor: Aside">
     <div t-att-class="'col-12 ps-0 pe-0 o_wevent_online_page_aside o_wesponsor_exhibitor_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
-        <div class="bg-white o_wevent_online_page_aside_content">
+        <div class="o_wevent_online_page_aside_content">
             <div class="d-flex align-items-center justify-content-between mx-2">
                 <span class="h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2">Other exhibitors</span>
                 <a href="#collapse_exhibitor_aside" data-bs-toggle="collapse"

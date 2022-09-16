@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="website.TranslateWebsiteSystray" owl="1">
-        <div class="o_translate_website_container">
-            <a href="#" accesskey="a" t-on-click="startTranslate">
+        <div class="o_translate_website_container d-none d-md-block">
+            <a href="#" accesskey="t" t-on-click="startTranslate">
                 <span t-if="websiteContext.translation" class="fa fa-refresh fa-spin me-2"/>
                 TRANSLATE
             </a>

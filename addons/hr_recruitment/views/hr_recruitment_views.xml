@@ -33,20 +33,23 @@
                 <field name="job_id"/>
                 <field name="name" readonly="1"/>
                 <field name="stage_id"/>
+                <field name="application_status" optional="show" attrs="{'invisible': [('application_status', '=', 'ongoing')]}"/>
+                <field name="refuse_reason_id" optional='hide'/>
                 <field name="priority" widget="priority" optional="show"/>
+                <field name="email_from" readonly="1" optional="hide"/>
                 <field name="partner_mobile" widget="phone" readonly="1" optional="show" class="text-end"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="interviewer_id" widget="many2one_avatar_user" optional="hide"/>
                 <field name="create_date" readonly="1" widget="date" optional="show"/>
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
-                <field name="email_from" readonly="1" optional="hide"/>
                 <field name="medium_id" optional="hide"/>
                 <field name="source_id" readonly="1" optional="hide"/>
                 <field name="salary_expected" optional="hide"/>
                 <field name="salary_proposed" optional="hide"/>
                 <field name="availability" optional="hide"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)" readonly="1"/>
+                <field name="company_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
             </tree>
         </field>
@@ -138,6 +141,7 @@
                         <field name="partner_phone" widget="phone" options="{'enable_sms': 0}"/>
                         <field name="partner_mobile" widget="phone"/>
                         <field name="type_id" placeholder="Degree"/>
+                        <field name="linkedin_profile" widget="url"/>
                     </group>
                     <group>
                         <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
@@ -483,23 +487,21 @@
         <field name="priority">200</field>
         <field name="arch" type="xml">
             <form string="Create a Job Position" class="o_hr_job_simple_form" >
-                <sheet>
-                    <group>
-                        <field name="name" class="o_job_name oe_inline" placeholder="e.g. Sales Manager"/>
-                        <label for="alias_name" string="Application email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
-                        <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
-                            <div class="oe_edit_only" name="edit_alias">
-                                <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            </div>
-                            <div class="text-muted" attrs="{'invisible': [('alias_domain', '=', False)]}">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
+                <group>
+                    <field name="name" class="o_job_name oe_inline" placeholder="e.g. Sales Manager"/>
+                    <label for="alias_name" string="Application email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                    <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
+                        <div class="oe_edit_only" name="edit_alias">
+                            <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                         </div>
-                    </group>
-                    <footer>
-                        <button string="Create" name="close_dialog" type="object" class="btn-primary o_create_job" data-hotkey="q"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
-                    </footer>
-                </sheet>
+                        <div class="text-muted" attrs="{'invisible': [('alias_domain', '=', False)]}">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
+                    </div>
+                </group>
+                <footer>
+                    <button string="Create" type="object" name="close_dialog" class="btn-primary o_create_job" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
             </form>
         </field>
     </record>
@@ -517,9 +519,10 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="department_id" position="before">
+            <div name="recruitment_target" position="after">
                 <field name="user_id" widget="many2one_avatar_user"/>
-            </field>
+                <field name="interviewer_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}" />
+            </div>
             <xpath expr="//field[@name='department_id']" position="after">
                 <label for="address_id"/>
                 <div class="o_row">
@@ -533,9 +536,6 @@
                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                     </div>
                 </div>
-            </xpath>
-            <xpath expr="//div[@name='recruitment_target']" position="after">
-                <field name="interviewer_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}" />
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
@@ -863,6 +863,13 @@
         action="hr_recruitment_stage_act"
         groups="base.group_no_one"
         sequence="1"/>
+
+    <menuitem
+        id="menu_hr_recruitment_contract_type"
+        action="hr.hr_contract_type_action"
+        parent="menu_hr_recruitment_config_jobs"
+        sequence="2"
+        groups="hr.group_hr_user"/>
 
     <!-- Tag Form View -->
     <record id="hr_applicant_category_view_form" model="ir.ui.view">

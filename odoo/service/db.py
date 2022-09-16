@@ -116,14 +116,22 @@ def _create_empty_database(name):
                 sql.Identifier(name), collate, sql.Identifier(chosen_template)
             ))
 
-    if odoo.tools.config['unaccent']:
-        try:
-            db = odoo.sql_db.db_connect(name)
-            with closing(db.cursor()) as cr:
+    # TODO: add --extension=trigram,unaccent
+    try:
+        db = odoo.sql_db.db_connect(name)
+        with db.cursor() as cr:
+            cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+            if odoo.tools.config['unaccent']:
                 cr.execute("CREATE EXTENSION IF NOT EXISTS unaccent")
-                cr.commit()
-        except psycopg2.Error:
-            pass
+                # From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
+                # because it depends on external data - see
+                # https://www.postgresql.org/message-id/flat/201012021544.oB2FiTn1041521@wwwmaster.postgresql.org#201012021544.oB2FiTn1041521@wwwmaster.postgresql.org
+                # But in the case of Odoo, we consider that those data don't
+                # change in the lifetime of a database. If they do change, all
+                # indexes created with this function become corrupted!
+                cr.execute("ALTER FUNCTION unaccent(text) IMMUTABLE")
+    except psycopg2.Error as e:
+        _logger.warning("Unable to create PostgreSQL extensions : %s", e)
 
 @check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None, phone=None):

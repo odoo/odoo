@@ -8,7 +8,6 @@ const _t = core._t;
 
 publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
     selector: '.o_wevent_meeting_room_card',
-    xmlDependencies: ['/website_event_meet/static/src/xml/website_event_meeting_room.xml'],
     events: {
         'click .o_wevent_meeting_room_delete': '_onDeleteClick',
         'click .o_wevent_meeting_room_duplicate': '_onDuplicateClick',

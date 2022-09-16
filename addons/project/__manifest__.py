@@ -48,7 +48,6 @@
         'data/mail_template_data.xml',
         'data/project_data.xml',
         'wizard/project_task_type_delete_views.xml',
-        'wizard/project_milestone_reach_wizard.xml',
     ],
     'demo': [
         'data/mail_template_demo.xml',
@@ -73,25 +72,17 @@
             'project/static/src/js/project_rating_graph_view.js',
             'project/static/src/js/project_rating_pivot_view.js',
             'project/static/src/js/project_task_kanban_examples.js',
-            'project/static/src/js/subtasks_list_renderer.js',
             'project/static/src/js/tours/project.js',
             'project/static/src/js/project_calendar.js',
             'project/static/src/js/widgets/*',
             'project/static/src/scss/project_dashboard.scss',
             'project/static/src/scss/project_form.scss',
             'project/static/src/scss/project_widgets.scss',
-        ],
-        "web.assets_backend_legacy_lazy": [
-            'project/static/src/js/*_legacy.js',
+            'project/static/src/xml/**/*',
         ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
             'project/static/src/js/portal_rating.js',
-        ],
-        'web.assets_qweb': [
-            'project/static/src/xml/**/*',
-            'project/static/src/components/**/*.xml',
-            'project/static/src/views/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/project_test_utils.js',
@@ -100,10 +91,6 @@
         ],
         'web.assets_tests': [
             'project/static/tests/tours/**/*',
-        ],
-        'project.assets_qweb': [
-            ('include', 'web.assets_qweb'),
-            'project/static/src/project_sharing/**/*.xml',
         ],
         'project.webclient': [
             ('include', 'web.assets_backend'),
@@ -122,6 +109,9 @@
             'project/static/src/scss/project_sharing/*',
             'web/static/src/start.js',
             'web/static/src/legacy/legacy_setup.js',
+
+            'project/static/src/project_sharing/**/*.xml',
+            'portal/static/src/xml/portal_chatter.xml',
         ],
     },
     'license': 'LGPL-3',

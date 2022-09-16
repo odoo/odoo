@@ -32,4 +32,4 @@ export const systrayItem = {
     isDisplayed: env => env.services.website.currentWebsite && env.services.website.currentWebsite.metadata.translatable,
 };
 
-registry.category("website_systray").add("TranslateWebsiteSystray", systrayItem, { sequence: 9 });
+registry.category("website_systray").add("TranslateWebsiteSystray", systrayItem, { sequence: 8 });

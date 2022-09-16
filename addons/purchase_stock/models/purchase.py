@@ -21,7 +21,7 @@ class PurchaseOrder(models.Model):
     incoterm_location = fields.Char(string='Incoterm Location', states={'done': [('readonly', True)]})
     incoming_picking_count = fields.Integer("Incoming Shipment count", compute='_compute_incoming_picking_count')
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Receptions', copy=False, store=True)
-
+    dest_address_id = fields.Many2one('res.partner', compute='_compute_dest_address_id', store=True, readonly=False)
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=Purchase.READONLY_STATES, required=True, default=_default_picking_type, domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
         help="This will determine operation type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',
@@ -73,10 +73,9 @@ class PurchaseOrder(models.Model):
             else:
                 order.receipt_status = 'pending'
 
-    @api.onchange('picking_type_id')
-    def _onchange_picking_type_id(self):
-        if self.picking_type_id.default_location_dest_id.usage != 'customer':
-            self.dest_address_id = False
+    @api.depends('picking_type_id')
+    def _compute_dest_address_id(self):
+        self.filtered(lambda po: po.picking_type_id.default_location_dest_id.usage != 'customer').dest_address_id = False
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -236,6 +235,7 @@ class PurchaseOrder(models.Model):
                 if not pickings:
                     res = order._prepare_picking()
                     picking = StockPicking.with_user(SUPERUSER_ID).create(res)
+                    pickings = picking
                 else:
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
@@ -245,6 +245,7 @@ class PurchaseOrder(models.Model):
                     seq += 5
                     move.sequence = seq
                 moves._action_assign()
+                pickings.action_confirm()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)

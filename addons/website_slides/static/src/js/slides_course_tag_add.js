@@ -337,7 +337,6 @@ var TagCourseDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesTag = publicWidget.Widget.extend({
     selector: '.o_wslides_js_channel_tag_add',
-    xmlDependencies: ['/website_slides/static/src/xml/website_slides_channel_tag.xml'],
     events: {
         'click': '_onAddTagClick',
     },

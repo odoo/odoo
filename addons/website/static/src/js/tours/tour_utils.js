@@ -288,28 +288,37 @@ function clickOnExtraMenuItem(stepOptions, backend = false) {
 /**
  * Registers a tour that will go in the website client action.
  *
- * @param name {string} The tour's name
- * @param options {Object} The tour options
- * @param options.url {string} the page to edit
- * @param options.edition {boolean} If the tour starts in edit mode
- * @param steps {[*]} The steps of the tour
+ * @param {string} name The tour's name
+ * @param {object} options The tour options
+ * @param {string} options.url The page to edit
+ * @param {boolean} [options.edition] If the tour starts in edit mode
+ * @param {object[]} steps The steps of the tour
  */
-function registerEditionTour(name, options, steps) {
-    let tourSteps = steps;
-    let url = getClientActionUrl(options.url, !!options.edition);
+function registerWebsitePreviewTour(name, options, steps) {
+    const tourSteps = [...steps];
+    const url = getClientActionUrl(options.url, !!options.edition);
+
+    // Note: for both non edit mode and edit mode, we set a high timeout for the
+    // first step. Indeed loading both the backend and the frontend (in the
+    // iframe) and potentially starting the edit mode can take a long time in
+    // automatic tests. We'll try and decrease the need for this high timeout
+    // of course.
     if (options.edition) {
-        tourSteps = [{
+        tourSteps.unshift({
             content: "Wait for the edit mode to be started",
             trigger: '.o_website_preview.editor_enable.editor_has_snippets',
             timeout: 30000,
             run: () => {}, // It's a check
-        }].concat(tourSteps);
+        });
+    } else {
+        tourSteps[0].timeout = 20000;
     }
-    tour.register(name, Object.assign(options, { url }), tourSteps);
+
+    return tour.register(name, Object.assign({}, options, { url }), tourSteps);
 }
 
 function registerThemeHomepageTour(name, steps) {
-    registerEditionTour(name, {
+    return registerWebsitePreviewTour(name, {
         url: '/',
         edition: true,
         sequence: 1010,
@@ -320,23 +329,23 @@ function registerThemeHomepageTour(name, steps) {
     ));
 }
 
-function registerBackendAndFrontend(name, options, steps) {
-    let url;
-    let tourSteps = steps;
+function registerBackendAndFrontendTour(name, options, steps) {
     if (window.location.pathname === '/web') {
-        url = getClientActionUrl(options.url);
-        for (const step of tourSteps) {
-            step.trigger = 'iframe ' + step.trigger;
+        const newSteps = [];
+        for (const step of steps) {
+            const newStep = Object.assign({}, step);
+            newStep.trigger = `iframe ${step.trigger}`;
             if (step.extra_trigger) {
-                step.extra_trigger = 'iframe ' + step.trigger;
+                newStep.extra_trigger = `iframe ${step.extra_trigger}`;
             }
+            newSteps.push(newStep);
         }
-    } else {
-        url = options.url;
+        return registerWebsitePreviewTour(name, options, newSteps);
     }
-    tour.register(name, {
-        url
-    }, tourSteps);
+
+    return tour.register(name, {
+        url: options.url,
+    }, steps);
 }
 
 /**
@@ -386,8 +395,8 @@ return {
     getClientActionUrl,
     registerThemeHomepageTour,
     clickOnExtraMenuItem,
-    registerEditionTour,
-    registerBackendAndFrontend,
+    registerWebsitePreviewTour,
+    registerBackendAndFrontendTour,
     selectElementInWeSelectWidget,
 };
 });

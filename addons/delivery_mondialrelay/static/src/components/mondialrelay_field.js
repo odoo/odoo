@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { loadJS } from "@web/core/assets";
 
 // temporary for OnNoResultReturned bug
 import { UncaughtCorsError } from "@web/core/errors/error_service";
@@ -9,7 +10,6 @@ const errorHandlerRegistry = registry.category("error_handlers");
 const { Component, onWillRender, useEffect, useRef, useState, xml } = owl;
 
 const MONDIALRELAY_SCRIPT_URL = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"
-let SCRIPT_LOADED = false;
 
 function corsIgnoredErrorHandler(env, error) {
     if (error instanceof UncaughtCorsError) {
@@ -28,27 +28,7 @@ export class MondialRelayField extends Component {
             if (!this.enabled || this.state.libLoaded) {
                 return;
             }
-            // Check if lib is already loaded
-            let script = document.querySelector(`script[src="${MONDIALRELAY_SCRIPT_URL}"]`)
-            if (script) {
-                if (!SCRIPT_LOADED) {
-                    script.onload = () => {
-                        this.state.libLoaded = true;
-                        SCRIPT_LOADED = true;
-                    }
-                } else {
-                    this.state.libLoaded = true;
-                }
-                return;
-            }
-            // Make sure the library is loaded
-            script = document.createElement('script');
-            script.src = MONDIALRELAY_SCRIPT_URL;
-            script.onload = () => {
-                this.state.libLoaded = true;
-                SCRIPT_LOADED = true;
-            };
-            document.body.appendChild(script);
+            loadJS(MONDIALRELAY_SCRIPT_URL).then(() => {this.state.libLoaded = true});
         });
 
         useEffect(

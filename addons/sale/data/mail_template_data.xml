@@ -188,7 +188,7 @@
                         <t t-out="transaction.token_id.name or ''"></t>
                     </t>
                     <t t-else="">
-                        <t t-out="transaction.acquirer_id.sudo().name or ''"></t>
+                        <t t-out="transaction.provider_id.sudo().name or ''"></t>
                     </t>
                     (<t t-out="format_amount(transaction.amount, object.currency_id) or ''">$ 10.00</t>)
                 </td>

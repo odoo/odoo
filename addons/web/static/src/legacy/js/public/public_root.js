@@ -1,6 +1,5 @@
 /** @odoo-module alias=web.public.root */
 
-import ajax from 'web.ajax';
 import dom from 'web.dom';
 import legacyEnv from 'web.public_env';
 import session from 'web.session';
@@ -21,8 +20,8 @@ import {
 } from "../../utils";
 import { standaloneAdapter } from "web.OwlCompatibility";
 
-import { fetchAndProcessTemplates, loadBundle } from "@web/core/assets";
 import { makeEnv, startServices } from "@web/env";
+import { setLoadXmlDefaultApp, loadJS, templates } from '@web/core/assets';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { jsonrpc } from '@web/core/network/rpc_service';
@@ -40,7 +39,7 @@ function getLang() {
 }
 var lang = utils.get_cookie('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
 // momentjs don't have config for en_US, so avoid useless RPC
-var localeDef = lang !== 'en_US' ? ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_')) : Promise.resolve();
+var localeDef = lang !== 'en_US' ? loadJS('/web/webclient/locale/' + lang.replace('-', '_')) : Promise.resolve();
 
 
 /**
@@ -263,8 +262,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
                 }
                 params.kwargs.context = _computeContext.call(this, params.kwargs.context, noContextKeys);
             }
-        } else if (payload.service === 'ajax' && payload.method === 'loadLibs') {
-            args[1] = _computeContext.call(this, args[1]);
         } else {
             return;
         }
@@ -408,20 +405,18 @@ export async function createPublicRoot(RootWidget) {
 
     const wowlEnv = makeEnv();
 
-    const templates = await fetchAndProcessTemplates("web.assets_frontend");
-    window.__OWL_TEMPLATES__ = templates;
     await startServices(wowlEnv);
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
     // The root widget's parent is a standalone adapter so that it has _trigger_up
     const publicRoot = new RootWidget(standaloneAdapter({ Component }));
     const app = new App(MainComponentsContainer, {
+        templates,
         env: wowlEnv,
         dev: wowlEnv.debug,
-        templates: window.__OWL_TEMPLATES__,
         translateFn: _t,
         translatableAttributes: ["data-tooltip"],
     });
-    loadBundle.app = app;
+    setLoadXmlDefaultApp(app);
     await Promise.all([
         app.mount(document.body),
         publicRoot.attachTo(document.body),

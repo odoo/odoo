@@ -6,23 +6,6 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
-                <button string="Costs / Revenues" class="oe_stat_button d-none" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}" groups="project.group_project_manager"/>
-            </xpath>
-            <xpath expr="//button[@name='action_show_timesheets_by_employee_invoice_type']" position="after">
-                <button name="action_billable_time_button" type="object" class="oe_stat_button" icon="fa-clock-o" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('analytic_account_id', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_approver">
-                    <div class="o_field_widget o_stat_info">
-                        <div class="oe_inline">
-                            <span class="o_stat_value me-1">
-                                <field name="billable_percentage" widget="statinfo" nolabel="1"/>%
-                            </span>
-                        </div>
-                        <span class="o_stat_text">
-                        Billable Time
-                        </span>
-                    </div>
-                </button>
-            </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}">
                     <group>
@@ -31,8 +14,8 @@
                             <field name="pricing_type" invisible="1" widget="radio"/>
                             <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_detailed_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
                             <field name="sale_order_id" invisible="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
-                            <field name="sale_line_id" groups="!sales_team.group_sale_salesman" string="Default Sales Order Item" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
-                            <field name="sale_line_id" groups="sales_team.group_sale_salesman" string="Default Sales Order Item" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
+                            <field name="sale_line_id" groups="!sales_team.group_sale_salesman" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                            <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
                         </group>
                     </group>
                     <field name="sale_line_employee_ids">
@@ -42,7 +25,7 @@
                             <field name="employee_id" options="{'no_create': True}"/>
                             <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}"/>
                             <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
-                            <field name="cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="is_cost_changed" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="cost_currency_id" invisible="1"/>
@@ -58,10 +41,20 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_project_view_form_simplified_inherit_timesheet"/>
         <field name="arch" type="xml">
-            <field name="allow_timesheets" position="before">
-                <field name="company_id" invisible="1"/>
-                <field name="allow_billable"/>
-            </field>
+            <xpath expr="//div[hasclass('o_setting_box')]" position="before">
+                <div class="col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="company_id" invisible="1"/>
+                        <field name="allow_billable"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_billable"/>
+                        <div class="text-muted" id="allow_billable_setting">
+                            Invoice your time and material to customers
+                        </div>
+                    </div>
+                </div>
+            </xpath>
         </field>
     </record>
 
@@ -112,10 +105,10 @@
                     <field name="allow_billable" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='child_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" string="Remaining Hours on SO" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
                 </xpath>
                 <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" string="Remaining Hours on SO" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
                 </xpath>
 
             </field>
@@ -127,7 +120,7 @@
             <field name="inherit_id" ref="hr_timesheet.view_task_tree2_inherited" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" string="Remaining Hours on SO" widget="timesheet_uom" optional="hide"/>
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide"/>
                 </xpath>
             </field>
         </record>
@@ -184,7 +177,7 @@
                             <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
                                 attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&gt;=', 0)]}"/>
                         </span>
-                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"></field>
+                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" decoration-danger="remaining_hours_so &lt; 0"></field>
                     </t>
                 </xpath>
             </field>

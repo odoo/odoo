@@ -4,6 +4,8 @@ import { registry } from "@web/core/registry";
 import { ConnectionLostError, RPCError } from "../core/network/rpc_service";
 import { lostConnectionHandler, rpcErrorHandler } from "@web/core/errors/error_handlers";
 
+const { OwlError } = owl;
+
 const errorHandlerRegistry = registry.category("error_handlers");
 
 /**
@@ -22,6 +24,9 @@ const errorHandlerRegistry = registry.category("error_handlers");
  * @returns {boolean}
  */
 function legacyRPCErrorHandler(env, error, originalError) {
+    if (originalError instanceof OwlError) {
+        originalError = originalError.cause;
+    }
     if (
         originalError &&
         originalError.legacy &&

@@ -6,7 +6,7 @@
         <field name="model">mail.guest</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Guest">
+            <tree string="Guests">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="country_id"/>
@@ -17,7 +17,7 @@
     </record>
 
     <record id="mail_guest_action" model="ir.actions.act_window">
-        <field name="name">User Settings</field>
+        <field name="name">Guests</field>
         <field name="res_model">mail.guest</field>
         <field name="view_mode">tree,form</field>
     </record>

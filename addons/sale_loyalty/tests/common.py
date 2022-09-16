@@ -221,3 +221,111 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
             if len(program.reward_ids) > 1 or len(coupons_per_program[program]) != 1 or not program.active:
                 continue
             self._claim_reward(order, program, coupons_per_program[program])
+
+class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.largeCabinet = cls.env['product.product'].create({
+            'name': 'Large Cabinet',
+            'list_price': 320.0,
+            'taxes_id': False,
+        })
+        cls.conferenceChair = cls.env['product.product'].create({
+            'name': 'Conference Chair',
+            'list_price': 16.5,
+            'taxes_id': False,
+        })
+        cls.pedalBin = cls.env['product.product'].create({
+            'name': 'Pedal Bin',
+            'list_price': 47.0,
+            'taxes_id': False,
+        })
+        cls.drawerBlack = cls.env['product.product'].create({
+            'name': 'Drawer Black',
+            'list_price': 25.0,
+            'taxes_id': False,
+        })
+        cls.largeMeetingTable = cls.env['product.product'].create({
+            'name': 'Large Meeting Table',
+            'list_price': 40000.0,
+            'taxes_id': False,
+        })
+
+        cls.steve = cls.env['res.partner'].create({
+            'name': 'Steve Bucknor',
+            'email': 'steve.bucknor@example.com',
+        })
+        cls.empty_order = cls.env['sale.order'].create({
+            'partner_id': cls.steve.id
+        })
+
+        cls.p1 = cls.env['loyalty.program'].create({
+            'name': 'Code for 10% on orders',
+            'trigger': 'with_code',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'mode': 'with_code',
+                'code': 'test_10pc',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        cls.p2 = cls.env['loyalty.program'].create({
+            'name': 'Buy 3 cabinets, get one for free',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': cls.largeCabinet,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 3,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': cls.largeCabinet.id,
+                'reward_product_qty': 1,
+                'required_points': 3,
+            })],
+        })
+        cls.p3 = cls.env['loyalty.program'].create({
+            'name': 'Buy 1 drawer black, get a free Large Meeting Table',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': cls.drawerBlack,
+                'reward_point_mode': 'order',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': cls.largeMeetingTable.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            })],
+        })
+        cls.discount_coupon_program = cls.env['loyalty.program'].create({
+            'name': '$100 coupon',
+            'program_type': 'coupons',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'minimum_amount': 100,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 100,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        cls.all_programs = cls.env['loyalty.program'].search([])

@@ -103,17 +103,23 @@ export class FormController extends Component {
         const beforeLoadProm = new Promise((r) => {
             this.beforeLoadResolver = r;
         });
-        this.model = useModel(this.props.Model, {
-            resModel: this.props.resModel,
-            resId: this.props.resId || false,
-            resIds: this.props.resIds,
-            fields: this.props.fields,
-            activeFields,
-            viewMode: "form",
-            rootType: "record",
-            mode: this.props.mode,
-            beforeLoadProm,
-        });
+        this.model = useModel(
+            this.props.Model,
+            {
+                resModel: this.props.resModel,
+                resId: this.props.resId || false,
+                resIds: this.props.resIds,
+                fields: this.props.fields,
+                activeFields,
+                viewMode: "form",
+                rootType: "record",
+                mode: this.props.mode,
+                beforeLoadProm,
+            },
+            {
+                ignoreUseSampleModel: true,
+            }
+        );
         const { create, edit } = this.archInfo.activeActions;
 
         this.canCreate = create && !this.props.preventCreate;
@@ -191,8 +197,10 @@ export class FormController extends Component {
                     limit: 1,
                     total: resIds.length,
                     onUpdate: async ({ offset }) => {
-                        await this.model.root.save({ stayInEdition: true });
-                        this.model.load({ resId: resIds[offset] });
+                        const canProceed = await this.model.root.save({ stayInEdition: true });
+                        if (canProceed) {
+                            this.model.load({ resId: resIds[offset] });
+                        }
                     },
                 };
             }
@@ -397,17 +405,17 @@ export class FormController extends Component {
     }
 
     get className() {
+        const result = {};
         const { size } = this.ui;
-        let sizeClass = "";
         if (size <= SIZES.XS) {
-            sizeClass = "o_xxs_form_view";
-        } else if (size === SIZES.XXL) {
-            sizeClass = "o_xxl_form_view h-100";
+            result.o_xxs_form_view = true;
+        } else if (!this.env.inDialog && size === SIZES.XXL) {
+            result["o_xxl_form_view h-100"] = true;
         }
-        return {
-            [this.props.className]: true,
-            [sizeClass]: true,
-        };
+        if (this.props.className) {
+            result[this.props.className] = true;
+        }
+        return result;
     }
 }
 

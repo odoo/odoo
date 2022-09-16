@@ -156,3 +156,25 @@ PosLoyalty.check.orderTotalIs('16.27');
 PosLoyalty.exec.finalizeOrder('Cash', '20');
 
 Tour.register('PosLoyaltyTour2', { test: true, url: '/pos/web' }, getSteps());
+
+// --- PoS Loyalty Tour Basic Part 3 ---
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct('Promo Product');
+PosLoyalty.check.orderTotalIs('34.50');
+ProductScreen.do.clickDisplayedProduct('Product B');
+PosLoyalty.check.hasRewardLine('100% on specific products', '25.00');
+ProductScreen.do.clickDisplayedProduct('Product A');
+PosLoyalty.check.hasRewardLine('100% on specific products', '15.00');
+PosLoyalty.check.orderTotalIs('34.50');
+ProductScreen.do.clickDisplayedProduct('Product A');
+PosLoyalty.check.hasRewardLine('100% on specific products', '21.82');
+PosLoyalty.check.hasRewardLine('100% on specific products', '18.18');
+PosLoyalty.check.orderTotalIs('49.50');
+
+
+Tour.register('PosLoyaltyTour3', { test: true, url: '/pos/web' }, getSteps());

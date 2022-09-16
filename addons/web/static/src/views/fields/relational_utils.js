@@ -133,7 +133,7 @@ export class Many2XAutocomplete extends Component {
     setup() {
         this.orm = useService("orm");
 
-        const autoCompleteContainer = useForwardRefToParent("autocomplete_container");
+        this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
 
         this.openMany2X = useOpenMany2XRecord({
@@ -145,8 +145,16 @@ export class Many2XAutocomplete extends Component {
             },
             fieldString,
             onClose: () => {
-                const autoCompleteInput = autoCompleteContainer.el.querySelector("input");
-                autoCompleteInput.value = "";
+                const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
+
+                // There are two cases:
+                // 1. Value is the same as the input: it means the autocomplete has re-rendered with the right value
+                //    This is in case we saved the record, triggering all the interface to update.
+                // 2. Value is different from the input: it means the input has a manually entered value and nothing
+                //    happened, that is, we discarded the changes
+                if (this.props.value !== autoCompleteInput.value) {
+                    autoCompleteInput.value = "";
+                }
                 autoCompleteInput.focus();
             },
         });
@@ -268,6 +276,11 @@ export class Many2XAutocomplete extends Component {
         }
 
         return options;
+    }
+
+    async onSearchMoreSmall() {
+        const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
+        return this.onSearchMore(autoCompleteInput.value);
     }
 
     async onSearchMore(request) {

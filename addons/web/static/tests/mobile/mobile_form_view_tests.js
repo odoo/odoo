@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import {
     click,
     clickEdit,
@@ -14,6 +15,8 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 
 let fixture;
 let serverData;
+
+const serviceRegistry = registry.category("services");
 
 QUnit.module("Mobile Views", ({ beforeEach }) => {
     beforeEach(() => {
@@ -221,6 +224,10 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
     QUnit.test(
         `statusbar widgets should appear in the statusbar dropdown only if there are multiple items`,
         async (assert) => {
+            serviceRegistry.add("http", {
+                start: () => ({}),
+            });
+
             await makeView({
                 type: "form",
                 resModel: "partner",

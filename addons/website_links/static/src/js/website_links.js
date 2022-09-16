@@ -115,7 +115,6 @@ var SelectBox = publicWidget.Widget.extend({
 
 var RecentLinkBox = publicWidget.Widget.extend({
     template: 'website_links.RecentLink',
-    xmlDependencies: ['/website_links/static/src/xml/recent_link.xml'],
     events: {
         'click .btn_shorten_url_clipboard': '_toggleCopyButton',
         'click .o_website_links_edit_code': '_editCode',

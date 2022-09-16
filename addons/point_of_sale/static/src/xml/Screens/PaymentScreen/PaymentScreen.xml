@@ -12,11 +12,6 @@
                             <span class="back_text">Back</span>
                         </div>
                         <div class="top-content-center"><h1>Payment</h1></div>
-                        <div class="button next" t-att-class="{ highlight: currentOrder.is_paid() and currentOrder._isValidEmptyOrder() }"
-                            t-on-click="() => this.trigger('validate-order')">
-                            <span class="next_text">Validate</span>
-                            <i class="fa fa-angle-double-right fa-fw"></i>
-                        </div>
                     </div>
                 </t>
                 <div class="main-content">
@@ -27,8 +22,8 @@
                             </section>
                         </t>
                         <div class="paymentmethods-container">
-                            <PaymentScreenPaymentLines paymentLines="paymentLines" />
                             <div class="paymentmethods">
+                                <p class="title-category">Payment method</p>
                                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod"
                                    t-key="paymentMethod.id">
                                     <div class="button paymentmethod"
@@ -39,9 +34,17 @@
                                     </div>
                                 </t>
                             </div>
+                            <PaymentScreenPaymentLines paymentLines="paymentLines" />
+                        </div>
+                        <div t-if="!env.isMobile" class="button next validation" t-att-class="{ highlight: currentOrder.is_paid() and currentOrder._isValidEmptyOrder() }"
+                            t-on-click="() => this.trigger('validate-order')">
+                            <div class="pay-circle">
+                                <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                            </div>
+                            <span class="next_text">Validate</span>
                         </div>
                     </div>
-                    <div class="right-content">
+                    <div class="center-content">
                         <t t-if="!env.isMobile">
                             <section class="paymentlines-container">
                                 <PaymentScreenStatus order="currentOrder" />
@@ -52,42 +55,43 @@
                             <section class="payment-numpad">
                                 <PaymentScreenNumpad />
                             </section>
-
-                            <div class="payment-buttons">
-                                <div class="partner-button">
-                                    <div class="button" t-att-class="{ highlight: currentOrder.get_partner() }" t-on-click="selectPartner">
-                                        <i class="fa fa-user" role="img" title="Customer" />
-                                        <t t-set="partner" t-value="currentOrder.get_partner()" />
-                                        <span>
-                                            <t t-if="partner">
-                                                <t t-esc="partner.name" />
-                                            </t>
-                                            <t t-if="!partner">
-                                                Customer
-                                            </t>
-                                        </span>
-                                    </div>
+                        </div>
+                    </div>
+                    <div class="right-content">
+                        <div class="payment-buttons">
+                            <div class="partner-button">
+                                <div class="button" t-att-class="{ highlight: currentOrder.get_partner() }" t-on-click="selectPartner">
+                                    <i class="fa fa-user" role="img" title="Customer" />
+                                    <t t-set="partner" t-value="currentOrder.get_partner()" />
+                                    <span>
+                                        <t t-if="partner">
+                                            <t t-esc="partner.name" />
+                                        </t>
+                                        <t t-if="!partner">
+                                            Customer
+                                        </t>
+                                    </span>
                                 </div>
-                                <div class="payment-controls">
-                                    <div class="button js_invoice"
-                                        t-att-class="{ highlight: currentOrder.is_to_invoice() }"
-                                        t-on-click="toggleIsToInvoice">
-                                        <i class="fa fa-file-text-o" /> Invoice
-                                    </div>
-                                    <div t-if="env.pos.config.tip_product_id" class="button js_tip"
-                                        t-att-class="{ highlight: currentOrder.get_tip() }"
-                                        t-on-click="addTip">
-                                        <i class="fa fa-heart" /> Tip <t t-if="currentOrder.get_tip() != 0">(<t t-esc="env.pos.format_currency(currentOrder.get_tip())"/>)</t>
-                                    </div>
-                                    <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
-                                        t-on-click="openCashbox">
-                                        <i class="fa fa-archive" /> Open Cashbox
-                                    </div>
-                                    <div t-if="env.pos.config.ship_later" class="button"
-                                         t-att-class="{ highlight: currentOrder.is_to_ship() }"
-                                         t-on-click="toggleIsToShip">
-                                        <i class="fa fa-clock-o" /> Ship Later
-                                    </div>
+                            </div>
+                            <div class="payment-controls">
+                                <div class="button js_invoice"
+                                    t-att-class="{ highlight: currentOrder.is_to_invoice() }"
+                                    t-on-click="toggleIsToInvoice">
+                                    <i class="fa fa-file-text-o" /> Invoice
+                                </div>
+                                <div t-if="env.pos.config.tip_product_id" class="button js_tip"
+                                    t-att-class="{ highlight: currentOrder.get_tip() }"
+                                    t-on-click="addTip">
+                                    <i class="fa fa-heart" /> Tip <t t-if="currentOrder.get_tip() != 0">(<t t-esc="env.pos.format_currency(currentOrder.get_tip())"/>)</t>
+                                </div>
+                                <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
+                                    t-on-click="openCashbox">
+                                    <i class="fa fa-archive" /> Open Cashbox
+                                </div>
+                                <div t-if="env.pos.config.ship_later" class="button"
+                                        t-att-class="{ highlight: currentOrder.is_to_ship() }"
+                                        t-on-click="toggleIsToShip">
+                                    <i class="fa fa-clock-o" /> Ship Later
                                 </div>
                             </div>
                         </div>

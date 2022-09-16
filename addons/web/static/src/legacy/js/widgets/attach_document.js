@@ -10,7 +10,7 @@ var Widget = require('web.Widget');
 var _t = core._t;
 
 var AttachDocument = Widget.extend({
-    template: 'AttachDocument',
+    template: 'LegacyAttachDocument',
     events: {
         'click': '_onClickAttachDocument',
         'change input.o_input_file': '_onFileChanged',

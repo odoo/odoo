@@ -1,5 +1,6 @@
 /** @odoo-module alias=calendar.CalendarRenderer **/
 
+import {_t} from 'web.core';
 import CalendarRenderer from 'web.CalendarRenderer';
 import CalendarPopover from 'web.CalendarPopover';
 import session from 'web.session';
@@ -110,6 +111,20 @@ const AttendeeCalendarRenderer = CalendarRenderer.extend({
         CalendarPopover: AttendeeCalendarPopover,
         eventTemplate: 'Calendar.calendar-box',
     }),
+
+    events: _.extend({}, CalendarRenderer.prototype.events, {
+        'click #google_sync_activate': '_onConfigureExternalCalendarGoogle',
+        'click #microsoft_sync_activate': '_onConfigureExternalCalendarMicrosoft',
+    }),
+
+    _onConfigureExternalCalendarGoogle: function (e) {
+        e.preventDefault();
+        this._configureCalendarProviderSync('google');
+    },
+    _onConfigureExternalCalendarMicrosoft: function (e) {
+        e.preventDefault();
+        this._configureCalendarProviderSync('microsoft');
+    },
     /**
      * Add the attendee-id attribute in order to distinct the events when there are
      * several attendees in the event.
@@ -130,6 +145,20 @@ const AttendeeCalendarRenderer = CalendarRenderer.extend({
             selector += `[data-attendee-id=${info.event.extendedProps.attendee_id}]`;
         }
         return selector;
+    },
+    _configureCalendarProviderSync: function (ProviderName) {
+        this.do_action({
+            name: _t('Connect your Calendar'),
+            type: 'ir.actions.act_window',
+            res_model: 'calendar.provider.config',
+            views: [[false, "form"]],
+            view_mode: "form",
+            target: 'new',
+            context: {
+                'default_external_calendar_provider': ProviderName,
+                'dialog_size': 'medium',
+            }
+        });
     },
 });
 

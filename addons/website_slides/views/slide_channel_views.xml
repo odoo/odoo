@@ -109,7 +109,8 @@
                                 <group>
                                     <group name="communication" string="Communication">
                                         <field string="Allow Reviews" name="allow_comment"/>
-                                        <field name="share_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="share_slide_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="share_channel_template_id" domain="[('model', '=', 'slide.channel')]" groups="base.group_no_one"/>
                                         <field name="publish_template_id" placeholder="No Notification"/>
                                         <field name="completed_template_id" placeholder="No Notification"/>
                                     </group>
@@ -161,7 +162,7 @@
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="channel_type" string="Course Type"/>
-                    <field name="visibility"/>
+                    <field name="visibility" optional="hide"/>
                     <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'"/>
                     <field name="active" invisible="1"/>
                 </tree>

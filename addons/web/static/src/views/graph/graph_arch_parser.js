@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { evaluateExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { archParseBoolean } from "@web/views/utils";
 
 const MODES = ["bar", "line", "pie"];
-const ORDERS = ["ASC", "DESC", null];
+const ORDERS = ["ASC", "DESC", "asc", "desc", null];
 
 export class GraphArchParser extends XMLParser {
     parse(arch, fields = {}) {
@@ -31,7 +30,7 @@ export class GraphArchParser extends XMLParser {
                     }
                     const order = node.getAttribute("order");
                     if (order && ORDERS.includes(order)) {
-                        archInfo.order = order;
+                        archInfo.order = order.toUpperCase();
                     }
                     const title = node.getAttribute("string");
                     if (title) {
@@ -51,10 +50,8 @@ export class GraphArchParser extends XMLParser {
                         }
                         archInfo.fieldAttrs[fieldName].string = string;
                     }
-                    const isInvisible = Boolean(
-                        evaluateExpr(node.getAttribute("invisible") || "0")
-                    );
-                    if (isInvisible) {
+                    const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+                    if (modifiers.invisible === true) {
                         if (!archInfo.fieldAttrs[fieldName]) {
                             archInfo.fieldAttrs[fieldName] = {};
                         }

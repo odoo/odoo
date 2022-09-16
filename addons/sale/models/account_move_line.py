@@ -9,6 +9,7 @@ from odoo.tools import float_compare, float_is_zero
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    is_downpayment = fields.Boolean()
     sale_line_ids = fields.Many2many(
         'sale.order.line',
         'sale_order_line_invoice_rel',
@@ -185,7 +186,7 @@ class AccountMoveLine(models.Model):
             return order.pricelist_id._get_product_price(
                 self.product_id,
                 1.0,
-                self.product_uom_id,
+                uom=self.product_uom_id,
                 date=order.date_order,
             )
 

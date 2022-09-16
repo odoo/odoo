@@ -12,10 +12,10 @@
                 <i t-if="slideCompleted" class="o_wslides_slide_completed fa fa-check-circle fa-fw text-success fa-lg" t-att-data-slide-id="slideId" title="Mark as not done"/>
                 <i t-if="!slideCompleted" class="fa fa-circle-thin fa-fw fa-lg" t-att-data-slide-id="slideId" title="Mark as done"/>
             </button>
-            <div class="o_wslides_button_complete btn-sm" t-else="">
+            <button class="o_wslides_button_complete btn btn-sm" t-else="" disabled="1">
                 <i t-if="slideCompleted" class="o_wslides_slide_completed fa fa-check fa-fw text-success fa-lg" t-att-data-slide-id="slideId" title="Can not be marked as not done"/>
                 <i t-if="!slideCompleted" class="fa fa-circle-thin fa-fw fa-lg" t-att-data-slide-id="slideId" title="Can not be marked as done"/>
-            </div>
+            </button>
         </div>
     </t>
 </templates>

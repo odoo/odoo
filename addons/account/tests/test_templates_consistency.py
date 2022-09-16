@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
+@tagged('post_install', '-at_install')
 class AccountingTestTemplConsistency(TransactionCase):
     '''Test the templates consistency between some objects like account.account when account.account.template.
     '''
@@ -47,7 +49,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         '''
         self.check_fields_consistency('account.tax.template', 'account.tax', exceptions=['chart_template_id'])
         self.check_fields_consistency('account.tax', 'account.tax.template', exceptions=['company_id', 'country_id', 'real_amount'])
-        self.check_fields_consistency('account.tax.repartition.line.template', 'account.tax.repartition.line', exceptions=['plus_report_line_ids', 'minus_report_line_ids'])
+        self.check_fields_consistency('account.tax.repartition.line.template', 'account.tax.repartition.line', exceptions=['plus_report_expression_ids', 'minus_report_expression_ids'])
         self.check_fields_consistency('account.tax.repartition.line', 'account.tax.repartition.line.template', exceptions=['tag_ids', 'country_id', 'company_id', 'sequence'])
 
     def test_fiscal_position_fields(self):

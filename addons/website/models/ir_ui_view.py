@@ -426,9 +426,6 @@ class View(models.Model):
         else:
             return super(View, self).get_default_lang_code()
 
-    def redirect_to_page_manager(self):
-        return self.env["ir.actions.server"]._for_xml_id('website.action_website_pages_list')
-
     def _read_template_keys(self):
         return super(View, self)._read_template_keys() + ['website_id']
 

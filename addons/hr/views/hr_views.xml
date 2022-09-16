@@ -111,11 +111,18 @@
                     parent="menu_config_recruitment"
                     sequence="1"/>
 
+                <menuitem
+                    id="menu_view_hr_contract_type"
+                    action="hr_contract_type_action"
+                    parent="menu_config_recruitment"
+                    sequence="2"
+                    groups="group_hr_user"/>
+
             <menuitem
                 id="menu_config_plan"
                 name="Activity Planning"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_manager"
+                groups="group_hr_user"
                 sequence="100"/>
 
                 <menuitem
@@ -123,7 +130,7 @@
                     name="On/Offboarding Plans"
                     action="hr_plan_action"
                     parent="menu_config_plan"
-                    groups="group_hr_manager"
+                    groups="group_hr_user"
                     sequence="100"/>
 
     </data>

@@ -87,7 +87,6 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: "chat",
-        public: 'private',
     });
     const { messaging } = await start();
     const existingChat = messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 }).dmChatWithCurrentPartner;

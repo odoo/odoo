@@ -14,7 +14,6 @@ const _t = core._t;
  * Allows to customize link content and style.
  */
 const Link = Widget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
     events: {
         'input': '_onAnyChange',
         'change': '_onAnyChange',
@@ -502,9 +501,13 @@ const Link = Widget.extend({
  */
 Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
 
-    if (startNode && !$(startNode).is('a')) {
-        $(startNode).wrap('<a href="#"/>');
-        return { link: startNode.parentElement, needLabel: false };
+    if (startNode) {
+        if ($(startNode).is('a')) {
+            return { link: startNode, needLabel: false };
+        } else {
+            $(startNode).wrap('<a href="#"/>');
+            return { link: startNode.parentElement, needLabel: false };
+        }
     }
 
     const doc = containerNode && containerNode.ownerDocument || document;

@@ -50,9 +50,9 @@ registerModel({
                 model: 'hr.employee.public',
                 method: 'read',
                 args: [ids],
+                fields: fields,
                 kwargs: {
                     context,
-                    fields,
                 },
             });
             this.messaging.models['Employee'].insert(employeesData.map(employeeData =>

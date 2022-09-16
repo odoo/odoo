@@ -59,8 +59,7 @@
         ##
         ## 1. When defining new component, put the .js files in `point_of_sale/static/src/js/`
         ##    and the corresponding .xml files in `point_of_sale/static/src/xml/`
-        ##    * POS is setup to automatically include the .xml files in `web.assets_qweb` and the `.js` files
-        ##    * in `point_of_sale.assets`.
+        ##    * POS is setup to automatically include the .xml and `.js` files in `point_of_sale.assets`.
         ## 2. When adding new tour tests, put the .js files in `point_of_sale/static/tests/tours/`.
         ## 3. When adding new qunit tests, put the .js files in `point_of_sale/static/tests/unit/`.
         ##
@@ -84,9 +83,6 @@
         'web.assets_tests': [
             'point_of_sale/static/tests/tours/**/*',
         ],
-        'web.assets_qweb': [
-            'point_of_sale/static/src/xml/**/*.xml',
-        ],
 
         ####################################################
         ## Exclusive POS Assets 1: For running the POS UI ##
@@ -99,17 +95,22 @@
         # We can reduce the size of loaded assets in POS UI by selectively
         # loading the `web` assets. We should only include what POS needs.
         'point_of_sale.pos_assets_backend': [
-            ('include', 'web.assets_common'),
             ('include', 'web.assets_backend'),
             ('remove', 'web/static/src/core/errors/error_handlers.js'),
             ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
         ],
         # This bundle includes the main pos assets.
         'point_of_sale.assets': [
+            'point_of_sale/static/src/scss/pos_variables_extra.scss',
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
+            ('include', 'web._assets_primary_variables'),
+            'web/static/lib/bootstrap/scss/_functions.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/fonts/fonts.scss',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/daterangepicker/daterangepicker.css',
-            'point_of_sale/static/src/css/pos.css',
+            'point_of_sale/static/src/scss/pos.scss',
             'point_of_sale/static/src/css/pos_receipts.css',
             'point_of_sale/static/src/css/popups/product_info_popup.css',
             'point_of_sale/static/src/css/popups/common.css',
@@ -123,6 +124,7 @@
             'web_editor/static/lib/html2canvas.js',
             'point_of_sale/static/src/js/**/*.js',
             'web/static/lib/zxing-library/zxing-library.js',
+            'point_of_sale/static/src/xml/**/*.xml',
         ],
         # This bundle contains the code responsible for starting the POS UI.
         # It is practically the entry point.

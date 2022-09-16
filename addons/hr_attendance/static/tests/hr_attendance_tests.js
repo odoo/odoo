@@ -44,10 +44,14 @@ QUnit.module('HR Attendance', {
             'res.company': {
                 fields: {
                     name: {string: 'Name', type: 'char'},
+                    attendance_kiosk_mode: {type: 'char'},
+                    attendance_barcode_source: {type: 'char'},
                 },
                 records: [{
                     id: 1,
                     name: "Company A",
+                    attendance_kiosk_mode: 'barcode_manual',
+                    attendance_barcode_source: 'front',
                 }],
             },
         };

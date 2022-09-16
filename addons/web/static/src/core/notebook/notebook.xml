@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Notebook" owl="1">
-        <div t-attf-class="o_notebook d-flex w-100 {{ props.orientation }} {{ props.className }}" t-if="state.currentPage">
-            <div class="o_notebook_headers">
-                <ul t-attf-class="nav {{ props.orientation === 'horizontal' ? 'nav-tabs' : 'nav-pills flex-column' }}">
-                    <li t-foreach="navItems" t-as="navItem" t-key="navItem[0]" class="nav-item" t-if="navItem[1].isVisible">
-                        <a class="nav-link" t-att-name="navItem[1].name" t-on-click.prevent="() => state.currentPage = navItem[0]" href="#" role="tab" tabindex="-1" t-att-class="{ active: navItem[0] === state.currentPage}" t-esc="navItem[1].title"/>
+        <div t-attf-class="o_notebook d-flex w-100 {{ props.orientation == 'horizontal' ? 'horizontal flex-column' : 'vertical flex-row' }} {{ props.className }}" t-if="state.currentPage">
+            <div class="o_notebook_headers" t-att-class="{ 'm-0': props.orientation === 'vertical' }">
+                <ul t-attf-class="nav nav-tabs {{ props.orientation === 'horizontal' ? 'flex-row flex-nowrap' : 'flex-column p-0' }}">
+                    <li t-foreach="navItems" t-as="navItem" t-key="navItem[0]" class="nav-item flex-nowrap cursor-pointer" t-if="navItem[1].isVisible">
+                        <a class="nav-link" t-att-class="{ active: navItem[0] === state.currentPage, 'p-3': props.orientation === 'vertical'}" t-att-name="navItem[1].name" t-on-click.prevent="() => state.currentPage = navItem[0]" href="#" role="tab" tabindex="-1" t-esc="navItem[1].title"/>
                     </li>
                 </ul>
             </div>
-            <div class="o_notebook_content tab-content">
+            <div class="o_notebook_content bg-white pt-3 tab-content">
                 <div class="tab-pane active" t-ref="activePane">
                     <t t-if="page" t-component="page.Component" t-key="state.currentPage" t-props="page.props" />
                     <t t-else="" t-slot="{{ state.currentPage }}" />

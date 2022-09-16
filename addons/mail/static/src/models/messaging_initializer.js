@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { executeGracefully } from '@mail/utils/utils';
 import { insert } from '@mail/model/model_field_command';
 
 registerModel({
@@ -46,6 +45,8 @@ registerModel({
          * @param {Object} param0.current_partner
          * @param {integer} param0.current_user_id
          * @param {Object} param0.current_user_settings
+         * @param {boolean} [param0.hasLinkPreviewFeature]
+         * @param {integer} [param0.internalUserGroupId]
          * @param {integer} [param0.needaction_inbox_counter=0]
          * @param {Object} param0.partner_root
          * @param {Object[]} [param0.shortcodes=[]]
@@ -59,12 +60,13 @@ registerModel({
             currentGuest,
             current_user_id,
             current_user_settings,
+            hasLinkPreviewFeature,
             internalUserGroupId,
             menu_id,
             needaction_inbox_counter = 0,
             partner_root,
             shortcodes = [],
-            starred_counter = 0
+            starred_counter = 0,
         }) {
             const discuss = this.messaging.discuss;
             // partners first because the rest of the code relies on them
@@ -99,9 +101,7 @@ registerModel({
             }
             discuss.update({ menu_id });
             // company related data
-            this.messaging.update({ companyName });
-
-            this.messaging.update({ internalUserGroupId });
+            this.messaging.update({ companyName, hasLinkPreviewFeature, internalUserGroupId });
         },
         /**
          * @private
@@ -117,7 +117,10 @@ registerModel({
          * @param {Object[]} channelsData
          */
         async _initChannels(channelsData) {
-            return executeGracefully(channelsData.map(channelData => () => {
+            return this.messaging.executeGracefully(channelsData.map(channelData => () => {
+                if (!this.exists()) {
+                    return;
+                }
                 const convertedData = this.messaging.models['Thread'].convertData(channelData);
                 const channel = this.messaging.models['Thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
@@ -146,7 +149,7 @@ registerModel({
                         name: "leave",
                     },
                     {
-                        channel_types: ['channel', 'chat'],
+                        channel_types: ['channel', 'chat', 'group'],
                         help: this.env._t("List users in the current channel"),
                         methodName: 'execute_command_who',
                         name: "who",
@@ -172,7 +175,10 @@ registerModel({
          * @param {Object[]} mailFailuresData
          */
         async _initMailFailures(mailFailuresData) {
-            await executeGracefully(mailFailuresData.map(messageData => () => {
+            await this.messaging.executeGracefully(mailFailuresData.map(messageData => () => {
+                if (!this.exists()) {
+                    return;
+                }
                 const message = this.messaging.models['Message'].insert(
                     this.messaging.models['Message'].convertData(messageData)
                 );

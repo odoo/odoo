@@ -182,7 +182,7 @@ QUnit.test('add an emoji', async function (assert) {
     });
     await openDiscuss();
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "😊",
@@ -209,7 +209,7 @@ QUnit.test('add an emoji after some text', async function (assert) {
     );
 
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "Blabla😊",
@@ -239,7 +239,7 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
     // simulate selection of all the content by keyboard
     composerTextInputTextArea.setSelectionRange(0, composerTextInputTextArea.value.length);
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "😊",
@@ -391,7 +391,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
 
     // select emoji
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "Hello! How are you? 😊",
@@ -403,7 +403,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
+    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", channel_type: 'channel' });
     const { insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChanelId1 },
@@ -428,7 +428,7 @@ QUnit.test('mention a channel', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
+    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", channel_type: 'channel' });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChanelId1 },
@@ -464,7 +464,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
+    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", channel_type: 'channel' });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChanelId1 },
@@ -506,7 +506,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", public: "groups" });
+    const mailChanelId1 = pyEnv['mail.channel'].create({ name: "General", channel_type: 'channel' });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChanelId1 },
@@ -539,7 +539,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
 
     // select emoji
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "#General 😊",
@@ -718,7 +718,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
 
     // select emoji
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "/who 😊",
@@ -899,7 +899,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
 
     // select emoji
     await click('.o_Composer_buttonEmojis');
-    await click('.o_Emoji[data-unicode="😊"]');
+    await click('.o_EmojiView[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
         "@TestPartner 😊",
@@ -1324,9 +1324,14 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
         contentType: 'text/plain',
         name: 'text.txt',
     });
-    await afterNextRender(() =>
-        inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
-    );
+    await afterNextRender(() => afterEvent({
+        eventName: 'o-file-uploader-upload',
+        func() {
+            inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file]);
+        },
+        message: 'should wait until files are uploaded',
+        predicate: ({ files: uploadedFiles }) => uploadedFiles[0] === file,
+    }));
     assert.containsOnce(
         document.body,
         '.o_Composer_attachmentList',

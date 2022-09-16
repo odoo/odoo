@@ -29,7 +29,7 @@
         <h2 class="d-flex flex-row justify-content-between">
             <span>Join a room</span>
             <div class="dropdown">
-                <a class="dropdown-toggle o-no-caret btn p-0" title="Languages Menu"
+                <a class="dropdown-toggle o-no-caret btn btn-outline-secondary py-0 px-1" title="Languages Menu"
                     aria-label="Dropdown menu" data-bs-display="static" data-bs-toggle="dropdown" href="#" role="button">
                     <span t-out="current_lang.name if current_lang else 'All Languages'"/> ▼</a>
                 <div class="dropdown-menu" role="menu">
@@ -116,10 +116,10 @@
     </t>
 
     <a t-if="is_event_user or not meeting_room.room_is_full"
+        class="card o_wevent_meeting_room_card w-100 my-2 d-block text-decoration-none rounded-0"
         t-att-data-meeting-room-id="meeting_room.id"
         t-att-data-open-room="opened"
         t-att-data-is-event-manager="int(is_event_user)"
-        t-attf-class="card o_wevent_meeting_room_card w-100 my-2 bg-light d-block text-decoration-none rounded-0"
         t-att-href="meeting_room_href"
         t-att-data-bs-toggle="meeting_room_data_toggle"
         t-att-data-bs-target="meeting_room_data_target">
@@ -134,7 +134,7 @@
                 </div>
                 <span class="text-muted" t-field="meeting_room.summary"/>
                 <div class="d-flex flex-row justify-content-between align-items-center">
-                    <span class="h6 m-0 row">
+                    <span class="h6 m-0">
                         <span t-out="meeting_room.room_participant_count"/>&amp;nbsp;
                         <span t-if="meeting_room.target_audience" class="text-uppercase" t-field="meeting_room.target_audience"/>
                         <span t-else="" class="text-uppercase">participant(s)</span>

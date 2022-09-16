@@ -8,7 +8,7 @@ const { useEffect, useRef, Component } = owl;
 
 const localStorageNoDialogKey = 'website_translator_nodialog';
 
-class AttributeTranslateDialog extends Component {
+export class AttributeTranslateDialog extends Component {
     setup() {
         this.title = this.env._t("Translate Attribute");
 
@@ -40,7 +40,7 @@ class AttributeTranslateDialog extends Component {
 AttributeTranslateDialog.components = { WebsiteDialog };
 AttributeTranslateDialog.template = 'website.AttributeTranslateDialog';
 
-class TranslatorInfoDialog extends Component {
+export class TranslatorInfoDialog extends Component {
     setup() {
         this.strongOkButton = this.env._t("Ok, never show me this again");
         this.okButton = this.env._t("Ok");

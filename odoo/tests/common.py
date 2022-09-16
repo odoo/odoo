@@ -37,6 +37,7 @@ except ImportError:
     InvalidStateError = NotImplementedError
 from contextlib import contextmanager, ExitStack
 from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch
 from xmlrpc import client as xmlrpclib
@@ -327,7 +328,8 @@ class MetaCase(type):
         super(MetaCase, cls).__init__(name, bases, attrs)
         # assign default test tags
         if cls.__module__.startswith('odoo.addons.'):
-            cls.test_tags = {'standard', 'at_install'}
+            if getattr(cls, 'test_tags', None) is None:
+                cls.test_tags = {'standard', 'at_install'}
             cls.test_module = cls.__module__.split('.')[2]
             cls.test_class = cls.__name__
             cls.test_sequence = 0
@@ -958,6 +960,8 @@ class ChromeBrowser:
         self._open_websocket()
         self._request_id = itertools.count()
         self._result = Future()
+        self.failure_message = ''
+        self.had_failure = False
         # maps request_id to Futures
         self._responses = {}
         # maps frame ids to callbacks
@@ -1273,17 +1277,19 @@ class ChromeBrowser:
         )
 
         if log_type == 'error':
-            self.take_screenshot()
-            self._save_screencast()
-            try:
-                self._result.set_exception(ChromeBrowserException(message))
-            except CancelledError:
-                ...
-            except InvalidStateError:
-                self._logger.warning(
-                    "Trying to set result to failed (%s) but found the future settled (%s)",
-                    message, self._result
-                )
+            self.had_failure = True
+            if self.failure_message in message:
+                self.take_screenshot()
+                self._save_screencast()
+                try:
+                    self._result.set_exception(ChromeBrowserException(message))
+                except CancelledError:
+                    ...
+                except InvalidStateError:
+                    self._logger.warning(
+                        "Trying to set result to failed (%s) but found the future settled (%s)",
+                        message, self._result
+                    )
         elif 'test successful' in message:
             if self.test_class.allow_end_on_form:
                 self._result.set_result(True)
@@ -1470,7 +1476,8 @@ which leads to stray network requests and inconsistencies."""))
         self._logger.info('Ready code last try result: %s', result)
         return False
 
-    def _wait_code_ok(self, code, timeout):
+    def _wait_code_ok(self, code, timeout, failure_message=''):
+        self.failure_message = failure_message
         self._logger.info('Evaluate test code "%s"', code)
         start = time.time()
         res = self._websocket_request('Runtime.evaluate', params={
@@ -1481,7 +1488,7 @@ which leads to stray network requests and inconsistencies."""))
             raise ChromeBrowserException("Running code returned an error: %s" % res)
         # if the runcode was a promise which took some time to execute, discount
         # that from the timeout
-        if self._result.result(time.time() - start + timeout):
+        if self._result.result(time.time() - start + timeout) and not self.had_failure:
             return
 
         self.take_screenshot()
@@ -1526,6 +1533,7 @@ which leads to stray network requests and inconsistencies."""))
         self._responses.clear()
         self._result.cancel()
         self._result = Future()
+        self.had_failure = False
 
     def _from_remoteobject(self, arg):
         """ attempts to make a CDT RemoteObject comprehensible
@@ -1756,7 +1764,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, watch=False, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, failure_message='', watch=False, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -1765,9 +1773,10 @@ class HttpCase(TransactionCase):
         - open another chrome window to watch code execution if watch is True
 
         To signal success test do: console.log('test successful')
-        To signal test failure raise an exception or call console.error
-        """
+        To signal test failure raise an exception or
+        call console.error with a message containing the failure_message
 
+        """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
 
@@ -1803,6 +1812,7 @@ class HttpCase(TransactionCase):
             if cookies:
                 for name, value in cookies.items():
                     self.browser.set_cookie(name, value, '/', HOST)
+
             self.browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
@@ -1812,7 +1822,7 @@ class HttpCase(TransactionCase):
 
             error = False
             try:
-                self.browser._wait_code_ok(code, timeout)
+                self.browser._wait_code_ok(code, timeout, failure_message=failure_message)
             except ChromeBrowserException as chrome_browser_exception:
                 error = chrome_browser_exception
             if error:  # dont keep initial traceback, keep that outside of except
@@ -2098,14 +2108,29 @@ class Form(object):
         contexts = fvg['contexts'] = {}
         order = fvg['fields_ordered'] = []
         field_level = fvg['tree'].xpath('count(ancestor::field)')
+        eval_context = {
+            "uid": self._env.user.id,
+            "tz": self._env.user.tz,
+            "lang": self._env.user.lang,
+            "datetime": datetime,
+            "context_today": lambda: odoo.fields.Date.context_today(self._env.user),
+            "relativedelta": relativedelta,
+            "current_date": time.strftime("%Y-%m-%d"),
+            "allowed_company_ids": [self._env.user.company_id.id],
+            "context": {},
+        }
         for f in fvg['tree'].xpath('.//field[count(ancestor::field) = %s]' % field_level):
             fname = f.get('name')
             order.append(fname)
 
-            node_modifiers = {
-                modifier: ([TRUE_LEAF] if domain else [FALSE_LEAF]) if isinstance(domain, int) else normalize_domain(domain)
-                for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
-            }
+            node_modifiers = {}
+            for modifier, domain in json.loads(f.get('modifiers', '{}')).items():
+                if isinstance(domain, int):
+                    node_modifiers[modifier] = [TRUE_LEAF] if domain else [FALSE_LEAF]
+                elif isinstance(domain, str):
+                    node_modifiers[modifier] = normalize_domain(safe_eval(domain, eval_context))
+                else:
+                    node_modifiers[modifier] = normalize_domain(domain)
 
             for a in f.xpath('ancestor::*[@modifiers][count(ancestor::field) = %s]' % field_level):
                 ancestor_modifiers = json.loads(a.get('modifiers'))
@@ -2906,18 +2931,21 @@ def _get_node(view, f, *arg):
     ), *arg)
 
 def tagged(*tags):
-    """
-    A decorator to tag BaseCase objects.
+    """A decorator to tag BaseCase objects.
+
     Tags are stored in a set that can be accessed from a 'test_tags' attribute.
+
     A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag.
+
     By default, all Test classes from odoo.tests.common have a test_tags
     attribute that defaults to 'standard' and 'at_install'.
-    When using class inheritance, the tags are NOT inherited.
+
+    When using class inheritance, the tags ARE inherited.
     """
+    include = {t for t in tags if not t.startswith('-')}
+    exclude = {t[1:] for t in tags if t.startswith('-')}
     def tags_decorator(obj):
-        include = {t for t in tags if not t.startswith('-')}
-        exclude = {t[1:] for t in tags if t.startswith('-')}
-        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude # todo remove getattr in master since we want to limmit tagged to BaseCase and always have +standard tag
+        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
         return obj
     return tags_decorator
 

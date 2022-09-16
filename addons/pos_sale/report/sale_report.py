@@ -66,8 +66,8 @@ class SaleReport(models.Model):
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
             partner.commercial_partner_id AS commercial_partner_id,
-            (SUM(t.weight) * l.qty / u.factor) AS weight,
-            (SUM(t.volume) * l.qty / u.factor) AS volume,
+            (SUM(p.weight) * l.qty / u.factor) AS weight,
+            (SUM(p.volume) * l.qty / u.factor) AS volume,
             l.discount AS discount,
             SUM((l.price_unit * l.discount * l.qty / 100.0
                 * {self._case_value_or_one('pos.currency_rate')}

@@ -146,6 +146,9 @@ class AccountChartTemplate(models.Model):
     default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
     default_pos_receivable_account_id = fields.Many2one('account.account.template', string="PoS receivable account")
 
+    account_journal_early_pay_discount_loss_account_id = fields.Many2one(comodel_name='account.account.template', string='Cash Discount Write-Off Loss Account', )
+    account_journal_early_pay_discount_gain_account_id = fields.Many2one(comodel_name='account.account.template', string='Cash Discount Write-Off Gain Account', )
+
     property_account_receivable_id = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable_id = fields.Many2one('account.account.template', string='Payable Account')
     property_account_expense_categ_id = fields.Many2one('account.account.template', string='Category of Expense Account')
@@ -204,6 +207,24 @@ class AccountChartTemplate(models.Model):
             'name': _("Bank Suspense Account"),
             'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
             'account_type': 'asset_current',
+            'company_id': company.id,
+        })
+
+    @api.model
+    def _create_cash_discount_loss_account(self, company, code_digits):
+        return self.env['account.account'].create({
+            'name': _("Cash Discount Write-Off Loss Account"),
+            'code': 999997,
+            'account_type': 'expense',
+            'company_id': company.id,
+        })
+
+    @api.model
+    def _create_cash_discount_gain_account(self, company, code_digits):
+        return self.env['account.account'].create({
+            'name': _("Cash Discount Write-Off Gain Account"),
+            'code': 999998,
+            'account_type': 'income_other',
             'company_id': company.id,
         })
 
@@ -316,6 +337,14 @@ class AccountChartTemplate(models.Model):
 
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
+
+        # Set default cash discount write-off accounts
+        if not company.account_journal_early_pay_discount_loss_account_id:
+            company.account_journal_early_pay_discount_loss_account_id = self._create_cash_discount_loss_account(
+                company, self.code_digits)
+        if not company.account_journal_early_pay_discount_gain_account_id:
+            company.account_journal_early_pay_discount_gain_account_id = self._create_cash_discount_gain_account(
+                company, self.code_digits)
 
         # Set default cash difference account on company
         if not company.account_journal_suspense_account_id:
@@ -805,32 +834,32 @@ class AccountChartTemplate(models.Model):
             self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
 
         # Create default rules for the reconciliation widget matching invoices automatically.
+        if not self.parent_id:
+            self.env['account.reconcile.model'].sudo().create({
+                "name": _('Invoices/Bills Perfect Match'),
+                "sequence": '1',
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": True,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": True,
+                "payment_tolerance_type": 'percentage',
+                "payment_tolerance_param": 0,
+                "match_partner": True,
+                "company_id": company.id,
+            })
 
-        self.env['account.reconcile.model'].sudo().create({
-            "name": _('Invoices/Bills Perfect Match'),
-            "sequence": '1',
-            "rule_type": 'invoice_matching',
-            "auto_reconcile": True,
-            "match_nature": 'both',
-            "match_same_currency": True,
-            "allow_payment_tolerance": True,
-            "payment_tolerance_type": 'percentage',
-            "payment_tolerance_param": 0,
-            "match_partner": True,
-            "company_id": company.id,
-        })
-
-        self.env['account.reconcile.model'].sudo().create({
-            "name": _('Invoices/Bills Partial Match if Underpaid'),
-            "sequence": '2',
-            "rule_type": 'invoice_matching',
-            "auto_reconcile": False,
-            "match_nature": 'both',
-            "match_same_currency": True,
-            "allow_payment_tolerance": False,
-            "match_partner": True,
-            "company_id": company.id,
-        })
+            self.env['account.reconcile.model'].sudo().create({
+                "name": _('Invoices/Bills Partial Match if Underpaid'),
+                "sequence": '2',
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": False,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": False,
+                "match_partner": True,
+                "company_id": company.id,
+            })
 
         return True
 

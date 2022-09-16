@@ -7,20 +7,22 @@
                 <span class="search-icon" t-if="!env.isMobile"><i class="fa fa-search"></i></span>
                 <input class="radius-left" t-ref="autofocus" t-att-class="{ 'radius-right': !props.config.filter.show }"
                     t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
-                <ul t-if="state.showSearchFields and state.searchInput" class="fields">
-                    <t t-foreach="searchFieldsList" t-as="fieldName" t-key="fieldName">
-                        <li t-att-class="{ highlight: fieldName == searchFieldsList[state.selectedSearchFieldId] }"
-                            t-on-click="() => this.trigger('click-search-field', fieldName)">
-                            <span class="field">
-                                <t t-esc="props.config.searchFields.get(fieldName)"></t>
-                            </span>
-                            <span>: </span>
-                            <span class="term">
-                                <t t-esc="state.searchInput"></t>
-                            </span>
-                        </li>
-                    </t>
-                </ul>
+                <div t-if="state.showSearchFields and state.searchInput" class="fields">
+                    <ul>
+                        <t t-foreach="searchFieldsList" t-as="fieldName" t-key="fieldName">
+                            <li t-att-class="{ highlight: fieldName == searchFieldsList[state.selectedSearchFieldId] }"
+                                t-on-click="() => this.trigger('click-search-field', fieldName)">
+                                <span class="field">
+                                    <t t-esc="props.config.searchFields.get(fieldName)"></t>
+                                </span>
+                                <span>: </span>
+                                <span class="term">
+                                    <t t-esc="state.searchInput"></t>
+                                </span>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
             </div>
             <div t-if="props.config.filter.show" class="filter radius-right"
                 t-on-click.stop="() => { state.showFilterOptions = !state.showFilterOptions }">

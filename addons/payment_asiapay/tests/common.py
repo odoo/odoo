@@ -6,17 +6,17 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class AsiaPayCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
-        cls.asiapay = cls._prepare_acquirer('asiapay', update_values={
+        cls.asiapay = cls._prepare_provider('asiapay', update_values={
             'asiapay_merchant_id': '123456789',
             'asiapay_currency_id': cls.currency_euro,
             'asiapay_secure_hash_secret': 'coincoin_motherducker',
             'asiapay_secure_hash_function': 'sha1',
         })
 
-        cls.acquirer = cls.asiapay
+        cls.provider = cls.asiapay
 
         cls.redirect_notification_data = {
             'Ref': cls.reference,

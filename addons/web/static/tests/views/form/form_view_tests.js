@@ -60,7 +60,12 @@ QUnit.module("Views", (hooks) => {
                         foo: { string: "Foo", type: "char", default: "My little Foo Value" },
                         bar: { string: "Bar", type: "boolean" },
                         int_field: { string: "int_field", type: "integer", sortable: true },
-                        qux: { string: "Qux", type: "float", digits: [16, 1] },
+                        qux: {
+                            string: "Qux",
+                            type: "float",
+                            digits: [16, 1],
+                            group_operator: "sum",
+                        },
                         p: { string: "one2many field", type: "one2many", relation: "partner" },
                         trululu: { string: "Trululu", type: "many2one", relation: "partner" },
                         timmy: { string: "pokemon", type: "many2many", relation: "partner_type" },
@@ -635,6 +640,46 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector('.o_field_widget[name="foo"]'), "text-danger");
     });
 
+    QUnit.test("decoration-bf works on fields", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="display_name" decoration-bf="int_field &lt; 5"/>
+                    <field name="foo" decoration-bf="int_field &gt; 5"/>
+                </form>`,
+            resId: 2,
+        });
+        assert.doesNotHaveClass(
+            target.querySelector('.o_field_widget[name="display_name"]'),
+            "fw-bold"
+        );
+        assert.hasClass(target.querySelector('.o_field_widget[name="foo"]'), "fw-bold");
+    });
+
+    QUnit.test("decoration-it works on fields", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="display_name" decoration-it="int_field &lt; 5"/>
+                    <field name="foo" decoration-it="int_field &gt; 5"/>
+                </form>`,
+            resId: 2,
+        });
+        assert.doesNotHaveClass(
+            target.querySelector('.o_field_widget[name="display_name"]'),
+            "fst-italic"
+        );
+        assert.hasClass(target.querySelector('.o_field_widget[name="foo"]'), "fst-italic");
+    });
+
     QUnit.test("decoration on widgets are reevaluated if necessary", async function (assert) {
         await makeView({
             type: "form",
@@ -859,6 +904,24 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_field_widget[name=foo]");
         assert.containsNone(target, ".o_field_widget[name=qux]");
         assert.containsNone(target, ".o_field_widget[name=p]");
+    });
+
+    QUnit.test("correctly copy attributes to compiled labels", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <label string="Apply after" for="bar" class="a"/>
+                    <field name="bar" class="b"/>
+                    <label string="hours" for="bar" class="c"/>
+                </form>`,
+        });
+
+        assert.hasClass(target.querySelectorAll(".o_form_label")[0], "a");
+        assert.hasClass(target.querySelector(".o_field_widget.o_field_boolean"), "b");
+        assert.hasClass(target.querySelectorAll(".o_form_label")[1], "c");
     });
 
     QUnit.test("invisible elements are properly hidden", async function (assert) {
@@ -2521,6 +2584,41 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_dialog .o_form_view");
         assert.containsNone(target, ".o_dialog .o_form_view .o_control_panel");
+    });
+
+    QUnit.test("form views in dialogs do not have class o_xxl_form_view", async function (assert) {
+        const bus = new EventBus();
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: false,
+                });
+                return {
+                    activateElement() {},
+                    deactivateElement() {},
+                    bus,
+                    size: SIZES.XXL,
+                    isSmall: false,
+                };
+            },
+        });
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo"/></form>`,
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                target: "new",
+            },
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.doesNotHaveClass(target.querySelector(".o_dialog .o_form_view"), "o_xxl_form_view");
     });
 
     QUnit.test("buttons in form view", async function (assert) {
@@ -4283,6 +4381,39 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
+    });
+
+    QUnit.test("switching to another record from an invalid one", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" required="1"/>
+                </form>`,
+            resIds: [1, 2],
+            resId: 1,
+            mockRPC(route) {
+                if (route === "/web/dataset/call_kw/partner/write") {
+                    throw new Error("Shouldn't call write as the record is invalid");
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name=foo] input", "");
+        await click(target.querySelector(".o_pager_next"));
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
+        assert.containsOnce(target, ".o_notification_manager .o_notification");
     });
 
     QUnit.test("keynav switching to another record from a dirty one", async function (assert) {
@@ -7425,6 +7556,53 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "Action partner");
     });
 
+    QUnit.test("execute ActionMenus actions", async function (assert) {
+        const actionService = {
+            start() {
+                return {
+                    doAction(id, { additionalContext, onClose }) {
+                        assert.step(JSON.stringify({ action_id: id, context: additionalContext }));
+                        onClose(); // simulate closing of target new action's dialog
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `<form><field name="bar"/></form>`,
+            info: {
+                actionMenus: {
+                    action: [
+                        {
+                            id: 29,
+                            name: "Action partner",
+                        },
+                    ],
+                },
+            },
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle:contains(Action)");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Action Partner");
+
+        assert.verifySteps([
+            "get_views",
+            "read",
+            `{"action_id":29,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1],"active_model":"partner","active_domain":[]}}`,
+            "read",
+        ]);
+    });
+
     QUnit.test("control panel is not present in FormViewDialogs", async function (assert) {
         serverData.models.partner.records[0].product_id = 37;
         serverData.views = {
@@ -7994,6 +8172,39 @@ QUnit.module("Views", (hooks) => {
             "the third td should 50% width"
         );
     });
+
+    QUnit.test(
+        "form rendering innergroup: separator should take one line",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <separator string="sep"/>
+                                <td class="o_td_label">
+                                    <label for="display_name"/>
+                                </td>
+                                <field name="display_name" nolabel="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>`,
+                resId: 1,
+            });
+
+            const rows = document.querySelectorAll(".o_inner_group tr");
+            assert.containsOnce(rows[0], "> td", "Should only contain one cell");
+            assert.containsOnce(rows[0], ".o_horizontal_separator");
+            assert.containsN(rows[1], "> td", 2, "Should contain 2 cells");
+            assert.containsOnce(rows[1], "label[for=display_name]");
+            assert.containsOnce(rows[1], "div[name=display_name]");
+        }
+    );
 
     QUnit.test("outer and inner groups string attribute", async function (assert) {
         await makeView({
@@ -9350,7 +9561,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            ".o_list_renderer thead tr th:not(.o_list_record_remove_header)",
+            ".o_list_renderer thead tr th:not(.o_list_actions_header)",
             "there should be only one column"
         );
     });
@@ -9375,7 +9586,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            ".o_list_renderer thead tr th:not(.o_list_record_remove_header)",
+            ".o_list_renderer thead tr th:not(.o_list_actions_header)",
             "there should be only one column"
         );
     });
@@ -9474,32 +9685,11 @@ QUnit.module("Views", (hooks) => {
         widgetRegistry.remove("test_widget");
     });
 
-    QUnit.test("attach document widget calls action with attachment ids", async function (assert) {
-        assert.expect(1);
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            mockRPC(route, args) {
-                if (args.method === "my_action") {
-                    assert.deepEqual(args.kwargs.attachment_ids, [5, 2]);
-                    return true;
-                }
-            },
-            arch: `<form><widget name="attach_document" action="my_action"/></form>`,
+    QUnit.test("support header button as widgets on form statusbar", async function (assert) {
+        serviceRegistry.add("http", {
+            start: () => ({}),
         });
 
-        var onFileLoadedEventName = target.querySelector(".o_form_binary_form").target;
-        // trigger _onFileLoaded function
-        // TODO wowl remove line below when implem don't require jquery
-        $(window).trigger(onFileLoadedEventName, [{ id: 5 }, { id: 2 }]);
-        // await triggerEvent(window, null, onFileLoadedEventName, {
-        //     attachment_ids: [{ id: 5 }, { id: 2 }],
-        // });
-    });
-
-    QUnit.test("support header button as widgets on form statusbar", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -10654,25 +10844,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("display tooltips for save and discard buttons", async function (assert) {
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><field name="foo"/></form>`,
-        });
-        assert.hasAttrValue(
-            target.querySelector(".o_form_button_save"),
-            "data-tooltip",
-            "Save record"
-        );
-        assert.hasAttrValue(
-            target.querySelector(".o_form_button_cancel"),
-            "data-tooltip",
-            "Discard changes"
-        );
-    });
-
     QUnit.test("resequence list lines when discardable lines are present", async function (assert) {
         var onchangeNum = 0;
         serverData.models.partner.onchanges = {
@@ -10918,14 +11089,14 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".o_widget .o_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
+            ".o_widget_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
         );
 
         await click(target.querySelector(".o_pager_next"));
 
         assert.containsOnce(
             target,
-            ".o_widget .o_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
+            ".o_widget_pie_chart .o_graph_canvas_container .chartjs-render-monitor"
         );
     });
 
@@ -11814,6 +11985,8 @@ QUnit.module("Views", (hooks) => {
             // need to preventDefault to remove error from console (so python test pass)
             ev.preventDefault();
         };
+        // fake error service so that the odoo qunit handlers don't think that they need to handle the error
+        registry.category("services").add("error", { start: () => {} });
         window.addEventListener("unhandledrejection", handler);
         registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
         patchWithCleanup(QUnit, {
@@ -12003,5 +12176,65 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_form_button_edit");
         await click(target, ".o_form_button_cancel");
         assert.verifySteps(["save", "discard"]);
+    });
+
+    QUnit.test("form view does not deactivate sample data on other views", async function (assert) {
+        serverData.models.partner.records = [];
+        serverData.views = {
+            "partner,false,list": `<tree sample="1"><field name="name"/></tree>`,
+            "partner,false,form": `<form><field name="name"/></form>`,
+            "partner,false,search": `<search/>`,
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        });
+
+        assert.containsOnce(target, ".o_list_view .o_content.o_view_sample_data");
+        await click(target.querySelector(".o_list_view .o_list_button_add"));
+        assert.containsOnce(target, ".o_form_view");
+        await click(target.querySelector(".o_form_view .breadcrumb-item a"));
+        assert.containsOnce(target, ".o_list_view .o_content.o_view_sample_data");
+    });
+
+    QUnit.test("empty x2manys when coming form a list with sample data", async function (assert) {
+        serverData.models.partner.records = [];
+        serverData.views = {
+            "partner,false,list": `<tree sample="1"><field name="name"/></tree>`,
+            "partner,false,form": `
+                <form>
+                    <field name="p">
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div><field name="name"/></div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+            "partner,false,search": `<search/>`,
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        });
+
+        assert.containsOnce(target, ".o_list_view .o_content.o_view_sample_data");
+        await click(target.querySelector(".o_list_view .o_list_button_add"));
+        assert.containsOnce(target, ".o_form_view .o_field_x2many .o_kanban_renderer");
+        assert.containsNone(target, ".o_view_nocontent");
     });
 });

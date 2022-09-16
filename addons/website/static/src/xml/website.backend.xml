@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <div t-name="WidgetWebsiteButton" class="o_stat_info published">
-        <span class="o_stat_text o_value"/>
-        <span class="o_stat_text">On Website</span>
-    </div>
-
     <t t-name="WidgetWebsiteButtonIcon">
         <button type="button" class="btn oe_stat_button">
             <i class="fa fa-fw o_button_icon fa-globe"/>
@@ -80,19 +75,5 @@
         <a role="button" href="/" class="btn btn-primary" title="Go to Website">
             Go to Website
         </a>
-    </t>
-
-    <t t-name="PageListView.WebsiteSelect">
-        <div class="btn-group" role="toolbar" aria-label="Main actions">
-            <button class="btn btn-primary dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="o_website_active" t-esc="active.name"/> <i class="fa fa-caret-down ms-1"/>
-            </button>
-            <div class="dropdown-menu">
-                <t t-foreach="websites" t-as="website">
-                    <a role="menuitem" href="#" class="dropdown-item" t-att-data-website-id="website.id"><t t-esc="website.name"/></a>
-                    <div t-if="!website.id" class="dropdown-divider"/>
-                </t>
-            </div>
-        </div>
     </t>
 </templates>

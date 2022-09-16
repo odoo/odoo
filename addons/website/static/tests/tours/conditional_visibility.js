@@ -8,7 +8,7 @@ const snippets = [
         name: 'Text - Image',
     },
 ];
-wTourUtils.registerEditionTour('conditional_visibility_1', {
+wTourUtils.registerWebsitePreviewTour('conditional_visibility_1', {
     edition: true,
     url: '/',
     test: true,

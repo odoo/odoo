@@ -7,6 +7,7 @@ class LoyaltyProgram(models.Model):
     _inherit = 'loyalty.program'
 
     order_count = fields.Integer(compute='_compute_order_count')
+    sale_ok = fields.Boolean("Sales", default=True)
 
     def _compute_order_count(self):
         # An order should count only once PER program but may appear in multiple programs

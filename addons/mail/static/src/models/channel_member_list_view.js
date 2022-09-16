@@ -64,12 +64,10 @@ registerModel({
         offlineCategoryView: one('ChannelMemberListCategoryView', {
             compute: '_computeOfflineCategoryView',
             inverse: 'channelMemberListViewOwnerAsOffline',
-            isCausal: true,
         }),
         onlineCategoryView: one('ChannelMemberListCategoryView', {
             compute: '_computeOnlineCategoryView',
             inverse: 'channelMemberListViewOwnerAsOnline',
-            isCausal: true,
         }),
         threadViewOwner: one('ThreadView', {
             identifying: true,

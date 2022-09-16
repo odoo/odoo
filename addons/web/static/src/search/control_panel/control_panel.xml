@@ -20,31 +20,29 @@
                     <t t-slot="control-panel-bottom-left-buttons" t-if="display['bottom-left'] and display['bottom-left-buttons']" />
                     <t t-slot="control-panel-bottom-left" t-if="display['bottom-left']"/>
                 </div>
-                <div class="o_cp_bottom_right">
-                    <t t-if="display['bottom-right']">
-                        <t t-slot="control-panel-bottom-right">
-                            <div class="btn-group o_search_options position-static" role="search">
-                                <t t-foreach="searchMenus" t-as="menu" t-key="menu.key">
-                                    <t t-component="menu.Component"/>
-                                </t>
-                            </div>
-                        </t>
-
-                        <div class="o_cp_pager" role="search">
-                            <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
+                <div t-if="display['bottom-right']" class="o_cp_bottom_right">
+                    <t t-slot="control-panel-bottom-right">
+                        <div class="btn-group o_search_options position-static" role="search">
+                            <t t-foreach="searchMenus" t-as="menu" t-key="menu.key">
+                                <t t-component="menu.Component"/>
+                            </t>
                         </div>
+                    </t>
 
-                        <t t-if="env.config.viewSwitcherEntries.length > 1">
-                            <nav class="btn-group o_cp_switch_buttons">
-                                <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                    <button class="btn btn-light o_switch_view "
-                                        t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
-                                        t-att-data-tooltip="view.name"
-                                        t-on-click="() => this.onViewClicked(view.type)"
-                                        />
-                                </t>
-                            </nav>
-                        </t>
+                    <div class="o_cp_pager" role="search">
+                        <Pager t-if="pagerProps and pagerProps.total > 0" t-props="pagerProps"/>
+                    </div>
+
+                    <t t-if="env.config.viewSwitcherEntries.length > 1">
+                        <nav class="btn-group o_cp_switch_buttons">
+                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                <button class="btn btn-light o_switch_view "
+                                    t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
+                                    t-att-data-tooltip="view.name"
+                                    t-on-click="() => this.onViewClicked(view.type)"
+                                    />
+                            </t>
+                        </nav>
                     </t>
                 </div>
             </div>

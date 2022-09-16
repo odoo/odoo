@@ -23,7 +23,7 @@ tour.register('sale_timesheet_tour', {
     trigger: 'td.o_field_x2many_list_row_add > a:first-child',
     content: 'Click on "Add a product" to add a new product. We will add a service product.',
 }, {
-    trigger: '.o_field_widget[name="product_id"], .o_field_widget[name="product_template_id"] input',
+    trigger: '.o_field_html[name="product_id"], .o_field_widget[name="product_template_id"] input',
     content: Markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
     run: 'text Service Product (Prepaid Hours)',
 }, {
@@ -160,7 +160,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
     run: 'text S',
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a',
+    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
 }, {
     trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > a[role="button"]',
@@ -168,8 +168,9 @@ tour.register('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="sale_line_employee_ids"] div[name="employee_id"] input',
     content: 'Select an employee to link a Sales Order Item on his timesheets into this project.',
+    run: 'click',
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a',
+    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first employee in the autocomplete dropdown',
 }, {
     trigger: 'div[name="sale_line_employee_ids"] div[name="sale_line_id"] input',
@@ -177,7 +178,7 @@ tour.register('sale_timesheet_tour', {
     position: 'bottom',
     run: 'text S',
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a',
+    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
 }, {
     trigger: 'h1 > div[name="name"] > input',
@@ -193,7 +194,7 @@ tour.register('sale_timesheet_tour', {
     trigger: '.oe_kanban_global_click :contains("Project for Freeman") button.o_dropdown_kanban',
     content: 'Open the project dropdown',
 }, {
-    trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Edit")',
+    trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Settings")',
     content: 'Start editing the project',
     // timer: 300,
 }, {
@@ -212,7 +213,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Select the first sale order of the list',
     run: 'text Prepaid',
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a',
+    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first item on the autocomplete dropdown',
 }, {
     trigger: '.o_form_button_save',

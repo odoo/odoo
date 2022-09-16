@@ -12,6 +12,7 @@ class ChannelMember(models.Model):
     _description = 'Listeners of a Channel'
     _table = 'mail_channel_member'
     _rec_names_search = ['partner_id', 'guest_id']
+    _bypass_create_check = {}
 
     # identity
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', index=True)
@@ -75,7 +76,7 @@ class ChannelMember(models.Model):
         partner will be added in the channel and the security rule will always authorize
         the creation.
         """
-        if not self.env.is_admin():
+        if not self.env.is_admin() and not self.env.context.get('mail_create_bypass_create_check') is self._bypass_create_check:
             for vals in vals_list:
                 if 'channel_id' in vals:
                     channel_id = self.env['mail.channel'].browse(vals['channel_id'])

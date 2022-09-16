@@ -65,11 +65,12 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        var self = this;
+        let self = this;
+        self.hovered = true;
         clearTimeout(timeout);
         $(this.selector).not(ev.currentTarget).popover('hide');
         timeout = setTimeout(function () {
-            if (!self.$el.is(':hover') || $('.mycart-popover:visible').length) {
+            if (!self.hovered || $('.mycart-popover:visible').length) {
                 return;
             }
             self._popoverRPC = $.get("/shop/cart", {
@@ -93,7 +94,8 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        var self = this;
+        let self = this;
+        self.hovered = false;
         setTimeout(function () {
             if ($('.popover:hover').length) {
                 return;
@@ -156,16 +158,16 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
 });
 });
 
-odoo.define('website_sale.website_sale_category', function (require) {
+odoo.define('website_sale.website_sale_offcanvas', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
 
-publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
-    selector: '#o_shop_collapse_category',
+publicWidget.registry.websiteSaleOffcanvas = publicWidget.Widget.extend({
+    selector: '#o_wsale_offcanvas',
     events: {
-        'click .fa-angle-right': '_onOpenClick',
-        'click .fa-angle-down': '_onCloseClick',
+        'show.bs.offcanvas': '_toggleFilters',
+        'hidden.bs.offcanvas': '_toggleFilters',
     },
 
     //--------------------------------------------------------------------------
@@ -173,23 +175,17 @@ publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Unfold active filters, fold inactive ones
+     *
      * @private
      * @param {Event} ev
      */
-    _onOpenClick: function (ev) {
-        var $fa = $(ev.currentTarget);
-        $fa.parent().siblings().find('.fa-angle-down:first').click();
-        $fa.parents('li').find('ul:first').show('normal');
-        $fa.toggleClass('fa-angle-down fa-angle-right');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCloseClick: function (ev) {
-        var $fa = $(ev.currentTarget);
-        $fa.parent().find('ul:first').hide('normal');
-        $fa.toggleClass('fa-angle-down fa-angle-right');
+    _toggleFilters: function (ev) {
+        for (const btn of this.el.querySelectorAll('button[data-status]')) {
+            if(btn.classList.contains('collapsed') && btn.dataset.status == "active" || ! btn.classList.contains('collapsed') && btn.dataset.status == "inactive" ) {
+                btn.click();
+            }
+        }
     },
 });
 });
@@ -386,6 +382,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showWarning(data.warning);
+            // Propagating the change to the express checkout forms
+            core.bus.trigger('cart_amount_changed', data.amount, data.minor_amount);
         });
     },
     /**
@@ -739,6 +737,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onChangeAttribute: function (ev) {
         if (!ev.isDefaultPrevented()) {
             ev.preventDefault();
+            this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
             $(ev.currentTarget).closest("form").submit();
         }
     },
@@ -762,7 +761,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @param {Event} ev
      */
     _onClickShowCoupon: function (ev) {
-        $(ev.currentTarget).hide();
+        $(".show_coupon").hide();
         $('.coupon_form').removeClass('d-none');
     },
     /**
@@ -955,6 +954,12 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
                 },
             });
         }
+
+        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
+        ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
+            activeClasses.map(c => btn.classList.toggle(c));
+        });
+
         var $grid = this.$('#products_grid');
         // Disable transition on all list elements, then switch to the new
         // layout then reenable all transitions after having forced a redraw
@@ -1162,9 +1167,9 @@ odoo.define('website_sale.price_range_option', function (require) {
 const publicWidget = require('web.public.widget');
 
 publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
-    selector: '#o_wsale_price_range_option',
+    selector: '.o_wsale_products_page',
     events: {
-        'newRangeValue input[type="range"]': '_onPriceRangeSelected',
+        'newRangeValue #o_wsale_price_range_option input[type="range"]': '_onPriceRangeSelected',
     },
 
     //----------------------------------------------------------------------
@@ -1186,6 +1191,7 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (parseFloat(range.max) !== range.valueHigh) {
             search['max_price'] = range.valueHigh;
         }
+        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
         window.location.search = $.param(search);
     },
 });

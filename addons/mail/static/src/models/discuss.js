@@ -8,13 +8,6 @@ import { escape, sprintf } from '@web/core/utils/strings';
 registerModel({
     name: 'Discuss',
     recordMethods: {
-        clearIsAddingItem() {
-            this.update({
-                addingChannelValue: "",
-                isAddingChannel: false,
-                isAddingChat: false,
-            });
-        },
         /**
          * Close the discuss app. Should reset its internal state.
          */
@@ -36,13 +29,12 @@ registerModel({
             // Necessary in order to prevent AutocompleteSelect event's default
             // behaviour as html tags visible for a split second in text area
             ev.preventDefault();
-            const name = this.addingChannelValue;
-            this.clearIsAddingItem();
-            if (ui.item.special) {
+            const name = this.discussView.addingChannelValue;
+            this.discussView.clearIsAddingItem();
+            if (ui.item.create) {
                 const channel = await this.messaging.models['Thread'].performRpcCreateChannel({
                     name,
-                    group_id: ui.item.special === 'private' ? false : this.messaging.internalUserGroupId,
-                    privacy: ui.item.special === 'private' ? 'private' : 'groups',
+                    group_id: this.messaging.internalUserGroupId,
                 });
                 channel.open();
             } else {
@@ -63,7 +55,7 @@ registerModel({
          * @param {function} res
          */
         async handleAddChannelAutocompleteSource(req, res) {
-            this.update({ addingChannelValue: req.term });
+            this.discussView.update({ addingChannelValue: req.term });
             const threads = await this.messaging.models['Thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
             const items = threads.map((thread) => {
                 const escapedName = escape(thread.name);
@@ -77,19 +69,12 @@ registerModel({
             // XDU FIXME could use a component but be careful with owl's
             // renderToString https://github.com/odoo/owl/issues/708
             items.push({
+                create: true,
+                escapedValue,
                 label: sprintf(
                     `<strong>${this.env._t('Create %s')}</strong>`,
                     `<em><span class="fa fa-hashtag"/>${escapedValue}</em>`,
                 ),
-                escapedValue,
-                special: 'public'
-            }, {
-                label: sprintf(
-                    `<strong>${this.env._t('Create %s')}</strong>`,
-                    `<em><span class="fa fa-lock"/>${escapedValue}</em>`,
-                ),
-                escapedValue,
-                special: 'private'
             });
             res(items);
         },
@@ -101,7 +86,7 @@ registerModel({
          */
         handleAddChatAutocompleteSelect(ev, ui) {
             this.messaging.openChat({ partnerId: ui.item.id });
-            this.clearIsAddingItem();
+            this.discussView.clearIsAddingItem();
         },
         /**
          * @param {Object} req
@@ -251,26 +236,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean}
-         */
-        _computeIsAddingChannel() {
-            if (!this.discussView) {
-                return false;
-            }
-            return this.isAddingChannel;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsAddingChat() {
-            if (!this.discussView) {
-                return false;
-            }
-            return this.isAddingChat;
-        },
-        /**
-         * @private
          * @returns {FieldCommand}
          */
         _computeMobileMessagingNavbarView() {
@@ -326,18 +291,11 @@ registerModel({
             compute: '_computeAddChatInputPlaceholder',
         }),
         /**
-         * Value that is used to create a channel from the sidebar.
-         */
-        addingChannelValue: attr({
-            default: "",
-        }),
-        /**
          * Discuss sidebar category for `channel` type channel threads.
          */
         categoryChannel: one('DiscussSidebarCategory', {
             default: {},
             inverse: 'discussAsChannel',
-            isCausal: true,
         }),
         /**
          * Discuss sidebar category for `chat` type channel threads.
@@ -345,11 +303,9 @@ registerModel({
         categoryChat: one('DiscussSidebarCategory', {
             default: {},
             inverse: 'discussAsChat',
-            isCausal: true,
         }),
         discussView: one('DiscussView', {
             inverse: 'discuss',
-            isCausal: true,
         }),
         /**
          * Determines whether `this.thread` should be displayed.
@@ -369,22 +325,6 @@ registerModel({
             default: 'mail.box_inbox',
         }),
         /**
-         * Determine whether current user is currently adding a channel from
-         * the sidebar.
-         */
-        isAddingChannel: attr({
-            compute: '_computeIsAddingChannel',
-            default: false,
-        }),
-        /**
-         * Determine whether current user is currently adding a chat from
-         * the sidebar.
-         */
-        isAddingChat: attr({
-            compute: '_computeIsAddingChat',
-            default: false,
-        }),
-        /**
          * Determines if the logic for opening a thread via the `initActiveId`
          * has been processed. This is necessary to ensure that this only
          * happens once.
@@ -402,7 +342,6 @@ registerModel({
         notificationListView: one('NotificationListView', {
             compute: '_computeNotificationListView',
             inverse: 'discussOwner',
-            isCausal: true,
         }),
         /**
          * The navbar view on the discuss app when in mobile and when not
@@ -411,7 +350,6 @@ registerModel({
         mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'discuss',
-            isCausal: true,
         }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful
@@ -433,7 +371,6 @@ registerModel({
         threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'discuss',
-            isCausal: true,
             required: true,
         }),
     },

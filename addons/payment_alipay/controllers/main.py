@@ -76,10 +76,10 @@ class AlipayController(http.Controller):
         :return: None
         :raise: :class:`werkzeug.exceptions.Forbidden` if the notification origin can't be verified
         """
-        url = tx_sudo.acquirer_id._alipay_get_api_url()
+        url = tx_sudo.provider_id._alipay_get_api_url()
         payload = {
             'service': 'notify_verify',
-            'partner': tx_sudo.acquirer_id.alipay_merchant_partner_id,
+            'partner': tx_sudo.provider_id.alipay_merchant_partner_id,
             'notify_id': notification_data['notify_id'],
         }
         try:
@@ -116,7 +116,7 @@ class AlipayController(http.Controller):
             raise Forbidden()
 
         # Compare the received signature with the expected signature computed from the data
-        expected_signature = tx_sudo.acquirer_id._alipay_compute_signature(notification_data)
+        expected_signature = tx_sudo.provider_id._alipay_compute_signature(notification_data)
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("received notification with invalid signature")
             raise Forbidden()

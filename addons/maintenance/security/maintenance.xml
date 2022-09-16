@@ -5,6 +5,7 @@
         <field name="name">Equipment Manager</field>
         <field name="category_id" ref="base.module_category_manufacturing_maintenance"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         <field name="comment">The user will be able to manage equipments.</field>
     </record>
 
@@ -61,10 +62,6 @@
         <field name="name">Maintenance Equipment Category Multi-company rule</field>
         <field name="model_id" ref="model_maintenance_equipment_category"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="base.user_admin" model="res.users">
-        <field name="groups_id" eval="[(4, ref('group_equipment_manager'))]"/>
     </record>
 
     </data>

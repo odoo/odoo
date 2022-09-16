@@ -63,20 +63,15 @@ class TestDiscussFullPerformance(TransactionCase):
         self.env['mail.channel'].sudo().search([('id', '!=', self.channel_general.id)]).unlink()
         self.user_root = self.env.ref('base.user_root')
         # create public channels
-        self.channel_channel_public_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 1', privacy='public', group_id=None)['id'])
+        self.channel_channel_public_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public channel 1', group_id=None)['id'])
         self.channel_channel_public_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[4] + self.users[8]).partner_id.ids)
-        self.channel_channel_public_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 2', privacy='public', group_id=None)['id'])
+        self.channel_channel_public_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public channel 2', group_id=None)['id'])
         self.channel_channel_public_2.add_members((self.users[0] + self.users[2] + self.users[4] + self.users[7] + self.users[9]).partner_id.ids)
-        # create groups channels
-        self.channel_channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 1', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
+        # create group-restricted channels
+        self.channel_channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group restricted channel 1', group_id=self.env.ref('base.group_user').id)['id'])
         self.channel_channel_group_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[6] + self.users[12]).partner_id.ids)
-        self.channel_channel_group_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 2', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
+        self.channel_channel_group_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group restricted channel 2', group_id=self.env.ref('base.group_user').id)['id'])
         self.channel_channel_group_2.add_members((self.users[0] + self.users[2] + self.users[6] + self.users[7] + self.users[13]).partner_id.ids)
-        # create private channels
-        self.channel_channel_private_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 1', privacy='private', group_id=None)['id'])
-        self.channel_channel_private_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[5] + self.users[10]).partner_id.ids)
-        self.channel_channel_private_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 2', privacy='private', group_id=None)['id'])
-        self.channel_channel_private_2.add_members((self.users[0] + self.users[2] + self.users[5] + self.users[7] + self.users[11]).partner_id.ids)
         # create chats
         self.channel_chat_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[14]).partner_id.ids)['id'])
         self.channel_chat_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[15]).partner_id.ids)['id'])
@@ -113,6 +108,7 @@ class TestDiscussFullPerformance(TransactionCase):
             The point of having a separate getter is to allow it to be overriden.
         """
         return {
+            'hasLinkPreviewFeature': True,
             'needaction_inbox_counter': 1,
             'starred_counter': 1,
             'channels': [
@@ -160,7 +156,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': next(res['message_id'] for res in self.channel_general._channel_last_message_ids()),
                     'message_needaction_counter': 0,
                     'name': 'general',
-                    'public': 'groups',
                     'rtcSessions': [('insert', [])],
                     'seen_message_id': False,
                     'state': 'open',
@@ -209,8 +204,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_interest_dt': self.channel_channel_public_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_public_1._channel_last_message_ids()),
                     'message_needaction_counter': 1,
-                    'name': 'public 1',
-                    'public': 'public',
+                    'name': 'public channel 1',
                     'rtcSessions': [('insert', [])],
                     'seen_message_id': next(res['message_id'] for res in self.channel_channel_public_1._channel_last_message_ids()),
                     'state': 'open',
@@ -259,8 +253,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_interest_dt': self.channel_channel_public_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_public_2._channel_last_message_ids()),
                     'message_needaction_counter': 0,
-                    'name': 'public 2',
-                    'public': 'public',
+                    'name': 'public channel 2',
                     'rtcSessions': [('insert', [])],
                     'seen_message_id': next(res['message_id'] for res in self.channel_channel_public_2._channel_last_message_ids()),
                     'state': 'open',
@@ -309,8 +302,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_interest_dt': self.channel_channel_group_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_group_1._channel_last_message_ids()),
                     'message_needaction_counter': 0,
-                    'name': 'group 1',
-                    'public': 'groups',
+                    'name': 'group restricted channel 1',
                     'rtcSessions': [('insert', [])],
                     'seen_message_id': next(res['message_id'] for res in self.channel_channel_group_1._channel_last_message_ids()),
                     'state': 'open',
@@ -359,112 +351,11 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_interest_dt': self.channel_channel_group_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in self.channel_channel_group_2._channel_last_message_ids()),
                     'message_needaction_counter': 0,
-                    'name': 'group 2',
-                    'public': 'groups',
+                    'name': 'group restricted channel 2',
                     'rtcSessions': [('insert', [])],
                     'seen_message_id': next(res['message_id'] for res in self.channel_channel_group_2._channel_last_message_ids()),
                     'state': 'open',
                     'uuid': self.channel_channel_group_2.uuid,
-                },
-                {
-                    'authorizedGroupFullName': False,
-                    'channel': {
-                        'anonymous_country': [('clear',)],
-                        'anonymous_name': False,
-                        'avatarCacheKey': self.channel_channel_private_1._get_avatar_cache_key(),
-                        'channel_type': 'channel',
-                        'channelMembers': [('insert', sorted([{
-                            'channel': {
-                                'id': self.channel_channel_private_1.id,
-                            },
-                            'id': self.channel_channel_private_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'persona': {
-                                'partner': {
-                                    'active': True,
-                                    'email': 'e.e@example.com',
-                                    'id': self.users[0].partner_id.id,
-                                    'im_status': 'offline',
-                                    'name': 'Ernest Employee',
-                                    'out_of_office_date_end': False,
-                                    'user': {
-                                        'id': self.users[0].id,
-                                        'isInternalUser': True,
-                                    },
-                                },
-                            },
-                        }], key=lambda member_data: member_data['id']))],
-                        'custom_channel_name': False,
-                        'id': self.channel_channel_private_1.id,
-                        'memberCount': 5,
-                        'serverMessageUnreadCounter': 0,
-                    },
-                    'create_uid': self.env.user.id,
-                    'defaultDisplayMode': False,
-                    'description': False,
-                    'group_based_subscription': False,
-                    'id': self.channel_channel_private_1.id,
-                    'invitedMembers': [('insert', [])],
-                    'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_private_1.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in self.channel_channel_private_1._channel_last_message_ids()),
-                    'message_needaction_counter': 0,
-                    'name': 'private 1',
-                    'public': 'private',
-                    'rtcSessions': [('insert', [])],
-                    'seen_message_id': next(res['message_id'] for res in self.channel_channel_private_1._channel_last_message_ids()),
-                    'state': 'open',
-                    'uuid': self.channel_channel_private_1.uuid,
-                },
-                {
-                    'authorizedGroupFullName': False,
-                    'channel': {
-                        'anonymous_country': [('clear',)],
-                        'anonymous_name': False,
-                        'avatarCacheKey': self.channel_channel_private_2._get_avatar_cache_key(),
-                        'channel_type': 'channel',
-                        'channelMembers': [('insert', sorted([{
-                            'channel': {
-                                'id': self.channel_channel_private_2.id,
-                            },
-                            'id': self.channel_channel_private_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,
-                            'persona': {
-                                'partner': {
-                                    'active': True,
-                                    'email': 'e.e@example.com',
-                                    'id': self.users[0].partner_id.id,
-                                    'im_status': 'offline',
-                                    'name': 'Ernest Employee',
-                                    'out_of_office_date_end': False,
-                                    'user': {
-                                        'id': self.users[0].id,
-                                        'isInternalUser': True,
-                                    },
-                                },
-                            },
-                        }], key=lambda member_data: member_data['id']))],
-                        'custom_channel_name': False,
-                        'id': self.channel_channel_private_2.id,
-                        'memberCount': 5,
-                        'serverMessageUnreadCounter': 0,
-                    },
-                    'create_uid': self.env.user.id,
-                    'defaultDisplayMode': False,
-                    'description': False,
-                    'group_based_subscription': False,
-                    'id': self.channel_channel_private_2.id,
-                    'invitedMembers': [('insert', [])],
-                    'is_minimized': False,
-                    'is_pinned': True,
-                    'last_interest_dt': self.channel_channel_private_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'last_message_id': next(res['message_id'] for res in self.channel_channel_private_2._channel_last_message_ids()),
-                    'message_needaction_counter': 0,
-                    'name': 'private 2',
-                    'public': 'private',
-                    'rtcSessions': [('insert', [])],
-                    'seen_message_id': next(res['message_id'] for res in self.channel_channel_private_2._channel_last_message_ids()),
-                    'state': 'open',
-                    'uuid': self.channel_channel_private_2.uuid,
                 },
                 {
                     'authorizedGroupFullName': False,
@@ -532,7 +423,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'message_needaction_counter': 0,
                     'name': '',
-                    'public': 'private',
                     'rtcSessions': [('insert', [])],
                     'seen_message_id': False,
                     'seen_partners_info': [
@@ -618,7 +508,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test14',
-                    'public': 'private',
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [
                         {
@@ -704,7 +593,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test15',
-                    'public': 'private',
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [
                         {
@@ -790,7 +678,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test2',
-                    'public': 'private',
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [
                         {
@@ -876,7 +763,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'last_message_id': False,
                     'message_needaction_counter': 0,
                     'name': 'Ernest Employee, test3',
-                    'public': 'private',
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [
                         {
@@ -957,7 +843,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'message_needaction_counter': 0,
                     'name': 'test1 Ernest Employee',
                     'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
-                    'public': 'private',
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [
                         {
@@ -1037,7 +922,6 @@ class TestDiscussFullPerformance(TransactionCase):
                     'message_needaction_counter': 0,
                     'name': 'anon 2 Ernest Employee',
                     'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
-                    'public': 'private',
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [
                         {

@@ -143,7 +143,7 @@ function getYAxeLabel(graph) {
     return getChart(graph).config.options.scales.yAxes[0].scaleLabel.labelString;
 }
 
-async function clickOnDataset(graph) {
+export async function clickOnDataset(graph) {
     const chart = getChart(graph);
     const meta = chart.getDatasetMeta(0);
     const rectangle = chart.canvas.getBoundingClientRect();
@@ -2350,8 +2350,8 @@ QUnit.module("Views", (hooks) => {
             <graph type="pie">
                 <field name="revenue" type="measure"/>
                 <field name="date" interval="day"/>
-                <field name="foo" invisible="0"/>
-                <field name="bar" invisible="1" string="My invisible field"/>
+                <field name="foo" modifiers='{"invisible": false}'/>
+                <field name="bar" modifiers='{"invisible": true}' string="My invisible field"/>
                 <field name="id"/>
                 <field name="fighters" string="FooFighters"/>
             </graph>
@@ -4083,5 +4083,39 @@ QUnit.module("Views", (hooks) => {
         checkModeIs(assert, graph, "bar");
         checkLabels(assert, graph, ["Undefined", "red"]);
         checkLegend(assert, graph, "Revenue");
+    });
+
+    QUnit.test("order='desc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="desc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [2, 2, 2, 1, 1],
+            label: "Count",
+        });
+    });
+
+    QUnit.test("order='asc' on arch", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="asc">
+                    <field name="date"/>
+                </graph>
+            `,
+        });
+        checkDatasets(assert, graph, ["data", "label"], {
+            data: [1, 1, 2, 2, 2],
+            label: "Count",
+        });
     });
 });

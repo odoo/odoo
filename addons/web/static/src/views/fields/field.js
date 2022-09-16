@@ -2,7 +2,12 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { archParseBoolean, evalDomain, X2M_TYPES } from "@web/views/utils";
+import {
+    archParseBoolean,
+    evalDomain,
+    getClassNameFromDecoration,
+    X2M_TYPES,
+} from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
 const { Component, xml } = owl;
@@ -102,7 +107,7 @@ export class Field extends Component {
         const evalContext = record.evalContext;
         for (const decoName in decorations) {
             const value = evaluateExpr(decorations[decoName], evalContext);
-            classNames[`text-${decoName}`] = value;
+            classNames[getClassNameFromDecoration(decoName)] = value;
         }
 
         return classNames;

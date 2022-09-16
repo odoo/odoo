@@ -30,19 +30,9 @@
     <record id="hr_employee_view_form_inherit_timesheet" model="ir.ui.view">
         <field name="name">hr.employee.form.timesheet</field>
         <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="inherit_id" ref="hr_hourly_cost.view_employee_form"/>
         <field name="priority" eval="40"/>
         <field name="arch" type="xml">
-            <group name="application_group" position="attributes">
-                <attribute name="string">Application Settings</attribute>
-            </group>
-            <group name="application_group" position="inside">
-                <label for="timesheet_cost" groups="hr_timesheet.group_timesheet_manager"/>
-                <div name="timesheet" groups="hr_timesheet.group_timesheet_manager">
-                    <field name="timesheet_cost" class="oe_inline"/> per hour
-                    <field name="currency_id" invisible="1"/>
-                </div>
-            </group>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar" groups="hr_timesheet.group_hr_timesheet_user">
                     <div class="o_stat_info">

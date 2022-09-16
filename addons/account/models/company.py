@@ -65,6 +65,13 @@ class ResCompany(models.Model):
     account_journal_suspense_account_id = fields.Many2one('account.account', string='Journal Suspense Account')
     account_journal_payment_debit_account_id = fields.Many2one('account.account', string='Journal Outstanding Receipts Account')
     account_journal_payment_credit_account_id = fields.Many2one('account.account', string='Journal Outstanding Payments Account')
+    account_journal_early_pay_discount_gain_account_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Gain Account')
+    account_journal_early_pay_discount_loss_account_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Loss Account')
+    early_pay_discount_computation = fields.Selection([
+        ('included', 'On early payment'),
+        ('excluded', 'Never'),
+        ('mixed', 'Always (upon invoice)')
+    ], string='Cash Discount Tax Reduction', default='included', readonly=False)
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
@@ -109,7 +116,9 @@ class ResCompany(models.Model):
     account_setup_coa_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding charts of account step", default='not_done')
     account_setup_taxes_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding Taxes step", default='not_done')
     account_onboarding_invoice_layout_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding invoice layout step", default='not_done')
-    account_onboarding_create_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding create invoice step", default='not_done')
+    account_onboarding_create_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding create invoice step", compute='_compute_account_onboarding_create_invoice_state')
+    #this field must be there to ensure that the create_invoice_state stay complete and because we can't use a dependencies on account move
+    account_onboarding_create_invoice_state_flag = fields.Boolean(default=False, store=True)
     account_onboarding_sale_tax_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sale tax step", default='not_done')
 
     # account dashboard onboarding
@@ -205,6 +214,17 @@ class ResCompany(models.Model):
             foreign_vat_fpos = self.env['account.fiscal.position'].search([('company_id', '=', record.id), ('foreign_vat', '!=', False)])
             record.account_enabled_tax_country_ids = foreign_vat_fpos.country_id + record.account_fiscal_country_id
 
+    @api.depends('account_onboarding_create_invoice_state_flag')
+    def _compute_account_onboarding_create_invoice_state(self):
+        for record in self:
+            if record.account_onboarding_create_invoice_state_flag:
+                record.account_onboarding_create_invoice_state = 'done'
+            elif self.env['account.move'].search([('company_id', '=', record.id), ('move_type', '=', 'out_invoice')], limit=1):
+                record.account_onboarding_create_invoice_state = 'just_done'
+                record.account_onboarding_create_invoice_state_flag = True
+            else:
+                record.account_onboarding_create_invoice_state = 'not_done'
+
     @api.depends('terms_type')
     def _compute_invoice_terms_html(self):
         for company in self.filtered(lambda company: is_html_empty(company.invoice_terms_html) and company.terms_type == 'html'):
@@ -217,14 +237,14 @@ class ResCompany(models.Model):
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
-        return self.get_and_update_onbarding_state(
+        return self._get_and_update_onboarding_state(
             'account_invoice_onboarding_state',
             self.get_account_invoice_onboarding_steps_states_names()
         )
 
     # YTI FIXME: Define only one method that returns {'account': [], 'sale': [], ...}
     def get_account_invoice_onboarding_steps_states_names(self):
-        """ Necessary to add/edit steps from other modules (payment acquirer in this case). """
+        """ Necessary to add/edit steps from other modules (payment provider in this case). """
         return [
             'base_onboarding_company_state',
             'account_onboarding_invoice_layout_state',
@@ -234,7 +254,7 @@ class ResCompany(models.Model):
     def get_and_update_account_dashboard_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
-        return self.get_and_update_onbarding_state(
+        return self._get_and_update_onboarding_state(
             'account_dashboard_onboarding_state',
             self.get_account_dashboard_onboarding_steps_states_names()
         )
@@ -521,8 +541,7 @@ class ResCompany(models.Model):
 
     @api.model
     def action_open_account_onboarding_create_invoice(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_create_invoice")
-        return action
+        return self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_create_invoice")
 
     @api.model
     def action_open_taxes_onboarding(self):

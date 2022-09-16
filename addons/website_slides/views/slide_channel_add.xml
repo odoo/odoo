@@ -5,18 +5,17 @@
     <field name="name">slide.channel.view.form.add</field>
     <field name="model">slide.channel</field>
     <field name="arch" type="xml">
-        <form js_class="website_slides_add_form">
+        <form js_class="website_new_content_form">
+            <div class="oe_title">
+                <label for="name" string="Course Title"/>
+                <h1><field name="name" placeholder="e.g. Computer Science for kids" class="w-100"/></h1>
+            </div>
             <group>
                 <field name="website_url" invisible="1"/>
-                <field name="name" placeholder="e.g. Computer Science for kids" string="Course Title"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
-            </group>
-            <group>
-                <field name="channel_type" widget="radio" options="{'horizontal': true}" string="Choose a layout"/>
-                <field name="description" widget="html" placeholder="Common tasks for a computer scientist is asking the right questions andanswering questions. In this course, you'll study those topics with activities about mathematics, science and logic." string="Description"/>
-            </group>
-            <group name="review">
-                <field name="allow_comment"/>
+                <field name="channel_type" widget="image_radio" options="{'images': ['/website_slides/static/src/img/channel-training-layout.png', '/website_slides/static/src/img/channel-documentation-layout.png']}" string="Choose a layout"/>
+                <field name="description" placeholder="Common tasks for a computer scientist is asking the right questions and answering questions..." class="mb-3"/>
+                <field name="allow_comment" string="Allow Rating"/>
             </group>
         </form>
     </field>

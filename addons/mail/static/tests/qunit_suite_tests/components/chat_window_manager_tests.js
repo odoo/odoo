@@ -274,7 +274,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
 
     // open channel-2
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationListItem[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]`);
+    await click(`.o_ChannelPreviewView[data-channel-id="${mailChannelId2}"]`);
     assert.containsN(
         document.body,
         '.o_ChatWindow',
@@ -335,7 +335,6 @@ QUnit.test('new message chat window should close on selecting the user if chat w
         ],
         channel_type: "chat",
         name: "Partner 131",
-        public: 'private',
     });
     const { afterEvent, click } = await start();
 
@@ -1015,7 +1014,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId1}"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1039,7 +1038,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId2}"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1106,7 +1105,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId1}"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1127,7 +1126,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId2}"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1148,7 +1147,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId3}"][data-thread-model="mail.channel"]
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId3}"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1197,7 +1196,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId1}"]`
     );
 
     assert.containsOnce(document.body, '.o_ChatWindow', "Only 1 chatWindow must be opened");
@@ -1229,7 +1228,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]`
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId2}"]`
     );
 
     assert.containsN(document.body, '.o_ChatWindow', 2, "2 chatWindows must be opened");
@@ -1955,12 +1954,12 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     await click('.o_MessagingMenu_toggler');
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId1}"]
     `);
     await click('.o_ChatWindowHeader_commandBack');
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+        .o_ChannelPreviewView[data-channel-id="${mailChannelId2}"]
     `);
     // simulate resize to go into mobile
     await afterNextRender(

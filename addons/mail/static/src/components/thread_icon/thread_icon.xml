@@ -5,14 +5,11 @@
         <t t-if="thread">
             <div class="o_ThreadIcon d-flex justify-content-center flex-shrink-0" t-attf-class="{{ className }}" t-ref="root" name="root">
                 <t t-if="thread.channel and thread.channel.channel_type === 'channel'">
-                    <t t-if="thread.public === 'private'">
-                        <div class="o_ThreadIcon_channelPrivate fa fa-fw fa-lock" title="Private channel"/>
+                    <t t-if="thread.authorizedGroupFullName">
+                        <div class="o_ThreadIcon_groupRestrictedChannel fa fa-fw fa-hashtag" t-att-title="thread.accessRestrictedToGroupText"/>
                     </t>
-                    <t t-if="thread.public === 'public'">
-                        <div class="o_ThreadIcon_channelPublic fa fa-fw fa-globe" title="Public channel"/>
-                    </t>
-                    <t t-if="thread.public === 'groups'">
-                        <div class="o_ThreadIcon_channelGroups fa fa-fw fa-hashtag" title="Selected group of users"/>
+                    <t t-if="!thread.authorizedGroupFullName">
+                        <div class="o_ThreadIcon_publicChannel fa fa-fw fa-globe" title="Public Channel"/>
                     </t>
                 </t>
                 <t t-elif="thread.channel and thread.channel.channel_type === 'chat' and thread.channel.correspondent">

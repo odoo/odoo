@@ -4,12 +4,40 @@
 $o-wsale-products-layout-grid-gutter-width: $grid-gutter-width / 2 !default;
 $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale-products-layout-grid-gutter-width);
 
-@mixin wsale-break-table-to-list() {
+@mixin wsale-break-table($-list: false) {
     .o_wsale_products_grid_table_wrapper {
-        table, tbody, tr, td {
+        table, tbody {
             display: block;
             width: 100%;
         }
+
+        tr {
+            display: if($-list, block, flex);
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        td {
+            display: if($-list, block, inline-block);
+            width: if($-list, 100%, 50%);
+        }
+    }
+}
+
+@mixin o-wsale-scrollbar-subdle($-vertical: true) {
+    scrollbar-color: currentColor $light;
+    scrollbar#{if($-vertical, -width, -height)}: 2px;
+
+    &::-webkit-scrollbar {
+        #{if($-vertical, width, height)}: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: currentColor;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $light;
     }
 }
 
@@ -50,9 +78,19 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         --o-wsale-card-thumb-fill-mode: cover;
     }
 
-    ul ul {
-        margin-left: 1.5rem;
+    .o_wsale_filmstip_wrapper {
+        scroll-snap-type: x mandatory;
+        @include o-wsale-scrollbar-subdle($-vertical: false);
+
+        .o_wsale_filmstip {
+            transform: translateX(0);
+
+            li {
+                scroll-snap-align: start;
+            }
+        }
     }
+
     .o_payment_form .card {
         border-radius: 4px !important;
     }
@@ -103,22 +141,6 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         padding: 0;
     }
 
-    .breadcrumb {
-        background-color: map-get($grays, '100');
-        padding: 0.6rem 0.75rem;
-        font-size: 0.9rem;
-
-        a {
-            color: map-get($theme-colors, 'primary');
-            font-weight: bold;
-        }
-        .breadcrumb-item + .breadcrumb-item::before {
-            font-family: 'FontAwesome';
-            content: "\f105";
-            padding-right: 0.2rem;
-        }
-    }
-
     .table-striped tbody tr td:nth-of-type(even) {
         --table-accent-bg: rgba(0, 0, 0, 0.025);
     }
@@ -129,70 +151,61 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;
     }
+
+    #o_wsale_offcanvas {
+        width: 80%;
+        max-width: $offcanvas-horizontal-width;
+
+        .o_searchbar_form .dropdown-menu {
+            right: 0;
+        }
+
+        #o_wsale_offcanvas_content {
+            @include o-wsale-scrollbar-subdle();
+        }
+
+        .o_wsale_offcanvas_title {
+            &::after, &:not(.collapsed)::after {
+                width: .75rem;
+                height: .75rem;
+                background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$headings-color}'><path transform='#{rotate(45, 8, 8)}' d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>");
+                background-size: .75rem;
+            }
+
+            &:not(.collapsed)::after {
+                transform: rotate(-45deg);
+            }
+
+            // Since this nav is visible on mobile only, remove all visual
+            // effects related to keyboard/mouse navigation.
+            &, &:focus, &:hover {
+                box-shadow: none;
+                z-index: 0;
+            }
+        }
+    }
+
     #products_grid_before {
-        #wsale_products_categories_collapse {
-            label {
-                &:hover {
-                    color: map-get($theme-colors, 'primary');
-                    cursor: pointer;
-                }
-            }
-            i.fa {
-                color: map-get($grays, '500');
-            }
+        // == Guess the distance with the navbar
+        $-container-top-gap: calc(#{map-get($spacers, 2)} + var(--gutter-x));
+
+        // == Guess the distance with the viewport's top.
+        // Defined using CSS variables to ease custom-headers overrides.
+        --o_ws_sidebar_top_gap: calc(#{$navbar-padding-y * 2} + #{$btn-padding-y-lg * 2} + #{$-container-top-gap});
+
+        @if (o-website-value('header-scroll-effect') == null) or (o-website-value('header-scroll-effect') == 'fixed') {
+            top: var(--o_ws_sidebar_top_gap);
+        } @else {
+            top: $-container-top-gap;
         }
-        .o_categories_collapse_title, .o_products_attributes_title {
-            font-size: 0.9rem;
-        }
-        .form-check {
-            .form-check-input {
-                ~ .form-check-label:before {
-                    outline: none;
-                    border: 0px;
-                    border: 2px solid map-get($grays, '400');
-                    border-radius: 0px;
-                    cursor: pointer;
-                }
-                &:checked {
-                    ~ .form-check-label:before {
-                        background-color: map-get($theme-colors, 'primary');
-                        border: 2px solid map-get($theme-colors, 'primary');
-                    }
-                }
-            }
-            label:hover {
-                color: map-get($theme-colors, 'primary');
-                cursor: pointer;
-            }
-        }
+
         .css_attribute_color {
             height: 32px;
             width: 32px;
-            margin-bottom: 0.2rem;
         }
     }
     .o_pricelist_dropdown, .o_sortby_dropdown {
         min-width: fit-content;
-
-        > .btn {
-            &, &:hover, &:focus, &:active {
-                background-color: transparent !important;
-                box-shadow: none !important;
-            }
-        }
-    }
-    .o_wsale_apply_layout > .btn {
-        color: map-get($grays, '500');
-        background-color: transparent;
-        border-radius: 0%;
-    }
-
-    .o_wsale_apply_layout > .btn-check:checked + .btn,
-    .o_wsale_apply_layout > .btn:focus
-    {
-        color: map-get($grays, '600');
-        background-color: map-get($grays, '200');
-        box-shadow: none !important;
     }
 }
 
@@ -263,12 +276,6 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 
 // ==== THE GRID
 #products_grid {
-    .o_wsale_products_searchbar_form {
-        @include media-breakpoint-up(md) {
-            max-width: 450px;
-        }
-    }
-
     .o_wsale_products_grid_table_wrapper .table {
         table-layout: fixed;
 
@@ -296,7 +303,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 
 #products_grid:not(.o_wsale_layout_list) {
     @include media-breakpoint-down(lg) {
-        @include wsale-break-table-to-list();
+        @include wsale-break-table();
     }
 
     @include media-breakpoint-up(lg) {
@@ -327,7 +334,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 }
 
 #products_grid.o_wsale_layout_list {
-    @include wsale-break-table-to-list();
+    @include wsale-break-table($-list: true);
 
     .oe_product {
         --o-wsale-card-border-radius: 0;
@@ -361,8 +368,8 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     // mt-* / my-* / mb-* utility classes, but here we need to use the shop max
     // grid gutter width to prevent the grid wrapper to overflow because of its
     // negative margins.
-    margin-top: $grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
+    margin-top: $grid-gutter-width / 2;
 }
 
 .oe_cart {
@@ -460,20 +467,6 @@ ul.wizard {
                 display: none;
             }
         }
-    }
-}
-
-#o_shop_collapse_category li {
-    width: 100%;
-
-    a {
-        display: inline-block;
-        width: 80%;
-        padding-left: 3px;
-    }
-
-    i.fa {
-        cursor: pointer;
     }
 }
 

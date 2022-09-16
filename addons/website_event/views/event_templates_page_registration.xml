@@ -30,14 +30,14 @@
 <!-- Event - Description -->
 <template id="event_description_full" name="Event Description" track="1">
     <t t-call="website_event.event_details">
-        <section class="bg-200 mt-n5" t-cache="event if not editable and event.website_published else None">
+        <section class="mt-n5" t-cache="event if not editable and event.website_published else None">
             <div class="container overflow-hidden">
                 <div class="row g-0 mt-n4 mb-3">
                     <!-- Description -->
-                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white px-3 pt-5 pb-0 shadow-sm">
+                    <div id="o_wevent_event_main_col" class="o_wevent_theme_bg_base col-lg-8 px-3 pt-5 pb-0 shadow-sm">
                         <span t-field="event.description" itemprop="description"/>
                     </div>
-                    <div class="col-lg-4 bg-light shadow-sm d-print-none">
+                    <div class="o_wevent_theme_bg_light col-lg-4 shadow-sm d-print-none">
                         <!-- Date & Time -->
                         <div class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
@@ -118,7 +118,7 @@
 <!-- Event - Registration -->
 <template id="registration_template" name="Registration">
     <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
-    <div t-if="not event.event_registrations_open" class="bg-white mb-5">
+    <div t-if="not event.event_registrations_open" class="o_wevent_theme_bg_base mb-5">
         <div class="alert alert-info mb-0 row g-0 justify-content-between align-items-center" role="status">
             <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
                 <div class="col col-md-8 d-flex">
@@ -150,7 +150,7 @@
         t-attf-action="/event/#{slug(event)}/registration/new" method="post"
         itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <div id="o_wevent_tickets" class="bg-white shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">
+        <div id="o_wevent_tickets" class="o_wevent_theme_bg_base shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
             <t t-if="len(event.event_ticket_ids) &gt; 1 or tickets.description">
@@ -169,7 +169,7 @@
                 </div>
                 <div id="o_wevent_tickets_collapse" class="collapse show">
                     <div t-foreach="tickets" t-as="ticket"
-                         class="row px-3 py-3 mx-0 bg-light border-bottom o_wevent_ticket_selector"
+                         class="o_wevent_theme_bg_light row px-3 py-3 mx-0 border-bottom o_wevent_ticket_selector"
                          t-att-name="ticket.name">
                         <div class="col-md-8 col-xs-12 p-0" itemscope="itemscope" itemtype="http://schema.org/Offer">
                             <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
@@ -287,7 +287,7 @@
                     <t t-foreach="tickets" t-as="ticket" t-if="availability_check">
                         <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                             <t t-set="counter" t-value="counter + 1"/>
-                            <div class="modal-body bg-light border-bottom">
+                            <div class="modal-body border-bottom">
                                 <h5 class="mt-1 pb-2 border-bottom">Ticket #<span t-out="counter"/> <small class="text-muted">- <span t-out="ticket['name']"/></small></h5>
                                 <div class="row">
                                     <div class="col-lg my-2">
@@ -312,7 +312,7 @@
                         <t t-set="counter_type" t-value="counter_type + 1"/>
                     </t>
                     <t t-if="not availability_check">
-                        <div class="modal-body bg-light border-bottom">
+                        <div class="modal-body border-bottom">
                             <strong> You ordered more tickets than available seats</strong>
                         </div>
                     </t>

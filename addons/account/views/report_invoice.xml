@@ -197,18 +197,39 @@
                             </div>
                         </div>
                     </div>
-                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
+                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication" class="mt-4">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
                     </p>
-                    <div t-if="o.invoice_payment_term_id" name="payment_term">
-                        <div t-field="o.invoice_payment_term_id.note"/>
-                        <t t-set="terms" t-value="o.invoice_payment_term_id.compute(o.amount_total, o.amount_total_in_currency_signed, o.invoice_date, o.currency_id)"/>
-                        <t t-if="o.invoice_payment_term_id.display_on_invoice" t-foreach="o.invoice_payment_term_id._get_amount_by_date(terms, o.currency_id).items()" t-as="pay_term_line">
-                            <div>
-                                <span t-esc="pay_term_line[1]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/> are due on <span t-esc="pay_term_line[0]"/>
+                    <t t-set="payment_term_details" t-value="o.payment_term_details"/>
+                    <div t-field="o.invoice_payment_term_id.note" name="payment_term"/>
+                    <t t-if="o.invoice_payment_term_id.display_on_invoice and payment_term_details">
+                        <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
+                            <div t-attf-class="#{'col-7' if report_type != 'html' else 'col-sm-7 col-md-6'} mt-2 mb-2">
+                                <table class="table table-sm" style="page-break-inside: avoid;">
+                                    <th class="border-black text-start">
+                                        Due Date
+                                    </th>
+                                    <th class="border-black text-end">
+                                        Amount Due
+                                    </th>
+                                    <th t-if="o.show_discount_details" class="border-black text-end">
+                                        Discount
+                                    </th>
+                                    <t t-foreach="payment_term_details" t-as="term">
+                                        <tr>
+                                            <td t-esc="term.get('date')" class="text-start"/>
+                                            <td t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-esc="term.get('amount')" class="text-end"/>
+                                            <td t-if="term.get('discount_date')" class="text-end">
+                                                <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                      t-esc="term.get('discount_amount_currency')"/> if paid before
+                                                <span t-esc="term.get('discount_date')"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
                             </div>
-                        </t>
-                    </div>
+                        </div>
+                    </t>
                     <div t-if="not is_html_empty(o.narration)" name="comment">
                         <span t-field="o.narration"/>
                     </div>
@@ -289,7 +310,7 @@
             -->
             <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                 <tr>
-                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1">
+                    <t t-if="tax_totals['display_tax_base']">
                         <td>
                             <span t-esc="amount_by_group['tax_group_name']"/>
                             <span class="text-nowrap"> on

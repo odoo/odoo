@@ -75,7 +75,6 @@ patch(MockServer.prototype, 'website_livechat', {
                 channel_member_ids: membersToAdd,
                 channel_type: 'livechat',
                 livechat_operator_id: this.currentPartnerId,
-                public: 'private',
             });
             // notify operator
             this.pyEnv['bus.bus']._sendone(this.currentPartner, 'website_livechat.send_chat_request',

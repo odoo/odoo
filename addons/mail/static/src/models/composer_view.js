@@ -214,7 +214,7 @@ registerModel({
          */
         onClickEmoji(ev) {
             this.saveStateInStore();
-            this.insertIntoTextInput(ev.currentTarget.dataset.unicode);
+            this.insertIntoTextInput(ev.currentTarget.dataset.codepoints);
             if (!this.messaging.device.isMobileDevice) {
                 this.update({ doFocus: true });
             }
@@ -240,20 +240,7 @@ registerModel({
          */
         onClickSaveLink(ev) {
             ev.preventDefault();
-            if (!this.composer.canPostMessage) {
-                if (this.composer.hasUploadingAttachment) {
-                    this.messaging.notify({
-                        message: this.env._t("Please wait while the file is uploading."),
-                        type: 'warning',
-                    });
-                }
-                return;
-            }
-            if (this.messageViewInEditing) {
-                this.updateMessage();
-                return;
-            }
-            this.postMessage();
+            this.sendMessage();
         },
         /**
          * Called when clicking on "send" button.
@@ -548,19 +535,6 @@ registerModel({
          */
         async postMessage() {
             const composer = this.composer;
-            if (composer.thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(composer.textInputContent);
-                if (command) {
-                    await command.execute({ channel: composer.thread, body: composer.textInputContent });
-                    if (composer.exists()) {
-                        composer._reset();
-                    }
-                    return;
-                }
-            }
-            if (composer.thread.channel) {
-                composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            }
             const postData = this._getMessageData();
             const params = {
                 'post_data': postData,
@@ -599,6 +573,14 @@ registerModel({
                 const message = messaging.models['Message'].insert(
                     messaging.models['Message'].convertData(messageData)
                 );
+                if (this.messaging.hasLinkPreviewFeature && !message.isBodyEmpty) {
+                    this.messaging.rpc({
+                        route: `/mail/link_preview`,
+                        params: {
+                            message_id: message.id
+                        }
+                    }, { shadow: true });
+                }
                 for (const threadView of message.originThread.threadViews) {
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
@@ -656,7 +638,7 @@ registerModel({
          * Sending of the message could be aborted if it cannot be posted like if there are attachments
          * currently uploading or if there is no text content and no attachments.
          */
-        sendMessage() {
+        async sendMessage() {
             if (!this.composer.canPostMessage) {
                 if (this.composer.hasUploadingAttachment) {
                     this.messaging.notify({
@@ -669,6 +651,17 @@ registerModel({
             if (this.messageViewInEditing) {
                 this.updateMessage();
                 return;
+            }
+            if (this.composer.thread.channel) {
+                const command = this._getCommandFromText(this.composer.textInputContent);
+                if (command) {
+                    await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
+                    if (this.composer.exists()) {
+                        this.composer._reset();
+                    }
+                    return;
+                }
+                this.composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
             this.postMessage();
         },
@@ -688,26 +681,14 @@ registerModel({
                 this.messageViewInEditing.messageActionList.update({ deleteConfirmDialog: {} });
                 return;
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
             let data = {
-                body: body,
+                body: this._generateMessageBody(),
                 attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
             };
-            try {
-                composer.update({ isPostingMessage: true });
-                const messageViewInEditing = this.messageViewInEditing;
-                await messageViewInEditing.message.updateContent(data);
-                if (messageViewInEditing.exists()) {
-                    messageViewInEditing.stopEditing();
-                }
-            } finally {
-                if (composer.exists()) {
-                    composer.update({ isPostingMessage: false });
-                }
+            const messageViewInEditing = this.messageViewInEditing;
+            await messageViewInEditing.message.updateContent(data);
+            if (messageViewInEditing.exists()) {
+                messageViewInEditing.stopEditing();
             }
         },
         /**
@@ -843,7 +824,7 @@ registerModel({
             return Boolean(
                 (this.hasThreadName && this.composer.thread) ||
                 (this.hasFollowers && !this.composer.isLog) ||
-                this.threadView && this.threadView.replyingToMessageView
+                (this.threadView && this.threadView.replyingToMessageView)
             );
         },
         /**
@@ -1086,7 +1067,7 @@ registerModel({
                     const regexp = new RegExp(
                         '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
                         'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
+                    htmlString = htmlString.replace(regexp, '$1' + emoji.codepoints);
                 }
             }
             return htmlString;
@@ -1140,6 +1121,20 @@ registerModel({
             }
             return body;
         },
+        _generateMessageBody() {
+            const escapedAndCompactContent = escapeAndCompactTextContent(this.composer.textInputContent);
+            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            // This message will be received from the mail composer as html content
+            // subtype but the urls will not be linkified. If the mail composer
+            // takes the responsibility to linkify the urls we end up with double
+            // linkification a bit everywhere. Ideally we want to keep the content
+            // as text internally and only make html enrichment at display time but
+            // the current design makes this quite hard to do.
+            body = this._generateMentionsLinks(body);
+            body = parseAndTransform(body, addLink);
+            body = this._generateEmojisOnHtml(body);
+            return body;
+        },
         /**
          * @private
          * @param {string} content html content
@@ -1167,20 +1162,9 @@ registerModel({
          * @returns {Object}
          */
         _getMessageData() {
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
             return {
                 attachment_ids: this.composer.attachments.map(attachment => attachment.id),
-                body,
+                body: this._generateMessageBody(),
                 message_type: 'comment',
                 partner_ids: this.composer.recipients.map(partner => partner.id),
             };
@@ -1348,7 +1332,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         /**
          * States the ref to the html node of the emojis button.
@@ -1376,12 +1359,10 @@ registerModel({
         composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', {
             compute: '_computeComposerSuggestedRecipientListView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         composerSuggestionListView: one('ComposerSuggestionListView', {
             compute: '_computeComposerSuggestionListView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         /**
          * Current partner image URL.
@@ -1396,20 +1377,17 @@ registerModel({
         dropZoneView: one('DropZoneView', {
             compute: '_computeDropZoneView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         /**
          * Determines the emojis popover that is active on this composer view.
          */
         emojisPopoverView: one('PopoverView', {
             inverse: 'composerViewOwnerAsEmoji',
-            isCausal: true,
         }),
         extraSuggestions: many('ComposerSuggestable'),
         fileUploader: one('FileUploader', {
             default: {},
             inverse: 'composerView',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
@@ -1592,7 +1570,6 @@ registerModel({
         useDragVisibleDropZone: one('UseDragVisibleDropZone', {
             default: {},
             inverse: 'composerViewOwner',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

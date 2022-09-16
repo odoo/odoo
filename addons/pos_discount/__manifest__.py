@@ -23,8 +23,6 @@ discount to a customer.
     'assets': {
         'point_of_sale.assets': [
             'pos_discount/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
             'pos_discount/static/src/xml/**/*',
         ],
     },

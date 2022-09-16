@@ -109,7 +109,7 @@ class FieldAdapter extends ComponentAdapter {
             const proms = [];
             for (const fieldName in payload.changes) {
                 let value = payload.changes[fieldName];
-                const fieldType = record.fields[name].type;
+                const fieldType = record.fields[fieldName].type;
                 if (fieldType === "many2one" && value) {
                     value = [value.id, value.display_name];
                 } else if (fieldType === "one2many" || fieldType === "many2many") {
@@ -173,11 +173,11 @@ class FieldAdapter extends ComponentAdapter {
         } else if (evType === "reload") {
             const record = this.props.record;
             if (payload.db_id === record.id) {
-                await record.load();
+                await record.model.reloadRecords(record);
             } else {
                 await record.model.root.load();
+                record.model.notify();
             }
-            record.model.notify();
             if (payload.onSuccess) {
                 payload.onSuccess();
             }
@@ -328,7 +328,7 @@ function registerField(name, LegacyFieldWidget) {
                     mode: fieldInfo.viewMode,
                 },
                 viewType: legacyRecord.viewType,
-                mode: hasReadonlyModifier ? "readonly" : record.mode,
+                mode: this.props.readonly || hasReadonlyModifier ? "readonly" : record.mode,
                 hasReadonlyModifier,
             };
             return { name, record: legacyRecord, options };
@@ -336,6 +336,19 @@ function registerField(name, LegacyFieldWidget) {
 
         update(fieldName, value) {
             if (fieldName === this.props.name) {
+                const record = this.props.record;
+                const fieldType = record.fields[fieldName].type;
+                if (["one2many", "many2many"].includes(fieldType) && !record.model.__bm__) {
+                    const staticList = this.props.value;
+                    switch (value.operation) {
+                        case "REPLACE_WITH": {
+                            return staticList.replaceWith(value.resIds);
+                        }
+                        case "FORGET": {
+                            return staticList.delete(value.ids);
+                        }
+                    }
+                }
                 return this.props.update(value);
             } else {
                 return this.props.record.update({ [fieldName]: value });

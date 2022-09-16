@@ -20,11 +20,26 @@ registerModel({
         },
     },
     recordMethods: {
+        onChangeBackgroundBlurAmount(ev) {
+            this.userSetting.update({
+                backgroundBlurAmount: Number(ev.target.value),
+            });
+        },
+        onChangeBlur(ev) {
+            this.userSetting.update({
+                useBlur: !this.userSetting.useBlur,
+            });
+        },
         /**
          * @param {Event} ev
          */
         onChangeDelay(ev) {
             this.userSetting.setDelayValue(ev.target.value);
+        },
+        onChangeEdgeBlurAmount(ev) {
+            this.userSetting.update({
+                edgeBlurAmount: Number(ev.target.value),
+            });
         },
         onChangePushToTalk() {
             if (this.userSetting.usePushToTalk) {

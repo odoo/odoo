@@ -21,6 +21,7 @@ import {
     triggerHotkey,
 } from "../helpers/utils";
 import { makeParent } from "./tooltip/tooltip_service_tests";
+import { templates } from "@web/core/assets";
 
 const { App, Component, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -392,7 +393,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         env = await makeTestEnv();
         const app = new App(Parent, {
             env,
-            templates: window.__OWL_TEMPLATES__,
+            templates,
             test: true,
         });
         registerCleanup(() => app.destroy());

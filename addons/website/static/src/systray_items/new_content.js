@@ -96,7 +96,7 @@ export class NewContentModal extends Component {
                     moduleXmlId: 'base.module_website_hr_recruitment',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-briefcase"/>`,
-                    title: this.env._t('Job Offer'),
+                    title: this.env._t('Job Position'),
                 },
                 {
                     moduleXmlId: 'base.module_website_sale',
@@ -148,14 +148,14 @@ export class NewContentModal extends Component {
         this.dialogs.add(AddPageDialog, {
             addPage: async (name, addMenu) => {
                 const url = `/website/add/${encodeURIComponent(name)}`;
-                const data = await this.http.post(url, { add_menu: addMenu || '', csrf_token });
+                const data = await this.http.post(url, { 'add_menu': addMenu || '', csrf_token });
                 if (data.view_id) {
                     this.action.doAction({
-                        res_model: 'ir.ui.view',
-                        res_id: data.view_id,
-                        views: [[false, 'form']],
-                        type: 'ir.actions.act_window',
-                        view_mode: 'form',
+                        'res_model': 'ir.ui.view',
+                        'res_id': data.view_id,
+                        'views': [[false, 'form']],
+                        'type': 'ir.actions.act_window',
+                        'view_mode': 'form',
                     });
                 } else {
                     this.website.goToWebsite({ path: data.url, edition: true });

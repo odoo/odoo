@@ -30,7 +30,7 @@ class Page(models.Model):
     # This is needed to be able to control if page is a menu in page properties.
     # TODO this should be reviewed entirely so that we use a transient model.
     is_in_menu = fields.Boolean(compute='_compute_website_menu', inverse='_inverse_website_menu')
-    is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
+    is_homepage = fields.Boolean(compute='_compute_is_homepage', inverse='_set_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
     # Page options
@@ -43,19 +43,20 @@ class Page(models.Model):
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
     arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
 
-    def _compute_homepage(self):
+    def _compute_is_homepage(self):
+        website = self.env['website'].get_current_website()
         for page in self:
-            page.is_homepage = page == self.env['website'].get_current_website().homepage_id
+            page.is_homepage = page.url == website.homepage_url
 
-    def _set_homepage(self):
+    def _set_is_homepage(self):
+        website = self.env['website'].get_current_website()
         for page in self:
-            website = self.env['website'].get_current_website()
             if page.is_homepage:
-                if website.homepage_id != page:
-                    website.write({'homepage_id': page.id})
+                if website.homepage_url != page.url:
+                    website.homepage_url = page.url
             else:
-                if website.homepage_id == page:
-                    website.write({'homepage_id': None})
+                if website.homepage_url == page.url:
+                    website.homepage_url = ''
 
     def _compute_visible(self):
         for page in self:
@@ -82,6 +83,13 @@ class Page(models.Model):
             elif page.menu_ids:
                 # If the page is no longer in menu, we should remove its website_menu
                 page.menu_ids.unlink()
+
+    # This update was added to make sure the mixin calculations are correct
+    # (page.website_url > page.url).
+    @api.depends('url')
+    def _compute_website_url(self):
+        for page in self:
+            page.website_url = page.url
 
     def _get_most_specific_pages(self):
         ''' Returns the most specific pages in self. '''
@@ -277,14 +285,15 @@ class Page(models.Model):
         url = '/' + slugify(page_url, max_length=1024, path=True)
         return self.env['website'].with_context(website_id=website_id).get_unique_path(url)
 
-    def action_manage_website_pages(self):
+    def action_page_debug_view(self):
         return {
-            'name': _('Website Pages'),
             'type': 'ir.actions.act_window',
-            'res_model': 'website.page',
-            'view_mode': 'tree',
-            'view_id': self.env.ref('website.website_pages_tree_view').id,
+            'res_model': 'ir.ui.view',
+            'res_id': self.view_id.id,
+            'view_mode': 'form',
+            'view_id': self.env.ref('website.view_view_form_extend').id,
         }
+
 
 # this is just a dummy function to be used as ormcache key
 def _cached_response():

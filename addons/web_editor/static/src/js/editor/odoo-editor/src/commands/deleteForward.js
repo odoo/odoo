@@ -20,47 +20,65 @@ import {
     fillEmpty,
     setSelection,
     isZWS,
-    childNodeIndex, boundariesOut
+    childNodeIndex,
+    boundariesOut,
+    isEditorTab,
 } from '../utils/utils.js';
 
-Text.prototype.oDeleteForward = function (offset, alreadyMoved = false) {
-    const parentNode = this.parentNode;
-
-    if (offset === this.nodeValue.length) {
-        // Delete at the end of a text node is not a specific case to
-        // handle, let the element implementation handle it.
-        HTMLElement.prototype.oDeleteForward.call(this, offset, alreadyMoved);
-        return;
-    }
-
-    // Get the size of the unicode character to remove.
-    const charSize = [...this.nodeValue.slice(0, offset + 1)].pop().length;
-    // Split around the character where the delete occurs.
+/**
+ * Handle text node deletion for Text.oDeleteForward and Text.oDeleteBackward.
+ *
+ * @param {int} charSize
+ * @param {int} offset
+ * @param {DIRECTIONS} direction
+ * @param {boolean} alreadyMoved
+ */
+export function deleteText(charSize, offset, direction, alreadyMoved) {
+    const parentElement = this.parentElement;
+    // Split around the character where the deletion occurs.
     const firstSplitOffset = splitTextNode(this, offset);
-    const secondSplitOffset = splitTextNode(parentNode.childNodes[firstSplitOffset], charSize);
-    const middleNode = parentNode.childNodes[firstSplitOffset];
+    const secondSplitOffset = splitTextNode(parentElement.childNodes[firstSplitOffset], charSize);
+    const middleNode = parentElement.childNodes[firstSplitOffset];
 
     // Do remove the character, then restore the state of the surrounding parts.
-    const restore = prepareUpdate(parentNode, firstSplitOffset, parentNode, secondSplitOffset);
+    const restore = prepareUpdate(parentElement, firstSplitOffset, parentElement, secondSplitOffset);
     const isSpace = !isVisibleStr(middleNode) && !isInPre(middleNode);
     const isZWS = middleNode.nodeValue === '\u200B';
     middleNode.remove();
     restore();
 
-    // If the removed element was not visible content, propagate the delete.
+    // If the removed element was not visible content, propagate the deletion.
     if (
         isZWS ||
         (isSpace &&
-        getState(parentNode, firstSplitOffset, DIRECTIONS.RIGHT).cType !== CTYPES.CONTENT)
+            getState(parentElement, firstSplitOffset, direction).cType !== CTYPES.CONTENT)
     ) {
-        parentNode.oDeleteForward(firstSplitOffset, alreadyMoved);
+        if(direction === DIRECTIONS.LEFT) {
+            parentElement.oDeleteBackward(firstSplitOffset, alreadyMoved);
+        } else {
+            parentElement.oDeleteForward(firstSplitOffset, alreadyMoved);
+        }
         if (isZWS) {
-            fillEmpty(parentNode);
+            fillEmpty(parentElement);
         }
         return;
     }
-    fillEmpty(parentNode);
-    setSelection(parentNode, firstSplitOffset);
+    fillEmpty(parentElement);
+    setSelection(parentElement, firstSplitOffset);
+}
+
+Text.prototype.oDeleteForward = function (offset, alreadyMoved = false) {
+    const parentElement = this.parentElement;
+
+    if (offset === this.nodeValue.length) {
+        // Delete at the end of a text node is not a specific case to handle,
+        // let the element implementation handle it.
+        parentElement.oDeleteForward([...parentElement.childNodes].indexOf(this) + 1);
+        return;
+    }
+    // Get the size of the unicode character to remove.
+    const charSize = [...this.nodeValue.slice(0, offset + 1)].pop().length;
+    deleteText.call(this, charSize, offset, DIRECTIONS.RIGHT, alreadyMoved);
 };
 
 HTMLElement.prototype.oDeleteForward = function (offset) {
@@ -106,7 +124,14 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
     }
 
     if (firstLeafNode && (isFontAwesome(firstLeafNode) || isNotEditableNode(firstLeafNode))) {
+        const nextSibling = firstLeafNode.nextSibling;
+        const nextSiblingText = nextSibling ? nextSibling.textContent : '';
         firstLeafNode.remove();
+        if (isEditorTab(firstLeafNode) && nextSiblingText[0] === '\u200B') {
+            // When deleting an editor tab, we need to ensure it's related ZWS
+            // il deleted as well.
+            nextSibling.textContent = nextSiblingText.replace('\u200B', '');
+        }
         return;
     }
     if (

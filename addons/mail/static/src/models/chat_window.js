@@ -175,6 +175,9 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickExpand(ev) {
+            if (!this.exists()) {
+                return;
+            }
             ev.stopPropagation();
             this.expand();
         },
@@ -593,7 +596,6 @@ registerModel({
         callSettingsMenu: one('CallSettingsMenu', {
             compute: '_computeCallSettingsMenu',
             inverse: 'chatWindowOwner',
-            isCausal: true,
         }),
         /**
          * Determines the channel invitation form displayed by this chat window
@@ -601,17 +603,14 @@ registerModel({
          */
         channelInvitationForm: one('ChannelInvitationForm', {
             inverse: 'chatWindow',
-            isCausal: true,
         }),
         channelMemberListView: one('ChannelMemberListView', {
             compute: '_computeChannelMemberListView',
             inverse: 'chatWindowOwner',
-            isCausal: true,
         }),
         chatWindowHeaderView: one('ChatWindowHeaderView', {
             default: {},
             inverse: 'chatWindowOwner',
-            isCausal: true,
         }),
         componentStyle: attr({
             compute: '_computeComponentStyle',
@@ -706,7 +705,6 @@ registerModel({
         newMessageAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeNewMessageAutocompleteInputView',
             inverse: 'chatWindowOwnerAsNewMessage',
-            isCausal: true,
         }),
         /**
          * The content of placeholder for the autocomplete input of
@@ -735,7 +733,6 @@ registerModel({
         threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'chatWindow',
-            isCausal: true,
             required: true,
         }),
         /**

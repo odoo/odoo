@@ -276,6 +276,7 @@ export class View extends Component {
         }
 
         Object.assign(this.env.config, {
+            viewArch: rootNode,
             viewId: viewDescription.id,
             viewType: type,
             viewSubType: subType,

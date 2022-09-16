@@ -8,6 +8,7 @@ from odoo.tests import common, HttpCase, tagged
 from odoo.tests.common import HOST
 from odoo.tools import config, mute_logger
 from odoo.addons.website.tools import MockRequest
+from odoo.fields import Command
 
 
 @tagged('-at_install', 'post_install')
@@ -204,6 +205,7 @@ class TestPage(common.TransactionCase):
         self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
         self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
+
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
     def setUp(self):
@@ -287,11 +289,11 @@ class WithContext(HttpCase):
             self.url_open(self.page.url).raise_for_status()
             session_save.assert_not_called()
 
-    def test_homepage_not_slash_url(self):
+    def test_05_homepage_not_slash_url(self):
         website = self.env['website'].browse([1])
         # Set another page (/page_1) as homepage
         website.write({
-            'homepage_id': self.page.id,
+            'homepage_url': self.page.url,
             'domain': f"http://{HOST}:{config['http_port']}",
         })
         assert self.page.url != '/'
@@ -303,6 +305,108 @@ class WithContext(HttpCase):
         root_html = html.fromstring(r.content)
         canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
         self.assertIn(canonical_url, [f"{website.domain}/", f"{website.domain}/page_1"])
+
+    def test_06_homepage_url(self):
+        # Setup
+        website = self.env['website'].browse([1])
+        website.write({
+            'name': 'Test Website',
+            'domain': f'http://{HOST}:{config["http_port"]}',
+            'homepage_url': False,
+        })
+        contactus_url = '/contactus'
+        contactus_url_full = website.domain + contactus_url
+        contactus_content = b'content="Contact Us | Test Website"'
+        contactus_menu = self.env['website.menu'].search([
+            ('website_id', '=', website.id),
+            ('url', '=', contactus_url),
+        ], limit=1)
+        home_url = '/'
+        home_url_full = website.domain + home_url
+        home_content = b'content="Home | Test Website"'
+        home_menu = self.env['website.menu'].search([
+            ('website_id', '=', website.id),
+            ('url', '=', home_url),
+        ], limit=1)
+
+        # Case 1: Default case
+        # -------------------------------------------
+        # / page exists | first menu  |  homepage_url
+        # -------------------------------------------
+        #    yes        |     /       |     None
+        # -------------------------------------------
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, home_url_full)
+        self.assertIn(home_content, r.content)
+
+        # Case 2: Another page as homepage
+        website.homepage_url = contactus_url
+        # -------------------------------------------
+        # / page exists | first menu  |  homepage_url
+        # -------------------------------------------
+        #    yes        |     /       |  /contactus
+        # -------------------------------------------
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, home_url_full)
+        self.assertIn(contactus_content, r.content)
+
+        # Case 3: Check we don't fallback on first menu if there is a / page
+        contactus_menu.sequence = 2
+        website.homepage_url = False
+        # -------------------------------------------
+        # / page exists | first menu  |  homepage_url
+        # -------------------------------------------
+        #    yes        | /contactus  |     None
+        # -------------------------------------------
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, home_url_full)
+        self.assertIn(home_content, r.content)
+
+        # Case 6: Wrong URL should fallback on first non "/" menu
+        website.homepage_url = '/unexisting'
+        home_menu.sequence = 1
+        self.assertEqual(website.menu_id.child_id[0], home_menu)
+        self.assertEqual(website.menu_id.child_id[1], contactus_menu)
+        # ----------------------------------------------------------
+        # / page exists | first menu  | second menu  |  homepage_url
+        # ----------------------------------------------------------
+        #     no        | /           |  /contactus  | /unexisting
+        # ----------------------------------------------------------
+        r = self.url_open(website.homepage_url)
+        self.assertEqual(r.status_code, 404, "The website homepage_url should be a 404")
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, contactus_url_full, "Menu fallback should be a redirect, not a reroute")
+        self.assertIn(contactus_content, r.content)
+
+        # Case 4: Check first menu fallback is a redirect (and not a reroute)
+        self.env['website.page'].search([('url', '=', home_url)]).unlink()  # this also deletes the / home menu
+        website.homepage_url = False
+        # -------------------------------------------
+        # / page exists | first menu  |  homepage_url
+        # -------------------------------------------
+        #     no        | /contactus  |     None
+        # -------------------------------------------
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.history[0].status_code, 303)
+        self.assertEqual(r.url, contactus_url_full)
+        self.assertIn(contactus_content, r.content)
+
+        # Case 5: Check controller redirect and make sure it is a reroute
+        website.homepage_url = '/website/info'
+        # -------------------------------------------
+        # / page exists | first menu  |  homepage_url
+        # -------------------------------------------
+        #     no        | /contactus  | /website/info
+        # -------------------------------------------
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, home_url_full)
+        self.assertIn(b'o_website_info', r.content)
 
     def test_07_alternatives(self):
         website = self.env.ref('website.default_website')
@@ -336,3 +440,19 @@ class WithContext(HttpCase):
             self.assertEqual(canonical_url, f'{self.base_url()}/fr/page_1')
             self.assertEqual(alternate_en_url, f'{self.base_url()}/page_1')
             self.assertEqual(alternate_fr_url, f'{self.base_url()}/fr/page_1')
+
+    def test_07_not_authorized(self):
+        # Create page that requires specific user role.
+        specific_page = self.page.copy({'website_id': self.env['website'].get_current_website().id})
+        specific_page.write({
+            'arch': self.page.arch.replace('I am a generic page', 'I am a specific page not available for visitors'),
+            'is_published': True,
+            'visibility': 'restricted_group',
+            'groups_id': [Command.link(self.ref('website.group_website_designer'))],
+        })
+        # Access page as anonymous visitor.
+        self.authenticate(None, None)
+        r = self.url_open('/page_1')
+        # Check that is is rendered as a website page.
+        self.assertEqual(403, r.status_code, "Must fail with 403")
+        self.assertTrue('id="wrap"' in r.text, "Must be rendered as a website page")

@@ -165,7 +165,6 @@ export class EditMenuDialog extends Component {
                         'parent_id': false,
                     },
                     'children': [],
-                    'is_homepage': false,
                 };
                 this.map.set(newMenu.fields['id'], newMenu);
                 this.state.rootMenu.children.push(newMenu);

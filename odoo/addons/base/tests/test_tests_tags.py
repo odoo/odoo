@@ -63,20 +63,18 @@ class TestSetTags(TransactionCase):
         class FakeClassA(TransactionCase):
             pass
 
-        @tagged('nightly')
-        class FakeClassB(FakeClassA):
-            pass
-
-        fc = FakeClassB()
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'nightly'})
-        self.assertEqual(fc.test_module, 'base')
-
         class FakeClassC(FakeClassA):
             pass
 
         fc = FakeClassC()
-        self.assertEqual(fc.test_tags, {'at_install', 'standard'})
-        self.assertEqual(fc.test_module, 'base')
+        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'slow'})
+
+        @tagged('-standard')
+        class FakeClassD(FakeClassA):
+            pass
+
+        fc = FakeClassD()
+        self.assertEqual(fc.test_tags, {'at_install', 'slow'})
 
     def test_untagging(self):
         """Test that one can remove the 'standard' tag"""
@@ -103,6 +101,17 @@ class TestSetTags(TransactionCase):
         fc = FakeClassC()
         self.assertEqual(fc.test_tags, {'fast', })
 
+    def test_parental_advisory(self):
+        """Explicit test tags on the class should override anything
+        """
+        @tagged('flow')
+        class FakeClassA(TransactionCase):
+            pass
+        class FakeClassB(FakeClassA):
+            test_tags = {'foo', 'bar'}
+
+        self.assertEqual(FakeClassA().test_tags, {'standard', 'at_install', 'flow'})
+        self.assertEqual(FakeClassB().test_tags, {'foo', 'bar'})
 
 @tagged('nodatabase')
 class TestSelector(TransactionCase):

@@ -29,11 +29,11 @@ odoo.define('web.mvc', function (require) {
  *     simple as possible.
  */
 
-var ajax = require('web.ajax');
 var Class = require('web.Class');
 var mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
 var Widget = require('web.Widget');
+const { loadBundle } = require('@web/core/assets');
 
 
 /**
@@ -179,7 +179,7 @@ var Factory = Class.extend({
     getController: function (parent) {
         var self = this;
         var model = this.getModel(parent);
-        return Promise.all([this._loadData(model), ajax.loadLibs(this)]).then(function (result) {
+        return Promise.all([this._loadData(model), loadBundle(this)]).then(function (result) {
             const { state, handle } = result[0];
             var renderer = self.getRenderer(parent, state);
             var Controller = self.Controller || self.config.Controller;

@@ -522,7 +522,7 @@ class ProductProduct(models.Model):
         move_lines = vacuum_svl.stock_move_id._prepare_account_move_line(
             vacuum_svl.quantity, vacuum_svl.value * -1,
             accounts['stock_output'].id, accounts['expense'].id,
-            description)
+            vacuum_svl, description)
         new_account_move = AccountMove.sudo().create({
             'journal_id': accounts['stock_journal'].id,
             'line_ids': move_lines,

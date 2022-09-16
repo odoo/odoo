@@ -25,11 +25,26 @@ function makeFakeWebsiteService() {
     };
 }
 
+function makeFakeWebsiteCustomMenusService() {
+    return {
+        start() {
+            return {
+                get() {},
+                open() {},
+                addCustomMenus(sections) {
+                    return sections;
+                },
+            };
+        }
+    };
+}
+
 const serviceRegistry = registry.category('services');
 patch(utils, 'website_test_registries', {
     prepareRegistriesWithCleanup() {
         prepareRegistriesWithCleanup(...arguments);
         serviceRegistry.add('website', makeFakeWebsiteService());
+        serviceRegistry.add('website_custom_menus', makeFakeWebsiteCustomMenusService());
         clearRegistryWithCleanup(registry.category('website_systray'));
     },
 });

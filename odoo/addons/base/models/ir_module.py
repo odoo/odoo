@@ -159,12 +159,12 @@ class Module(models.Model):
     _order = 'application desc,sequence,name'
 
     @api.model
-    def get_view(self, view_id=None, view_type='form', **options):
-        res = super().get_view(view_id, view_type, **options)
-        if view_type == 'form' and res.get('toolbar',False):
+    def get_views(self, views, options=None):
+        res = super().get_views(views, options)
+        if res['views'].get('form', {}).get('toolbar'):
             install_id = self.env.ref('base.action_server_module_immediate_install').id
-            action = [rec for rec in res['toolbar']['action'] if rec.get('id', False) != install_id]
-            res['toolbar'] = {'action': action}
+            action = [rec for rec in res['views']['form']['toolbar']['action'] if rec.get('id', False) != install_id]
+            res['views']['form']['toolbar'] = {'action': action}
         return res
 
     @classmethod
@@ -256,7 +256,7 @@ class Module(models.Model):
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
 
-    name = fields.Char('Technical Name', readonly=True, required=True, index=True)
+    name = fields.Char('Technical Name', readonly=True, required=True)
     category_id = fields.Many2one('ir.module.category', string='Category', readonly=True, index=True)
     shortdesc = fields.Char('Module Name', readonly=True, translate=True)
     summary = fields.Char('Summary', readonly=True, translate=True)

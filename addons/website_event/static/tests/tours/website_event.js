@@ -7,7 +7,7 @@ odoo.define("website_event.tour", function (require) {
     const wTourUtils = require('website.tour_utils');
 
 
-    wTourUtils.registerEditionTour("website_event_tour", {
+    wTourUtils.registerWebsitePreviewTour("website_event_tour", {
         test: true,
         url: "/",
     }, [{
@@ -21,15 +21,15 @@ odoo.define("website_event.tour", function (require) {
         content: _t("Click here to create a new event."),
         position: "bottom",
     }, {
-        trigger: '.modal-dialog input[name=name]',
+        trigger: '.modal-dialog div[name="name"] input',
         content: Markup(_t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training")),
         run: 'text Technical Training',
         position: "left",
     }, {
         content: _t("Open date range picker."),
-        trigger: '.modal-dialog input[name=date_begin]',
+        trigger: '.modal-dialog [name=date_begin] input',
     }, {
-        trigger: '.modal-dialog input[name=date_begin]',
+        trigger: '.modal-dialog [name=date_begin] input',
         extra_trigger: '.daterangepicker',
         content: _t("Pick a Start date for your event"),
         run: function () {
@@ -39,7 +39,7 @@ odoo.define("website_event.tour", function (require) {
         }
     }, {
         content: _t("Apply change."),
-        trigger: '.daterangepicker:first .applyBtn',
+        trigger: '.daterangepicker[data-name=date_begin] .applyBtn',
         in_modal: false,
     }, {
         trigger: '.modal-footer button.btn-primary',
@@ -62,7 +62,7 @@ odoo.define("website_event.tour", function (require) {
         content: _t("Click to publish your event."),
         position: "top",
     }, {
-        trigger: ".o_menu_systray_item.o_website_edit_in_backend",
+        trigger: ".o_website_edit_in_backend > a",
         content: _t("Click here to customize your event further."),
         position: "bottom",
     }]);

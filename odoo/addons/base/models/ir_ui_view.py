@@ -95,19 +95,21 @@ def transfer_node_to_modifiers(node, modifiers, context=None):
     # Don't deal with groups, it is done by check_group().
     # Need the context to evaluate the invisible attribute on tree views.
     # For non-tree views, the context shouldn't be given.
-    if node.get('attrs'):
-        attrs = node.get('attrs').strip()
-        modifiers.update(ast.literal_eval(attrs))
+    attrs = node.attrib.pop('attrs', None)
+    if attrs:
+        modifiers.update(ast.literal_eval(attrs.strip()))
 
-    if node.get('states'):
+    states = node.attrib.pop('states', None)
+    if states:
+        states = states.split(',')
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
             # TODO combine with AND or OR, use implicit AND for now.
-            modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
+            modifiers['invisible'].append(('state', 'not in', states))
         else:
-            modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
+            modifiers['invisible'] = [('state', 'not in', states)]
 
     for attr in ('invisible', 'readonly', 'required'):
-        value_str = node.get(attr)
+        value_str = node.attrib.pop(attr, None)
         if value_str:
             value = bool(quick_eval(value_str, {'context': context or {}}))
             if (attr == 'invisible'
@@ -123,7 +125,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None):
 
 
 def simplify_modifiers(modifiers):
-    for a in ('invisible', 'readonly', 'required'):
+    for a in ('column_invisible', 'invisible', 'readonly', 'required'):
         if a in modifiers and not modifiers[a]:
             del modifiers[a]
 
@@ -131,7 +133,8 @@ def simplify_modifiers(modifiers):
 def transfer_modifiers_to_node(modifiers, node):
     if modifiers:
         simplify_modifiers(modifiers)
-        node.set('modifiers', json.dumps(modifiers))
+        if modifiers:
+            node.set('modifiers', json.dumps(modifiers))
 
 
 @lazy
@@ -965,27 +968,6 @@ actual arch.
         arch = root.with_prefetch(tree_views._prefetch_ids)._combine(hierarchy)
         return arch
 
-    def _apply_groups(self, node, name_manager, node_info):
-        """ Apply group restrictions: elements with a 'groups' attribute should
-        be removed from the view to people who are not members.
-        """
-        if node.get('groups'):
-            if not self.user_has_groups(groups=node.attrib.pop('groups')):
-                node.getparent().remove(node)
-            elif node.tag == 't' and not node.attrib:
-                # Move content of <t> blocks with no other instructions than just "groups=" to the parent
-                # and remove the <t> node.
-                # This is to keep the structure
-                # <group>
-                #   <field name="foo"/>
-                #   <field name="bar"/>
-                # <group>
-                # so the web client adds the label as expected.
-                node_info['children'] = list(node)
-                for child in reversed(node):
-                    node.addnext(child)
-                node.getparent().remove(node)
-
     def _get_view_refs(self, node):
         """ Extract the `[view_type]_view_ref` keys and values from the node context attribute,
         giving the views to use for a field node.
@@ -1024,12 +1006,66 @@ actual arch.
 
         arch = etree.tostring(node, encoding="unicode").replace('\t', '')
 
-        models = set()
+        models = {}
         name_managers = [name_manager]
         for name_manager in name_managers:
-            models.add(name_manager.model._name)
+            models.setdefault(name_manager.model._name, set()).update(name_manager.available_fields)
             name_managers.extend(name_manager.children)
         return arch, models
+
+    def _postprocess_access_rights(self, tree):
+        """
+        Apply group restrictions: elements with a 'groups' attribute should
+        be removed from the view to people who are not members.
+
+        Compute and set on node access rights based on view type. Specific
+        views can add additional specific rights like creating columns for
+        many2one-based grouping views.
+        """
+
+        for node in tree.xpath('//*[@groups]'):
+            if not self.user_has_groups(node.attrib.pop('groups')):
+                node.getparent().remove(node)
+            elif node.tag == 't' and not node.attrib:
+                # Move content of <t> blocks with no other instructions than just "groups=" to the parent
+                # and remove the <t> node.
+                # This is to keep the structure
+                # <group>
+                #   <field name="foo"/>
+                #   <field name="bar"/>
+                # <group>
+                # so the web client adds the label as expected.
+                for child in reversed(node):
+                    node.addnext(child)
+                node.getparent().remove(node)
+
+        base_model = tree.get('model_access_rights')
+        for node in tree.xpath('//*[@model_access_rights]'):
+            model = self.env[node.attrib.pop('model_access_rights')]
+            if node.tag == 'field':
+                can_create = model.check_access_rights('create', raise_exception=False)
+                can_write = model.check_access_rights('write', raise_exception=False)
+                node.set('can_create', 'true' if can_create else 'false')
+                node.set('can_write', 'true' if can_write else 'false')
+            else:
+                is_base_model = base_model == model._name
+                for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
+                    if (not node.get(action) and
+                            not model.check_access_rights(operation, raise_exception=False) or
+                            not self._context.get(action, True) and is_base_model):
+                        node.set(action, 'false')
+                if node.tag == 'kanban':
+                    group_by_name = node.get('default_group_by')
+                    group_by_field = model._fields.get(group_by_name)
+                    if group_by_field and group_by_field.type == 'many2one':
+                        group_by_model = model.env[group_by_field.comodel_name]
+                        for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
+                            if (not node.get(action) and
+                                    not group_by_model.check_access_rights(operation, raise_exception=False) or
+                                    not self._context.get(action, True) and is_base_model):
+                                node.set(action, 'false')
+
+        return tree
 
     def _postprocess_view(self, node, model_name, editable=True, parent_name_manager=None, **options):
         """ Process the given architecture, modifying it in-place to add and
@@ -1074,7 +1110,6 @@ actual arch.
                     # the node has been removed, stop processing here
                     continue
 
-            self._apply_groups(node, name_manager, node_info)
             transfer_node_to_modifiers(node, node_info['modifiers'], self._context)
             transfer_modifiers_to_node(node_info['modifiers'], node)
 
@@ -1083,7 +1118,7 @@ actual arch.
                 stack.append((child, node_info['editable']))
 
         name_manager.update_available_fields()
-        self._postprocess_access_rights(root, model.sudo(False))
+        root.set('model_access_rights', model._name)
 
         return name_manager
 
@@ -1115,30 +1150,6 @@ actual arch.
                     if not node.get('on_change'):
                         node.set('on_change', '1')
 
-    def _postprocess_access_rights(self, node, model):
-        """ Compute and set on node access rights based on view type. Specific
-        views can add additional specific rights like creating columns for
-        many2one-based grouping views. """
-        # testing ACL as real user
-        is_base_model = self.env.context.get('base_model_name', model._name) == model._name
-
-        if node.tag in ('kanban', 'tree', 'form', 'activity', 'calendar'):
-            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                if (not node.get(action) and
-                        not model.check_access_rights(operation, raise_exception=False) or
-                        not self._context.get(action, True) and is_base_model):
-                    node.set(action, 'false')
-
-        if node.tag == 'kanban':
-            group_by_name = node.get('default_group_by')
-            group_by_field = model._fields.get(group_by_name)
-            if group_by_field and group_by_field.type == 'many2one':
-                group_by_model = model.env[group_by_field.comodel_name]
-                for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
-                    if (not node.get(action) and
-                            not group_by_model.check_access_rights(operation, raise_exception=False) or
-                            not self._context.get(action, True) and is_base_model):
-                        node.set(action, 'false')
 
     #------------------------------------------------------
     # Specific node postprocessors
@@ -1156,11 +1167,22 @@ actual arch.
             attrs = {'id': node.get('id'), 'select': node.get('select')}
             field = name_manager.model._fields.get(node.get('name'))
             if field:
-                # apply groups (no tested)
-                if field.groups and not self.user_has_groups(groups=field.groups):
-                    node.getparent().remove(node)
-                    # no point processing view-level ``groups`` anymore, return
-                    return
+                if field.groups:
+                    if node.get('groups'):
+                        # if the node has a group (e.g. "base.group_no_one")
+                        # and the field in the Python model has a group as well (e.g. "base.group_system")
+                        # the user must have both group to see the field.
+                        # groups="base.group_no_one,base.group_system" directly on the node
+                        # would be one of the two groups, not both (OR instead of AND).
+                        # To make mandatory to have both groups, wrap the field node in a <t> node with the group
+                        # set on the field in the Python model
+                        # e.g. <t groups="base.group_system"><field name="foo" groups="base.group_no_one"/></t>
+                        # The <t> node will be removed later, in _postprocess_access_rights.
+                        node_t = E.t(groups=field.groups)
+                        node.getparent().replace(node, node_t)
+                        node_t.append(node)
+                    else:
+                        node.set('groups', field.groups)
                 if (
                     node_info.get('view_type') == 'form'
                     and field.type in ('one2many', 'many2many')
@@ -1192,17 +1214,11 @@ actual arch.
                 for child in node:
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                         node_info['children'] = []
-                        self.with_context(
-                            base_model_name=name_manager.model._name,
-                        )._postprocess_view(
+                        self._postprocess_view(
                             child, field.comodel_name, editable=node_info['editable'], parent_name_manager=name_manager,
                         )
                 if field.type in ('many2one', 'many2many'):
-                    comodel = self.env[field.comodel_name].sudo(False)
-                    can_create = comodel.check_access_rights('create', raise_exception=False)
-                    can_write = comodel.check_access_rights('write', raise_exception=False)
-                    node.set('can_create', 'true' if can_create else 'false')
-                    node.set('can_write', 'true' if can_write else 'false')
+                    node.set('model_access_rights', field.comodel_name)
 
             name_manager.has_field(node, node.get('name'), attrs)
 
@@ -1223,23 +1239,25 @@ actual arch.
         if not field or not field.comodel_name:
             return
         # post-process the node as a nested view, and associate it to the field
-        self.with_context(
-            base_model_name=name_manager.model._name,
-        )._postprocess_view(node, field.comodel_name, editable=False, parent_name_manager=name_manager)
+        self._postprocess_view(node, field.comodel_name, editable=False, parent_name_manager=name_manager)
         name_manager.has_field(node, name)
 
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if node.get('for'):
             field = name_manager.model._fields.get(node.get('for'))
-            if field and field.groups and not self.user_has_groups(groups=field.groups):
-                node.getparent().remove(node)
+            if field and field.groups:
+                if node.get('groups'):
+                    # See the comment for this in `_postprocess_tag_field`
+                    node_t = E.t(groups=field.groups)
+                    node.getparent().replace(node, node_t)
+                    node_t.append(node)
+                else:
+                    node.set('groups', field.groups)
 
     def _postprocess_tag_search(self, node, name_manager, node_info):
         searchpanel = [child for child in node if child.tag == 'searchpanel']
         if searchpanel:
-            self.with_context(
-                base_model_name=name_manager.model._name,
-            )._postprocess_view(
+            self._postprocess_view(
                 searchpanel[0], name_manager.model._name, editable=False, parent_name_manager=name_manager
             )
             node_info['children'] = [child for child in node if child.tag != 'searchpanel']

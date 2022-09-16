@@ -343,6 +343,52 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         aml = self.env['account.move.line'].search([('purchase_line_id', '=', purchase_order.order_line.id)])
         self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_manual.id}])
 
+    def test_vendor_bill_analytic_account_product_change(self):
+        self.env.user.groups_id += self.env.ref('account.group_account_readonly')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+
+        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account'})
+        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account'})
+
+        super_product = self.env['product.product'].create({'name': 'Super Product'})
+        great_product = self.env['product.product'].create({'name': 'Great Product'})
+        product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
+        self.env['account.analytic.default'].create([
+            {
+                'analytic_id': analytic_account_super.id,
+                'product_id': super_product.id,
+            },
+            {
+                'analytic_id': analytic_account_great.id,
+                'product_id': great_product.id,
+            },
+        ])
+        po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
+        po_form.partner_id = self.env.ref('base.res_partner_1')
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.name = super_product.name
+            po_line_form.product_id = super_product
+        purchase_order = po_form.save()
+        purchase_order_line = purchase_order.order_line
+
+        self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_super.id, "The analytic account should be set to 'Super Account'")
+        purchase_order_line.write({'product_id': great_product.id})
+        self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_great.id, "The analytic account should be set to 'Great Account'")
+        purchase_order_line.write({'product_id': product_no_account.id})
+        self.assertFalse(purchase_order_line.account_analytic_id.id, "The analytic account should not be set")
+
+        po_no_analytic_account = self.env['purchase.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+        })
+        pol_no_analytic_account = self.env['purchase.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': po_no_analytic_account.id,
+            'account_analytic_id': False,
+        })
+        po_no_analytic_account.button_confirm()
+        self.assertFalse(pol_no_analytic_account.account_analytic_id.id, "The compute should not overwrite what the user has set.")
+
     def test_sequence_invoice_lines_from_multiple_purchases(self):
         """Test if the invoice lines are sequenced by purchase order when creating an invoice
            from multiple selected po's"""
@@ -457,3 +503,57 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         self.assertEqual(line.qty_invoiced, 10)
         line.qty_received = 15
         self.assertEqual(line.qty_invoiced, 10)
+
+    def test_on_change_quantity_price_unit(self):
+        """ When a user changes the quantity of a product in a purchase order it
+        should only update the unit price if PO line has no invoice line. """
+
+        supplierinfo_vals = {
+            'partner_id': self.partner_a.id,
+            'price': 10.0,
+            'min_qty': 1,
+            "product_id": self.product_order.id,
+            "product_tmpl_id": self.product_order.product_tmpl_id.id,
+        }
+
+        supplierinfo = self.env["product.supplierinfo"].create(supplierinfo_vals)
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.product_id = self.product_order
+            po_line_form.product_qty = 1
+        po = po_form.save()
+        po_line = po.order_line[0]
+
+        self.assertEqual(10.0, po_line.price_unit, "Unit price should be set to 10.0 for 1 quantity")
+
+        # Ensure price unit is updated when changing quantity on a un-confirmed PO
+        supplierinfo.write({'min_qty': 2, 'price': 20.0})
+        po_line.write({'product_qty': 2})
+        self.assertEqual(20.0, po_line.price_unit, "Unit price should be set to 20.0 for 2 quantity")
+
+        po.button_confirm()
+
+        # Ensure price unit is updated when changing quantity on a confirmed PO
+        supplierinfo.write({'min_qty': 3, 'price': 30.0})
+        po_line.write({'product_qty': 3})
+        self.assertEqual(30.0, po_line.price_unit, "Unit price should be set to 30.0 for 3 quantity")
+
+        po.action_create_invoice()
+
+        # Ensure price unit is NOT updated when changing quantity on PO confirmed and line linked to an invoice line
+        supplierinfo.write({'min_qty': 4, 'price': 40.0})
+        po_line.write({'product_qty': 4})
+        self.assertEqual(30.0, po_line.price_unit, "Unit price should be set to 30.0 for 3 quantity")
+
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.product_id = self.product_order
+            po_line_form.product_qty = 1
+        po = po_form.save()
+        po_line = po.order_line[1]
+
+        self.assertEqual(235.0, po_line.price_unit, "Unit price should be reset to 235.0 since the supplier supplies minimum of 4 quantities")
+
+        # Ensure price unit is updated when changing quantity on PO confirmed and line NOT linked to an invoice line
+        po_line.write({'product_qty': 4})
+        self.assertEqual(40.0, po_line.price_unit, "Unit price should be set to 40.0 for 4 quantity")

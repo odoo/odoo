@@ -19,6 +19,9 @@
     --KanbanRecord__image--fill-width: #{$o-kanban-image-fill-width};
 
     --KanbanRecord__dropdown-gap: #{$border-width};
+
+    --KanbanColumn__highlight-background: #{rgba($o-info, 0.05)};
+    --KanbanColumn__highlight-border: #{$o-info};
     // ----------------------------------------------------------------------------
 
     .dropdown,
@@ -33,13 +36,14 @@
 
     .o_kanban_record > div,
     .o_kanban_quick_create {
-        padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
         border: 1px solid $border-color;
         background-color: $o-view-background-color;
     }
 
     .o_kanban_quick_create {
         margin-bottom: calc(var(--KanbanRecord-margin-h) * 2);
+        margin-top: calc(var(--KanbanRecord-margin-h) * 2);
+        padding: 8px;
 
         .o_form_view .o_group.o_inner_group {
             margin: 0;
@@ -52,6 +56,7 @@
         margin: 0 0 -1px;
 
         > div {
+            padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
             width: 100%;
             height: 100%;
         }
@@ -347,13 +352,22 @@
             }
         }
 
-        &.oe_kanban_global_click,
-        &.oe_kanban_global_click_edit,
-        .oe_kanban_global_click,
-        .oe_kanban_global_click_edit {
+        @mixin global-click-selector {
+            &.oe_kanban_global_click,
+            &.oe_kanban_global_click_edit,
+            .oe_kanban_global_click,
+            .oe_kanban_global_click_edit {
+                @content;
+            }
+        }
+
+        @include global-click-selector {
             cursor: pointer;
-            &:focus,
-            &:focus-within {
+        }
+
+        &:focus,
+        &:focus-within {
+            @include global-click-selector {
                 outline: thin solid mix(map-get($theme-colors, "primary"), map-get($grays, "400"));
                 outline-offset: -1px;
 
@@ -396,7 +410,9 @@
             width: var(--KanbanRecord__image-width);
 
             + div {
-                padding-left: calc(var(--KanbanRecord__image-width) + var(--KanbanRecord-padding-h));
+                padding-left: calc(
+                    var(--KanbanRecord__image-width) + var(--KanbanRecord-padding-h)
+                );
             }
         }
 
@@ -485,8 +501,15 @@
             }
         }
         &.o_kanban_hover {
-            background-color: #00a09d0d;
-            box-shadow: -1px 0px 0px 0px #00a09d inset, 1px 0px 0px 0px #00a09d inset;
+            background-color: var(--KanbanColumn__highlight-background);
+            box-shadow: -1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset,
+                1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset;
+        }
+        .o_kanban_quick_add_bottom {
+            font-size: 0.94791667rem;
+            font-weight: $font-weight-bold;
+            @include o-hover-opacity(.7);
+            @include o-hover-text-color($text-muted, $body-color);
         }
     }
 

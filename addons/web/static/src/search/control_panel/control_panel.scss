@@ -36,7 +36,11 @@
 
         > .o_cp_action_menus {
             margin-left: auto;
-            padding-right: 10px;
+            padding-right: 0;
+
+            @include media-breakpoint-up(md) {
+                padding-right: 10px;
+            }
 
             .o_hidden_input_file {
                 position: relative;
@@ -62,7 +66,11 @@
                 right: 10px;
             }
             .dropdown-toggle {
-                margin-right: 15px;
+                margin-right: 0;
+
+                @include media-breakpoint-up(md) {
+                    margin-right: 15px;
+                }
             }
         }
     }

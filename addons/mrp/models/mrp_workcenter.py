@@ -9,7 +9,7 @@ from pytz import timezone
 from random import randint
 
 from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.resource.models.resource import make_aware, Intervals
 from odoo.tools.float_utils import float_compare
 
@@ -36,6 +36,7 @@ class MrpWorkcenter(models.Model):
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
     color = fields.Integer('Color')
+    currency_id = fields.Many2one('res.currency', 'Currency', related='company_id.currency_id', readonly=True, required=True)
     costs_hour = fields.Float(string='Cost per hour', help='Hourly cost of work center.', default=0.0)
     time_start = fields.Float('Setup Time')
     time_stop = fields.Float('Cleanup Time')
@@ -292,6 +293,15 @@ class MrpWorkcenter(models.Model):
         product_capacity = self.capacity_ids.filtered(lambda capacity: capacity.product_id == product)
         return product_capacity.capacity if product_capacity else self.default_capacity
 
+    def _get_expected_duration(self, product_id):
+        """Compute the expected duration when using this work-center
+        Always include workcenter startup time and clean-up time.
+        In case there are specific capacities defined in the workcenter
+        that matches the product we are producing. Add the extra-time.
+        """
+        capacity = self.capacity_ids.filtered(lambda p: p.product_id == product_id)
+        return self.time_start + self.time_stop + (capacity.time_start + capacity.time_stop if capacity else 0.0)
+
 
 class WorkcenterTag(models.Model):
     _name = 'mrp.workcenter.tag'
@@ -344,6 +354,17 @@ class MrpWorkcenterProductivityLoss(models.Model):
     loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=([('loss_type', 'in', ['quality', 'availability'])]), string='Category')
     loss_type = fields.Selection(string='Effectiveness Category', related='loss_id.loss_type', store=True, readonly=False)
 
+    def _convert_to_duration(self, date_start, date_stop, workcenter=False):
+        """ Convert a date range into a duration in minutes.
+        If the productivity type is not from an employee (extra hours are allow)
+        and the workcenter has a calendar, convert the dates into a duration based on
+        working hours.
+        """
+        if (self.loss_type not in ('productive', 'performance')) and workcenter and workcenter.resource_calendar_id:
+            r = workcenter._get_work_days_data_batch(date_start, date_stop)[workcenter.id]['hours']
+            return round(r * 60, 2)
+        else:
+            return round((date_stop - date_start).total_seconds() / 60.0, 2)
 
 class MrpWorkcenterProductivity(models.Model):
     _name = "mrp.workcenter.productivity"
@@ -389,14 +410,7 @@ class MrpWorkcenterProductivity(models.Model):
     def _compute_duration(self):
         for blocktime in self:
             if blocktime.date_start and blocktime.date_end:
-                d1 = fields.Datetime.from_string(blocktime.date_start)
-                d2 = fields.Datetime.from_string(blocktime.date_end)
-                diff = d2 - d1
-                if (blocktime.loss_type not in ('productive', 'performance')) and blocktime.workcenter_id.resource_calendar_id:
-                    r = blocktime.workcenter_id._get_work_days_data_batch(d1, d2)[blocktime.workcenter_id.id]['hours']
-                    blocktime.duration = round(r * 60, 2)
-                else:
-                    blocktime.duration = round(diff.total_seconds() / 60.0, 2)
+                blocktime.duration = blocktime.loss_id._convert_to_duration(blocktime.date_start, blocktime.date_end, blocktime.workcenter_id)
             else:
                 blocktime.duration = 0.0
 
@@ -411,6 +425,30 @@ class MrpWorkcenterProductivity(models.Model):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
 
+    def _close(self):
+        underperformance_timers = self.env['mrp.workcenter.productivity']
+        for timer in self:
+            wo = timer.workorder_id
+            if wo.duration_expected <= wo.duration:
+                if timer.loss_type == 'productive':
+                    underperformance_timers |= timer
+                timer.write({'date_end': fields.Datetime.now()})
+                continue
+
+            maxdate = timer.date_start + relativedelta.relativedelta(minutes=wo.duration_expected - wo.duration)
+            enddate = fields.datetime.now()
+            if maxdate > enddate:
+                timer.write({'date_end': enddate})
+            else:
+                timer.write({'date_end': maxdate})
+                underperformance_timers |= timer.copy({'date_start': maxdate, 'date_end': enddate})
+
+        if underperformance_timers:
+            underperformance_type = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            if not underperformance_type:
+                raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+            underperformance_timers.write({'loss_id': underperformance_type.id})
+
 
 class MrpWorkCenterCapacity(models.Model):
     _name = 'mrp.workcenter.capacity'
@@ -421,6 +459,8 @@ class MrpWorkCenterCapacity(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
+    time_start = fields.Float('Setup Time (minutes)', help="Time in minutes for the setup.")
+    time_stop = fields.Float('Cleanup Time (minutes)', help="Time in minutes for the cleaning.")
 
     _sql_constraints = [
         ('positive_capacity', 'CHECK(capacity > 0)', 'Capacity should be a positive number.'),

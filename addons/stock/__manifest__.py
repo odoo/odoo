@@ -75,6 +75,7 @@
         'views/stock_warehouse_views.xml',
         'views/stock_move_line_views.xml',
         'views/stock_picking_views.xml',
+        'views/stock_picking_type_views.xml',
         'views/stock_move_views.xml',
         'views/product_views.xml',
         'views/stock_location_views.xml',
@@ -93,8 +94,12 @@
     'post_init_hook': '_assign_default_mail_template_picking_id',
     'assets': {
         'web.report_assets_common': [
+            # legacy reports (delete when all reports are converted)
+            'stock/static/src/legacy_web_report/utils.js',
+            'stock/static/src/legacy_web_report/report.js',
+            'stock/static/src/legacy_web_report/report_backend.scss',
+
             'web/static/src/legacy/scss/views.scss',
-            'web/static/src/legacy/scss/graph_view.scss',
             'stock/static/src/scss/report_stock_forecasted.scss',
             'stock/static/src/scss/report_stock_reception.scss',
             'stock/static/src/scss/report_stock_rule.scss',
@@ -104,10 +109,10 @@
         ],
         'web.assets_backend': [
             'stock/static/src/**/*.js',
+            'stock/static/src/**/*.xml',
             'stock/static/src/scss/forecast_widget.scss',
             'stock/static/src/scss/stock_empty_screen.scss',
-            'stock/static/src/views/**/*.js',
-            'stock/static/src/views/**/**.scss',
+            'stock/static/src/views/**/*',
         ],
         'web.assets_tests': [
             'stock/static/tests/tours/stock_report_tests.js',
@@ -117,10 +122,6 @@
             'stock/static/tests/popover_widget_tests.js',
             'stock/static/tests/lazy_column_list_tests.js',
             'stock/static/tests/stock_traceability_report_backend_tests.js',
-        ],
-        'web.assets_qweb': [
-            'stock/static/src/**/*.xml',
-            'stock/static/src/views/**/*.xml',
         ],
     },
     'license': 'LGPL-3',

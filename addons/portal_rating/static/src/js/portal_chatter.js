@@ -27,12 +27,6 @@ PortalChatter.include({
         'click .o_wrating_js_publisher_comment_submit': '_onClickPublisherCommentSubmit',
         'click .o_wrating_js_publisher_comment_cancel': '_onClickPublisherCommentCancel',
     }),
-    xmlDependencies: (PortalChatter.prototype.xmlDependencies || [])
-        .concat([
-            '/portal_rating/static/src/xml/portal_tools.xml',
-            '/portal_rating/static/src/xml/portal_chatter.xml'
-        ]),
-
     /**
      * @constructor
      */

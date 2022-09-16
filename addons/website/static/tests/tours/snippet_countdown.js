@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('snippet_countdown', {
+wTourUtils.registerWebsitePreviewTour('snippet_countdown', {
     test: true,
     url: '/',
     edition: true,

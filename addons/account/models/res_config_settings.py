@@ -159,6 +159,24 @@ class ResConfigSettings(models.TransientModel):
     # Quick encoding (fiduciary mode)
     quick_edit_mode = fields.Selection(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode')
 
+    early_pay_discount_computation = fields.Selection(related='company_id.early_pay_discount_computation', string='Tax setting', readonly=False)
+    account_journal_early_pay_discount_loss_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Cash Discount Loss account',
+        help='Account for the difference amount after the expense discount has been granted',
+        readonly=False,
+        related='company_id.account_journal_early_pay_discount_loss_account_id',
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('expense', 'income', 'income_other'))]",
+    )
+    account_journal_early_pay_discount_gain_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Cash Discount Gain account',
+        help='Account for the difference amount after the income discount has been granted',
+        readonly=False,
+        related='company_id.account_journal_early_pay_discount_gain_account_id',
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
+    )
+
     def set_values(self):
         super().set_values()
         # install a chart of accounts for the given company (if required)

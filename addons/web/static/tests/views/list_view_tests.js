@@ -254,9 +254,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody tr", 4, "should have 4 rows");
         assert.containsOnce(target, "th.o_column_sortable", "should have 1 sortable column");
 
-        assert.strictEqual(
-            $(target).find("thead th:nth(2)").css("text-align"),
-            "right",
+        assert.containsOnce(
+            target,
+            "thead th:nth(2) .text-end",
             "header cells of integer fields should be right aligned"
         );
         assert.strictEqual(
@@ -574,7 +574,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(
             target,
             "th",
-            3,
+            4,
             "adjacent buttons in the arch must be grouped in a single column"
         );
         assert.containsN(target.querySelector(".o_data_row:first-child"), "td.o_list_button", 2);
@@ -897,6 +897,7 @@ QUnit.module("Views", (hooks) => {
             "Some static label",
             "My custom label",
             "text field",
+            "",
         ]);
 
         await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
@@ -3211,9 +3212,10 @@ QUnit.module("Views", (hooks) => {
                         </sheet>
                     </form>`,
         });
-        assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "1");
-        await clickEdit(target);
         // in edit mode, the delete action is available and the empty lines should cover that col
+        assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "2");
+        await clickEdit(target);
+        // in edit mode, the colspan shouldn't change
         assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "2");
     });
 
@@ -3278,9 +3280,9 @@ QUnit.module("Views", (hooks) => {
             );
             assertions.forEach((a) => {
                 assert.strictEqual(
-                    target.querySelector(`.o_field_one2many th[data-name="${a.field}"]`)
-                        .offsetWidth,
-                    a.expected,
+                    target.querySelector(`.o_field_one2many th[data-name="${a.field}"]`).style
+                        .width,
+                    `${a.expected}px`,
                     `Field ${a.type} should have a fixed width of ${a.expected} pixels`
                 );
             });
@@ -3294,10 +3296,7 @@ QUnit.module("Views", (hooks) => {
                 25,
                 "Currency field should have a fixed width of 25px (see arch)"
             );
-            assert.strictEqual(
-                target.querySelector(".o_list_record_remove_header").style.width,
-                "32px"
-            );
+            assert.strictEqual(target.querySelector(".o_list_actions_header").style.width, "32px");
         }
     );
 
@@ -3496,7 +3495,7 @@ QUnit.module("Views", (hooks) => {
 
             const [titi, grosminet] = target.querySelectorAll(".tab-pane:last-child th");
             assert.ok(
-                titi.style.width.split("px")[0] > 80 && grosminet.style.width.split("px")[0] > 700,
+                titi.style.width.split("px")[0] > 80 && grosminet.style.width.split("px")[0] > 500,
                 "list has been correctly frozen after being visible"
             );
         }
@@ -3650,9 +3649,8 @@ QUnit.module("Views", (hooks) => {
         const thRect = charTh.getBoundingClientRect();
         const resizeRect = charTh.querySelector(".o_resize").getBoundingClientRect();
 
-        assert.strictEqual(
-            thRect.x + thRect.width,
-            resizeRect.x + resizeRect.width,
+        assert.ok(
+            resizeRect.right - thRect.right <= 1,
             "First resize handle should be attached at the end of the first header"
         );
         assert.containsNone(
@@ -3901,7 +3899,6 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
             });
 
-            assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, 146);
             assert.strictEqual($(target).find('th[data-name="int_field"]')[0].offsetWidth, 200);
         }
     );
@@ -3993,7 +3990,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             window.getComputedStyle(target.querySelectorAll("th")[2]).maxWidth,
-            "100%",
+            "none",
             "no max-width should be harcoded on the buttons column"
         );
     });
@@ -5179,6 +5176,45 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody tr", 4, "should have 4 rows");
     });
 
+    QUnit.test("support row decoration (decoration-bf)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree decoration-bf="int_field > 5">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, "tbody tr.fw-bold", 3, "should have 3 columns with fw-bold class");
+
+        assert.containsN(target, "tbody tr", 4, "should have 4 rows");
+    });
+
+    QUnit.test("support row decoration (decoration-it)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree decoration-it="int_field > 5">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(
+            target,
+            "tbody tr.fst-italic",
+            3,
+            "should have 3 columns with fst-italic class"
+        );
+
+        assert.containsN(target, "tbody tr", 4, "should have 4 rows");
+    });
+
     QUnit.test("support field decoration", async function (assert) {
         await makeView({
             type: "list",
@@ -5196,6 +5232,44 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody td.text-danger", 3);
         assert.containsN(target, "tbody td.o_list_number", 4);
         assert.containsNone(target, "tbody td.o_list_number.text-danger");
+    });
+
+    QUnit.test("support field decoration (decoration-bf)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo" decoration-bf="int_field > 5"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, "tbody tr", 4);
+        assert.containsN(target, "tbody td.o_list_char", 4);
+        assert.containsN(target, "tbody td.fw-bold", 3);
+        assert.containsN(target, "tbody td.o_list_number", 4);
+        assert.containsNone(target, "tbody td.o_list_number.fw-bold");
+    });
+
+    QUnit.test("support field decoration (decoration-it)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo" decoration-it="int_field > 5"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, "tbody tr", 4);
+        assert.containsN(target, "tbody td.o_list_char", 4);
+        assert.containsN(target, "tbody td.fst-italic", 3);
+        assert.containsN(target, "tbody td.o_list_number", 4);
+        assert.containsNone(target, "tbody td.o_list_number.fst-italic");
     });
 
     QUnit.test(
@@ -5416,7 +5490,12 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.ok(target.querySelectorAll(".o_data_row").length > 0);
         assert.hasClass(target.querySelectorAll(".o_data_row"), "o_sample_data_disabled");
-        assert.containsN(target, "th", 2, "should have 2 th, 1 for selector and 1 for foo");
+        assert.containsN(
+            target,
+            "th",
+            3,
+            "should have 3 th, 1 for selector, 1 for foo and 1 for optional columns"
+        );
         assert.containsOnce(target, "table .o_optional_columns_dropdown");
 
         await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
@@ -5426,7 +5505,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
         assert.ok(target.querySelectorAll(".o_data_row").length > 0);
         assert.hasClass(target.querySelector(".o_data_row"), "o_sample_data_disabled");
-        assert.containsN(target, "th", 3);
+        assert.containsN(target, "th", 4);
     });
 
     QUnit.test("empty list with sample data: keyboard navigation", async function (assert) {
@@ -7112,6 +7191,60 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
             ["Export", "Delete", "Action event"]
         );
+    });
+
+    QUnit.test("execute ActionMenus actions", async function (assert) {
+        patchWithCleanup(actionService, {
+            start() {
+                return {
+                    doAction(id, { additionalContext, onClose }) {
+                        assert.step(JSON.stringify({ action_id: id, context: additionalContext }));
+                        onClose(); // simulate closing of target new action's dialog
+                    },
+                };
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            info: {
+                actionMenus: {
+                    action: [
+                        {
+                            id: 44,
+                            name: "Custom Action",
+                            type: "ir.actions.act_window",
+                            target: "new",
+                        },
+                    ],
+                    print: [],
+                },
+            },
+            actionMenus: {},
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
+        assert.containsN(target, ".o_data_row", 4);
+        // select all records
+        await click(target, "thead .o_list_record_selector input");
+        assert.containsN(target, ".o_list_record_selector input:checked", 5);
+        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Custom Action");
+
+        assert.verifySteps([
+            "get_views",
+            "web_search_read",
+            `{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}`,
+            "web_search_read",
+        ]);
     });
 
     QUnit.test(
@@ -13018,7 +13151,12 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        assert.containsN(target, "th", 3, "should have 3 th, 1 for selector, 2 for columns");
+        assert.containsN(
+            target,
+            "th",
+            4,
+            "should have 4 th, 1 for selector, 2 for columns and 1 for optional columns"
+        );
 
         assert.containsOnce(
             target,
@@ -13026,10 +13164,10 @@ QUnit.module("Views", (hooks) => {
             "should have the optional columns dropdown toggle inside the table"
         );
 
-        const optionalFieldsToggler = target.querySelector("table").lastElementChild;
-        assert.ok(
-            optionalFieldsToggler.classList.contains("o_optional_columns_dropdown"),
-            "The optional fields toggler is the second last element"
+        assert.containsOnce(
+            target,
+            "table > thead > tr > th:last-child .o_optional_columns_dropdown",
+            "The optional fields toggler is in the last header column"
         );
 
         // optional fields
@@ -13043,10 +13181,10 @@ QUnit.module("Views", (hooks) => {
 
         // enable optional field
         await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
-        // 5 th (1 for checkbox, 4 for columns)
-        assert.containsN(target, "th", 4, "should have 4 th");
+        // 5 th (1 for checkbox, 3 for columns, 1 for optional columns)
+        assert.containsN(target, "th", 5, "should have 5 th");
         assert.ok(
-            $(target).find("th:contains(M2O field)").is(":visible"),
+            $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
             "should have a visible m2o field"
         ); //m2o field
 
@@ -13061,14 +13199,14 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
-        // 3 th (1 for checkbox, 2 for columns)
-        assert.containsN(target, "th", 3, "should have 3 th");
+        // 4 th (1 for checkbox, 2 for columns, 1 for optional columns)
+        assert.containsN(target, "th", 4, "should have 4 th");
         assert.notOk(
-            $(target).find("th:contains(M2O field)").is(":visible"),
+            $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
             "should not have a visible m2o field"
         ); //m2o field not displayed
 
-        await click(target, "table .o_optional_columns_dropdown");
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
         assert.notOk(
             $(target)
                 .find('div.o_optional_columns_dropdown span.dropdown-item [name="m2o"]')
@@ -13100,10 +13238,10 @@ QUnit.module("Views", (hooks) => {
             "should have the optional columns dropdown toggle inside the table"
         );
 
-        const optionalFieldsToggler = target.querySelector("table").lastElementChild;
-        assert.ok(
-            optionalFieldsToggler.classList.contains("o_optional_columns_dropdown"),
-            "The optional fields toggler is the last element"
+        assert.containsOnce(
+            target,
+            "table > thead > tr > th:last-child .o_optional_columns_dropdown",
+            "The optional fields toggler is in the last header column"
         );
     });
 
@@ -13123,7 +13261,12 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
             });
 
-            assert.containsN(target, "th", 3, "should have 3 th, 1 for selector, 2 for columns");
+            assert.containsN(
+                target,
+                "th",
+                4,
+                "should have 3 th, 1 for selector, 2 for columns, 1 for optional columns"
+            );
 
             // enable optional field
             await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
@@ -13133,9 +13276,14 @@ QUnit.module("Views", (hooks) => {
                 ).checked
             );
             await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
-            assert.containsN(target, "th", 4, "should have 4 th 1 for selector, 3 for columns");
+            assert.containsN(
+                target,
+                "th",
+                5,
+                "should have 5 th 1 for selector, 3 for columns, 1 for optional columns"
+            );
             assert.ok(
-                $(target).find("th:contains(M2O field)").is(":visible"),
+                $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
                 "should have a visible m2o field"
             ); //m2o field
 
@@ -13145,11 +13293,11 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(
                 target,
                 "th",
-                4,
-                "should have 4 th 1 for selector, 3 for columns ever after listview reload"
+                5,
+                "should have 5 th 1 for selector, 3 for columns, 1 for optional columns ever after listview reload"
             );
             assert.ok(
-                $(target).find("th:contains(M2O field)").is(":visible"),
+                $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
                 "should have a visible m2o field even after listview reload"
             );
 
@@ -13174,7 +13322,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        assert.containsN(target, "th", 2);
+        assert.containsN(target, "th", 3);
 
         // select a record
         await click(target.querySelector(".o_data_row .o_list_record_selector input"));
@@ -13183,7 +13331,7 @@ QUnit.module("Views", (hooks) => {
         // add an optional field
         await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
         await click(target, ".o_optional_columns_dropdown span.dropdown-item:first-child label");
-        assert.containsN(target, "th", 3);
+        assert.containsN(target, "th", 4);
         assert.containsOnce(target, ".o_list_record_selector input:checked");
 
         // select all records
@@ -13193,7 +13341,7 @@ QUnit.module("Views", (hooks) => {
         // remove an optional field
         await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
         await click(target, ".o_optional_columns_dropdown span.dropdown-item:first-child label");
-        assert.containsN(target, "th", 2);
+        assert.containsN(target, "th", 3);
         assert.containsN(target, ".o_list_record_selector input:checked", 5);
     });
 
@@ -13226,7 +13374,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        assert.containsN(target, "th", 2);
+        assert.containsN(target, "th", 3);
         assert.containsNone(target, ".o_optional_columns_dropdown.show");
 
         // add an optional field (we click on the label on purpose, as it will trigger
@@ -13236,13 +13384,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_optional_columns_dropdown input:checked");
 
         await click(target, ".o_optional_columns_dropdown span.dropdown-item:first-child label");
-        assert.containsN(target, "th", 2);
+        assert.containsN(target, "th", 3);
         assert.containsOnce(target, ".o_optional_columns_dropdown.show");
         assert.containsOnce(target, ".o_optional_columns_dropdown input:checked");
 
         def.resolve();
         await nextTick();
-        assert.containsN(target, "th", 3);
+        assert.containsN(target, "th", 4);
         assert.containsOnce(target, ".o_optional_columns_dropdown.show");
         assert.containsOnce(target, ".o_optional_columns_dropdown input:checked");
     });
@@ -13289,7 +13437,12 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_list_view", "should have rendered a list view");
 
-        assert.containsN(target, "th", 3, "should display 3 th (selector + 2 fields)");
+        assert.containsN(
+            target,
+            "th",
+            4,
+            "should display 4 th (selector + 2 fields + optional columns)"
+        );
 
         // enable optional field
         await click(target, "table .o_optional_columns_dropdown_toggle");
@@ -13306,9 +13459,14 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(target.querySelector("div.o_optional_columns_dropdown span.dropdown-item"));
-        assert.containsN(target, "th", 4, "should display 4 th (selector + 3 fields)");
+        assert.containsN(
+            target,
+            "th",
+            5,
+            "should display 5 th (selector + 3 fields + optional columns)"
+        );
         assert.ok(
-            $(target).find("th:contains(M2O field)").is(":visible"),
+            $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
             "should have a visible m2o field"
         ); //m2o field
 
@@ -13330,15 +13488,15 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_kanban_view", "should not display the kanban view anymoe");
         assert.containsOnce(target, ".o_list_view", "should display the list view");
 
-        assert.containsN(target, "th", 4, "should display 4 th");
+        assert.containsN(target, "th", 5, "should display 5 th");
         assert.ok(
-            $(target).find("th:contains(M2O field)").is(":visible"),
+            $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
             "should have a visible m2o field"
         ); //m2o field
         assert.ok(
-            $(target).find("th:contains(O2M field)").is(":visible"),
+            $(target).find("th:not(.o_list_actions_header):contains(O2M field)").is(":visible"),
             "should have a visible o2m field"
-        ); //m2o field
+        ); //o2m field
 
         // disable optional field
         await click(target, "table .o_optional_columns_dropdown_toggle");
@@ -13356,14 +13514,14 @@ QUnit.module("Views", (hooks) => {
             target.querySelectorAll("div.o_optional_columns_dropdown span.dropdown-item input")[1]
         );
         assert.ok(
-            $(target).find("th:contains(M2O field)").is(":visible"),
+            $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
             "should have a visible m2o field"
         ); //m2o field
         assert.notOk(
-            $(target).find("th:contains(O2M field)").is(":visible"),
-            "should have a visible o2m field"
-        ); //m2o field
-        assert.containsN(target, "th", 3, "should display 3 th");
+            $(target).find("th:not(.o_list_actions_header):contains(O2M field)").is(":visible"),
+            "shouldn't have a visible o2m field"
+        ); //o2m field
+        assert.containsN(target, "th", 4, "should display 4 th");
 
         await doAction(webClient, 1);
 
@@ -13375,15 +13533,15 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_kanban_view", "should not havethe kanban view anymoe");
         assert.containsOnce(target, ".o_list_view", "should display the list view");
 
-        assert.containsN(target, "th", 3, "should display 3 th");
+        assert.containsN(target, "th", 4, "should display 4 th");
         assert.ok(
-            $(target).find("th:contains(M2O field)").is(":visible"),
+            $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
             "should have a visible m2o field"
         ); //m2o field
         assert.notOk(
-            $(target).find("th:contains(O2M field)").is(":visible"),
-            "should have a visible o2m field"
-        ); //m2o field
+            $(target).find("th:not(.o_list_actions_header):contains(O2M field)").is(":visible"),
+            "shouldn't have a visible o2m field"
+        ); //o2m field
     });
 
     QUnit.test(
@@ -13419,15 +13577,22 @@ QUnit.module("Views", (hooks) => {
 
             assert.verifySteps(["getItem " + localStorageKey]);
 
-            assert.containsN(target, "th", 3, "should have 3 th, 1 for selector, 2 for columns");
+            assert.containsN(
+                target,
+                "th",
+                4,
+                "should have 4 th, 1 for selector, 2 for columns, 1 for optional columns"
+            );
 
             assert.ok(
-                $(target).find("th:contains(M2O field)").is(":visible"),
+                $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
                 "should have a visible m2o field"
             ); //m2o field
 
             assert.notOk(
-                $(target).find("th:contains(Reference Field)").is(":visible"),
+                $(target)
+                    .find("th:not(.o_list_actions_header):contains(Reference Field)")
+                    .is(":visible"),
                 "should not have a visible reference field"
             );
 
@@ -13450,16 +13615,18 @@ QUnit.module("Views", (hooks) => {
             // optional columns.
             assert.verifySteps(["setItem " + localStorageKey + ' to ["m2o","reference"]']);
 
-            // 4 th (1 for checkbox, 3 for columns)
-            assert.containsN(target, "th", 4, "should have 4 th");
+            // 5 th (1 for checkbox, 3 for columns, 1 for optional columns)
+            assert.containsN(target, "th", 5, "should have 5 th");
 
             assert.ok(
-                $(target).find("th:contains(M2O field)").is(":visible"),
+                $(target).find("th:not(.o_list_actions_header):contains(M2O field)").is(":visible"),
                 "should have a visible m2o field"
             ); //m2o field
 
             assert.ok(
-                $(target).find("th:contains(Reference Field)").is(":visible"),
+                $(target)
+                    .find("th:not(.o_list_actions_header):contains(Reference Field)")
+                    .is(":visible"),
                 "should have a visible reference field"
             );
         }
@@ -13519,26 +13686,16 @@ QUnit.module("Views", (hooks) => {
 
         // Target handle
         const th = target.querySelector("th:nth-child(2)");
-        const optionalDropdown = target.querySelector(".o_optional_columns_dropdown");
-        const optionalInitialX = Math.floor(optionalDropdown.getBoundingClientRect().x);
         const resizeHandle = th.querySelector(".o_resize");
         const originalWidth = th.offsetWidth;
         const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
-        const delta = originalWidth - expectedWidth;
 
         await dragAndDrop(resizeHandle, th);
-        const optionalFinalX = Math.floor(optionalDropdown.getBoundingClientRect().x);
 
         assert.strictEqual(
-            th.offsetWidth,
-            expectedWidth,
-            // 1px for the cell right border
+            th.style.width,
+            `${expectedWidth}px`,
             "header width should be halved (plus half the width of the handle)"
-        );
-        assert.strictEqual(
-            optionalFinalX,
-            optionalInitialX - delta,
-            "optional columns dropdown should have moved the same amount"
         );
     });
 
@@ -13564,18 +13721,26 @@ QUnit.module("Views", (hooks) => {
         const thNext = target.querySelector("th:nth-child(3)");
         const resizeHandle = th.querySelector(".o_resize");
         const nextResizeHandle = thNext.querySelector(".o_resize");
-        const thOriginalWidth = th.offsetWidth;
-        const thNextOriginalWidth = thNext.offsetWidth;
-        const thExpectedWidth = Math.floor(thOriginalWidth + thNextOriginalWidth);
+        const thOriginalWidth = th.getBoundingClientRect().width;
+        const thNextOriginalWidth = thNext.getBoundingClientRect().width;
+        const thExpectedWidth = thOriginalWidth + thNextOriginalWidth;
 
         await dragAndDrop(resizeHandle, nextResizeHandle);
 
-        const thFinalWidth = th.offsetWidth;
-        const thNextFinalWidth = thNext.offsetWidth;
-        const thWidthDiff = Math.abs(thExpectedWidth - thFinalWidth);
+        const thFinalWidth = th.getBoundingClientRect().width;
+        const thNextFinalWidth = thNext.getBoundingClientRect().width;
+        // const thWidthDiff = thExpectedWidth - thFinalWidth;
 
-        assert.ok(thWidthDiff <= 1, "Wrong width on resize");
-        assert.ok(thNextOriginalWidth === thNextFinalWidth, "Width must not have been changed");
+        assert.strictEqual(
+            Math.floor(thFinalWidth),
+            Math.floor(thExpectedWidth),
+            "Wrong width on resize"
+        );
+        assert.strictEqual(
+            Math.floor(thNextOriginalWidth),
+            Math.floor(thNextFinalWidth),
+            "Width must not have been changed"
+        );
     });
 
     QUnit.test("resize column with several x2many lists in form group", async function (assert) {
@@ -13608,14 +13773,16 @@ QUnit.module("Views", (hooks) => {
 
         const th = target.querySelector("th");
         const resizeHandle = th.querySelector(".o_resize");
-        const firstTableInitialWidth = target.querySelectorAll(".o_field_x2many_list table")[0]
-            .offsetWidth;
-        const secondTableInititalWidth = target.querySelectorAll(".o_field_x2many_list table")[1]
-            .offsetWidth;
+        const firstTableInitialWidth = target
+            .querySelectorAll(".o_field_x2many_list table")[0]
+            .getBoundingClientRect().width;
+        const secondTableInititalWidth = target
+            .querySelectorAll(".o_field_x2many_list table")[1]
+            .getBoundingClientRect().width;
 
         assert.strictEqual(
-            firstTableInitialWidth,
-            secondTableInititalWidth,
+            Math.floor(firstTableInitialWidth),
+            Math.floor(secondTableInititalWidth),
             "both table columns have same width"
         );
 
@@ -13624,13 +13791,19 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.notEqual(
-            firstTableInitialWidth,
-            target.querySelectorAll("thead")[0].offsetWidth,
+            Math.floor(firstTableInitialWidth),
+            Math.floor(
+                target.querySelectorAll(".o_field_x2many_list table")[0].getBoundingClientRect()
+                    .width
+            ),
             "first o2m table is resized and width of table has changed"
         );
         assert.strictEqual(
-            secondTableInititalWidth,
-            target.querySelectorAll("thead")[1].offsetWidth,
+            Math.floor(secondTableInititalWidth),
+            Math.floor(
+                target.querySelectorAll(".o_field_x2many_list table")[1].getBoundingClientRect()
+                    .width
+            ),
             "second o2m table should not be impacted on first o2m in group resized"
         );
     });

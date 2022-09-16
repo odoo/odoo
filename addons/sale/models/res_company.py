@@ -22,7 +22,7 @@ class ResCompany(models.Model):
         ('digital_signature', 'Sign online'),
         ('paypal', 'PayPal'),
         ('stripe', 'Stripe'),
-        ('other', 'Pay with another payment acquirer'),
+        ('other', 'Pay with another payment provider'),
         ('manual', 'Manual Payment'),
     ], string="Sale onboarding selected payment method")
 
@@ -32,10 +32,10 @@ class ResCompany(models.Model):
         self.env.company.sale_quotation_onboarding_state = 'closed'
 
     @api.model
-    def action_open_sale_onboarding_payment_acquirer(self):
+    def action_open_sale_onboarding_payment_provider(self):
         """ Called by onboarding panel above the quotation list."""
         self.env.company.get_chart_of_accounts_or_fail()
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_onboarding_payment_acquirer_wizard")
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_payment_provider_onboarding_wizard")
         return action
 
     def _mark_payment_onboarding_step_as_done(self):
@@ -94,7 +94,7 @@ class ResCompany(models.Model):
         message_composer = self.env['mail.compose.message'].with_context(
             default_use_template=bool(template),
             mark_so_as_sent=True,
-            default_email_layout_xmlid='mail.mail_notification_paynow',
+            default_email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             proforma=self.env.context.get('proforma', False),
             force_email=True, mail_notify_author=True
         ).create({
@@ -130,6 +130,6 @@ class ResCompany(models.Model):
             'sale_onboarding_order_confirmation_state',
             'sale_onboarding_sample_quotation_state',
         ]
-        return self.get_and_update_onbarding_state('sale_quotation_onboarding_state', steps)
+        return self._get_and_update_onboarding_state('sale_quotation_onboarding_state', steps)
 
     _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]

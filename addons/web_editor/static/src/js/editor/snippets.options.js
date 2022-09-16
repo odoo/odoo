@@ -13,6 +13,7 @@ const utils = require('web.utils');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
+const gridUtils = require('@web_editor/js/common/grid_layout_utils');
 const {
     normalizeColor,
     getBgImageURL,
@@ -2274,12 +2275,18 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
         let min = this.el.dataset.min && parseFloat(this.el.dataset.min) || 0;
         let max = this.el.dataset.max && parseFloat(this.el.dataset.max) || 100;
         const step = this.el.dataset.step && parseFloat(this.el.dataset.step) || 1;
+        this.displayValue = this.el.dataset.displayRangeValue;
         if (min > max) {
             [min, max] = [max, min];
             this.input.classList.add('o_we_inverted_range');
         }
         this._setInputAttributes(min, max, step);
         this.containerEl.appendChild(this.input);
+        if (this.displayValue) {
+            this.outputEl = document.createElement('output');
+            this.outputEl.classList.add('ms-2');
+            this.containerEl.appendChild(this.outputEl);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -2305,7 +2312,11 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     async setValue(value, methodName) {
         await this._super(...arguments);
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
-        this.input.value = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
+        const inputValue = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
+        this.input.value = inputValue;
+        if (this.displayValue) {
+            this.outputEl.value = inputValue;
+        }
     },
     /**
      * @override
@@ -2333,6 +2344,9 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
      */
     _onInputInput(ev) {
         this._value = ev.target.value;
+        if (this.displayValue) {
+            this.outputEl.value = this._value;
+        }
         this._onUserValuePreview(ev);
     },
     /**
@@ -3292,8 +3306,9 @@ const SnippetOptionWidget = Widget.extend({
         hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
 
         function applyCSS(cssProp, cssValue, styles) {
+            const propertyValue = styles.getPropertyValue(cssProp);
             // This condition requires extraClass to NOT be set.
-            if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
+            if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
                 // Property must be set => extraClass will be enabled.
                 if (params.extraClass) {
                     // The extraClass is temporarily removed during selectStyle
@@ -3306,7 +3321,7 @@ const SnippetOptionWidget = Widget.extend({
                     this.$target[0].classList.add(params.extraClass);
                     // Set inline style only if different from value defined
                     // with extraClass.
-                    if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
+                    if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
                         this.$target[0].style.setProperty(cssProp, cssValue);
                     }
                 } else {
@@ -3315,7 +3330,7 @@ const SnippetOptionWidget = Widget.extend({
                 }
                 // If change had no effect then make it important.
                 // This condition requires extraClass to be set.
-                if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
+                if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
                     this.$target[0].style.setProperty(cssProp, cssValue, 'important');
                 }
                 if (params.extraClass) {
@@ -3660,7 +3675,7 @@ const SnippetOptionWidget = Widget.extend({
 
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
                 const cssValues = cssProps.map(cssProp => {
-                    let value = styles[cssProp].trim();
+                    let value = styles.getPropertyValue(cssProp).trim();
                     if (cssProp === 'box-shadow') {
                         const inset = value.includes('inset');
                         let values = value.replace(/,\s/g, ',').replace('inset', '').trim().split(/\s+/g);
@@ -3730,11 +3745,17 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise<boolean>|boolean}
      */
     _computeWidgetVisibility: async function (widgetName, params) {
-        if (widgetName === 'move_up_opt' || widgetName === 'move_left_opt') {
-            return !this.$target.is(':first-child');
-        }
-        if (widgetName === 'move_down_opt' || widgetName === 'move_right_opt') {
-            return !this.$target.is(':last-child');
+        const moveUpOrLeft = widgetName === 'move_up_opt' || widgetName === 'move_left_opt';
+        const moveDownOrRight = widgetName === 'move_down_opt' || widgetName === 'move_right_opt';
+
+        if (moveUpOrLeft || moveDownOrRight) {
+            // The arrows are not displayed if the target is in a grid and if not in mobile view.
+            const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < 768;
+            if (this.$target[0].classList.contains('o_grid_item') && !isMobileView) {
+                return false;
+            }
+            const firstOrLastChild = moveUpOrLeft ? ':first-child' : ':last-child';
+            return !this.$target.is(firstOrLastChild);
         }
         return true;
     },
@@ -3844,7 +3865,7 @@ const SnippetOptionWidget = Widget.extend({
                 // widget start.
                 parentEl.removeChild(el);
 
-                if (widget.isContainer()) {
+                if (widget.isContainer() && !widget.isDestroyed()) {
                     return this._renderXMLWidgets(widget.el, widget);
                 }
             });
@@ -4171,22 +4192,28 @@ registry.sizing = SnippetOptionWidget.extend({
      * @override
      */
     start: function () {
-        var self = this;
-        var def = this._super.apply(this, arguments);
+        const self = this;
+        const def = this._super.apply(this, arguments);
 
         this.$handles = this.$overlay.find('.o_handle');
 
-        var resizeValues = this._getSize();
+        let resizeValues = this._getSize();
         this.$handles.on('mousedown', function (ev) {
             ev.preventDefault();
+
+            // If the handle has the class 'readonly', don't allow to resize.
+            // (For the grid handles when we are in mobile view).
+            if (ev.currentTarget.classList.contains('readonly')) {
+                return;
+            }
 
             // First update size values as some element sizes may not have been
             // initialized on option start (hidden slides, etc)
             resizeValues = self._getSize();
-            var $handle = $(ev.currentTarget);
+            const $handle = $(ev.currentTarget);
 
-            var compass = false;
-            var XY = false;
+            let compass = false;
+            let XY = false;
             if ($handle.hasClass('n')) {
                 compass = 'n';
                 XY = 'Y';
@@ -4199,74 +4226,156 @@ registry.sizing = SnippetOptionWidget.extend({
             } else if ($handle.hasClass('w')) {
                 compass = 'w';
                 XY = 'X';
+            } else if ($handle.hasClass('nw')) {
+                compass = 'nw';
+                XY = 'YX';
+            } else if ($handle.hasClass('ne')) {
+                compass = 'ne';
+                XY = 'YX';
+            } else if ($handle.hasClass('sw')) {
+                compass = 'sw';
+                XY = 'YX';
+            } else if ($handle.hasClass('se')) {
+                compass = 'se';
+                XY = 'YX';
             }
 
-            var resize = resizeValues[compass];
-            if (!resize) {
+            // Don't call the normal resize methods if we are in a grid and
+            // vice-versa.
+            const isGrid = Object.keys(resizeValues).length === 4;
+            const isGridHandle = $handle[0].classList.contains('o_grid_handle');
+            if (isGrid && !isGridHandle || !isGrid && isGridHandle) {
                 return;
             }
 
-            var current = 0;
-            var cssProperty = resize[2];
-            var cssPropertyValue = parseInt(self.$target.css(cssProperty));
-            _.each(resize[0], function (val, key) {
-                if (self.$target.hasClass(val)) {
-                    current = key;
-                } else if (resize[1][key] === cssPropertyValue) {
-                    current = key;
-                }
-            });
-            var begin = current;
-            var beginClass = self.$target.attr('class');
-            var regClass = new RegExp('\\s*' + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
+            let resizeVal;
+            if (compass.length > 1) {
+                resizeVal = [resizeValues[compass[0]], resizeValues[compass[1]]];
+            } else {
+                resizeVal = [resizeValues[compass]];
+            }
 
-            var cursor = $handle.css('cursor') + '-important';
-            var $body = $(this.ownerDocument.body);
+            if (resizeVal.some(rV => !rV)) {
+                return;
+            }
+
+            // If we are in grid mode, add a background grid and place the element
+            // we are resizing in front of it.
+            const rowEl = self.$target[0].parentNode;
+            let backgroundGridEl;
+            if (rowEl.classList.contains('o_grid_mode')) {
+                self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
+                backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, 0);
+                self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
+                gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
+                gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
+            }
+
+            // For loop to handle the cases where it is ne, nw, se or sw. Since there are two
+            // directions, we compute for both directions and we store the values in an array.
+            const directions = [];
+            for (const [i, resize] of resizeVal.entries()) {
+                const props = {};
+                let current = 0;
+                const cssProperty = resize[2];
+                const cssPropertyValue = parseInt(self.$target.css(cssProperty));
+                _.each(resize[0], function (val, key) {
+                    if (self.$target.hasClass(val)) {
+                        current = key;
+                    } else if (resize[1][key] === cssPropertyValue) {
+                        current = key;
+                    }
+                });
+
+                props.resize = resize;
+                props.current = current;
+                props.begin = current;
+                props.beginClass = self.$target.attr('class');
+                props.regClass = new RegExp('\\s*' + resize[0][current].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
+                props.xy = ev['page' + XY[i]];
+                props.XY = XY[i];
+                props.compass = compass[i];
+
+                directions.push(props);
+            }
+
+            const cursor = $handle.css('cursor') + '-important';
+            const $body = $(this.ownerDocument.body);
             $body.addClass(cursor);
 
-            var xy = ev['page' + XY];
-            var bodyMouseMove = function (ev) {
+            const bodyMouseMove = function (ev) {
                 ev.preventDefault();
 
-                var dd = ev['page' + XY] - xy + resize[1][begin];
-                var next = current + (current + 1 === resize[1].length ? 0 : 1);
-                var prev = current ? (current - 1) : 0;
+                let changeTotal = false;
+                for (const dir of directions) {
+                    // dd is the number of pixels by which the mouse moved, compared to the
+                    // initial position of the handle.
+                    const dd = ev['page' + dir.XY] - dir.xy + dir.resize[1][dir.begin];
+                    const next = dir.current + (dir.current + 1 === dir.resize[1].length ? 0 : 1);
+                    const prev = dir.current ? (dir.current - 1) : 0;
 
-                var change = false;
-                if (dd > (2 * resize[1][next] + resize[1][current]) / 3) {
-                    self.$target.attr('class', (self.$target.attr('class') || '').replace(regClass, ''));
-                    self.$target.addClass(resize[0][next]);
-                    current = next;
-                    change = true;
-                }
-                if (prev !== current && dd < (2 * resize[1][prev] + resize[1][current]) / 3) {
-                    self.$target.attr('class', (self.$target.attr('class') || '').replace(regClass, ''));
-                    self.$target.addClass(resize[0][prev]);
-                    current = prev;
-                    change = true;
+                    let change = false;
+                    // If the mouse moved to the right/down by at least 2/3 of the space between the
+                    // previous and the next steps, the handle is snapped to the next step and the
+                    // class is replaced by the one matching this step.
+                    if (dd > (2 * dir.resize[1][next] + dir.resize[1][dir.current]) / 3) {
+                        self.$target.attr('class', (self.$target.attr('class') || '').replace(dir.regClass, ''));
+                        self.$target.addClass(dir.resize[0][next]);
+                        dir.current = next;
+                        change = true;
+                    }
+                    // Same as above but to the left/up.
+                    if (prev !== dir.current && dd < (2 * dir.resize[1][prev] + dir.resize[1][dir.current]) / 3) {
+                        self.$target.attr('class', (self.$target.attr('class') || '').replace(dir.regClass, ''));
+                        self.$target.addClass(dir.resize[0][prev]);
+                        dir.current = prev;
+                        change = true;
+                    }
+
+                    if (change) {
+                        self._onResize(dir.compass, dir.beginClass, dir.current);
+                    }
+
+                    changeTotal = changeTotal || change;
                 }
 
-                if (change) {
-                    self._onResize(compass, beginClass, current);
+                if (changeTotal) {
                     self.trigger_up('cover_update');
                     $handle.addClass('o_active');
                 }
             };
-            var bodyMouseUp = function () {
+            const bodyMouseUp = function () {
                 $body.off('mousemove', bodyMouseMove);
                 $body.off('mouseup', bodyMouseUp);
                 $body.removeClass(cursor);
                 $handle.removeClass('o_active');
 
+                // If we are in grid mode, removes the background grid.
+                // Also sync the col-* class with the g-col-* class so the toggle to normal mode
+                // and the mobile view are well done.
+                if (rowEl.classList.contains('o_grid_mode')) {
+                    self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
+                    backgroundGridEl.remove();
+                    self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
+                    gridUtils._resizeGrid(rowEl);
+                    gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
+
+                    const colClass = [...self.$target[0].classList].find(c => /^col-/.test(c));
+                    const gColClass = [...self.$target[0].classList].find(c => /^g-col-/.test(c));
+                    self.$target[0].classList.remove(colClass);
+                    self.$target[0].classList.add(gColClass.substring(2));
+                }
+
                 // Highlights the previews for a while
-                var $handlers = self.$overlay.find('.o_handle');
+                const $handlers = self.$overlay.find('.o_handle');
                 $handlers.addClass('o_active').delay(300).queue(function () {
                     $handlers.removeClass('o_active').dequeue();
                 });
 
-                if (begin === current) {
+                if (directions.every(dir => dir.begin === dir.current)) {
                     return;
                 }
+
                 setTimeout(function () {
                     self.options.wysiwyg.odooEditor.historyStep();
                 }, 0);
@@ -4278,6 +4387,9 @@ registry.sizing = SnippetOptionWidget.extend({
         _.each(resizeValues, (value, key) => {
             this.$handles.filter('.' + key).toggleClass('readonly', !value);
         });
+        if (this.$target[0].classList.contains('o_grid_item')) {
+            this.$handles.filter('.o_grid_handle').toggleClass('readonly', false);
+        }
 
         return def;
     },
@@ -4301,6 +4413,45 @@ registry.sizing = SnippetOptionWidget.extend({
         // TODO master: _onResize should not be called here, need to check if
         // updateUI is called when the target is changed
         this._onResize();
+    },
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+
+        const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < 768;
+        const isGrid = this.$target[0].classList.contains('o_grid_item');
+        if (this.$target[0].parentNode.classList.contains('row')) {
+            // Hiding/showing the correct resize handles if we are in grid mode or not.
+            for (const handle of this.$handles) {
+                const isGridHandle = handle.classList.contains('o_grid_handle');
+                handle.classList.toggle('d-none', isGrid ^ isGridHandle);
+                // Disabling the resize if we are in mobile view.
+                handle.classList.toggle('readonly', isMobileView && isGridHandle);
+            }
+
+            // Hiding the move handle for some snippets so we can't drag them and
+            // so we can't toggle grid mode.
+            const moveHandle = this.$overlay[0].querySelector('.o_move_handle');
+            const untoggleableColumns = '.s_masonry_block, .s_showcase, .s_features_grid, .s_website_form, .s_color_blocks_2';
+            const disableToggle = this.$target[0].closest(untoggleableColumns);
+            moveHandle.classList.toggle('d-none', disableToggle || isMobileView);
+
+            // Hiding/showing the arrows.
+            if (isGrid) {
+                const moveLeftArrow = this.$overlay[0].querySelector('.fa-angle-left');
+                const moveRightArrow = this.$overlay[0].querySelector('.fa-angle-right');
+                const showLeft = await this._computeWidgetVisibility('move_left_opt');
+                const showRight = await this._computeWidgetVisibility('move_right_opt');
+                moveLeftArrow.classList.toggle('d-none', !showLeft);
+                moveRightArrow.classList.toggle('d-none', !showRight);
+            }
+
+            // Show/hide the buttons to send back/front a grid item.
+            const bringFrontBack = this.$overlay[0].querySelectorAll('.o_front_back');
+            bringFrontBack.forEach(button => button.classList.toggle('d-none', !isGrid || isMobileView));
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -4492,6 +4643,108 @@ registry['sizing_x'] = registry.sizing.extend({
 });
 
 /**
+ * Handles the sizing in grid mode: edition of grid-{column|row}-{start|end}.
+ */
+registry['sizing_grid'] = registry.sizing.extend({
+    /**
+     * @override
+     */
+    _getSize() {
+        const rowEl = this.$target.closest('.row')[0];
+        const gridProp = gridUtils._getGridProperties(rowEl);
+
+        const rowStart = this.$target[0].style.gridRowStart;
+        const rowEnd = parseInt(this.$target[0].style.gridRowEnd);
+        const columnStart = this.$target[0].style.gridColumnStart;
+        const columnEnd = this.$target[0].style.gridColumnEnd;
+
+        const gridN = [];
+        const gridS = [];
+        for (let i = 1; i < rowEnd + 12; i++) {
+            gridN.push(i);
+            gridS.push(i + 1);
+        }
+        const gridW = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        const gridE = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
+        this.grid = {
+            n: [_.map(gridN, v => ('g-height-' + (rowEnd - v))), _.map(gridN, v => ((gridProp.rowSize + gridProp.rowGap) * (v - 1))), 'grid-row-start'],
+            s: [_.map(gridS, v => ('g-height-' + (v - rowStart))), _.map(gridS, v => ((gridProp.rowSize + gridProp.rowGap) * (v - 1))), 'grid-row-end'],
+            w: [_.map(gridW, v => ('g-col-lg-' + (columnEnd - v))), _.map(gridW, v => ((gridProp.columnSize + gridProp.columnGap) * (v - 1))), 'grid-column-start'],
+            e: [_.map(gridE, v => ('g-col-lg-' + (v - columnStart))), _.map(gridE, v => ((gridProp.columnSize + gridProp.columnGap) * (v - 1))), 'grid-column-end'],
+        };
+
+        return this.grid;
+    },
+    /**
+     * @override
+     */
+    _onResize(compass, beginClass, current) {
+        if (compass === 'n') {
+            const rowEnd = parseInt(this.$target[0].style.gridRowEnd);
+            if (current < 0) {
+                this.$target[0].style.gridRowStart = 1;
+            } else if (current + 1 >= rowEnd) {
+                this.$target[0].style.gridRowStart = rowEnd - 1;
+            } else {
+                this.$target[0].style.gridRowStart = current + 1;
+            }
+        } else if (compass === 's') {
+            const rowStart = parseInt(this.$target[0].style.gridRowStart);
+            const rowEnd = parseInt(this.$target[0].style.gridRowEnd);
+            if (current + 2 <= rowStart) {
+                this.$target[0].style.gridRowEnd = rowStart + 1;
+            } else {
+                this.$target[0].style.gridRowEnd = current + 2;
+            }
+
+            // Updating the grid height.
+            const rowEl = this.$target[0].parentNode;
+            const rowCount = parseInt(rowEl.dataset.rowCount);
+            const backgroundGridEl = rowEl.querySelector('.o_we_background_grid');
+            const backgroundGridRowEnd = parseInt(backgroundGridEl.style.gridRowEnd);
+            let rowMove = 0;
+            if (this.$target[0].style.gridRowEnd > rowEnd && this.$target[0].style.gridRowEnd > rowCount + 1) {
+                rowMove = this.$target[0].style.gridRowEnd - rowEnd;
+            } else if (this.$target[0].style.gridRowEnd < rowEnd && this.$target[0].style.gridRowEnd >= rowCount + 1) {
+                rowMove = this.$target[0].style.gridRowEnd - rowEnd;
+            }
+            backgroundGridEl.style.gridRowEnd = backgroundGridRowEnd + rowMove;
+        } else if (compass === 'w') {
+            const columnEnd = parseInt(this.$target[0].style.gridColumnEnd);
+            if (current < 0) {
+                this.$target[0].style.gridColumnStart = 1;
+            } else if (current + 1 >= columnEnd) {
+                this.$target[0].style.gridColumnStart = columnEnd - 1;
+            } else {
+                this.$target[0].style.gridColumnStart = current + 1;
+            }
+        } else if (compass === 'e') {
+            const columnStart = parseInt(this.$target[0].style.gridColumnStart);
+            if (current + 2 > 13) {
+                this.$target[0].style.gridColumnEnd = 13;
+            } else if (current + 2 <= columnStart) {
+                this.$target[0].style.gridColumnEnd = columnStart + 1;
+            } else {
+                this.$target[0].style.gridColumnEnd = current + 2;
+            }
+        }
+
+        if (compass === 'n' || compass === 's') {
+            const numberRows = this.$target[0].style.gridRowEnd - this.$target[0].style.gridRowStart;
+            this.$target.attr('class', this.$target.attr('class').replace(/\s*(g-height-)([0-9-]+)/g, ''));
+            this.$target.addClass('g-height-' + numberRows);
+        }
+
+        if (compass === 'w' || compass === 'e') {
+            const numberColumns = this.$target[0].style.gridColumnEnd - this.$target[0].style.gridColumnStart;
+            this.$target.attr('class', this.$target.attr('class').replace(/\s*(g-col-lg-)([0-9-]+)/g, ''));
+            this.$target.addClass('g-col-lg-' + numberColumns);
+        }
+    },
+});
+
+/**
  * Controls box properties.
  */
 registry.Box = SnippetOptionWidget.extend({
@@ -4650,6 +4903,112 @@ registry.layout_column = SnippetOptionWidget.extend({
             name: 'change_columns',
         });
     },
+    /**
+     * Changes the layout (columns or grid).
+     *
+     * @see this.selectClass for parameters
+     */
+    async selectLayout(previewMode, widgetValue, params) {
+        if (widgetValue === "grid") {
+            const rowEl = this.$target[0].querySelector('.row');
+            if (!rowEl || !rowEl.classList.contains('o_grid_mode')) { // Prevent toggling grid mode twice.
+                gridUtils._toggleGridMode(this.$target[0]);
+                this.trigger_up('activate_snippet', {$snippet: this.$target});
+            }
+        } else {
+            // Toggle normal mode only if grid mode was activated (as it's in normal mode by default).
+            const rowEl = this.$target[0].querySelector('.row');
+            if (rowEl && rowEl.classList.contains('o_grid_mode')) {
+                this._toggleNormalMode(rowEl);
+                this.trigger_up('activate_snippet', {$snippet: this.$target});
+            }
+        }
+        this.trigger_up('option_update', {
+            optionName: 'StepsConnector',
+            name: 'change_columns',
+        });
+    },
+    /**
+     * Adds an image, some text or a button in the grid.
+     *
+     * @see this.selectClass for parameters
+     */
+    async addElement(previewMode, widgetValue, params) {
+        const rowEl = this.$target[0].querySelector('.row');
+        const elementType = widgetValue;
+
+        // If it has been less than 15 seconds that we have added an element, shift the new element
+        // right and down by one cell. Otherwise, put it on the top left corner.
+        const currentTime = new Date().getTime();
+        if (this.lastAddTime && (currentTime - this.lastAddTime) / 1000 < 15) {
+            this.lastStartPosition = [this.lastStartPosition[0] + 1, this.lastStartPosition[1] + 1];
+        } else {
+            this.lastStartPosition = [1, 1]; // [rowStart, columnStart]
+        }
+        this.lastAddTime = currentTime;
+
+        // Create the new column.
+        const newColumn = document.createElement('div');
+        newColumn.classList.add('o_grid_item');
+        let numberColumns, numberRows;
+
+        if (elementType === 'image') {
+            // Set the columns properties.
+            newColumn.classList.add('col-lg-6', 'g-col-lg-6', 'g-height-6');
+            numberColumns = 6;
+            numberRows = 6;
+
+            // Create a default image and add it to the new column.
+            const img = document.createElement('img');
+            img.classList.add('img', 'img-fluid', 'mx-auto');
+            img.src = '/web/image/website.s_text_image_default_image';
+            img.alt = '';
+            img.loading = 'lazy';
+
+            newColumn.appendChild(img);
+
+        } else if (elementType === 'text') {
+            newColumn.classList.add('col-lg-4', 'g-col-lg-4', 'g-height-2');
+            numberColumns = 4;
+            numberRows = 2;
+
+            // Create default text content.
+            const p = document.createElement('p');
+            p.classList.add('o_default_snippet_text');
+            p.textContent = _t("Write something...");
+
+            newColumn.appendChild(p);
+
+        } else if (elementType === 'button') {
+            newColumn.classList.add('col-lg-2', 'g-col-lg-2', 'g-height-1');
+            numberColumns = 2;
+            numberRows = 1;
+
+            // Create default button.
+            const a = document.createElement('a');
+            a.href = '#';
+            a.classList.add('mb-2', 'btn', 'btn-primary');
+            a.textContent = "Button";
+
+            newColumn.appendChild(a);
+        }
+        // Place the column in the grid.
+        const rowStart = this.lastStartPosition[0];
+        let columnStart = this.lastStartPosition[1];
+        if (columnStart + numberColumns > 13) {
+            columnStart = 1;
+            this.lastStartPosition[1] = columnStart;
+        }
+        newColumn.style.gridArea = `${rowStart} / ${columnStart} / ${rowStart + numberRows} / ${columnStart + numberColumns}`;
+
+        // Setting the z-index to the maximum of the grid.
+        gridUtils._setElementToMaxZindex(newColumn, rowEl);
+
+        // Add the new column and update the grid height.
+        rowEl.appendChild(newColumn);
+        gridUtils._resizeGrid(rowEl);
+        this.trigger_up('activate_snippet', {$snippet: $(newColumn)});
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -4661,6 +5020,14 @@ registry.layout_column = SnippetOptionWidget.extend({
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'selectCount') {
             return this.$('> .row').children().length;
+
+        } else if (methodName === 'selectLayout') {
+            const rowEl = this.$target[0].querySelector('.row');
+            if (rowEl && rowEl.classList.contains('o_grid_mode')) {
+                return "grid";
+            } else {
+                return 'normal';
+            }
         }
         return this._super(...arguments);
     },
@@ -4716,6 +5083,33 @@ registry.layout_column = SnippetOptionWidget.extend({
             $columns.first().addClass('offset-lg-' + colOffset);
         }
     },
+    /**
+     * Toggles the normal mode.
+     *
+     * @private
+     * @param {Element} rowEl
+     */
+    _toggleNormalMode(rowEl) {
+        // Removing the grid class
+        rowEl.classList.remove('o_grid_mode');
+
+        const columns = rowEl.children;
+        for (const column of columns) {
+            // Reload the images.
+            gridUtils._reloadLazyImages(column);
+
+            // Removing the grid properties.
+            column.classList.remove('o_grid_item');
+            column.style.removeProperty('grid-area');
+            column.style.removeProperty('z-index');
+        }
+
+        // Removing the grid properties.
+        delete rowEl.dataset.rowCount;
+
+        // Adding back an align-items-* class.
+        rowEl.classList.add('align-items-start');
+    },
 });
 
 /**
@@ -4730,8 +5124,9 @@ registry.SnippetMove = SnippetOptionWidget.extend({
     start: function () {
         var $buttons = this.$el.find('we-button');
         var $overlayArea = this.$overlay.find('.o_overlay_move_options');
+        // Putting the arrows side by side.
+        $overlayArea.prepend($buttons[1]);
         $overlayArea.prepend($buttons[0]);
-        $overlayArea.append($buttons[1]);
 
         return this._super(...arguments);
     },
@@ -6583,8 +6978,6 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
  * Handles the edition of snippets' background image position.
  */
 registry.BackgroundPosition = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
-
     /**
      * @override
      */
@@ -7095,8 +7488,6 @@ registry.many2one = SnippetOptionWidget.extend({
  * Allows to display a warning message on outdated snippets.
  */
 registry.VersionControl = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
-
     /**
      * @override
      */
@@ -7118,7 +7509,6 @@ registry.VersionControl = SnippetOptionWidget.extend({
  * Handle the save of a snippet as a template that can be reused later
  */
 registry.SnippetSave = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     isTopOption: true,
 
     //--------------------------------------------------------------------------

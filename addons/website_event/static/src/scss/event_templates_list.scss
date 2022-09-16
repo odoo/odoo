@@ -33,11 +33,6 @@
                 min-width: 0;
             }
         }
-        &.opt_event_list_cards_bg {
-            @if (map-get($colors, 'body') == $o-portal-default-body-bg) {
-                @extend .bg-200;
-            }
-        }
         .opt_events_list_columns {
             header {
                 height: 200px;
@@ -66,6 +61,8 @@
             height: 4rem;
             border-radius: 50%;
             text-align: center;
+            background-color: $o-wevent-bg-color-base;
+            color: $o-wevent-color;
 
             .o_wevent_event_day {
                 font-size: 1.125rem;
@@ -86,8 +83,13 @@
             padding: $card-spacer-y $card-spacer-x;
             text-align: right;
         }
-        .card-title {
-            color: $body-color;
+        article {
+            background-color: $o-wevent-bg-color-base;
+            color: $o-wevent-color;
+            .card-body {
+                background-color: $o-wevent-bg-color-base !important;
+                color: $o-wevent-color;
+            }
         }
     }
     .o_wevent_sidebar_title {
@@ -114,5 +116,9 @@
             @include border-bottom-radius($border-radius);
             color: #fff;
         }
+    }
+    .o_half_screen_height {
+        // Set min-height to the same value as the header
+        min-height: 200px !important;
     }
 }

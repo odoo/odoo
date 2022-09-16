@@ -79,24 +79,16 @@ registerModel({
         _computeCounter() {
             return this.activityGroups.reduce((total, group) => total + group.total_count, this.extraCount);
         },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortActivityGroups() {
-            return [
-                ['smaller-first', 'irModel.id'],
-            ];
-        },
     },
     fields: {
         activityGroups: many('ActivityGroup', {
-            sort: '_sortActivityGroups',
+            sort() {
+                return [['smaller-first', 'irModel.id']];
+            }
         }),
         activityGroupViews: many('ActivityGroupView', {
             compute: '_computeActivityGroupViews',
             inverse: 'activityMenuViewOwner',
-            isCausal: true,
         }),
         component: attr(),
         counter: attr({

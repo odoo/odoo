@@ -10,7 +10,7 @@ import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
  * they create some lessons in it;
  * they publishe it;
  */
-wTourUtils.registerEditionTour('course_publisher', {
+wTourUtils.registerWebsitePreviewTour('course_publisher', {
     // TODO: replace by wTourUtils.getClientActionURL when it's added
     url: '/slides',
     test: true
@@ -34,7 +34,7 @@ wTourUtils.registerEditionTour('course_publisher', {
     in_modal: false,
 }, {
     content: 'eLearning: set description',
-    trigger: '.oe_form_field_html[name="description"]',
+    trigger: '.o_field_html[name="description"]',
     run: 'text Déboulonnate is very common at Fleurus',
 }, {
     content: 'eLearning: we want reviews',

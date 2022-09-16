@@ -10,7 +10,7 @@ class ResCompany(models.Model):
     subcontracting_location_id = fields.Many2one('stock.location')
 
     @api.model
-    def create_missing_subcontracting_location(self):
+    def _create_missing_subcontracting_location(self):
         company_without_subcontracting_loc = self.env['res.company'].search(
             [('subcontracting_location_id', '=', False)])
         company_without_subcontracting_loc._create_subcontracting_location()

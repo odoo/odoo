@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_acquirer_form" model="ir.ui.view">
-        <field name="name">PayPal Acquirer Form</field>
-        <field name="model">payment.acquirer</field>
-        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">PayPal Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <xpath expr='//group[@name="acquirer"]' position='inside'>
-                <group attrs="{'invisible': [('provider', '!=', 'paypal')]}">
+            <group name="code" position='inside'>
+                <group attrs="{'invisible': [('code', '!=', 'paypal')]}">
                     <field name="paypal_email_account"
-                           attrs="{'required':[('provider', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
+                           attrs="{'required':[('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
                     <field name="paypal_seller_account" password="True"/>
                     <!-- This field should no longer be used but is kept in debug mode for the time
                          being, until we are sure that the verification protocol of IPN can be used
                          for DPT notifications -->
                     <field name="paypal_pdt_token" groups="base.group_no_one" password="True"/>
                     <field name="paypal_use_ipn"
-                           attrs="{'required':[('provider', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
-                    <a href="https://www.odoo.com/documentation/master/applications/general/payment_acquirers/paypal.html"
+                           attrs="{'required':[('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
+                    <a href="https://www.odoo.com/documentation/master/applications/general/payment_providers/paypal.html"
                        target="_blank"
                        colspan="2">
                         How to configure your paypal account?
                     </a>
                 </group>
-            </xpath>
+            </group>
         </field>
     </record>
 
@@ -32,10 +32,10 @@
         <field name="model">payment.transaction</field>
         <field name="inherit_id" ref="payment.payment_transaction_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='acquirer_reference']" position="after">
+            <xpath expr="//field[@name='provider_reference']" position="after">
                 <field name="paypal_type"
                        readonly="1"
-                       attrs="{'invisible': [('provider', '!=', 'paypal')]}"
+                       attrs="{'invisible': [('provider_code', '!=', 'paypal')]}"
                        groups="base.group_no_one"/>
             </xpath>
         </field>

@@ -472,12 +472,13 @@ class TestProjectrecurrence(TransactionCase):
             'name': 'Parent Task',
             'project_id': self.project_recurring.id
         })
+        child_task = self.env['project.task'].create({
+            'name': 'Child Task',
+            'parent_id': parent_task.id,
+        })
         domain = [('project_id', '=', self.project_recurring.id)]
-        with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
-            with task_form.child_ids.new() as subtask_form:
-                subtask_form.name = 'Test Subtask 1'
         with freeze_time("2020-01-01"):
-            with Form(parent_task.child_ids.with_context({'tracking_disable': True})) as form:
+            with Form(child_task.with_context({'tracking_disable': True})) as form:
                 form.description = 'my super recurring task bla bla bla'
                 form.date_deadline = datetime(2020, 2, 1)
                 form.display_project_id = parent_task.project_id
@@ -569,12 +570,20 @@ class TestProjectrecurrence(TransactionCase):
             'project_id': self.project_recurring.id
         })
         domain = [('project_id', '=', self.project_recurring.id)]
+        child_task_1, child_task_2_recurrence = self.env['project.task'].create([
+            {'name': 'Child task 1'},
+            {'name': 'Child task 2 that have recurrence'},
+        ])
         with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
-            with task_form.child_ids.new() as subtask_form:
-                subtask_form.name = 'Child task 1'
-        with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
-            with task_form.child_ids.new() as subtask_form:
-                subtask_form.name = 'Child task 2 that have recurrence'
+            task_form.child_ids.add(child_task_1)
+            task_form.child_ids.add(child_task_2_recurrence)
+
+        grand_child_task_1 = self.env['project.task'].create({
+            'name': 'Grandchild task 1 (recurrent)',
+        })
+        grand_child_task_2_recurrence = self.env['project.task'].create({
+            'name': 'Grandchild task 2',
+        })
         with freeze_time("2020-01-01"):
             recurrent_subtask = parent_task.child_ids[0]
             with Form(recurrent_subtask.with_context(tracking_disable=True)) as task_form:
@@ -586,11 +595,8 @@ class TestProjectrecurrence(TransactionCase):
                 task_form.repeat_on_month = 'date'
                 task_form.repeat_day = '15'
                 task_form.date_deadline = datetime(2020, 2, 1)
-                with task_form.child_ids.new() as subtask_form:
-                    subtask_form.name = 'Grandchild task 1 (recurrent)'
-                with task_form.child_ids.new() as subtask_form:
-                    subtask_form.name = 'Grandchild task 2'
-
+                task_form.child_ids.add(grand_child_task_1)
+                task_form.child_ids.add(grand_child_task_2_recurrence)
             # configure recurring subtask
             recurrent_subsubtask = recurrent_subtask.child_ids.filtered(lambda t: t.name == 'Grandchild task 1 (recurrent)')
             non_recurrent_subsubtask = recurrent_subtask.child_ids.filtered(lambda t: t.name == 'Grandchild task 2')
@@ -602,18 +608,20 @@ class TestProjectrecurrence(TransactionCase):
                 subtask_form.repeat_number = 4
                 subtask_form.date_deadline = datetime(2020, 2, 3)
 
+            grand_child_task_3, grand_child_task_4, grand_child_task_5 = self.env['project.task'].create([
+                {'name': 'Grandchild task 3'},
+                {'name': 'Grandchild task 4'},
+                {'name': 'Grandchild task 5'},
+            ])
             # create non-recurring grandchild subtasks
             with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
-                with subtask_form.child_ids.new() as subsubtask_form:
-                    subsubtask_form.name = 'Grandchild task 3'
+                subtask_form.child_ids.add(grand_child_task_3)
             non_recurrent_subsubtask = non_recurrent_subsubtask.child_ids
             with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
-                with subtask_form.child_ids.new() as subsubtask_form:
-                    subsubtask_form.name = 'Grandchild task 4'
+                subtask_form.child_ids.add(grand_child_task_4)
             non_recurrent_subsubtask = non_recurrent_subsubtask.child_ids
             with Form(non_recurrent_subsubtask.with_context(tracking_disable=True)) as subtask_form:
-                with subtask_form.child_ids.new() as subsubtask_form:
-                    subsubtask_form.name = 'Grandchild task 5'
+                subtask_form.child_ids.add(grand_child_task_5)
 
             self.assertTrue(recurrent_subtask.recurrence_id)
             self.assertEqual(recurrent_subtask.recurrence_id.next_recurrence_date, date(2020, 1, 15))

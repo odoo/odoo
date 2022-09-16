@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
 import {
     click,
@@ -59,9 +58,6 @@ QUnit.module("Fields", (hooks) => {
 
         setupViewRegistries();
 
-        patchWithCleanup(AutoComplete, {
-            delay: 0,
-        });
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
@@ -191,7 +187,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
-            ["Aline", "Christine", "Aline", ""]
+            ["Aline", "Christine", "Aline"]
         );
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
         assert.strictEqual(imgs[0].dataset.src, "/web/image/user/17/avatar_128");
@@ -209,7 +205,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
-            ["Aline", "Christine", "Aline", ""]
+            ["Aline", "Christine", "Aline"]
         );
 
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");

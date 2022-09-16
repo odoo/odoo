@@ -10,6 +10,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
+from odoo.tools.sql import create_index
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -94,7 +95,7 @@ class SaleOrder(models.Model):
              "this date rather than product lead times.")
     date_order = fields.Datetime(
         string="Order Date",
-        required=True, readonly=False, index=True, copy=False,
+        required=True, readonly=False, copy=False,
         states=READONLY_FIELD_STATES,
         help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.",
         default=fields.Datetime.now)
@@ -111,13 +112,12 @@ class SaleOrder(models.Model):
         compute='_compute_require_signature',
         store=True, readonly=False, precompute=True,
         states=READONLY_FIELD_STATES,
-        help="Request a online signature to the customer in order to confirm orders automatically.")
+        help="Request a online signature and/or payment to the customer in order to confirm orders automatically.")
     require_payment = fields.Boolean(
         string="Online Payment",
         compute='_compute_require_payment',
         store=True, readonly=False, precompute=True,
-        states=READONLY_FIELD_STATES,
-        help="Request an online payment to the customer in order to confirm orders automatically.")
+        states=READONLY_FIELD_STATES)
 
     signature = fields.Image(
         string="Signature",
@@ -285,6 +285,10 @@ class SaleOrder(models.Model):
         string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
+
+
+    def init(self):
+        create_index(self._cr, 'sale_order_date_order_id_idx', 'sale_order', ["date_order desc", "id desc"])
 
     #=== COMPUTE METHODS ===#
 
@@ -570,7 +574,7 @@ class SaleOrder(models.Model):
             show_warning = order.state in ('draft', 'sent') and \
                            order.company_id.account_use_credit_limit
             if show_warning:
-                updated_credit = order.partner_id.credit + (order.amount_total * order.currency_rate)
+                updated_credit = order.partner_id.commercial_partner_id.credit + (order.amount_total * order.currency_rate)
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order, updated_credit)
 
@@ -724,7 +728,7 @@ class SaleOrder(models.Model):
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
-            'default_email_layout_xmlid': 'mail.mail_notification_paynow',
+            'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
             'model_description': self.with_context(lang=lang).type_name,
@@ -739,31 +743,32 @@ class SaleOrder(models.Model):
             'context': ctx,
         }
 
-    def _find_mail_template(self, force_confirmation_template=False):
-        """ Get the appropriate mail template for the current sales orders based on their state.
+    def _find_mail_template(self):
+        """ Get the appropriate mail template for the current sales order based on its state.
 
-        If all SOs are confirmed or ``force_confirmation_template`` is `True`, we return the mail
-        template for the sale confirmation. Otherwise, we return the quotation email template.
+        If the SO is confirmed, we return the mail template for the sale confirmation.
+        Otherwise, we return the quotation email template.
 
-        :param bool force_confirmation_template: Allows to force the confirmation template to be
-        used in any case
         :return: The correct mail template based on the current status
         :rtype: record of `mail.template` or `None` if not found
         """
-        if force_confirmation_template or (
-            all(order.state == 'sale' for order in self) and not self.env.context.get('proforma')
-        ):
-            default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_param(
-                'sale.default_confirmation_template'
-            )
-            default_confirmation_template = default_confirmation_template_id \
-                and self.env['mail.template'].browse(int(default_confirmation_template_id)).exists()
-            if default_confirmation_template:
-                return default_confirmation_template
-            else:
-                return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
-        else:
+        self.ensure_one()
+        if self.env.context.get('proforma') or self.state not in ('sale', 'done'):
             return self.env.ref('sale.email_template_edi_sale', raise_if_not_found=False)
+        else:
+            return self._get_confirmation_template()
+
+    def _get_confirmation_template(self):
+        self.ensure_one()
+        default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_param(
+            'sale.default_confirmation_template'
+        )
+        default_confirmation_template = default_confirmation_template_id \
+            and self.env['mail.template'].browse(int(default_confirmation_template_id)).exists()
+        if default_confirmation_template:
+            return default_confirmation_template
+        else:
+            return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
 
     def action_quotation_sent(self):
         if self.filtered(lambda so: so.state != 'draft'):
@@ -827,18 +832,20 @@ class SaleOrder(models.Model):
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
 
-        mail_template = self._find_mail_template(force_confirmation_template=True)
-        if mail_template:
-            self.with_context(force_send=True).message_post_with_template(
+        for sale_order in self:
+            mail_template = sale_order._get_confirmation_template()
+            if not mail_template:
+                continue
+            sale_order.with_context(force_send=True).message_post_with_template(
                 mail_template.id,
                 composition_mode='comment',
-                email_layout_xmlid='mail.mail_notification_paynow',
+                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             )
 
     def action_done(self):
         for order in self:
             tx = order.sudo().transaction_ids._get_last()
-            if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
+            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom':
                 tx._set_done()
                 tx.write({'is_post_processed': True})
         self.write({'state': 'done'})
@@ -868,7 +875,7 @@ class SaleOrder(models.Model):
                 'default_template_id': template_id,
                 'default_order_id': self.id,
                 'mark_so_as_canceled': True,
-                'default_email_layout_xmlid': 'mail.mail_notification_paynow',
+                'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
                 'model_description': self.with_context(lang=lang).type_name,
             }
             return {
@@ -946,28 +953,26 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        invoice_vals = {
+        return {
             'ref': self.client_order_ref or '',
             'move_type': 'out_invoice',
             'narration': self.note,
-            'currency_id': self.pricelist_id.currency_id.id,
+            'currency_id': self.currency_id.id,
             'campaign_id': self.campaign_id.id,
             'medium_id': self.medium_id.id,
             'source_id': self.source_id.id,
-            'user_id': self.user_id.id,
-            'invoice_user_id': self.user_id.id,
             'team_id': self.team_id.id,
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(self.partner_invoice_id)).id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
+            'invoice_user_id': self.user_id.id,
             'payment_reference': self.reference,
             'transaction_ids': [Command.set(self.transaction_ids.ids)],
-            'invoice_line_ids': [],
             'company_id': self.company_id.id,
+            'invoice_line_ids': [],
         }
-        return invoice_vals
 
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
@@ -1228,15 +1233,15 @@ class SaleOrder(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
+        subtitles = [render_context['record'].name]
         if self.validity_date:
-            render_context['subtitle'] = _(
-                u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
-            )
+            subtitles.append(_(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
+                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
+                          ))
         else:
-            render_context['subtitle'] = format_amount(
-                self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        render_context['subtitles'] = subtitles
         return render_context
 
     def _sms_get_number_fields(self):
@@ -1267,13 +1272,13 @@ class SaleOrder(models.Model):
     def payment_action_capture(self):
         """ Capture all transactions linked to this sale order. """
         payment_utils.check_rights_on_recordset(self)
-        # In sudo mode because we need to be able to read on acquirer fields.
+        # In sudo mode because we need to be able to read on provider fields.
         self.authorized_transaction_ids.sudo().action_capture()
 
     def payment_action_void(self):
         """ Void all transactions linked to this sale order. """
         payment_utils.check_rights_on_recordset(self)
-        # In sudo mode because we need to be able to read on acquirer fields.
+        # In sudo mode because we need to be able to read on provider fields.
         self.authorized_transaction_ids.sudo().action_void()
 
     def get_portal_last_transaction(self):
@@ -1298,6 +1303,16 @@ class SaleOrder(models.Model):
                 return False
 
         return self.order_line.filtered(show_line)
+
+    def _get_default_payment_link_values(self):
+        self.ensure_one()
+        return {
+            'description': self.name,
+            'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_total')),
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.id,
+            'amount_max': self.amount_total,
+        }
 
     # PORTAL #
 

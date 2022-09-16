@@ -7,7 +7,7 @@
        <field name="view_mode">kanban,tree,form</field>
        <field name="context">{
            'search_default_is_absent': 1,
-           'searchpanel_default_department_id': active_id,
+           'search_default_department_id': active_id,
            'default_department_id': active_id}
        </field>
        <field name="search_view_id" ref="hr.view_employee_filter"/>
@@ -33,14 +33,14 @@
                     <t groups="hr_holidays.group_hr_holidays_user">
                         <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml16">
                             <div class="col">
-                                <a name="%(hr_leave_action_action_approve_department)d" type="action">
+                                <a name="action_open_leave_department" type="object">
                                     <field name="leave_to_approve_count"/> Time Off Requests
                                 </a>
                             </div>
                         </div>
                         <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row ml16">
                             <div class="col">
-                                <a name="%(hr_leave_allocation_action_approve_department)d" type="action">
+                                <a name="action_open_allocation_department" type="object">
                                     <field name="allocation_to_approve_count"/> Allocation Requests
                                 </a>
                             </div>
@@ -48,9 +48,11 @@
                     </t>
                 </xpath>
 
-                <xpath expr="//div[hasclass('o_kanban_card_upper_content')]" position="after">
+                <xpath expr="//div[hasclass('o_kanban_card_lower_content')]" position="inside">
                     <t groups="hr_holidays.group_hr_holidays_user">
-                        <div class="row o_kanban_primary_bottom bottom_block">
+                        <div class="row o_kanban_primary_bottom bottom_block"
+                             style="background-color: white"
+                             t-if="record.absence_of_today.raw_value > 0">
                             <div class="col-3">
                                 <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose time off requests are either confirmed or validated on today">Absence</a>
                             </div>
@@ -91,7 +93,8 @@
             <xpath expr="//templates" position="before">
                 <field name="is_absent"/>
             </xpath>
-            <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="inside">
+            <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="inside"
+                   t-if="record.show_hr_icon_display.raw_value">
                  <!-- Employee is absent, in holiday but he is connected -->
                 <div class="float-end"
                      t-if="record.hr_icon_display.raw_value == 'presence_holiday_present'">
@@ -121,7 +124,8 @@
                 <field name="leave_date_to"/>
                 <field name="is_absent"/>
             </xpath>
-            <xpath expr="//div[@name='presence_absent_active']" position="after">
+            <xpath expr="//div[@name='presence_absent_active']" position="after"
+                   t-if="record.show_hr_icon_display.raw_value">
                 <!-- Employee is absent, in holiday but he is connected -->
                 <!-- green plane -->
                 <div class="float-end"
@@ -157,8 +161,14 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='hr_presence_status']" position="attributes">
                 <attribute name="attrs">
-                    {'invisible': ['|', '|', '|', ('last_activity', '=', False), ('is_absent', '=', True), ('user_id', '=', False), ('id', '=', False)]}
+                    {'invisible': ['|', '|', ('last_activity', '=', False), ('user_id', '=', False), ('id', '=', False)]}
                 </attribute>
+            </xpath>
+            <xpath expr="//div[@id='hr_presence_status']" position="inside">
+                <!-- Employee is absent, in holiday but he is connected -->
+                <div role="img" class="fa fa-fw fa-plane text-success o_button_icon hr_presence" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_present')]}" aria-label="Present but on leave" title="Present but on leave" name="presence_absent_active"/>
+                <!-- Employee is on holiday, not present and not connected -->
+                <div role="img" class="fa fa-fw fa-plane text-warning o_button_icon hr_presence" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}"  aria-label="On Leave" title="On Leave" name="presence_absent"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id"/>
@@ -180,11 +190,11 @@
                         <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}" role="img"
                              class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="leave_date_to"/>
-                        </span>
                         <span class="o_stat_text">
                             Off Till
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="leave_date_to"/>
                         </span>
                     </div>
                 </button>
@@ -246,13 +256,12 @@
                         <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_absent')]}" role="img"
                              class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till" title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="leave_date_to"/>
-                        </span>
                         <span class="o_stat_text">
                             Off Till
                         </span>
-                        <t t-esc="hr_icon_display == 'presence_holiday_present'"/>
+                        <span class="o_stat_value">
+                            <field name="leave_date_to"/>
+                        </span>
                     </div>
                 </button>
             </xpath>
@@ -296,11 +305,11 @@
                              role="img" class="fa fa-fw fa-plane o_button_icon text-warning" aria-label="Off Till"
                              title="Off Till"/>
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="leave_date_to"/>
-                        </span>
                         <span class="o_stat_text">
                             Off Till
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="leave_date_to"/>
                         </span>
                     </div>
                 </button>

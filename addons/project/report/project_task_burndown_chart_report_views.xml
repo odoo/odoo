@@ -6,13 +6,13 @@
         <field name="model">project.task.burndown.chart.report</field>
         <field name="arch" type="xml">
             <search string="Burndown Chart">
+                <field name="stage_id" />
                 <field name="project_id" />
                 <field name="user_ids" />
                 <field name="milestone_id" groups="project.group_project_milestone"/>
                 <field name="date_assign"/>
                 <field name="date_deadline"/>
                 <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
-                <field name="stage_id" />
                 <separator/>
                 <filter name="filter_date" date="date" string="Date" default_period="this_year,last_year" />
                 <filter name="filter_date_deadline" date="date_deadline"/>

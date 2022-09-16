@@ -368,12 +368,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.price_diff_account = self.env['account.account'].create({
-            'name': 'price diff account',
-            'code': 'price.diff.account',
-            'account_type': 'asset_current',
-        })
-        self.product1.property_account_creditor_price_difference = self.price_diff_account
+        stock_valuation_account = self.company_data['default_account_stock_valuation']
 
         # Create PO
         po_form = Form(self.env['purchase.order'])
@@ -393,7 +388,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         # Check SVL and AML
         svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_ids.id)])
         self.assertAlmostEqual(svl.value, 455)
-        aml = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_valuation'].id)])
+        aml = self.env['account.move.line'].search([('account_id', '=', stock_valuation_account.id)])
         self.assertAlmostEqual(aml.debit, 455)
 
         # Create and validate LC
@@ -416,7 +411,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertAlmostEqual(lc.valuation_adjustment_lines.final_cost, 554)
         svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_ids.id)], order='id desc', limit=1)
         self.assertAlmostEqual(svl.value, 99)
-        aml = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_valuation'].id)], order='id desc', limit=1)
+        aml = self.env['account.move.line'].search([('account_id', '=', stock_valuation_account.id)], order='id desc', limit=1)
         self.assertAlmostEqual(aml.debit, 99)
 
         # Create an invoice with the same price
@@ -427,6 +422,6 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         move = move_form.save()
         move.action_post()
 
-        # Check nothing was posted in the price difference account
-        price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id), ('move_id', '=', move.id)])
-        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+        # Check nothing was posted in the stock valuation account.
+        price_diff_aml = self.env['account.move.line'].search([('account_id', '=', stock_valuation_account.id), ('move_id', '=', move.id)])
+        self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the stock valuation account about the price difference.")

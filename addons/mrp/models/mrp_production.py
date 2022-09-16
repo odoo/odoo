@@ -616,7 +616,7 @@ class MrpProduction(models.Model):
     @api.depends('state', 'move_raw_ids')
     def _compute_show_lot_ids(self):
         for order in self:
-            order.show_lot_ids = order.state != 'draft' and any(m.product_id.tracking == 'serial' for m in order.move_raw_ids)
+            order.show_lot_ids = order.state != 'draft' and any(m.product_id.tracking != 'none' for m in order.move_raw_ids)
 
     @api.depends('state', 'move_raw_ids')
     def _compute_show_serial_mass_produce(self):

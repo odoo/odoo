@@ -36,12 +36,16 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/legacy/website_livechat_chatbot_test_script.js',
             'website_livechat/static/src/legacy/public_livechat.scss',
         ],
+        'website.assets_wysiwyg': [
+            'website_livechat/static/src/scss/website_livechat.edit_mode.scss',
+        ],
         'website.assets_editor': [
             'website_livechat/static/src/js/systray_items/*.js',
         ],
         'web.assets_backend': [
             'website_livechat/static/src/components/*/*.js',
             'website_livechat/static/src/components/*/*.scss',
+            'website_livechat/static/src/components/*/*.xml',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
@@ -51,9 +55,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/tests/qunit_suite_tests/**/*.js',
-        ],
-        'web.assets_qweb': [
-            'website_livechat/static/src/components/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

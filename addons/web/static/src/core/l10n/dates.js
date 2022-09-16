@@ -80,12 +80,12 @@ export function areDateEquals(d1, d2) {
  *   "-4y" will return now + 4 years
  *
  * @param {string} value
- * @returns {DateTime|false} Luxon datetime object (in the UTC timezone)
+ * @returns {DateTime|false} Luxon datetime object (in the user's local timezone)
  */
 function parseSmartDateInput(value) {
     const match = smartDateRegex.exec(value);
     if (match) {
-        let date = DateTime.utc();
+        let date = DateTime.local();
         const offset = parseInt(match[2], 10);
         const unit = smartDateUnits[match[3] || "d"];
         if (match[1] === "+") {

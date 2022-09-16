@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { browser } from "@web/core/browser/browser";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import {
     click,
@@ -342,8 +343,53 @@ QUnit.module("Fields", (hooks) => {
 
         // click on the tag: should do nothing and open the form view
         click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
-
         assert.verifySteps(["selectRecord"]);
+        await nextTick();
+
+        assert.containsNone(target, ".o_colorlist");
+
+        await click(target.querySelectorAll(".o_list_record_selector")[1]);
+        click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
+        assert.verifySteps(["selectRecord"]);
+        await nextTick();
+
+        assert.containsNone(target, ".o_colorlist");
+    });
+
+    QUnit.test("Many2ManyTagsField in tree view -- multi edit", async function (assert) {
+        serverData.models.partner.records[0].timmy = [12, 14];
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="foo"/>
+                </tree>`,
+            selectRecord: () => {
+                assert.step("selectRecord");
+            },
+        });
+
+        assert.containsN(target, ".o_field_many2many_tags .badge", 2, "there should be 2 tags");
+        assert.containsNone(target, ".badge.dropdown-toggle", "the tags should not be dropdowns");
+
+        // click on the tag: should do nothing and open the form view
+        click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
+        assert.verifySteps(["selectRecord"]);
+        await nextTick();
+
+        assert.containsNone(target, ".o_colorlist");
+
+        await click(target.querySelectorAll(".o_list_record_selector")[1]);
+        click(target.querySelector(".o_field_many2many_tags .badge :nth-child(1)"));
+        assert.verifySteps([]);
+        await nextTick();
+
+        assert.containsOnce(target, ".o_selected_row");
+        assert.containsNone(target, ".o_colorlist");
     });
 
     QUnit.test("Many2ManyTagsField view a domain", async function (assert) {
@@ -1542,8 +1588,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField supports 'create' props to be a Boolean", async (assert) => {
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
         await makeView({
             type: "form",
@@ -1585,8 +1631,8 @@ QUnit.module("Fields", (hooks) => {
         serverData.views = {
             "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
         };
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
         await makeView({
             type: "form",
@@ -1617,8 +1663,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2ManyTagsField with option 'no_create' set to true", async (assert) => {
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
         await makeView({
             type: "form",
@@ -1629,11 +1675,12 @@ QUnit.module("Fields", (hooks) => {
 
         await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
         assert.containsNone(target, ".o-autocomplete.dropdown li.o_m2o_dropdown_option");
+        assert.containsOnce(target, ".o-autocomplete.dropdown li.o_m2o_no_result");
     });
 
     QUnit.test("Many2ManyTagsField with attribute 'can_create' set to false", async (assert) => {
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
         await makeView({
             type: "form",

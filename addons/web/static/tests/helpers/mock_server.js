@@ -15,6 +15,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
+import { assets } from "@web/core/assets";
 
 const serviceRegistry = registry.category("services");
 
@@ -236,7 +237,7 @@ export class MockServer {
             const isGroupby = node.tagName === "groupby";
             if (isField) {
                 const fieldName = node.getAttribute("name");
-                fieldNodes[fieldName] = node;
+                fieldNodes[fieldName] = { node, isInvisible: node.getAttribute("invisible") };
                 // 'transfer_field_to_modifiers' simulation
                 const field = fields[fieldName];
                 if (!field) {
@@ -267,16 +268,18 @@ export class MockServer {
                 });
             } else if (isGroupby && !isNodeProcessed(node)) {
                 const groupbyName = node.getAttribute("name");
-                fieldNodes[groupbyName] = node;
+                fieldNodes[groupbyName] = { node };
                 groupbyNodes[groupbyName] = node;
             }
             // 'transfer_node_to_modifiers' simulation
             let attrs = node.getAttribute("attrs");
+            node.removeAttribute("attrs");
             if (attrs) {
                 attrs = evaluateExpr(attrs);
                 Object.assign(modifiers, attrs);
             }
             const states = node.getAttribute("states");
+            node.removeAttribute("states");
             if (states) {
                 if (!modifiers.invisible) {
                     modifiers.invisible = [];
@@ -286,12 +289,12 @@ export class MockServer {
             const inListHeader = inTreeView && node.closest("header");
             modifiersNames.forEach((attr) => {
                 const mod = node.getAttribute(attr);
+                node.removeAttribute(attr);
                 if (mod) {
                     const v = evaluateExpr(mod, context) ? true : false;
                     if (inTreeView && !inListHeader && attr === "invisible") {
                         modifiers.column_invisible = v;
-                    }
-                    if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
+                    } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
                         modifiers[attr] = v;
                     }
                 }
@@ -314,7 +317,7 @@ export class MockServer {
             return !isField;
         });
         let relModel, relFields;
-        Object.entries(fieldNodes).forEach(([name, node]) => {
+        Object.entries(fieldNodes).forEach(([name, { node, isInvisible }]) => {
             const field = fields[name];
             if (field.type === "many2one" || field.type === "many2many") {
                 const canCreate = node.getAttribute("can_create");
@@ -326,12 +329,7 @@ export class MockServer {
                 relModel = field.relation;
                 relatedModels.add(relModel);
                 // inline subviews: in forms if field is visible and has no widget (1st level only)
-                if (
-                    inFormView &&
-                    level === 0 &&
-                    !node.getAttribute("widget") &&
-                    !node.getAttribute("invisible")
-                ) {
+                if (inFormView && level === 0 && !node.getAttribute("widget") && !isInvisible) {
                     const inlineViewTypes = Array.from(node.children).map((c) => c.tagName);
                     const missingViewtypes = [];
                     const mode = node.getAttribute("mode") || "kanban,tree";
@@ -1115,21 +1113,24 @@ export class MockServer {
 
     mockReadProgressBar(modelName, kwargs) {
         const { domain, group_by: groupBy, progress_bar: progressBar } = kwargs;
-        const records = this.getRecords(modelName, domain || []);
+        const groups = this.mockReadGroup(modelName, { domain, fields: [], groupby: [groupBy] });
 
+        // Find group by field
         const data = {};
-        for (const record of records) {
-            const groupByValue = record[groupBy]; // always technical value here
+        for (const group of groups) {
+            const records = this.getRecords(modelName, group.__domain || []);
+            const groupByValue = group[groupBy]; // always technical value here
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
                 for (const key in progressBar.colors) {
                     data[groupByValue][key] = 0;
                 }
             }
-
-            const fieldValue = record[progressBar.field];
-            if (fieldValue in data[groupByValue]) {
-                data[groupByValue][fieldValue]++;
+            for (const record of records) {
+                const fieldValue = record[progressBar.field];
+                if (fieldValue in data[groupByValue]) {
+                    data[groupByValue][fieldValue]++;
+                }
             }
         }
 
@@ -2203,12 +2204,11 @@ export async function makeMockServer(serverData, mockRPC) {
             // simulates that we serialized the call to be passed in a real request
             args = JSON.parse(JSON.stringify(args));
         }
-        const performRPC = (route, args) => mockServer.performRPC(route, args);
         if (mockRPC) {
-            res = await mockRPC(route, args, performRPC);
+            res = await mockRPC(route, args, mockServer.performRPC.bind(mockServer));
         }
         if (res === undefined) {
-            res = await performRPC(route, args);
+            res = await mockServer.performRPC(route, args);
         }
         return res;
     };
@@ -2216,6 +2216,35 @@ export async function makeMockServer(serverData, mockRPC) {
     patchWithCleanup(browser, {
         fetch: makeMockFetch(_mockRPC),
     });
+    if (mockRPC) {
+        const { loadJS, loadCSS } = assets;
+        patchWithCleanup(assets, {
+            loadJS: async function (ressource) {
+                let res = await mockRPC(ressource, {});
+                if (res === undefined) {
+                    res = await loadJS(ressource);
+                } else {
+                    console.log(
+                        "%c[assets] fetch (mock) JS ressource " + ressource,
+                        "color: #66e; font-weight: bold;"
+                    );
+                }
+                return res;
+            },
+            loadCSS: async function (ressource) {
+                let res = await mockRPC(ressource, {});
+                if (res === undefined) {
+                    res = await loadCSS(ressource);
+                } else {
+                    console.log(
+                        "%c[assets] fetch (mock) CSS ressource " + ressource,
+                        "color: #66e; font-weight: bold;"
+                    );
+                }
+                return res;
+            },
+        });
+    }
     // Replace RPC service
     serviceRegistry.add("rpc", rpcService, { force: true });
     return mockServer;

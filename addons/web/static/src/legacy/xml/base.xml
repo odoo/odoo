@@ -548,27 +548,6 @@
     </ul>
 </t>
 
-<form t-name="ChangePassword" name="change_password_form" method="POST" aria-atomic="true">
-    <div class="o_legacy_form_view">
-        <table class="o_group o_inner_group o_label_nowrap">
-            <tr>
-                <td class="o_td_label"><label for="old_pwd" class="o_form_label">Old Password</label></td>
-                <td width="100%"><input type="password" class="o_field_widget o_input" name="old_pwd" minlength="1" autofocus="autofocus" autocomplete="current-password"/></td>
-            </tr>
-            <tr>
-                <td class="o_td_label"><label for="new_password" class="o_form_label">New Password</label></td>
-                <td width="100%"><input type="password" class="o_field_widget o_input" name="new_password" minlength="1" autocomplete="new-password"/></td>
-            </tr>
-            <tr>
-                <td class="o_td_label"><label for="confirm_pwd" class="o_form_label">New Password (Confirmation)</label></td>
-                <td width="100%"><input type="password" class="o_field_widget o_input" name="confirm_pwd" minlength="1" autocomplete="new-password"/></td>
-            </tr>
-        </table>
-    </div>
-    <button type="button" class="btn btn-primary oe_form_button">Change Password</button>
-    <button type="button" class="btn btn-secondary oe_form_button oe_form_button_cancel" href="javascript:void(0)">Cancel</button>
-</form>
-
 <div t-name="Action" class="o_action">
     <div class="o_content"/>
 </div>
@@ -1533,7 +1512,7 @@
     </div>
 </t>
 
-<t t-name="AttachDocument">
+<t t-name="LegacyAttachDocument">
     <button t-attf-class="btn o_attachment_button #{widget.node.attrs.highlight?'btn-primary':'btn-secondary'}">
         <span class="o_attach_document"><t t-esc="widget.node.attrs.string"/></span>
         <span class="d-none">

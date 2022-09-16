@@ -14,11 +14,13 @@ import werkzeug.wrappers
 from itertools import islice
 from lxml import etree
 from textwrap import shorten
+from werkzeug.exceptions import NotFound
 from xml.etree import ElementTree as ET
 
 import odoo
 
 from odoo import http, models, fields, _
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
@@ -70,21 +72,47 @@ class Website(Home):
 
     @http.route('/', type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
+        """ The goal of this controller is to make sure we don't serve a 404 as
+        the website homepage. As this is the website entry point, serving a 404
+        is terrible.
+        There is multiple fallback mechanism to prevent that:
+        - If homepage URL is set (empty by default), serve the website.page
+        matching it
+        - If homepage URL is set (empty by default), serve the controller
+        matching it
+        - If homepage URL is not set, serve the `/` website.page
+        - Serve the first accessible menu as last resort. It should be relevant
+        content, at least better than a 404
+        - Serve 404
+        Most DBs will just have a website.page with '/' as URL and keep the
+        homepage_url setting empty.
+        """
         # prefetch all menus (it will prefetch website.page too)
         top_menu = request.website.menu_id
 
-        homepage_id = request.website._get_cached('homepage_id')
-        homepage = homepage_id and request.env['website.page'].browse(homepage_id)
-        if homepage and (homepage.sudo().is_visible or request.env.user._is_internal()) and homepage.url != '/':
-            request.env['ir.http'].reroute(homepage.url)
+        homepage_url = request.website._get_cached('homepage_url')
+        if homepage_url and homepage_url != '/':
+            request.env['ir.http'].reroute(homepage_url)
 
+        # Check for page
         website_page = request.env['ir.http']._serve_page()
         if website_page:
             return website_page
-        else:
-            first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered(lambda menu: menu.is_visible)
-            if first_menu and first_menu[0].url not in ('/', '', '#') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
-                return request.redirect(first_menu[0].url)
+
+        # Check for controller
+        if homepage_url and homepage_url != '/':
+            try:
+                return request._serve_ir_http()
+            except (AccessError, NotFound):
+                pass
+
+        # Fallback on first accessible menu
+        def is_reachable(menu):
+            return menu.is_visible and menu.url not in ('/', '', '#') and not menu.url.startswith(('/?', '/#', ' '))
+
+        reachable_menus = top_menu.child_id.filtered(is_reachable)
+        if reachable_menus:
+            return request.redirect(reachable_menus[0].url)
 
         raise request.not_found()
 
@@ -651,8 +679,9 @@ class Website(Home):
         if not request.website.google_search_console:
             logger.warning('Google Search Console not enable')
             raise werkzeug.exceptions.NotFound()
+        gsc = request.website.google_search_console
+        trusted = gsc[gsc.startswith('google') and len('google'):gsc.endswith('.html') and -len('.html') or None]
 
-        trusted = request.website.google_search_console.lstrip('google').rstrip('.html')
         if key != trusted:
             if key.startswith(trusted):
                 request.website.sudo().google_search_console = "google%s.html" % key

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useService } from "@web/core/utils/hooks";
 import { groupBy } from "@web/core/utils/arrays";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
@@ -15,7 +15,30 @@ const { Component } = owl;
 export class StatusBarField extends Component {
     setup() {
         if (this.props.record.activeFields[this.props.name].viewType === "form") {
-            this.initiateCommand();
+            const commandName = sprintf(
+                this.env._t(`Move to %s...`),
+                escape(this.props.displayName)
+            );
+            useCommand(
+                commandName,
+                () => {
+                    return {
+                        placeholder: commandName,
+                        providers: [
+                            {
+                                provide: () =>
+                                    this.computeItems().unfolded.map((value) => ({
+                                        name: value.name,
+                                        action: () => {
+                                            this.selectItem(value);
+                                        },
+                                    })),
+                            },
+                        ],
+                    };
+                },
+                { category: "smart_action", hotkey: "alt+shift+x" }
+            );
         }
     }
 
@@ -122,34 +145,6 @@ export class StatusBarField extends Component {
 
     onDropdownItemSelected(ev) {
         this.selectItem(ev.detail.payload);
-    }
-
-    initiateCommand() {
-        try {
-            const commandService = useService("command");
-            const provide = () => {
-                return this.computeItems().unfolded.map((value) => ({
-                    name: value.name,
-                    action: () => {
-                        this.selectItem(value);
-                    },
-                }));
-            };
-            const name = sprintf(this.env._t(`Move to %s...`), escape(this.props.displayName));
-            const action = () => {
-                return {
-                    placeholder: name,
-                    providers: [{ provide }],
-                };
-            };
-            const options = {
-                category: "smart_action",
-                hotkey: "alt+shift+x",
-            };
-            commandService.add(name, action, options);
-        } catch {
-            console.log("Could not add command to service");
-        }
     }
 }
 

@@ -79,6 +79,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_ice_server_views.xml',
         'views/mail_channel_member_views.xml',
         'views/mail_channel_rtc_session_views.xml',
+        'views/mail_link_preview_views.xml',
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
@@ -116,6 +117,8 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_messaging': [
             'mail/static/src/model/*.js',
             'mail/static/src/models/*.js',
+            'mail/static/src/models_data/*.js',
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
         ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
@@ -187,11 +190,15 @@ For more specific needs, you may also assign custom-defined actions
             # defines mixins and variables used by multiple components
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
+            'mail/static/src/fields/*.js',
+            'mail/static/src/fields/*.xml',
             'mail/static/src/utils/*.js',
             'mail/static/src/scss/*.scss',
+            'mail/static/src/xml/*.xml',
             'mail/static/src/component_hooks/*.js',
             'mail/static/src/components/*/*.js',
             'mail/static/src/components/*/*.scss',
+            'mail/static/src/components/*/*.xml',
             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
             'mail/static/src/views/**/*.js',
@@ -218,10 +225,6 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web.qunit_mobile_suite_tests': [
             'mail/static/tests/qunit_mobile_suite_tests/**/*.js',
-        ],
-        'web.assets_qweb': [
-            'mail/static/src/xml/*.xml',
-            'mail/static/src/components/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

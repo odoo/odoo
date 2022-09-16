@@ -14,7 +14,6 @@ addFields('PopoverView', {
     snailmailNotificationPopoverContentView: one('SnailmailNotificationPopoverContentView', {
         compute: '_computeSnailmailNotificationPopoverContentView',
         inverse: 'popoverViewOwner',
-        isCausal: true,
     }),
 });
 

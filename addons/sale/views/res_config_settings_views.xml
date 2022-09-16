@@ -103,14 +103,14 @@
                        </div>
                         <div class="col-12 col-lg-6 o_setting_box"
                             id="coupon_settings"
-                            title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
+                            title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
                             <div class="o_setting_left_pane">
-                                <field name="module_sale_loyalty"/>
+                                <field name="module_loyalty"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_sale_loyalty"/>
+                                <label for="module_loyalty" string="Discounts, Loyalty &amp; Gift Card"/>
                                 <div class="text-muted" id="sale_coupon">
-                                    Manage promotion &amp; coupon programs
+                                    Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet
                                 </div>
                             </div>
                         </div>
@@ -191,7 +191,7 @@
                                     Request an online payment to confirm orders
                                 </div>
                                 <div class="mt8" attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
-                                    <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
+                                    <button name='%(payment.action_payment_provider)d' icon="fa-arrow-right" type="action" string="Payment Providers" class="btn-link"/>
                                 </div>
                             </div>
                         </div>
@@ -352,6 +352,20 @@
                                 </div>
                                 <div class="content-group">
                                     <div id="sale_delivery_easypost"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="shipping_costs_sendcloud">
+                            <div class="o_setting_left_pane">
+                                <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_delivery_sendcloud"/>
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with Sendcloud
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_sendcloud"/>
                                 </div>
                             </div>
                         </div>

@@ -4,9 +4,11 @@
 import datetime
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo.addons.event.tests.common import EventCase
 from odoo.exceptions import ValidationError
+from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
@@ -54,6 +56,32 @@ class TestEventFlow(EventCase):
         test_reg2.action_set_done()
         self.assertEqual(test_reg1.state, 'done', 'Event: wrong state of attended registration')
         self.assertEqual(test_event.seats_used, 2, 'Event: incorrect number of attendees after closing registration')
+
+    @users('user_eventmanager')
+    def test_event_default_datetime(self):
+        """ Check that the default date_begin and date_end are correctly set """
+
+        # Should apply default datetimes
+        with freeze_time(self.reference_now):
+            default_event = self.env['event.event'].create({
+                'name': 'Test Default Event',
+            })
+        self.assertEqual(default_event.date_begin, datetime.datetime.strptime('2022-09-05 15:30:00', '%Y-%m-%d %H:%M:%S'))
+        self.assertEqual(default_event.date_end, datetime.datetime.strptime('2022-09-06 15:30:00', '%Y-%m-%d %H:%M:%S'))
+
+        specific_datetimes = {
+            'date_begin': self.reference_now + relativedelta(days=1),
+            'date_end': self.reference_now + relativedelta(days=3),
+        }
+
+        # Should not apply default datetimes if values are set manually
+        with freeze_time(self.reference_now):
+            event = self.env['event.event'].create({
+                'name': 'Test Event',
+                **specific_datetimes,
+            })
+        self.assertEqual(event.date_begin, specific_datetimes['date_begin'])
+        self.assertEqual(event.date_end, specific_datetimes['date_end'])
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_flow(self):

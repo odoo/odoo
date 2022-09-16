@@ -144,12 +144,12 @@ class IrFilters(models.Model):
         # Partial constraint, complemented by unique index (see below). Still
         # useful to keep because it provides a proper error message when a
         # violation occurs, as it shares the same prefix as the unique index.
-        ('name_model_uid_unique', 'unique (name, model_id, user_id, action_id)', 'Filter names must be unique'),
+        ('name_model_uid_unique', 'unique (model_id, user_id, action_id, name)', 'Filter names must be unique'),
     ]
 
     def _auto_init(self):
         result = super(IrFilters, self)._auto_init()
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
         tools.create_unique_index(self._cr, 'ir_filters_name_model_uid_unique_action_index',
-            self._table, ['lower(name)', 'model_id', 'COALESCE(user_id,-1)', 'COALESCE(action_id,-1)'])
+            self._table, ['model_id', 'COALESCE(user_id,-1)', 'COALESCE(action_id,-1)', 'lower(name)'])
         return result

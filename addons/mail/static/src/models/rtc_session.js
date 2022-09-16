@@ -8,7 +8,8 @@ registerModel({
     name: 'RtcSession',
     lifecycleHooks: {
         _willDelete() {
-            this.reset();
+            this._removeAudio();
+            this._removeVideo();
         },
     },
     recordMethods: {
@@ -35,8 +36,8 @@ registerModel({
          */
         reset() {
             this.messaging.browser.clearTimeout(this.connectionRecoveryTimeout);
-            this._removeAudio();
             this.removeVideo();
+            this._removeAudio();
             this.update({
                 audioElement: clear(),
                 broadcastTimer: clear(),
@@ -50,11 +51,7 @@ registerModel({
          * cleanly removes the video stream of the session
          */
         removeVideo() {
-            if (this.videoStream) {
-                for (const track of this.videoStream.getTracks() || []) {
-                    track.stop();
-                }
-            }
+            this._removeVideo();
             this.update({
                 videoStream: clear(),
             });
@@ -285,10 +282,13 @@ registerModel({
                     // ignore error during remove, the value will be overwritten at next usage anyway
                 }
             }
-            this.update({
-                audioStream: clear(),
-                isAudioInError: false,
-            });
+        },
+        _removeVideo() {
+            if (this.videoStream) {
+                for (const track of this.videoStream.getTracks() || []) {
+                    track.stop();
+                }
+            }
         },
         /**
          * @private
@@ -354,7 +354,6 @@ registerModel({
         audioStream: attr(),
         broadcastTimer: one('Timer', {
             inverse: 'rtcSessionOwnerAsBroadcast',
-            isCausal: true,
         }),
         /**
          * The mail.channel of the session, rtc sessions are part and managed by
@@ -492,14 +491,12 @@ registerModel({
         }),
         rtcPeerConnection: one('RtcPeerConnection', {
             inverse: 'rtcSession',
-            isCausal: true,
         }),
         /**
          * Contains the RTCDataChannel of the rtc session.
          */
         rtcDataChannel: one('RtcDataChannel', {
             inverse: 'rtcSession',
-            isCausal: true,
         }),
         /**
          * MediaStream of the user's video.

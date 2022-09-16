@@ -84,7 +84,7 @@ $o-form-label-margin-right: 0px;
         margin: 0 (-$o-form-spacing-unit/2);
 
         > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
-            flex: 0 0 auto;
+            flex: 0 1 auto;
             width: auto!important;
             margin-right: $o-form-spacing-unit/2;
             margin-left: $o-form-spacing-unit/2;
@@ -102,7 +102,8 @@ $o-form-label-margin-right: 0px;
         }
     }
 
-    .o_row > div > .o_field_widget {
+    .o_row > div > .o_field_widget,
+    &.o_form_editable .oe_title .o_field_char {
         width: 100%;
     }
 
@@ -174,7 +175,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // No sheet
-    .o_form_nosheet {
+    &.o_form_nosheet, .o_form_nosheet {
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
 
         .o_form_statusbar {
@@ -680,6 +681,7 @@ $o-form-label-margin-right: 0px;
 
         .o_form_sheet_bg {
             padding: 0;
+            width: 100%;
 
             > .o_form_statusbar, > .alert {
                 /**
@@ -713,7 +715,7 @@ $o-form-label-margin-right: 0px;
             width: 100%;
         }
     }
-    .o_onboarding_payment_acquirer_wizard {
+    .o_onboarding_payment_provider_wizard {
         a[type="action"] {
             color: $link-color;
             cursor: pointer;
@@ -780,7 +782,6 @@ $o-form-label-margin-right: 0px;
 }
 
 .o_form_view.o_xxl_form_view {
-    flex-flow: row nowrap;
 
     .o_form_sheet_bg {
         flex: 1 1 auto; // Side chatter is disabled if this has to shrink but this was added for safety

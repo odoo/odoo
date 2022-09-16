@@ -7,9 +7,11 @@
                     <header class="title drag-handle">
                         <t t-esc="props.title" />
                     </header>
-                    <textarea t-model="state.inputValue" t-ref="input"></textarea>
+                    <div class="popup-textarea-wrap">
+                        <textarea t-model="state.inputValue" t-ref="input"></textarea>
+                    </div>
                     <footer class="footer">
-                        <div class="button confirm" t-on-click="confirm">
+                        <div class="button confirm highlight" t-on-click="confirm">
                             <t t-esc="props.confirmText" />
                         </div>
                         <div class="button cancel" t-on-click="cancel">

@@ -38,6 +38,23 @@ registerModel({
             this.initializedPromise.resolve();
         },
         /**
+         * Executes the provided functions in order, but with a potential delay between
+         * them if they take too much time. This is done in order to avoid blocking the
+         * main thread for too long.
+         *
+         * @param {function[]} functions
+         */
+        async executeGracefully(functions) {
+            let date = new Date();
+            for (const func of functions) {
+                if (new Date() - date > 100) {
+                    await new Promise(resolve => setTimeout(resolve, this.isInQUnitTest ? 0 : 50));
+                    date = new Date();
+                }
+                await func();
+            }
+        },
+        /**
          * Open the form view of the record with provided id and model.
          * Gets the chat with the provided person and returns it.
          *
@@ -389,20 +406,18 @@ registerModel({
         }),
         fetchImStatusTimer: one('Timer', {
             inverse: 'messagingOwnerAsFetchImStatusTimer',
-            isCausal: true,
         }),
         fetchImStatusTimerDuration: attr({
             default: 50 * 1000,
         }),
+        hasLinkPreviewFeature: attr(),
         history: one('Mailbox', {
             default: {},
             inverse: 'messagingAsHistory',
-            isCausal: true,
         }),
         inbox: one('Mailbox', {
             default: {},
             inverse: 'messagingAsInbox',
-            isCausal: true,
         }),
         /**
          * Promise that will be resolved when messaging is initialized.
@@ -495,7 +510,6 @@ registerModel({
         starred: one('Mailbox', {
             default: {},
             inverse: 'messagingAsStarred',
-            isCausal: true,
         }),
         userNotificationManager: one('UserNotificationManager', {
             default: {},

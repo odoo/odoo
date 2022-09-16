@@ -24,11 +24,11 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one() from `_get_rendering_values`.
 
         :param dict processing_values: The generic and specific processing values of the transaction
-        :return: The dict of acquirer-specific processing values.
+        :return: The dict of provider-specific processing values.
         :rtype: dict
         """
         res = super()._get_specific_rendering_values(processing_values)
-        if self.provider != 'mercado_pago':
+        if self.provider_code != 'mercado_pago':
             return res
 
         # Initiate the payment and retrieve the payment link data.
@@ -37,9 +37,9 @@ class PaymentTransaction(models.Model):
             "Sending '/checkout/preferences' request for link creation:\n%s",
             pprint.pformat(payload),
         )
-        api_url = self.acquirer_id._mercado_pago_make_request(
+        api_url = self.provider_id._mercado_pago_make_request(
             '/checkout/preferences', payload=payload
-        )['init_point' if self.acquirer_id.state == 'enabled' else 'sandbox_init_point']
+        )['init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point']
 
         # Extract the payment link URL and embed it in the redirect form.
         rendering_values = {
@@ -53,7 +53,7 @@ class PaymentTransaction(models.Model):
         :return: The request payload.
         :rtype: dict
         """
-        base_url = self.acquirer_id.get_base_url()
+        base_url = self.provider_id.get_base_url()
         return_url = urls.url_join(base_url, MercadoPagoController._return_url)
         webhook_url = urls.url_join(
             base_url, f'{MercadoPagoController._webhook_url}/{self.reference}'
@@ -89,25 +89,25 @@ class PaymentTransaction(models.Model):
             },
         }
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on Mercado Pago data.
 
-        :param str provider: The provider of the acquirer that handled the transaction.
+        :param str provider_code: The code of the provider that handled the transaction.
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction if found.
         :rtype: recordset of `payment.transaction`
         :raise ValidationError: If inconsistent data were received.
         :raise ValidationError: If the data match no transaction.
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'mercado_pago' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'mercado_pago' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('external_reference')
         if not reference:
             raise ValidationError("Mercado Pago: " + _("Received data with missing reference."))
 
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'mercado_pago')])
+        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'mercado_pago')])
         if not tx:
             raise ValidationError(
                 "Mercado Pago: " + _("No transaction found matching reference %s.", reference)
@@ -124,17 +124,17 @@ class PaymentTransaction(models.Model):
         :raise ValidationError: If inconsistent data were received.
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'mercado_pago':
+        if self.provider_code != 'mercado_pago':
             return
 
         payment_id = notification_data.get('payment_id')
         if not payment_id:
             raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
-        self.acquirer_reference = payment_id
+        self.provider_reference = payment_id
 
         # Verify the notification data.
-        verified_payment_data = self.acquirer_id._mercado_pago_make_request(
-            f'/v1/payments/{self.acquirer_reference}', method='GET'
+        verified_payment_data = self.provider_id._mercado_pago_make_request(
+            f'/v1/payments/{self.provider_reference}', method='GET'
         )
 
         payment_status = verified_payment_data.get('status')

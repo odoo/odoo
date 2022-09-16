@@ -132,15 +132,33 @@ def fix_import_export_id_paths(fieldname):
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
 
-def trigger_tree_merge(node1, node2):
-    """ Merge two trigger trees. """
-    for key, val in node2.items():
-        if key is None:
-            node1.setdefault(None, OrderedSet())
-            node1[None].update(val)
-        else:
-            node1.setdefault(key, {})
-            trigger_tree_merge(node1[key], node2[key])
+def merge_trigger_trees(trees: list, select=bool) -> dict:
+    """ Merge trigger trees list into a final tree. The function ``select`` is
+    called on every field to determine which fields should be kept in the tree
+    nodes. This enables to discard some fields from the tree nodes.
+    """
+    result_tree = {}                        # the resulting tree
+    root_fields = OrderedSet()              # the fields in the root node
+    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
+
+    for tree in trees:
+        for key, val in tree.items():
+            if key is None:
+                root_fields.update(val)
+            else:
+                subtrees_to_merge[key].append(val)
+
+    # the root node contains the collected fields for which select is true
+    root_node = [field for field in root_fields if select(field)]
+    if root_node:
+        result_tree[None] = root_node
+
+    for key, subtrees in subtrees_to_merge.items():
+        subtree = merge_trigger_trees(subtrees, select)
+        if subtree:
+            result_tree[key] = subtree
+
+    return result_tree
 
 
 class MetaModel(api.Meta):
@@ -1635,9 +1653,46 @@ class BaseModel(metaclass=MetaModel):
             )
             for [v_id, v_type] in views
         }
-        models = set(model for info in result['views'].values() for model in info.pop('models'))
 
-        result['models'] = {model: self.env[model].fields_get() for model in models}
+        models = {}
+        for view in result['views'].values():
+            for model, model_fields in view.pop('models').items():
+                models.setdefault(model, {'id', self.CONCURRENCY_CHECK_FIELD}).update(model_fields)
+
+        result['models'] = {}
+
+        if 'search' in result['views']:
+            # If the search view is requested, all fields of the main model must be passed.
+            result['models'][self._name] = self.fields_get(attributes=self._get_view_field_attributes())
+            models.pop(self._name)
+
+        for model, model_fields in models.items():
+            result['models'][model] = self.env[model].fields_get(
+                allfields=model_fields, attributes=self._get_view_field_attributes()
+            )
+
+        # Add related action information if asked
+        if options.get('toolbar'):
+            for view in result['views'].values():
+                view['toolbar'] = {}
+
+            bindings = self.env['ir.actions.actions'].get_bindings(self._name)
+            for action_type, key in (('report', 'print'), ('action', 'action')):
+                for action in bindings.get(action_type, []):
+                    view_types = (
+                        action['binding_view_types'].split(',')
+                        if action.get('binding_view_types')
+                        else result['views'].keys()
+                    )
+                    for view_type in view_types:
+                        view_type = view_type if view_type != 'tree' else 'list'
+                        if view_type in result['views']:
+                            result['views'][view_type]['toolbar'].setdefault(key, []).append(action)
+
+        if options.get('load_filters') and 'search' in result['views']:
+            result['views']['search']['filters'] = self.env['ir.filters'].get_filters(
+                self._name, options.get('action_id')
+            )
 
         return result
 
@@ -1650,10 +1705,8 @@ class BaseModel(metaclass=MetaModel):
         :param int view_id: id of the view or None
         :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
         :param dict options: bool options to return additional features:
-            - bool load_filters: returns the model's filters (for search views)
             - bool mobile: true if the web client is currently using the responsive mobile view
               (to use kanban views instead of list views for x2many fields)
-            - bool toolbar: true to include contextual actions
         :return: architecture of the view as an etree node, and the browse record of the view used
         :rtype: tuple
         :raise AttributeError:
@@ -1699,6 +1752,63 @@ class BaseModel(metaclass=MetaModel):
         return arch, view
 
     @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """ Get the key to use for caching `_get_view_cache`.
+
+        This method is meant to be overriden by models needing additional keys.
+
+        :param int view_id: id of the view or None
+        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param dict options: bool options to return additional features:
+            - bool mobile: true if the web client is currently using the responsive mobile view
+              (to use kanban views instead of list views for x2many fields)
+        :return: a cache key
+        :rtype: tuple
+        """
+        return (view_id, view_type, options.get('mobile'), self.env.lang) + tuple(
+            (key, value) for key, value in self.env.context.items() if key.endswith('_view_ref')
+        )
+
+    @api.model
+    @ormcache('self._get_view_cache_key(view_id, view_type, **options)')
+    def _get_view_cache(self, view_id=None, view_type='form', **options):
+        """ Get the view information ready to be cached
+
+        The cached view includes the postprocessed view, including inherited views, for all groups.
+        The blocks restricted to groups must therefore be removed after calling this method
+        for users not part of the given groups.
+
+        :param int view_id: id of the view or None
+        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param dict options: boolean options to return additional features:
+            - bool mobile: true if the web client is currently using the responsive mobile view
+              (to use kanban views instead of list views for x2many fields)
+        :return: a dictionnary including
+            - string arch: the architecture of the view (including inherited views, postprocessed, for all groups)
+            - int id: the view id
+            - string model: the view model
+            - dict models: the fields of the models used in the view (including sub-views)
+        :rtype: dict
+        """
+        # Get the view arch and all other attributes describing the composition of the view
+        arch, view = self._get_view(view_id, view_type, **options)
+
+        # Apply post processing, groups and modifiers etc...
+        arch, models = view.postprocess_and_fields(arch, model=self._name, **options)
+        result = {
+            'arch': arch,
+            # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
+            'id': view.id,
+            # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
+            # you just called `get_views` for that model, so obviously the web client already knows the model.
+            'model': self._name,
+            # Set a frozendict and tuple for the field list to make sure the value in cache cannot be updated.
+            'models': frozendict({model: tuple(fields) for model, fields in models.items()}),
+        }
+
+        return frozendict(result)
+
+    @api.model
     def get_view(self, view_id=None, view_type='form', **options):
         """ get_view([view_id | view_type='form'])
 
@@ -1707,11 +1817,8 @@ class BaseModel(metaclass=MetaModel):
         :param int view_id: id of the view or None
         :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
         :param dict options: boolean options to return additional features:
-
-            - load_filters: returns the model's filters (for search views)
-            - mobile: true if the web client is currently using the responsive mobile view
-              (to use kanban views instead of list views for x2many fields)
-            - toolbar: true to include contextual actions
+            - bool mobile: true if the web client is currently using the responsive mobile view
+            (to use kanban views instead of list views for x2many fields)
         :return: composition of the requested view (including inherited views and extensions)
         :rtype: dict
         :raise AttributeError:
@@ -1723,45 +1830,29 @@ class BaseModel(metaclass=MetaModel):
         """
         self.check_access_rights('read')
 
-        # Get the view arch and all other attributes describing the composition of the view
-        arch, view = self._get_view(view_id, view_type, **options)
+        result = dict(self._get_view_cache(view_id, view_type, **options))
 
-        # Override context for postprocessing
-        if view and (view.model or self._name) != self._name:
-            view = view.with_context(base_model_name=view.model)
-
-        # Apply post processing, groups and modifiers etc...
-        arch, models = view.postprocess_and_fields(arch, model=self._name, **options)
-        result = {
-            'arch': arch,
-            # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
-            'id': view.id,
-            # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
-            # you just called `get_views` for that model, so obviously the web client already knows the model.
-            'model': self._name,
-            'models': models,
-        }
-
-        # Add related action information if asked
-        if options.get('toolbar') and view_type != 'search':
-            vt = 'list' if view_type == 'tree' else view_type
-            bindings = self.env['ir.actions.actions'].get_bindings(self._name)
-            resreport = [action
-                         for action in bindings['report']
-                         if vt in (action.get('binding_view_types') or vt).split(',')]
-            resaction = [action
-                         for action in bindings['action']
-                         if vt in (action.get('binding_view_types') or vt).split(',')]
-
-            result['toolbar'] = {
-                'print': resreport,
-                'action': resaction,
-            }
-
-        if options.get('load_filters') and view_type == 'search':
-            result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
+        node = etree.fromstring(result['arch'])
+        node = self.env['ir.ui.view']._postprocess_access_rights(node)
+        result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result
+
+    @api.model
+    def _get_view_field_attributes(self):
+        """ Returns the field attributes required by the web client to load the views.
+
+        The method is meant to be overridden by modules extending web client features and requiring additional
+        field attributes.
+
+        :return: string list of field attribute names
+        :rtype: list
+        """
+        return [
+            'context', 'currency_field', 'definition_record', 'digits', 'domain', 'group_operator', 'groups', 'help',
+            'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
+            'sortable', 'store', 'string', 'translate', 'trim', 'type',
+        ]
 
     @api.model
     def load_views(self, views, options=None):
@@ -1805,7 +1896,7 @@ class BaseModel(metaclass=MetaModel):
             'Method `fields_view_get` is deprecated, use `get_view` instead',
             DeprecationWarning, stacklevel=2,
         )
-        result = self.get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
+        result = self.get_views([(view_id, view_type)], {'toolbar': toolbar, 'submenu': submenu})['views'][view_type]
         node = etree.fromstring(result['arch'])
         view_fields = set(el.get('name') for el in node.xpath('.//field[not(ancestor::field)]'))
         result['fields'] = self.fields_get(view_fields)
@@ -6260,15 +6351,26 @@ class BaseModel(metaclass=MetaModel):
         #  - mark H to recompute on inverse(X, records),
         #  - mark I to recompute on inverse(W, inverse(X, records)),
         #  - mark J to recompute on inverse(Y, records).
-        if len(fnames) == 1:
-            tree = self.pool.field_triggers.get(self._fields[next(iter(fnames))])
-        else:
-            # merge dependency trees to evaluate all triggers at once
-            tree = {}
-            for fname in fnames:
-                node = self.pool.field_triggers.get(self._fields[fname])
-                if node:
-                    trigger_tree_merge(tree, node)
+        fields = [self._fields[fname] for fname in fnames]
+        field_triggers = self.pool.field_triggers
+        trees = [field_triggers[field] for field in fields if field in field_triggers]
+
+        if not trees:
+            return
+
+        cache = self.env.cache
+
+        # Merge dependency trees to evaluate all triggers at once.
+        # For non-stored computed fields, `_modified_triggers` might traverse
+        # the tree (at the cost of extra queries) only to know which records to
+        # invalidate in cache. But in many cases, most of these fields have no
+        # data in cache, so they can be ignored from the start. This allows us
+        # to discard subtrees from the merged tree when they only contain such
+        # fields.
+        tree = merge_trigger_trees(
+            trees,
+            select=lambda field: (field.compute and field.store) or cache.contains_field(field),
+        )
 
         if tree:
             # determine what to compute (through an iterator)

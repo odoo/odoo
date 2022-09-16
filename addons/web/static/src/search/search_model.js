@@ -408,7 +408,7 @@ export class SearchModel extends EventBus {
      */
     get context() {
         if (!this._context) {
-            this._context = makeContext([this._getContext(), this.globalContext]);
+            this._context = makeContext([this.globalContext, this._getContext()]);
         }
         return deepCopy(this._context);
     }

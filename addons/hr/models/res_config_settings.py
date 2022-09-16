@@ -13,6 +13,7 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.resource_calendar_id', readonly=False)
     module_hr_presence = fields.Boolean(string="Advanced Presence Control")
     module_hr_skills = fields.Boolean(string="Skills Management")
+    module_hr_homeworking = fields.Boolean(string="Homeworking")
     hr_presence_control_login = fields.Boolean(string="Based on user status in system", config_parameter='hr.hr_presence_control_login')
     hr_presence_control_email = fields.Boolean(string="Based on number of emails sent", config_parameter='hr_presence.hr_presence_control_email')
     hr_presence_control_ip = fields.Boolean(string="Based on IP Address", config_parameter='hr_presence.hr_presence_control_ip')

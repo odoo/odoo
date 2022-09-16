@@ -7,7 +7,7 @@ import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import {qweb, _t} from 'web.core';
 
-const {Component, onWillStart, onRendered, useState, xml, useRef, markup} = owl;
+const {Component, onWillStart, useState, xml, useRef, markup} = owl;
 
 export class PageDependencies extends Component {
     setup() {
@@ -208,55 +208,4 @@ PagePropertiesDialog.defaultProps = {
         form_view_ref: 'website.website_page_properties_view_form',
     },
     onClose: () => {},
-};
-
-// TODO remove this once the 'website.page' listView is adapted to OWL.
-export class PagePropertiesDialogManager extends Component {
-    setup() {
-        this.dialog = useService('dialog');
-        onRendered(this.createDialog);
-    }
-
-    createDialog() {
-        switch (this.props.mode) {
-            case 'clone':
-                this.dialog.add(DuplicatePageDialog, {
-                    pageId: this.props.resId,
-                    onDuplicate: this.props.onClose,
-                });
-                break;
-            case 'delete':
-                this.dialog.add(DeletePageDialog, {
-                    pageId: this.props.resId,
-                    onDelete: this.props.onClose,
-                });
-                break;
-            default:
-                this.dialog.add(PagePropertiesDialog, {
-                    resId: this.props.resId,
-                    onClose: this.props.onClose,
-                    onRecordSaved: this.props.onRecordSaved,
-                });
-                break;
-        }
-    }
-}
-PagePropertiesDialogManager.template = xml``;
-PagePropertiesDialogManager.props = {
-    onClose: {
-        type: Function,
-        optional: true,
-    },
-    mode: {
-        type: String,
-        optional: true,
-    },
-    resId: {
-        type: [Number, Boolean],
-        optional: true,
-    },
-    onRecordSaved: {
-        type: Function,
-        optional: true,
-    }
 };

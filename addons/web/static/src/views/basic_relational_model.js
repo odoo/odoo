@@ -453,7 +453,7 @@ export class Record extends DataPoint {
     async checkX2ManyValidity(fieldName) {
         const list = this.data[fieldName];
         const record = list.editedRecord;
-        if (record && record.isNew && !(await record.checkValidity())) {
+        if (record && !(await record.checkValidity())) {
             if (record.canBeAbandoned && !record.isDirty) {
                 list.abandonRecord(record.id);
             } else {
@@ -503,7 +503,7 @@ export class Record extends DataPoint {
                 viewType: this.__viewType,
             });
         } else {
-            await this.model.__bm__.reload(this.__bm_handle__, {
+            this.__bm_handle__ = await this.model.__bm__.reload(this.__bm_handle__, {
                 viewType: this.__viewType,
             });
         }
@@ -872,7 +872,7 @@ export class StaticList extends DataPoint {
             if (record) {
                 record.__syncData();
             } else {
-                record = new Record(this.model, {
+                record = new this.model.constructor.Record(this.model, {
                     handle: dp.id,
                     onRecordWillSwitchMode: this.onRecordWillSwitchMode,
                     mode: "readonly",
@@ -1299,6 +1299,7 @@ export class RelationalModel extends Model {
             }
         }
 
+        const Record = this.constructor.Record;
         const newRecord = new Record(this, {
             handle,
             viewType: params.viewMode,
@@ -1370,7 +1371,7 @@ export class RelationalModel extends Model {
             loadParams.context = params.context;
         }
         const state = this.root ? this.root.exportState() : {};
-        const nextRoot = new Record(
+        const nextRoot = new this.constructor.Record(
             this,
             {
                 __bm_load_params__: loadParams,
@@ -1446,7 +1447,8 @@ export class RelationalModel extends Model {
                 context: params.context,
             },
         });
-        return new Record(this, params, state);
+        return new this.constructor.Record(this, params, state);
     }
 }
 RelationalModel.services = ["action", "dialog", "notification"];
+RelationalModel.Record = Record;

@@ -5,7 +5,7 @@ odoo.define('website.content.snippets.animation', function (require) {
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
-const ajax = require('web.ajax');
+const { loadJS } = require('@web/core/assets');
 var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
@@ -624,7 +624,7 @@ const MobileYoutubeAutoplayMixin = {
                     return resolve();
                 };
             });
-            ajax.loadJS('https://www.youtube.com/iframe_api');
+            loadJS('https://www.youtube.com/iframe_api');
         }
 
         return promise;
@@ -725,7 +725,6 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
 
 registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.o_background_video',
-    xmlDependencies: ['/website/static/src/xml/website.background.video.xml'],
     disabledInEditableMode: false,
 
     /**
@@ -849,7 +848,6 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
 
 registry.socialShare = publicWidget.Widget.extend({
     selector: '.oe_social_share',
-    xmlDependencies: ['/website/static/src/xml/website.share.xml'],
     events: {
         'mouseenter': '_onMouseEnter',
     },
@@ -1201,7 +1199,9 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
                 el.classList.add('o_animate_in_dropdown');
                 return;
             }
-            this._resetAnimation($(el));
+            if (!el.classList.contains('o_animate_on_scroll')) {
+                this._resetAnimation($(el));
+            }
         });
         // Then we render all the elements, the ones which are invisible
         // in state 0 (like fade_in for example) will stay invisible.
@@ -1211,7 +1211,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         // Setting capture to true allows to take advantage of event bubbling
         // for events that otherwise don’t support it. (e.g. useful when
         // scrolling a modal)
-        this.__onScrollWebsiteAnimate = _.throttle(this._onScrollWebsiteAnimate.bind(this), 200);
+        this.__onScrollWebsiteAnimate = _.throttle(this._onScrollWebsiteAnimate.bind(this), 10);
         this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
         $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
@@ -1315,15 +1315,11 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @param {Element} el
      */
     _scrollWebsiteAnimate(el) {
-        const scroll = $(el).scrollTop();
-        // Handle reverse scrolling
-        const direction = (scroll < this.lastScroll) ? -1 : 1;
-        this.lastScroll = scroll;
-
         _.each(this.$target.find('.o_animate:not(.o_animate_in_dropdown)'), el => {
             const $el = $(el);
-            const elHeight = $el.height();
-            const elOffset = direction * Math.max((elHeight * this.offsetRatio), this.offsetMin);
+            const elHeight = el.offsetHeight;
+            const animateOnScroll = el.classList.contains('o_animate_on_scroll');
+            let elOffset = animateOnScroll ? 0 : Math.max((elHeight * this.offsetRatio), this.offsetMin);
             const state = $el.css("animation-play-state");
 
             // We need to offset for the change in position from some animation.
@@ -1331,6 +1327,10 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             // Cookies bar might be opened and considered as a modal but it is
             // not really one (eg 'discrete' layout), and should not be used as
             // scrollTop value.
+            const scrollTop = document.body.classList.contains('modal-open') ?
+                this.$target.find('.modal:visible').scrollTop() :
+                this.$scrollingElement.scrollTop();
+            const elTop = this._getElementOffsetTop(el) - scrollTop;
             let visible;
             const footerEl = el.closest('.o_footer_slideout');
             const wrapEl = this.$target[0];
@@ -1347,19 +1347,32 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
                 visible = actualScroll >=
                     totalScrollHeight - heightFromFooter - elHeight + elOffset;
             } else {
-                const scrollTop = document.body.classList.contains("modal-open") ?
-                    this.$target.find('.modal:visible').scrollTop() :
-                    this.$scrollingElement.scrollTop();
-                const elTop = this._getElementOffsetTop($el[0]) - scrollTop;
                 visible = this.windowsHeight > (elTop + elOffset) &&
                     0 < (elTop + elHeight - elOffset);
             }
-            if (visible && state === "paused") {
-                $el.addClass("o_visible");
-                this._startAnimation($el);
-            } else if (!visible && $el.hasClass("o_animate_both_scroll") && state === "running") {
-                $el.removeClass("o_visible");
-                this._resetAnimation($el);
+            if (animateOnScroll) {
+                if (visible) {
+                    const start = 100 / (parseFloat(el.dataset.scrollZoneStart) || 1);
+                    const end = 100 / (parseFloat(el.dataset.scrollZoneEnd) || 1);
+                    const out = el.classList.contains('o_animate_out');
+                    const ratio = (out ? elTop + elHeight : elTop) / (this.windowsHeight - (this.windowsHeight / start));
+                    const duration = parseFloat(window.getComputedStyle(el).animationDuration);
+                    const delay = (ratio - 1) * (duration * end);
+                    el.style.animationDelay = (out ? - duration - delay : delay) + "s";
+                    el.classList.add('o_animating');
+                    this._toggleOverflowXYHidden(true);
+                } else if (el.classList.contains('o_animating')) {
+                    el.classList.remove('o_animating');
+                    this._toggleOverflowXYHidden(false);
+                }
+            } else {
+                if (visible && state === 'paused') {
+                    $el.addClass('o_visible');
+                    this._startAnimation($el);
+                } else if (!visible && $el.hasClass('o_animate_both_scroll') && state === 'running') {
+                    $el.removeClass('o_visible');
+                    this._resetAnimation($el);
+                }
             }
         });
     },

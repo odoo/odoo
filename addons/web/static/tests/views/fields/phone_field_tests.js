@@ -185,4 +185,27 @@ QUnit.module("Fields", (hooks) => {
             "Placeholder"
         );
     });
+
+    QUnit.test("unset and readonly PhoneField", async function (assert) {
+        serverData.models.partner.fields.foo.default = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="phone" readonly="1" placeholder="Placeholder"/>
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+        assert.containsNone(
+            target.querySelector(".o_field_widget[name='foo']"),
+            "a",
+            "The readonly field don't contain a link if no value is set"
+        );
+    });
 });

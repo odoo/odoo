@@ -13,7 +13,7 @@
                     Customer
                 </t>
             </button>
-            <button class="button pay" t-on-click="() => this.trigger(props.actionToTrigger or 'click-pay')">
+            <button class="button pay validation" t-on-click="() => this.trigger(props.actionToTrigger or 'click-pay')">
                 <div class="pay-circle" t-att-class="{ 'highlight': props.isActionButtonHighlighted }">
                     <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
                 </div>

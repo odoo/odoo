@@ -536,13 +536,16 @@ $line-height-truncate: 1.25em;
             .o_wslides_lesson_aside_list_link {
                 @include o-hover-text-color($gray-600, $headings-color );
 
-                .o_wslides_lesson_link_name {
-                    line-height: 1.2;
-                }
-
                 &.active {
                     box-shadow:inset 2px 0 map-get($theme-colors, 'primary');
                 }
+            }
+            button {
+                padding-top: 0;
+                border-top: 0;
+            }
+            i {
+                line-height: unset;
             }
             .o_wslides_button_complete {
                 margin-left: 5px;
@@ -659,18 +662,6 @@ $line-height-truncate: 1.25em;
     .tooltip > .arrow::before {
         display: none;
     }
-}
-
-#slide_channel_add_form input[name="channel_type"]:checked + label {
-    border: 4px solid $primary;
-    box-shadow: 3px 3px 5px gray;
-}
-
-#slide_channel_add_form label img {
-    // make the layout preview images size depending on the screen size
-    // so we do not need to scroll on most resolutions
-    cursor: pointer;
-    height: 20vh;
 }
 
 .o_wslides_body .form-control::-webkit-input-placeholder {

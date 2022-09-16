@@ -20,7 +20,7 @@ It is completely integrated with the cost accounting module. It allows you to se
 up a management by affair.
     """,
     'website': 'https://www.odoo.com/app/timesheet',
-    'depends': ['hr', 'analytic', 'project', 'uom'],
+    'depends': ['hr', 'hr_hourly_cost', 'analytic', 'project', 'uom'],
     'data': [
         'security/hr_timesheet_security.xml',
         'security/ir.model.access.csv',
@@ -48,12 +48,7 @@ up a management by affair.
     'uninstall_hook': '_uninstall_hook',
     'assets': {
         'web.assets_backend': [
-            'hr_timesheet/static/src/**/*.scss',
-            'hr_timesheet/static/src/**/*.js',
-            ('remove', 'hr_timesheet/static/src/js/*_legacy.js')
-        ],
-        "web.assets_backend_legacy_lazy": [
-            'hr_timesheet/static/src/js/*_legacy.js',
+            'hr_timesheet/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
             'hr_timesheet/static/tests/**/*',

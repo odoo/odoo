@@ -71,6 +71,18 @@ QUnit.module("SettingsFormView", (hooks) => {
                     <div class="o_setting_container">
                         <div class="settings">
                             <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="app_settings_header pt-1 pb-1" style="background-color: #FEF0D0;">
+                                    <div class="col-xs-12 col-md-6 ms-0 o_setting_box">
+                                        <div class="o_setting_right_pane border-start-0 ms-0 ps-0">
+                                            <div class="content-group">
+                                                <div class="row flex-row flex-nowrap mt8 align-items-center">
+                                                    <label class="col text-nowrap ml8 flex-nowrap" string="Foo" for="foo_config_id"/>
+                                                    <field name="foo" title="Foo?."/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <h2>Title of group Bar</h2>
                                 <div class="row mt16 o_settings_container">
                                     <div class="col-12 col-lg-6 o_setting_box">
@@ -104,6 +116,18 @@ QUnit.module("SettingsFormView", (hooks) => {
                                         </div>
                                     </div>
                                 </div>
+                                <h2 attrs="{'invisible': [('bar','=',False)]}">Hide group Foo</h2>
+                                <div class="row mt16 o_settings_container" attrs="{'invisible': [('bar','=',False)]}">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="foo"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <span class="o_form_label">Hide Foo</span>
+                                            <div class="text-muted">this is hide foo</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,7 +153,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ["this is bar", "this is big bar", "this is foo"]
         );
         assert.deepEqual(
-            [...target.querySelectorAll(".settings h2")].map((x) => x.textContent),
+            [...target.querySelectorAll(".settings h2:not(.d-none)")].map((x) => x.textContent),
             ["Title of group Bar", "Title of group Foo"]
         );
         assert.doesNotHaveClass(target.querySelector(".o_form_editable"), "o_form_nosheet");
@@ -138,6 +162,10 @@ QUnit.module("SettingsFormView", (hooks) => {
             target.querySelector(".o_searchview input"),
             "searchview input should be focused"
         );
+        assert.containsOnce(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+        );
 
         await editSearch(target, "Hello there");
         await execTimeouts();
@@ -145,6 +173,10 @@ QUnit.module("SettingsFormView", (hooks) => {
             target.querySelector(".o_searchview input").value,
             "Hello there",
             "input value should be updated"
+        );
+        assert.containsNone(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
         );
 
         await editSearch(target, "b");
@@ -161,9 +193,13 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
 
         assert.deepEqual(
-            [...target.querySelectorAll(".settings h2")].map((x) => x.textContent),
+            [...target.querySelectorAll(".settings h2:not(.d-none)")].map((x) => x.textContent),
             ["Title of group Bar"],
             "The title of group Bar is also selected"
+        );
+        assert.containsOnce(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
         );
 
         await editSearch(target, "Big");
@@ -174,9 +210,13 @@ QUnit.module("SettingsFormView", (hooks) => {
             "Only 'Big Bar' is shown"
         );
         assert.deepEqual(
-            [...target.querySelectorAll(".settings h2")].map((x) => x.textContent),
+            [...target.querySelectorAll(".settings h2:not(.d-none)")].map((x) => x.textContent),
             ["Title of group Bar"],
             "The title of group Bar is also selected"
+        );
+        assert.containsOnce(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
         );
 
         await editSearch(target, "group Bar");
@@ -186,6 +226,10 @@ QUnit.module("SettingsFormView", (hooks) => {
             ["Bar", "This is Big BAR"],
             "When searching a title, all group is shown"
         );
+        assert.containsOnce(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+        );
 
         await editSearch(target, "bx");
         await execTimeouts();
@@ -194,17 +238,43 @@ QUnit.module("SettingsFormView", (hooks) => {
             target.querySelector(".o_nocontent_help"),
             "record not found message shown"
         );
+        assert.containsNone(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+        );
+
         await editSearch(target, "Fo");
         await execTimeouts();
         assert.strictEqual(
             target.querySelector(".highlighter").textContent,
             "Fo",
-            "F word highlighted"
+            "Fo word highlighted"
         );
         assert.deepEqual(
             [...target.querySelectorAll(".o_setting_box .o_form_label")].map((x) => x.textContent),
             ["Foo"],
             "only Foo is shown"
+        );
+        assert.containsOnce(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
+        );
+
+        await editSearch(target, "Hide");
+        await execTimeouts();
+        assert.deepEqual(
+            [...target.querySelectorAll(".settings h2:not(.d-none)")].map((x) => x.textContent),
+            [],
+            "Hide settings should not be shown"
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_setting_box .o_form_label")].map((x) => x.textContent),
+            [],
+            "Hide settings should not be shown"
+        );
+        assert.containsNone(
+            target,
+            ".app_settings_block:not(.d-none) .app_settings_header .o_setting_box"
         );
     });
 
@@ -303,16 +373,20 @@ QUnit.module("SettingsFormView", (hooks) => {
                     </div>
                 </form>`,
         });
-        assert.containsOnce(target, ".o_setting_tip", "Tip should not be hidden initially");
+        assert.containsOnce(
+            target,
+            ".o_setting_tip:not(.d-none)",
+            "Tip should not be hidden initially"
+        );
         await editSearch(target, "below");
         await execTimeouts();
-        assert.containsOnce(target, ".o_setting_tip", "Tip should not be hidden");
+        assert.containsOnce(target, ".o_setting_tip:not(.d-none)", "Tip should not be hidden");
         await editSearch(target, "Foo");
         await execTimeouts();
-        assert.containsNone(target, ".o_setting_tip", "Tip should not be displayed");
+        assert.containsNone(target, ".o_setting_tip:not(.d-none)", "Tip should not be displayed");
         await editSearch(target, "");
         await execTimeouts();
-        assert.containsOnce(target, ".o_setting_tip", "Tip should not be hidden");
+        assert.containsOnce(target, ".o_setting_tip:not(.d-none)", "Tip should not be hidden");
     });
 
     QUnit.test(
@@ -601,17 +675,17 @@ QUnit.module("SettingsFormView", (hooks) => {
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_form_label");
         assert.equal(target.querySelector(".o_form_label").textContent, "");
-        assert.containsNone(target, ".settingSearchHeader");
+        assert.containsNone(target, ".app_settings_block:not(.d-none) .settingSearchHeader");
         await editSearch(target, "Fo");
         await execTimeouts();
         assert.containsNone(target, ".o_form_label");
-        assert.containsNone(target, ".settingSearchHeader");
+        assert.containsNone(target, ".app_settings_block:not(.d-none) .settingSearchHeader");
     });
 
     QUnit.test(
         "clicking on any button in setting should show discard warning if setting form is dirty",
         async function (assert) {
-            assert.expect(12);
+            assert.expect(11);
 
             serverData.actions = {
                 1: {
@@ -659,10 +733,6 @@ QUnit.module("SettingsFormView", (hooks) => {
                 if (route === "/web/dataset/call_button") {
                     if (args.method === "execute") {
                         assert.ok("execute method called");
-                        return true;
-                    }
-                    if (args.method === "cancel") {
-                        assert.ok("cancel method called");
                         return true;
                     }
                 }
@@ -1018,7 +1088,15 @@ QUnit.module("SettingsFormView", (hooks) => {
                     <form string="Settings" js_class="base_settings">
                         <div class="settings">
                             <div class="app_settings_block" string="CRM" data-key="crm">
-                                <button name="3" string="Execute action" type="action"/>
+                                <h2>Title of group</h2>
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane"/>
+                                        <div class="o_setting_right_pane">
+                                            <button name="3" string="Execute action" type="action"/>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>`,
@@ -1171,7 +1249,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
     QUnit.test("Discard button clean the settings view", async function (assert) {
-        assert.expect(5);
+        assert.expect(10);
 
         serverData.actions = {
             1: {
@@ -1209,21 +1287,18 @@ QUnit.module("SettingsFormView", (hooks) => {
         };
 
         const mockRPC = (route, args) => {
-            if (route === "/web/dataset/call_button" && args.method === "cancel") {
-                assert.step("cancel");
-                return Promise.resolve({
-                    name: "Settings view",
-                    res_model: "res.config.settings",
-                    type: "ir.actions.act_window",
-                    target: "inline",
-                    views: [[false, "form"]],
-                });
-            }
+            assert.step(args.method || route);
         };
 
         const webClient = await createWebClient({ serverData, mockRPC });
 
         await doAction(webClient, 1);
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "get_views",
+            "onchange",
+        ]);
         assert.containsNone(
             target,
             ".o_field_boolean input:checked",
@@ -1240,8 +1315,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ".o_field_boolean input:checked",
             "checkbox should not be checked"
         );
-
-        assert.verifySteps(["cancel"]);
+        assert.verifySteps(["onchange"]);
     });
 
     QUnit.test("Settings Radio widget: show and search", async function (assert) {
@@ -1351,12 +1425,64 @@ QUnit.module("SettingsFormView", (hooks) => {
         const expectedCompiled = `
         <div class="o_setting_container">
             <SettingsPage slots="props.slots" initialTab="props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}]" class="'settings'">
-                <SettingsApp t-props="{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}" selectedTab="settings.selectedTab" t-if="!searchState.value or search(&quot;app&quot;, &quot;crm&quot;)" class="'app_settings_block'">
+                <SettingsApp t-props="{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}" selectedTab="settings.selectedTab" class="'app_settings_block'">
                     <FormLabel t-props="{id:'display_name',fieldName:'display_name',record:props.record,fieldInfo:props.archInfo.fieldNodes['display_name'],className:&quot;highhopes&quot;}" string="\`My&quot; little '  Label\`"/>
                     <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
                 </SettingsApp>
             </SettingsPage>
         </div>`;
         assert.areEquivalent(compiled.firstChild.innerHTML, expectedCompiled);
+    });
+
+    QUnit.test("highlight Element with inner html/fields", async (assert) => {
+        let compiled = undefined;
+        patchWithCleanup(SettingsFormCompiler.prototype, {
+            compile() {
+                const _compiled = this._super(...arguments);
+                compiled = _compiled;
+                return _compiled;
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+            <div class="o_setting_container">
+                <div class="settings">
+                    <div class="app_settings_block" string="CRM" data-key="crm">
+                        <h2>Title of group Bar</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="bar"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="bar"/>
+                                    <div class="text-muted">this is Baz value: <field name="baz" readonly="1"/> and this is the after text</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_setting_right_pane .text-muted").textContent,
+            "this is Baz value: treads and this is the after text"
+        );
+
+        const expectedCompiled = `
+            <HighlightText originalText="\`this is Baz value: \`"/>
+            <Field id="'baz'" name="'baz'" record="props.record" fieldInfo="props.archInfo.fieldNodes['baz']"/>
+            <HighlightText originalText="\` and this is the after text\`"/>`;
+        assert.areEquivalent(
+            compiled.querySelector("Setting div.o_setting_right_pane div.text-muted").innerHTML,
+            expectedCompiled
+        );
     });
 });

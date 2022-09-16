@@ -26,6 +26,7 @@
             </t>
             <t t-else="">
                 <a
+                    t-if="props.value"
                     class="o_form_uri"
                     t-att-href="props.value ? `#id=${props.value[0]}&amp;model=${relation}` : '#'"
                     t-on-click.prevent="onClick"
@@ -67,6 +68,17 @@
                         t-on-click="onExternalBtnClick"
                     />
                 </t>
+                <button
+                    t-if="hasBarcodeButton"
+                    t-on-click="onBarcodeBtnClick"
+                    type="button"
+                    class="btn ms-3 o_barcode"
+                    tabindex="-1"
+                    draggable="false"
+                    aria-label="Scan barcode"
+                    title="Scan barcode"
+                    data-tooltip="Scan barcode"
+                />
             </div>
             <div class="o_field_many2one_extra">
                 <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">

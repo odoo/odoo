@@ -501,12 +501,22 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         expected['email_to'] = email_to_list
 
         # fetch mail
-        sent_mail = next(
-            (mail for mail in self._mails
-             if set(mail['email_to']) == set(expected['email_to']) and mail['email_from'] == expected['email_from']
-             ), False)
-        debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails) if not bool(sent_mail) else ''
-        self.assertTrue(bool(sent_mail), 'Expected mail from %s to %s not found in %s' % (expected['email_from'], expected['email_to'], debug_info))
+        sent_mails = [
+            mail for mail in self._mails
+            if set(mail['email_to']) == set(expected['email_to']) and mail['email_from'] == expected['email_from']
+        ]
+        if len(sent_mails) > 1 and values.get('subject'):
+            # try to better filter
+            sent_mail = next((mail for mail in sent_mails if mail['subject'] == values['subject']), False)
+        else:
+            sent_mail = sent_mails[0] if sent_mails else False
+        debug_info = ''
+        if not sent_mail:
+            debug_info = '-'.join('From: %s-To: %s' % (mail['email_from'], mail['email_to']) for mail in self._mails)
+        self.assertTrue(
+            bool(sent_mail),
+            'Expected mail from %s to %s not found in %s' % (expected['email_from'], expected['email_to'], debug_info)
+        )
 
         # assert values
         for val in direct_check:

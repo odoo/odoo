@@ -3,16 +3,16 @@
 import { memoize } from "./utils/functions";
 import { browser } from "./browser/browser";
 import { registry } from "./registry";
-
-class AssetsLoadingError extends Error {}
+import { session } from "@web/session";
 
 /**
- * An object describing a bundle to load
- * @typedef {Object} BundleInfo
- * @property {'script'|'link'} [type] the type of file in this bundle
- * @property {string} [src] the url of the file for this bundle, for this type of file
- * @example `[{"type": "script", "src": "/web/assets/266-d34b0b4/documents_spreadsheet.o_spreadsheet.min.js"}]`
+ * This export is done only in order to modify the behavior of the exported
+ * functions. This is done in order to be able to make a test environment.
+ * Modules should only use the methods exported below.
  */
+export const assets = {};
+
+class AssetsLoadingError extends Error {}
 
 /**
  * Loads the given url inside a script tag.
@@ -20,7 +20,7 @@ class AssetsLoadingError extends Error {}
  * @param {string} url the url of the script
  * @returns {Promise<true>} resolved when the script has been loaded
  */
-export const loadJS = memoize(function loadJS(url) {
+assets.loadJS = memoize(function loadJS(url) {
     if (document.querySelector(`script[src="${url}"]`)) {
         // Already in the DOM and wasn't loaded through this function
         // Unfortunately there is no way to check whether a script has loaded
@@ -28,6 +28,7 @@ export const loadJS = memoize(function loadJS(url) {
         // so we assume it is.
         return Promise.resolve();
     }
+
     const scriptEl = document.createElement("script");
     scriptEl.type = "text/javascript";
     scriptEl.src = url;
@@ -39,13 +40,14 @@ export const loadJS = memoize(function loadJS(url) {
         });
     });
 });
+
 /**
  * Loads the given url as a stylesheet.
  *
  * @param {string} url the url of the stylesheet
  * @returns {Promise<true>} resolved when the stylesheet has been loaded
  */
-export const loadCSS = memoize(function loadCSS(url) {
+assets.loadCSS = memoize(function loadCSS(url) {
     if (document.querySelector(`link[href="${url}"]`)) {
         // Already in the DOM and wasn't loaded through this function
         // Unfortunately there is no way to check whether a link has loaded
@@ -65,109 +67,186 @@ export const loadCSS = memoize(function loadCSS(url) {
         });
     });
 });
-/**
- * Loads the qweb templates from a given bundle name.
- * TODO: merge this into loadBundleDefinition?
- *
- * @param {string} bundle the name of the bundle as declared in the manifest.
- * @returns {Promise<XMLDocument|"">} A Promise of an XML document containing
- *      the owl templates or an empty string if the bundle has none.
- */
-export const fetchAndProcessTemplates = memoize(async function fetchAndProcessTemplates(bundle) {
-    // TODO: quid of the "unique" in the URL? We can't have one cache_hash
-    // for each and every bundle I'm guessing.
-    const bundleURL = `/web/webclient/qweb/${Date.now()}?bundle=${bundle}`;
-    const templates = await (await browser.fetch(bundleURL)).text();
-    if (!templates) {
-        return "";
-    }
-    return processTemplates(templates);
-});
 
 /**
- * Loads the content definition of a bundle.
- *
- * @param {string} name the bundleName of the bundle as declared in the manifest.
- * @returns {Promise<BundleInfo[]>} A promise of the content definition of the bundle
+ * Container dom containing all the owl templates that have been loaded.
+ * This can be imported by the modules in order to use it when loading the
+ * application and the components.
  */
-const loadBundleDefinition = memoize(async function (bundleName) {
-    const request = await browser.fetch(`/web/bundle/${bundleName}`);
-    return await request.json();
-});
+export const templates = new DOMParser().parseFromString("<odoo/>", "text/xml");
 
-const bundlesCache = {};
-
+let defaultApp;
 /**
- * Loads a bundle.
+ * Loads the given xml template.
  *
- * @param {string} name the name of the bundle to load
- * @param {owl.App} [app] the app in which the bundle's templates should be
- *      loaded. Defaults to the app that's written on the function itself, this
- *      is considered the main app, and should be written on the function by the
- *      code that bootstraps the app. In most cases, this will be the webclient,
- *      and is set in start.js
- * @returns {Promise<void>} a promise that is resolved after the bundle has been
- *      loaded.
+ * @param {string} xml the string defining the templates
+ * @param {App} [app=defaultApp] optional owl App instance (default value
+ *      can be changed with setLoadXmlDefaultApp method)
+ * @returns {Promise<true>} resolved when the template xml has been loaded
  */
-export async function loadBundle(name, app = loadBundle.app) {
-    if (!bundlesCache[name]) {
-        bundlesCache[name] = Promise.all([
-            fetchAndProcessTemplates(name).then((templates) => app.addTemplates(templates, app)),
-            loadBundleDefinition(name).then((bundleInfo) =>
-                Promise.all([
-                    ...bundleInfo.filter((i) => i.type === "script").map((i) => loadJS(i.src)),
-                    ...bundleInfo.filter((i) => i.type === "link").map((i) => loadCSS(i.src)),
-                ])
-            ),
-        ]).then(() => {});
+ assets.loadXML = function loadXML (xml, app=defaultApp) {
+    const doc = new DOMParser().parseFromString(xml, "text/xml");
+    if (doc.querySelector('parsererror')) {
+        throw doc.querySelector('parsererror div').textContent.split(':')[0];
     }
 
-    return bundlesCache[name];
-}
-
-/**
- * Process the qweb templates to obtain only the owl templates. This function
- * does NOT register the templates into Owl.
- *
- * @param {string} templates An xml string describing templates
- * @returns {XMLDocument} An xml document containing only the owl templates
- */
-export function processTemplates(templates) {
-    const doc = new DOMParser().parseFromString(templates, "text/xml");
-    // as we currently have two qweb engines (owl and legacy), owl templates are
-    // flagged with attribute `owl="1"`. The following lines removes the "owl"
-    // attribute from the templates, so that it doesn't appear in the DOM. We
-    // also remove the non-owl templates, as those shouldn't be loaded in the
-    // owl application, and will be loaded separately.
-    for (const template of [...doc.querySelector("templates").children]) {
-        if (template.hasAttribute("owl")) {
-            template.removeAttribute("owl");
+    for (const element of doc.querySelectorAll("templates > [t-name][owl]")) {
+        element.removeAttribute("owl");
+        const name = element.getAttribute('t-name');
+        const previous = templates.querySelector(`[t-name="${name}"]`);
+        if (previous) {
+            console.debug('Override template: ' + name);
+            previous.replaceWith(element);
         } else {
-            template.remove();
+            templates.documentElement.appendChild(element);
         }
     }
-    return doc;
+    if (app || defaultApp) {
+        console.debug('Add templates in Owl app.');
+        app.addTemplates(templates, app || defaultApp);
+    } else {
+        console.debug('Add templates on window Owl container.');
+    }
+};
+/**
+ * Update the default app to load templates.
+ *
+ * @param {App} app owl App instance
+ */
+export function setLoadXmlDefaultApp(app) {
+    defaultApp = app;
 }
 
 /**
- * Renders a public asset template and loads the libraries defined inside of it.
- * Only loads js and css, template declarations will be ignored. Only loads
- * scripts and styles that are defined in script src and link href, ignores
- * inline scripts and styles.
+ * Get the files information as descriptor object from a public asset template.
  *
- * @deprecated
- * @param {string} xmlid The xmlid of the template that defines the public asset
- * @param {ORM} orm An ORM object capable of calling methods on models
- * @returns {Promise<void>} Resolved when the contents of the asset is loaded
+ * @param {string} bundleName Name of the bundle containing the list of files
+ * @returns {Promise<{cssLibs, cssContents, jsLibs, jsContents}>}
  */
-export const loadPublicAsset = memoize(async function loadPublicAsset(xmlid, orm) {
-    const xml = await orm.call("ir.ui.view", "render_public_asset", [xmlid]);
-    const doc = new DOMParser().parseFromString(`<xml>${xml}</xml>`, "text/xml");
-    return Promise.all([
-        ...[...doc.querySelectorAll("link[href]")].map((el) => loadCSS(el.getAttribute("href"))),
-        ...[...doc.querySelectorAll("script[src]")].map((el) => loadJS(el.getAttribute("src"))),
-    ]);
+assets.getBundle = memoize(async function getBundle(bundleName) {
+    const url = new URL(`/web/bundle/${bundleName}`, location.origin);
+    for (const [key, value] of Object.entries(session.bundle_params || {})) {
+        url.searchParams.set(key, value);
+    }
+    const response = await browser.fetch(url.href);
+    const json = await response.json();
+    const assets = {
+        cssLibs: [],
+        cssContents: [],
+        jsLibs: [],
+        jsContents: [],
+    };
+    for (const key in json) {
+        const file = json[key];
+        if (file.type === 'link') {
+            assets.cssLibs.push(file.src);
+        } else if (file.type === 'style') {
+            assets.cssContents.push(file.content);
+        } else {
+            if (file.src) {
+                assets.jsLibs.push(file.src);
+            } else {
+                assets.jsContents.push(file.content);
+            }
+        }
+    }
+    return assets;
 });
+
+/**
+ * Loads the given js/css libraries and asset bundles. Note that no library or
+ * asset will be loaded if it was already done before.
+ *
+ * @param {Object} desc
+ * @param {Array<string|string[]>} [desc.assetLibs=[]]
+ *      The list of assets to load. Each list item may be a string (the xmlID
+ *      of the asset to load) or a list of strings. The first level is loaded
+ *      sequentially (so use this if the order matters) while the assets in
+ *      inner lists are loaded in parallel (use this for efficiency but only
+ *      if the order does not matter, should rarely be the case for assets).
+ * @param {string[]} [desc.cssLibs=[]]
+ *      The list of CSS files to load. They will all be loaded in parallel but
+ *      put in the DOM in the given order (only the order in the DOM is used
+ *      to determine priority of CSS rules, not loaded time).
+ * @param {Array<string|string[]>} [desc.jsLibs=[]]
+ *      The list of JS files to load. Each list item may be a string (the URL
+ *      of the file to load) or a list of strings. The first level is loaded
+ *      sequentially (so use this if the order matters) while the files in inner
+ *      lists are loaded in parallel (use this for efficiency but only
+ *      if the order does not matter).
+ * @param {string[]} [desc.cssContents=[]]
+ *      List of inline styles to add after loading the CSS files.
+ * @param {string[]} [desc.jsContents=[]]
+ *      List of inline scripts to add after loading the JS files.
+ *
+ * @returns {Promise}
+ */
+assets.loadBundle = memoize(async function loadBundle(desc) {
+    // Load css in parallel
+    const promiseCSS = Promise.all((desc.cssLibs || []).map(assets.loadCSS)).then(() => {
+        if (desc.cssContents && desc.cssContents.length) {
+            const style = document.createElement("style");
+            style.textContent = desc.cssContents.join('\n');
+            document.head.appendChild(style);
+        }
+    });
+    // Load JavaScript (don't wait for the css loading)
+    for (const urlData of desc.jsLibs || []) {
+        if (typeof urlData === 'string') {
+            // serial loading
+            await assets.loadJS(urlData);
+            // Wait template if the JavaScript come from bundle.
+            const bundle = urlData.match(/\/web\/assets\/.*\/([^\/]+?)(\.min)?\.js/);
+            if (bundle) {
+                await odoo.ready(bundle[1] + '.bundle.xml');
+            }
+        } else {
+            // parallel loading
+            await Promise.all(urlData.map(loadJS));
+        }
+    }
+
+    if (desc.jsContents && desc.jsContents.length) {
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.textContent = desc.jsContents.join('\n');
+        document.head.appendChild(script);
+    }
+    // Wait for the scc loading to be completed before loading the other bundle
+    await promiseCSS;
+    // Load other desc
+    for (const bundleName of desc.assetLibs || []) {
+        if (typeof bundleName === 'string') {
+            // serial loading
+            const desc = await assets.getBundle(bundleName);
+            await assets.loadBundle(desc);
+        } else {
+            // parallel loading
+            await Promise.all(bundleName.map(async bundleName => {
+                const desc = await assets.getBundle(bundleName);
+                return assets.loadBundle(desc);
+            }));
+        }
+    }
+});
+
+
+export const loadJS = function (url) {
+    return assets.loadJS(url);
+}
+export const loadCSS = function (url) {
+    return assets.loadCSS(url);
+}
+export const loadXML = function (xml, app=defaultApp) {
+    return assets.loadXML(xml, app=app);
+}
+export const getBundle = function (bundleName) {
+    return assets.getBundle(bundleName);
+}
+export const loadBundle = function (desc) {
+    return assets.loadBundle(desc);
+}
+
 
 const { Component, xml, onWillStart } = owl;
 /**
@@ -176,7 +255,8 @@ const { Component, xml, onWillStart } = owl;
 export class LazyComponent extends Component {
     setup() {
         onWillStart(async () => {
-            await loadBundle(this.props.bundle);
+            const bundle = await getBundle(this.props.bundle);
+            await loadBundle(bundle);
             this.Component = registry.category("lazy_components").get(this.props.Component);
         });
     }

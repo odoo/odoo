@@ -1,9 +1,8 @@
-odoo.define('sale.product.configurator.tests', function (require) {
-"use strict";
-
-const FormView = require('web.FormView');
-const ProductConfiguratorFormView = require('sale_product_configurator.ProductConfiguratorFormView');
-const testUtils = require('web.test_utils');
+/** @odoo-module */
+import FormView from 'web.FormView';
+import testUtils from 'web.test_utils';
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { ProductConfiguratorWidget } from "@sale_product_configurator/js/product_configurator_widget";
 const createView = testUtils.createView;
 
 const getArch = function (){
@@ -175,8 +174,11 @@ QUnit.module('Product Configurator', {
     });
 
     QUnit.test('Select a configurable product template and verify that the product configurator is opened', async function (assert) {
-        assert.expect(2);
-
+        patchWithCleanup(ProductConfiguratorWidget.prototype, {
+            _openProductConfigurator() {
+                assert.step("open configurator");
+            }
+        });
         const form = await createView({
             View: FormView,
             model: 'sale_order',
@@ -189,17 +191,12 @@ QUnit.module('Product Configurator', {
                 }
                 return this._super.apply(this, arguments);
             },
-            intercepts: {
-                do_action: function (ev) {
-                    if (ev.data.action === 'sale_product_configurator.sale_product_configurator_action') {
-                        assert.ok(true);
-                    }
-                },
-            }
         });
 
         await testUtils.dom.click(form.$("a:contains('Add a product')"));
+        assert.verifySteps([]);
         await testUtils.fields.many2one.searchAndClickItem("product_template_id", {item: 'Customizable Desk'});
+        assert.verifySteps(["open configurator"]);
         form.destroy();
     });
 
@@ -224,39 +221,6 @@ QUnit.module('Product Configurator', {
 
         assert.containsN(list, "tr.o_data_row", 2);
         form.destroy();
-    });
-
-    QUnit.test('Select a product in the list and check for template loading', async function (assert) {
-        assert.expect(1);
-
-        const product_configurator_form = await createView({
-            View: ProductConfiguratorFormView,
-            model: 'sale_product_configurator',
-            data: this.data,
-            arch:
-                '<form js_class="product_configurator_form">' +
-                    '<group>' +
-                        '<field name="product_template_id" class="oe_product_configurator_product_template_id" />' +
-                        '<field name="product_template_attribute_value_ids" invisible="1" />' +
-                        '<field name="product_no_variant_attribute_value_ids" invisible="1" />' +
-                        '<field name="product_custom_attribute_value_ids" invisible="1" />' +
-                    '</group>' +
-                    '<footer>' +
-                        '<button string="Add" class="btn-primary o_sale_product_configurator_add disabled"/>' +
-                        '<button string="Cancel" class="btn-secondary" special="cancel"/>' +
-                    '</footer>' +
-                '</form>',
-                mockRPC: function (route) {
-                    if (route === '/sale_product_configurator/configure') {
-                        assert.ok(true);
-                        return Promise.resolve('<div>plop</div>');
-                    }
-                    return this._super.apply(this, arguments);
-                }
-        });
-        await testUtils.dom.click(product_configurator_form.$('.o_input'));
-        await testUtils.dom.click($("ul.ui-autocomplete li a:contains('Customizable Desk')").mouseenter());
-        product_configurator_form.destroy();
     });
 
     QUnit.test('drag and drop rows containing product_configurator many2one', async function (assert) {
@@ -304,6 +268,4 @@ QUnit.module('Product Configurator', {
 
         form.destroy();
     });
-});
-
 });

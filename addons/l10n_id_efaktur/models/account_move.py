@@ -136,9 +136,6 @@ class AccountMove(models.Model):
     def _generate_efaktur_invoice(self, delimiter):
         """Generate E-Faktur for customer invoice."""
         # Invoice of Customer
-        company_id = self.company_id
-        dp_product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
-
         output_head = '%s%s%s' % (
             _csv_row(FK_HEAD_LIST, delimiter),
             _csv_row(LT_HEAD_LIST, delimiter),
@@ -180,7 +177,7 @@ class AccountMove(models.Model):
             eTax['REFERENSI'] = number_ref
             eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
-            lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0 and x.display_type == 'product')
+            lines = move.line_ids.filtered(lambda x: x.is_downpayment and x.price_unit < 0 and not x.display_type)
             eTax['FG_UANG_MUKA'] = 0
             eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))))
             eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))))

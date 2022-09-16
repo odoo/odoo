@@ -11,6 +11,21 @@ class LoyaltyRule(models.Model):
     _name = 'loyalty.rule'
     _description = 'Loyalty Rule'
 
+    @api.model
+    def default_get(self, fields_list):
+        # Try to copy the values of the program types default's
+        result = super().default_get(fields_list)
+        if 'program_type' in self.env.context:
+            program_type = self.env.context['program_type']
+            program_default_values = self.env['loyalty.program']._program_type_default_values()
+            if program_type in program_default_values and\
+                len(program_default_values[program_type]['rule_ids']) == 2 and\
+                isinstance(program_default_values[program_type]['rule_ids'][1][2], dict):
+                result.update({
+                    k: v for k, v in program_default_values[program_type]['rule_ids'][1][2].items() if k in fields_list
+                })
+        return result
+
     def _get_reward_point_mode_selection(self):
         # The value is provided in the loyalty program's view since we may not have a program_id yet
         #  and makes sure to display the currency related to the program instead of the company's.
@@ -23,11 +38,13 @@ class LoyaltyRule(models.Model):
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one('loyalty.program', required=True, ondelete='cascade')
+    program_type = fields.Selection(related="program_id.program_type")
     # Stored for security rules
     company_id = fields.Many2one(related='program_id.company_id', store=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
 
     # Only for dev mode
+    user_has_debug = fields.Boolean(compute='_compute_user_has_debug')
     product_domain = fields.Char(default="[]")
 
     product_ids = fields.Many2many('product.product', string='Products')
@@ -51,8 +68,8 @@ class LoyaltyRule(models.Model):
     mode = fields.Selection([
         ('auto', 'Automatic'),
         ('with_code', 'With a promotion code'),
-    ], string="Application", default="auto")
-    code = fields.Char(string='Promotion Code', compute='_compute_code', store=True, readonly=False)
+    ], string="Application", compute='_compute_mode', store=True, readonly=False)
+    code = fields.Char(string='Discount code', compute='_compute_code', store=True, readonly=False)
 
     _sql_constraints = [
         ('reward_point_amount_positive', 'CHECK (reward_point_amount > 0)', 'Rule points reward must be strictly positive.'),
@@ -83,6 +100,19 @@ class LoyaltyRule(models.Model):
         for rule in self:
             if rule.mode == 'auto':
                 rule.code = False
+
+    @api.depends('code')
+    def _compute_mode(self):
+        for rule in self:
+            if rule.code:
+                rule.mode = 'with_code'
+            else:
+                rule.mode = 'auto'
+
+    @api.depends_context('uid')
+    @api.depends("mode")
+    def _compute_user_has_debug(self):
+        self.user_has_debug = self.user_has_groups('base.group_no_one')
 
     def _get_valid_product_domain(self):
         self.ensure_one()

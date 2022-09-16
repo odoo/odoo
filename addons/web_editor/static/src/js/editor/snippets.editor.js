@@ -5,12 +5,13 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-const {Markup, sprintf} = require('web.utils');
+const {Markup, sprintf, confine} = require('web.utils');
 var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
 const {getCSSVariableValue} = require('web_editor.utils');
+const gridUtils = require('@web_editor/js/common/grid_layout_utils');
 const QWeb = core.qweb;
 
 var _t = core._t;
@@ -129,10 +130,11 @@ var globalSelector = {
  */
 var SnippetEditor = Widget.extend({
     template: 'web_editor.snippet_overlay',
-    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     events: {
         'click .oe_snippet_remove': '_onRemoveClick',
         'wheel': '_onMouseWheel',
+        'click .o_send_back': '_onSendBackClick',
+        'click .o_bring_front': '_onBringFrontClick',
     },
     custom_events: {
         'option_update': '_onOptionUpdate',
@@ -214,6 +216,7 @@ var SnippetEditor = Widget.extend({
                             this._onDragAndDropStop(...args);
                         }, 0);
                     },
+                    refreshPositions: true, // So the dropzone expands when its size increases.
                 },
             });
             const modalAncestorEl = this.$target[0].closest('.modal');
@@ -510,6 +513,14 @@ var SnippetEditor = Widget.extend({
         this.$target.remove();
         this.$el.remove();
 
+        // Resize the grid to have the correct row count.
+        // Must be done here and not in a dedicated onRemove method because
+        // onRemove is called before actually removing the element and it
+        // should be the case in order to resize the grid.
+        if (this.$target[0].classList.contains('o_grid_item')) {
+            gridUtils._resizeGrid($parent[0]);
+        }
+
         var node = $parent[0];
         if (node && node.firstChild) {
             if (!node.firstChild.tagName && node.firstChild.textContent === ' ') {
@@ -664,7 +675,7 @@ var SnippetEditor = Widget.extend({
      */
     toggleOverlayVisibility: function (show) {
         if (this.$el && !this.scrollingTimeout) {
-            this.$el.toggleClass('o_overlay_hidden', !show && this.isShown());
+            this.$el.toggleClass('o_overlay_hidden', (!show || this.$target[0].matches('.o_animating:not(.o_animate_on_scroll)')) && this.isShown());
         }
     },
     /**
@@ -911,10 +922,47 @@ var SnippetEditor = Widget.extend({
      * @private
      */
     _onDragAndDropStart: function () {
-        this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         this.trigger_up('drag_and_drop_start');
         this.options.wysiwyg.odooEditor.automaticStepUnactive();
         var self = this;
+
+        // Number of grid columns and rows in the grid item (BS column).
+        let columnColCount;
+        let columnRowCount;
+        const rowEl = this.$target[0].parentNode;
+        if (rowEl.classList.contains('row') && this.options.isWebsite) {
+            // Toggle grid mode if it is not already on.
+            if (!rowEl.classList.contains('o_grid_mode')) {
+                const containerEl = rowEl.parentNode;
+                gridUtils._toggleGridMode(containerEl);
+            }
+
+            this.dragState = {};
+            // Computing the moving column width and height in terms of columns
+            // and rows.
+            const columnStart = self.$target[0].style.gridColumnStart;
+            const columnEnd = self.$target[0].style.gridColumnEnd;
+            const rowStart = self.$target[0].style.gridRowStart;
+            const rowEnd = self.$target[0].style.gridRowEnd;
+
+            columnColCount = columnEnd - columnStart;
+            columnRowCount = rowEnd - rowStart;
+            this.dragState.columnColCount = columnColCount;
+            this.dragState.columnRowCount = columnRowCount;
+
+            // Deactivate the snippet so the overlay doesn't show.
+            this.trigger_up('deactivate_snippet', {$snippet: self.$target});
+            // Storing the current grid and grid area to use them for the
+            // history.
+            this.dragState.previousGrid = rowEl;
+            this.dragState.prevGridArea = self.$target[0].style.gridArea;
+
+            // Reload the images.
+            gridUtils._reloadLazyImages(this.$target[0]);
+        }
+
+        const isPopup = this.$target[0].closest('div.s_popup');
+
         this.dropped = false;
         this._dropSiblings = {
             prev: self.$target.prev()[0],
@@ -946,11 +994,35 @@ var SnippetEditor = Widget.extend({
         }
         const canBeSanitizedUnless = this._canBeSanitizedUnless(this.$target[0]);
 
+        // Remove the siblings that belong to a snippet in grid mode
+        // and put the identified grid mode snippets in their own "selector".
+        const selectorGrids = new Set();
+        if (this.$target[0].classList.contains('o_grid_item')) {
+            if ($selectorSiblings) {
+                // Looping backwards because elements are removed, so the
+                // indexes are not lost.
+                for (let i = $selectorSiblings.length - 1; i >= 0; i--) {
+                    if (isPopup && !$selectorSiblings[i].closest('div.s_popup')) {
+                        // Removing the siblings that are outside the popup if
+                        // the grid item is in a popup.
+                        $selectorSiblings.splice(i, 1);
+                    } else {
+                        const gridSnippet = $selectorSiblings[i].closest('div.o_grid_mode');
+                        if (gridSnippet) {
+                            $selectorSiblings.splice(i, 1);
+                            selectorGrids.add(gridSnippet);
+                        }
+                    }
+                }
+            }
+        }
+
         this.trigger_up('activate_snippet', {$snippet: this.$target.parent()});
         this.trigger_up('activate_insertion_zones', {
             $selectorSiblings: $selectorSiblings,
             $selectorChildren: $selectorChildren,
             canBeSanitizedUnless: canBeSanitizedUnless,
+            selectorGrids: selectorGrids,
         });
 
         this.$body.addClass('move-important');
@@ -968,9 +1040,74 @@ var SnippetEditor = Widget.extend({
                     $('.oe_drop_zone').removeClass('invisible');
                 }
                 self.dropped = true;
-                $(this).first().after(self.$target).addClass('invisible');
+                const $dropzone = $(this).first().after(self.$target);
+                $dropzone.addClass('invisible');
+
+                if ($dropzone[0].classList.contains('oe_grid_zone')) {
+                    // Case where the column we are dragging is over a grid
+                    // dropzone.
+                    const rowEl = $dropzone[0].parentNode;
+
+                    // Creating the drag helper.
+                    const dragHelperEl = document.createElement('div');
+                    dragHelperEl.classList.add('o_we_drag_helper');
+                    dragHelperEl.style.gridArea = `1 / 1 / ${1 + columnRowCount} / ${1 + columnColCount}`;
+                    rowEl.append(dragHelperEl);
+
+                    // Creating the background grid and updating the dropzone
+                    // (in the case where the column over the dropzone is
+                    // bigger than the grid).
+                    const backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, columnRowCount);
+                    const rowCount = Math.max(rowEl.dataset.rowCount, columnRowCount);
+                    $dropzone[0].style.gridRowEnd = rowCount + 1;
+
+                    // Setting the background grid, the moving grid item and
+                    // the drag helper z-indexes so they are in front of the
+                    // other elements and in this order.
+                    gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
+                    gridUtils._setElementToMaxZindex(self.$target[0], rowEl);
+                    gridUtils._setElementToMaxZindex(dragHelperEl, rowEl);
+
+                    // Setting the column height and width to keep its size
+                    // when the grid-area is removed (as it prevents it from
+                    // moving with the mouse).
+                    const gridProp = gridUtils._getGridProperties(rowEl);
+                    const columnHeight = columnRowCount * (gridProp.rowSize + gridProp.rowGap) - gridProp.rowGap;
+                    const columnWidth = columnColCount * (gridProp.columnSize + gridProp.columnGap) - gridProp.columnGap;
+                    self.$target[0].style.height = columnHeight + 'px';
+                    self.$target[0].style.width = columnWidth + 'px';
+                    self.$target[0].style.position = 'absolute';
+                    self.$target[0].style.removeProperty('grid-area');
+                    rowEl.style.position = 'relative';
+
+                    // Storing useful information and adding an event listener.
+                    self.dragState.startingHeight = rowEl.clientHeight;
+                    self.dragState.currentHeight = rowEl.clientHeight;
+                    self.dragState.dragHelperEl = dragHelperEl;
+                    self.dragState.backgroundGridEl = backgroundGridEl;
+                    self.dragState.dropzoneEl = $dropzone[0];
+                    self.onDragMove = self._onDragMove.bind(self);
+                    document.body.addEventListener('mousemove', self.onDragMove, false);
+                }
             },
             out: function () {
+                const dropzoneEl = this;
+                const rowEl = dropzoneEl.parentNode;
+                if (rowEl.classList.contains('o_grid_mode')) {
+                    // Removing the listener + cleaning.
+                    document.body.removeEventListener('mousemove', self.onDragMove, false);
+                    gridUtils._gridCleanUp(rowEl, self.$target[0]);
+                    self.$target[0].style.removeProperty('z-index');
+
+                    // Removing the drag helper and the background grid and
+                    // resizing the grid and the dropzone.
+                    self.dragState.dragHelperEl.remove();
+                    self.dragState.backgroundGridEl.remove();
+                    gridUtils._resizeGrid(rowEl);
+                    const rowCount = parseInt(rowEl.dataset.rowCount);
+                    dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
+                }
+
                 var prev = self.$target.prev();
                 if (this === prev[0]) {
                     self.dropped = false;
@@ -999,6 +1136,41 @@ var SnippetEditor = Widget.extend({
         this.options.wysiwyg.odooEditor.automaticStepSkipStack();
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
 
+        const rowEl = this.$target[0].parentNode;
+        if (rowEl && rowEl.classList.contains('o_grid_mode')) {
+            // Case when dropping the column in a grid.
+
+            // Removing the event listener.
+            document.body.removeEventListener('mousemove', this.onDragMove, false);
+
+            // Defining the column grid area with its position.
+            const gridProp = gridUtils._getGridProperties(rowEl);
+
+            const top = parseFloat(this.$target[0].style.top);
+            const left = parseFloat(this.$target[0].style.left);
+
+            const rowStart = Math.round(top / (gridProp.rowSize + gridProp.rowGap)) + 1;
+            const columnStart = Math.round(left / (gridProp.columnSize + gridProp.columnGap)) + 1;
+            const rowEnd = rowStart + this.dragState.columnRowCount;
+            const columnEnd = columnStart + this.dragState.columnColCount;
+
+            this.$target[0].style.gridArea = `${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`;
+
+            // Cleaning, removing the drag helper and the background grid and
+            // resizing the grid.
+            gridUtils._gridCleanUp(rowEl, this.$target[0]);
+            this.dragState.dragHelperEl.remove();
+            this.dragState.backgroundGridEl.remove();
+            gridUtils._resizeGrid(rowEl);
+
+            // Setting the z-index to the maximum of the grid.
+            gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
+        } else if (this.$target[0].classList.contains('o_grid_item') && this.dropped) {
+            // Case when dropping a grid item in a non-grid dropzone.
+            this.$target[0].classList.remove('o_grid_item');
+            this.$target[0].style.removeProperty('grid-area');
+        }
+
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
             const { nearest } = this.$body[0].ownerDocument.defaultView.$;
@@ -1006,6 +1178,25 @@ var SnippetEditor = Widget.extend({
             // Some drop zones might have been disabled.
             $el = $el.filter(this.$dropZones);
             if ($el.length) {
+                // If the column is not dropped inside a dropzone.
+                if (this.$target[0].classList.contains('o_grid_item')) {
+                    if ($el[0].classList.contains('oe_grid_zone')) {
+                        // Case when a column is dropped near a grid.
+                        // Placing it in the top left corner.
+                        this.$target[0].style.gridArea = `1 / 1 / ${1 + this.dragState.columnRowCount} / ${1 + this.dragState.columnColCount}`;
+                        const rowEl = $el[0].parentNode;
+                        const rowCount = Math.max(rowEl.dataset.rowCount, 1 + this.dragState.columnRowCount);
+                        rowEl.dataset.rowCount = rowCount;
+
+                        // Setting the z-index to the maximum of the grid.
+                        gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
+                    } else {
+                        // Case when a column is dropped near a non-grid dropzone.
+                        this.$target[0].classList.remove('o_grid_item');
+                        this.$target[0].style.removeProperty('z-index');
+                    }
+                }
+
                 $el.after(this.$target);
                 this.dropped = true;
             }
@@ -1053,11 +1244,15 @@ var SnippetEditor = Widget.extend({
             $snippet: this.$target,
         });
         this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
-        const samePositionAsStart = this._dropSiblings.prev === this.$target.prev()[0] && this._dropSiblings.next === this.$target.next()[0];
+        const samePositionAsStart = this.$target[0].classList.contains('o_grid_item')
+            ? (this.$target[0].parentNode === this.dragState.previousGrid
+                && this.$target[0].style.gridArea === this.dragState.prevGridArea)
+            : this._dropSiblings.prev === this.$target.prev()[0] && this._dropSiblings.next === this.$target.next()[0];
         if (!samePositionAsStart) {
             this.options.wysiwyg.odooEditor.historyStep();
         }
         delete this.$dropZones;
+        delete this.dragState;
     },
     /**
      * @private
@@ -1177,6 +1372,106 @@ var SnippetEditor = Widget.extend({
             this.$el.css('pointer-events', '');
         }, 250);
     },
+    /**
+     * Called when the "send to back" overlay button is clicked.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onSendBackClick(ev) {
+        ev.stopPropagation();
+        const rowEl = this.$target[0].parentNode;
+        const columnEls = [...rowEl.children].filter(el => el !== this.$target[0]);
+        const minZindex = Math.min(...columnEls.map(el => el.style.zIndex));
+
+        // While the minimum z-index is not 0, it is OK to decrease it and to
+        // set the column to it. Otherwise, the column is set to 0 and the
+        // other columns z-index are increased by one.
+        if (minZindex > 0) {
+            this.$target[0].style.zIndex = minZindex - 1;
+        } else {
+            for (const columnEl of columnEls) {
+                columnEl.style.zIndex++;
+            }
+            this.$target[0].style.zIndex = 0;
+        }
+    },
+    /**
+     * Called when the "bring to front" overlay button is clicked.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onBringFrontClick(ev) {
+        ev.stopPropagation();
+        const rowEl = this.$target[0].parentNode;
+        gridUtils._setElementToMaxZindex(this.$target[0], rowEl);
+    },
+    /**
+     * Called when the mouse is moved to place a column in a grid.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onDragMove(ev) {
+        const columnEl = this.$target[0];
+        const rowEl = columnEl.parentNode;
+
+        // Computing the rowEl position.
+        const rowElTop = rowEl.getBoundingClientRect().top + document.documentElement.scrollTop;
+        const rowElLeft = rowEl.getBoundingClientRect().left;
+
+        // Getting the column dimensions.
+        const borderWidth = parseFloat(window.getComputedStyle(columnEl).borderWidth);
+        const columnHeight = columnEl.clientHeight + 2 * borderWidth;
+        const columnWidth = columnEl.clientWidth + 2 * borderWidth;
+        const columnMiddle = columnWidth / 2;
+
+        // Placing the column where the mouse is.
+        const top = ev.pageY - rowElTop;
+        const bottom = top + columnHeight;
+        let left = ev.pageX - rowElLeft - columnMiddle;
+
+        // Horizontal overflow.
+        left = confine(left, 0, rowEl.clientWidth - columnWidth);
+
+        columnEl.style.top = top + 'px';
+        columnEl.style.left = left + 'px';
+
+        // Computing the drag helper corresponding grid area.
+        const gridProp = gridUtils._getGridProperties(rowEl);
+
+        const rowStart = Math.round(top / (gridProp.rowSize + gridProp.rowGap)) + 1;
+        const columnStart = Math.round(left / (gridProp.columnSize + gridProp.columnGap)) + 1;
+        const rowEnd = rowStart + this.dragState.columnRowCount;
+        const columnEnd = columnStart + this.dragState.columnColCount;
+
+        const dragHelperEl = this.dragState.dragHelperEl;
+        if (parseInt(dragHelperEl.style.gridRowStart) !== rowStart) {
+            dragHelperEl.style.gridRowStart = rowStart;
+            dragHelperEl.style.gridRowEnd = rowEnd;
+        }
+
+        if (parseInt(dragHelperEl.style.gridColumnStart) !== columnStart) {
+            dragHelperEl.style.gridColumnStart = columnStart;
+            dragHelperEl.style.gridColumnEnd = columnEnd;
+        }
+
+        // Vertical overflow/underflow.
+        // Updating the reference heights, the dropzone and the background grid.
+        const startingHeight = this.dragState.startingHeight;
+        const currentHeight = this.dragState.currentHeight;
+        const backgroundGridEl = this.dragState.backgroundGridEl;
+        const dropzoneEl = this.dragState.dropzoneEl;
+        const rowOverflow = Math.round((bottom - currentHeight) / (gridProp.rowSize + gridProp.rowGap));
+        const updateRows = bottom > currentHeight || bottom <= currentHeight && bottom > startingHeight;
+        if (Math.abs(rowOverflow) >= 1 && updateRows) {
+            const dropzoneEnd = parseInt(dropzoneEl.style.gridRowEnd);
+            dropzoneEl.style.gridRowEnd = dropzoneEnd + rowOverflow;
+            backgroundGridEl.style.gridRowEnd = dropzoneEnd + rowOverflow;
+            this.dragState.currentHeight += rowOverflow * (gridProp.rowSize + gridProp.rowGap);
+        }
+    }
 });
 
 /**
@@ -1664,8 +1959,15 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery} [$selectorChildren]
      *        elements which must have child drop zones between each of existing
      *        child
+     * @param {string or boolean} canBeSanitizedUnless
+     *        true: always allows,
+     *        false: always forbid,
+     *        string: specific type of forbidden sanitization
+     * @param {Object} [selectorGrids = []]
+     *        elements which are in grid mode and for which a grid dropzone
+     *        needs to be inserted
      */
-    _activateInsertionZones: function ($selectorSiblings, $selectorChildren, canBeSanitizedUnless) {
+    _activateInsertionZones($selectorSiblings, $selectorChildren, canBeSanitizedUnless, selectorGrids = []) {
         var self = this;
 
         // If a modal or a dropdown is open, the drop zones must be created
@@ -1719,9 +2021,9 @@ var SnippetsMenu = Widget.extend({
             };
         }
 
-        // Firstly, add a dropzone after the clone
+        // Firstly, add a dropzone after the clone (if we are not in grid mode).
         var $clone = this.$body.find('.oe_drop_clone');
-        if ($clone.length) {
+        if ($clone.length && $clone.closest('div.o_grid_mode').length === 0) {
             var $neighbor = $clone.prev();
             if (!$neighbor.length) {
                 $neighbor = $clone.next();
@@ -1841,6 +2143,11 @@ var SnippetsMenu = Widget.extend({
                 };
             }
         });
+
+        // Inserting a grid dropzone for each row in grid mode.
+        for (const rowEl of selectorGrids) {
+            self._insertGridDropzone(rowEl);
+        }
     },
     /**
      * Adds an entry for every invisible snippet in the left panel box.
@@ -2308,7 +2615,6 @@ var SnippetsMenu = Widget.extend({
         this._disableUndroppableSnippets();
 
         this.$el.addClass('o_loaded');
-        this.trigger_up('snippets_loaded', self.$el);
         $(this.el.ownerDocument.body).addClass('editor_has_snippets');
     },
     /**
@@ -2489,6 +2795,24 @@ var SnippetsMenu = Widget.extend({
         }
         $hook.replaceWith($dropzone);
         return $dropzone;
+    },
+    /**
+     * Creates a dropzone taking the entire area of the row in grid mode in
+     * which it will be added. It allows to place elements dragged over it
+     * inside the grid it belongs to.
+     *
+     * @param {Element} rowEl
+     */
+    _insertGridDropzone(rowEl) {
+        const columnCount = 12;
+        const rowCount = parseInt(rowEl.dataset.rowCount);
+        let $dropzone = $('<div/>', {
+            'class': 'oe_drop_zone oe_insert oe_grid_zone',
+            'style': 'grid-area: ' + 1 + '/' + 1 + '/' + (rowCount + 1) + '/' + (columnCount + 1),
+        });
+        $dropzone[0].style.minHeight = window.getComputedStyle(rowEl).height;
+        $dropzone[0].style.width = window.getComputedStyle(rowEl).width;
+        rowEl.append($dropzone[0]);
     },
     /**
      * Make given snippets be draggable/droppable thanks to their thumbnail.
@@ -2905,7 +3229,7 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onActivateInsertionZones: function (ev) {
-        this._activateInsertionZones(ev.data.$selectorSiblings, ev.data.$selectorChildren, ev.data.canBeSanitizedUnless);
+        this._activateInsertionZones(ev.data.$selectorSiblings, ev.data.$selectorChildren, ev.data.canBeSanitizedUnless, ev.data.selectorGrids);
     },
     /**
      * Called when a child editor asks to deactivate the current snippet
@@ -3526,20 +3850,55 @@ var SnippetsMenu = Widget.extend({
     /**
      * Preview on mobile.
      */
-    _onMobilePreviewClick: function () {
+    _onMobilePreviewClick() {
         this.trigger_up('request_mobile_preview');
+
+        // TODO refactor things to make this more understandable -> on mobile
+        // edition, update the UI. But to do it properly and inside the mutex
+        // this simulates what happens when a snippet option is used.
+        this._execWithLoadingEffect(async () => {
+            // TODO needed so that mobile edition is considered before updating
+            // the UI but this is clearly random. The trigger_up above should
+            // properly await for the rerender somehow.
+            await new Promise(resolve => setTimeout(resolve));
+
+            return new Promise(resolve => {
+                this.trigger_up('snippet_option_update', {
+                    onSuccess: () => resolve(),
+                });
+            });
+        }, false);
+
+        // Reload images inside grid items so that no image disappears when
+        // activating mobile preview.
+        const gridItemEls = this.getEditableArea().find('div.o_grid_item');
+        for (const gridItemEl of gridItemEls) {
+            gridUtils._reloadLazyImages(gridItemEl);
+        }
     },
     /**
      * Undo..
      */
     _onUndo: async function () {
         this.options.wysiwyg.undo();
+        // Resizing all the grids.
+        // TODO maybe to remove when history will be fixed.
+        const $gridModeRows = this.getEditableArea().find('.row.o_grid_mode');
+        for (const rowEl of $gridModeRows) {
+            gridUtils._resizeGrid(rowEl);
+        }
     },
     /**
      * Redo.
      */
     _onRedo: async function () {
         this.options.wysiwyg.redo();
+        // Resizing all the grids.
+        // TODO maybe to remove when history will be fixed.
+        const $gridModeRows = this.getEditableArea().find('.row.o_grid_mode');
+        for (const rowEl of $gridModeRows) {
+            gridUtils._resizeGrid(rowEl);
+        }
     },
     /**
      * @private

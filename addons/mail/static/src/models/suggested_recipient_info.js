@@ -45,7 +45,6 @@ registerModel({
     fields: {
         composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', {
             inverse: 'suggestedRecipientInfo',
-            isCausal: true,
         }),
         dialogText: attr({
             compute: '_computeDialogText',

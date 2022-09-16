@@ -4,7 +4,7 @@
 <!-- Snippets menu -->
 <template id="snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
     <xpath expr="//button[@data-action='cancel']" position="before">
-        <button type="button" class="btn btn-secondary" data-action="mobile" title="Mobile Preview" accesskey="v"><span class="fa fa-mobile" style="font-size: 18px;"/></button>
+        <button type="button" class="btn btn-secondary" data-action="mobile" title="Mobile Preview" accesskey="v"><span class="fa fa-mobile"/></button>
     </xpath>
     <xpath expr="//div[@id='snippets_menu']" position="inside">
         <button type="button" tabindex="3" class="o_we_customize_theme_btn text-uppercase"
@@ -466,9 +466,8 @@
     </div>
 
     <div data-js="layout_column"
-        data-selector="section"
-        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns"
-        data-exclude=".s_masonry_block">
+        data-selector="section.s_features_grid, section.s_color_blocks_2"
+        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns">
         <we-select string="Columns" data-no-preview="true">
             <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
             <we-button data-select-count="1">1</we-button>
@@ -478,6 +477,54 @@
             <we-button data-select-count="5">5</we-button>
             <we-button data-select-count="6">6</we-button>
         </we-select>
+    </div>
+
+    <div data-js="layout_column"
+        data-selector="section"
+        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns"
+        data-exclude=".s_masonry_block, .s_features_grid, .s_color_blocks_2">
+        <we-row>
+            <we-button-group string="Layout" data-no-preview="true">
+                <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
+                <we-button data-select-layout="normal" data-name="normal_mode">Cols</we-button>
+            </we-button-group>
+            <we-select class="o_grid" data-no-preview="true" data-dependencies="normal_mode">
+                <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
+                <we-button data-select-count="1">1</we-button>
+                <we-button data-select-count="2">2</we-button>
+                <we-button data-select-count="3">3</we-button>
+                <we-button data-select-count="4">4</we-button>
+                <we-button data-select-count="5">5</we-button>
+                <we-button data-select-count="6">6</we-button>
+            </we-select>
+        </we-row>
+        <we-button-group class="o_grid o_we_sublevel_1" string="Add Elements" data-no-preview="true" data-dependencies="grid_mode">
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="image" title="Image" data-name="image">Image</we-button>
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="text" title="Text" data-name="text">Text</we-button>
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="button" title="Button" data-name="button">Button</we-button>
+        </we-button-group>
+        <we-row class="o_we_sublevel_1" string="Padding (Y, X)">
+            <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="--grid-item-padding-y" data-unit="px" data-apply-to=".row"/>
+            <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="--grid-item-padding-x" data-unit="px" data-apply-to=".row"/>
+        </we-row>
+    </div>
+
+    <!--  Vertical Alignment -->
+    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+        <we-button-group class="o_we_sublevel_1" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
+            <we-button title="Align Top"
+                       data-select-class="align-items-start"
+                       data-img="/website/static/src/img/snippets_options/align_top.svg"/>
+            <we-button title="Align Middle"
+                       data-select-class="align-items-center"
+                       data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
+            <we-button title="Align Bottom"
+                       data-select-class="align-items-end"
+                       data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
+            <we-button title="Stretch to Equal Height"
+                       data-select-class="align-items-stretch"
+                       data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
+        </we-button-group>
     </div>
 
     <!-- Move snippets around -->
@@ -556,6 +603,11 @@
     <div data-js="sizing_x"
         data-selector=".row > div"
         data-drop-near=".row:not(.s_col_no_resize) > div"
+        data-exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
+
+    <div data-js="sizing_grid"
+        data-selector=".row > div"
+        data-drop-near=".row.o_grid_mode > div"
         data-exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
 
     <t t-set="so_snippet_addition_selector" t-translation="off">section, .parallax</t>
@@ -700,7 +752,7 @@
          data-no-check="true"
          groups="website.group_website_designer">
 
-        <we-select string="Scroll Effect" data-dependencies="!header_sidebar_opt" class="o_scroll_effects_selector">
+        <we-select string="Scroll Effect" data-dependencies="!header_sidebar_opt" class="o_scroll_effects_selector" data-variable="header-scroll-effect">
             <t t-set="header_effect_standard_label">Standard</t>
             <t t-set="header_effect_scroll_label">Scroll</t>
             <t t-set="header_effect_fixed_label">Fixed</t>
@@ -709,6 +761,7 @@
             <we-button id="option_header_visibility_standard"
                        t-att-data-select-label="header_effect_standard_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'standard'"
                        data-name="header_visibility_standard_opt"
                        data-select-class="o_header_standard"
                        data-customize-website-views="website.header_visibility_standard"
@@ -718,6 +771,7 @@
             <we-button id="option_header_effect_scroll"
                        t-att-data-select-label="header_effect_scroll_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'scroll'"
                        data-name="header_effect_scroll_opt"
                        data-select-class=""
                        data-customize-website-views=""
@@ -727,6 +781,7 @@
             <we-button id="option_header_effect_fixed"
                        t-att-data-select-label="header_effect_fixed_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'fixed'"
                        data-name="header_effect_fixed_opt"
                        data-select-class="o_header_fixed"
                        data-customize-website-views="website.header_visibility_fixed"
@@ -736,6 +791,7 @@
             <we-button id="option_header_effect_disappears"
                        t-att-data-select-label="header_effect_disappears_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'disappears'"
                        data-name="header_effect_disappears_opt"
                        data-select-class="o_header_disappears"
                        data-customize-website-views="website.header_visibility_disappears"
@@ -745,6 +801,7 @@
             <we-button id="option_header_effect_fade_out"
                        t-att-data-select-label="header_effect_fadeout_label"
                        class="o_we_img_animate"
+                       data-customize-website-variable="'fade-out'"
                        data-name="header_effect_fade_out_opt"
                        data-select-class="o_header_fade_out"
                        data-customize-website-views="website.header_visibility_fade_out"
@@ -1150,24 +1207,6 @@
         </we-select>
     </div>
 
-    <!--  Vertical Alignment -->
-    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
-        <we-button-group string="Vert. Alignment" title="Vertical Alignment">
-            <we-button title="Align Top"
-                       data-select-class="align-items-start"
-                       data-img="/website/static/src/img/snippets_options/align_top.svg"/>
-            <we-button title="Align Middle"
-                       data-select-class="align-items-center"
-                       data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
-            <we-button title="Align Bottom"
-                       data-select-class="align-items-end"
-                       data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
-            <we-button title="Stretch to Equal Height"
-                       data-select-class="align-items-stretch"
-                       data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
-        </we-button-group>
-    </div>
-
     <div data-js="ConditionalVisibility" data-selector="section">
         <t t-set="current_website" t-value="request.env['website'].get_current_website()"/>
         <we-collapse>
@@ -1250,49 +1289,121 @@
     <div data-js="WebsiteAnimate"
          data-selector=".o_animable, section .row > div, img, .fa, .btn, .o_animated_text"
          data-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize">
-        <we-select string="Animate" data-dependencies="!image_transform_opt" data-is-animation-type-selection="true">
-            <we-button data-select-class="" data-name="no_animation_opt">No Animation</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_fade_in">Fade In</we-button>
-            <we-button data-select-class="o_anim_fade_in_down">Fade In-Down</we-button>
-            <we-button data-select-class="o_anim_fade_in_left">Fade In-Left</we-button>
-            <we-button data-select-class="o_anim_fade_in_right">Fade In-Right</we-button>
-            <we-button data-select-class="o_anim_fade_in_up">Fade In-Up</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_bounce_in">Bounce In</we-button>
-            <we-button data-select-class="o_anim_bounce_in_down">Bounce In-Down</we-button>
-            <we-button data-select-class="o_anim_bounce_in_left">Bounce In-Left</we-button>
-            <we-button data-select-class="o_anim_bounce_in_right">Bounce In-Right</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_rotate_in">Rotate In</we-button>
-            <we-button data-select-class="o_anim_rotate_in_down_left">Rotate In-Down-Left</we-button>
-            <we-button data-select-class="o_anim_rotate_in_down_right">Rotate In-Down-Right</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_zoom_out">Zoom Out</we-button>
-            <we-button data-select-class="o_anim_zoom_in">Zoom In</we-button>
-            <we-button data-select-class="o_anim_zoom_in_down">Zoom In-Down</we-button>
-            <we-button data-select-class="o_anim_zoom_in_left">Zoom In-Left</we-button>
-            <we-button data-select-class="o_anim_zoom_in_right">Zoom In-Right</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_flash">Flash</we-button>
-            <we-button data-select-class="o_anim_pulse">Pulse</we-button>
-            <we-button data-select-class="o_anim_shake">Shake</we-button>
-            <we-button data-select-class="o_anim_tada">Tada</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_flip_in_x">Flip-In-X</we-button>
-            <we-button data-select-class="o_anim_flip_in_y">Flip-In-Y</we-button>
+        <!-- Animation mode -->
+        <we-row string="Animation">
+            <we-select data-dependencies="!image_transform_opt"
+                       data-is-animation-type-selection="true" data-no-preview="true">
+                <we-button data-animation-mode=""
+                           data-select-class=""
+                           data-name="no_animation_opt">None</we-button>
+                <we-button data-animation-mode="onAppearance"
+                           data-force-animation="true"
+                           data-select-class="o_animate"
+                           data-name="animation_on_appearance_opt">On Appearance</we-button>
+                <we-button data-animation-mode="onScroll"
+                           data-select-class="o_animate o_animate_on_scroll"
+                           data-force-animation="true"
+                           data-name="animation_on_scroll_opt">On Scroll</we-button>
+            </we-select>
+            <we-button-group data-dependencies="animation_on_scroll_opt"
+                             data-no-preview="true" data-force-animation="true">
+                <we-button data-select-class="">In</we-button>
+                <we-button data-select-class="o_animate_out">Out</we-button>
+            </we-button-group>
+        </we-row>
+        <!-- Effect -->
+        <we-select string="Effect" class="o_we_sublevel_1" data-dependencies="!no_animation_opt"
+                   data-name="animation_effect_opt">
+            <we-button data-select-class=""
+                       data-name="o_anim_no_effect_opt"
+                       data-dependencies="no_animation_opt">None</we-button>
+            <we-button data-select-class="o_anim_fade_in"
+                       data-trigger="animation_direction_in_place_opt">Fade</we-button>
+            <we-button data-select-class="o_anim_slide_in"
+                       data-name="o_anim_slide_in_opt"
+                       data-trigger="animation_direction_from_right_opt">Slide</we-button>
+            <we-button data-select-class="o_anim_bounce_in"
+                       data-trigger="animation_direction_in_place_opt">Bounce</we-button>
+            <we-button data-select-class="o_anim_rotate_in"
+                       data-name="o_anim_rotate_opt"
+                       data-trigger="animation_direction_in_place_opt">Rotate</we-button>
+            <we-button data-select-class="o_anim_zoom_out"
+                       data-trigger="animation_direction_in_place_opt">Zoom Out</we-button>
+            <we-button data-select-class="o_anim_zoom_in"
+                       data-trigger="animation_direction_in_place_opt">Zoom In</we-button>
+            <we-button data-select-class="o_anim_flash"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Flash</we-button>
+            <we-button data-select-class="o_anim_pulse"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Pulse</we-button>
+            <we-button data-select-class="o_anim_shake"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Shake</we-button>
+            <we-button data-select-class="o_anim_tada"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Tada</we-button>
+            <we-button data-select-class="o_anim_flip_in_x"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Flip-In-X</we-button>
+            <we-button data-select-class="o_anim_flip_in_y"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Flip-In-Y</we-button>
         </we-select>
-        <we-select string="Launch" class="o_we_sublevel_1"
-                   data-dependencies="!no_animation_opt" data-name="animation_launch_opt">
+        <!-- Direction -->
+        <we-select string="Direction" class="o_we_sublevel_1"
+                   data-dependencies="!no_animation_opt" data-name="animation_direction_opt"
+                   data-force-animation="true">
+            <we-button data-select-class=""
+                       data-name="animation_direction_in_place_opt"
+                       data-dependencies="!o_anim_slide_in_opt">In Place</we-button>
+            <we-button data-select-class="o_anim_from_right"
+                       data-name="animation_direction_from_right_opt"
+                       data-dependencies="!o_anim_rotate_opt">From Right</we-button>
+            <we-button data-select-class="o_anim_from_left"
+                       data-dependencies="!o_anim_rotate_opt">From Left</we-button>
+            <we-button data-select-class="o_anim_from_bottom"
+                       data-dependencies="!o_anim_rotate_opt">From Bottom</we-button>
+            <we-button data-select-class="o_anim_from_top"
+                       data-dependencies="!o_anim_rotate_opt">From Top</we-button>
+            <we-button data-select-class="o_anim_from_top_right"
+                       data-dependencies="o_anim_rotate_opt">From Top Right</we-button>
+            <we-button data-select-class="o_anim_from_top_left"
+                       data-dependencies="o_anim_rotate_opt">From Top Left</we-button>
+            <we-button data-select-class="o_anim_from_bottom_right"
+                       data-dependencies="o_anim_rotate_opt">From Bottom Right</we-button>
+            <we-button data-select-class="o_anim_from_bottom_left"
+                       data-dependencies="o_anim_rotate_opt">From Bottom Left</we-button>
+        </we-select>
+        <!-- Trigger -->
+        <we-select string="Trigger" class="o_we_sublevel_1"
+                   data-dependencies="animation_on_appearance_opt" data-name="animation_trigger_opt">
             <we-button data-select-class="">First Time Only</we-button>
             <we-button data-select-class="o_animate_both_scroll">Every Time</we-button>
         </we-select>
-        <we-input string="Duration" class="o_we_sublevel_1 o_we_small_input"
-                  data-dependencies="!no_animation_opt"
-                  data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
-        <we-input string="Delay" class="o_we_sublevel_1 o_we_small_input"
-                  data-dependencies="!no_animation_opt"
+        <!-- Intensity -->
+        <we-range string="Intensity" class="o_we_sublevel_1"
+                  data-name="animation_intensity_opt" data-dependencies="!no_animation_opt"
+                  data-animation-intensity="" data-min="1" data-max="100" data-step="1"
+                  data-display-range-value="true" data-no-preview="true"/>
+        <!-- Scroll Zone -->
+        <we-row string="Scroll Zone" class="o_we_sublevel_1">
+            <we-input data-unit="%" data-step="1" data-dependencies="animation_on_scroll_opt"
+                      data-no-preview="true" data-select-data-attribute=""
+                      data-attribute-name="scrollZoneStart" data-force-animation="true"/>
+            <span class="mx-2">to</span>
+            <we-input data-unit="%" data-step="1" data-dependencies="animation_on_scroll_opt"
+                      data-no-preview="true" data-select-data-attribute=""
+                      data-attribute-name="scrollZoneEnd" data-force-animation="true"/>
+        </we-row>
+        <!-- Start After -->
+        <we-input string="Start After" class="o_we_sublevel_1 o_we_small_input"
+                  data-dependencies="animation_on_appearance_opt" data-name="animation_delay_opt"
                   data-select-style="0s" data-css-property="animation-delay" data-unit="s"/>
+        <!-- Duration -->
+        <we-input string="Duration" class="o_we_sublevel_1 o_we_small_input"
+                  data-dependencies="animation_on_appearance_opt"
+                  data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
     </div>
 
     <!-- Theme options -->

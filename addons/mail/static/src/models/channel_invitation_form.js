@@ -166,10 +166,7 @@ registerModel({
             if (!this.thread) {
                 return clear();
             }
-            if (
-                !this.thread.authorizedGroupFullName ||
-                this.thread.public !== 'groups'
-            ) {
+            if (!this.thread.authorizedGroupFullName) {
                 return clear();
             }
             return sprintf(
@@ -300,7 +297,6 @@ registerModel({
         selectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
             compute: '_computeSelectablePartnerViews',
             inverse: 'channelInvitationFormOwner',
-            isCausal: true,
         }),
         /**
          * Determines all partners that are currently selected.
@@ -309,7 +305,6 @@ registerModel({
         selectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
             compute: '_computeSelectedPartnerViews',
             inverse: 'channelInvitationFormOwner',
-            isCausal: true,
         }),
         /**
          * States the thread on which this list operates (if any).

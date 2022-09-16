@@ -75,6 +75,7 @@ class Binary(http.Controller):
             stream = request.env['ir.binary']._get_stream_from(record, field, filename, filename_field, mimetype)
         send_file_kwargs = {'as_attachment': download}
         if unique:
+            send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
@@ -100,6 +101,7 @@ class Binary(http.Controller):
 
         send_file_kwargs = {'as_attachment': False}
         if unique:
+            send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
@@ -147,6 +149,7 @@ class Binary(http.Controller):
 
         send_file_kwargs = {'as_attachment': download}
         if unique:
+            send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
@@ -171,9 +174,7 @@ class Binary(http.Controller):
                 filename = unicodedata.normalize('NFD', ufile.filename)
 
             try:
-                cids = request.httprequest.cookies.get('cids', str(request.env.user.company_id.id))
-                allowed_company_ids = [int(cid) for cid in cids.split(',')]
-                attachment = Model.with_context(allowed_company_ids=allowed_company_ids).create({
+                attachment = Model.create({
                     'name': filename,
                     'datas': base64.encodebytes(ufile.read()),
                     'res_model': model,
@@ -234,7 +235,8 @@ class Binary(http.Controller):
                         imgext = '.' + mimetype.split('/')[1]
                         if imgext == '.svg+xml':
                             imgext = '.svg'
-                        response = send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
+                        response = send_file(image_data, request.httprequest.environ,
+                                             download_name=imgname + imgext, mimetype=mimetype, last_modified=row[1])
                     else:
                         response = http.Stream.from_path(placeholder('nologo.png')).get_response()
             except Exception:

@@ -379,7 +379,7 @@ class HrContract(models.Model):
         # retrieve contracts for the current month
         today = fields.Date.today()
         start = today + relativedelta(day=1, hour=0)
-        stop = today + relativedelta(day=31, hour=23, minute=59, second=59)
+        stop = today + relativedelta(months=1, day=31, hour=23, minute=59, second=59)
         contracts = self.env['hr.employee']._get_all_contracts(
             start, stop, states=['open', 'close'])
         # determine contracts to do (the ones whose generated dates have open periods this month)
@@ -388,6 +388,12 @@ class HrContract(models.Model):
             (not c.last_generation_date or c.last_generation_date < today))
         if not contracts_todo:
             return
+        countract_todo_count = len(contracts_todo)
+        # Filter contracts by company, work entries generation is not supposed to be called on
+        # contracts from differents companies, as we will retrieve the resource.calendar.leave
+        # and we don't want to mix everything up. The other contracts will be treated when the
+        # cron is re-triggered
+        contracts_todo = contracts_todo.filtered(lambda c: c.company_id == contracts_todo[0].company_id)
         # generate a batch of work entries
         BATCH_SIZE = 100
         # Since attendance based are more volatile for their work entries generation
@@ -398,5 +404,5 @@ class HrContract(models.Model):
         contracts_todo = contracts_todo.sorted(key=lambda c: 1 if c.has_static_work_entries() else 100)
         contracts_todo[:BATCH_SIZE]._generate_work_entries(start, stop, False)
         # if necessary, retrigger the cron to generate more work entries
-        if len(contracts_todo) > BATCH_SIZE:
+        if countract_todo_count > BATCH_SIZE:
             self.env.ref('hr_work_entry_contract.ir_cron_generate_missing_work_entries')._trigger()

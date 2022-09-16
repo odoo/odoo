@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from freezegun import freeze_time
+
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests.common import Form, tagged
 
 
+
 @tagged('post_install', '-at_install')
 class TestValuationReconciliation(ValuationReconciliationTestCommon):
-
-    @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
-
-        cls.stock_account_product_categ.property_account_creditor_price_difference_categ = cls.company_data['default_account_stock_price_diff']
-
     @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         company_data = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
@@ -30,31 +27,33 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         return company_data
 
     def _create_purchase(self, product, date, quantity=1.0, set_tax=False, price_unit=66.0):
-        rslt = self.env['purchase.order'].create({
-            'partner_id': self.partner_a.id,
-            'currency_id': self.currency_data['currency'].id,
-            'order_line': [
-                (0, 0, {
-                    'name': product.name,
-                    'product_id': product.id,
-                    'product_qty': quantity,
-                    'product_uom': product.uom_po_id.id,
-                    'price_unit': price_unit,
-                    'date_planned': date,
-                    'taxes_id': [(6, 0, product.supplier_taxes_id.ids)] if set_tax else False,
-                })],
-             'date_order': date,
-        })
-        rslt.button_confirm()
-        return rslt
+        with freeze_time(date):
+            rslt = self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'currency_id': self.currency_data['currency'].id,
+                'order_line': [
+                    (0, 0, {
+                        'name': product.name,
+                        'product_id': product.id,
+                        'product_qty': quantity,
+                        'product_uom': product.uom_po_id.id,
+                        'price_unit': price_unit,
+                        'date_planned': date,
+                        'taxes_id': [(6, 0, product.supplier_taxes_id.ids)] if set_tax else False,
+                    })],
+                'date_order': date,
+            })
+            rslt.button_confirm()
+            return rslt
 
     def _create_invoice_for_po(self, purchase_order, date):
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', default_date=date))
-        move_form.invoice_date = date
-        move_form.partner_id = self.partner_a
-        move_form.currency_id = self.currency_data['currency']
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
-        return move_form.save()
+        with freeze_time(date):
+            move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', default_date=date))
+            move_form.invoice_date = date
+            move_form.partner_id = self.partner_a
+            move_form.currency_id = self.currency_data['currency']
+            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
+            return move_form.save()
 
     def test_shipment_invoice(self):
         """ Tests the case into which we receive the goods first, and then make the invoice.
@@ -92,17 +91,16 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self.check_reconciliation(invoice, picking)
 
         # Return the goods and refund the invoice
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.action_assign()
-        return_pick.move_ids.quantity_done = 1
-        return_pick._action_done()
-        self._change_pickings_date(return_pick, '2018-01-13')
+        with freeze_time('2018-01-13'):
+            stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+                active_ids=picking.ids, active_id=picking.ids[0], active_model='stock.picking'))
+            stock_return_picking = stock_return_picking_form.save()
+            stock_return_picking.product_return_moves.quantity = 1.0
+            stock_return_picking_action = stock_return_picking.create_returns()
+            return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+            return_pick.action_assign()
+            return_pick.move_ids.quantity_done = 1
+            return_pick._action_done()
 
         # Refund the invoice
         refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=[invoice.id]).create({
@@ -173,15 +171,16 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.discount = 0.92431
         move_form.save()
-
         invoice.action_post()
 
         # Check the price difference amount.
-        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
-        self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
-        self.assertAlmostEqual(price_diff_line.amount_currency, -6100.446)
+        invoice_layer = self.env['stock.valuation.layer'].search([('account_move_line_id', 'in', invoice.line_ids.ids)])
+        self.assertTrue(len(invoice_layer) == 1, "A price difference line should be created")
+        self.assertAlmostEqual(invoice_layer.value, -3050.22)
 
-        picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
+        picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
+        self.assertAlmostEqual(invoice_layer.value + picking.move_ids.stock_valuation_layer_ids.value, invoice.line_ids[0].debit)
+        self.assertAlmostEqual(invoice_layer.value + picking.move_ids.stock_valuation_layer_ids.value, invoice.invoice_line_ids.price_subtotal/2, 2)
         self.check_reconciliation(invoice, picking)
 
     def test_rounding_price_unit(self):
@@ -200,16 +199,15 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 0.0006
         move_form.save()
-
         invoice.action_post()
 
         # Check the price difference amount. It's expected that price_unit * qty != price_total.
-        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
-        self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
-        self.assertAlmostEqual(price_diff_line.price_unit, 0.0001)
-        self.assertAlmostEqual(price_diff_line.amount_currency, 100.0)
+        invoice_layer = self.env['stock.valuation.layer'].search([('account_move_line_id', 'in', invoice.line_ids.ids)])
+        self.assertTrue(len(invoice_layer) == 1, "A price difference line should be created")
+        # self.assertAlmostEqual(invoice_layer.price_unit, 0.0001)
+        self.assertAlmostEqual(invoice_layer.value, 50.0)
 
-        picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
+        picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
         self.check_reconciliation(invoice, picking)
 
     def test_reconcile_cash_basis_bill(self):
@@ -290,7 +288,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         )
         product_A.categ_id.write(
             {
-                "property_account_creditor_price_difference_categ": False,
                 "property_valuation": "real_time",
                 "property_cost_method": "standard",
             }

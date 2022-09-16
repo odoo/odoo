@@ -212,20 +212,17 @@ registerModel({
         notificationListView: one('NotificationListView', {
             compute: '_computeNotificationListView',
             inverse: 'messagingMenuOwner',
-            isCausal: true,
         }),
         /**
          * The navbar view on the messaging menu when in mobile.
          */
-         mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
+        mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'messagingMenu',
-            isCausal: true,
         }),
         mobileNewMessageAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeMobileNewMessageAutocompleteInputView',
             inverse: 'messagingMenuOwnerAsMobileNewMessageInput',
-            isCausal: true,
         }),
         mobileNewMessageInputPlaceholder: attr({
             compute: '_computeMobileNewMessageInputPlaceholder',

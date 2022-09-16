@@ -47,6 +47,9 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeDuration() {
+            if (this.emojiGridViewAsOnScroll) {
+                return 150;
+            }
             if (this.threadAsThrottleNotifyCurrentPartnerTypingStatus) {
                 return 2.5 * 1000;
             }
@@ -56,7 +59,6 @@ registerModel({
     fields: {
         cooldownTimer: one('Timer', {
             inverse: 'throttleOwner',
-            isCausal: true,
         }),
         /**
          * Duration, in milliseconds, of the cool down phase.
@@ -64,6 +66,10 @@ registerModel({
         duration: attr({
             compute: '_computeDuration',
             required: true,
+        }),
+        emojiGridViewAsOnScroll: one('EmojiGridView', {
+            identifying: true,
+            inverse: 'onScrollThrottle',
         }),
         /**
          * Inner function to be invoked and throttled.

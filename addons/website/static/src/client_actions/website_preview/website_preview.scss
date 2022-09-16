@@ -33,25 +33,33 @@
             width: 100%;
             height: 100%;
         }
+    }
 
-        &.o_is_mobile {
+    &.o_is_mobile {
+        .o_we_website_top_actions button[data-action="mobile"] span.fa {
+            color: $o-we-color-success;
+        }
+
+        .o_iframe_container {
+            @extend %o-mobile-phone;
             @include media-breakpoint-up(md) {
-                @include o-iframe-position(720px);
-
-                @media(max-height: calc(720px + #{$o-navbar-height})) {
-                    @include o-iframe-position(520px);
-                }
-
-                iframe {
-                    border-radius: 25px;
-                    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-                }
-
-                .o_block_preview {
-                    border-radius: 25px;
+                @media(max-height: calc(800px + #{$o-navbar-height})) {
+                    // Below this height, we decrease the size of the mobile
+                    // preview (see in website.backend.scss) so we have to make
+                    // the image take the same size as its parent.
+                    div.o_mobile_preview_layout > img {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
             }
         }
+    }
+}
+
+.o_we_website_top_actions button[data-action="mobile"], .o_mobile_preview {
+    span.fa {
+        font-size: 20px;
     }
 }
 

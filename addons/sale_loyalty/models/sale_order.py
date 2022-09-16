@@ -158,7 +158,8 @@ class SaleOrder(models.Model):
 
         discountable = 0
         discountable_per_tax = defaultdict(int)
-        for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
+        lines = self.order_line if reward.program_id.is_payment_program else (self.order_line - self._get_no_effect_on_threshold_lines())
+        for line in lines:
             # Ignore lines from this reward
             if not line.product_uom_qty or not line.price_unit:
                 continue
@@ -325,7 +326,7 @@ class SaleOrder(models.Model):
             'name': _(
                 'Discount: %(desc)s%(tax_str)s',
                 desc=reward.description,
-                tax_str=_(' - On product with the following taxes: %(taxes)s', taxes=", ".join(mapped_taxes[tax].mapped('name'))),
+                tax_str=len(discountable_per_tax) and any(t.name for t in mapped_taxes[tax]) and _(' - On product with the following taxes: %(taxes)s', taxes=", ".join(mapped_taxes[tax].mapped('name'))) or '',
             ),
             'product_id': reward.discount_line_product_id.id,
             'price_unit': -(price * discount_factor),
@@ -348,7 +349,7 @@ class SaleOrder(models.Model):
         Returns the base domain that all programs have to comply to.
         """
         self.ensure_one()
-        return [('active', '=', True),
+        return [('active', '=', True), ('sale_ok', '=', True),
                 ('company_id', 'in', (self.company_id.id, False)),
                 '|', ('date_to', '=', False), ('date_to', '>=', fields.Date.context_today(self))]
 
@@ -357,7 +358,7 @@ class SaleOrder(models.Model):
         Returns the base domain that all triggers have to comply to.
         """
         self.ensure_one()
-        return [('active', '=', True),
+        return [('active', '=', True), ('program_id.sale_ok', '=', True),
                 ('company_id', 'in', (self.company_id.id, False)),
                 '|', ('program_id.date_to', '=', False), ('program_id.date_to', '<=', fields.Date.context_today(self))]
 
@@ -621,9 +622,8 @@ class SaleOrder(models.Model):
         lines_to_unlink = self.env['sale.order.line']
         coupons_to_unlink = self.env['loyalty.card']
         point_entries_to_unlink = self.env['sale.order.coupon.points']
-        # Remove any coupons that do not belong to the customer or are expired
+        # Remove any coupons that are expired
         self.applied_coupon_ids = self.applied_coupon_ids.filtered(lambda c:
-            (not c.partner_id or c.partner_id == self.partner_id) and
             (not c.expiration_date or c.expiration_date >= fields.Date.today())
         )
         point_ids_per_program = defaultdict(lambda: self.env['sale.order.coupon.points'])
@@ -710,7 +710,7 @@ class SaleOrder(models.Model):
                 not line.coupon_id:
                 continue
             seen_rewards.add(line.reward_identifier_code)
-            if line.reward_id.program_id.program_type not in ('gift_card', 'ewallet'):
+            if line.reward_id.program_id.is_payment_program:
                 line_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
             else:
                 payment_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
@@ -723,7 +723,11 @@ class SaleOrder(models.Model):
             if coupon not in all_coupons or points < reward.required_points or program not in domain_matching_programs:
                 # Reward is not applicable anymore, the reward lines will simply be removed at the end of this function
                 continue
-            values_list = self._get_reward_line_values(reward, coupon, product=reward_key[3])
+            try:
+                values_list = self._get_reward_line_values(reward, coupon, product=reward_key[3])
+            except UserError:
+                # It could happen that we have nothing to discount after changing the order.
+                values_list = []
             reward_line_pool = self._write_vals_from_reward_vals(values_list, reward_line_pool, delete=False)
 
         lines_to_unlink |= reward_line_pool
@@ -937,8 +941,11 @@ class SaleOrder(models.Model):
 
         # No trigger was found from the code, try to find a coupon
         if not program:
-            coupon = self.env['loyalty.card'].search([('partner_id', 'in', (False, self.partner_id.id)), ('code', '=', code)])
-            if not coupon or not coupon.program_id.active or not coupon.program_id.reward_ids:
+            coupon = self.env['loyalty.card'].search([('code', '=', code)])
+            if not coupon or\
+                not coupon.program_id.active or\
+                not coupon.program_id.reward_ids or\
+                not coupon.program_id.filtered_domain(self._get_program_domain()):
                 return {'error': _('This code is invalid (%s).', code), 'not_found': True}
             elif coupon.expiration_date and coupon.expiration_date < fields.Date.today():
                 return {'error': _('This coupon is expired.')}

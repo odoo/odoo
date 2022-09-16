@@ -7,6 +7,8 @@ from functools import lru_cache
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import frozendict, formatLang, format_date
+from odoo.tools.sql import create_index
+from odoo.addons.web.controllers.utils import clean_action
 
 INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
 
@@ -53,7 +55,6 @@ class AccountMoveLine(models.Model):
     parent_state = fields.Selection(related='move_id.state', store=True)
     date = fields.Date(
         related='move_id.date', store=True,
-        index=True,
         copy=False,
         group_operator='min',
     )
@@ -275,6 +276,7 @@ class AccountMoveLine(models.Model):
             ('payment_term', 'Payment Term'),
             ('line_section', 'Section'),
             ('line_note', 'Note'),
+            ('epd', 'Early Payment Discount')
         ],
         compute='_compute_display_type', store=True, readonly=False, precompute=True,
         required=True,
@@ -338,6 +340,9 @@ class AccountMoveLine(models.Model):
     tax_key = fields.Binary(compute='_compute_tax_key')
     compute_all_tax = fields.Binary(compute='_compute_all_tax')
     compute_all_tax_dirty = fields.Boolean(compute='_compute_all_tax')
+    epd_key = fields.Binary(compute='_compute_epd_key')
+    epd_needed = fields.Binary(compute='_compute_epd_needed')
+    epd_dirty = fields.Boolean(compute='_compute_epd_needed')
 
     # === Analytic fields === #
     analytic_line_ids = fields.One2many(
@@ -359,6 +364,26 @@ class AccountMoveLine(models.Model):
         check_company=True,
         copy=True,
     )
+
+    # === Early Pay fields === #
+    discount_date = fields.Date(
+        string='Discount Date',
+        store=True,
+        help='Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted'
+    )
+    # Discounted amount to pay when the early payment discount is applied
+    discount_amount_currency = fields.Monetary(
+        string='Discount amount in Currency',
+        store=True,
+        currency_field='currency_id',
+    )
+    # Discounted balance when the early payment discount is applied
+    discount_balance = fields.Monetary(
+        string='Discount Balance',
+        store=True,
+        currency_field='company_currency_id',
+    )
+    discount_percentage = fields.Float(store=True,)
 
     # === Misc Information === #
     blocked = fields.Boolean(
@@ -717,7 +742,7 @@ class AccountMoveLine(models.Model):
             line.reconciled = (
                 comp_curr.is_zero(line.amount_residual)
                 and foreign_curr.is_zero(line.amount_residual_currency)
-                and line.move_id.state not in ('draft', 'cancel')
+                and (line.matched_debit_ids or line.matched_credit_ids)
             )
 
     @api.depends('move_id.move_type', 'tax_ids', 'tax_repartition_line_id', 'debit', 'credit', 'tax_tag_ids', 'is_refund')
@@ -895,14 +920,16 @@ class AccountMoveLine(models.Model):
                 amount_currency = sign * line.price_unit * (1 - line.discount / 100)
                 amount = sign * line.price_unit / line.currency_rate * (1 - line.discount / 100)
                 handle_price_include = True
+                quantity = line.quantity
             else:
                 amount_currency = line.amount_currency
                 amount = line.balance
                 handle_price_include = False
+                quantity = 1
             compute_all_currency = line.tax_ids.compute_all(
                 amount_currency,
                 currency=line.currency_id,
-                quantity=line.quantity,
+                quantity=quantity,
                 product=line.product_id,
                 partner=line.move_id.partner_id or line.partner_id,
                 is_refund=line.is_refund,
@@ -913,7 +940,7 @@ class AccountMoveLine(models.Model):
             compute_all = line.tax_ids.compute_all(
                 amount,
                 currency=line.company_id.currency_id,
-                quantity=line.quantity,
+                quantity=quantity,
                 product=line.product_id,
                 partner=line.move_id.partner_id or line.partner_id,
                 is_refund=line.is_refund,
@@ -948,6 +975,79 @@ class AccountMoveLine(models.Model):
                     'tax_tag_ids': [(6, 0, compute_all['base_tags'])],
                 }
 
+    @api.depends('tax_ids', 'account_id', 'company_id')
+    def _compute_epd_key(self):
+        for line in self:
+            if line.display_type == 'epd' and line.company_id.early_pay_discount_computation == 'mixed':
+                line.epd_key = frozendict({
+                    'account_id': line.account_id.id,
+                    'analytic_account_id': line.analytic_account_id.id,
+                    'analytic_tag_ids': [Command.set(line.analytic_tag_ids.ids)],
+                    'tax_ids': [Command.set(line.tax_ids.ids)],
+                    'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
+                    'move_id': line.move_id.id,
+                })
+            else:
+                line.epd_key = False
+
+    @api.depends('move_id.needed_terms', 'account_id', 'analytic_account_id', 'analytic_tag_ids', 'tax_ids', 'tax_tag_ids', 'company_id')
+    def _compute_epd_needed(self):
+        for line in self:
+            line.epd_dirty = True
+            line.epd_needed = False
+            if line.display_type != 'product' or not line.tax_ids.ids or line.company_id.early_pay_discount_computation != 'mixed':
+                continue
+
+            discount_percentages = [
+                x['discount_percentage']
+                for x in line.move_id.needed_terms.values()
+                if x.get('discount_percentage')
+            ]
+            if not discount_percentages:
+                continue
+
+            epd_needed = {}
+            for discount_percentage in discount_percentages:
+                percentage = discount_percentage / 100
+                epd_needed_vals = epd_needed.setdefault(
+                    frozendict({
+                        'move_id': line.move_id.id,
+                        'account_id': line.account_id.id,
+                        'analytic_account_id': line.analytic_account_id.id,
+                        'analytic_tag_ids': [Command.set(line.analytic_tag_ids.ids)],
+                        'tax_ids': [Command.set(line.tax_ids.ids)],
+                        'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
+                        'display_type': 'epd',
+                    }),
+                    {
+                        'name': _("Early Payment Discount (%s%%)", discount_percentage),
+                        'amount_currency': 0.0,
+                        'balance': 0.0,
+                        'price_subtotal': 0.0,
+                    },
+                )
+                epd_needed_vals['amount_currency'] -= line.amount_currency * percentage
+                epd_needed_vals['balance'] -= line.balance * percentage
+                epd_needed_vals['price_subtotal'] -= line.price_subtotal * percentage
+                epd_needed_vals = epd_needed.setdefault(
+                    frozendict({
+                        'move_id': line.move_id.id,
+                        'account_id': line.account_id.id,
+                        'display_type': 'epd',
+                    }),
+                    {
+                        'name': _("Early Payment Discount (%s%%)", discount_percentage),
+                        'amount_currency': 0.0,
+                        'balance': 0.0,
+                        'price_subtotal': 0.0,
+                        'tax_ids': [],
+                    },
+                )
+                epd_needed_vals['amount_currency'] += line.amount_currency * percentage
+                epd_needed_vals['balance'] += line.balance * percentage
+                epd_needed_vals['price_subtotal'] += line.price_subtotal * percentage
+            line.epd_needed = {k: frozendict(v) for k, v in epd_needed.items()}
+
     @api.depends('move_id.move_type', 'balance', 'tax_ids')
     def _compute_is_refund(self):
         for line in self:
@@ -966,10 +1066,12 @@ class AccountMoveLine(models.Model):
     @api.depends('date_maturity')
     def _compute_term_key(self):
         for line in self:
-            if line.display_type in 'payment_term':
+            if line.display_type == 'payment_term':
                 line.term_key = frozendict({
                     'move_id': line.move_id.id,
                     'date_maturity': fields.Date.to_date(line.date_maturity),
+                    'discount_date': line.discount_date,
+                    'discount_percentage': line.discount_percentage
                 })
             else:
                 line.term_key = False
@@ -1187,11 +1289,9 @@ class AccountMoveLine(models.Model):
             same way when we search on partner_id, with the addition of being optimal when having a query that will
             search on partner_id and ref at the same time (which is the case when we open the bank reconciliation widget)
         """
-        cr = self._cr
-        cr.execute('DROP INDEX IF EXISTS account_move_line_partner_id_index')
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_partner_id_ref_idx',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
+        create_index(self._cr, 'account_move_line_partner_id_ref_idx', 'account_move_line', ["partner_id", "ref"])
+        create_index(self._cr, 'account_move_line_date_name_id_idx', 'account_move_line', ["date desc", "move_name desc", "id"])
+
 
     def _sanitize_vals(self, vals):
         if 'debit' in vals or 'credit' in vals:
@@ -1497,7 +1597,6 @@ class AccountMoveLine(models.Model):
             'debit_vals': debit_vals,
             'credit_vals': credit_vals,
         }
-
         remaining_debit_amount_curr = debit_vals['amount_residual_currency']
         remaining_credit_amount_curr = credit_vals['amount_residual_currency']
         remaining_debit_amount = debit_vals['amount_residual']
@@ -1568,17 +1667,6 @@ class AccountMoveLine(models.Model):
             credit_rate = get_accounting_rate(credit_vals)
             recon_debit_amount = remaining_debit_amount
             recon_credit_amount = -remaining_credit_amount
-
-        # Check if there is something left to reconcile. Move to the next loop iteration if not.
-        skip_reconciliation = False
-        if recon_currency.is_zero(recon_debit_amount):
-            res['debit_vals'] = None
-            skip_reconciliation = True
-        if recon_currency.is_zero(recon_credit_amount):
-            res['credit_vals'] = None
-            skip_reconciliation = True
-        if skip_reconciliation:
-            return res
 
         # ==== Match both lines together and compute amounts to reconcile ====
 
@@ -1726,9 +1814,9 @@ class AccountMoveLine(models.Model):
         credit_vals['amount_residual'] = remaining_credit_amount
         credit_vals['amount_residual_currency'] = remaining_credit_amount_curr
 
-        if debit_fully_matched:
+        if recon_currency.is_zero(recon_debit_amount) or debit_fully_matched:
             res['debit_vals'] = None
-        if credit_fully_matched:
+        if recon_currency.is_zero(recon_credit_amount) or credit_fully_matched:
             res['credit_vals'] = None
         return res
 
@@ -1738,8 +1826,9 @@ class AccountMoveLine(models.Model):
         Note: The order of records in self is important because the journal items will be reconciled using this order.
         :return: a tuple of 1) list of vals for partial reconciliation creation, 2) the list of vals for the exchange difference entries to be created
         '''
-        debit_vals_list = iter([x for x in vals_list if x['balance'] > 0.0 or x['amount_currency'] > 0.0])
-        credit_vals_list = iter([x for x in vals_list if x['balance'] < 0.0 or x['amount_currency'] < 0.0])
+        debit_vals_list = iter([x for x in vals_list if x['balance'] > 0.0 or x['amount_currency'] > 0.0 and not x['reconciled']])
+        credit_vals_list = iter([x for x in vals_list if x['balance'] < 0.0 or x['amount_currency'] < 0.0 and not x['reconciled']])
+        void_vals_list = iter([x for x in vals_list if not x['balance'] and not x['amount_currency'] and not x['reconciled']])
         debit_vals = None
         credit_vals = None
 
@@ -1755,13 +1844,13 @@ class AccountMoveLine(models.Model):
 
             # Move to the next available debit line.
             if not debit_vals:
-                debit_vals = next(debit_vals_list, None)
+                debit_vals = next(debit_vals_list, None) or next(void_vals_list, None)
                 if not debit_vals:
                     break
 
             # Move to the next available credit line.
             if not credit_vals:
-                credit_vals = next(credit_vals_list, None)
+                credit_vals = next(void_vals_list, None) or next(credit_vals_list, None)
                 if not credit_vals:
                     break
 
@@ -1793,6 +1882,7 @@ class AccountMoveLine(models.Model):
                 'company': line.company_id,
                 'currency': line.currency_id,
                 'date': line.date,
+                'reconciled': line.reconciled,
             }
             for line in self
         ])
@@ -2142,15 +2232,8 @@ class AccountMoveLine(models.Model):
 
         # ==== Collect all involved lines through the existing reconciliation ====
 
-        involved_lines = sorted_lines
-        involved_partials = self.env['account.partial.reconcile']
-        current_lines = involved_lines
-        current_partials = involved_partials
-        while current_lines:
-            current_partials = (current_lines.matched_debit_ids + current_lines.matched_credit_ids) - current_partials
-            involved_partials += current_partials
-            current_lines = (current_partials.debit_move_id + current_partials.credit_move_id) - current_lines
-            involved_lines += current_lines
+        involved_lines = sorted_lines._all_reconciled_lines()
+        involved_partials = involved_lines.matched_credit_ids | involved_lines.matched_debit_ids
 
         # ==== Create partials ====
 
@@ -2344,6 +2427,16 @@ class AccountMoveLine(models.Model):
             ids.append(aml.id)
         return ids
 
+    def _all_reconciled_lines(self):
+        reconciliation_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
+        current_lines = reconciliation_lines
+        current_partials = self.env['account.partial.reconcile']
+        while current_lines:
+            current_partials = (current_lines.matched_debit_ids + current_lines.matched_credit_ids) - current_partials
+            current_lines = (current_partials.debit_move_id + current_partials.credit_move_id) - current_lines
+            reconciliation_lines += current_lines
+        return reconciliation_lines
+
     def _get_attachment_domains(self):
         self.ensure_one()
         domains = [[('res_model', '=', 'account.move'), ('res_id', '=', self.move_id.id)]]
@@ -2450,15 +2543,25 @@ class AccountMoveLine(models.Model):
             'template': '/account/static/xls/aml_import_template.xlsx'
         }]
 
+    def _is_eligible_for_early_payment_discount(self, currency, reference_date):
+        self.ensure_one()
+        return self.display_type == 'payment_term' \
+            and self.currency_id == currency \
+            and self.move_id.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt') \
+            and not self.matched_debit_ids \
+            and not self.matched_credit_ids \
+            and self.discount_date \
+            and reference_date <= self.discount_date
+
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------
 
     def open_reconcile_view(self):
         action = self.env['ir.actions.act_window']._for_xml_id('account.action_account_moves_all_grouped_matching')
-        ids = self._reconciled_lines()
+        ids = self._all_reconciled_lines().filtered(lambda l: l.matched_debit_ids or l.matched_credit_ids).ids
         action['domain'] = [('id', 'in', ids)]
-        return action
+        return clean_action(action, self.env)
 
     def open_move(self):
         return self.move_id.open_move()

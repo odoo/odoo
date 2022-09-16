@@ -948,6 +948,16 @@ class Cache(object):
         """ Return whether ``record`` has a value for ``field``. """
         return record.id in self._get_field_cache(record, field)
 
+    def contains_field(self, field):
+        """ Return whether ``field`` has a value for at least one record. """
+        cache = self._data.get(field)
+        if not cache:
+            return False
+        # 'cache' keys are tuples if 'field' is context-dependent, record ids otherwise
+        if isinstance(next(iter(cache)), tuple):
+            return any(value for value in cache.values())
+        return True
+
     def get(self, record, field, default=NOTHING):
         """ Return the value of ``field`` for ``record``. """
         try:

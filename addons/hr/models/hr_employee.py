@@ -432,6 +432,12 @@ class HrEmployeePrivate(models.Model):
         for employee in self:
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
 
+    @api.depends('address_home_id', 'user_partner_id')
+    def _compute_related_contacts(self):
+        super()._compute_related_contacts()
+        for employee in self:
+            employee.related_contact_ids |= employee.address_home_id | employee.user_partner_id
+
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):
         """Checks that chosen address (res.partner) is not linked to a company.

@@ -237,19 +237,19 @@ describe('Collaboration', () => {
                 afterCreate: clientInfos => {
                     applyConcurentActions(clientInfos, {
                         c1: editor => {
-                            editor.execCommand('insertText', 'b');
-                            editor.execCommand('insertText', 'c');
-                            editor.execCommand('insertText', 'd');
+                            editor.execCommand('insert', 'b');
+                            editor.execCommand('insert', 'c');
+                            editor.execCommand('insert', 'd');
                         },
                         c2: editor => {
-                            editor.execCommand('insertText', 'f');
-                            editor.execCommand('insertText', 'g');
-                            editor.execCommand('insertText', 'h');
+                            editor.execCommand('insert', 'f');
+                            editor.execCommand('insert', 'g');
+                            editor.execCommand('insert', 'h');
                         },
                         c3: editor => {
-                            editor.execCommand('insertText', 'j');
-                            editor.execCommand('insertText', 'k');
-                            editor.execCommand('insertText', 'l');
+                            editor.execCommand('insert', 'j');
+                            editor.execCommand('insert', 'k');
+                            editor.execCommand('insert', 'l');
                         },
                     });
                     mergeClientsSteps(clientInfos);
@@ -265,10 +265,10 @@ describe('Collaboration', () => {
                 afterCreate: clientInfos => {
                     applyConcurentActions(clientInfos, {
                         c1: editor => {
-                            editor.execCommand('insertText', 'e');
+                            editor.execCommand('insert', 'e');
                         },
                         c2: editor => {
-                            editor.execCommand('insertText', 'f');
+                            editor.execCommand('insert', 'f');
                         },
                     });
                     mergeClientsSteps(clientInfos);
@@ -284,12 +284,12 @@ describe('Collaboration', () => {
                 afterCreate: clientInfos => {
                     applyConcurentActions(clientInfos, {
                         c1: editor => {
-                            editor.execCommand('insertText', 'e');
-                            editor.execCommand('insertText', 'f');
+                            editor.execCommand('insert', 'e');
+                            editor.execCommand('insert', 'f');
                         },
                         c2: editor => {
-                            editor.execCommand('insertText', 'g');
-                            editor.execCommand('insertText', 'h');
+                            editor.execCommand('insert', 'g');
+                            editor.execCommand('insert', 'h');
                         },
                     });
                     mergeClientsSteps(clientInfos);
@@ -305,7 +305,7 @@ describe('Collaboration', () => {
                 afterCreate: clientInfos => {
                     applyConcurentActions(clientInfos, {
                         c1: editor => {
-                            editor.execCommand('insertText', 'd');
+                            editor.execCommand('insert', 'd');
                         },
                         c2: editor => {
                             editor.execCommand('oDeleteBackward');
@@ -324,8 +324,8 @@ describe('Collaboration', () => {
                 afterCreate: clientInfos => {
                     applyConcurentActions(clientInfos, {
                         c1: editor => {
-                            editor.execCommand('insertText', 'd');
-                            editor.execCommand('insertText', 'e');
+                            editor.execCommand('insert', 'd');
+                            editor.execCommand('insert', 'e');
                         },
                         c2: editor => {
                             editor.execCommand('oDeleteBackward');
@@ -344,7 +344,7 @@ describe('Collaboration', () => {
             clientIds: ['c1', 'c2'],
             contentBefore: '<p>a[c1}{c1]</p>',
             afterCreate: clientInfos => {
-                clientInfos.c1.editor.execCommand('insertText', 'b');
+                clientInfos.c1.editor.execCommand('insert', 'b');
                 clientInfos.c1.editor._historyMakeSnapshot();
                 // Insure the snapshot is considered to be older than 30 seconds.
                 clientInfos.c1.editor._historySnapshots[0].time = 1;
@@ -367,11 +367,11 @@ describe('Collaboration', () => {
                 clientIds: ['c1', 'c2', 'c3'],
                 contentBefore: '<p><x>a[c1}{c1]</x><y>b[c2}{c2]</y><z>c[c3}{c3]</z></p>',
                 afterCreate: clientInfos => {
-                    clientInfos.c1.editor.execCommand('insertText', 'd');
+                    clientInfos.c1.editor.execCommand('insert', 'd');
                     clientInfos.c2.editor.onExternalHistorySteps([
                         clientInfos.c1.editor._historySteps[1],
                     ]);
-                    clientInfos.c2.editor.execCommand('insertText', 'e');
+                    clientInfos.c2.editor.execCommand('insert', 'e');
                     clientInfos.c1.editor.onExternalHistorySteps([
                         clientInfos.c2.editor._historySteps[2],
                     ]);
@@ -392,7 +392,7 @@ describe('Collaboration', () => {
                 clientIds: ['c1', 'c2', 'c3'],
                 contentBefore: '<p><i>a[c1}{c1]</i><b>b[c2}{c2]</b></p>',
                 afterCreate: clientInfos => {
-                    clientInfos.c1.editor.execCommand('insertText', 'c');
+                    clientInfos.c1.editor.execCommand('insert', 'c');
                     clientInfos.c2.editor.onExternalHistorySteps([
                         clientInfos.c1.editor._historySteps[1],
                     ]);
@@ -407,8 +407,8 @@ describe('Collaboration', () => {
                     clientInfos.c3.editor.historyResetFromSteps(steps);
 
                     // In the meantime client 2 send the step to client 1
-                    clientInfos.c2.editor.execCommand('insertText', 'd');
-                    clientInfos.c2.editor.execCommand('insertText', 'e');
+                    clientInfos.c2.editor.execCommand('insert', 'd');
+                    clientInfos.c2.editor.execCommand('insert', 'e');
                     clientInfos.c1.editor.onExternalHistorySteps([
                         clientInfos.c2.editor._historySteps[2],
                     ]);
@@ -417,7 +417,7 @@ describe('Collaboration', () => {
                     ]);
 
                     // Now client 2 is connected to client 3 and client 2 make a new step.
-                    clientInfos.c2.editor.execCommand('insertText', 'f');
+                    clientInfos.c2.editor.execCommand('insert', 'f');
                     clientInfos.c1.editor.onExternalHistorySteps([
                         clientInfos.c2.editor._historySteps[4],
                     ]);

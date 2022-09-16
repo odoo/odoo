@@ -125,7 +125,7 @@ async function _startServices(env, toStart) {
                             })
                             .catch((error) => {
                                 services[name] = error;
-                                console.error(error);
+                                console.error("Can't load service '" + name + "' because:", error);
                             })
                             .finally(resolve);
                     })

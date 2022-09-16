@@ -13,6 +13,18 @@ class ResCompany(models.Model):
     overtime_company_threshold = fields.Integer(string="Tolerance Time In Favor Of Company", default=0)
     overtime_employee_threshold = fields.Integer(string="Tolerance Time In Favor Of Employee", default=0)
 
+    attendance_kiosk_mode = fields.Selection([
+        ('barcode', 'Barcode / RFID'),
+        ('barcode_manual', 'Barcode / RFID and Manual Selection'),
+        ('manual', 'Manual Selection'),
+    ], string='Attendance Mode', default='barcode_manual')
+    attendance_barcode_source = fields.Selection([
+        ('scanner', 'Scanner'),
+        ('front', 'Front Camera'),
+        ('back', 'Back Camera'),
+    ], string='Barcode Source', default='front')
+    attendance_kiosk_delay = fields.Integer(default=10)
+
     def write(self, vals):
         search_domain = False  # Overtime to generate
         delete_domain = False  # Overtime to delete

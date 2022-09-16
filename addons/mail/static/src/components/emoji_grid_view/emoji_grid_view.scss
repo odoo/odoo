@@ -2,7 +2,19 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_EmojiGridView {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
+.o_EmojiGridView_container {
+    height: auto;
+    width: auto;
+    overflow-y: scroll;
+    overflow-x: visible;
+}
+
+.o_EmojiGridView_list {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.o_EmojiGridView_viewBlock {
+    position: absolute;
 }

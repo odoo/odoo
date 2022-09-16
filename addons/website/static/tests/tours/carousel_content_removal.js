@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour("carousel_content_removal", {
+wTourUtils.registerWebsitePreviewTour("carousel_content_removal", {
     test: true,
     url: '/',
     edition: true,

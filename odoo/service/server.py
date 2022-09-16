@@ -126,19 +126,16 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         me = threading.current_thread()
         me.name = 'odoo.service.http.request.%s' % (me.ident,)
 
-    def send_response(self, code, message=None):
-        # Since the upgrade header is introduced in version 1.1, Firefox
-        # won't accept a websocket connection if the version is set to
-        # 1.0.
-        if self.environ.get('REQUEST_URI') == '/websocket':
-            self.protocol_version = "HTTP/1.1"
-        return super().send_response(code, message=message)
-
     def make_environ(self):
         environ = super().make_environ()
         # Add the TCP socket to environ in order for the websocket
         # connections to use it.
         environ['socket'] = self.connection
+        if self.headers.get('Upgrade') == 'websocket':
+            # Since the upgrade header is introduced in version 1.1, Firefox
+            # won't accept a websocket connection if the version is set to
+            # 1.0.
+            self.protocol_version = "HTTP/1.1"
         return environ
 
 
@@ -1310,7 +1307,12 @@ def preload_registries(dbnames):
                                 sorted(registry._init_modules))
                 _logger.info("Starting post tests")
                 tests_before = registry._assertion_report.testsRun
-                result = loader.run_suite(loader.make_suite(module_names, 'post_install'))
+                post_install_suite = loader.make_suite(module_names, 'post_install')
+                if post_install_suite.countTestCases():
+                    with registry.cursor() as cr:
+                        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                        env['ir.qweb']._pregenerate_assets_bundles()
+                result = loader.run_suite(post_install_suite)
                 registry._assertion_report.update(result)
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,

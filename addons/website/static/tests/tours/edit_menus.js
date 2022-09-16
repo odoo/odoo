@@ -2,7 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('edit_menus', {
+wTourUtils.registerWebsitePreviewTour('edit_menus', {
     test: true,
     url: '/',
 }, [

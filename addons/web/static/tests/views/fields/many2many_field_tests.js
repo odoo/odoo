@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
@@ -14,11 +15,13 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { editSearch, validateSearch } from "@web/../tests/search/helpers";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
 import { registry } from "@web/core/registry";
+
+import legacyFieldRegistry from "web.field_registry";
+import { FieldMany2ManyTags } from "web.relational_fields";
 
 let target;
 let serverData;
@@ -476,6 +479,44 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("field string is used in the SelectCreateDialog", async function (assert) {
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,search": '<search><field name="display_name"/></search>',
+            "turtle,false,list": '<tree><field name="display_name"/></tree>',
+            "turtle,false,search": '<search><field name="display_name"/></search>',
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                    <field name="turtles" widget="many2many" string="Abcde">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[0]);
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal .modal-title").innerText, "Add: pokemon");
+
+        await click(target.querySelector(".modal .o_form_button_cancel"));
+        assert.containsNone(target, ".modal");
+
+        await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal .modal-title").innerText, "Add: Abcde");
+    });
+
     QUnit.test("many2many kanban: create action disabled", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
 
@@ -760,6 +801,44 @@ QUnit.module("Fields", (hooks) => {
             "new name",
             "the updated row still has the correct values"
         );
+    });
+
+    QUnit.test("add record in a many2many non editable list with context", async function (assert) {
+        assert.expect(1);
+
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,search": '<search><field name="display_name"/></search>',
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="timmy" context="{'abc': int_field}">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "web_search_read") {
+                    // done by the SelectCreateDialog
+                    assert.deepEqual(args.kwargs.context, {
+                        abc: 2,
+                        bin_size: true, // not sure it should be there, but was in legacy
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
+                }
+            },
+        });
+
+        await editInput(target, ".o_field_widget[name=int_field] input", "2");
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
 
     QUnit.test("many2many list (editable): edition", async function (assert) {
@@ -1834,8 +1913,8 @@ QUnit.module("Fields", (hooks) => {
             "partner_type,false,search": `<search />`,
         };
 
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
 
         patchWithCleanup(Many2XAutocomplete.defaultProps, {
@@ -1897,8 +1976,8 @@ QUnit.module("Fields", (hooks) => {
 
         registry.category("services").add("company", companyService, { force: true });
 
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
 
         await makeView({
@@ -1953,8 +2032,8 @@ QUnit.module("Fields", (hooks) => {
 
         registry.category("services").add("company", companyService, { force: true });
 
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => Promise.resolve().then(fn),
         });
 
         await makeView({
@@ -2014,8 +2093,8 @@ QUnit.module("Fields", (hooks) => {
             });
             registry.category("services").add("company", companyService, { force: true });
 
-            patchWithCleanup(AutoComplete, {
-                timeout: 0,
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => Promise.resolve().then(fn),
             });
 
             await makeView({
@@ -2052,4 +2131,40 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("many2many legacy field in list add a record", async (assert) => {
+        const myM2M = FieldMany2ManyTags.extend({});
+        legacyFieldRegistry.add("many2many_tags_legacy", myM2M);
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="timmy" widget="many2many_tags_legacy"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.step(`write: ${JSON.stringify(args.args[1])}`);
+                }
+            },
+        });
+
+        assert.containsNone(target, ".o_badge_text");
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        await click(target, ".o_legacy_field_widget input");
+        await click(document.querySelectorAll(".ui-autocomplete .dropdown-item")[0]);
+
+        assert.strictEqual(target.querySelector(".o_badge_text").textContent, "gold");
+        await click(target);
+        assert.verifySteps([`write: {"timmy":[[6,false,[12]]]}`]);
+
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        await click(target.querySelector(".badge .o_delete"));
+        await click(target);
+        assert.containsNone(target, ".o_badge_text");
+        assert.verifySteps([`write: {"timmy":[[6,false,[]]]}`]);
+        delete legacyFieldRegistry.map["many2many_tags_legacy"];
+    });
 });

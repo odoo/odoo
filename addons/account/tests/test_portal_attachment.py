@@ -31,6 +31,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_portal_attachment(self):
         """Test the portal chatter attachment route."""
+        self.partner_a.write({  # ensure an email for message_post
+            'email': 'partner.a@test.example.com',
+        })
 
         self.authenticate(None, None)
 
@@ -242,7 +245,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(res.status_code, 200)
         self.out_invoice.invalidate_recordset(['message_ids'])
         self.assertEqual(len(self.out_invoice.message_ids), 2)
+        self.assertEqual(self.out_invoice.message_ids[0].author_id, self.partner_a)
         self.assertEqual(self.out_invoice.message_ids[0].body, "<p>test message 2</p>")
+        self.assertEqual(self.out_invoice.message_ids[0].email_from, self.partner_a.email_formatted)
         self.assertFalse(self.out_invoice.message_ids.attachment_ids)
 
         # Test attachment can be associated if all good (complete flow)

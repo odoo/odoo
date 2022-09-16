@@ -43,7 +43,7 @@ export class WebsocketWorker {
     constructor(websocketURL) {
         this.websocketURL = websocketURL;
         this.channelsByClient = new Map();
-        this.connectRetryDelay = 0;
+        this.connectRetryDelay = 1000;
         this.connectTimeout = null;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
@@ -81,7 +81,6 @@ export class WebsocketWorker {
             this._onClientMessage(messagePort, ev.data);
         };
         this.channelsByClient.set(messagePort, []);
-        this._updateChannels();
     }
 
     /**
@@ -122,6 +121,9 @@ export class WebsocketWorker {
                 return this._deleteChannel(client, data);
             case 'force_update_channels':
                 return this._forceUpdateChannels();
+            case 'update_last_notification_id':
+                this.lastNotificationId = data;
+                this._updateChannels();
         }
     }
 
@@ -216,6 +218,10 @@ export class WebsocketWorker {
         // WebSocket was not closed cleanly, let's try to reconnect.
         this.broadcast('reconnecting', { closeCode: code });
         this.isReconnecting = true;
+        if (code === WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT) {
+            // Don't wait to reconnect on keep alive timeout.
+            this.connectRetryDelay = 0;
+        }
         this._onWebsocketError();
     }
 
@@ -236,7 +242,7 @@ export class WebsocketWorker {
     _onWebsocketMessage(messageEv) {
         const notifications = JSON.parse(messageEv.data);
         this.lastNotificationId = notifications[notifications.length - 1].id;
-        this.broadcast('notification', notifications.map(notification => notification.message));
+        this.broadcast('notification', notifications);
     }
 
     /**

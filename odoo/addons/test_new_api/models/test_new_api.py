@@ -1658,3 +1658,42 @@ class Prefetch(models.Model):
     ron = fields.Float('Ron Weasley', prefetch='Harry Potter')
     hansel = fields.Integer('Hansel', prefetch="Hansel and Gretel")
     gretel = fields.Char('Gretel', prefetch="Hansel and Gretel")
+
+
+class Modified(models.Model):
+    _name = 'test_new_api.modified'
+    _description = 'A model to check modified trigger'
+
+    name = fields.Char('Name')
+    line_ids = fields.One2many('test_new_api.modified.line', 'modified_id')
+    total_quantity = fields.Integer(compute='_compute_total_quantity')
+
+    @api.depends('line_ids.quantity')
+    def _compute_total_quantity(self):
+        for rec in self:
+            rec.total_quantity = sum(rec.line_ids.mapped('quantity'))
+
+
+class ModifiedLine(models.Model):
+    _name = 'test_new_api.modified.line'
+    _description = 'A model to check modified trigger'
+
+    modified_id = fields.Many2one('test_new_api.modified')
+    modified_name = fields.Char(related="modified_id.name")
+    quantity = fields.Integer()
+    price = fields.Float()
+    total_price = fields.Float(compute='_compute_total_quantity', recursive=True)
+    total_price_quantity = fields.Float(compute='_compute_total_price_quantity')
+
+    parent_id = fields.Many2one('test_new_api.modified.line')
+    child_ids = fields.One2many('test_new_api.modified.line', 'parent_id')
+
+    @api.depends('price', 'child_ids.total_price', 'child_ids.price')
+    def _compute_total_quantity(self):
+        for rec in self:
+            rec.total_price = sum(rec.child_ids.mapped('total_price')) + rec.price
+
+    @api.depends('total_price', 'quantity')
+    def _compute_total_price_quantity(self):
+        for rec in self:
+            rec.total_price_quantity = rec.total_price * rec.quantity

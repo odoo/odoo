@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
 import { registry } from '@web/core/registry';
-import core from 'web.core';
-import ajax from 'web.ajax';
 import { getWysiwygClass } from 'web_editor.loader';
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
@@ -42,6 +40,9 @@ export const websiteService = {
         let hasMultiWebsites;
         let actionJsId;
         let blockingProcesses = [];
+        let modelNamesProm = null;
+        const modelNames = {};
+
         const context = reactive({
             showNewContentModal: false,
             showAceEditor: false,
@@ -52,10 +53,6 @@ export const websiteService = {
         });
         const bus = new EventBus();
 
-        const setCurrentWebsiteId = id => {
-            currentWebsiteId = id;
-            websiteSystrayRegistry.trigger('EDIT-WEBSITE');
-        };
         hotkey.add("escape", () => {
             // Toggle fullscreen mode when pressing escape.
             if (currentWebsiteId) {
@@ -74,8 +71,15 @@ export const websiteService = {
         });
         return {
             set currentWebsiteId(id) {
-                setCurrentWebsiteId(id);
+                currentWebsiteId = id;
+                websiteSystrayRegistry.trigger('EDIT-WEBSITE');
             },
+            /**
+             * This represents the current website being edited in the
+             * WebsitePreview client action. Multiple components based their
+             * visibility on this value, which is falsy if the client action is
+             * not displayed.
+             */
             get currentWebsite() {
                 const currentWebsite = websites.find(w => w.id === currentWebsiteId);
                 if (currentWebsite) {
@@ -160,9 +164,6 @@ export const websiteService = {
             set actionJsId(jsId) {
                 actionJsId = jsId;
             },
-            openMenuDialog(Component, props) {
-                return dialog.add(Component, props);
-            },
             goToWebsite({ websiteId, path, edition, translation } = {}) {
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,
@@ -176,28 +177,23 @@ export const websiteService = {
                     },
                 });
             },
-            async fetchWebsites() {
+            async fetchUserGroups() {
                 // Fetch user groups, before fetching the websites.
                 [isRestrictedEditor, isDesigner, hasMultiWebsites] = await Promise.all([
                     user.hasGroup('website.group_website_restricted_editor'),
                     user.hasGroup('website.group_website_designer'),
                     user.hasGroup('website.group_multi_website'),
                 ]);
-
-                const [currentWebsiteRepr, allWebsites] = await Promise.all([
-                    orm.call('website', 'get_current_website'),
-                    hasMultiWebsites ? orm.searchRead('website', [], ['domain', 'id', 'name']) : [],
-                ]);
-                websites = [...allWebsites];
-                setCurrentWebsiteId(unslugHtmlDataObject(currentWebsiteRepr).id);
-                if (!websites.length) {
-                    websites = [{ id: currentWebsiteId }];
-                }
+            },
+            async fetchWebsites() {
+                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
             },
             async loadWysiwyg() {
                 if (!Wysiwyg) {
-                    await ajax.loadXML('/website/static/src/xml/website.editor.xml', core.qweb);
-                    Wysiwyg = await getWysiwygClass({wysiwygAlias: 'website.wysiwyg'}, ['website.compiled_assets_wysiwyg']);
+                    Wysiwyg = await getWysiwygClass({
+                        moduleName: 'website.wysiwyg',
+                        additionnalAssets: ['website.assets_wysiwyg']
+                    });
                 }
                 return Wysiwyg;
             },
@@ -221,6 +217,34 @@ export const websiteService = {
             },
             hideLoader() {
                 bus.trigger('HIDE-WEBSITE-LOADER');
+            },
+            /**
+             * Returns the (translated) "functional" name of a model
+             * (_description) given its "technical" name (_name).
+             *
+             * @param {string} [model]
+             * @returns {string}
+             */
+            async getUserModelName(model = this.currentWebsite.metadata.mainObject.model) {
+                if (!modelNamesProm) {
+                    // FIXME the `get_available_models` is to be removed/changed
+                    // in a near future. This code is to be adapted, probably
+                    // with another helper to map a model functional name from
+                    // its technical map without the need of the right access
+                    // rights (which is why I cannot use search_read here).
+                    modelNamesProm = orm.call("ir.model", "get_available_models")
+                        .then(modelsData => {
+                            for (const modelData of modelsData) {
+                                modelNames[modelData['model']] = modelData['display_name'];
+                            }
+                        })
+                        // Precaution in case the util is simply removed without
+                        // adapting this method: not critical, we can restore
+                        // later and use the fallback until the fix is made.
+                        .catch(() => {});
+                }
+                await modelNamesProm;
+                return modelNames[model] || env._t("Data");
             },
         };
     },

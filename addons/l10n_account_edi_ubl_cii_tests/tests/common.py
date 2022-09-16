@@ -10,7 +10,6 @@ from odoo.tools.misc import file_open
 from odoo.tests import tagged
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLCommon(AccountEdiTestCommon):
 
     @classmethod

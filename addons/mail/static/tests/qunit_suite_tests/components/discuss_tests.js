@@ -535,20 +535,19 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     );
 });
 
-QUnit.test('sidebar: public/private channel rendering', async function (assert) {
-    assert.expect(5);
+QUnit.test('sidebar: public channel rendering', async function (assert) {
+    assert.expect(3);
 
     const pyEnv = await startServer();
-    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
-        { name: "channel1", public: 'public' },
-        { name: "channel2", public: 'private' },
+    const mailChannelId1 = pyEnv['mail.channel'].create([
+        { name: "channel1", channel_type: 'channel', group_public_id: false},
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
         document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
-        2,
-        "should have 2 channel items"
+        1,
+        "should have 1 channel items"
     );
     assert.strictEqual(
         document.querySelectorAll(`
@@ -558,30 +557,13 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
         1,
         "should have channel 1"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
-        `).length,
-        1,
-        "should have channel 2"
-    );
     const channel1 = document.querySelector(`
         .o_DiscussSidebar_categoryChannel
         .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
     `);
-    const channel2 = document.querySelector(`
-        .o_DiscussSidebar_categoryChannel
-        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
-    `);
     assert.ok(
-        channel1.querySelectorAll(`:scope .o_ThreadIcon_channelPublic`).length,
+        channel1.querySelectorAll(`:scope .o_ThreadIcon_publicChannel`).length,
         "channel1 (public) should have globe icon"
-    );
-    assert.strictEqual(
-        channel2.querySelectorAll(`:scope .o_ThreadIcon_channelPrivate`).length,
-        1,
-        "channel2 (private) has lock icon"
     );
 });
 
@@ -596,7 +578,6 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat', // testing a chat is the goal of the test
-        public: 'private', // expected value for testing a chat
     });
     const { openDiscuss } = await start();
     await openDiscuss();
@@ -658,7 +639,6 @@ QUnit.test('sidebar: chat rendering with unread counter', async function (assert
             }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     const { openDiscuss } = await start();
     await openDiscuss();
@@ -701,7 +681,6 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
                 [0, 0, { partner_id: resPartnerId1 }],
             ],
             channel_type: 'chat',
-            public: 'private',
         },
         {
             channel_member_ids: [
@@ -709,7 +688,6 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
                 [0, 0, { partner_id: resPartnerId2 }],
             ],
             channel_type: 'chat',
-            public: 'private',
         },
         {
             channel_member_ids: [
@@ -717,7 +695,6 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
                 [0, 0, { partner_id: resPartnerId3 }],
             ],
             channel_type: 'chat',
-            public: 'private',
         }
     ]);
     const { openDiscuss } = await start();
@@ -794,7 +771,6 @@ QUnit.test('sidebar: chat custom name', async function (assert) {
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     const { openDiscuss } = await start();
     await openDiscuss();
@@ -1947,7 +1923,6 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
                 [0, 0, { partner_id: resPartnerId1 }],
             ],
             channel_type: 'chat',
-            public: 'private',
         }
     ]);
     const mailMessageId1 = pyEnv['mail.message'].create(
@@ -3445,8 +3420,8 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
     let step = 0;
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
-        { channel_type: 'chat', public: 'private' },
-        { channel_type: 'chat', public: 'private' },
+        { channel_type: 'chat' },
+        { channel_type: 'chat' },
     ]);
     const { env, openDiscuss } = await start({
         services: {
@@ -3524,7 +3499,6 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
                 [0, 0, { partner_id: resPartnerId1 }],
             ],
             channel_type: 'chat',
-            public: 'private',
         }
     ]);
     const { click, openDiscuss } = await start();

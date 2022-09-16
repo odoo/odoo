@@ -16,7 +16,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         # set up
         cls.employee_tde = cls.env['hr.employee'].create({
             'name': 'Employee TDE',
-            'timesheet_cost': 42,
+            'hourly_cost': 42,
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -295,6 +295,9 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         self.assertTrue(task.allow_billable, "Task in project 'task rate' should be billed at task rate")
         self.assertEqual(task.sale_line_id, self.so1_line_deliver_no_task, "The task should keep the same SOL since the partner_id has not changed when the project of the task has changed.")
         self.assertEqual(task.partner_id, self.partner_a, "Task created in a project billed on 'employee rate' should have the same customer when it has been created.")
+        # the `subtask.sale_line_id` is consider to be recompute,
+        # but the result differ after the write of display_project_id without depend on it
+        task.flush_model(["sale_line_id"])
 
         # move subtask into task rate project
         subtask.write({
@@ -379,6 +382,9 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
         self.assertEqual(subtask.display_project_id, timesheet2.project_id, "The timesheet is in the subtask project")
         self.assertFalse(timesheet2.so_line, "The timesheet should not be linked to SOL as it's a non billable project")
+        # the `subtask.sale_line_id` is consider to be recompute,
+        # but the result differ after the write of project_id
+        task.flush_model(["sale_line_id"])
 
         # move task and subtask into task rate project
         task.write({

@@ -7,7 +7,6 @@ const QWeb = core.qweb;
 
 publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend({
     selector: '.o_wevent_create_room_button',
-    xmlDependencies: ['/website_event_meet/static/src/xml/website_event_meeting_room.xml'],
     events: {
         'click': '_onClickCreate',
     },

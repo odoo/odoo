@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChannelPreviewView" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_ChannelPreviewView_messageBody')]" position="replace">
+            <t t-if="channelPreviewView.isRating">
+                <span class="o_ChannelPreviewView_ratingText">Rating:</span>
+                <img class="o_ChannelPreviewView_ratingImage ms-2" t-att-src="channelPreviewView.thread.lastMessage.rating.ratingImageUrl" t-att-alt="channelPreviewView.thread.lastMessage.rating.ratingText"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

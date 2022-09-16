@@ -80,15 +80,15 @@
                          data-customize-website-views="website_sale.products_description"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-row string="Left Panel" class="o_we_full_row">
-                <we-button string="Categories"
-                           data-name="categories_opt"
+            <we-row string="Categories" data-variable="filmstrip">
+                <we-button string="Left"
                            data-customize-website-views="website_sale.products_categories"
+                           data-name="categories_opt"
                            data-no-preview="true"
                            data-reload="/"/>
-                <we-button string="Attributes"
-                           data-name="attributes_opt"
-                           data-customize-website-views="website_sale.products_attributes"
+                <we-button string="Top"
+                           data-customize-website-views="website_sale.products_categories_top"
+                           data-name="categories_opt_top"
                            data-no-preview="true"
                            data-reload="/"/>
             </we-row>
@@ -98,6 +98,18 @@
                          data-dependencies="categories_opt"
                          data-no-preview="true"
                          data-reload="/"/>
+            <we-row string="Attributes" class="o_we_full_row">
+                <we-button string="Left"
+                           data-customize-website-views="website_sale.products_attributes"
+                           data-name="attributes_opt"
+                           data-no-preview="true"
+                           data-reload="/"/>
+                <we-button string="Top"
+                           data-customize-website-views="website_sale.products_attributes_top"
+                           data-name="attributes_opt_top"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
             <we-checkbox string="Price Filter"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.filter_products_price"

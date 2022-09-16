@@ -25,7 +25,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import UserError, AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_path, get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
@@ -73,8 +73,6 @@ class Website(models.Model):
     name = fields.Char('Website Name', required=True)
     sequence = fields.Integer(default=10)
     domain = fields.Char('Website Domain', help='E.g. https://www.mydomain.com')
-    country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
-                                         string='Country Groups', help='Used when multiple websites have the same domain.')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
     language_ids = fields.Many2many(
         'res.lang', 'website_lang_rel', 'website_id', 'lang_id', string="Languages",
@@ -132,7 +130,7 @@ class Website(models.Model):
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
     partner_id = fields.Many2one(related='user_id.partner_id', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
-    homepage_id = fields.Many2one('website.page', string='Homepage')
+    homepage_url = fields.Char(help='E.g. /contactus or /shop')
     custom_code_head = fields.Html('Custom <head> code', sanitize=False)
     custom_code_footer = fields.Html('Custom end of <body> code', sanitize=False)
 
@@ -151,6 +149,10 @@ class Website(models.Model):
         ('b2b', 'On invitation'),
         ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b')
+
+    _sql_constraints = [
+        ('domain_unique', 'unique(domain)', 'Website Domain should be unique.'),
+    ]
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
@@ -261,6 +263,7 @@ class Website(models.Model):
     def _handle_create_write(self, vals):
         self._handle_favicon(vals)
         self._handle_domain(vals)
+        self._handle_homepage_url(vals)
 
     @api.model
     def _handle_favicon(self, vals):
@@ -273,6 +276,18 @@ class Website(models.Model):
             if not vals['domain'].startswith('http'):
                 vals['domain'] = 'https://%s' % vals['domain']
             vals['domain'] = vals['domain'].rstrip('/')
+
+    @api.model
+    def _handle_homepage_url(self, vals):
+        homepage_url = vals.get('homepage_url')
+        if homepage_url:
+            vals['homepage_url'] = homepage_url.rstrip('/')
+
+    @api.constrains('homepage_url')
+    def _check_homepage_url(self):
+        for website in self.filtered('homepage_url'):
+            if not website.homepage_url.startswith('/'):
+                raise ValidationError(_("The homepage URL should be relative and start with '/'."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_remaining_website(self):
@@ -356,8 +371,10 @@ class Website(models.Model):
 
     @api.model
     def configurator_recommended_themes(self, industry_id, palette):
-        domain = [('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common']), ('state', '!=', 'uninstallable')]
-        client_themes = request.env['ir.module.module'].search(domain).mapped('name')
+        Module = request.env['ir.module.module']
+        domain = Module.get_themes_domain()
+        domain = AND([[('name', '!=', 'theme_default')], domain])
+        client_themes = Module.search(domain).mapped('name')
         client_themes_img = {t: get_manifest(t).get('images_preview_theme', {}) for t in client_themes if get_manifest(t)}
         themes_suggested = self._website_api_rpc(
             '/api/website/2/configurator/recommended_themes/%s' % industry_id,
@@ -436,7 +453,7 @@ class Website(models.Model):
 
         def configure_page(page_code, snippet_list, pages_views, cta_data):
             if page_code == 'homepage':
-                page_view_id = website.homepage_id.view_id
+                page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
             else:
                 page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
             rendered_snippets = []
@@ -638,13 +655,12 @@ class Website(models.Model):
             })
         # prevent /-1 as homepage URL
         homepage_page.url = '/'
-        self.homepage_id = homepage_page
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
         self.copy_menu_hierarchy(default_menu)
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
-        home_menu.page_id = self.homepage_id
+        home_menu.page_id = homepage_page
 
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
@@ -963,40 +979,26 @@ class Website(models.Model):
         # The format of `httprequest.host` is `domain:port`
         domain_name = request and request.httprequest.host or ''
 
-        country = request and request.geoip.get('country_code')
-        country_id = False
-        if country:
-            country_id = self.env['res.country'].search([('code', '=', country)], limit=1).id
-
-        website_id = self._get_current_website_id(domain_name, country_id, fallback=fallback)
+        website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
-    @tools.cache('domain_name', 'country_id', 'fallback')
+    @tools.cache('domain_name', 'fallback')
     @api.model
-    def _get_current_website_id(self, domain_name, country_id, fallback=True):
+    def _get_current_website_id(self, domain_name, fallback=True):
         """Get the current website id.
 
-        First find all the websites for which the configured `domain` (after
+        First find the website for which the configured `domain` (after
         ignoring a potential scheme) is equal to the given
-        `domain_name`. If there is only one result, return it immediately.
+        `domain_name`. If a match is found, return it immediately.
 
-        If there are no website found for the given `domain_name`, either
+        If there is no website found for the given `domain_name`, either
         fallback to the first found website (no matter its `domain`) or return
         False depending on the `fallback` parameter.
-
-        If there are multiple websites for the same `domain_name`, we need to
-        filter them out by country. We return the first found website matching
-        the given `country_id`. If no found website matching `domain_name`
-        corresponds to the given `country_id`, the first found website for
-        `domain_name` will be returned (no matter its country).
 
         :param domain_name: the domain for which we want the website.
             In regard to the `url_parse` method, only the `netloc` part should
             be given here, no `scheme`.
         :type domain_name: string
-
-        :param country_id: id of the country for which we want the website
-        :type country_id: int
 
         :param fallback: if True and no website is found for the specificed
             `domain_name`, return the first website (without filtering them)
@@ -1014,19 +1016,17 @@ class Website(models.Model):
         def _filter_domain(website, domain_name, ignore_port=False):
             """Ignore `scheme` from the `domain`, just match the `netloc` which
             is host:port in the version of `url_parse` we use."""
-            # Here we add http:// to the domain if it's not set because
-            # `url_parse` expects it to be set to correctly return the `netloc`.
             website_domain = urls.url_parse(website.domain or '').netloc
             if ignore_port:
                 website_domain = _remove_port(website_domain)
                 domain_name = _remove_port(domain_name)
             return website_domain.lower() == (domain_name or '').lower()
 
-        # Sort on country_group_ids so that we fall back on a generic website:
-        # websites with empty country_group_ids will be first.
-        found_websites = self.search([('domain', 'ilike', _remove_port(domain_name))]).sorted('country_group_ids')
+        found_websites = self.search([('domain', 'ilike', _remove_port(domain_name))])
         # Filter for the exact domain (to filter out potential subdomains) due
         # to the use of ilike.
+        # `domain_name` could be an empty string, in that case multiple website
+        # without a domain will be returned
         websites = found_websites.filtered(lambda w: _filter_domain(w, domain_name))
         # If there is no domain matching for the given port, ignore the port.
         websites = websites or found_websites.filtered(lambda w: _filter_domain(w, domain_name, ignore_port=True))
@@ -1035,11 +1035,8 @@ class Website(models.Model):
             if not fallback:
                 return False
             return self.search([], limit=1).id
-        elif len(websites) == 1:
-            return websites.id
-        else:  # > 1 website with the same domain
-            country_specific_websites = websites.filtered(lambda website: country_id in website.country_group_ids.mapped('country_ids').ids)
-            return country_specific_websites[0].id if country_specific_websites else websites[0].id
+
+        return websites[0].id
 
     def _force(self):
         self._force_website(self.id)
@@ -1155,7 +1152,6 @@ class Website(models.Model):
             :rtype: list({name: str, url: str})
         """
         router = http.root.get_db_router(request.db)
-        # Force enumeration to be performed as public user
         url_set = set()
 
         sitemap_endpoint_done = set()
@@ -1377,7 +1373,7 @@ class Website(models.Model):
             'user_id': self.user_id.id,
             'company_id': self.company_id.id,
             'default_lang_id': self.default_lang_id.id,
-            'homepage_id': self.homepage_id.id,
+            'homepage_url': self.homepage_url,
         }
 
     def _get_cached(self, field):

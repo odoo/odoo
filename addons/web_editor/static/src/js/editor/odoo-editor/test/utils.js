@@ -154,7 +154,9 @@ export function setTestSelection(selection, doc = document) {
     try {
         domSelection.extend(selection.focusNode, selection.focusOffset);
     } catch {
-        // Firefox yells not happy when setting selection on elem with contentEditable=false.
+        // Firefox throws NS_ERROR_FAILURE when setting selection on element
+        // with contentEditable=false for no valid reason since non-editable
+        // content are selectable by the user anyway.
     }
     triggerEvent(selection.anchorNode, 'selectionchange');
 }
@@ -262,8 +264,11 @@ export function renderTextualSelection() {
  */
 export function customErrorMessage(assertLocation, value, expected) {
     const zws = '//zws//';
-    value = value.replace('\u200B', zws);
-    expected = expected.replace('\u200B', zws);
+    value = value.replaceAll('\u200B', zws);
+    expected = expected.replaceAll('\u200B', zws);
+    const tab = '//TAB//';
+    value = value.replaceAll('\u0009', tab);
+    expected = expected.replaceAll('\u0009', tab);
 
     return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
@@ -280,7 +285,6 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     const selection = parseTextualSelection(testNode);
 
     const editor = new Editor(testNode, Object.assign({ toSanitize: false }, options));
-    let firefoxExecCommandError = false;
     let error = false;
     try {
         editor.keyboardType = 'PHYSICAL';
@@ -308,18 +312,10 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         }
 
         if (spec.stepFunction) {
-            try {
-                await spec.stepFunction(editor);
-            } catch (err) {
-                if (typeof err === 'object' && err.name === 'NS_ERROR_FAILURE') {
-                    firefoxExecCommandError = true;
-                } else {
-                    throw err;
-                }
-            }
+            await spec.stepFunction(editor);
         }
 
-        if (spec.contentAfterEdit && !firefoxExecCommandError) {
+        if (spec.contentAfterEdit) {
             renderTextualSelection();
             const afterEditValue = testNode.innerHTML;
             window.chai.expect(afterEditValue).to.be.equal(
@@ -341,7 +337,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
 
     if (!error) {
         try {
-            if (spec.contentAfter && !firefoxExecCommandError) {
+            if (spec.contentAfter) {
                 renderTextualSelection();
 
                 // remove all check-ids (checklists, stars)
@@ -363,10 +359,6 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
 
     await testNode.remove();
 
-    if (firefoxExecCommandError) {
-        // FIXME
-        throw new Error('Firefox was not able to test this case because of an execCommand error');
-    }
     if (error) {
         throw error;
     }

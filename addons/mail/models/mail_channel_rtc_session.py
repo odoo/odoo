@@ -11,7 +11,7 @@ class MailRtcSession(models.Model):
     _name = 'mail.channel.rtc.session'
     _description = 'Mail RTC session'
 
-    channel_member_id = fields.Many2one('mail.channel.member', index=True, required=True, ondelete='cascade')
+    channel_member_id = fields.Many2one('mail.channel.member', required=True, ondelete='cascade')
     channel_id = fields.Many2one('mail.channel', related='channel_member_id.channel_id', store=True, readonly=True)
     partner_id = fields.Many2one('res.partner', related='channel_member_id.partner_id', string="Partner")
     guest_id = fields.Many2one('mail.guest', related='channel_member_id.guest_id')

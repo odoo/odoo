@@ -17,7 +17,7 @@
                 </t>
                 <section class="mt-n5">
                     <div class="container overflow-hidden">
-                        <div class="row mb64 bg-white g-0 rounded shadow-sm">
+                        <div class="o_wevent_theme_bg_base row mb64 g-0 rounded shadow-sm">
                             <t t-out="0"/>
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                         </div>
                     </form>
                 </div>
-                <div t-if="available_booth_category_ids" class="col-lg-3 bg-200 hidden-sm hidden-xs p-4">
+                <div t-if="available_booth_category_ids" class="o_wevent_booth_category col-lg-3 hidden-sm hidden-xs p-4">
                     <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                         <div t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
                              class="o_wbooth_booth_description d-none" t-field="booth_category.description"/>

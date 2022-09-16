@@ -4,7 +4,7 @@
         <template id="survey_fill_form_done_inherit_website_slides" inherit_id="survey.survey_fill_form_done">
             <xpath expr="//div[hasclass('o_survey_finished')]//a[hasclass('btn-primary')][1]" position="after">
                 <t t-if="channel_id">
-                    <a role="button" class="me-2 mt-2 mt-md-0 btn btn-secondary btn-lg" href="#" data-bs-toggle="modal" t-attf-data-bs-target="#slideChannelShareModal_{{channel_id.id}}">
+                    <a role="button" class="me-2 mt-2 mt-md-0 btn btn-secondary btn-lg" href="#" data-bs-toggle="modal" t-attf-data-bs-target="#slideShareModal_{{channel_id.id}}">
                         <i class="fa fa-share-alt" aria-label="Share certification" title="Share certification"/>
                         Share your certification
                     </a>

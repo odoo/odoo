@@ -66,21 +66,24 @@
 
 // Modify modals so that their scrollable element is the modal-body (except in
 // mobile).
+// TODO: should be replaced by .modal-dialog-scrollable class
 @include media-breakpoint-up(sm) {
-    .modal-dialog {
-        height: 100%;
-        padding: $modal-dialog-margin-y-sm-up 0;
-        margin: 0 auto;
-    }
-    .modal-content {
-        max-height: 100%;
-    }
-    .modal-header, .modal-footer {
-        flex: 0 0 auto;
-    }
-    .modal-body {
-        overflow: auto;
-        min-height: 0;
+    :not(.s_popup) > .modal {
+        .modal-dialog {
+            height: 100%;
+            padding: $modal-dialog-margin-y-sm-up 0;
+            margin: 0 auto;
+        }
+        .modal-content {
+            max-height: 100%;
+        }
+        .modal-header, .modal-footer {
+            flex: 0 0 auto;
+        }
+        .modal-body {
+            overflow: auto;
+            min-height: 0;
+        }
     }
 }
 
@@ -98,9 +101,9 @@
     background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
 }
 
-// Restore pointer cursor which came with the 'btn' class until BS 4.3.1
-.btn:not(:disabled):not(.disabled) {
-    cursor: pointer;
+// Force field label pointer to cursor
+.form-check, .form-select {
+    @include o-field-pointer();
 }
 
 // Disable RTL for the dropdown position

@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="view_forum_post_form" model="ir.ui.view">
+    <field name="name">forum.post.form</field>
+    <field name="model">forum.post</field>
+    <field name="arch" type="xml">
+        <form string="Forum Post">
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button type="object" class="oe_stat_button" icon="fa-globe" name="go_to_website">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Go to <br/>Website</span>
+                        </div>
+                    </button>
+                </div>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <label for="name"/>
+                <h1>
+                    <field name="name" placeholder="e.g. When should I plant my tomatoes?"/>
+                </h1>
+                <group>
+                    <group name="forum_details">
+                        <field name="active" invisible="1"/>
+                        <field name="forum_id"/>
+                        <field name="website_id" groups="website.group_multi_website"/>
+                        <field name="parent_id"/>
+                    </group>
+                    <group name="post_details">
+                        <field name="tag_ids" widget="many2many_tags"/>
+                        <field name="state"/>
+                        <field name="closed_reason_id"/>
+                        <field name="closed_uid"/>
+                        <field name="closed_date"/>
+                    </group>
+                    <group name="creation_details">
+                        <field name="create_uid"/>
+                        <field name="create_date"/>
+                        <field name="write_uid"/>
+                        <field name="write_date"/>
+                    </group>
+                    <group name="post_statistics">
+                        <field name="is_correct"/>
+                        <field name="views"/>
+                        <field name="vote_count"/>
+                        <field name="favourite_count"/>
+                        <field name="child_count"/>
+                        <field name="relevancy"/>
+                    </group>
+                </group>
+                <group name="answers" string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
+                    <field name="child_ids" nolabel="1">
+                        <tree>
+                            <field name="create_uid" string="Answered by"/>
+                            <field name="vote_count"/>
+                            <field name="state"/>
+                            <field name="is_correct"/>
+                        </tree>
+                    </field>
+                </group>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" groups="base.group_user"/>
+                <field name="message_ids"/>
+            </div>
+        </form>
+    </field>
+</record>
+
+<record id="view_forum_post_search" model="ir.ui.view">
+    <field name="name">forum.post.search</field>
+    <field name="model">forum.post</field>
+    <field name="arch" type="xml">
+        <search string="Search in Post">
+            <field name="name" string="Content" filter_domain="['|', ('name', 'ilike', self), ('content', 'ilike', self)]"/>
+            <field name="create_uid"/>
+            <field name="forum_id"/>
+            <field name="tag_ids" string="Tag"/>
+            <filter string="Posts" name="posts" domain="[('parent_id', '=', False)]" />
+            <filter string="Answers" name="answers" domain="[('parent_id', '!=', False)]" />
+            <filter string="Accepted Answer" name="accepted_answer" domain="[('is_correct' , '!=', False), ('parent_id', '!=', False)]" />
+            <filter string="Answered Posts" name="answered_posts" domain="[('child_count', '!=', 0), ('parent_id', '=', False)]" />
+            <separator/>
+            <filter name="filter_create_date" date="create_date"/>
+            <filter name="filter_write_date" date="write_date"/>
+            <separator/>
+            <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            <group expand="0" string="Group By">
+                <filter string="Forum" name="forum" domain="[]" context="{'group_by': 'forum_id'}"/>
+                <filter string="Author" name="author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                <filter string="Post" name="post" domain="[]" context="{'group_by': 'parent_id'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="view_forum_post_graph" model="ir.ui.view">
+    <field name="name">forum.post.graph</field>
+    <field name="model">forum.post</field>
+    <field name="arch" type="xml">
+        <graph string="Graph of Posts" sample="1">
+            <field name="write_date" interval="month"/>
+            <field name="forum_id"/>
+        </graph>
+    </field>
+</record>
+
+<record id="view_forum_post_list" model="ir.ui.view">
+    <field name="name">Forum Post Pages Tree</field>
+    <field name="model">forum.post</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <tree js_class="website_pages_list" create="false" type="object" action="go_to_website">
+            <field name="active" invisible="1"/>
+            <field name="name"/>
+            <field name="website_url"/>
+
+            <field name="forum_id" optional="show"/>
+            <field name="views" string="# Views" sum="Total Views" optional="hide"/>
+            <field name="child_count" string="# Answers" sum="Total Answers" optional="hide"/>
+            <field name="state" widget="badge"
+                decoration-success="state == 'active'"
+                decoration-danger="state == 'close'"
+                decoration-warning="state not in ('active', 'close')" optional="show"/>
+
+            <field name="is_seo_optimized"/>
+
+            <field name="website_id" groups="website.group_multi_website"/>
+        </tree>
+    </field>
+</record>
+
+<record id="action_forum_post" model="ir.actions.act_window">
+    <field name="name">Forum Post Pages</field>
+    <field name="res_model">forum.post</field>
+    <field name="view_mode">tree,graph</field>
+    <field name="view_id" ref="view_forum_post_list"/>
+    <field name="search_view_id" ref="view_forum_post_search"/>
+    <field name="context">{'search_default_posts': 1, 'create_action': 'website_forum.forum_forum_action_add'}</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a new forum post
+        </p>
+    </field>
+</record>
+
+<menuitem id="menu_forum_post_pages"
+    parent="website.menu_content"
+    sequence="80"
+    name="Forum Posts"
+    action="action_forum_post"/>
+
+</odoo>

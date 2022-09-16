@@ -77,6 +77,8 @@ QUnit.test("hotkey handles wrongly formed KeyboardEvent", async (assert) => {
         assert.step("error");
     };
 
+    // fake error service so that the odoo qunit handlers don't think that they need to handle the error
+    registry.category("services").add("error", { start: () => {} });
     window.addEventListener("error", handler);
     const _onError = window.onerror;
     window.onerror = () => {};

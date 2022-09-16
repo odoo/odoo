@@ -943,7 +943,6 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
             [0, 0, { partner_id: resPartnerId }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     pyEnv['mail.message'].create({
         author_id: resPartnerId,

@@ -217,10 +217,11 @@
                 <button name="action_draft" states="cancel" type="object" string="Set to Quotation" data-hotkey="w"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             </header>
-            <field name="partner_credit_warning"
-                   class="alert alert-warning mb-0"
-                   role="alert"
-                   attrs="{'invisible': [('partner_credit_warning', '=', '')]}" />
+            <div groups="account.group_account_invoice,account.group_account_readonly"
+                 class="alert alert-warning mb-0" role="alert"
+                 attrs="{'invisible': [('partner_credit_warning', '=', '')]}">
+                <field name="partner_credit_warning"/>
+            </div>
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="action_view_invoice"
@@ -588,8 +589,13 @@
                                 <field name="user_id" widget="many2one_avatar_user"/>
                                 <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="require_signature"/>
-                                <field name="require_payment"/>
+                                <label for="require_signature" string="Online confirmation"/>
+                                <div>
+                                    <field name="require_signature" class="oe_inline"/>
+                                    <span>Signature</span>
+                                    <field name="require_payment" class="oe_inline ms-3"/>
+                                    <span>Payment</span>
+                                </div>
                                 <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                 <field name="client_order_ref"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>

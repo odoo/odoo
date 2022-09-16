@@ -2,7 +2,8 @@
 <odoo>
 
     <template id="sale_loyalty.used_gift_card">
-        <div class="text-muted d-md-block small" t-if="line.coupon_id">
+        <div class="text-muted d-md-block small"
+            t-if="line.coupon_id and line.order_id != line.coupon_id.order_id and not line.coupon_id.program_id.is_nominative">
             <span>
                 Code:
                 <t t-esc="line.coupon_id.code[-4:].rjust(14, '&#8902;')"/>

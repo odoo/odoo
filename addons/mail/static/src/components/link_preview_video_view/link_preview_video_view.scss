@@ -1,0 +1,18 @@
+.o_LinkPreviewVideoView {
+    max-width: $o-mail-link-preview-width;
+}
+.o_LinkPreviewVideoView .row {
+    min-height: $o-mail-link-preview-card-height;
+}
+
+.o_LinkPreviewVideoView_hasMultineLines {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
+    &.o_LinkPreviewVideoView_description {
+        -webkit-line-clamp: 2;
+    }
+    &.o_LinkPreviewVideoView_title {
+        -webkit-line-clamp: 3;
+    }    
+}

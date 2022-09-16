@@ -47,8 +47,8 @@
                                         <t t-esc="job.no_of_recruitment"/> open positions
                                     </h5>
                                     <div t-if="editable"
-                                       t-field="job.description"
-                                       class="mt16 mb0 css_non_editable_mode_hidden"/>
+                                        t-field="job.description"
+                                        class="mt16 mb0 css_non_editable_mode_hidden"/>
                                     <div t-esc="job.description or ''"
                                         class="mt16 mb0 css_editable_mode_hidden o_website_hr_recruitment_job_description"
                                     />
@@ -58,6 +58,9 @@
                                             "fields": ["address"],
                                             "no_tag_br": True
                                             }'/>
+                                        <div t-if="job.contract_type_id">
+                                            <i class="fa fa-fw fa-suitcase" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.contract_type_id"/>
+                                        </div>
                                         <div>
                                             <i class="fa fa-fw fa-clock-o" title="Publication date" role="img" aria-label="Publication date"/><span t-field="job.write_date"/>
                                         </div>
@@ -122,97 +125,171 @@
         <t t-set="additional_title">Apply Job</t>
 
         <div id="wrap"  class="container">
-            <h1 class="text-center mt-2">
+            <nav aria-label="breadcrumb" class="mt-5">
+                <ol class="breadcrumb ps-0 mb-0 pb-1">
+                    <li class="breadcrumb-item"><a href="/jobs" class="text-secondary fw-bold">Jobs</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><span t-field="job.name"/></li>
+                </ol>
+            </nav>
+            <h1 class="mb-4">
                 Job Application Form
             </h1>
-            <h2 t-if="job" class="text-center text-muted">
-                <span t-field="job.name"/>
-            </h2>
             <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'department_id': job and job.department_id.id or '', 'job_id': job and job.id or ''}" />
             <div id="jobs_section">
                 <section id="forms" class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                     <div class="container">
-                        <form id="hr_recruitment_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="hr.applicant" data-success-mode="redirect" data-success-page="/job-thank-you" hide-change-model="true">
-                            <div class="s_website_form_rows row s_col_no_bgcolor">
-                                <div class="form-group col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
+                        <form id="hr_recruitment_form" action="/website/form/" method="post"
+                            enctype="multipart/form-data" class="o_mark_required row"
+                            data-mark="*" data-model_name="hr.applicant"
+                            data-success-mode="redirect" data-success-page="/job-thank-you"
+                            hide-change-model="true">
+                            <section class="col-8 s_website_form_rows row s_col_no_bgcolor">
+                                <div class="col-12 mb-3 s_website_form_field s_website_form_required s_website_form_model_required"
+                                    data-type="char" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment1">
+                                        <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment1">
                                             <span class="s_website_form_label_content">Your Name</span>
                                             <span class="s_website_form_mark"> *</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment1" type="text" class="form-control s_website_form_input" name="partner_name" required="" data-fill-with="name"/>
+                                            <input id="recruitment1" type="text"
+                                                class="form-control s_website_form_input"
+                                                name="partner_name" required=""
+                                                data-fill-with="name"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email" data-name="Field">
+                                <div class="col-12 mb-3 s_website_form_field s_website_form_required"
+                                    data-type="email" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment2">
+                                        <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment2">
                                             <span class="s_website_form_label_content">Your Email</span>
                                             <span class="s_website_form_mark"> *</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment2" type="email" class="form-control s_website_form_input" name="email_from" required="" data-fill-with="email"/>
+                                            <input id="recruitment2" type="email"
+                                                class="form-control s_website_form_input"
+                                                name="email_from" required=""
+                                                data-fill-with="email"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                                <div class="col-12 mb-3 s_website_form_field s_website_form_required"
+                                    data-type="char" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment3">
+                                        <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment3">
                                             <span class="s_website_form_label_content">Your Phone Number</span>
                                             <span class="s_website_form_mark"> *</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment3" type="tel" class="form-control s_website_form_input" name="partner_phone" required="" data-fill-with="phone"/>
+                                            <input id="recruitment3" type="tel"
+                                                class="form-control s_website_form_input"
+                                                name="partner_phone" required=""
+                                                data-fill-with="phone"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field" data-type="text" data-name="Field">
+                                <div class="col-12 mb-3 s_website_form_field s_website_form_required"
+                                    data-type="char" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment4">
-                                            <span class="s_website_form_label_content">Short Introduction</span>
+                                        <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment4">
+                                            <span class="s_website_form_label_content">LinkedIn Profile</span>
                                         </label>
-                                        <div class="col-sm">
-                                            <textarea id="recruitment4" class="form-control s_website_form_input" name="description"></textarea>
+                                        <div class="col-sm" style="position: relative">
+                                            <i class="fa fa-linkedin fa-2x m-1 o_linkedin_icon"></i>
+                                            <input id="recruitment4" type="text"
+                                                class="form-control s_website_form_input pl64"
+                                                placeholder="e.g. https://www.linkedin.com/in/fpodoo/"
+                                                style="padding-left: 40px"
+                                                name="linkedin_profile"
+                                                data-fill-with="linkedin_profile"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
+                                <div class="col-12 mb-3 s_website_form_field s_website_form_custom"
+                                    data-type="binary" data-name="Field">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment5">
+                                        <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment6">
                                             <span class="s_website_form_label_content">Resume</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment5" type="file" class="form-control s_website_form_input" name="Resume"/>
+                                            <input id="recruitment6" type="file"
+                                                class="form-control s_website_form_input o_resume_input"
+                                                name="Resume"/>
+                                        </div>
+                                    </div>
+                                    <span class="text-muted" style="margin-left: 200px; font-size: 0.8rem">The resume is optional if you have a Linkedin profile</span>
+                                </div>
+                                <div class="col-12 mb-3 s_website_form_field"
+                                    data-type="text" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment5">
+                                            <span class="s_website_form_label_content">Short Introduction</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <textarea id="recruitment5"
+                                                class="form-control s_website_form_input"
+                                                placeholder="Optional introduction, or any question you might have about the job…"
+                                                name="description" rows="5"></textarea>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_dnone">
+                                <div class="col-12 mb-3 s_website_form_field s_website_form_dnone">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment6">
+                                        <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment7">
                                             <span class="s_website_form_label_content">Job</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment6" type="hidden" class="form-control s_website_form_input" name="job_id"/>
+                                            <input id="recruitment7" type="hidden"
+                                                class="form-control s_website_form_input"
+                                                name="job_id"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_field s_website_form_dnone">
+                                <div class="col-12 mb-3 s_website_form_field s_website_form_dnone">
                                     <div class="row s_col_no_resize s_col_no_bgcolor">
-                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="recruitment7">
+                                        <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment8">
                                             <span class="s_website_form_label_content">Department</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment7" type="hidden" class="form-control s_website_form_input" name="department_id"/>
+                                            <input id="recruitment8" type="hidden"
+                                                class="form-control s_website_form_input"
+                                                name="department_id"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-12 s_website_form_submit" data-name="Submit Button">
-                                    <div style="width: 200px;" class="s_website_form_label"/>
-                                    <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                <div class="col-12 s_website_form_submit mt64" data-name="Submit Button">
+                                    <div style="width: 200px" class="s_website_form_label"/>
+                                    <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">I'm feeling lucky</a>
                                     <span id="s_website_form_result"></span>
                                 </div>
-                            </div>
+                            </section>
+                            <section class="col-4">
+                                <a role="button" t-attf-href="/jobs/detail/#{job.id}" class="btn btn-primary btn-lg mb16">
+                                    <i class="fa fa-arrow-left"></i> Job Description
+                                </a>
+                                <div t-if="job.name" class="d-flex flex-column align-items-baseline">
+                                    <span class="text-muted small">Job</span>
+                                    <h6 t-field="job.name"/>
+                                </div>
+                                <div t-if="job.address_id" class="d-flex flex-column align-items-baseline">
+                                    <span class="text-muted small">Location</span>
+                                    <h6 t-field="job.address_id" t-options='{
+                                        "fields": ["city"],
+                                        "no_tag_br": True
+                                    }'/>
+                                </div>
+                                <div t-if="job.department_id" class="d-flex flex-column align-items-baseline">
+                                    <span class="text-muted small">Department</span>
+                                    <h6 t-field="job.department_id"/>
+                                </div>
+                                <div t-if="job.contract_type_id" class="d-flex flex-column align-items-baseline">
+                                    <span class="text-muted small">Employment Type</span>
+                                    <h6 t-field="job.contract_type_id"/>
+                                </div>
+                                <hr t-if="job.job_details" class="w-50" style="margin: 1rem auto"/>
+                                <span t-esc="job.job_details"/>
+                            </section>
                         </form>
                     </div>
                 </section>
@@ -515,10 +592,11 @@
 <template id="job_filter_by_countries" inherit_id="website_hr_recruitment.index" active="False" name="Filter by Countries">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
-            <li class="nav-item"><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }?all_countries=1" t-attf-class="nav-link#{'' if country_id else ' active'}">All Countries</a></li>
+            <li class="nav-item"><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }#{ '/employment_type/%s' % contract_type_id if contract_type_id else '' }?all_countries=1"
+                t-attf-class="nav-link#{'' if country_id else ' active'}">All Countries</a></li>
             <t t-foreach="countries" t-as="country">
                 <li class="nav-item">
-                    <a t-attf-href="/jobs/country/#{ slug(country) }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }"
+                    <a t-attf-href="/jobs/country/#{ slug(country) }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }#{ '/employment_type/%s' % contract_type_id if contract_type_id else '' }"
                         t-attf-class="nav-link#{' active' if country_id and country_id.id == country.id else ''}"><span t-field="country.name"/></a>
                 </li>
             </t>
@@ -532,10 +610,12 @@
 <template id="job_filter_by_departments" inherit_id="website_hr_recruitment.index" active="False" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
-            <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/office/%s' % office_id if office_id else ''}" t-attf-class="nav-link#{'' if department_id else ' active'}">All Departments</a></li>
+            <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/office/%s' % office_id if office_id else ''}#{ '/employment_type/%s' % contract_type_id if contract_type_id else '' }"
+                t-attf-class="nav-link#{'' if department_id else ' active'}">All Departments</a></li>
             <t t-foreach="departments" t-as="department">
                 <li class="nav-item">
-                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }/department/#{ slug(department) }#{ '/office/%s' % office_id if office_id else '' }" t-attf-class="nav-link#{' active' if department_id and department_id.id == department.id else ''}"><span t-field="department.name"/></a>
+                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }/department/#{ slug(department) }#{ '/office/%s' % office_id if office_id else '' }#{ '/employment_type/%s' % contract_type_id if contract_type_id else '' }"
+                        t-attf-class="nav-link#{' active' if department_id and department_id.id == department.id else ''}"><span t-field="department.name"/></a>
                 </li>
             </t>
         </ul>
@@ -548,14 +628,36 @@
 <template id="job_filter_by_offices" inherit_id="website_hr_recruitment.index" active="False" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills flex-column mb32">
-            <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }" t-attf-class="nav-link#{'' if office_id else ' active'}">All Offices</a></li>
+            <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/employment_type/%s' % contract_type_id if contract_type_id else '' }"
+                t-attf-class="nav-link#{'' if office_id else ' active'}">All Offices</a></li>
             <t t-foreach="offices" t-as="thisoffice">
                 <li class="nav-item">
-                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }/office/#{ thisoffice.id }"
-                        t-attf-class="nav-link#{' active' if office_id == thisoffice.id else ''}">
-                        <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">,
+                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }/office/#{ thisoffice.id }#{ '/employment_type/%s' % contract_type_id if contract_type_id else '' }"
+                        t-attf-class="nav-link#{' active' if office_id and office_id == thisoffice.id else ''}">
+                        <span t-field="thisoffice.city"/>
+                        <t t-if="thisoffice.country_id">,
                             <span t-field="thisoffice.country_id.name"/>
                         </t>
+                    </a>
+                </li>
+            </t>
+        </ul>
+    </xpath>
+    <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
+        <attribute name="class">col-lg-3</attribute>
+    </xpath>
+</template>
+
+<template id="job_filter_by_employment_type" inherit_id="website_hr_recruitment.index" active="False" name="Filter by Employment Type">
+    <xpath expr="//div[@id='jobs_grid_left']" position="inside">
+        <ul class="nav nav-pills flex-column mb32">
+            <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }"
+                t-attf-class="nav-link#{'' if contract_type_id else ' active'}">All Employment Types</a></li>
+            <t t-foreach="employment_types" t-as="employment_type">
+                <li class="nav-item">
+                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }/employment_type/#{ employment_type.id }"
+                        t-attf-class="nav-link#{' active' if contract_type_id and contract_type_id == employment_type.id else ''}">
+                        <span t-field="employment_type.name"/>
                     </a>
                 </li>
             </t>

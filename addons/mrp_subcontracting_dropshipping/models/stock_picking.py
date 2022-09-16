@@ -7,6 +7,11 @@ from odoo import models
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    def _compute_is_dropship(self):
+        dropship_subcontract_pickings = self.filtered(lambda p: p.location_dest_id.is_subcontracting_location and p.location_id.usage == 'supplier')
+        dropship_subcontract_pickings.is_dropship = True
+        super(StockPicking, self - dropship_subcontract_pickings)._compute_is_dropship()
+
     def _get_warehouse(self, subcontract_move):
         if subcontract_move.sale_line_id:
             return subcontract_move.sale_line_id.order_id.warehouse_id

@@ -6,18 +6,18 @@
     'summary': 'Payment integration with website',
     'version': '1.0',
     'description': """
-This is a bridge module that adds multi-website support for payment acquirers.
+This is a bridge module that adds multi-website support for payment providers.
     """,
     'depends': [
         'website',
-        'payment',
+        'account_payment',
         'portal',
     ],
     'data': [
         'data/mail_templates.xml',
         'data/mail_template_data.xml',
         'data/ir_action_data.xml',
-        'views/payment_acquirer.xml',
+        'views/payment_provider.xml',
         'views/res_config_settings_views.xml',
         'views/donation_templates.xml',
         'views/snippets/snippets.xml',
@@ -27,6 +27,7 @@ This is a bridge module that adds multi-website support for payment acquirers.
     'assets': {
         'website.assets_wysiwyg': [
             'website_payment/static/src/snippets/s_donation/options.js',
+            'website_payment/static/src/snippets/s_donation/000.xml',
         ],
         'web.assets_frontend': [
             'website_payment/static/src/js/website_payment_donation.js',

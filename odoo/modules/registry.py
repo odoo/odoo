@@ -13,10 +13,13 @@ import logging
 import os
 import threading
 import time
+import warnings
 
 import psycopg2
 
 import odoo
+from odoo.modules.db import FunctionStatus
+from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (config, existing_tables, ignore,
@@ -453,7 +456,7 @@ class Registry(Mapping):
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
         expected = [
-            (f"{Model._table}_{field.name}_index", Model._table, field.name, field.index)
+            (f"{Model._table}_{field.name}_index", Model._table, field.name, field.index, getattr(field, 'unaccent', False))
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -467,23 +470,32 @@ class Registry(Mapping):
                    [tuple(row[0] for row in expected)])
         existing = {row[0] for row in cr.fetchall()}
 
-        if not self.has_trigram and any(row[3] == 'trigram' for row in expected):
-            self.has_trigram = sql.install_pg_trgm(cr)
-
-        for indexname, tablename, columnname, index in expected:
+        for indexname, tablename, column_name, index, unaccent in expected:
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
             if index and indexname not in existing:
+                column_expression = f'"{column_name}"'
                 method = 'btree'
                 operator = ''
                 where = ''
                 if index == 'btree_not_null':
-                    where = f'"{columnname}" IS NOT NULL'
+                    where = f'{column_expression} IS NOT NULL'
                 elif index == 'trigram' and self.has_trigram:
                     method = 'gin'
                     operator = 'gin_trgm_ops'
+                    # add `unaccent` to the trigram index only because the
+                    # trigram indexes are mainly used for (i/=)like search and
+                    # unaccent is added only in these cases when searching
+                    if unaccent and self.has_unaccent:
+                        if self.has_unaccent == FunctionStatus.INDEXABLE:
+                            column_expression = get_unaccent_wrapper(cr)(column_expression)
+                        else:
+                            warnings.warn(
+                                "PostgreSQL function 'unaccent' is present but not immutable, "
+                                "therefore trigram indexes may not be effective.",
+                            )
                 try:
                     with cr.savepoint(flush=False):
-                        expression = f'"{columnname}" {operator}'
+                        expression = f'{column_expression} {operator}'
                         sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)

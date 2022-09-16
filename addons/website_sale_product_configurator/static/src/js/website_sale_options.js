@@ -4,7 +4,7 @@ odoo.define('website_sale_options.website_sale', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
-var OptionalProductsModal = require('sale_product_configurator.OptionalProductsModal');
+var { OptionalProductsModal } = require('@sale_product_configurator/js/product_configurator_modal');
 require('website_sale.website_sale');
 
 var _t = core._t;

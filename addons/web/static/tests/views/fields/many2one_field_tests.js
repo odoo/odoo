@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -207,9 +206,6 @@ QUnit.module("Fields", (hooks) => {
 
         setupViewRegistries();
 
-        patchWithCleanup(AutoComplete, {
-            delay: 0,
-        });
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
@@ -670,6 +666,54 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
+        "many2ones in list views: create in dialog keeps the input",
+        async function (assert) {
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <field name="name" />
+                </form>`,
+            };
+
+            await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <tree editable="top">
+                    <field name="trululu" />
+                </tree>`,
+                mockRPC(route, args) {
+                    if (args.method === "create" || args.method === "write") {
+                        assert.step(`${args.method}: ${JSON.stringify(args.args)}`);
+                    }
+                },
+            });
+
+            await click(target.querySelectorAll(".o_data_cell")[0]);
+            const input = target.querySelector(".o_field_widget[name=trululu] input");
+            input.value = "yy";
+            await triggerEvent(input, null, "input");
+            await click(target, ".o_field_widget[name=trululu] input");
+            await selectDropdownItem(target, "trululu", "Create and edit...");
+
+            await clickSave(target.querySelector(".modal"));
+            assert.verifySteps([`create: [{"name":"yy"}]`]);
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=trululu] input").value,
+                "yy"
+            );
+
+            await click(target);
+            assert.verifySteps([`write: [[1],{"trululu":5}]`]);
+            assert.strictEqual(
+                target.querySelector(".o_data_cell[name=trululu]").textContent,
+                "yy"
+            );
+        }
+    );
+
+    QUnit.test(
         "onchanges on many2ones trigger when editing record in form view",
         async function (assert) {
             assert.expect(11);
@@ -913,6 +957,18 @@ QUnit.module("Fields", (hooks) => {
             ".dropdown-menu li.o_m2o_start_typing",
             "autocomplete should not contains start typing option"
         );
+    });
+
+    QUnit.test("empty readonly many2one field", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="trululu" readonly="1"/></form>`,
+        });
+
+        assert.containsOnce(target, "div.o_field_widget[name=trululu]");
+        assert.strictEqual(target.querySelector(".o_field_widget[name=trululu]").innerHTML, "");
     });
 
     QUnit.test("empty many2one field with node options", async function (assert) {
@@ -1163,17 +1219,12 @@ QUnit.module("Fields", (hooks) => {
             "href should contain id and model"
         );
 
-        // Remove value from many2one and then save, there should not have href with id and model on m2o anchor
+        // Remove value from many2one and then save, there should be no link anymore
         await click(target, ".o_form_button_edit");
         await editInput(target, ".o_field_many2one input", "");
 
         await click(target, ".o_form_button_save");
-        assert.hasAttrValue(
-            target.querySelector("a.o_form_uri"),
-            "href",
-            "#",
-            "href should have #"
-        );
+        assert.containsNone(target, "a.o_form_uri");
     });
 
     QUnit.test("many2one with co-model whose name field is a many2one", async function (assert) {

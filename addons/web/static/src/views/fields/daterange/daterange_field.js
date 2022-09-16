@@ -37,8 +37,9 @@ export class DateRangeField extends Component {
                             applyLabel: this.env._t("Apply"),
                             cancelLabel: this.env._t("Cancel"),
                         },
-                        startDate: start ? window.moment(start) : window.moment(),
-                        endDate: end ? window.moment(end) : window.moment(),
+                        startDate: start ? window.moment(start, this.momentFormat) : window.moment(),
+                        endDate: end ? window.moment(end, this.momentFormat) : window.moment(),
+                        drops: "auto",
                     });
                     this.pickerContainer = window.$(el).data("daterangepicker").container[0];
 

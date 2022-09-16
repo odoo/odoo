@@ -23,6 +23,12 @@
         <field name="groups_id" eval="[(4, ref('website.group_website_designer'))]"/>
     </record>
 
+    <!-- NOTE: this group implication is needed so that any admin user can do the website onboarding
+        after website app installation. -->
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
+    </record>
+
     <data noupdate="1">
 
     <record id="website_designer_edit_qweb" model="ir.rule">

@@ -189,8 +189,8 @@
                                         attrs="{'invisible': ['|', ('question_type', '!=', 'datetime'), ('validation_required', '=', False)]}"/>
 
                                     <field name="validation_error_msg" attrs="{
-                                        'required': [('validation_required', '=', True)],
-                                        'invisible': [('validation_required', '=', False)]}"/>
+                                        'invisible': [('validation_required', '=', False)]}"
+                                        placeholder="The answer you entered is not valid."/>
 
                                     <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
                                     <field name="question_placeholder"
@@ -198,7 +198,8 @@
                                         placeholder="Help Participants know what to write"/>
                                     <field name='comments_allowed' attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}"/>
                                     <field name='comments_message'
-                                        attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"/>
+                                        attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"
+                                        placeholder="If other, please specify:"/>
                                 </group>
                                 <group string="Layout">
                                     <field name="is_conditional" attrs="{'invisible': [('questions_selection', '=', 'random')]}"/>
@@ -212,7 +213,9 @@
                             <group>
                                 <group string="Constraints">
                                     <field name="constr_mandatory" string="Mandatory Answer"/>
-                                    <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
+                                    <field name="constr_error_msg"
+                                        attrs="{'invisible': [('constr_mandatory', '=', False)]}"
+                                        placeholder="This question requires an answer."/>
                                 </group>
                                 <group string="Live Sessions">
                                     <label for="is_time_limited" string="Question Time Limit"/>

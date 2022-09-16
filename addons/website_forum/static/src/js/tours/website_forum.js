@@ -6,8 +6,7 @@ odoo.define("website_forum.tour_forum", function (require) {
 
     var _t = core._t;
 
-    wTourUtils.registerBackendAndFrontend("question", {
-        // url: wTourUtils.getClientActionUrl('/forum/1'),
+    wTourUtils.registerBackendAndFrontendTour("question", {
         url: '/forum/1',
     }, [{
         trigger: ".o_forum_ask_btn",

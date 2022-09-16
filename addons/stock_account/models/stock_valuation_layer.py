@@ -29,7 +29,9 @@ class StockValuationLayer(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_valuation_layer_id')
     stock_move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True, check_company=True, index=True)
     account_move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True, check_company=True)
+    account_move_line_id = fields.Many2one('account.move.line', 'Invoice Line', readonly=True, check_company=True, index=True)
     reference = fields.Char(related='stock_move_id.reference')
+    price_diff_value = fields.Float('Invoice value correction with invoice currency')
 
     def init(self):
         tools.create_index(
@@ -44,7 +46,10 @@ class StockValuationLayer(models.Model):
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
-            am_vals += svl.stock_move_id._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            move = svl.stock_move_id
+            if not move:
+                move = svl.stock_valuation_layer_id.stock_move_id
+            am_vals += move._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
@@ -66,7 +71,7 @@ class StockValuationLayer(models.Model):
     def action_open_reference(self):
         self.ensure_one()
         if self.stock_move_id:
-            action = self.move_id.action_open_reference()
+            action = self.stock_move_id.action_open_reference()
             if action['res_model'] != 'stock.move':
                 return action
         return {

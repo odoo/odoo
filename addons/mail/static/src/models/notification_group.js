@@ -118,7 +118,6 @@ registerModel({
         }),
         notificationGroupViews: many('NotificationGroupView', {
             inverse: 'notificationGroup',
-            isCausal: true,
         }),
         res_id: attr({
             identifying: true,

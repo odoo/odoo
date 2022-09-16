@@ -14,6 +14,7 @@ It is basically used when we want to keep track of production orders generated
 from purchase order.
     """,
     'data': [
+        'views/mrp_bom_views.xml',
         'views/purchase_order_views.xml',
         'views/mrp_production_views.xml',
         'security/ir.model.access.csv',

@@ -447,7 +447,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     },
 
     update_customer_facing_display: function(html) {
-        if (this.posbox_supports_display) {
+        if (this.posbox_supports_display && this.get('status').status == 'connected') {
             return this.message('customer_facing_display',
                 { html: html },
                 { timeout: 5000 });

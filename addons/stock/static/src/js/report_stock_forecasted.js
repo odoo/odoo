@@ -50,7 +50,7 @@ const ReplenishReport = clientAction.extend({
         return Promise.all([
             this._super.apply(this, arguments),
             loadWarehouses,
-            loadLegacyViews({ rpc: this._rpc.bind(this) }),
+            loadLegacyViews(),
         ]);
     },
 
@@ -125,7 +125,10 @@ const ReplenishReport = clientAction.extend({
             withControlPanel: false,
             context: {fill_temporal: false},
         };
-        const GraphView = viewRegistry.get("graph");
+        const viewArch = new DOMParser().parseFromString(viewInfo.arch, "text/xml");
+        const viewArchJSClass = viewArch.documentElement.getAttribute("js_class");
+        const viewRegistryKey = viewArchJSClass && viewRegistry.contains(viewArchJSClass) ? viewArchJSClass : "graph";
+        const GraphView = viewRegistry.get(viewRegistryKey);
         const graphView = new GraphView(viewInfo, params);
         const graphController = await graphView.getController(this);
         await graphController.appendTo(document.createDocumentFragment());

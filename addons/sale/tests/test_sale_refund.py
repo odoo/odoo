@@ -329,7 +329,19 @@ class TestSaleRefund(TestSaleCommon):
             'tax_id': False,
         })
 
+        self.assertRecordValues(sol_product, [{
+            'price_unit': 280.0,
+            'discount': 0.0,
+            'product_uom_qty': 5.0,
+            'qty_to_invoice': 0.0,
+            'invoice_status': 'no',
+        }])
+
         sale_order_refund.action_confirm()
+
+        self.assertEqual(sol_product.qty_to_invoice, 5.0)
+        self.assertEqual(sol_product.invoice_status, 'to invoice')
+
         so_context = {
             'active_model': 'sale.order',
             'active_ids': [sale_order_refund.id],
@@ -343,9 +355,21 @@ class TestSaleRefund(TestSaleCommon):
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
-        sale_order_refund.invoice_ids[0].action_post()
         # order_line[1] is the down payment section
         sol_downpayment = sale_order_refund.order_line[2]
+        dp_invoice = sale_order_refund.invoice_ids[0]
+        dp_invoice.action_post()
+
+        self.assertRecordValues(sol_downpayment, [{
+            'price_unit': 700.0,
+            'discount': 0.0,
+            'invoice_status': 'to invoice',
+            'untaxed_amount_to_invoice': -700.0,
+            'untaxed_amount_invoiced': 700.0,
+            'product_uom_qty': 0.0,
+            'qty_invoiced': 1.0,
+            'qty_to_invoice': -1.0,
+        }])
 
         payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
             'deposit_account_id': self.company_data['default_account_revenue'].id

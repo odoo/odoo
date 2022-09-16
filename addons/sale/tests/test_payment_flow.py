@@ -5,12 +5,13 @@ from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestSalePayment(SaleCommon, PaymentHttpCommon):
+class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -40,7 +41,7 @@ class TestSalePayment(SaleCommon, PaymentHttpCommon):
 
         route_values.update({
             'flow': 'direct',
-            'payment_option_id': self.acquirer.id,
+            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
             'validation_route': False,
             'reference_prefix': None, # Force empty prefix to fallback on SO reference
@@ -86,7 +87,7 @@ class TestSalePayment(SaleCommon, PaymentHttpCommon):
 
         route_values.update({
             'flow': 'direct',
-            'payment_option_id': self.acquirer.id,
+            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
             'validation_route': False,
             'reference_prefix': tx_context['reference_prefix'],
@@ -123,7 +124,7 @@ class TestSalePayment(SaleCommon, PaymentHttpCommon):
 
         route_values.update({
             'flow': 'direct',
-            'payment_option_id': self.acquirer.id,
+            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
             'validation_route': False,
             'reference_prefix': tx_context['reference_prefix'],
@@ -162,7 +163,7 @@ class TestSalePayment(SaleCommon, PaymentHttpCommon):
 
         route_values.update({
             'flow': 'direct',
-            'payment_option_id': self.acquirer.id,
+            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
             'validation_route': False,
             'reference_prefix': tx_context['reference_prefix'],

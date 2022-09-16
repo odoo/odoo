@@ -263,32 +263,26 @@ QUnit.test('activity view: activity widget', async function (assert) {
         },
     });
 
-    const activity = $(document);
-    var today = activity.find('table tbody tr:first td:nth-child(2).today');
-    var dropdown = today.find('.dropdown-menu.o_activity');
-
-    await testUtils.dom.click(today.find('.o_closest_deadline'));
-    assert.hasClass(dropdown,'show', "dropdown should be displayed");
-    assert.ok(dropdown.find('.o_activity_color_today:contains(Today)').length, "Title should be today");
-    assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first div:contains(Template1)').length,
+    await testUtils.dom.click(document.querySelector('.today .o_closest_deadline'));
+    assert.hasClass(document.querySelector('.today .dropdown-menu.o_activity'), 'show', "dropdown should be displayed");
+    assert.ok(document.querySelector('.o_activity_color_today').textContent.includes('Today'), "Title should be today");
+    assert.ok([...document.querySelectorAll('.today .o_activity_title_entry')].filter(el => el.textContent.includes('Template1')).length,
         "Template1 should be available");
-    assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:eq(1) div:contains(Template2)').length,
+    assert.ok([...document.querySelectorAll('.today .o_activity_title_entry')].filter(el => el.textContent.includes('Template2')).length,
         "Template2 should be available");
 
-    await testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_preview'));
-    await testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_send'));
-    var overdue = activity.find('table tbody tr:first td:nth-child(3).overdue');
-    await testUtils.dom.click(overdue.find('.o_closest_deadline'));
-    dropdown = overdue.find('.dropdown-menu.o_activity');
-    assert.notOk(dropdown.find('.o_activity_title div div div:first span').length,
+    await testUtils.dom.click(document.querySelector('.o_activity_title_entry[data-activity-id="2"] .o_activity_template_preview'));
+    await testUtils.dom.click(document.querySelector('.o_activity_title_entry[data-activity-id="2"] .o_activity_template_send'));
+    await testUtils.dom.click(document.querySelector('.overdue .o_closest_deadline'));
+    assert.notOk(document.querySelector('.overdue .o_activity_template_preview'),
         "No template should be available");
 
-    await testUtils.dom.click(dropdown.find('.o_schedule_activity'));
-    await testUtils.dom.click(overdue.find('.o_closest_deadline'));
-    await testUtils.dom.click(dropdown.find('.o_mark_as_done'));
-    dropdown.find('#activity_feedback').val("feedback2");
+    await testUtils.dom.click(document.querySelector('.overdue .o_schedule_activity'));
+    await testUtils.dom.click(document.querySelector('.overdue .o_closest_deadline'));
+    await testUtils.dom.click(document.querySelector('.overdue .o_mark_as_done'));
+    document.querySelector('.overdue #activity_feedback').value = "feedback2";
 
-    await testUtils.dom.click(dropdown.find('.o_activity_popover_done_next'));
+    await testUtils.dom.click(document.querySelector('.overdue .o_activity_popover_done_next'));
     assert.verifySteps([
         "do_action_compose",
         "activity_send_mail",

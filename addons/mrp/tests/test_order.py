@@ -2068,6 +2068,9 @@ class TestMrpOrder(TestMrpCommon):
         # Possible working hours are Monday to Friday, from 8:00 to 12:00 and from 13:00 to 17:00 (UTC+7)
         workcenter = self.workcenter_1
         workcenter.resource_calendar_id.tz = 'Asia/Bangkok'
+        # The test will try to plan some WO on next Monday. We need to unlink all
+        # useless times off to ensure that nothing will disturb the slot reservation
+        (workcenter.resource_calendar_id.global_leave_ids | workcenter.resource_calendar_id.leave_ids).unlink()
 
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_1.product_tmpl_id.id,

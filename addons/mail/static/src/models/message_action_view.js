@@ -47,7 +47,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickReaction(ev) {
-            this.messageAction.messageActionListOwner.message.addReaction(ev.currentTarget.dataset.unicode);
+            this.messageAction.messageActionListOwner.message.addReaction(ev.currentTarget.dataset.codepoints);
             this.update({ reactionPopoverView: clear() });
         },
         /**
@@ -188,7 +188,6 @@ registerModel({
         }),
         deleteConfirmDialog: one('Dialog', {
             inverse: 'messageActionViewOwnerAsDeleteConfirm',
-            isCausal: true,
         }),
         messageAction: one('MessageAction', {
             identifying: true,
@@ -200,7 +199,6 @@ registerModel({
         }),
         reactionPopoverView: one('PopoverView', {
             inverse: 'messageActionViewOwnerAsReaction',
-            isCausal: true,
         }),
         tabindex: attr({
             compute: '_computeTabindex',

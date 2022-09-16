@@ -7,9 +7,9 @@
         <field name="priority" eval="5"/>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <field name="company_id" position="after">
+            <xpath expr="//group[@name='right_event_details']/field[@name='company_id']" position="after">
                 <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="website.group_multi_website"/>
-            </field>
+            </xpath>
             <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
                 <field name="is_published" widget="website_redirect_button"/>

@@ -1,14 +1,10 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-import { commandService } from "@web/core/commands/command_service";
 import { click, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
 let target;
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -87,6 +83,11 @@ QUnit.module("Fields", (hooks) => {
             "should not have one green status since selection is the second, blocked state"
         );
         assert.containsNone(target, ".dropdown-menu", "there should not be a dropdown");
+        assert.strictEqual(
+            target.querySelector(".o_field_state_selection .dropdown-toggle").dataset.tooltip,
+            "Blocked",
+            "tooltip attribute has the right text"
+        );
 
         // Click on the status button to make the dropdown appear
         await click(target, ".o_field_widget.o_field_state_selection .o_status");
@@ -435,8 +436,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         'StateSelectionField edited by the smart action "Set kanban state..."',
         async function (assert) {
-            serviceRegistry.add("command", commandService);
-
             await makeView({
                 type: "form",
                 resModel: "partner",

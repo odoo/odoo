@@ -4,16 +4,20 @@
     <Dialog contentClass="contentClass"
         size="size"
         title="title">
-        <ul class="nav nav-tabs" role="tablist">
-            <t t-foreach="tabs" t-as="tab" t-key="tab.id">
-                <li class="nav-item"><a class="nav-link" t-att-class="{ active:  tab.id === state.activeTab }" t-on-click="() => state.activeTab = tab.id"><t t-esc="tab.title"/></a></li>
-            </t>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <t t-foreach="tabs" t-as="tab" t-key="tab.id">
-                <div class="tab-pane fade" t-att-class="tab.id === state.activeTab ? 'active show' : ''"><t t-component="tab.Component" t-props="tab.props"/></div>
-            </t>
+        <div class="o_notebook">
+            <div class="o_notebook_headers">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li t-foreach="tabs" t-as="tab" t-key="tab.id" class="nav-item cursor-pointer">
+                        <a class="nav-link" t-att-class="{ active:  tab.id === state.activeTab }" t-on-click="() => state.activeTab = tab.id"><t t-esc="tab.title"/></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Tab panes -->
+            <div class="o_notebook_content tab-content">
+                <t t-foreach="tabs" t-as="tab" t-key="tab.id">
+                    <div class="tab-pane fade" t-att-class="tab.id === state.activeTab ? 'active show' : ''"><t t-component="tab.Component" t-props="tab.props"/></div>
+                </t>
+            </div>
         </div>
         <t t-set-slot="footer">
             <button class="btn btn-primary" t-on-click="() => this.save()">Add</button>

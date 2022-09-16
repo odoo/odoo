@@ -142,7 +142,7 @@
     <template id="survey_fill_form_start" name="Survey: start form content">
         <div class="wrap o_survey_start">
             <div class='mb32'>
-                <div t-field='survey.description' class="oe_no_empty pb-5"/>
+                <div t-field='survey.description' class="oe_no_empty pb-5 text-break"/>
                 <t t-if="answer.is_session_answer">
                     <div class="fw-bold">
                         The session will begin automatically when the host starts.
@@ -180,8 +180,8 @@
             t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
             <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16" />
-                <div t-if="question.is_page" t-field='question.description'/>
+                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16 text-break" />
+                <div t-if="question.is_page" t-field='question.description' class="text-break"/>
                 <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
             </t>
 
@@ -194,8 +194,8 @@
         </t>
 
         <t t-if="survey.questions_layout == 'page_per_section'">
-            <h2 t-field='page.title' class="o_survey_title pb16" />
-            <div t-field='page.description' class="oe_no_empty"/>
+            <h2 t-field='page.title' class="o_survey_title pb16 text-break" />
+            <div t-field='page.description' class="oe_no_empty text-break"/>
 
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <t t-foreach='page.question_ids' t-as='question'>
@@ -320,16 +320,19 @@
         <t t-set="useKeySelection" t-value="len(question.suggested_answer_ids) &lt; len(letters) and survey.questions_layout == 'page_per_question'"/>
         <!-- Extra 'right' margin is added on layouts that are not "page_per_question" to align with choices questions, since all choices have a me-2 class (pixel perfect yay...) -->
         <t t-set="extra_right_margin" t-value="survey.questions_layout != 'page_per_question' and question.question_type not in ['simple_choice', 'multiple_choice']"/>
+        <t t-set="default_constr_error_msg">This question requires an answer.</t>
+        <t t-set="default_validation_error_msg">The answer you entered is not valid.</t>
+        <t t-set="default_comments_message">If other, please specify:</t>
         <div t-att-class="'js_question-wrapper pb-4 %s %s' % ('d-none' if not display_question else '', 'me-2' if extra_right_margin else '')"
              t-att-id="question.id" t-att-data-required="question.constr_mandatory"
-             t-att-data-constr-error-msg="question.constr_error_msg"
-             t-att-data-validation-error-msg="question.validation_error_msg">
+             t-att-data-constr-error-msg="question.constr_error_msg or default_constr_error_msg"
+             t-att-data-validation-error-msg="question.validation_error_msg or default_validation_error_msg">
             <div class="mb-4">
                 <h3 t-if="not hide_question_title">
-                    <span t-field='question.title' />
+                    <span t-field='question.title' class="text-break" />
                     <span t-if="question.constr_mandatory" class="text-danger">*</span>
                 </h3>
-                <div t-if="not is_html_empty(question.description)" t-field='question.description' class="text-muted oe_no_empty mt-1"/>
+                <div t-if="not is_html_empty(question.description)" t-field='question.description' class="text-muted oe_no_empty mt-1 text-break"/>
             </div>
             <t t-if="question.question_type == 'text_box'"><t t-call="survey.question_text_box"/></t>
             <t t-if="question.question_type == 'char_box'"><t t-call="survey.question_char_box"/></t>
@@ -435,7 +438,7 @@
                         <t t-call="survey.survey_selection_key">
                             <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-start d-flex'"/>
                         </t>
-                        <span class="ms-2" t-field='label.value'/>
+                        <span class="ms-2 text-break" t-field='label.value'/>
                         <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
                                t-attf-class="o_survey_form_choice_item invisible position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
                                t-att-name='question.id'
@@ -465,7 +468,7 @@
                                t-att-name='question.id'
                                t-att-checked="comment_line and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ms-2" t-field="question.comments_message" />
+                        <span class="ms-2" t-out="question.comments_message or default_comments_message" />
                         <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
                         <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
                     </label>
@@ -477,7 +480,7 @@
             </div>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 o_survey_comment_container mx-1 mt-3 ps-3 pe-4">
                 <textarea type="text" class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
-                          t-att-placeholder="question.comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                          t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>
@@ -509,7 +512,7 @@
                                t-att-name="question.id"
                                t-att-checked="'checked' if answer_line else None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ms-2" t-field='label.value'/>
+                        <span class="ms-2 text-break" t-field='label.value'/>
                         <t t-if="has_correct_answer and answer_selected">
                             <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
                             <i t-if="is_correct" class="float-end mt-1 position-relative d-inline fa fa-check-circle"/>
@@ -534,7 +537,7 @@
                                t-att-name="question.id"
                                t-att-checked="comment_line and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ms-2" t-field="question.comments_message" />
+                        <span class="ms-2" t-out="question.comments_message or default_comments_message" />
                         <i class="fa fa-check-circle float-end mt-1 position-relative"></i>
                         <i class="fa fa-circle-thin float-end mt-1 position-relative"></i>
                     </label>
@@ -546,7 +549,7 @@
             </div>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 o_survey_comment_container mx-1 mt-3 py-0 ps-3 pe-4">
                 <textarea type="text" class="form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
-                          t-att-placeholder="question.comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
+                          t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
     </template>
@@ -595,7 +598,7 @@
         </table>
         <div t-if='question.comments_allowed'>
             <textarea type="text" class="form-control o_survey_question_text_box o_survey_comment bg-transparent text-dark rounded-0 p-0 mt-3"
-                      t-att-placeholder="question.comments_message if not survey_form_readonly else ''"
+                      t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"
                       t-att-name="'%s_%s' % (question.id, 'comment')"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
         </div>
     </template>

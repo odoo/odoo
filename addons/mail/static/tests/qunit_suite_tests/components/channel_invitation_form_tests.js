@@ -24,7 +24,6 @@ QUnit.test('should display the channel invitation form after clicking on the inv
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     const { click, openDiscuss } = await start({
         discuss: {
@@ -62,7 +61,6 @@ QUnit.test('should be able to search for a new user to invite from an existing c
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
@@ -101,7 +99,6 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
@@ -140,7 +137,6 @@ QUnit.test('Invitation form should display channel group restriction', async fun
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
         ],
         channel_type: 'channel',
-        public: 'groups',
         group_public_id: resGroupId1,
     });
     const { click, openDiscuss } = await start({

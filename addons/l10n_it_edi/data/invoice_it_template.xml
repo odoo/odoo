@@ -79,6 +79,24 @@
                 <StatoLiquidazione t-esc="company.l10n_it_eco_index_liquidation_state"/>
             </IscrizioneREA>
         </CedentePrestatore>
+        <RappresentanteFiscale t-if="not is_self_invoice and representative">
+            <DatiAnagrafici>
+                <IdFiscaleIVA>
+                    <IdPaese t-esc="get_vat_country(representative.vat)"/>
+                    <IdCodice t-esc="get_vat_number(representative.vat)"/>
+                </IdFiscaleIVA>
+                <CodiceFiscale t-if="representative.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(representative.l10n_it_codice_fiscale)"/>
+                <Anagrafica>
+                <t t-if="representative.is_company">
+                    <Denominazione t-esc="format_alphanumeric(representative.display_name[:80])"/>
+                </t>
+                <t t-else="">
+                    <Nome t-esc="format_alphanumeric(' '.join(representative.name.split()[:1])[:60])"/>
+                    <Cognome t-esc="format_alphanumeric(' '.join(representative.name.split()[1:])[:60])"/>
+                </t>
+                </Anagrafica>
+            </DatiAnagrafici>
+        </RappresentanteFiscale>
         <CessionarioCommittente>
             <DatiAnagrafici>
                 <IdFiscaleIVA t-if="buyer.vat and in_eu(buyer)">
@@ -109,24 +127,6 @@
                 <t t-set="partner" t-value="buyer_partner"/>
             </t>
         </CessionarioCommittente>
-        <RappresentanteFiscale t-if="not is_self_invoice and representative">
-            <DatiAnagrafici>
-                <IdFiscaleIVA>
-                    <IdPaese t-esc="get_vat_country(representative.vat)"/>
-                    <IdCodice t-esc="get_vat_number(representative.vat)"/>
-                </IdFiscaleIVA>
-                <CodiceFiscale t-if="representative.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(representative.l10n_it_codice_fiscale)"/>
-                <Anagrafica>
-                <t t-if="representative.is_company">
-                    <Denominazione t-esc="format_alphanumeric(representative.display_name[:80])"/>
-                </t>
-                <t t-else="">
-                    <Nome t-esc="format_alphanumeric(' '.join(representative.name.split()[:1])[:60])"/>
-                    <Cognome t-esc="format_alphanumeric(' '.join(representative.name.split()[1:])[:60])"/>
-                </t>
-                </Anagrafica>
-            </DatiAnagrafici>
-        </RappresentanteFiscale>
     </FatturaElettronicaHeader>
     <FatturaElettronicaBody>
         <DatiGenerali>

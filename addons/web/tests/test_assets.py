@@ -6,8 +6,11 @@ import time
 import odoo
 import odoo.tests
 
+from odoo.tests.common import HttpCase
 from odoo.modules.module import get_manifest
 from odoo.tools import mute_logger
+
+from unittest.mock import patch
 
 _logger = logging.getLogger(__name__)
 
@@ -15,6 +18,7 @@ _logger = logging.getLogger(__name__)
 class TestAssetsGenerateTimeCommon(odoo.tests.TransactionCase):
 
     def generate_bundles(self):
+        self.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink() # delete existing attachement
         installed_module_names = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
         bundles = {
             key
@@ -35,20 +39,19 @@ class TestAssetsGenerateTimeCommon(odoo.tests.TransactionCase):
                         _logger.info('Error detected while generating bundle %r %s', bundle, assets_type)
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'assets_bundle')
 class TestLogsAssetsGenerateTime(TestAssetsGenerateTimeCommon):
 
     def test_logs_assets_generate_time(self):
         """
         The purpose of this test is to monitor the time of assets bundle generation.
         This is not meant to test the generation failure, hence the try/except and the mute logger.
-        For example, 'web.assets_qweb' is contains only static xml.
         """
         for bundle, duration in self.generate_bundles():
             _logger.info('Bundle %r generated in %.2fs', bundle, duration)
 
 
-@odoo.tests.tagged('post_install', '-at_install', '-standard', 'bundle_generation')
+@odoo.tests.tagged('post_install', '-at_install', '-standard', 'assets_bundle')
 class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
     """
     This test is meant to be run nightly to ensure bundle generation does not exceed
@@ -65,3 +68,19 @@ class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
         for bundle, duration in self.generate_bundles():
             threshold = thresholds.get(bundle, 2)
             self.assertLess(duration, threshold, "Bundle %r took more than %s sec" % (bundle, threshold))
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestLoad(HttpCase):
+    def test_assets_already_exists(self):
+        self.authenticate('admin', 'admin')
+        _save_attachment = odoo.addons.base.models.assetsbundle.AssetsBundle.save_attachment
+
+        def save_attachment(bundle, extension, content):
+            attachment = _save_attachment(bundle, extension, content)
+            message = f"Trying to save an attachement for {bundle.name} when it should already exist: {attachment.url}"
+            _logger.error(message)
+            return attachment
+
+        with patch('odoo.addons.base.models.assetsbundle.AssetsBundle.save_attachment', save_attachment):
+            self.url_open('/web').raise_for_status()
+            self.url_open('/').raise_for_status()

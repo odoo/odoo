@@ -17,9 +17,9 @@ import {
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 import 'web._field_registry';
 import "@web/views/fields/html/html_field"; // make sure the html field file has first been executed.
-import { registry } from '@web/core/registry';
 
 var _lt = core._lt;
+var _t = core._t;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 var QWeb = core.qweb;
@@ -107,9 +107,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
 
                 const t = document.createElement('T');
                 t.setAttribute('t-out', dynamicPlaceholder);
-                const fragment = new DocumentFragment();
-                fragment.appendChild(t);
-                this.wysiwyg.odooEditor.execCommand('insertFragment', fragment);
+                this.wysiwyg.odooEditor.execCommand('insert', t);
                 setSelection(...rightPos(t));
                 this.wysiwyg.odooEditor.editable.focus();
             }
@@ -258,7 +256,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      * @returns {$.Promise}
      */
     _createWysiwygInstance: async function () {
-        this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
+        const Wysiwyg = await wysiwygLoader.getWysiwygClass();
+        this.wysiwyg = new Wysiwyg(this, this._getWysiwygOptions());
         return this.wysiwyg.appendTo(this.$el).then(() => {
             this.$content = this.wysiwyg.$editable;
             this._onLoadWysiwyg();
@@ -632,13 +631,19 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      */
     _onLoadWysiwyg: function () {
         var $button = this._renderTranslateButton();
-        $button.css({
-            'font-size': '15px',
-            position: 'absolute',
-            right: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
-            top: '5px',
-        });
-        this.$el.append($button);
+        var $container;
+        if (this.nodeOptions.cssEdit && this.wysiwyg) {
+            $container = this.wysiwyg.$iframeBody.find('.email_designer_top_actions');
+        } else {
+            $container = this.$el;
+            $button.css({
+                'font-size': '15px',
+                position: 'absolute',
+                top: '5px',
+                [_t.database.parameters.direction === 'rtl' ? 'left' : 'right']: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
+            });
+        }
+        $container.append($button);
         if (odoo.debug && this.nodeOptions.codeview) {
             const $codeviewButtonToolbar = $(`
                 <div id="codeview-btn-group" class="btn-group">
@@ -675,9 +680,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      */
     _onWysiwygFocus: function (ev) {},
 });
-
-// Road to WOWL trick needed not to shadow the legacy html field in web editor.
-registry.category("fields").remove("html");
 
 field_registry.add('html', FieldHtml);
 

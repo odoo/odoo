@@ -282,7 +282,7 @@ body.editor_enable.editor_has_snippets {
             }
             &:focus, &:active, &:focus:active {
                 outline: none;
-                box-shadow: none;
+                box-shadow: none !important;
             }
         }
 
@@ -1272,7 +1272,15 @@ body.editor_enable.editor_has_snippets {
 
         // Progress bar widget
         we-range.o_we_user_value_widget {
-
+            &[data-display-range-value] {
+                input[type="range"] {
+                    // Needed because without it the output overflows to the right
+                    // and makes a horizontal scrollbar appear on
+                    // 'o_we_customize_panel' if 'o_we_customize_panel' already has
+                    // a vertical scrollbar.
+                    min-width: 0;
+                }
+            }
             input[type="range"] {
                 @include large-component();
                 height: $o-we-sidebar-content-field-height;
@@ -1528,7 +1536,7 @@ body.editor_enable.editor_has_snippets {
                 margin-top: 0;
                 min-width: 4em; // Ideally rely on actual natural min-width, but does not work...
             }
-            we-button, .o_we_so_color_palette {
+            we-button, .o_we_so_color_palette, we-button-group {
                 &.o_we_user_value_widget {
                     min-width: auto; // ... except for these ones
                 }
@@ -1941,11 +1949,16 @@ body.editor_enable.editor_has_snippets {
         position: relative;
         z-index: $o-we-overlay-zindex;
         width: 100%;
+        border: 2px dashed $o-we-border-color;
+    }
+}
+
+.oe_drop_zone:not(.oe_grid_zone) {
+    &.oe_insert {
         min-width: $o-we-dropzone-size;
         height: $o-we-dropzone-size;
         min-height: $o-we-dropzone-size;
         margin: (-$o-we-dropzone-size/2) 0;
-        border: 2px dashed $o-we-border-color;
 
         &.oe_vertical {
             width: $o-we-dropzone-size;
@@ -2007,9 +2020,17 @@ body.editor_enable.editor_has_snippets {
                     border-right-width: 0;
                     cursor: e-resize;
 
+                    &.o_grid_handle {
+                        cursor: ew-resize;
+                    }
+
                     &:after {
                         @include o-position-absolute($top: 50%, $left: 40%);
                         margin-top: -$o-we-handles-btn-size/2;
+                    }
+
+                    &.o_grid_handle:after {
+                        display: none;
                     }
                 }
                 &.e {
@@ -2018,9 +2039,17 @@ body.editor_enable.editor_has_snippets {
                     border-right-width: $o-we-handle-border-width;
                     cursor: w-resize;
 
+                    &.o_grid_handle {
+                        cursor: ew-resize;
+                    }
+
                     &:after {
                         @include o-position-absolute($top: 50%, $right: 40%);
                         margin-top: -$o-we-handles-btn-size/2;
+                    }
+
+                    &.o_grid_handle:after{
+                        display: none;
                     }
                 }
                 &.n {
@@ -2033,6 +2062,10 @@ body.editor_enable.editor_has_snippets {
                         @include o-position-absolute($left: 50%, $top: 40%);
                         margin-left: -$o-we-handles-btn-size/2;
                     }
+
+                    &.o_grid_handle:after{
+                        display: none;
+                    }
                 }
                 &.s {
                     @include o-position-absolute(auto, 0, -$o-we-handles-offset-to-hide, 0);
@@ -2044,6 +2077,53 @@ body.editor_enable.editor_has_snippets {
                         @include o-position-absolute($left: 50%, $bottom: 40%);
                         margin-left: -$o-we-handles-btn-size/2;
                     }
+
+                    &.o_grid_handle:after {
+                        display: none;
+                    }
+                }
+                &.ne {
+                    @include o-position-absolute($o-we-handles-offset-to-hide + $o-we-handle-border-width, $o-we-handle-border-width, auto, auto);
+                    height: $o-we-handle-edge-size;
+                    cursor: nesw-resize;
+                }
+                &.se {
+                    @include o-position-absolute(auto, $o-we-handle-border-width, -$o-we-handles-offset-to-hide - $o-we-handle-border-width, auto);
+                    height: $o-we-handle-edge-size;
+                    cursor: nwse-resize;
+
+                    &:after {
+                        @include o-position-absolute($top: 50%, $right: 40%);
+                    }
+                }
+                &.sw {
+                    @include o-position-absolute(auto, auto, -$o-we-handles-offset-to-hide - $o-we-handle-border-width/2, $o-we-handle-border-width);
+                    height: $o-we-handle-edge-size;
+                    cursor: nesw-resize;
+
+                    &:after {
+                        @include o-position-absolute($left: 40%, $bottom: 40%);
+                    }
+                }
+                &.nw {
+                    @include o-position-absolute($o-we-handles-offset-to-hide - $o-we-handle-border-width, auto, auto, $o-we-handle-border-width + 1);
+                    height: $o-we-handle-edge-size;
+                    cursor: nwse-resize;
+
+                    &:after {
+                        @include o-position-absolute($left: 50%, $bottom: 40%);
+                    }
+                }
+
+                &.ne,
+                &.sw {
+                    content: "\f065";
+                }
+
+                &.nw,
+                &.se {
+                    content: "\f065";
+                    transform: rotate(90deg);
                 }
 
                 &::after {
@@ -2082,6 +2162,17 @@ body.editor_enable.editor_has_snippets {
                 &.s:after,
                 &.n:after {
                     content: "\f07d";
+                }
+
+                &.ne:after,
+                &.sw:after {
+                    content: "\f065";
+                }
+
+                &.nw:after,
+                &.se:after {
+                    content: "\f065";
+                    transform: rotate(180deg);
                 }
 
                 &.o_handle_start {
@@ -2148,6 +2239,20 @@ body.editor_enable.editor_has_snippets {
                     width: 30px;
                     height: 22px;
                     background-image: url('/web_editor/static/src/img/snippets_options/o_overlay_move_drag.svg');
+                    background-position: center;
+                    background-repeat: no-repeat;
+                }
+                > .o_overlay_move_options > .o_send_back {
+                    width: 30px;
+                    height: 22px;
+                    background-image: url('/web_editor/static/src/img/snippets_options/bring-backward.svg');
+                    background-position: center;
+                    background-repeat: no-repeat;
+                }
+                > .o_overlay_move_options > .o_bring_front {
+                    width: 30px;
+                    height: 22px;
+                    background-image: url('/web_editor/static/src/img/snippets_options/bring-forward.svg');
                     background-position: center;
                     background-repeat: no-repeat;
                 }
@@ -2407,4 +2512,36 @@ we-button:hover .o_we_shape_animated_label > span {
     // code evolves. We may need to increase the CSS priority of this. It will
     // also not work to override important inline style... this is a limitation.
     transition: none !important;
+}
+
+// GRID LAYOUT
+we-button.o_grid {
+    min-width: fit-content;
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}
+
+we-select.o_grid we-toggler {
+    width: fit-content !important;
+}
+
+we-button-group.o_grid {
+    min-width: fit-content !important;
+}
+
+// Background grid.
+.o_we_background_grid {
+    padding: 0;
+}
+
+.o_we_cell {
+    fill: $o-brand-odoo;
+    fill-opacity: .2;
+    stroke: $o-we-border-color;
+    stroke-width: 1px;
+}
+
+.o_we_drag_helper {
+    padding: 0;
+    border: $o-we-handle-border-width solid $o-we-accent;
 }

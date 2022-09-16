@@ -3,22 +3,12 @@
 import tourUtils from 'website_sale.tour_utils';
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerEditionTour('shop_customize', {
+wTourUtils.registerWebsitePreviewTour('shop_customize', {
     url: '/shop',
     edition: true,
     test: true,
 },
     [
-        {
-            content: "open customize tab",
-            extra_trigger: '#oe_snippets.o_loaded',
-            trigger: '.o_we_customize_snippet_btn',
-        },
-        {
-            content: "click on 'Attributes'",
-            extra_trigger: '#oe_snippets .o_we_customize_panel',
-            trigger: 'we-button[data-name="attributes_opt"]',
-        },
         ...wTourUtils.clickOnSave(),
         {
             content: "select product attribute Steel",

@@ -43,11 +43,9 @@ export class KanbanArchParser extends XMLParser {
             groupCreate: archParseBoolean(xmlDoc.getAttribute("group_create"), true),
             groupDelete: archParseBoolean(xmlDoc.getAttribute("group_delete"), true),
             groupEdit: archParseBoolean(xmlDoc.getAttribute("group_edit"), true),
+            quickCreate: archParseBoolean(xmlDoc.getAttribute("quick_create"), true),
         };
-        const onCreate =
-            activeActions.create &&
-            archParseBoolean(xmlDoc.getAttribute("quick_create"), true) &&
-            xmlDoc.getAttribute("on_create");
+        const onCreate = xmlDoc.getAttribute("on_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltipInfo = {};
         let handleField = null;

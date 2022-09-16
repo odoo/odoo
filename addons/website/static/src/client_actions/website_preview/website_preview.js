@@ -6,6 +6,7 @@ import core from 'web.core';
 import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
+import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { routeToUrl } from "@web/core/browser/router_service";
 
@@ -22,6 +23,7 @@ export class WebsitePreview extends Component {
         this.user = useService('user');
         this.router = useService('router');
         this.action = useService('action');
+        this.orm = useService('orm');
 
         this.iframeFallbackUrl = '/website/iframefallback';
 
@@ -38,7 +40,13 @@ export class WebsitePreview extends Component {
         useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
 
         onWillStart(async () => {
-            await this.websiteService.fetchWebsites();
+            const [backendWebsiteRepr] = await Promise.all([
+                this.orm.call('website', 'get_current_website'),
+                this.websiteService.fetchWebsites(),
+                this.websiteService.fetchUserGroups(),
+            ]);
+            this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
+
             const encodedPath = encodeURIComponent(this.path);
             if (this.websiteDomain && this.websiteDomain !== window.location.origin) {
                 window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
@@ -104,15 +112,32 @@ export class WebsitePreview extends Component {
                 window.removeEventListener('popstate', handleBackNavigation);
             };
         }, () => []);
+
+        const toggleIsMobile = () => {
+            const wrapwrapEl = this.iframe.el.contentDocument.querySelector('#wrapwrap');
+            if (wrapwrapEl) {
+                wrapwrapEl.classList.toggle('o_is_mobile', this.websiteContext.isMobile);
+            }
+        };
+        // Toggle the 'o_is_mobile' class on the wrapwrap when 'isMobile'
+        // changes in the context. (e.g. Click on mobile preview buttons)
+        useEffect(toggleIsMobile, () => [this.websiteContext.isMobile]);
+
+        // Toggle the 'o_is_mobile' class on the wrapwrap according to
+        // 'isMobile' on iframe load.
+        useEffect(() => {
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', toggleIsMobile);
+            return () => this.iframe.el.removeEventListener('OdooFrameContentLoaded', toggleIsMobile);
+        }, () => []);
     }
 
     get websiteId() {
         let websiteId = this.props.action.context.params && this.props.action.context.params.website_id;
         // When no parameter is passed to the client action, the current
-        // website from the website service is taken. By default, it will be
-        // the one from the session.
+        // website from the backend (which is the last viewed/edited) will be
+        // taken.
         if (!websiteId) {
-            websiteId = this.websiteService.currentWebsite && this.websiteService.currentWebsite.id;
+            websiteId = this.backendWebsiteId;
         }
         if (!websiteId) {
             websiteId = this.websiteService.websites[0].id;

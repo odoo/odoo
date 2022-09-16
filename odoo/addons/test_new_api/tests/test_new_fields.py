@@ -4085,3 +4085,91 @@ class TestPrecompute(common.TransactionCase):
         ]
         with self.assertQueries(QUERIES):
             model.create({})
+
+
+class TestModifiedPerformance(common.TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Modified = cls.env['test_new_api.modified']
+        cls.ModifiedLine = cls.env['test_new_api.modified.line']
+        cls.modified_a = cls.Modified.create({
+            'name': 'Test',
+        })
+        cls.modified_line_a = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 1,
+        })
+        cls.modified_line_a_child = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 2,
+            'parent_id': cls.modified_line_a.id,
+        })
+        cls.modified_line_a_child_child = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 3,
+            'parent_id': cls.modified_line_a_child.id,
+        })
+        cls.env.invalidate_all()  # Clean the cache
+
+    def test_modified_trigger_related(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `modified_name` has a empty cache
+            self.modified_a.name = "Other"
+
+        self.assertEqual(self.modified_line_a.modified_name, 'Other')  # check
+
+    def test_modified_trigger_no_store_compute(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `total_quantity` has a empty cache
+            self.modified_line_a.quantity = 8
+
+        self.assertEqual(self.modified_a.total_quantity, 18)
+
+    def test_modified_trigger_recursive_empty_cache(self):
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `total_price` has a empty cache
+            self.modified_line_a_child_child.price = 4
+
+        self.assertEqual(self.modified_line_a.total_price, 7)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a_child.total_price, 6)
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
+
+    def test_modified_trigger_recursive_fill_cache(self):
+        self.assertEqual(self.modified_line_a.total_price, 6)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 30)
+        with self.assertQueryCount(0, flush=False):
+            # No query because the `modified_line_a.total_price` has fetch every data needed
+            self.modified_line_a_child_child.price = 4
+
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a.total_price, 7)
+
+    def test_modified_trigger_recursive_partial_invalidate(self):
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 25)
+        self.modified_line_a_child_child.invalidate_recordset()
+
+        self.modified_line_a_child.price
+        with self.assertQueries(["""
+        SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id",
+               "test_new_api_modified_line"."quantity" AS "quantity", "test_new_api_modified_line"."price" AS "price",
+               "test_new_api_modified_line"."parent_id" AS "parent_id", "test_new_api_modified_line"."create_uid" AS "create_uid",
+               "test_new_api_modified_line"."create_date" AS "create_date", "test_new_api_modified_line"."write_uid" AS "write_uid",
+               "test_new_api_modified_line"."write_date" AS "write_date"
+         FROM "test_new_api_modified_line"
+        WHERE "test_new_api_modified_line".id IN %s
+        """] * 2, flush=False):
+            # Two requests:
+            # - one for fetch modified_line_a_child_child data (invalidate just before)
+            # - one because modified_line_a_child.parent_id (invalidate just before because we invalidate inverse in `_invalidate_cache`,
+            # see TODO) -> We should change that
+            self.modified_line_a_child_child.price = 4
+        self.assertEqual(self.modified_line_a_child_child.total_price_quantity, 20)
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a.total_price, 7)

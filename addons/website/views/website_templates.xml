@@ -140,7 +140,10 @@
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
-        <attribute name="t-cache">no_footer,no_copyright,website</attribute>
+        <!-- Add the main object as a cache key so that the footer_visible page
+        option is properly reflected across pages. Controllers and other objects
+        do not have any page option (yet) so they can share the same cache -->
+        <attribute name="t-cache" add="website,main_object._name == 'website.page' and main_object"/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
@@ -1861,9 +1864,9 @@
                  data-show-after="500"
                  data-display="afterDelay"
                  data-consents-duration="999"
-                 data-focus="false"
+                 data-bs-focus="false"
                  data-bs-backdrop="false"
-                 data-keyboard="false"
+                 data-bs-keyboard="false"
                  tabindex="-1"
                  role="dialog">
                 <div class="modal-dialog d-flex s_popup_size_full">
@@ -2378,7 +2381,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <t t-set="search_placeholder">Search...</t>
         <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s' % _input_classes" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
         <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')" aria-label="Search" title="Search">
-            <i class="fa fa-search"/>
+            <i class="oi oi-search"/>
             <span t-if="search" class="oe_search_found">
                 <small>(<t t-out="search_count or 0"/> found)</small>
             </span>

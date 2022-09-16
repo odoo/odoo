@@ -126,9 +126,15 @@ registerModel({
             });
         },
         onMouseenter() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: true });
         },
         onMouseleave() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({
                 isHovered: false,
                 messagingAsClickedMessageView: clear(),
@@ -380,6 +386,9 @@ registerModel({
             }
             return clear();
         },
+        _computeLinkPreviewListView() {
+            return (this.message && this.message.linkPreviews.length > 0) ? {} : clear();
+        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -460,7 +469,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'messageViewOwner',
-            isCausal: true,
         }),
         authorTitleText: attr({
             compute: '_computeAuthorTitleText',
@@ -472,7 +480,6 @@ registerModel({
                 },
             },
             inverse: 'messageViewOwner',
-            isCausal: true,
         }),
         /**
          * States the component displaying this message view (if any).
@@ -480,14 +487,12 @@ registerModel({
         component: attr(),
         composerForEditing: one('Composer', {
             inverse: 'messageViewInEditing',
-            isCausal: true,
         }),
         /**
         * Determines the composer that is used to edit this message (if any).
         */
         composerViewInEditing: one('ComposerView', {
             inverse: 'messageViewInEditing',
-            isCausal: true,
         }),
         /**
          * States the time elapsed since date up to now.
@@ -534,7 +539,6 @@ registerModel({
          */
         highlightTimer: one('Timer', {
             inverse: 'messageViewOwnerAsHighlight',
-            isCausal: true,
         }),
         /**
          * Whether the message is "active", ie: hovered or clicked, and should
@@ -605,13 +609,16 @@ registerModel({
             compute: '_computeIsSquashed',
             default: false,
         }),
+        linkPreviewListView: one('LinkPreviewListView', {
+            compute: '_computeLinkPreviewListView',
+            inverse: 'messageViewOwner',
+        }),
         /**
          * Determines the message action list of this message view (if any).
          */
         messageActionList: one('MessageActionList', {
             compute: '_computeMessageActionList',
             inverse: 'messageView',
-            isCausal: true,
         }),
         /**
          * Determines the message that is displayed by this message view.
@@ -628,7 +635,6 @@ registerModel({
         messageInReplyToView: one('MessageInReplyToView', {
             compute: '_computeMessageInReplyToView',
             inverse: 'messageView',
-            isCausal: true,
         }),
         messageListViewItemOwner: one('MessageListViewItem', {
             identifying: true,
@@ -637,7 +643,6 @@ registerModel({
         messageSeenIndicatorView: one('MessageSeenIndicatorView', {
             compute: '_computeMessageSeenIndicatorView',
             inverse: 'messageViewOwner',
-            isCausal: true,
         }),
         messagingAsClickedMessageView: one('Messaging', {
             inverse: 'clickedMessageView',
@@ -653,12 +658,10 @@ registerModel({
         notificationIconRef: attr(),
         notificationPopoverView: one('PopoverView', {
             inverse: 'messageViewOwnerAsNotificationContent',
-            isCausal: true,
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
             inverse: 'messageViewOwner',
-            isCausal: true,
         }),
         /**
          * States whether this message view is the last one of its thread view.

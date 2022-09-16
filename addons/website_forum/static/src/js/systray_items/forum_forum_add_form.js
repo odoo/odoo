@@ -1,27 +1,20 @@
 /** @odoo-module **/
 
-import {NewContentFormController} from '@website/js/new_content_form';
-import viewRegistry from 'web.view_registry';
-import FormView from 'web.FormView';
+import {NewContentFormController, NewContentFormView} from '@website/js/new_content_form';
+import {registry} from "@web/core/registry";
 
-const AddForumFormController = NewContentFormController.extend({
+export class AddForumFormController extends NewContentFormController {
     /**
      * @override
      */
-    _getPath(state) {
-        return `/forum/${state.data.id}`;
-    },
-});
+    get path() {
+        return `/forum/${this.model.root.data.id}`;
+    }
+}
 
-const AddForumFormView = FormView.extend({
-    config: _.extend({}, FormView.prototype.config, {
-        Controller: AddForumFormController,
-    }),
-});
-
-viewRegistry.add('website_forum_add_form', AddForumFormView);
-
-export default {
-    AddForumFormController: AddForumFormController,
-    AddForumFormView: AddForumFormView,
+export const AddForumFormView = {
+    ...NewContentFormView,
+    Controller: AddForumFormController,
 };
+
+registry.category("views").add("website_forum_add_form", AddForumFormView);

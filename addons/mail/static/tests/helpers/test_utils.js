@@ -69,14 +69,12 @@ function getAfterEvent({ messagingBus }) {
      * @returns {Promise}
      */
     return async function afterEvent({ eventName, func, message, predicate, timeoutDelay = 5000 }) {
+        const error = new Error(message || `Timeout: the event ${eventName} was not triggered.`);
         // Set up the timeout to reject if the event is not triggered.
         let timeoutNoEvent;
         const timeoutProm = new Promise((resolve, reject) => {
             timeoutNoEvent = setTimeout(() => {
-                let error = message
-                    ? new Error(message)
-                    : new Error(`Timeout: the event ${eventName} was not triggered.`);
-                console.error(error);
+                console.warn(error);
                 reject(error);
             }, timeoutDelay);
         });
@@ -92,9 +90,12 @@ function getAfterEvent({ messagingBus }) {
         // promise has been registered to not miss any potential event.
         const funcRes = func();
         // Make them race (first to resolve/reject wins).
-        await Promise.race([eventProm, timeoutProm]);
-        clearTimeout(timeoutNoEvent);
-        messagingBus.removeEventListener(eventName, eventHandler);
+        await Promise.race([eventProm, timeoutProm]).finally(() => {
+            // Execute clean up regardless of whether the promise is
+            // rejected or not.
+            clearTimeout(timeoutNoEvent);
+            messagingBus.removeEventListener(eventName, eventHandler);
+        });
         // If the event is triggered before the end of the async function,
         // ensure the function finishes its job before returning.
         return await funcRes;
@@ -104,6 +105,14 @@ function getAfterEvent({ messagingBus }) {
 function getClick({ afterNextRender }) {
     return async function click(selector) {
         await afterNextRender(() => document.querySelector(selector).click());
+    };
+}
+
+function getMouseenter({ afterNextRender }) {
+    return async function mouseenter(selector) {
+        await afterNextRender(() =>
+            document.querySelector(selector).dispatchEvent(new window.MouseEvent('mouseenter'))
+        );
     };
 }
 
@@ -196,11 +205,6 @@ function getOpenFormView(afterEvent, openView) {
  * @param {Deferred|Promise} [param0.messagingBeforeCreationDeferred=Promise.resolve()]
  *   Deferred that let tests block messaging creation and simulate resolution.
  *   Useful for testing working components when messaging is not yet created.
- * @param {Object} [param0.waitUntilEvent]
- * @param {String} [param0.waitUntilEvent.eventName]
- * @param {String} [param0.waitUntilEvent.message]
- * @param {function} [param0.waitUntilEvent.predicate]
- * @param {integer} [param0.waitUntilEvent.timeoutDelay]
  * @param {string} [param0.waitUntilMessagingCondition='initialized'] Determines
  *   the condition of messaging when this function is resolved.
  *   Supported values: ['none', 'created', 'initialized'].
@@ -226,7 +230,6 @@ async function start(param0 = {}) {
     const {
         discuss = {},
         hasTimeControl,
-        waitUntilEvent,
         waitUntilMessagingCondition = 'initialized',
     } = param0;
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
@@ -236,21 +239,23 @@ async function start(param0 = {}) {
         throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
     }
     const messagingBus = new EventBus();
-    const testSetupDoneDeferred = makeDeferred();
     const afterEvent = getAfterEvent({ messagingBus });
-    let waitUntilEventPromise;
-    if (waitUntilEvent) {
-        waitUntilEventPromise = afterEvent({ func: () => testSetupDoneDeferred.resolve(), ...waitUntilEvent, });
-    } else {
-        testSetupDoneDeferred.resolve();
-        waitUntilEventPromise = Promise.resolve();
-    }
 
     const pyEnv = await getPyEnv();
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
-    const webClient = await getWebClientReady({ ...param0, messagingBus, testSetupDoneDeferred });
+    let webClient;
+    await afterNextRender(async () => {
+        webClient = await getWebClientReady({ ...param0, messagingBus });
+        if (waitUntilMessagingCondition === 'created') {
+            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+        }
+        if (waitUntilMessagingCondition === 'initialized') {
+            await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+            await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
+        }
+    });
 
     registerCleanup(async () => {
         await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
@@ -260,18 +265,10 @@ async function start(param0 = {}) {
         delete owl.Component.env[wowlServicesSymbol].messaging;
         delete owl.Component.env;
     });
-    if (waitUntilMessagingCondition === 'created') {
-        await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
-    }
-    if (waitUntilMessagingCondition === 'initialized') {
-        await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
-        await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
-    }
     const openView = async (action, options) => {
         action['type'] = action['type'] || 'ir.actions.act_window';
         await afterNextRender(() => doAction(webClient, action, { props: options }));
     };
-    await waitUntilEventPromise;
     return {
         advanceTime,
         afterEvent,
@@ -280,6 +277,7 @@ async function start(param0 = {}) {
         env: webClient.env,
         insertText,
         messaging: webClient.env.services.messaging.modelManager.messaging,
+        mouseenter: getMouseenter({ afterNextRender }),
         openDiscuss: getOpenDiscuss(afterEvent, webClient, discuss),
         openView,
         openFormView: getOpenFormView(afterEvent, openView),

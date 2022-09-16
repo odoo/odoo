@@ -35,14 +35,6 @@
                 <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary" groups="sales_team.group_sale_salesman_all_leads" attrs="{'invisible': [('has_any_so_to_invoice', '=', False)]}" data-hotkey="w"/>
                 <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-secondary" groups="sales_team.group_sale_salesman_all_leads" attrs="{'invisible': ['|', ('has_any_so_with_nothing_to_invoice', '=', False), ('has_any_so_to_invoice', '=', True)]}" data-hotkey="w"/>
             </xpath>
-            <xpath expr="//button[@name='project_update_all_action']" position="after">
-                <button class="oe_stat_button"
-                        type="object" name="action_view_sos" icon="fa-dollar"
-                        attrs="{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_count', '=', 0)]}"
-                        groups="sales_team.group_sale_salesman_all_leads">
-                    <field name="sale_order_count" widget="statinfo" string="Sales Orders"/>
-                </button>
-            </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'always_reload': True}</attribute>
                 <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
@@ -59,32 +51,6 @@
                         </div>
                     </div>
                 </div>
-            </xpath>
-            <xpath expr="//button[@name='action_view_analytic_account_entries']" position="after">
-                <button name="action_open_project_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
-                        attrs="{'invisible': ['|', ('invoice_count', '=', 0), ('analytic_account_id', '=', False)]}"
-                        groups="account.group_account_readonly">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="invoice_count" nolabel="1"/>
-                        </span>
-                        <span class="o_stat_text">
-                            Invoices
-                        </span>
-                    </div>
-                </button>
-            </xpath>
-            <xpath expr="//button[@name='action_view_analytic_account_entries']" position="after">
-                <button name="action_open_project_vendor_bills" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('vendor_bill_count', '=', 0)]}" groups="account.group_account_readonly">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="vendor_bill_count" nolabel="1"/>
-                        </span>
-                        <span class="o_stat_text">
-                            Vendor Bills
-                        </span>
-                    </div>
-                </button>
             </xpath>
         </field>
     </record>
@@ -136,8 +102,8 @@
                 <field name="allow_billable" invisible="1"/>
                 <group attrs="{'invisible': [('allow_billable', '=', False)]}">
                     <field name="project_partner_id" invisible="1"/>
-                    <field name="sale_line_id" groups="!sales_team.group_sale_salesman" options="{'no_open': True}" readonly="1"/>
-                    <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True}" readonly="0"/>
+                    <field name="sale_line_id" groups="!sales_team.group_sale_salesman" placeholder="Non-billable" options="{'no_open': True}" readonly="1"/>
+                    <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True}" placeholder="Non-billable" readonly="0"/>
                     <field name="quantity_percentage" groups="!sales_team.group_sale_salesman" widget="percentage" readonly="1"/>
                     <field name="quantity_percentage" groups="sales_team.group_sale_salesman" widget="percentage" readonly="0"/>
                 </group>
@@ -154,8 +120,8 @@
             <xpath expr="//field[@name='name']" position="after">
                 <field name="project_partner_id" invisible="1"/>
                 <field name="allow_billable" invisible="1"/>
-                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
-                <field name="sale_line_id" optional="hide" options="{'no_create': True}" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" placeholder="Non-billable" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_create': True}" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
                 <field name="quantity_percentage" optional="hide" widget="percentage" readonly="1" groups="!sales_team.group_sale_salesman"/>
                 <field name="quantity_percentage" optional="hide" widget="percentage" groups="sales_team.group_sale_salesman"/>
             </xpath>

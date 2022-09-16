@@ -345,7 +345,7 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': {
                 'default_composition_mode': 'mass_mail' if len(self.ids) > 1 else 'comment',
-                'default_email_layout_xmlid': 'mail.mail_notification_paynow',
+                'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
                 'default_res_id': self.ids[0],
                 'default_model': 'sale.order',
                 'default_use_template': bool(template_id),

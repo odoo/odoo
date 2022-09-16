@@ -157,9 +157,12 @@ class PurchaseOrder(models.Model):
             orig_purchase_group = self.purchase_group_id
         result = super(PurchaseOrder, self).write(vals)
         if vals.get('requisition_id'):
-            self.message_post_with_view('mail.message_origin_link',
-                    values={'self': self, 'origin': self.requisition_id, 'edit': True},
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
+            for order in self:
+                order.message_post_with_view(
+                    'mail.message_origin_link',
+                    values={'self': order, 'origin': order.requisition_id, 'edit': True},
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+                )
         if vals.get('alternative_po_ids', False):
             if not self.purchase_group_id and len(self.alternative_po_ids + self) > len(self):
                 # this can create a new group + delete an existing one (or more) when linking to already linked PO(s), but this is

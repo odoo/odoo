@@ -4,15 +4,10 @@ odoo.define('website_sale_stock.VariantMixin', function (require) {
 const {Markup} = require('web.utils');
 var VariantMixin = require('sale.VariantMixin');
 var publicWidget = require('web.public.widget');
-var ajax = require('web.ajax');
 var core = require('web.core');
 var QWeb = core.qweb;
 
 require('website_sale.website_sale');
-
-VariantMixin.loadStockXML = async () => {
-    return ajax.loadXML('/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml', QWeb);
-};
 
 /**
  * Addition to the variant_mixin._onChangeCombination
@@ -42,7 +37,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         combination.product_id === parseInt(product_id);
 
     if (!this.isWebsite || !isMainProduct) {
-        return VariantMixin.loadStockXML();
+        return;
     }
 
     const $addQtyInput = $parent.find('input[name="add_qty"]');
@@ -67,18 +62,16 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         }
     }
 
-    return VariantMixin.loadStockXML().then(function (result) {
-        $('.oe_website_sale')
-            .find('.availability_message_' + combination.product_template)
-            .remove();
-        combination.has_out_of_stock_message = $(combination.out_of_stock_message).text() !== '';
-        combination.out_of_stock_message = Markup(combination.out_of_stock_message);
-        const $message = $(QWeb.render(
-            'website_sale_stock.product_availability',
-            combination
-        ));
-        $('div.availability_messages').html($message);
-    });
+    $('.oe_website_sale')
+        .find('.availability_message_' + combination.product_template)
+        .remove();
+    combination.has_out_of_stock_message = $(combination.out_of_stock_message).text() !== '';
+    combination.out_of_stock_message = Markup(combination.out_of_stock_message);
+    const $message = $(QWeb.render(
+        'website_sale_stock.product_availability',
+        combination
+    ));
+    $('div.availability_messages').html($message);
 };
 
 publicWidget.registry.WebsiteSale.include({

@@ -420,6 +420,8 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
             if (args.method === 'read' && args.model === 'res.partner') {
                 assert.step(JSON.stringify(args.args[0]));
                 assert.ok(args.args[1].includes('email'), "should read the email");
+            } else if (args.method === "get_formview_id") {
+                return false;
             }
         },
     });
@@ -435,27 +437,26 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     );
 
     assert.verifySteps([`[${resPartnerId1}]`]);
-    assert.containsOnce(document.body, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0',
+    assert.containsOnce(document.body, '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0',
         "should contain one tag");
 
     // add an other existing tag
-    await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
-    await testUtils.fields.many2one.searchAndClickItem('partner_ids', { search: 'silver' });
+    await selectDropdownItem(document.body, 'partner_ids', "silver");
 
-    assert.strictEqual($('.modal-body.o_act_window').length, 1,
+    assert.strictEqual(document.querySelectorAll('.modal-content .o_form_view').length, 1,
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual($('.modal-body.o_act_window input[name="name"]').val(), "silver",
+    assert.strictEqual(document.querySelector(".modal-content .o_form_view .o_input#name").value, "silver",
         "the opened modal in edit mode should be a form view dialog with the res.partner 14");
-    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
+    assert.strictEqual(document.querySelectorAll(".modal-content .o_form_view .o_input#email").length, 1,
         "there should be an email field in the modal");
 
     // set the email and save the modal (will rerender the form view)
-    await testUtils.fields.editInput($('.modal-body.o_act_window input[name="email"]'), 'coucou@petite.perruche');
-    await testUtils.dom.click($('.modal-footer .btn-primary'));
+    await testUtils.fields.editInput($('.modal-content .o_form_view .o_input#email'), 'coucou@petite.perruche');
+    await testUtils.dom.click($('.modal-content .o_form_button_save'));
 
-    assert.containsN(document.body, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0', 2,
+    assert.containsN(document.body, '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0', 2,
         "should contain the second tag");
-    const firstTag = document.querySelector('.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0');
+    const firstTag = document.querySelector('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
     assert.strictEqual(firstTag.querySelector('.o_badge_text').innerText, "gold",
         "tag should only show name");
     assert.hasAttrValue(firstTag.querySelector('.o_badge_text'), 'title', "coucou@petite.perruche",

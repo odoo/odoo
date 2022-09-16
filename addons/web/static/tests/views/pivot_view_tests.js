@@ -20,6 +20,7 @@ import {
 import {
     applyGroup,
     editFavoriteName,
+    getFacetTexts,
     removeFacet,
     saveFavorite,
     selectGroup,
@@ -5540,6 +5541,133 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll("th")].slice(3).map((el) => el.innerText),
                 ["Total", "First", "Second"],
                 "The row headers should be as expected"
+            );
+        }
+    );
+
+    QUnit.test(
+        "specific pivot keys in action context must have less importance than in favorite context",
+        async function (assert) {
+            await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `<pivot/>`,
+                context: {
+                    pivot_column_groupby: [],
+                    pivot_measures: ["__count"],
+                    pivot_row_groupby: [],
+                },
+                irFilters: [
+                    {
+                        user_id: [2, "Mitchell Admin"],
+                        name: "My favorite",
+                        id: 1,
+                        context: `{
+                            "pivot_column_groupby": ["bar"],
+                            "pivot_measures": ["computed_field"],
+                            "pivot_row_groupby": [],
+                        }`,
+                        sort: "[]",
+                        domain: "",
+                        is_default: true,
+                        model_id: "partner",
+                        action_id: false,
+                    },
+                    {
+                        user_id: [2, "Mitchell Admin"],
+                        name: "My favorite 2",
+                        id: 2,
+                        context: `{
+                            "pivot_column_groupby": ["product_id"],
+                            "pivot_measures": ["computed_field", "__count"],
+                            "pivot_row_groupby": [],
+                        }`,
+                        sort: "[]",
+                        domain: "",
+                        is_default: false,
+                        model_id: "partner",
+                        action_id: false,
+                    },
+                ],
+            });
+
+            assert.deepEqual(
+                [...target.querySelectorAll("th")].slice(1, 6).map((el) => el.innerText),
+                ["Total", "", "No", "Yes", "Computed and not stored"]
+            );
+
+            await toggleFavoriteMenu(target);
+            await toggleMenuItem(target, "My favorite 2");
+
+            assert.deepEqual(
+                [...target.querySelectorAll("th")].slice(1, 11).map((el) => el.innerText),
+                [
+                    "Total",
+                    "",
+                    "xphone",
+                    "xpad",
+                    "Computed and not stored",
+                    "Count",
+                    "Computed and not stored",
+                    "Count",
+                    "Computed and not stored",
+                    "Count",
+                ]
+            );
+        }
+    );
+
+    QUnit.test(
+        "favorite pivot_measures should be used even if found also in global context",
+        async function (assert) {
+            serverData.models.partner.fields.computed_field.store = true; // --> Computed and not stored displayed in "Measures" menu
+
+            await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `<pivot/>`,
+                context: {
+                    pivot_measures: ["__count"],
+                },
+                mockRPC(route, args) {
+                    if (args.method === "create_or_replace") {
+                        assert.deepEqual(args.args[0].context, {
+                            group_by: [],
+                            pivot_column_groupby: [],
+                            pivot_measures: ["computed_field"],
+                            pivot_row_groupby: [],
+                        });
+                        return 1;
+                    }
+                },
+            });
+
+            assert.deepEqual(
+                [...target.querySelectorAll("th")].slice(1, 3).map((el) => el.innerText),
+                ["Total", "Count"]
+            );
+
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Count");
+            await toggleMenuItem(target, "Computed and not stored");
+
+            assert.deepEqual(getFacetTexts(target), []);
+            assert.deepEqual(
+                [...target.querySelectorAll("th")].slice(1, 3).map((el) => el.innerText),
+                ["Total", "Computed and not stored"]
+            );
+
+            await toggleFavoriteMenu(target);
+            await toggleSaveFavorite(target);
+            await editFavoriteName(target, "Favorite");
+            await saveFavorite(target);
+
+            assert.deepEqual(getFacetTexts(target), ["Favorite"]);
+            assert.deepEqual(
+                [...target.querySelectorAll("th")].slice(1, 3).map((el) => el.innerText),
+                ["Total", "Computed and not stored"]
             );
         }
     );

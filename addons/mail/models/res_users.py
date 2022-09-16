@@ -16,7 +16,6 @@ class Users(models.Model):
     """
     _name = 'res.users'
     _inherit = ['res.users']
-    _description = 'Users'
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
@@ -129,8 +128,8 @@ class Users(models.Model):
         return super().unlink()
 
     def _unsubscribe_from_non_public_channels(self):
-        """ This method un-subscribes users from private mail channels. Main purpose of this
-            method is to prevent sending internal communication to archived / deleted users.
+        """ This method un-subscribes users from group restricted channels. Main purpose
+            of this method is to prevent sending internal communication to archived / deleted users.
             We do not un-subscribes users from public channels because in most common cases,
             public channels are mailing list (e-mail based) and so users should always receive
             updates from public channels until they manually un-subscribe themselves.
@@ -139,7 +138,7 @@ class Users(models.Model):
             ('partner_id', 'in', self.partner_id.ids),
         ])
         current_cm.filtered(
-            lambda cm: cm.channel_id.public != 'public' and cm.channel_id.channel_type == 'channel'
+            lambda cm: (cm.channel_id.channel_type == 'channel' and cm.channel_id.group_public_id)
         ).unlink()
 
     def _get_portal_access_update_body(self, access_granted):
@@ -190,6 +189,7 @@ class Users(models.Model):
             'current_partner': self.partner_id.mail_partner_format().get(self.partner_id),
             'current_user_id': self.id,
             'current_user_settings': self.env['res.users.settings']._find_or_create_for_user(self)._res_users_settings_format(),
+            'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
             'internalUserGroupId': self.env.ref('base.group_user').id,
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),

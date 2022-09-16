@@ -63,8 +63,14 @@ export class KanbanRenderer extends Component {
                     }
                     element.classList.add("o_dragged", "shadow");
                 },
-                onGroupEnter: (group) => group.classList.add("o_kanban_hover"),
-                onGroupLeave: (group) => group.classList.remove("o_kanban_hover"),
+                onGroupEnter: (group) => {
+                    group.classList.add("o_kanban_hover");
+                    group.classList.remove("bg-100");
+                },
+                onGroupLeave: (group) => {
+                    group.classList.remove("o_kanban_hover");
+                    group.classList.add("bg-100");
+                },
                 onStop: (group, element) => {
                     group && group.classList && group.classList.remove("o_kanban_hover");
                     element.classList.remove("o_dragged", "shadow");
@@ -77,6 +83,9 @@ export class KanbanRenderer extends Component {
                         parent.dataset.id === element.parentElement.dataset.id
                     ) {
                         parent && parent.classList && parent.classList.remove("o_kanban_hover");
+                        while (previous && !previous.dataset.id) {
+                            previous = previous.previousElementSibling;
+                        }
                         const refId = previous ? previous.dataset.id : null;
                         const targetGroupId = parent && parent.dataset.id;
                         await this.props.list.moveRecord(
@@ -220,12 +229,13 @@ export class KanbanRenderer extends Component {
             return true;
         }
         if (isGrouped) {
-            if (!this.state.columnQuickCreateIsFolded) {
+            if (this.canCreateGroup() && !this.state.columnQuickCreateIsFolded) {
                 return false;
             }
             if (groups.length === 0) {
-                return true;
+                return !this.props.list.groupedBy("m2o");
             }
+            return this.props.list.records.length === 0;
         }
         return !model.hasData();
     }
@@ -251,12 +261,17 @@ export class KanbanRenderer extends Component {
 
     getGroupName({ groupByField, count, displayName, isFolded }) {
         let name = displayName;
-        if (isNull(name)) {
-            name = this.env._t("None");
-        } else if (isRelational(groupByField)) {
-            name = name || this.env._t("None");
-        } else if (groupByField.type === "boolean") {
+        if (groupByField.type === "boolean") {
             name = name ? this.env._t("Yes") : this.env._t("No");
+        } else if (!name) {
+            if (
+                isRelational(groupByField) ||
+                groupByField.type === "date" ||
+                groupByField.type === "datetime" ||
+                isNull(name)
+            ) {
+                name = this.env._t("None");
+            }
         }
         return !this.env.isSmall && isFolded ? `${name} (${count})` : name;
     }
@@ -359,19 +374,24 @@ export class KanbanRenderer extends Component {
         return this.props.archInfo.activeActions.edit;
     }
 
+    canQuickCreate() {
+        return this.props.archInfo.activeActions.quickCreate && this.props.list.canQuickCreate();
+    }
+
     // ------------------------------------------------------------------------
     // Edition methods
     // ------------------------------------------------------------------------
 
-    quickCreate(group) {
-        return this.props.list.quickCreate(group);
+    quickCreate(group, atFirstPosition = true) {
+        return this.props.list.quickCreate(group, atFirstPosition);
     }
 
     async validateQuickCreate(mode, group) {
         const values = group.list.quickCreateRecord.data;
+        const quickCreateRecordIndex = group.list.quickCreateRecordIndex;
         let record;
         try {
-            record = await group.validateQuickCreate();
+            record = await group.validateQuickCreate(quickCreateRecordIndex);
         } catch (e) {
             // TODO: filter RPC errors more specifically (eg, for access denied, there is no point in opening a dialog)
             if (!(e instanceof RPCError)) {
@@ -387,8 +407,8 @@ export class KanbanRenderer extends Component {
                         resModel: this.props.list.resModel,
                         context,
                         title: this.env._t("Create"),
-                        onRecordSaved: (record) => {
-                            group.addRecord(record, 0);
+                        onRecordSaved: async (record) => {
+                            await group.addExistingRecord(record.resId, true);
                         },
                     },
                     {
@@ -404,7 +424,7 @@ export class KanbanRenderer extends Component {
             if (mode === "edit") {
                 await this.props.openRecord(record, "edit");
             } else {
-                await this.quickCreate(group);
+                await this.quickCreate(group, quickCreateRecordIndex === 0);
             }
         }
     }
@@ -526,7 +546,7 @@ export class KanbanRenderer extends Component {
     }
 
     tooltipAttributes(group) {
-        if (!group.tooltip) {
+        if (!group.tooltip.length) {
             return {};
         }
         return {

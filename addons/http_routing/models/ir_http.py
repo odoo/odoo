@@ -402,16 +402,19 @@ class IrHttp(models.AbstractModel):
             return super()._match(path)
 
         # See /1, match a non website endpoint
-        with contextlib.suppress(NotFound):
+        try:
             rule, args = super()._match(path)
             routing = rule.endpoint.routing
             request.is_frontend = routing.get('website', False)
             request.is_frontend_multilang = request.is_frontend and routing.get('multilang', routing['type'] == 'http')
             if not request.is_frontend:
                 return rule, args
-
-        _, url_lang_str, *rest = path.split('/', 2)
-        path_no_lang = '/' + (rest[0] if rest else '')
+        except NotFound:
+            _, url_lang_str, *rest = path.split('/', 2)
+            path_no_lang = '/' + (rest[0] if rest else '')
+        else:
+            url_lang_str = ''
+            path_no_lang = path
         allow_redirect = request.httprequest.method != 'POST'
 
         # There is no user on the environment yet but the following code
@@ -627,10 +630,14 @@ class IrHttp(models.AbstractModel):
 
         request.cr.rollback()
         if code == 403:
-            response = cls._serve_fallback()
-            if response:
-                cls._post_dispatch(response)
-                return response
+            try:
+                response = cls._serve_fallback()
+                if response:
+                    cls._post_dispatch(response)
+                    return response
+            except werkzeug.exceptions.Forbidden:
+                # Rendering does raise a Forbidden if target is not visible.
+                pass # Use default error page handling.
         elif code == 500:
             values = cls._get_values_500_error(request.env, values, exception)
         try:

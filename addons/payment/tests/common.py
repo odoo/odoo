@@ -6,26 +6,17 @@ from unittest.mock import patch
 from lxml import objectify
 
 from odoo.fields import Command
+from odoo.tests.common import TransactionCase
 from odoo.tools.misc import hmac as hmac_tool
-
-from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentCommon(AccountTestInvoicingCommon):
+class PaymentCommon(TransactionCase):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
-
-        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
-
-        def _get_payment_method_information(self):
-            res = Method_get_payment_method_information(self)
-            res['none'] = {'mode': 'multi', 'domain': [('type', '=', 'bank')]}
-            return res
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.currency_euro = cls._prepare_currency('EUR')
         cls.currency_usd = cls._prepare_currency('USD')
@@ -68,7 +59,7 @@ class PaymentCommon(AccountTestInvoicingCommon):
             'country_id': cls.country_belgium.id,
         })
 
-        # Create a dummy acquirer to allow basic tests without any specific acquirer implementation
+        # Create a dummy provider to allow basic tests without any specific provider implementation
         arch = """
         <form action="dummy" method="post">
             <input type="hidden" name="view_id" t-att-value="viewid"/>
@@ -81,50 +72,41 @@ class PaymentCommon(AccountTestInvoicingCommon):
             'arch': arch,
         })
 
-        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            cls.env['account.payment.method'].create({
-                'name': 'Dummy method',
-                'code': 'none',
-                'payment_type': 'inbound'
-            })
-        cls.dummy_acquirer = cls.env['payment.acquirer'].create({
-            'name': "Dummy Acquirer",
-            'provider': 'none',
+        cls.dummy_provider = cls.env['payment.provider'].create({
+            'name': "Dummy Provider",
+            'code': 'none',
             'state': 'test',
             'is_published': True,
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
-            'journal_id': cls.company_data['default_journal_bank'].id,
         })
 
-        cls.acquirer = cls.dummy_acquirer
+        cls.provider = cls.dummy_provider
         cls.amount = 1111.11
         cls.company = cls.env.company
         cls.company_id = cls.company.id
         cls.currency = cls.currency_euro
         cls.partner = cls.default_partner
         cls.reference = "Test Transaction"
-        cls.account = cls.company.account_journal_payment_credit_account_id
-        cls.invoice = cls.env['account.move'].create({
-            'move_type': 'entry',
-            'date': '2019-01-01',
-            'line_ids': [
-                (0, 0, {
-                    'account_id': cls.account.id,
-                    'currency_id': cls.currency_euro.id,
-                    'debit': 100.0,
-                    'credit': 0.0,
-                    'amount_currency': 200.0,
-                }),
-                (0, 0, {
-                    'account_id': cls.account.id,
-                    'currency_id': cls.currency_euro.id,
-                    'debit': 0.0,
-                    'credit': 100.0,
-                    'amount_currency': -200.0,
-                }),
-            ],
-        })
+
+        account_payment_module = cls.env['ir.module.module']._get('account_payment')
+        cls.account_payment_installed = account_payment_module.state in ('installed', 'to upgrade')
+
+    def setUp(self):
+        def stop_patcher_without_fail():
+            if self.is_patcher_started:
+                self.reconcile_after_done_patcher.stop()
+
+        super().setUp()
+        if self.account_payment_installed:
+            # disable account payment generation if account_payment is installed
+            # because the accounting setup of providers is not managed in this common
+            self.reconcile_after_done_patcher = patch(
+                'odoo.addons.account_payment.models.payment_transaction.PaymentTransaction._reconcile_after_done',
+            )
+            self.reconcile_after_done_patcher.start()
+            self.is_patcher_started = True
+            self.addCleanup(stop_patcher_without_fail)
 
     #=== Utils ===#
 
@@ -137,49 +119,44 @@ class PaymentCommon(AccountTestInvoicingCommon):
         return currency
 
     @classmethod
-    def _prepare_acquirer(cls, provider='none', company=None, update_values=None):
-        """ Prepare and return the first acquirer matching the given provider and company.
+    def _prepare_provider(cls, code='none', company=None, update_values=None):
+        """ Prepare and return the first provider matching the given provider and company.
 
-        If no acquirer is found in the given company, we duplicate the one from the base company.
+        If no provider is found in the given company, we duplicate the one from the base company.
 
-        All other acquirers belonging to the same company are disabled to avoid any interferences.
+        All other providers belonging to the same company are disabled to avoid any interferences.
 
-        :param str provider: The provider of the acquirer to prepare
-        :param recordset company: The company of the acquirer to prepare, as a `res.company` record
-        :param dict update_values: The values used to update the acquirer
-        :return: The acquirer to prepare, if found
-        :rtype: recordset of `payment.acquirer`
+        :param str code: The code of the provider to prepare
+        :param recordset company: The company of the provider to prepare, as a `res.company` record
+        :param dict update_values: The values used to update the provider
+        :return: The provider to prepare, if found
+        :rtype: recordset of `payment.provider`
         """
         company = company or cls.env.company
         update_values = update_values or {}
 
-        acquirer = cls.env['payment.acquirer'].sudo().search(
-            [('provider', '=', provider), ('company_id', '=', company.id)], limit=1
+        provider = cls.env['payment.provider'].sudo().search(
+            [('code', '=', code), ('company_id', '=', company.id)], limit=1
         )
-        if not acquirer:
-            base_acquirer = cls.env['payment.acquirer'].sudo().search(
-                [('provider', '=', provider)], limit=1
+        if not provider:
+            base_provider = cls.env['payment.provider'].sudo().search(
+                [('code', '=', code)], limit=1
             )
-            if not base_acquirer:
-                _logger.error("no payment.acquirer found for provider %s", provider)
-                return cls.env['payment.acquirer']
+            if not base_provider:
+                _logger.error("no payment.provider found for code %s", code)
+                return cls.env['payment.provider']
             else:
-                acquirer = base_acquirer.copy({'company_id': company.id})
+                provider = base_provider.copy({'company_id': company.id})
 
-        acquirer.write(update_values)
-        if not acquirer.journal_id:
-            acquirer.journal_id = cls.env['account.journal'].search([
-                ('company_id', '=', company.id),
-                ('type', '=', 'bank')
-            ], limit=1)
-        acquirer.state = 'test'
-        return acquirer
+        update_values['state'] = 'test'
+        provider.write(update_values)
+        return provider
 
     def _create_transaction(self, flow, sudo=True, **values):
         default_values = {
             'amount': self.amount,
             'currency_id': self.currency.id,
-            'acquirer_id': self.acquirer.id,
+            'provider_id': self.provider.id,
             'reference': self.reference,
             'operation': f'online_{flow}',
             'partner_id': self.partner.id,
@@ -189,9 +166,9 @@ class PaymentCommon(AccountTestInvoicingCommon):
     def _create_token(self, sudo=True, **values):
         default_values = {
             'payment_details': "1234",
-            'acquirer_id': self.acquirer.id,
+            'provider_id': self.provider.id,
             'partner_id': self.partner.id,
-            'acquirer_ref': "Acquirer Ref (TEST)",
+            'provider_ref': "provider Ref (TEST)",
             'active': True,
         }
         return self.env['payment.token'].sudo(sudo).create(dict(default_values, **values))
@@ -200,31 +177,6 @@ class PaymentCommon(AccountTestInvoicingCommon):
         return self.env['payment.transaction'].sudo().search([
             ('reference', '=', reference),
         ])
-
-    def _prepare_transaction_values(self, payment_option_id, flow):
-        """ Prepare the basic payment/transaction route values.
-
-        :param int payment_option_id: The payment option handling the transaction, as a
-                                      `payment.acquirer` id or a `payment.token` id
-        :param str flow: The payment flow
-        :return: The route values
-        :rtype: dict
-        """
-        return {
-            'amount': self.amount,
-            'currency_id': self.currency.id,
-            'partner_id': self.partner.id,
-            'access_token': self._generate_test_access_token(
-                self.partner.id, self.amount, self.currency.id
-            ),
-            'payment_option_id': payment_option_id,
-            'reference_prefix': 'test',
-            'tokenization_requested': True,
-            'landing_route': 'Test',
-            'is_validation': False,
-            'invoice_id': self.invoice.id,
-            'flow': flow,
-        }
 
     def _generate_test_access_token(self, *values):
         """ Generate an access token based on the provided values for testing purposes.

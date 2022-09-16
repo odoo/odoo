@@ -401,7 +401,6 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
             }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
 
     const { openDiscuss } = await start();
@@ -425,7 +424,6 @@ QUnit.test('chat - counter: should not have a counter if the category is unfolde
             }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     const { openDiscuss } = await start();
     await openDiscuss();
@@ -448,7 +446,6 @@ QUnit.test('chat - counter: should not have a counter if category is folded and 
             }],
         ],
         channel_type: 'chat',
-        public: 'private',
     });
     const { click, openDiscuss } = await start();
     await openDiscuss();
@@ -473,7 +470,6 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
                 }],
             ],
             channel_type: 'chat',
-            public: 'private',
         },
         {
             channel_member_ids: [
@@ -483,7 +479,6 @@ QUnit.test('chat - counter: should have correct value of unread threads if categ
                 }],
             ],
             channel_type: 'chat',
-            public: 'private',
         },
     ]);
     const { click, openDiscuss } = await start();
@@ -532,7 +527,6 @@ QUnit.test('chat - states: close manually by clicking the title', async function
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        public: 'private',
     });
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
@@ -554,7 +548,6 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        public: 'private',
     });
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
@@ -649,7 +642,6 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        public: 'private',
     });
     const resUsersSettingsId1 = pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
@@ -677,7 +669,6 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        public: 'private',
     });
     const resUsersSettingsId1 = pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
@@ -705,7 +696,6 @@ QUnit.test('chat - states: the active category item should be visible even if th
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'chat',
-        public: 'private',
     });
     const { click, messaging, openDiscuss } = await start();
     await openDiscuss();

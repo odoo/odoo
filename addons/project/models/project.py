@@ -778,21 +778,6 @@ class Project(models.Model):
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
 
-    def action_view_analytic_account_entries(self):
-        self.ensure_one()
-        return {
-            'res_model': 'account.analytic.line',
-            'type': 'ir.actions.act_window',
-            'name': _("Gross Margin"),
-            'domain': [('account_id', '=', self.analytic_account_id.id)],
-            'views': [(self.env.ref('analytic.view_account_analytic_line_tree').id, 'list'),
-                      (self.env.ref('analytic.view_account_analytic_line_form').id, 'form'),
-                      (self.env.ref('analytic.view_account_analytic_line_graph').id, 'graph'),
-                      (self.env.ref('analytic.view_account_analytic_line_pivot').id, 'pivot')],
-            'view_mode': 'tree,form,graph,pivot',
-            'context': {'search_default_group_date': 1, 'default_account_id': self.analytic_account_id.id}
-        }
-
     def action_get_list_view(self):
         self.ensure_one()
         return {
@@ -899,7 +884,7 @@ class Project(models.Model):
             'show': True,
             'sequence': 3,
         }]
-        if self.user_has_groups('project.group_project_rating'):
+        if self.rating_count != 0 and self.user_has_groups('project.group_project_rating'):
             if self.rating_avg >= rating_data.RATING_AVG_TOP:
                 icon = 'smile-o text-success'
             elif self.rating_avg >= rating_data.RATING_AVG_OK:
@@ -1060,8 +1045,6 @@ class Task(models.Model):
 
     @api.model
     def _default_personal_stage_type_id(self):
-        if self._context.get('default_project_id'):
-            return False
         return self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1).id
 
     @api.model
@@ -1791,6 +1774,13 @@ class Task(models.Model):
         return public_fields
 
     @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of fields_get making fields readonly for portal users
+        makes the view cache dependent on the fact the user has the group portal or not"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.user.has_group('base.group_portal'),)
+
+    @api.model
     def default_get(self, default_fields):
         vals = super(Task, self).default_get(default_fields)
 
@@ -2000,8 +1990,7 @@ class Task(models.Model):
         if 'parent_id' in vals and vals['parent_id'] in self.ids:
             raise UserError(_("Sorry. You can't set a task as its parent task."))
         if 'active' in vals and not vals.get('active') and any(self.mapped('recurrence_id')):
-            # TODO: show a dialog to stop the recurrence
-            raise UserError(_('You cannot archive recurring tasks. Please disable the recurrence first.'))
+            vals['recurring_task'] = False
         if 'recurrence_id' in vals and vals.get('recurrence_id') and any(not task.active for task in self):
             raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
         # stage change: update date_last_stage_update
@@ -2054,9 +2043,10 @@ class Task(models.Model):
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self}
 
-        result = super(Task, tasks).write(vals)
+        if "personal_stage_type_id" in vals and not vals['personal_stage_type_id']:
+            del vals['personal_stage_type_id']
 
-        self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
+        result = super(Task, tasks).write(vals)
 
         if 'user_ids' in vals:
             tasks._populate_missing_personal_stages()
@@ -2076,6 +2066,8 @@ class Task(models.Model):
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set
                 task.display_project_id = task.project_id
+
+        self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         return result
 
     def update_date_end(self, stage_id):
@@ -2152,6 +2144,20 @@ class Task(models.Model):
     # Mail gateway
     # ---------------------------------------------------
 
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
+                                                   force_email_company=False, force_email_lang=False):
+        render_context = super()._notify_by_email_prepare_rendering_context(
+            message, msg_vals, model_description=model_description,
+            force_email_company=force_email_company, force_email_lang=force_email_lang
+        )
+        if self.date_deadline:
+            render_context['subtitles'].append(
+                _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
+        elif self.date_assign:
+            render_context['subtitles'].append(
+                _('Assigned On: %s', self.date_assign.strftime(get_lang(self.env).date_format)))
+        return render_context
+
     @api.model
     def _task_message_auto_subscribe_notify(self, users_per_task):
         # Utility method to send assignation notification upon writing/creation.
@@ -2176,7 +2182,7 @@ class Task(models.Model):
                     body=assignation_msg,
                     partner_ids=user.partner_id.ids,
                     record_name=task.display_name,
-                    email_layout_xmlid='mail.mail_notification_light',
+                    email_layout_xmlid='mail.mail_notification_layout',
                     model_description=task_model_description,
                 )
 
@@ -2418,22 +2424,6 @@ class Task(models.Model):
             return children
         return children + children._get_all_subtasks(depth - 1)
 
-    def get_milestone_to_mark_as_reached_action(self):
-        """ Return an action if the milestone can be marked as reached otherwise return False """
-        milestones = self.milestone_id.filtered('can_be_marked_as_done')
-        if milestones:
-            wizard = self.env['project.milestone.reach.wizard'].create({'line_ids': [Command.create({'milestone_id': m.id}) for m in milestones]})
-            return {
-                'name': _('Mark milestone as reached'),
-                'view_mode': 'form',
-                'res_model': 'project.milestone.reach.wizard',
-                'views': [(self.env.ref('project.project_milestone_reach_wizard_view_form').id, 'form')],
-                'type': 'ir.actions.act_window',
-                'res_id': wizard.id,
-                'target': 'new',
-            }
-        return False
-
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
@@ -2621,10 +2611,9 @@ class ProjectTags(models.Model):
     ]
 
     def _get_project_tags_domain(self, domain, project_id):
-        return expression.AND([
-            domain,
-            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]
-        ])
+        tag_ids = list(self.with_user(SUPERUSER_ID)._search(
+            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]))
+        return expression.AND([domain, [('id', 'in', tag_ids)]])
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):

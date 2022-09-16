@@ -363,7 +363,7 @@ class AccountTax(models.Model):
         # default value for custom amount_type
         return 0.0
 
-    def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, is_refund=False):
+    def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, is_refund=False, include_caba_tags=False):
         """ Called by the reconciliation to compute taxes on writeoff during bank reconciliation
         """
         if currency_id:
@@ -377,7 +377,8 @@ class AccountTax(models.Model):
         tax_type = self and self[0].type_tax_use
         is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
 
-        rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
+        rslt = self.with_context(caba_no_transition_account=True)\
+                   .compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund, include_caba_tags=include_caba_tags)
 
         return rslt
 
@@ -809,12 +810,16 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _compute_taxes_for_single_line(self, base_line, handle_price_include=True, include_caba_tags=False):
+    def _compute_taxes_for_single_line(self, base_line, handle_price_include=True, include_caba_tags=False, early_pay_discount_computation=None, early_pay_discount_percentage=None):
         orig_price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
         price_unit_after_discount = orig_price_unit_after_discount
         taxes = base_line['taxes']._origin
         currency = base_line['currency'] or self.env.company.currency_id
         rate = base_line['rate']
+
+        if early_pay_discount_computation in ('included', 'excluded'):
+            remaining_part_to_consider = (100 - early_pay_discount_percentage) / 100.0
+            price_unit_after_discount = remaining_part_to_consider * price_unit_after_discount
 
         if taxes:
 
@@ -839,6 +844,22 @@ class AccountTax(models.Model):
                 'price_subtotal': taxes_res['total_excluded'],
                 'price_total': taxes_res['total_included'],
             }
+
+            if early_pay_discount_computation == 'excluded':
+                new_taxes_res = taxes.with_context(**base_line['extra_context']).compute_all(
+                    orig_price_unit_after_discount,
+                    currency=currency,
+                    quantity=base_line['quantity'],
+                    product=base_line['product'],
+                    partner=base_line['partner'],
+                    is_refund=base_line['is_refund'],
+                    handle_price_include=manage_price_include,
+                    include_caba_tags=include_caba_tags,
+                )
+                for tax_res, new_taxes_res in zip(taxes_res['taxes'], new_taxes_res['taxes']):
+                    delta_tax = new_taxes_res['amount'] - tax_res['amount']
+                    tax_res['amount'] += delta_tax
+                    to_update_vals['price_total'] += delta_tax
 
             tax_values_list = []
             for tax_res in taxes_res['taxes']:
@@ -1179,6 +1200,8 @@ class AccountTax(models.Model):
 
         amount_total = amount_untaxed + amount_tax
 
+        display_tax_base = len(global_tax_details['tax_details']) == 1 and tax_group_vals['base_amount'] != amount_untaxed
+
         return {
             'amount_untaxed': amount_untaxed,
             'amount_total': amount_total,
@@ -1187,6 +1210,7 @@ class AccountTax(models.Model):
             'groups_by_subtotal': groups_by_subtotal,
             'subtotals': subtotals,
             'subtotals_order': sorted(subtotal_order.keys(), key=lambda k: subtotal_order[k]),
+            'display_tax_base': display_tax_base
         }
 
     @api.model
@@ -1301,7 +1325,7 @@ class AccountTaxRepartitionLine(models.Model):
         :return: An account.account record or an empty recordset.
         """
         self.ensure_one()
-        if self.tax_id.tax_exigibility == 'on_payment':
+        if self.tax_id.tax_exigibility == 'on_payment' and not self._context.get('caba_no_transition_account'):
             return self.tax_id.cash_basis_transition_account_id
         else:
             return self.account_id

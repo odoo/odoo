@@ -181,6 +181,8 @@
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
                     <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" width="0.5" optional="hide"/>
+                    <field name="discount_date" string="Discount Date"/>
+                    <field name="discount_amount_currency" string="Discount Amount"/>
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
@@ -655,7 +657,8 @@
                          attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', 'no'), ('auto_post', '=', 'at_date')]}">
                          <field name="auto_post" readonly="1"/> auto-posting enabled. Next accounting date: <field name="date" readonly="1"/>.<span attrs="{'invisible': [('auto_post_until', '=', False)]}"> The recurrence will end on <field name="auto_post_until" readonly="1"/> (included).</span>
                     </div>
-                    <div class="alert alert-warning mb-0" role="alert"
+                    <div groups="account.group_account_invoice,account.group_account_readonly"
+                         class="alert alert-warning mb-0" role="alert"
                          attrs="{'invisible': [('partner_credit_warning', '=', '')]}">
                         <field name="partner_credit_warning"/>
                     </div>
@@ -807,11 +810,11 @@
                                             'readonly': [('state', '!=', 'draft')],
                                        }"/>
                                 <field name="payment_reference"
-                                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
+                                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                 <field name="partner_bank_id"
                                        context="{'default_partner_id': bank_partner_id}"
                                        domain="[('partner_id', '=', bank_partner_id)]"
-                                       attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
+                                       attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
                                 <label for="invoice_payment_term_id" string="Due Date"
@@ -1095,6 +1098,14 @@
                                                sum="Total Credit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))], 'readonly': [('parent.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')), ('display_type', 'in', ('line_section', 'line_note', 'product'))]}"/>
                                         <field name="balance" invisible="1"/>
+                                        <field name="discount_date"
+                                               string="Discount Date"
+                                               optional="hide"
+                                        />
+                                        <field name="discount_amount_currency"
+                                               string="Discount Amount"
+                                               optional="hide"
+                                        />
 
                                         <field name="tax_tag_ids"
                                                widget="many2many_tags"
@@ -1352,7 +1363,7 @@
         </record>
 
         <record id="action_account_moves_all_grouped_matching" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_matching': 1, 'search_default_posted':1, 'expand':'1'}</field>
+            <field name="context">{'journal_type':'general', 'search_default_posted':1, 'expand':'1'}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -1506,7 +1517,7 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a vendor credit note
               </p><p>
-                Note that the easiest way to create a vendor credit note it to do it directly from the vendor bill.
+                Note that the easiest way to create a vendor credit note is to do it directly from the vendor bill.
               </p>
             </field>
         </record>

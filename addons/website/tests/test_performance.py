@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tools import mute_logger
-from odoo.tests.common import HttpCase
+from odoo.tests.common import HttpCase, tagged
 
 EXTRA_REQUEST = 2 - 1
 """ During tests, the query on 'base_registry_signaling, base_cache_signaling'
@@ -140,10 +140,13 @@ class TestWebsitePerformance(UtilPerf):
         self.assertEqual(self._get_url_hot_query(self.page.url), 6)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
 
+
+@tagged('-at_install', 'post_install')
+class TestWebsitePerformancePost(UtilPerf):
     @mute_logger('odoo.http')
     def test_50_perf_sql_web_assets(self):
         # assets route /web/assets/..
-        self.url_open('/')  # create assets attachments
+        self.env['ir.qweb']._generate_asset_nodes('web.assets_common', css=False, js=True)
         assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/web.assets_common%.js')], limit=1).url
         self.assertEqual(self._get_url_hot_query(assets_url), 4)
         self.assertEqual(self._get_url_hot_query(assets_url, cache=False), 4)

@@ -14,23 +14,23 @@ _logger = logging.getLogger(__name__)
 
 class AuthorizeController(http.Controller):
 
-    @http.route('/payment/authorize/get_acquirer_info', type='json', auth='public')
-    def authorize_get_acquirer_info(self, acquirer_id):
-        """ Return public information on the acquirer.
+    @http.route('/payment/authorize/get_provider_info', type='json', auth='public')
+    def authorize_get_provider_info(self, provider_id):
+        """ Return public information on the provider.
 
-        :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
-        :return: Information on the acquirer, namely: the state, payment method type, login ID, and
+        :param int provider_id: The provider handling the transaction, as a `payment.provider` id
+        :return: Information on the provider, namely: the state, payment method type, login ID, and
                  public client key
         :rtype: dict
         """
-        acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id).exists()
+        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
         return {
-            'state': acquirer_sudo.state,
-            'payment_method_type': acquirer_sudo.authorize_payment_method_type,
+            'state': provider_sudo.state,
+            'payment_method_type': provider_sudo.authorize_payment_method_type,
             # The public API key solely used to identify the seller account with Authorize.Net
-            'login_id': acquirer_sudo.authorize_login,
+            'login_id': provider_sudo.authorize_login,
             # The public client key solely used to identify requests from the Accept.js suite
-            'client_key': acquirer_sudo.authorize_client_key,
+            'client_key': provider_sudo.authorize_client_key,
         }
 
     @http.route('/payment/authorize/payment', type='json', auth='public')
