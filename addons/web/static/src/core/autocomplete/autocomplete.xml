@@ -17,7 +17,7 @@
                 t-on-keydown="onInputKeydown"
                 t-ref="input"
             />
-            <t t-if="isOpened">
+            <t t-if="isOpened and hasOptions">
                 <ul class="o-autocomplete--dropdown-menu dropdown-menu ui-widget ui-autocomplete show" t-on-mousedown.prevent="" t-ref="sourcesList">
                     <t t-foreach="sources" t-as="source" t-key="source.id">
                         <t t-if="source.isLoading">
