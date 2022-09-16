@@ -12,6 +12,9 @@
                 },
                 "18": {
                     "size": 40
+                },
+                "19": {
+                    "size": 40
                 }
             },
             "cols": {
@@ -52,7 +55,7 @@
                 },
                 "A19": {
                     "style": 1,
-                    "content": "[Operator Analysis](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
+                    "content": "[Top Operators](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
                     "border": 1
                 },
                 "A20": {
@@ -106,43 +109,42 @@
                 },
                 "B20": {
                     "style": 6,
-                    "content": "Sessions",
                     "border": 2
                 },
                 "B21": {
                     "style": 7,
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",1)"
+                    "format": 1
                 },
                 "B22": {
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",2)"
+                    "format": 1
                 },
                 "B23": {
                     "style": 7,
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",3)"
+                    "format": 1
                 },
                 "B24": {
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",4)"
+                    "format": 1
                 },
                 "B25": {
                     "style": 7,
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",5)"
+                    "format": 1
                 },
                 "B26": {
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",6)"
+                    "format": 1
                 },
                 "B27": {
                     "style": 7,
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",7)"
+                    "format": 1
                 },
                 "B28": {
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",8)"
+                    "format": 1
                 },
                 "B29": {
                     "style": 7,
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",9)"
+                    "format": 1
                 },
                 "B30": {
-                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",10)"
+                    "format": 1
                 },
                 "C7": {
                     "style": 5,
@@ -150,116 +152,312 @@
                 },
                 "C20": {
                     "style": 6,
-                    "content": "Time to answer",
                     "border": 2
                 },
                 "C21": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",1)"
+                    "format": 1
                 },
                 "C22": {
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",2)"
+                    "format": 1
                 },
                 "C23": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",3)"
+                    "format": 1
                 },
                 "C24": {
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",4)"
+                    "format": 1
                 },
                 "C25": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",5)"
+                    "format": 1
                 },
                 "C26": {
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",6)"
+                    "format": 1
                 },
                 "C27": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",7)"
+                    "format": 1
                 },
                 "C28": {
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",8)"
+                    "format": 1
                 },
                 "C29": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",9)"
+                    "format": 1
                 },
                 "C30": {
-                    "format": 1,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",10)"
+                    "format": 1
                 },
                 "D20": {
                     "style": 6,
-                    "content": "Average session (sec)",
+                    "content": "Sessions",
                     "border": 2
                 },
                 "D21": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",1)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",1)"
                 },
                 "D22": {
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",2)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",2)"
                 },
                 "D23": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",3)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",3)"
                 },
                 "D24": {
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",4)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",4)"
                 },
                 "D25": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",5)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",5)"
                 },
                 "D26": {
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",6)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",6)"
                 },
                 "D27": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",7)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",7)"
                 },
                 "D28": {
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",8)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",8)"
                 },
                 "D29": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",9)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",9)"
                 },
                 "D30": {
-                    "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",10)"
+                    "content": "=ODOO.PIVOT(3,\"nbr_channel\",\"#partner_id\",10)"
                 },
-                "E7": {
+                "E20": {
+                    "style": 6,
+                    "border": 2
+                },
+                "E21": {
+                    "style": 7,
+                    "format": 1
+                },
+                "E22": {
+                    "format": 1
+                },
+                "E23": {
+                    "style": 7,
+                    "format": 1
+                },
+                "E24": {
+                    "format": 1
+                },
+                "E25": {
+                    "style": 7,
+                    "format": 1
+                },
+                "E26": {
+                    "format": 1
+                },
+                "E27": {
+                    "style": 7,
+                    "format": 1
+                },
+                "E28": {
+                    "format": 1
+                },
+                "E29": {
+                    "style": 7,
+                    "format": 1
+                },
+                "E30": {
+                    "format": 1
+                },
+                "F7": {
                     "style": 1,
                     "content": "[Sessions by Operator](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})",
                     "border": 1
                 },
-                "F7": {
-                    "style": 5,
-                    "border": 1
+                "F20": {
+                    "style": 6,
+                    "content": "Time to answer (seconds)",
+                    "border": 2
+                },
+                "F21": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",1)"
+                },
+                "F22": {
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",2)"
+                },
+                "F23": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",3)"
+                },
+                "F24": {
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",4)"
+                },
+                "F25": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",5)"
+                },
+                "F26": {
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",6)"
+                },
+                "F27": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",7)"
+                },
+                "F28": {
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",8)"
+                },
+                "F29": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",9)"
+                },
+                "F30": {
+                    "format": 2,
+                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",10)"
                 },
                 "G7": {
                     "style": 5,
                     "border": 1
+                },
+                "G20": {
+                    "style": 6,
+                    "border": 2
+                },
+                "G21": {
+                    "style": 7,
+                    "format": 1
+                },
+                "G22": {
+                    "format": 1
+                },
+                "G23": {
+                    "style": 7,
+                    "format": 1
+                },
+                "G24": {
+                    "format": 1
+                },
+                "G25": {
+                    "style": 7,
+                    "format": 1
+                },
+                "G26": {
+                    "format": 1
+                },
+                "G27": {
+                    "style": 7,
+                    "format": 1
+                },
+                "G28": {
+                    "format": 1
+                },
+                "G29": {
+                    "style": 7,
+                    "format": 1
+                },
+                "G30": {
+                    "format": 1
+                },
+                "H7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "H20": {
+                    "style": 6,
+                    "border": 2
+                },
+                "H21": {
+                    "style": 7,
+                    "format": 1
+                },
+                "H22": {
+                    "format": 1
+                },
+                "H23": {
+                    "style": 7,
+                    "format": 1
+                },
+                "H24": {
+                    "format": 1
+                },
+                "H25": {
+                    "style": 7,
+                    "format": 1
+                },
+                "H26": {
+                    "format": 1
+                },
+                "H27": {
+                    "style": 7,
+                    "format": 1
+                },
+                "H28": {
+                    "format": 1
+                },
+                "H29": {
+                    "style": 7,
+                    "format": 1
+                },
+                "H30": {
+                    "format": 1
+                },
+                "I20": {
+                    "style": 6,
+                    "content": "Average session (seconds)",
+                    "border": 2
+                },
+                "I21": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",1)"
+                },
+                "I22": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",2)"
+                },
+                "I23": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",3)"
+                },
+                "I24": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",4)"
+                },
+                "I25": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",5)"
+                },
+                "I26": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",6)"
+                },
+                "I27": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",7)"
+                },
+                "I28": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",8)"
+                },
+                "I29": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",9)"
+                },
+                "I30": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(3,\"duration\",\"#partner_id\",10)"
                 },
                 "A8": {
                     "border": 2
@@ -279,14 +477,29 @@
                 "D19": {
                     "border": 1
                 },
-                "E8": {
-                    "border": 2
+                "E19": {
+                    "border": 1
                 },
                 "F8": {
                     "border": 2
                 },
+                "F19": {
+                    "border": 1
+                },
                 "G8": {
                     "border": 2
+                },
+                "G19": {
+                    "border": 1
+                },
+                "H8": {
+                    "border": 2
+                },
+                "H19": {
+                    "border": 1
+                },
+                "I19": {
+                    "border": 1
                 }
             },
             "conditionalFormats": [],
@@ -531,12 +744,12 @@
                 },
                 "D3": {
                     "style": 7,
-                    "format": 1,
+                    "format": 2,
                     "content": "=CONCATENATE(-ROUND(B3/60),\"min\")"
                 },
                 "D4": {
                     "style": 7,
-                    "format": 1,
+                    "format": 2,
                     "content": "=CONCATENATE(ROUND(B4/60),\"min\")"
                 },
                 "D5": {
@@ -553,13 +766,13 @@
                 },
                 "E3": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=CONCATENATE(-ROUND(C3/60),\"min\")"
+                    "format": 2,
+                    "content": "=-ROUND(C3/60)"
                 },
                 "E4": {
                     "style": 7,
-                    "format": 1,
-                    "content": "=CONCATENATE(ROUND(C4/60),\"min\")"
+                    "format": 2,
+                    "content": "=ROUND(C4/60)"
                 },
                 "E5": {
                     "style": 8
@@ -604,7 +817,8 @@
         }
     },
     "formats": {
-        "1": "#,##0"
+        "1": "0",
+        "2": "#,##0"
     },
     "borders": {
         "1": {
@@ -696,10 +910,7 @@
                     []
                 ],
                 "measure": "nbr_channel",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         },
         "4": {
