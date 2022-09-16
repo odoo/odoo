@@ -145,6 +145,7 @@ QUnit.module(
         QUnit.test("Can undo-redo a LINK_ODOO_MENU_TO_CHART", async function (assert) {
             const env = await makeTestEnv({ serverData: this.serverData });
             const model = new Model({}, { evalContext: { env } });
+            createBasicChart(model, chartId);
             model.dispatch("LINK_ODOO_MENU_TO_CHART", {
                 chartId,
                 odooMenuId: 1,
@@ -154,6 +155,22 @@ QUnit.module(
             assert.equal(model.getters.getChartOdooMenu(chartId), undefined);
             model.dispatch("REQUEST_REDO");
             assert.equal(model.getters.getChartOdooMenu(chartId).id, 1);
+        });
+
+        QUnit.test("link is removed when figure is deleted", async function (assert) {
+            const env = await makeTestEnv({ serverData: this.serverData });
+            const model = new Model({}, { evalContext: { env } });
+            createBasicChart(model, chartId);
+            model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+                chartId,
+                odooMenuId: 1,
+            });
+            assert.equal(model.getters.getChartOdooMenu(chartId).id, 1);
+            model.dispatch("DELETE_FIGURE", {
+                sheetId: model.getters.getActiveSheetId(),
+                id: chartId,
+            });
+            assert.equal(model.getters.getChartOdooMenu(chartId), undefined);
         });
     }
 );
