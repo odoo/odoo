@@ -44,8 +44,8 @@
                                         <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/></small>
                                     </div>
                                 </div>
-                                <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#" groups="hr_recruitment.group_hr_recruitment_user"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                <div class="o_kanban_manage_button_section" groups="hr_recruitment.group_hr_recruitment_user">
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_recruitment_job_container o_kanban_card_content mt-0 mt-sm-3">
@@ -57,9 +57,12 @@
                                     </div>
                                     <ul class="col-5 o_job_activities">
                                         <li>
-                                            <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'to-recruit' : 'text-secondary' }}">
+                                            <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'to-recruit' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_interviewer">
                                                 <field name="no_of_recruitment"/> To Recruit
                                             </a>
+                                            <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'to-recruit' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_interviewer">
+                                                <field name="no_of_recruitment"/> To Recruit
+                                            </span>
                                         </li>
                                         <li t-if="record.application_count.raw_value > 0">
                                             <field name="application_count"/> Applications
