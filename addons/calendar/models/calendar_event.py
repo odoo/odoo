@@ -1083,6 +1083,7 @@ class Meeting(models.Model):
                 if meeting.partner_id.name:
                     organizer.params['CN'] = [meeting.partner_id.display_name.replace('\"', '\'')]
 
+            event.add('organizer').value = u'MAILTO:' + (meeting.user_id.email or u'')
             result[meeting.id] = cal.serialize().encode('utf-8')
 
         return result
