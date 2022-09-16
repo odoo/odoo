@@ -11,18 +11,12 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickShowLess(ev) {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ hasShowMoreButton: false });
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickShowMore(ev) {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ hasShowMoreButton: true });
         },
     },

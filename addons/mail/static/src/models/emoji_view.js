@@ -26,18 +26,12 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseenter(ev) {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isHovered: true });
         },
         /**
          * @param {MouseEvent} ev
          */
         onMouseleave(ev) {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isHovered: false });
         },
     },

@@ -314,9 +314,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseEnterTopbarThreadDescription(ev) {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isMouseOverThreadDescription: true });
         },
         /**

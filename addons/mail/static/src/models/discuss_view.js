@@ -48,9 +48,6 @@ registerModel({
             this.discuss.threadView.topbar.openInvitePopoverView();
         },
         onHideMobileAddItemHeader() {
-            if (!this.exists()) {
-                return;
-            }
             this.clearIsAddingItem();
         },
         /**
@@ -78,9 +75,6 @@ registerModel({
          * @param {integer} ui.item.id
          */
         onMobileAddItemHeaderInputSelect(ev, ui) {
-            if (!this.exists()) {
-                return;
-            }
             if (this.isAddingChannel) {
                 this.discuss.handleAddChannelAutocompleteSelect(ev, ui);
             } else {
@@ -93,9 +87,6 @@ registerModel({
          * @param {function} res
          */
         onMobileAddItemHeaderInputSource(req, res) {
-            if (!this.exists()) {
-                return;
-            }
             if (this.isAddingChannel) {
                 this.discuss.handleAddChannelAutocompleteSource(req, res);
             } else {

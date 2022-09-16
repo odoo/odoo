@@ -177,9 +177,7 @@ registerModel({
          */
         onClickCancelLink(ev) {
             ev.preventDefault();
-            if (this.exists()) {
-                this.discard();
-            }
+            this.discard();
         },
         /**
          * Discards the composer when clicking away.
@@ -260,29 +258,17 @@ registerModel({
             });
         },
         onClickTextarea() {
-            if (!this.exists()) {
-                return;
-            }
             // clicking might change the cursor position
             this.saveStateInStore();
         },
         onFocusinTextarea() {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isFocused: true });
         },
         onFocusoutTextarea() {
-            if (!this.exists()) {
-                return;
-            }
             this.saveStateInStore();
             this.update({ isFocused: false });
         },
         onInputTextarea() {
-            if (!this.exists()) {
-                return;
-            }
             this.saveStateInStore();
             if (this.textareaLastInputValue !== this.textareaRef.el.value) {
                 this.handleCurrentPartnerIsTyping();
@@ -322,9 +308,6 @@ registerModel({
          * @param {KeyboardEvent} ev
          */
         onKeydownTextarea(ev) {
-            if (!this.exists()) {
-                return;
-            }
             switch (ev.key) {
                 case 'Escape':
                     if (this.hasSuggestions) {
@@ -356,9 +339,6 @@ registerModel({
          * @param {KeyboardEvent} ev
          */
         onKeydownTextareaEnter(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (this.hasSuggestions) {
                 ev.preventDefault();
                 return;
@@ -403,9 +383,6 @@ registerModel({
           * @param {KeyboardEvent} ev
           */
         onKeyupTextarea(ev) {
-            if (!this.exists()) {
-                return;
-            }
             switch (ev.key) {
                 case 'Escape':
                     // already handled in _onKeydownTextarea, break to avoid default

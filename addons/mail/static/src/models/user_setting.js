@@ -183,9 +183,6 @@ registerModel({
          * @private
          */
         async _onSaveGlobalSettingsTimeout() {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ globalSettingsTimeout: clear() });
             await this.messaging.rpc(
                 {
@@ -207,9 +204,6 @@ registerModel({
          * @param {number} param0.volume
          */
         async _onSaveVolumeSettingTimeout({ guestId, partnerId, volume }) {
-            if (!this.exists()) {
-                return;
-            }
             const newVolumeSettingsTimeouts = { ...this.volumeSettingsTimeouts };
             delete newVolumeSettingsTimeouts[partnerId];
             this.update({ volumeSettingsTimeouts: newVolumeSettingsTimeouts });

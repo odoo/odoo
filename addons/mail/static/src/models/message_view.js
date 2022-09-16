@@ -107,9 +107,6 @@ registerModel({
             this.message.originThread.open();
         },
         onComponentUpdate() {
-            if (!this.exists()) {
-                return;
-            }
             if (this.doHighlight && this.component && this.component.root.el) {
                 this.component.root.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 this.highlight();
@@ -126,15 +123,9 @@ registerModel({
             });
         },
         onMouseenter() {
-            if (!this.exists()) {
-                return;
-            }
             this.update({ isHovered: true });
         },
         onMouseleave() {
-            if (!this.exists()) {
-                return;
-            }
             this.update({
                 isHovered: false,
                 messagingAsClickedMessageView: clear(),

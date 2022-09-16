@@ -51,9 +51,6 @@ registerModel({
             });
         },
         onClickRetryLoadMessages() {
-            if (!this.exists()) {
-                return;
-            }
             if (!this.threadCache) {
                 return;
             }
@@ -63,10 +60,6 @@ registerModel({
          * Called when an element in the thread becomes focused.
          */
         onFocusin() {
-            if (!this.exists()) {
-                // prevent crash on destroy
-                return;
-            }
             if (this.threadViewer.chatWindow) {
                 this.threadViewer.chatWindow.update({ isFocused: true });
             }

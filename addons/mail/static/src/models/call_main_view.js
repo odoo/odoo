@@ -78,18 +78,12 @@ registerModel({
                 // the overlay should not be hidden when the cursor leaves to enter the controller popover
                 return;
             }
-            if (!this.exists()) {
-                return;
-            }
             this.update({ showOverlay: false });
         },
         /**
          * @param {MouseEvent} ev
          */
         onMouseMove(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (isEventHandled(ev, 'CallMainView.MouseMoveOverlay')) {
                 return;
             }
@@ -99,9 +93,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseMoveOverlay(ev) {
-            if (!this.exists()) {
-                return;
-            }
             markEventHandled(ev, 'CallMainView.MouseMoveOverlay');
             this.update({
                 showOverlay: true,

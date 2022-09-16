@@ -51,9 +51,6 @@ registerModel({
          * @param {MouseEvent} ev
          */
         _onClickCaptureGlobal(ev) {
-            if (!this.exists()) {
-                return;
-            }
             if (!this.component || !this.component.root.el) {
                 return;
             }
