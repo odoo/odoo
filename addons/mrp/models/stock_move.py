@@ -346,7 +346,7 @@ class StockMove(models.Model):
 
         self.env['stock.move'].browse(moves_ids_to_unlink).sudo().unlink()
         if phantom_moves_vals_list:
-            phantom_moves = self.env['stock.move'].create(phantom_moves_vals_list)
+            phantom_moves = self.env['stock.move'].with_context(from_mrp=True).create(phantom_moves_vals_list)
             phantom_moves._adjust_procure_method()
             moves_ids_to_return |= phantom_moves.action_explode().ids
         return self.env['stock.move'].browse(moves_ids_to_return)
