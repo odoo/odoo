@@ -550,9 +550,9 @@ class PaymentProvider(models.Model):
         :param str provider_code: The code of the provider to setup.
         :return: None
         """
-        providers = self.search([('provider', '=', provider_code)])
+        providers = self.search([('code', '=', provider_code)])
         providers.write({
-            'provider': 'none',
+            'code': 'none',
             'state': 'disabled',
         })
 
