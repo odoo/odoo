@@ -1445,7 +1445,10 @@ class DynamicList extends DataPoint {
     }
 
     get isM2MGrouped() {
-        return this.groupBy.some((fieldName) => this.fields[fieldName].type === "many2many");
+        return this.groupBy.some((groupBy) => {
+            const fieldName = groupBy.split(":")[0];
+            return this.fields[fieldName].type === "many2many";
+        });
     }
 
     get selection() {
