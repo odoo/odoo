@@ -5367,7 +5367,7 @@
             : !template.includes("t-set") && !template.includes("t-call");
         // code generation
         const codeGenerator = new CodeGenerator(ast, { ...options, hasSafeContext });
-        const code = codeGenerator.generateCode();
+        let code = codeGenerator.generateCode();
         // template function
         return new Function("app, bdom, helpers", code);
     }

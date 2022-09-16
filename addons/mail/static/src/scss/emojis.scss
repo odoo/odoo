@@ -17,15 +17,6 @@ $o-mail-emoji-height: 2rem;
     }
 }
 
-.o_form_view {
-    // Emojis widgets should hide the emoji dropdown button when the field is invisible.
-    // This is necessary because the button is added *after* the main element (and not inside)
-    // (see '_attachEmojisDropdown' for more details)
-    .o_invisible_modifier + .o_mail_add_emoji, .o_invisible_modifier + textarea + .o_mail_add_emoji{
-        display: none !important;
-    }
-}
-
 .o_mail_emojis_dropdown {
     height: $o-mail-emoji-height;
     width: 40px;
