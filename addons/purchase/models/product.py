@@ -62,7 +62,6 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
             ('date_order', '>', date_from)
         ]
-        PurchaseOrderLines = self.env['purchase.order.line'].search(domain)
         order_lines = self.env['purchase.order.line'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         purchased_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in order_lines])
         for product in self:

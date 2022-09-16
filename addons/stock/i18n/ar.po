@@ -33,6 +33,7 @@
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2021
 # Farid Fox, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
+# Samer Ali, 2022
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Last-Translator: Samer Ali, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +131,7 @@ msgstr "%s (نسخة)"
 #: code:addons/stock/wizard/stock_picking_responsible.py:0
 #, python-format
 msgid "%s has a restricted access to %s"
-msgstr ""
+msgstr "%sلديه وصول مقيد إلى%s"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -139,6 +140,8 @@ msgid ""
 "%s use default source or destination locations                        from "
 "warehouse %s that will be archived."
 msgstr ""
+"%s استخدام المصدر أو الوجهة الافتراضية للموقع من المستودع  %s  الذي سيتم "
+"أرشفته."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -162,7 +165,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Inventory - %s' % (object.name)"
-msgstr ""
+msgstr "مخزن - %s"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -184,7 +187,7 @@ msgstr "'نوع العملية - %s' % object.name"
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'عمليات الانتقاء - %s - %s' % (object.partner_id.name أو '', object.name)"
+"'عمليات النقل - %s - %s' % (object.partner_id.name أو '', object.name)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -467,7 +470,7 @@ msgstr "<strong>أقل كمية :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>الكمية الموجودة</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -695,7 +698,7 @@ msgstr "متقدم: تطبيق قواعد التحصيل"
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay_alert
 msgid "Alert if Delay"
-msgstr ""
+msgstr "تحذير عند التأخير"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -732,7 +735,7 @@ msgstr "الموقع المسموح به "
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
-msgstr ""
+msgstr "السماح بالبدء بخزن فارغ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
@@ -740,6 +743,7 @@ msgid ""
 "Allows to start with prefill counted quantity for each lines or with all "
 "counted quantity set to zero."
 msgstr ""
+"السماح بالبدء بالكمية المحسوبة سابقا لكل بند أو ضبط الكمية المحسوبة إلى صفر."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -817,7 +821,7 @@ msgstr "تعيين مالك"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
-msgstr ""
+msgstr "تعيين مسؤول"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_assign_serial_numbers
@@ -933,7 +937,7 @@ msgstr "قارئ الباركود"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_pdf
 msgid "Barcodes (PDF)"
-msgstr ""
+msgstr "باركود(PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_zpl
@@ -1135,7 +1139,7 @@ msgstr "التحقق من وجود الحزم المطلوبة على خط ال�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr ""
+msgstr "تحقق من وجود عملية على النقل"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -1340,27 +1344,27 @@ msgstr "عدد الاستلامات"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr ""
+msgstr "عدد طلبات الانتقاء المؤجلة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr ""
+msgstr "عدد مسودات عمليات الانتقاء "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr ""
+msgstr "عدد عمليات الانتقاء المتأخرة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr ""
+msgstr "عدد عمليات الانتقاء الجاهزة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr ""
+msgstr "عدد عمليات الانتقاء المنتظرة "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
@@ -2819,7 +2823,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "Invalid domain left operand %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -2831,7 +2835,7 @@ msgstr "مشغّل النطاق غير صالح %s "
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "Invalid domain right operand %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
