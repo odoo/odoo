@@ -49,6 +49,15 @@ export class AutoComplete extends Component {
         return this.state.open;
     }
 
+    get hasOptions() {
+        for (const source of this.sources) {
+            if (source.isLoading || source.options.length) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     open(useInput = false) {
         this.state.open = true;
         this.loadSources(useInput);
