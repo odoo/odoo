@@ -10,6 +10,7 @@
     'description': """""",
     'depends': ['hr_skills', 'hr_recruitment'],
     'data': [
+        'security/hr_recruitment_skills_security.xml',
         'views/hr_applicant_views.xml',
         'views/hr_applicant_skill_views.xml',
         'security/ir.model.access.csv',

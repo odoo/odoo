@@ -9,6 +9,14 @@ class HrApplicant(models.Model):
 
     applicant_skill_ids = fields.One2many('hr.applicant.skill', 'applicant_id', string="Skills")
     skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True)
+    is_interviewer = fields.Boolean(compute='_compute_is_interviewer')
+
+    @api.depends_context('uid')
+    @api.depends('interviewer_ids', 'job_id.interviewer_ids')
+    def _compute_is_interviewer(self):
+        is_recruiter = self.user_has_groups('hr_recruitment.group_hr_recruitment_user')
+        for applicant in self:
+            applicant.is_interviewer = not is_recruiter and self.env.user in (applicant.interviewer_ids | applicant.job_id.interviewer_ids)
 
     @api.depends('applicant_skill_ids.skill_id')
     def _compute_skill_ids(self):

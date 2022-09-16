@@ -117,14 +117,16 @@
                 </div>
                 <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=', False)]}"/>
                 <widget name="web_ribbon" title="Hired" attrs="{'invisible': [('date_closed', '=', False)]}" />
-                <field name="kanban_state" widget="state_selection"/>
                 <field name="active" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
-                <div class="oe_title">
+                <div class="oe_title pe-0">
                     <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name" placeholder="e.g. Sales Manager 2 year experience"/></h1>
+                    <h1 class="d-flex justify-content-between align-items-center">
+                        <field name="name" placeholder="e.g. Sales Manager 2 year experience"/>
+                        <field name="kanban_state" widget="state_selection"/>
+                    </h1>
                     <h2 class="o_row">
                         <div>
                             <label for="partner_name" class="oe_edit_only"/>
