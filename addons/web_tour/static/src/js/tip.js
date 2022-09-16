@@ -659,6 +659,9 @@ Tip.getConsumeEventType = function ($element, run) {
         if ($element.closest('.ui-sortable').length) {
             return 'sort';
         }
+        if (run.indexOf("drag_and_drop_native") === 0 && $element.hasClass('o_record_draggable') || $element.closest('.o_record_draggable').length) {
+            return 'mousedown';
+        }
     }
     return "click";
 };
