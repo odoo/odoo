@@ -2646,6 +2646,26 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
     });
 
+    QUnit.test("select a record in list grouped by date with granularity", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ["date:year"],
+            // keep the actionMenus, it is relevant as it calls isM2MGrouped which crashes if we
+            // don't correctly extract the fieldName/granularity from the groupBy
+            actionMenus: {},
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsNone(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        await click(target.querySelector(".o_group_header"));
+        assert.containsOnce(target, ".o_data_row");
+        await click(target.querySelector(".o_data_row .o_list_record_selector"));
+        assert.containsOnce(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+    });
+
     QUnit.test("aggregates are computed correctly", async function (assert) {
         await makeView({
             type: "list",
