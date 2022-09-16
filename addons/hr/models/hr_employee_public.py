@@ -60,7 +60,7 @@ class HrEmployeePublic(models.Model):
 
     @api.depends('user_partner_id')
     def _compute_related_contacts(self):
-        super()._computer_related_contacts()
+        super()._compute_related_contacts()
         for employee in self:
             employee.related_contact_ids |= employee.user_partner_id
 
