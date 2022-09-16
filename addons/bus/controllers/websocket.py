@@ -3,7 +3,7 @@
 import json
 from werkzeug.exceptions import ServiceUnavailable
 
-from odoo.http import Controller, request, route
+from odoo.http import Controller, request, route, SessionExpiredException
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from ..models.bus import channel_with_db
 from ..websocket import WebsocketConnectionHandler
@@ -32,9 +32,14 @@ class WebsocketController(Controller):
         return request.make_response(data, headers)
 
     @route('/websocket/peek_notifications', type='json', auth='public', cors='*')
-    def peek_notifications(self, channels, last):
+    def peek_notifications(self, channels, last, is_first_poll=False):
         if not all(isinstance(c, str) for c in channels):
             raise ValueError("bus.Bus only string channels are allowed.")
+        if is_first_poll:
+            # Used to detect when the current session is expired.
+            request.session['is_websocket_session'] = True
+        elif 'is_websocket_session' not in request.session:
+            raise SessionExpiredException()
         channels = list(set(
             channel_with_db(request.db, c)
             for c in request.env['ir.websocket']._build_bus_channel_list(channels)
