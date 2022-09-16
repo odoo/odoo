@@ -13,12 +13,15 @@ const NUMERIC_TYPES = ["integer", "float", "monetary"];
  * @param {Object} activeFields
  * @param {Object} [dependencies={}]
  */
-export function addFieldDependencies(activeFields, dependencies = {}) {
+export function addFieldDependencies(activeFields, fields, dependencies = {}) {
     for (const [name, dependency] of Object.entries(dependencies)) {
         if (!(name in activeFields)) {
             activeFields[name] = Object.assign({ name, rawAttrs: {} }, dependency, {
                 modifiers: { invisible: true },
             });
+        }
+        if (!(name in fields)) {
+            fields[name] = { ...dependency };
         }
     }
 }
