@@ -15,6 +15,8 @@ import io
 import logging
 import os
 import lxml.html
+import psutil
+import signal
 import tempfile
 import subprocess
 import re
@@ -418,6 +420,17 @@ class IrActionsReport(models.Model):
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
         :return: Content of the pdf as a string
         '''
+        # Kill oldest wkhtmltopdf to avoid exceed workers and the system crashes
+        process_count = 1
+        wk_pid = False
+        for proc in psutil.process_iter():
+            if proc.name() == "wkhtmltopdf":
+                process_count += 1
+                if not wk_pid:
+                    wk_pid = proc
+        if wk_pid and (process_count >= config['workers']):
+            os.kill(wk_pid.pid, signal.SIGKILL)
+
         paperformat_id = self.get_paperformat()
 
         # Build the base command args for wkhtmltopdf bin
@@ -464,6 +477,9 @@ class IrActionsReport(models.Model):
                 if process.returncode == -11:
                     message = _(
                         'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
+                elif process.returncode == -9:
+                    # Return None to avoid show error in browser
+                    return
                 else:
                     message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
                 raise UserError(message % (str(process.returncode), err[-1000:]))
