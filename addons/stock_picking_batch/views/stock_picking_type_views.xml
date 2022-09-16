@@ -15,6 +15,11 @@
                             <label for="batch_group_by_partner" string="Contact"/>
                         </div>
                         <span attrs="{'invisible':[('auto_batch', '=', False)]}"/>
+                        <div name="batch_date" class="o_row" attrs="{'invisible':[('auto_batch', '=', False)]}">
+                            <field name="batch_group_by_date"/>
+                            <label for="batch_group_by_date" string="Scheduled Date"/>
+                        </div>
+                        <span attrs="{'invisible':[('auto_batch', '=', False)]}"/>
                         <div name="batch_destination" class="o_row" attrs="{'invisible':[('auto_batch', '=', False)]}">
                             <field name="batch_group_by_destination"/>
                             <label for="batch_group_by_destination"/>

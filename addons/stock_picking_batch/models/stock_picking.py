@@ -14,6 +14,7 @@ class StockPickingType(models.Model):
     auto_batch = fields.Boolean('Automatic Batches',
                                 help="Automatically put pickings into batches as they are confirmed when possible.")
     batch_group_by_partner = fields.Boolean('Contact', help="Automatically group batches by contacts.")
+    batch_group_by_date = fields.Boolean('Scheduled Date', help="Automatically group batches by scheduled dates.")
     batch_group_by_destination = fields.Boolean('Destination Country', help="Automatically group batches by destination country.")
     batch_group_by_src_loc = fields.Boolean('Source Location',
                                             help="Automatically group batches by their source location.")
@@ -46,7 +47,7 @@ class StockPickingType(models.Model):
 
     @api.model
     def _get_batch_group_by_keys(self):
-        return ['batch_group_by_partner', 'batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc']
+        return ['batch_group_by_partner', 'batch_group_by_date', 'batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc']
 
     @api.constrains(lambda self: self._get_batch_group_by_keys() + ['auto_batch'])
     def _validate_auto_batch_group_by(self):
@@ -189,6 +190,11 @@ class StockPicking(models.Model):
         ]
         if self.picking_type_id.batch_group_by_partner:
             domain = expression.AND([domain, [('partner_id', '=', self.partner_id.id)]])
+        if self.picking_type_id.batch_group_by_date:
+            tz_date = fields.Datetime.context_timestamp(self.with_context(tz=self.env.company.partner_id.tz or 'UTC'), self.scheduled_date)
+            start_date = fields.Datetime.start_of(tz_date, 'day')
+            end_date = fields.Datetime.end_of(tz_date, 'day')
+            domain = expression.AND([domain, ['&', ('scheduled_date', '>=', start_date), ('scheduled_date', '<=', end_date)]])
         if self.picking_type_id.batch_group_by_destination:
             domain = expression.AND([domain, [('partner_id.country_id', '=', self.partner_id.country_id.id)]])
         if self.picking_type_id.batch_group_by_src_loc:
@@ -207,6 +213,11 @@ class StockPicking(models.Model):
         ]
         if self.picking_type_id.batch_group_by_partner:
             domain = expression.AND([domain, [('picking_ids.partner_id', '=', self.partner_id.id)]])
+        if self.picking_type_id.batch_group_by_date:
+            tz_date = fields.Datetime.context_timestamp(self.with_context(tz=self.env.company.partner_id.tz or 'UTC'), self.scheduled_date)
+            start_date = fields.Datetime.start_of(tz_date, 'day')
+            end_date = fields.Datetime.end_of(tz_date, 'day')
+            domain = expression.AND([domain, ['&', ('picking_ids.scheduled_date', '>=', start_date), ('picking_ids.scheduled_date', '<=', end_date)]])
         if self.picking_type_id.batch_group_by_destination:
             domain = expression.AND([domain, [('picking_ids.partner_id.country_id', '=', self.partner_id.country_id.id)]])
         if self.picking_type_id.batch_group_by_src_loc:
