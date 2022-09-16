@@ -982,6 +982,9 @@ class Picking(models.Model):
         pickings_without_quantities = self.browse()
         pickings_without_lots = self.browse()
         products_without_lots = self.env['product.product']
+        pickings_with_inconsistent_done_qty = self.browse()
+        products_with_inconsistent_done_qty = self.env['product.product']
+
         for picking in self:
             if not picking.move_ids and not picking.move_line_ids:
                 pickings_without_moves |= picking
@@ -991,6 +994,12 @@ class Picking(models.Model):
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
             no_reserved_quantities = all(float_is_zero(move_line.reserved_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in picking.move_line_ids)
+            inconsistent_done_qty = any(move.is_action_show_details_danger for move in picking.move_ids)
+
+            if inconsistent_done_qty:
+                pickings_with_inconsistent_done_qty |= picking
+                products_with_inconsistent_done_qty |= picking.move_ids.filtered(lambda m: m.is_action_show_details_danger).product_id
+
             if no_reserved_quantities and no_quantities_done:
                 pickings_without_quantities |= picking
 
@@ -1012,6 +1021,8 @@ class Picking(models.Model):
                 raise UserError(self._get_without_quantities_error_message())
             if pickings_without_lots:
                 raise UserError(_('You need to supply a Lot/Serial number for products %s.') % ', '.join(products_without_lots.mapped('display_name')))
+            if pickings_with_inconsistent_done_qty:
+                raise UserError(_('\n\nTransfers %s: You have inconsistent quantity done, open the wizard to solve for products %s.') % (', '.join(pickings_with_inconsistent_done_qty.mapped('name')), ', '.join(products_with_inconsistent_done_qty.mapped('display_name'))))
         else:
             message = ""
             if pickings_without_moves:
@@ -1020,6 +1031,8 @@ class Picking(models.Model):
                 message += _('\n\nTransfers %s: You cannot validate these transfers if no quantities are reserved nor done. To force these transfers, switch in edit more and encode the done quantities.') % ', '.join(pickings_without_quantities.mapped('name'))
             if pickings_without_lots:
                 message += _('\n\nTransfers %s: You need to supply a Lot/Serial number for products %s.') % (', '.join(pickings_without_lots.mapped('name')), ', '.join(products_without_lots.mapped('display_name')))
+            if pickings_with_inconsistent_done_qty:
+                message += _('\n\nTransfers %s: You have inconsistent quantity done, open the wizard to solve for products %s.') % (', '.join(pickings_with_inconsistent_done_qty.mapped('name')), ', '.join(products_with_inconsistent_done_qty.mapped('display_name')))
             if message:
                 raise UserError(message.lstrip())
 

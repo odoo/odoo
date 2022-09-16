@@ -334,6 +334,8 @@ class StockMoveLine(models.Model):
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
+        if mls.move_id:
+            mls.move_id.quantity_done_need_compute = True
         return mls
 
     def write(self, vals):
@@ -471,6 +473,10 @@ class StockMoveLine(models.Model):
                 move.product_uom_qty = move.quantity_done
             next_moves._do_unreserve()
             next_moves._action_assign()
+
+        # There is update to qty_done -> re-enable compute done
+        if 'qty_done' in vals:
+            self.move_id.quantity_done_need_compute = True
 
         if moves_to_recompute_state:
             moves_to_recompute_state._recompute_state()
