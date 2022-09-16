@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Akram Alfusayal <akram_ma@hotmail.com>, 2019
+# nle_odoo, 2019
 # hoxhe Aits <hoxhe0@gmail.com>, 2019
 # Ali Alrehawi <alrehawi@hotmail.com>, 2019
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2019
@@ -28,8 +29,8 @@
 # Rachid Al Assir <rachidalassir@gmail.com>, 2020
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2021
 # Malaz Abuidris <msea@odoo.com>, 2022
-# nle_odoo, 2022
 # Abdullah Mohamed, 2022
+# Samer Ali, 2022
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Abdullah Mohamed, 2022\n"
+"Last-Translator: Samer Ali, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,8 +106,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') and 'عرض السعر - %s' % (object.name)) or "
-"'الطلب - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and 'أمر بيع - %s' % (object.name)) or "
+"'طلب بيع - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -320,7 +321,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr "<i class=\"fa fa-comment\"/> راسلنا للحصول على عرض سعر جديد."
+msgstr "<i class=\"fa fa-comment\"/> راسلنا لطلب مبيعات اخرى"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -443,7 +444,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr "<span class=\"o_stat_text\">مبيعات</span>"
+msgstr "<span class=\"o_stat_text\">مباع</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -514,7 +515,7 @@ msgstr "<strong class=\"mr16\">الإجمالي الفرعي</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr "<strong class=\"text-muted\">الشخص البائع</strong>"
+msgstr "<strong class=\"text-muted\">موظف المبيعات</strong> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -535,13 +536,13 @@ msgstr "<strong>الوضع المالي:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Order Date:</strong>"
-msgstr "<strong>تاريخ الأمر:</strong>"
+msgstr "<strong>تاريخ طلب البيع:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Quotation Date:</strong>"
-msgstr "<strong>تاريخ عرض السعر: </strong>"
+msgstr "<strong>تاريخ أمر البيع: </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -579,7 +580,7 @@ msgstr "<strong>انتهت صلاحية هذا العرض!</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been canceled.</strong>"
-msgstr "<strong>تم إلغاء عرض السعر.</strong>"
+msgstr "<strong>تم إلغاء أمر البيع.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -596,13 +597,13 @@ msgstr "<strong>رقم إشارتك:</strong>"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr "يجب أن يكون لأمر البيع المؤكد تاريخ تأكيد. "
+msgstr "يجب أن يكون لطلب البيع تاريخ تأكيد. "
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr "يجب تحديد دفتر يومية لمعالج السداد %s."
+msgstr "يجب تحديد دفتر يومية لمعالج السداد .%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -617,7 +618,7 @@ msgid ""
 "         according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
-"يتم إصدار الفاتورة القياسية مع كافة بنود الطلب جاحزة لفوترتها، وفقاً لسياسة "
+"تم إصدار فاتورة مع كافة بنود أمر البيع وهي جاحزة لفوترتها، وفقاً لسياسة "
 "الفوترة الخاصة بها (بناءً على الكميات المطلوبة أو التي تم توصيلها). "
 
 #. module: sale
@@ -625,14 +626,14 @@ msgstr ""
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
-msgstr "لا يمكن ربط المعاملة بأوامر بيع لها عملات مختلفة."
+msgstr "لا يمكن ربط المعاملة بأمر بيع له عملات مختلفة."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
-msgstr "لا يمكن ربط المعاملة بأوامر بيع لها شركاء مختلفين."
+msgstr "لا يمكن ربط المعاملة بأمر بيع له عملاء مختلفين."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling

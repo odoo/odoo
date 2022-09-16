@@ -1542,7 +1542,8 @@ class AccountTax(models.Model):
         tax_type = self and self[0].type_tax_use
         is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
 
-        rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
+        rslt = self.with_context(caba_no_transition_account=True)\
+                   .compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
 
         # The reconciliation widget calls this function to generate writeoffs on bank journals,
         # so the sign of the tags might need to be inverted, so that the tax report
@@ -1826,7 +1827,9 @@ class AccountTax(models.Model):
                     'amount': sign * line_amount,
                     'base': round(sign * base, precision_rounding=prec),
                     'sequence': tax.sequence,
-                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
+                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' \
+                                                                             and not self._context.get('caba_no_transition_account')\
+                                                                          else repartition_line.account_id.id,
                     'analytic': tax.analytic,
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,

@@ -23,11 +23,11 @@
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Martin Trigaux, 2019
 # omaodoo <oma@odoo.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2020
 # Antoine Gilard <ang@odoo.com>, 2020
 # Yann Papouin <ypa@decgroupe.com>, 2021
-# Sarah Kamli <sak@odoo.com>, 2021
-# R HT, 2021
+# SAKodoo <sak@odoo.com>, 2021
+# RHTodoo, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,13 +35,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: R HT, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -1943,6 +1943,14 @@ msgstr "L'utilisateur actuel travaille-t-il ?"
 #, python-format
 msgid "It has already been unblocked."
 msgstr "Ceci a déjà été débloqué. "
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -4017,6 +4025,15 @@ msgstr ""
 "afin de pouvoir sauver l'ordre de travail."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
@@ -4049,6 +4066,16 @@ msgstr ""
 "La gamme contient tous les postes de charge utilisés et les durées "
 "d'utilisation. Des ordres de travail seront ainsi créés par la suite, ce qui"
 " modifiera l'exécution de l'ordre de fabrication."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
+"Le numéro de série sélectionné ne correspond pas à celui utilisé dans "
+"l'ordre de fabrication, veuillez en sélectionner un autre."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0

@@ -30,7 +30,6 @@
 # fausthuang, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Mandy Choy <mnc@odoo.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
 # Shane Tsoi <sso@odoo.com>, 2019
@@ -42,6 +41,7 @@
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
+# liAnGjiA <liangjia@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -49,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 12:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2546,6 +2546,21 @@ msgid "Google Maps API Key"
 msgstr "Google 地图 API 密钥"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+"谷歌官方并不赞成使用 \"Universal Analytics\" 和 \"Google Sign-In\" "
+"这两个API接口。意思即仅2020年以前创建的谷歌账号能集成谷歌分析统计功能集成到 Odoo (或其他任何网站)中。 "
+"且仅支持到2023年中旬。此后这些服务将不再可用。"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Great Value"
 msgstr "巨大价值"
@@ -3557,6 +3572,15 @@ msgstr "新活动"
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Forum"
 msgstr "新论坛"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr "当前最新的谷歌分析统计账号和密钥使用着第4代谷歌分析统计技术，目前暂时还无法集成或/嵌入外部网站。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -4932,6 +4956,15 @@ msgstr "该页面位于菜单 <b>%s</b>"
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "This page will be visible on {{ date_formatted }}"
 msgstr "这个页面在{{date_formatting}}上是可见的"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr "这些账户现在应该直接可在谷歌平台上查看他们的分析仪表板了的。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
