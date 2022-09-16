@@ -956,7 +956,7 @@ class SaleOrder(models.Model):
         if not program or not program.active:
             return {'error': _('This code is invalid (%s).', code), 'not_found': True}
         elif (program.limit_usage and program.total_order_count >= program.max_usage) or\
-            (program.date_to and program.date_to <= fields.Date.context_today(self)):
+            (program.date_to and program.date_to < fields.Date.context_today(self)):
             return {'error': _('This code is expired (%s).', code)}
 
         # Rule will count the next time the points are updated
