@@ -60,17 +60,17 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
         assert.containsOnce(
             target,
-            'input[type="phone"]',
+            'input[type="tel"]',
             "should have an input for the phone field"
         );
         assert.strictEqual(
-            target.querySelector('input[type="phone"]').value,
+            target.querySelector('input[type="tel"]').value,
             "yop",
             "input should contain field value in edit mode"
         );
 
         // change value in edit mode
-        await editInput(target, "input[type='phone']", "new");
+        await editInput(target, "input[type='tel']", "new");
 
         // save
         await click(target.querySelector(".o_form_button_save"));
