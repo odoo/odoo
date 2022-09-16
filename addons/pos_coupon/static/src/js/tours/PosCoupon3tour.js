@@ -13,14 +13,14 @@ odoo.define('pos_coupon.tour.pos_coupon3', function (require) {
     ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickHomeCategory();
 
-    ProductScreen.exec.addOrderline('Promo Product', '1');
+    ProductScreen.do.clickDisplayedProduct('Promo Product');
     PosCoupon.check.orderTotalIs('34.50');
-    ProductScreen.exec.addOrderline('Product B', '1');
+    ProductScreen.do.clickDisplayedProduct('Product B');
     PosCoupon.check.hasRewardLine('100.0% discount on products', '25.00');
-    ProductScreen.exec.addOrderline('Product A', '1');
+    ProductScreen.do.clickDisplayedProduct('Product A');
     PosCoupon.check.hasRewardLine('100.0% discount on products', '15.00');
     PosCoupon.check.orderTotalIs('34.50');
-    ProductScreen.exec.addOrderline('Product A', '2');
+    ProductScreen.do.clickDisplayedProduct('Product A');
     PosCoupon.check.hasRewardLine('100.0% discount on products', '21.82');
     PosCoupon.check.hasRewardLine('100.0% discount on products', '18.18');
     PosCoupon.check.orderTotalIs('49.50');

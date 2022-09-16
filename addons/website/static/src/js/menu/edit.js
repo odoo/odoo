@@ -350,6 +350,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     _getReadOnlyAreas () {
         return [];
     },
+    _getUnremovableElements () {
+        return this._targetForEdition()[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
+    },
     /**
      * Call preventDefault of an event.
      *
@@ -436,6 +439,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             bindLinkTool: true,
             showEmptyElementHint: false,
             getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
+            getUnremovableElements: this._getUnremovableElements.bind(this),
         }, collaborationConfig);
         return wysiwygLoader.createWysiwyg(this,
             Object.assign(params, this.wysiwygOptions),

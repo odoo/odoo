@@ -7,6 +7,7 @@
 # 稀饭~~ <wangwhai@qq.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,7 +167,7 @@ msgstr ""
 "        </t>\n"
 "    </td></tr>\n"
 "    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        使用此优惠券代码\n"
+"        应用此优惠券代码\n"
 "        <t t-if=\"object.expiration_date\">\n"
 "            before <t t-out=\"object.expiration_date or ''\">2021-06-16</t>\n"
 "        </t>\n"
@@ -185,7 +186,7 @@ msgstr ""
 "        </t>\n"
 "        <t t-if=\"display_specific_products\">\n"
 "            <span>\n"
-"                *适用于以下产品: <t t-out=\"', '.join(object.program_id.discount_specific_product_ids.mapped('name')) or ''\">可定制的办公桌</t>\n"
+"                *应用于以下产品: <t t-out=\"', '.join(object.program_id.discount_specific_product_ids.mapped('name')) or ''\">可定制的办公桌</t>\n"
 "            </span><br/>\n"
 "        </t>\n"
 "        <br/>\n"
@@ -240,7 +241,7 @@ msgstr "应用"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
 msgid "Apply coupon"
-msgstr "使用优惠券"
+msgstr "应用优惠券"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0

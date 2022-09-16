@@ -6,7 +6,7 @@
 # Martin Trigaux, 2021
 # Tivisse <yti@odoo.com>, 2021
 # Eloïse Stilmant <est@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Yann Papouin <ypa@decgroupe.com>, 2021
 # Rémi CAZENAVE, 2021
 # Sebastien LANGE, 2021
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -1681,6 +1681,16 @@ msgid "Next Activity Type"
 msgstr "Type d'activités à venir"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"Aucun produit à imprimer, si le produit est archivé merci de le désarchiver "
+"avant d'imprimer son étiquette."
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "Aucune liste de prix fournisseur trouvée"
@@ -3270,6 +3280,12 @@ msgstr ""
 "Pour la comptabilité, il n'est pas possible de choisir une précision "
 "décimale supérieure au facteur d'arrondi de la devise principale de la "
 "société"
+
+#. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr "Vous ne pouvez pas supprimer la catégorie de produit %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

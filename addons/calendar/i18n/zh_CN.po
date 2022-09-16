@@ -627,7 +627,7 @@ msgstr ""
 "            <p><strong>活动详情</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"is_online\">\n"
-"                    <li>预约类型。<t t-out=\"object.event_id.appointment_type_id.name or ''\">预约演示</t></li>\n"
+"                    <li>预约类别。<t t-out=\"object.event_id.appointment_type_id.name or ''\">预约演示</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"object.event_id.location\">\n"
 "                    <li>地点。<t t-out=\"object.event_id.location or ''\">布鲁塞尔</t>\n"
@@ -851,9 +851,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
 "title=\"Meetings\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "
-"title=\"Meetings\"/>"
+msgstr "<i class=\"fa fa-fw fa-calendar\" aria-label=\"会议\" role=\"img\" title=\"会议\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1821,7 +1819,7 @@ msgstr "向所有与会者发送通知，以提醒会议的召开。"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of Actions"
-msgstr "操作次数"
+msgstr "动作数量"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
@@ -2191,7 +2189,7 @@ msgid ""
 msgstr ""
 "该日历可在员工之间共享，并与\n"
 "            其他应用程序（例如员工休假或商机）\n"
-"            全面整合。"
+"            全面集成。"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day

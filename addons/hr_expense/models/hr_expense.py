@@ -1049,6 +1049,7 @@ class HrExpenseSheet(models.Model):
         return res
 
     def action_unpost(self):
+        self = self.with_context(clean_context(self.env.context))
         moves = self.account_move_id
         self.write({
             'account_move_id': False,

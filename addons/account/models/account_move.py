@@ -571,6 +571,7 @@ class AccountMove(models.Model):
             # Copy currency.
             if self.currency_id != self.invoice_vendor_bill_id.currency_id:
                 self.currency_id = self.invoice_vendor_bill_id.currency_id
+                self._onchange_currency()
 
             # Reset
             self.invoice_vendor_bill_id = False

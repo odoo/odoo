@@ -802,10 +802,11 @@ class MrpProduction(models.Model):
         })
         production.move_raw_ids.write({'date': production.date_planned_start})
         production.move_finished_ids.write({'date': production.date_planned_finished})
-        # Trigger move_raw creation when importing a file
+        # Trigger SM & WO creation when importing a file
         if 'import_file' in self.env.context:
             production._onchange_move_raw()
             production._onchange_move_finished()
+            production._onchange_workorder_ids()
         return production
 
     @api.ondelete(at_uninstall=False)

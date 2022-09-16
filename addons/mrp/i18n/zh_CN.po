@@ -8,6 +8,7 @@
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# Tony Peng <umingpeng@gmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -148,7 +149,7 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"           可能需要手动操作。"
+"           可能需要手动动作。"
 
 #. module: mrp
 #: model_terms:product.product,description:mrp.product_product_computer_desk_leg
@@ -166,22 +167,22 @@ msgstr "：数量不足以拆解"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"管理\" title=\"管理\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
-msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
+msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"暂停\" title=\"暂停\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
+msgstr "<i class=\"fa fa-play\" role=\"img\" aria-label=\"运行\" title=\"运行\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
-msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
+msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"停止\" title=\"停止\"/>"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -439,7 +440,7 @@ msgstr "动作"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction
 msgid "Action Needed"
-msgstr "需要行动"
+msgstr "需要采取动作"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
@@ -966,7 +967,7 @@ msgstr "副产品"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any production location."
-msgstr "找不到任何生产位置 。"
+msgstr "找不到任何制造位置 。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1216,7 +1217,7 @@ msgstr "消耗警告"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "计量单位转换只能基于转换比例对同一个类型进行转换。"
+msgstr "计量单位转换只能基于转换比例对同一个类别进行转换。"
 
 #. module: mrp
 #. openerp-web
@@ -1445,7 +1446,7 @@ msgstr "默认制造提前期"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "所有库存商品的缺省单位。"
+msgstr "所有库存作业的默认单位。"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -1453,7 +1454,7 @@ msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
-"定义您要使用的组件和完工产品\n"
+"定义您希望使用的组件和完工产品\n"
 "                BOM和制造订单。"
 
 #. module: mrp
@@ -2499,7 +2500,7 @@ msgstr "主要附件"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "按订单产生"
+msgstr "按订单生成"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2616,7 +2617,7 @@ msgstr "制造交付时间"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
 msgid "Manufacturing Operation Type"
-msgstr "生产操作类型"
+msgstr "制造操作类型"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__mo_id
@@ -2936,7 +2937,7 @@ msgstr "请注意，已归档的工作中心：'%s'仍然与活动的BOM相联�
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
 msgid "Number of Actions"
-msgstr "动作个数"
+msgstr "动作数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
@@ -2970,7 +2971,7 @@ msgstr "生成的MO数量"
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要操作消息数量"
+msgstr "需要动作消息数量"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error_counter
@@ -3289,7 +3290,7 @@ msgstr "安排的日期"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Planned at the same time as other workorder(s) at %s"
-msgstr "与其他工作单同时安排于%s"
+msgstr "与其他工单安排时间重复:%s"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -3344,13 +3345,13 @@ msgstr "可能的产品模板属性值"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Post-Production"
-msgstr "生产后"
+msgstr "制造后"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pre-Production"
-msgstr "生产前"
+msgstr "制造前"
 
 #. module: mrp
 #. openerp-web
@@ -3401,8 +3402,8 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
-"生产：将组件直接移动到生产位置并开始制造过程。\n"
-"拣配/生产：首先将组件从“库存”卸载到“输入”位置，然后将其转移到“生产”位置。"
+"制造：将组件直接移动到制造位置并开始制造过程。\n"
+"拣配/制造：首先将组件从“库存”卸载到“输入”位置，然后将其转移到“制造”位置。"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -3647,7 +3648,7 @@ msgstr "质量工作表"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
 msgid "Quant"
-msgstr "库存"
+msgstr "量化"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_qty
@@ -3767,7 +3768,7 @@ msgstr "重新安排"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Report:"
-msgstr "报表："
+msgstr "报告："
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
@@ -3977,7 +3978,7 @@ msgstr "制造前拣货序号"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence production"
-msgstr "生产序号"
+msgstr "制造序号"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -4046,7 +4047,7 @@ msgstr "显示制造"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Show all records which has next action date is before today"
-msgstr "显示所有的在今天之前的下一个行动日期的记录"
+msgstr "显示所有的在今天之前的下一个动作日期的记录"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
@@ -4107,7 +4108,7 @@ msgstr "一些工单已经完成，您不能取消该制造订单的安排。"
 msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
-msgstr "一些工单已经开始，您不能取消该制造订单的安排."
+msgstr "一些工单已经开始，您不能取消该制造订单的安排计划."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -4908,7 +4909,7 @@ msgstr "计量单位"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr "计量单位是库存单位"
+msgstr "计量单位是库存控制的量度单位"
 
 #. module: mrp
 #: model:product.product,uom_name:mrp.product_product_computer_desk
@@ -5515,7 +5516,7 @@ msgstr "无法取消未完成的制造订单。"
 msgid ""
 "You cannot use the 'Apply on Variant' functionality and simultaneously "
 "create a BoM for a specific variant."
-msgstr "您不能在使用 \"应用于变体 \"功能的同时，为一个特定的变体创建一个BoM。"
+msgstr "您不能在应用 \"应用于变体 \"功能的同时，为一个特定的变体创建一个BoM。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -5532,7 +5533,7 @@ msgid ""
 msgstr ""
 "以下产品您消耗了与标准用量不同的数量。\n"
 "<b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
-"请确认您的操作。\n"
+"请验证您的操作。\n"
 "</b>\n"
 "<b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
 "请检查您的组件消耗量或请经理进行验证\n"
@@ -5573,7 +5574,7 @@ msgstr "您尚未记录<i>生产量</i>，通过单击<i>应用</i>Odoo将生产
 msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
-msgstr "你必须表明至少有一个组件的消耗量不为零"
+msgstr "您必须指明至少一个组件消耗的非零数量金额"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -5709,7 +5710,7 @@ msgstr "数量已更新."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "real duration"
-msgstr "真实期限"
+msgstr "实际时长"
 
 #. module: mrp
 #. openerp-web
