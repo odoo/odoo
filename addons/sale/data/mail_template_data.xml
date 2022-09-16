@@ -56,19 +56,29 @@
         Hello,
         <br/><br/>
         <t t-set="transaction" t-value="object.get_portal_last_transaction()"/>
-        Your order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span> amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>
-        <t t-if="object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))">
-            has been confirmed.<br/>
-            Thank you for your trust!
+
+        <t t-if="object.state != 'sale' and transaction and transaction.state in ('done', 'authorized') and object.amount_total != transaction.amount">
+            A payment was received for you order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span>
+            but its amount (<span style="font-weight:bold;" t-out="format_amount(transaction.amount, object.currency_id) or ''">$ 20.00</span>)
+            does not match the order amount (<span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>).
+            Please contact customer service.
+            <br/><br/>
         </t>
-        <t t-elif="transaction and transaction.state == 'pending'">
-            is pending. It will be confirmed when the payment is received.
-            <t t-if="object.reference">
-                Your payment reference is <span style="font-weight:bold;" t-out="object.reference or ''"></span>.
+        <t t-else="">
+            Your order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span> amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>
+            <t t-if="object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))">
+                has been confirmed.<br/>
+                Thank you for your trust!
+            </t>
+            <t t-elif="transaction and transaction.state == 'pending'">
+                is pending. It will be confirmed when the payment is received.
+                <t t-if="object.reference">
+                    Your payment reference is <span style="font-weight:bold;" t-out="object.reference or ''"></span>.
+                </t>
+                <br/><br/>
+                Do not hesitate to contact us if you have any questions.
             </t>
         </t>
-        <br/><br/>
-        Do not hesitate to contact us if you have any questions.
         <t t-if="not is_html_empty(object.user_id.signature)">
             <br/><br/>
             <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
