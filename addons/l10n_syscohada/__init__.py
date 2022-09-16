@@ -3,3 +3,4 @@
 
 # Copyright (C) 2010-2011 BAAMTU SARL (<http://www.baamtu.sn>).
 # contact: leadsn@baamtu.com
+from . import models

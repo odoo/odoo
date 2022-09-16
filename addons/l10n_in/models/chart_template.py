@@ -23,6 +23,33 @@ class AccountChartTemplate(models.Model):
             company.write({'fiscalyear_last_month': '3'})
         return res
 
+    @api.model
+    def _create_cash_discount_loss_account(self, company, code_digits):
+        if not self == self.env.ref('l10n_in.indian_chart_template_standard'):
+            return super()._create_cash_discount_loss_account(company, code_digits)
+        cash_discount_loss_account = self.env['account.account'].search([('company_id', '=', company.id), ('code', 'like', '213200')], limit=1)
+        if not cash_discount_loss_account:
+            return self.env['account.account'].create({
+                'name': _("Write Off Expense"),
+                'code': 213200,
+                'account_type': 'expense',
+                'company_id': company.id,
+            })
+        return cash_discount_loss_account
+
+    @api.model
+    def _create_cash_discount_gain_account(self, company, code_digits):
+        if not self == self.env.ref('l10n_in.indian_chart_template_standard'):
+            return super()._create_cash_discount_gain_account(company, code_digits)
+        cash_discount_gain_account = self.env['account.account'].search([('company_id', '=', company.id), ('code', 'like', '201200')], limit=1)
+        if not cash_discount_gain_account:
+            return self.env['account.account'].create({
+                'name': _("Write off Income"),
+                'code': 201200,
+                'account_type': 'income_other',
+                'company_id': company.id,
+            })
+        return cash_discount_gain_account
 
 class AccountTaxTemplate(models.Model):
     _inherit = 'account.tax.template'

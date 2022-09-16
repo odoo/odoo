@@ -4,6 +4,7 @@
 # This module is Copyright (c) 2009-2013 General Solutions (http://gscom.vn) All Rights Reserved.
 
 from odoo import api, SUPERUSER_ID
+from . import models
 
 
 def _post_init_hook(cr, registry):

@@ -3,3 +3,4 @@
 
 # Copyright (c) 2009-2010 Salvatore J. Trimarchi <salvatore@trimarchi.co.cc>
 # (http://salvatoreweb.co.cc)
+from . import models
