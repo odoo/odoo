@@ -1261,15 +1261,15 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        assert.strictEqual($(target).find("th:contains(Foo)").length, 1, "should contain Foo");
-        assert.strictEqual($(target).find("th:contains(Bar)").length, 1, "should contain Bar");
-        assert.containsN(target, "tr.o_group_header", 2, "should have 2 .o_group_header");
-        assert.containsN(target, "th.o_group_name", 2, "should have 2 .o_group_name");
-        assert.containsNone(
-            target,
-            "th:contains(int_field)",
-            "Should not have int_field in grouped list"
-        );
+        assert.containsN(target, "thead th", 3); // record selector + Foo + Bar
+        assert.containsOnce(target, "thead th.o_list_record_selector");
+        assert.containsOnce(target, "thead th[data-name=foo]");
+        assert.containsOnce(target, "thead th[data-name=bar]");
+        assert.containsNone(target, "thead th[data-name=int_field]");
+        assert.containsN(target, "tr.o_group_header", 2);
+        assert.containsN(target, "th.o_group_name", 2);
+        assert.containsN(target.querySelector(".o_group_header"), "th", 2); // group name + colspan 2
+        assert.containsNone(target.querySelector(".o_group_header"), ".o_list_number");
     });
 
     QUnit.test("basic grouped list rendering 1 col without selector", async function (assert) {
