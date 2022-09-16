@@ -2,13 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-import Dialog from 'web.OwlDialog';
-
 const { Component } = owl;
-
-const components = {
-    Dialog,
-};
 
 // TODO a nice-to-have would be a resize handle under the videos.
 
@@ -28,7 +22,6 @@ export class CallView extends Component {
 }
 
 Object.assign(CallView, {
-    components,
     props: { record: Object },
     template: 'mail.CallView',
 });
