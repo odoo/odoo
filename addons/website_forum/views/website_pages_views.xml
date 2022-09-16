@@ -130,10 +130,45 @@
     </field>
 </record>
 
+<record id="forum_post_view_kanban" model="ir.ui.view">
+    <field name="name">Forum Post Pages Kanban</field>
+    <field name="model">forum.post</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <kanban js_class="website_pages_kanban" create="false" action="go_to_website" type="object" sample="1">
+            <field name="name"/>
+            <field name="forum_id"/>
+            <field name="parent_id"/>
+            <field name="website_url" invisible="1"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="d-flex flex-column">
+                        <div class="o_text_overflow fw-bold">
+                            <span t-esc="record.name.value"/>
+                            <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
+                                <i class="fa fa-globe me-1" title="Website"/>
+                                <field name="website_id"/>
+                            </div>
+                            <div class="text-muted">
+                                <i class="fa fa-comments-o me-1" title="Forum"/><t t-esc="record.forum_id.value"/>
+                                <span t-if="!record.parent_id.raw_value" class="ms-3"><field name="child_count"/> Answers</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 text-primary"><i class="fa fa-eye me-1" title="Views"/><field name="views"/></div>
+                            <div class="col-6 text-end"><field name="create_uid" widget="many2one_avatar_user"/></div>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
 <record id="action_forum_post" model="ir.actions.act_window">
     <field name="name">Forum Post Pages</field>
     <field name="res_model">forum.post</field>
-    <field name="view_mode">tree,graph</field>
+    <field name="view_mode">tree,kanban,graph</field>
     <field name="view_id" ref="view_forum_post_list"/>
     <field name="search_view_id" ref="view_forum_post_search"/>
     <field name="context">{'search_default_posts': 1, 'create_action': 'website_forum.forum_forum_action_add'}</field>
