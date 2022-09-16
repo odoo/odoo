@@ -1050,7 +1050,7 @@ options.registry.gallery = options.Class.extend({
         this.$target.addClass('o_fake_not_editable').attr('contentEditable', false);
 
         // Make sure image previews are updated if images are changed
-        this.$target.on('save', 'img', function (ev) {
+        this.$target.on('save.gallery', 'img', function (ev) {
             var $img = $(ev.currentTarget);
             var index = self.$target.find('.carousel-item.active').index();
             self.$('.carousel:first li[data-target]:eq(' + index + ')')
@@ -1059,12 +1059,12 @@ options.registry.gallery = options.Class.extend({
 
         // When the snippet is empty, an edition button is the default content
         // TODO find a nicer way to do that to have editor style
-        this.$target.on('click', '.o_add_images', function (e) {
+        this.$target.on('click.gallery', '.o_add_images', function (e) {
             e.stopImmediatePropagation();
             self.addImages(false);
         });
 
-        this.$target.on('dropped', 'img', function (ev) {
+        this.$target.on('dropped.gallery', 'img', function (ev) {
             self.mode(null, self.getMode());
             if (!ev.target.height) {
                 $(ev.target).one('load', function () {
@@ -1100,6 +1100,13 @@ options.registry.gallery = options.Class.extend({
         if (this.$target.hasClass('slideshow')) {
             this.$target.removeAttr('style');
         }
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$target.off('.gallery');
     },
 
     //--------------------------------------------------------------------------
