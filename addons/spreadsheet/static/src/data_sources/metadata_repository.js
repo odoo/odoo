@@ -14,6 +14,7 @@ const { EventBus } = owl;
  * @property {string} type field type
  * @property {string} string display name
  * @property {string} [relation] related model technical name (only for relational fields)
+ * @property {boolean} [searchable] true if a field can be searched in database
  */
 /**
  * This class is used to provide facilities to fetch some common data. It's
