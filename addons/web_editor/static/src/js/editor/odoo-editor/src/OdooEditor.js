@@ -66,7 +66,8 @@ import {
     hasTableSelection,
     pxToFloat,
     parseHTML,
-    splitTextNode
+    splitTextNode,
+    isEditorTab,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -3350,15 +3351,83 @@ export class OdooEditor extends EventTarget {
             }
         } else if (ev.key === 'Tab') {
             // Tab
+            const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
             const sel = this.document.getSelection();
-            const closestTag = (closestElement(sel.anchorNode, 'li, table') || {}).tagName;
-
-            if (closestTag === 'LI') {
-                this._applyCommand('indentList', ev.shiftKey ? 'outdent' : 'indent');
-            } else if (closestTag === 'TABLE') {
+            if (closestElement(sel.anchorNode, 'table')) {
                 this._onTabulationInTable(ev);
-            } else if (!ev.shiftKey) {
-                this.execCommand('insert', parseHTML('<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B'));
+            } else if (!ev.shiftKey && sel.isCollapsed && !closestElement(sel.anchorNode, 'li')) {
+                // Indent text (collapsed selection).
+                this.execCommand('insert', parseHTML(tabHtml));
+            } else {
+                // Indent/outdent selection.
+                // Split traversed nodes into list items and the rest.
+                const listItems = new Set();
+                const nonListItems = new Set();
+                for (const node of getTraversedNodes(this.editable)) {
+                    const closestLi = closestElement(node, 'li');
+                    const target = closestLi || node;
+                    if (!(target.querySelector && target.querySelector('li'))) {
+                        if (closestLi) {
+                            listItems.add(closestLi);
+                        } else {
+                            nonListItems.add(node);
+                        }
+                    }
+                }
+
+                const restore = preserveCursor(this.document);
+
+                // Indent/outdent list items.
+                for (const listItem of listItems) {
+                    if (ev.shiftKey) {
+                        listItem.oShiftTab(0);
+                    } else {
+                        listItem.oTab(0);
+                    }
+                }
+
+                // Indent/outdent the rest.
+                if (ev.shiftKey) {
+                    const editorTabs = new Set(
+                        [...nonListItems].map(node => {
+                            const block = closestBlock(node);
+                            if (block && isEditorTab(block.firstElementChild)) {
+                                return block.firstElementChild;
+                            }
+                        }).filter(node => (
+                            // Filter out tabs preceded by visible text.
+                            node && !getAdjacentPreviousSiblings(node).some(sibling => (
+                                sibling.nodeType === Node.TEXT_NODE && !/^[\u200B\s]*$/.test(sibling.textContent)
+                            ))
+                    )));
+                    for (const tab of editorTabs) {
+                        let { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
+                        const updateAnchor = anchorNode === tab.nextSibling;
+                        const updateFocus = focusNode === tab.nextSibling;
+                        let zwsRemoved = 0;
+                        while (tab.nextSibling && tab.nextSibling.nodeType === Node.TEXT_NODE && tab.nextSibling.textContent.startsWith('\u200B')) {
+                            splitTextNode(tab.nextSibling, 1, DIRECTIONS.LEFT);
+                            tab.nextSibling.remove();
+                            zwsRemoved++;
+                        }
+                        if (updateAnchor || updateFocus) {
+                            setSelection(
+                                updateAnchor ? tab.nextSibling : anchorNode,
+                                updateAnchor ? Math.max(0, anchorOffset - zwsRemoved) : anchorOffset,
+                                updateFocus ? tab.nextSibling : focusNode,
+                                updateFocus ? Math.max(0, focusOffset - zwsRemoved) : focusOffset
+                            );
+                        }
+                        tab.remove();
+                    };
+                } else {
+                    const tab = parseHTML(tabHtml);
+                    for (const block of new Set([...nonListItems].map(node => closestBlock(node)).filter(node => node))) {
+                        block.prepend(tab.cloneNode(true));
+                    }
+                    restore();
+                }
+                this.historyStep();
             }
             ev.preventDefault();
             ev.stopPropagation();
@@ -3577,8 +3646,7 @@ export class OdooEditor extends EventTarget {
     }
 
     /**
-     * initialise the provided element to be ready for edition
-     *
+     * Initialize the provided element to be ready for edition.
      */
     initElementForEdition(element = this.editable) {
         // Detect if the editable base element contain orphan inline nodes. If
