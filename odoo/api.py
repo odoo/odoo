@@ -1048,7 +1048,10 @@ class Cache(object):
         try:
             value = self._data[key][field][record._ids[0]]
         except KeyError:
-            raise CacheMiss(record, field)
+            if record and field:
+                raise CacheMiss(record, field)
+            else:
+                return False
 
         return value.get() if isinstance(value, SpecialValue) else value
 
