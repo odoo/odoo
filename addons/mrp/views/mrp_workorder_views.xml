@@ -326,6 +326,10 @@
                 decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
                 color="workcenter_id"
                 display_unavailability="1"
+                progress_bar="workcenter_id"
+                total_row="True"
+                js_class="mrp_workorder_gantt"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
                 sample="1"
                 form_view_id="%(mrp_production_workorder_form_view_inherit)d">
 
@@ -364,6 +368,9 @@
                 color="production_id"
                 display_unavailability="1"
                 progress_bar="workcenter_id"
+                total_row="True"
+                js_class="mrp_workorder_gantt"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
                 form_view_id="mrp_production_workorder_form_view_inherit">
 
                 <field name="date_planned_start"/>
