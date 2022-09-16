@@ -4,7 +4,7 @@ import logging
 
 from psycopg2 import sql
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
@@ -23,8 +23,12 @@ class PaymentProvider(models.Model):
     name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(string="Sequence", help="Define the display order")
     code = fields.Selection(
-        string="Code", help="The Payment Service Code to use with this provider",
-        selection=[('none', "No Provider Set")], default='none', required=True)
+        string="Code",
+        help="The technical code of this payment provider.",
+        selection=[('none', "No Provider Set")],
+        default='none',
+        required=True,
+    )
     state = fields.Selection(
         string="State",
         help="In test mode, a fake payment is processed through a test payment interface.\n"
@@ -305,23 +309,23 @@ class PaymentProvider(models.Model):
     def _check_required_if_provider(self):
         """ Check that provider-specific required fields have been filled.
 
-        The fields that have the `required_if_provider="<provider>"` attribute are made required
-        for all payment.provider records with the `code` field equal to <provider> and with the
+        The fields that have the `required_if_provider='<provider>'` attribute are made required
+        for all `payment.provider` records with the `code` field equal to <provider> and with the
         `state` field equal to 'enabled' or 'test'.
         Provider-specific views should make the form fields required under the same conditions.
 
         :return: None
-        :raise ValidationError: if a provider-specific required field is empty
+        :raise ValidationError: If a provider-specific required field is empty.
         """
         field_names = []
         enabled_providers = self.filtered(lambda p: p.state in ['enabled', 'test'])
-        for name, field in self._fields.items():
-            required_provider = getattr(field, 'required_if_provider', None)
-            if required_provider and any(
-                required_provider == provider.code and not provider[name]
+        for field_name, field in self._fields.items():
+            required_for_provider_code = getattr(field, 'required_if_provider', None)
+            if required_for_provider_code and any(
+                required_for_provider_code == provider.code and not provider[field_name]
                 for provider in enabled_providers
             ):
-                ir_field = self.env['ir.model.fields']._get(self._name, name)
+                ir_field = self.env['ir.model.fields']._get(self._name, field_name)
                 field_names.append(ir_field.field_description)
         if field_names:
             raise ValidationError(
@@ -565,10 +569,12 @@ class PaymentProvider(models.Model):
             WHERE state NOT IN ('test', 'disabled')
         """)
 
-    def _neutralize_fields(self, provider, fields):
-        """ Helper to neutralize API keys for a specific provider
-        :param str provider: name of provider
-        :param list fields: list of fields to nullify
+    def _neutralize_fields(self, provider_code, field_names):
+        """ Helper to neutralize API keys for a specific provider.
+
+        :param str provider_code: The code of the provider.
+        :param list field_names: The names of the fields to nullify.
+        :return: None
         """
         self.flush_model()
         self.invalidate_model()
@@ -576,5 +582,8 @@ class PaymentProvider(models.Model):
             UPDATE payment_provider
             SET ({fields}) = ROW({vals})
             WHERE code = %s
-        """).format(fields=sql.SQL(','.join(fields)), vals=sql.SQL(', '.join(['NULL'] * len(fields))))
-        self.env.cr.execute(query, (provider, ))
+        """).format(
+            fields=sql.SQL(','.join(field_names)),
+            vals=sql.SQL(', '.join(['NULL'] * len(field_names))),
+        )
+        self.env.cr.execute(query, (provider_code, ))
