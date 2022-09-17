@@ -683,6 +683,15 @@ msgstr ""
 " (النسخ) ثم حاول مجدداً. "
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"لا يمكن أن تقوم بربط مرحلة مستخدم بالمشروع لأنها تكون مرئية فقط للمستخدم. "
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr "يمكن أن يكون للمهمة مرحلة شخصية واحدة فقط لكل مستخدم. "
@@ -1697,6 +1706,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"الأشخاص الذين سيكون هذا المشروع ومهامه مرئياً بالنسبة لهم.\n"
+"\n"
+"- المستخدمين الداخليين المدعوين: عند متابعة مشروع ما، سيحصل المستخدمون الداخليون على صلاحية الوصول إلى كافة مهامه دون استثناء. وإلا، فسيحصلون فقط على صلاحية الوصول إلى المهام المحددة التي يتابعونها.\n"
+"بإمكان المستخدم ذو صلاحية الوصول المشروع > المدير الوصول إلى هذا المشروع ومهامه، حتى وإن لم يكن أحد المتابعين.\n"
+"\n"
+"- كافة المستخدمين الداخليين: بوسع كافة المستخدمين الداخليين الوصول إلى المشروع وكافة مهامه دون استثناء.\n"
+"\n"
+"- مستخدمي البوابة المدعوين وكافة المستخدمين الداخليين: بوسع كافة المستخدمين الداخليين الوصول إلى المشروع وكافة مهامه دون استثناء.\n"
+"عند متابعة مشروع ما، سيحصل مستخدمو البوابة على صلاحية الوصول إلى كافة مهامه دون استثناء. وإلا، فسيحصلون فقط على صلاحية الوصول إلى المهام المحددة التي يتابعونها.\n"
+"\n"
+"عندما تتم مشاركة مشروع للقراءة فقط، تتم إعادة توجيه مستخدم البوابة إلى بوابته. بإمكانه عرض المهام ولكن لن يكون بمقدوره تحريرها.\n"
+"عندما تتم مشاركة مشروع للتحرير، تتم إعادة توجيه مستخدم البوابة إلى نافذتي عرض كانبان والقائمة للمهام. بإمكانه تعديل أي عدد من الحقول في المهتم.\n"
+"\n"
+"بأي حال، لا يزال بوسع مستخدم داخلي بلا صلاحيات وصول إلى المشاريع الوصول إلى المهام، إذا تم منحه رابط URL المناسب (ويجب أن يكون أحد المتابعين إذا كان المشروع خاصاً). "
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
