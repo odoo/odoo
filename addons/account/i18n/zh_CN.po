@@ -17,6 +17,7 @@
 # Melvin Liu <betien@msn.cn>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # keecome <7017511@qq.com>, 2022
+# GritLuo <dooms21day@163.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -77,7 +78,7 @@ msgstr "#已调节结算单"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
 msgid "# Reconciled Statements"
-msgstr "# 已调节对账单"
+msgstr "# 已核销对账单"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -182,7 +183,7 @@ msgstr "- 已发布和草稿分录"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> 查看部分已调整的分录"
+msgstr "-> 查看部分核销分录"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -779,6 +780,11 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">已结算</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span class=\"o_stat_text\">Journal Entry</span>"
+msgstr "<span class=\"o_stat_text\">日记账分录</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
@@ -1319,7 +1325,7 @@ msgstr "访问警告"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Account"
-msgstr "账户"
+msgstr "科目"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -1474,7 +1480,7 @@ msgstr "科目统计"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "账户标签"
+msgstr "科目标签"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
@@ -2394,7 +2400,7 @@ msgstr "表外科目不能对账"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not have taxes"
-msgstr "表外账户不能添加税"
+msgstr "表外科目不能添加税"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
@@ -4619,7 +4625,7 @@ msgstr "流动资产"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
 msgid "Current Balance"
-msgstr "经常项目差额"
+msgstr "当前余额"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -4766,7 +4772,7 @@ msgstr "自定义布局。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cut-Off"
-msgstr "截止"
+msgstr "Cut-Off"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -4969,7 +4975,7 @@ msgstr "默认进项税"
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__sale_tax_id
 msgid "Default Sale Tax"
-msgstr "默认销售税种"
+msgstr "默认销售税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tax_ids
@@ -5035,7 +5041,7 @@ msgstr "销售产品时使用的默认税。"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_type_form
 msgid "Define a new account type"
-msgstr "创建科目类型"
+msgstr "定义新科目类型"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__allowed_journal_ids
@@ -7522,7 +7528,6 @@ msgstr "‎会计凭证 "
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #, python-format
 msgid "Journal Entry"
 msgstr "日记账分录"
@@ -8170,7 +8175,7 @@ msgstr "应该呈现为此子项的子行"
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__liquidity
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Liquidity"
-msgstr "流动性"
+msgstr "流动"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9418,7 +9423,7 @@ msgstr "我们的结算单应在21个工作日内支付，除非结算单或订�
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
 msgid "Outbound"
-msgstr "转出"
+msgstr "出"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_line_ids
@@ -9521,7 +9526,7 @@ msgstr "包裹"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Paid"
-msgstr "已支付"
+msgstr "已付请"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -10519,7 +10524,7 @@ msgstr "入库"
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__receivable
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Receivable"
-msgstr "‎应收账款‎"
+msgstr "‎应收"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_receivable_id
@@ -10540,12 +10545,12 @@ msgstr "应收"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
 msgid "Receive"
-msgstr "入库"
+msgstr "接收"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
 msgid "Receive Money"
-msgstr "收款"
+msgstr "收钱"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__amount_received
@@ -10698,7 +10703,7 @@ msgstr "退款日期"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__refund_tax_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__refund_tax_id
 msgid "Refund Tax"
-msgstr "退税"
+msgstr "退款税"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_in_refund_type
@@ -10738,7 +10743,7 @@ msgstr "登记付款"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__other
 msgid "Regular"
-msgstr "常规科目"
+msgstr "常规"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__res_id
@@ -10853,7 +10858,7 @@ msgstr "代表非0的最小货币单位（例如：0.05）."
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__require_partner_bank_account
 msgid "Require Partner Bank Account"
-msgstr "需要合作银行账户"
+msgstr "需要合作伙伴银行账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
@@ -11507,7 +11512,7 @@ msgstr "发送结算单"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__outbound
 msgid "Send Money"
-msgstr "付款"
+msgstr "发钱"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11752,7 +11757,7 @@ msgstr "显示强制税"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
-msgstr "显示所有会计功能"
+msgstr "显示完整会计功能"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -12281,7 +12286,7 @@ msgstr "税计算"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_country_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_country_id
 msgid "Tax Country"
-msgstr "税收国"
+msgstr "税国家"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_country_code
@@ -12315,7 +12320,7 @@ msgstr "税优惠"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Tax Grids"
-msgstr "税务列表"
+msgstr "税网格"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -12475,12 +12480,12 @@ msgstr "税务流动账户（应收账款）"
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
 msgid "Tax display B2B"
-msgstr "B2B税显示"
+msgstr "显示B2B税"
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_included
 msgid "Tax display B2C"
-msgstr "B2C税显示"
+msgstr "显示B2C税"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -13027,7 +13032,7 @@ msgstr ""
 msgid ""
 "The 'Internal Group' is used to filter accounts based on the internal group "
 "set on the account type."
-msgstr "'内部组' 是用于基于账户类型上设置的内部组来过滤账户的。"
+msgstr "'内部组' 是用于基于科目类型上设置的内部组来过滤科目的。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_type
@@ -15566,7 +15571,7 @@ msgstr "您不能有不可对账的应收账款/应付账款。（账号：%s）
 msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
-msgstr "你不能有一个以上的\"当年收入\" 账户，类似于. (账户: %s)"
+msgstr "你不能有一个以上的\"当年收入\" 科目，类似于. (科目: %s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15659,7 +15664,7 @@ msgstr "不能重置为汇兑差额日记账分录草稿。"
 msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
-msgstr "在已经录入本币会计凭证的情况下不能为该账户设定币种。"
+msgstr "在已经录入本币会计凭证的情况下不能为该科目设定币种。"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
