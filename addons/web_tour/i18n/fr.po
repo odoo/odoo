@@ -9,12 +9,12 @@
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # William Olhasque <william.olhasque@scopea.fr>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2021
 # Clément Watthez <cwa@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,13 +22,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Clément Watthez <cwa@odoo.com>, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web_tour
 #. openerp-web
@@ -39,6 +39,13 @@ msgid ""
 msgstr ""
 "<strong><b>Bien joué !</b> Vous venez de terminer toutes les étapes de ce "
 "tour.</strong>"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tip.js:0
+#, python-format
+msgid "Click here to go to the next step."
+msgstr "Cliquez ici pour passer à l'étape suivante."
 
 #. module: web_tour
 #. openerp-web
