@@ -2,10 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.sql import column_exists, create_column
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "sale_order_line", "margin"):
+            # By creating the column 'margin' manually we steer clear of hefty data computation.
+            create_column(self.env.cr, "sale_order_line", "margin", "NUMERIC")
+        return super()._auto_init()
 
     margin = fields.Float(compute='_product_margin', digits='Product Price', store=True)
     purchase_price = fields.Float(string='Cost', digits='Product Price')
