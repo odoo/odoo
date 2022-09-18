@@ -6,7 +6,7 @@
 # Vortex Storm <vortexstorm@protonmail.com>, 2022
 # Niccolò Lubello <nlubello@gmail.com>, 2022
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
-# sakodoo <sak@odoo.com>, 2022
+# SAKodoo <sak@odoo.com>, 2022
 # Léonie Bouchat <lbo@odoo.com>, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Martin Trigaux, 2022
@@ -3274,6 +3274,13 @@ msgid "If set, the operations are packed into this package"
 msgstr "Se impostato, le operazioni sono incluse nel collo"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
+msgid ""
+"If the UoM of a lot is not 'units', the lot will be considered as a unit and"
+" only one label will be printed for this lot."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
@@ -6203,7 +6210,7 @@ msgstr "Quantità prenotata effettiva "
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Receipt"
-msgstr "Ricezione"
+msgstr "Ricevuta"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
@@ -7494,7 +7501,7 @@ msgstr "Movimenti di magazzino elaborati"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Tipo di pacchetto stock"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
