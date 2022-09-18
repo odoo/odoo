@@ -3,11 +3,11 @@
 # 	* product
 # 
 # Translators:
-# nasaaskii <nasaaskii@gmail.com>, 2019
+# Насан-Очир <nasaaskii@gmail.com>, 2019
 # Batzul B <batzul.active@gmail.com>, 2019
 # Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2019
 # Tsog Tsog <ts.tsogoo@gmail.com>, 2019
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
+# hish, 2019
 # Onii Onii <onii0223@yahoo.com>, 2019
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
@@ -17,7 +17,7 @@
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -448,7 +448,7 @@ msgstr "Барааны нэгж үнийг үнийн хүснэгтийн ху�
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "Зураг нь 1024 хэмжээгээр томрох боломжтой (zoom)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
@@ -2299,6 +2299,15 @@ msgid "This comes from the product form."
 msgstr "Энэ нь барааны формоос авагддаг."
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Энэ нь бүх шинж чанаруудын нэмэлт үнийн нийлбэр"
@@ -2780,6 +2789,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
 msgstr ""
 
 #. module: product

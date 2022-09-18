@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Manuela Feliciani <mfeliciani@alice.it>, 2019
-# maiolif <maiolif@mgftools.com>, 2019
+# neveroils <maiolif@mgftools.com>, 2019
 # Pietro Della Notte <pdellanotte@gmail.com>, 2019
 # Niccolò Lubello <nlubello@gmail.com>, 2019
 # Marius Marolla <mariusmarolla@entersys.it>, 2019
@@ -414,6 +414,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Overview:\n"
+"---------\n"
+"\n"
+"* Chart of Accounts and Taxes template for companies in Japan.\n"
+"* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify accounts based on this template.\n"
+"\n"
+"Note:\n"
+"-----\n"
+"\n"
+"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  Under normal circumstances, you might not need to use those at all.\n"
+"\n"
+"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"\n"
+"    "
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -793,6 +809,17 @@ msgid ""
 "        * Account Tags.\n"
 "    "
 msgstr ""
+"\n"
+"        Chart of Accounts (COA) Template for Lithuania's Accounting.\n"
+"\n"
+"        This module also includes:\n"
+"\n"
+"        * List of available banks in Lithuania.\n"
+"        * Tax groups.\n"
+"        * Most common Lithuanian Taxes.\n"
+"        * Fiscal positions.\n"
+"        * Account Tags.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -846,6 +873,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Definire il giornale di acquisto predefinito nel magazzino,\n"
+"aiutare l'utente a scegliere il giornale di acquisto corretto sull'ordine di acquisto quando\n"
+"si cambia l'operazione di prelievo.\n"
+"utile quando si configurano unità GSTIN multiple.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -866,6 +899,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Definire il giornale di vendita predefinito nel magazzino,\n"
+"aiutare l'utente a scegliere il giornale di vendita corretto sull'ordine di vendita quando\n"
+"si cambia il magazzino.\n"
+"utile quando si configurano più unità GSTIN.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur
@@ -969,6 +1008,11 @@ msgid ""
 "        Manage user and manager notifications\n"
 "    "
 msgstr ""
+"\n"
+"        Specificare i noleggi dei prodotti (prodotti, preventivi, fatture, ...)\n"
+"Gestire lo stato dei prodotti, dei noleggi, dei ritardi\n"
+"Gestire le notifiche agli utenti e ai manager\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -1470,6 +1514,11 @@ msgid ""
 "    - a Chart of Accounts customised to Ireland\n"
 "    - VAT Rates and Structure"
 msgstr ""
+"\n"
+"    Questo modulo è dedicato a tutte le PMI irlandesi che desiderano impostare rapidamente la propria contabilità. Il modulo fornisce\n"
+"\n"
+"- un piano dei conti personalizzato per l'Irlanda\n"
+"- Aliquote e struttura dell'IVA"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_saft
@@ -2178,6 +2227,13 @@ msgid ""
 "according to the order/contract you work on. This allows to\n"
 "have real delivered quantities in sales orders.\n"
 msgstr ""
+"\n"
+"Consente di vendere i fogli di lavoro nell'ordine di vendita\n"
+"=============================================\n"
+"\n"
+"Questo modulo consente di impostare il prodotto giusto su tutte le righe del timesheet\n"
+"in base all'ordine/contratto su cui si lavora. Questo permette di\n"
+"avere quantità reali consegnate negli ordini di vendita.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_amazon_delivery
@@ -2584,6 +2640,12 @@ msgid ""
 "Display a preview of the last chatter attachment in the form view for large\n"
 "screen devices.\n"
 msgstr ""
+"\n"
+"Modulo ponte per la posta e l'impresa\n"
+"=====================================\n"
+"\n"
+"Visualizza un'anteprima dell'ultimo allegato della chat nella vista del modulo per i dispositivi a schermo\n"
+"per i dispositivi con schermo grande.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_enterprise
@@ -2891,6 +2953,8 @@ msgid ""
 "Contains the enterprise views for Stock account\n"
 "    "
 msgstr ""
+"\n"
+"Contiene le viste aziendali per l'account Stock"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_enterprise
@@ -2972,6 +3036,10 @@ msgid ""
 "================================\n"
 "\n"
 msgstr ""
+"\n"
+"Creare rapporti per l'assistenza sul campo\n"
+"================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -8700,6 +8768,80 @@ msgid ""
 "\n"
 ".. figure:: static/description/invoice_custom_xml.png\n"
 msgstr ""
+"==========================================\n"
+"Odoo Mexico Localization for Stock/Landing\n"
+"==========================================\n"
+"\n"
+"This module extends the functionality of Mexican localization to support\n"
+"customs numbers related with landed costs when you generate the electronic\n"
+"invoice.\n"
+"\n"
+"Usage\n"
+"=====\n"
+"\n"
+"To use this module, you need to:\n"
+"\n"
+"* Generate a new purchase order for a product from abroad. Landed costs are\n"
+"  only possible for products configured with 'automated' valuation with\n"
+"  'FIFO' costing method. The costing method is configured in the product\n"
+"  category.\n"
+"\n"
+".. figure:: static/description/purchase_order_new.png\n"
+"\n"
+"* Receive the product of the purchase order\n"
+"\n"
+".. figure:: static/description/picking_done_purchase.png\n"
+"\n"
+"* Go to Inventory -> Inventory control -> Landed Cost\n"
+"\n"
+"* Create a new landed cost indicating the picking of the purchase order\n"
+"  and the number of the customs information (pedimento). Landed costs are\n"
+"  only possible for products configured in real time valuation with real\n"
+"  price costing method. The costing method is configured on the product\n"
+"  category\n"
+"\n"
+".. figure:: static/description/landed_cost_picking.png\n"
+"\n"
+"* Start by creating specific products to indicate your various Landed\n"
+"  Costs, such as freight, insurance or custom duties.\n"
+"\n"
+"  Go to Inventory -> Configuration -> Landed Cost types. Landed costs are\n"
+"  only possible for products configured in real time valuation with real\n"
+"  price costing method. The costing method is configured on the product\n"
+"  category.\n"
+"\n"
+".. figure:: static/description/product_landed_cost.png\n"
+"\n"
+"* Click the Compute button to see how the landed costs will be split across\n"
+"  the picking lines.\n"
+"\n"
+".. figure:: static/description/compute_landed_cost.png\n"
+"\n"
+"* To confirm the landed costs attribution, click on the Validate button.\n"
+"\n"
+".. figure:: static/description/validate_landed_cost.png\n"
+"\n"
+"* Create a sales order for the product purchased from abroad\n"
+"\n"
+".. figure:: static/description/sale_order_new.png\n"
+"\n"
+"* Delivery the product related to the sales order\n"
+"\n"
+".. figure:: static/description/picking_done_sale.png\n"
+"\n"
+"* Create and validate a new invoice associated with the sales order\n"
+"\n"
+".. figure:: static/description/validate_invoice_customs.png\n"
+"\n"
+"* The customs information is found in the lines of the invoice associated\n"
+"  with each product.\n"
+"\n"
+".. figure:: static/description/invoice_custom_pedimento.png\n"
+"\n"
+"* Check the electronic invoice associated with the product where the node\n"
+"  of the customs information is displayed\n"
+"\n"
+".. figure:: static/description/invoice_custom_xml.png\n"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
@@ -9367,7 +9509,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
 msgid "Add certification capabilities to your courses"
-msgstr ""
+msgstr "Aggiungere le funzionalità di certificazione ai tuoi corsi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_survey
@@ -9420,6 +9562,7 @@ msgstr "Aggiungi informazioni UTM di vendita sui social"
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
 msgid "Add sale order UTM info on mass mailing"
 msgstr ""
+"Aggiungere le informazioni UTM dell'ordine di vendita al mailing di massa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_matrix
@@ -15203,7 +15346,7 @@ msgstr "Ottieni la cronologia delle auto guidate dai dipendenti"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_enterprise
 msgid "Get the enterprise look and feel"
-msgstr ""
+msgstr "Ottieni il look and feel aziendale"
 
 #. module: base
 #: model:res.country,name:base.gh
@@ -15574,12 +15717,12 @@ msgstr "Gamification RU"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_org_chart
 msgid "HR Org Chart"
-msgstr ""
+msgstr "HR Org Chart"
 
 #. module: base
 #: model:res.country,vat_label:base.ca
 msgid "HST"
-msgstr ""
+msgstr "HST"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_report__report_type__qweb-html
@@ -15927,7 +16070,7 @@ msgstr "HR - Moduli di Colloqui di Assunzione"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Human Readable"
-msgstr ""
+msgstr "Leggibile all'uomo"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
@@ -16180,6 +16323,8 @@ msgid ""
 "If several child actions return an action, only the last one will be executed.\n"
 "                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action."
 msgstr ""
+"Se più azioni secondarie restituiscono un'azione, verrà eseguita solo l'ultima.\n"
+"Questo può accadere quando le azioni del server eseguono un codice che restituisce un'azione o le azioni del server restituiscono un'azione del client."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__action_id
@@ -16873,7 +17018,7 @@ msgstr "Nome modello %r non valido nella definizione dell'azione."
 #: code:addons/base/models/ir_actions.py:611
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "I campi many2many non possono essere valutati per riferimento"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -17218,12 +17363,12 @@ msgstr "LATAM Tipi di Documenti"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_latam_base
 msgid "LATAM Identification Types"
-msgstr ""
+msgstr "Tipi di identificazione LATAM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_base
 msgid "LATAM Localization Base"
-msgstr ""
+msgstr "LATAM Localization Base"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__lgpl-3
@@ -17806,7 +17951,7 @@ msgstr "Modulo di collegamento tra punto vendita e vendite"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
 msgid "Link module between Pos Blackbox Be and Pos HR"
-msgstr ""
+msgstr "Modulo di collegamento tra Pos Blackbox Be e Pos HR"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
@@ -18059,12 +18204,12 @@ msgstr "Test posta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mail_enterprise
 msgid "Mail Tests (Enterprise)"
-msgstr ""
+msgstr "Mail Tests (Enterprise)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mail_full
 msgid "Mail Tests (Full)"
-msgstr ""
+msgstr "Mail Tests (Full)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_mail
@@ -18077,6 +18222,8 @@ msgstr "Test posta: prestazioni e test specifici per le email"
 msgid ""
 "Mail Tests: performances and tests specific to mail with all sub-modules"
 msgstr ""
+"Mail Tests: prestazioni e test specifici per la posta con tutti i "
+"sottomoduli"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -18339,7 +18486,7 @@ msgstr "Gestione voci lavorative"
 #: model:ir.module.module,description:base.module_social_facebook
 #: model:ir.module.module,summary:base.module_social_facebook
 msgid "Manage your Facebook pages and schedule posts"
-msgstr ""
+msgstr "Gestire le pagine Facebook e programmare i post"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_linkedin
@@ -27367,6 +27514,8 @@ msgstr ""
 msgid ""
 "Used for custom many2many fields to define a custom relation table name"
 msgstr ""
+"Utilizzato per i campi personalizzati many2many per definire il nome di una "
+"tabella di relazione personalizzata"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__usage
@@ -27414,7 +27563,7 @@ msgstr "Tipologia utente"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__log_ids
 msgid "User log entries"
-msgstr ""
+msgstr "Voci di registro dell'utente"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
@@ -27554,6 +27703,8 @@ msgid ""
 "Validate stock moves for product added on sales orders through Field Service"
 " Management App"
 msgstr ""
+"Convalidare i movimenti di magazzino per i prodotti aggiunti agli ordini di "
+"vendita attraverso l'applicazione Field Service Management"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter__value
@@ -27882,7 +28033,7 @@ msgstr "Instradamento web"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_cohort
 msgid "Web cohort Test"
-msgstr ""
+msgstr "Web cohort Test"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -28081,7 +28232,7 @@ msgstr "Indica se il valore è memorizzato nel database."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_dependency__auto_install_required
 msgid "Whether this dependency blocks automatic installation of the dependent"
-msgstr ""
+msgstr "Se questa dipendenza blocca l'installazione automatica del dipendente"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__translate
@@ -28864,7 +29015,7 @@ msgstr "test read_group"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_xlsx_export
 msgid "test xlsx export"
-msgstr ""
+msgstr "test xlsx export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
