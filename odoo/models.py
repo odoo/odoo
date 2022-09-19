@@ -4024,7 +4024,7 @@ class BaseModel(metaclass=MetaModel):
             # mark fields that depend on 'self' to recompute them after 'self' has
             # been deleted (like updating a sum of lines after deleting one line)
             with self.env.protecting(self._fields.values(), records):
-                self.modified(self._fields, before=True)
+                records.modified(self._fields, before=True)
 
             query = f'DELETE FROM "{self._table}" WHERE id IN %s'
             cr.execute(query, (sub_ids,))
@@ -4134,7 +4134,6 @@ class BaseModel(metaclass=MetaModel):
 
         field_values = []                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}
-        records_to_inverse = {}                     # {field: records}
         relational_names = []
         protected = set()
         check_company = False
@@ -4153,9 +4152,6 @@ class BaseModel(metaclass=MetaModel):
                     # order to avoid an inconsistent update.
                     self[fname]
                 determine_inverses[field.inverse].append(field)
-                # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
-                # TODO: check whether still necessary
-                records_to_inverse[field] = self.filtered('id')
             if field.relational or self.pool.field_inverses[field]:
                 relational_names.append(fname)
             if field.inverse or (field.compute and not field.readonly):
@@ -6545,7 +6541,7 @@ class BaseModel(metaclass=MetaModel):
                     # use an inverse of field without domain
                     if not (invf.type in ('one2many', 'many2many') and invf.domain):
                         if invf.type == 'many2one_reference':
-                            rec_ids = set()
+                            rec_ids = OrderedSet()
                             for rec in self:
                                 try:
                                     if rec[invf.model_field] == key.model_name:
