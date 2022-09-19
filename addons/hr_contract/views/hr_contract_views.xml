@@ -8,6 +8,43 @@
             <field name="priority" eval="70" />
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
+                        <field name="first_contract_date"
+                               attrs="{'invisible' : ['|', ('employee_type', 'not in', ['employee', 'student']), ('first_contract_date', '=', False)]}"
+                               readonly="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='bank_account_id']" position="replace">
+                        <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='resource_calendar_id']" position="replace">
+                        <field name="calendar_mismatch" invisible="1"/>
+                        <label for="resource_calendar_id"/>
+                        <div>
+                            <field name="resource_calendar_id" required="1" nolabel="1"/>
+                            <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
+                                class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
+                                data-tooltip-template="hr_contract.CalendarMismatch"
+                                data-tooltip-info='{
+                                        "text":"Calendar Mismatch : The employee&apos;s calendar does not match this contract&apos;s calendar. This could lead to unexpected behaviors."
+                                    }'>
+                            </span>
+                        </div>
+                    </xpath>
+                    <field name="job_id" position="before">
+                        <field name="contract_id" groups="hr_contract.group_hr_contract_manager"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <!-- This part of the view is defined separately as we want to give priority to the smartbutton. -->
+        <record id="hr_hr_employee_view_form3" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form3</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="priority" eval="2" />
+            <field name="arch" type="xml">
+                <data>
                     <div name="button_box" position="inside">
                         <field name="contract_warning" invisible="1"/>
                         <field name="employee_type" invisible="1"/>
@@ -42,31 +79,6 @@
                             </div>
                         </button>
                     </div>
-                    <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
-                        <field name="first_contract_date"
-                               attrs="{'invisible' : ['|', ('employee_type', 'not in', ['employee', 'student']), ('first_contract_date', '=', False)]}"
-                               readonly="1"/>
-                    </xpath>
-                    <xpath expr="//field[@name='bank_account_id']" position="replace">
-                        <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
-                    </xpath>
-                    <xpath expr="//field[@name='resource_calendar_id']" position="replace">
-                        <field name="calendar_mismatch" invisible="1"/>
-                        <label for="resource_calendar_id"/>
-                        <div>
-                            <field name="resource_calendar_id" required="1" nolabel="1"/>
-                            <span attrs="{'invisible': [('calendar_mismatch', '=', False)]}"
-                                class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
-                                data-tooltip-template="hr_contract.CalendarMismatch"
-                                data-tooltip-info='{
-                                        "text":"Calendar Mismatch : The employee&apos;s calendar does not match this contract&apos;s calendar. This could lead to unexpected behaviors."
-                                    }'>
-                            </span>
-                        </div>
-                    </xpath>
-                    <field name="job_id" position="before">
-                        <field name="contract_id" groups="hr_contract.group_hr_contract_manager"/>
-                    </field>
                 </data>
             </field>
         </record>
