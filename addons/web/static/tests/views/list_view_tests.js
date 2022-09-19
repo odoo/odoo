@@ -3138,11 +3138,20 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
                 limit: 2,
             });
-            var widthPage1 = target.querySelector(`th[data-name=foo]`).offsetWidth;
+
+            assert.strictEqual(
+                target.querySelector("thead .o_list_record_selector").offsetWidth,
+                40
+            );
+            const widthPage1 = target.querySelector(`th[data-name=foo]`).offsetWidth;
 
             await pagerNext(target);
 
-            var widthPage2 = target.querySelector(`th[data-name=foo]`).offsetWidth;
+            assert.strictEqual(
+                target.querySelector("thead .o_list_record_selector").offsetWidth,
+                40
+            );
+            const widthPage2 = target.querySelector(`th[data-name=foo]`).offsetWidth;
             assert.ok(
                 widthPage1 > widthPage2,
                 "column widths should be computed dynamically according to the content"
@@ -13704,19 +13713,21 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        // Target handle
+        const originalWidths = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
+        );
         const th = target.querySelector("th:nth-child(2)");
         const resizeHandle = th.querySelector(".o_resize");
-        const originalWidth = th.offsetWidth;
-        const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
-
+        const expectedWidth =
+            Math.round(originalWidths[1] / 2) + Math.round(resizeHandle.offsetWidth / 2);
         await dragAndDrop(resizeHandle, th);
 
-        assert.strictEqual(
-            th.style.width,
-            `${expectedWidth}px`,
-            "header width should be halved (plus half the width of the handle)"
+        const finalWidths = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
         );
+        assert.strictEqual(finalWidths[0], originalWidths[0]);
+        assert.ok(Math.abs(finalWidths[1] - expectedWidth) <= 1); // rounding
+        assert.strictEqual(finalWidths[2], originalWidths[2]);
     });
 
     QUnit.test("editable list: resize column headers with max-width", async function (assert) {
