@@ -1318,7 +1318,6 @@
                                 <group>
                                     <field name="is_analytic_account_id_changed" invisible="1"/>
                                     <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
-                                    <field name="personal_stage_type_id" string="Personal Stage" groups="base.group_no_one" domain="[('user_id', '!=', False)]" context="{'default_user_id' : uid}" readonly="0" attrs="{'invisible': &quot;[('user_ids', 'not in', [uid])]&quot;}"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
