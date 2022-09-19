@@ -1977,9 +1977,11 @@ class MailThread(models.AbstractModel):
         if not msg_values.get('record_name'):
             msg_values['record_name'] = self.display_name
         msg_values.update({
+            # author
             'author_id': author_id,
             'author_guest_id': author_guest_id,
             'email_from': email_from,
+            # document
             'model': self._name,
             'res_id': self.id,
             # content
@@ -2118,18 +2120,22 @@ class MailThread(models.AbstractModel):
             res_id = False
 
         msg_values = {
-            'parent_id': parent_id,
-            'model': self._name if self else model,
-            'res_id': self.id if self else res_id,
-            'message_type': 'user_notification',
-            'subject': subject,
-            'body': body,
+            # author
             'author_id': author_id,
             'email_from': email_from,
-            'partner_ids': partner_ids,
-            'is_internal': True,
+            # document
+            'model': self._name if self else model,
             'record_name': False,
+            'res_id': self.id if self else res_id,
+            # content
+            'body': body,
+            'is_internal': True,
+            'message_type': 'user_notification',
+            'parent_id': parent_id,
+            'subject': subject,
+            # recipients
             'message_id': tools.generate_tracking_message_id('message-notify'),
+            'partner_ids': partner_ids,
         }
         msg_values.update(msg_kwargs)
         # add default-like values afterwards, to avoid useless queries
@@ -2159,19 +2165,23 @@ class MailThread(models.AbstractModel):
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
 
         msg_values = {
-            'subject': subject,
-            'body': body,
+            # author
             'author_id': author_id,
             'email_from': email_from,
-            'message_type': message_type,
+            # document
             'model': kwargs.get('model', self._name),
-            'res_id': self.ids[0] if self.ids else False,
-            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            'is_internal': True,
             'record_name': False,
-            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
-            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'res_id': self.ids[0] if self.ids else False,
+            # content
+            'body': body,
+            'is_internal': True,
+            'message_type': message_type,
+            'subject': subject,
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            # recipients
             'email_add_signature': False,  # False as no notification -> no need to compute signature
+            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
         }
         msg_values.update(kwargs)
 
@@ -2186,17 +2196,21 @@ class MailThread(models.AbstractModel):
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
 
         base_message_values = {
-            'subject': subject,
+            # author
             'author_id': author_id,
             'email_from': email_from,
-            'message_type': message_type,
+            # document
             'model': self._name,
-            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            'is_internal': True,
             'record_name': False,
-            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
-            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            # content
+            'message_type': message_type,
+            'is_internal': True,
+            'subject': subject,
+            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            # recipients
             'email_add_signature': False,
+            'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
         }
         values_list = [dict(base_message_values,
                             res_id=record.id,
@@ -2408,9 +2422,9 @@ class MailThread(models.AbstractModel):
             notif_create_values = [{
                 'author_id': message.author_id.id,
                 'mail_message_id': message.id,
-                'res_partner_id': pid,
-                'notification_type': 'inbox',
                 'notification_status': 'sent',
+                'notification_type': 'inbox',
+                'res_partner_id': pid,
             } for pid in inbox_pids]
             self.env['mail.notification'].sudo().create(notif_create_values)
 
@@ -2531,12 +2545,12 @@ class MailThread(models.AbstractModel):
                             })
                     notif_create_values += [{
                         'author_id': message.author_id.id,
-                        'mail_message_id': message.id,
-                        'res_partner_id': recipient_id,
-                        'notification_type': 'email',
-                        'mail_mail_id': new_email.id,
                         'is_read': True,  # discard Inbox notification
+                        'mail_mail_id': new_email.id,
+                        'mail_message_id': message.id,
                         'notification_status': 'ready',
+                        'notification_type': 'email',
+                        'res_partner_id': recipient_id,
                     } for recipient_id in tocreate_recipient_ids]
                 emails += new_email
 

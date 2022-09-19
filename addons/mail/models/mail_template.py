@@ -334,10 +334,16 @@ class MailTemplate(models.Model):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(
             res_id,
-            ['subject', 'body_html',
+            ('auto_delete',
+             'body_html',
+             'email_cc',
              'email_from',
-             'email_cc', 'email_to', 'partner_to', 'reply_to',
-             'auto_delete', 'scheduled_date']
+             'email_to',
+             'partner_to',
+             'reply_to',
+             'scheduled_date',
+             'subject',
+            )
         )
         values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
         values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]

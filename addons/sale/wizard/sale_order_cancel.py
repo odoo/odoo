@@ -84,12 +84,12 @@ class SaleOrderCancel(models.TransientModel):
     def action_send_mail_and_cancel(self):
         self.ensure_one()
         self.order_id.message_post(
-            subject=self.subject,
             body=self.body,
             message_type='comment',
             email_from=self.email_from,
             email_layout_xmlid='mail.mail_notification_light',
             partner_ids=self.recipient_ids.ids,
+            subject=self.subject,
         )
         return self.action_cancel()
 

@@ -213,14 +213,14 @@ class SurveyInvite(models.TransientModel):
         body = self._render_field('body', answer.ids, post_process=True)[answer.id]
         # post the message
         mail_values = {
-            'email_from': self.email_from,
+            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
+            'auto_delete': True,
             'author_id': self.author_id.id,
+            'body_html': body,
+            'email_from': self.email_from,
             'model': None,
             'res_id': None,
             'subject': subject,
-            'body_html': body,
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'auto_delete': True,
         }
         if answer.partner_id:
             mail_values['recipient_ids'] = [(4, answer.partner_id.id)]
