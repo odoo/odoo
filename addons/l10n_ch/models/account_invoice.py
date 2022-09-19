@@ -242,7 +242,7 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'partner_bank_id', 'payment_reference')
     def _compute_l10n_ch_isr_needs_fixing(self):
         for inv in self:
-            if inv.move_type == 'in_invoice' and inv.company_id.account_fiscal_country_id.code == "CH":
+            if inv.move_type == 'in_invoice' and inv.company_id.account_fiscal_country_id.code in ('CH', 'LI'):
                 partner_bank = inv.partner_bank_id
                 needs_isr_ref = partner_bank.l10n_ch_qr_iban or partner_bank._is_isr_issuer()
                 if needs_isr_ref and not inv._has_isr_ref():
