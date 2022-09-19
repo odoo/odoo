@@ -1,7 +1,11 @@
+.o_popover_field_selector .popover-arrow::after {
+    border-bottom-color: map-get($theme-colors, 'primary');
+}
 
-.o_field_selector_popover {
+.o_field_selector_popover:not(.o_legacy_field_selector_popover) {
     width: 265px;
     background: white;
+    --o-input-background-color: white;
 
     &:focus {
         outline: none;
@@ -22,7 +26,10 @@
         .o_field_selector_search {
             padding-right: 0.4rem;
             > .o_input {
+                font-size: 13px;
                 padding: 5px 0.4rem;
+                text-align: left;
+                line-height: normal;
             }
         }
         .o_field_selector_popover_option {
@@ -77,7 +84,9 @@
         padding: 5px 0.4em;
 
         > input {
+            font-size: 13px;
             width: 100%;
+            padding: 0 0.4rem;
         }
     }
 }
