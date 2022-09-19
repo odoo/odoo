@@ -59,7 +59,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=float_field] input").value,
-            "44.444",
+            "44.4",
             "The input should be rendered without the percentage symbol."
         );
         assert.strictEqual(
@@ -67,8 +67,8 @@ QUnit.module("Fields", (hooks) => {
             "%",
             "The input should be followed by a span containing the percentage symbol."
         );
-        const field = target.querySelector("input");
-        await editInput(target, "input", "24");
+        const field = target.querySelector("[name='float_field'] input");
+        await editInput(target, "[name='float_field'] input", "24");
         assert.strictEqual(field.value, "24", "The value should not be formated yet.");
         await click(target.querySelector(".o_form_button_save"));
         assert.strictEqual(
@@ -96,5 +96,19 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name='float_field'] input").placeholder,
             "Placeholder"
         );
+    });
+
+    QUnit.test("PercentageField in form view without rounding error", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="float_field" widget="percentage"/>
+                </form>`,
+        });
+        await editInput(target, "[name='float_field'] input", "28");
+        assert.strictEqual(target.querySelector("[name='float_field'] input").value, "28");
     });
 });

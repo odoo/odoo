@@ -13,7 +13,11 @@ const { Component } = owl;
 export class PercentageField extends Component {
     setup() {
         useInputField({
-            getValue: () => this.props.value * 100,
+            getValue: () =>
+                formatPercentage(this.props.value, {
+                    digits: this.props.digits,
+                    noSymbol: true,
+                }),
             refName: "numpadDecimal",
             parse: (v) => parsePercentage(v),
         });
