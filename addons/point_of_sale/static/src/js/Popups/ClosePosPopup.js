@@ -18,8 +18,9 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.moneyDetailsRef = useRef('moneyDetails');
             this.closeSessionClicked = false;
             this.moneyDetails = null;
-            this.state = useState({});
             Object.assign(this, this.props.info)
+            this.state = useState({});
+            Object.assign(this.state, this.props.info.state)
         }
         /*
          * Since this popup need to be self dependent, in case of an error, the popup need to be closed on its own.
