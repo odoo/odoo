@@ -15,7 +15,6 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
 //            models.load_fields('pos.order', 'x_receipt_note');
             return super_posmodel.initialize.call(this, session, attributes);
         },
-
     });
 
     var models = require('point_of_sale.models');
@@ -66,7 +65,7 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
             });
             console.log('----val--', val)
             console.log('-=====-receipt----', receipt, this);
-            receipt.program_reward_lines= val;
+            receipt.program_reward_lines = val;
             return receipt;
         }
     });

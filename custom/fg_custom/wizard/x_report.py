@@ -12,7 +12,7 @@ class XReport(models.TransientModel):
 
     user_id = fields.Many2one('res.users', string='Cashier User (Opened By)', required=True, default=lambda self: self.env.uid)
     start_at = fields.Date(string='Date', required=True, default=fields.Date.context_today)
-    session_id = fields.Many2one('pos.session', string='Session', required=True)
+    session_id = fields.Many2one('pos.session', domain="[('state', '=', 'opened'), ('user_id', '=', user_id)]", string='Session', required=True)
 
     @api.onchange('start_at', 'user_id')
     def onchange_start_at(self):

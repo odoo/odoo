@@ -31,46 +31,54 @@
                 </div>
                 <div class="report_body" style="margin-top: 30px;">
                     <table style="width: 100%;">
-                        <tr>
-                            <td>
-                                <div class="left_content" style="text-align: left;font-size: 15px;">
-                                    <p>OPEN CASHIER:</p>
-                                </div>
-                            </td>
-                            <td>
-                                <p>
-                                    <t t-esc="user_id.name"/>
-                                </p>
-                            </td>
-                            <td>
-                                <div class="right_content" style="text-align: right;font-size: 15px;">
+                        <t t-set="is_open_cashier" t-value="1"/>
+                        <t t-foreach="open_cashier_list" t-as="c">
+                            <tr>
+                                <td style="width:28%">
+                                    <div class="left_content" style="text-align: left;font-size: 15px;">
+                                        <p t-if="is_open_cashier">OPEN CASHIER:</p>
+                                        <t t-set="is_open_cashier" t-value="0"/>
+                                    </div>
+                                </td>
+                                <td style="width:40%">
                                     <p>
-                                        <span t-esc="start_at"/>
+                                        <t t-esc="c[0]"/>
                                     </p>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    <div class="right_content" style="text-align: right;font-size: 15px;">
+                                        <p>
+                                            <span t-esc="c[1]"/>
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-set="is_trans_no" t-value="1"/>
+                        <t t-foreach="start_end_order_list" t-as="c">
+                            <tr>
+                                <td style="width:28%">
+                                    <div class="left_content" style="text-align: left;font-size: 15px;">
+                                        <p t-if="is_trans_no">TRANS NO(s):</p>
+                                        <t t-set="is_trans_no" t-value="0"/>
+                                    </div>
+                                </td>
+                                <td style="width:40%">
+                                    <p>
+                                        <t t-esc="c"/>
+                                    </p>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </t>
                         <tr>
-                            <td>
-                                <div class="left_content" style="text-align: left;font-size: 15px;">
-                                    <p>TRANS NO(s):</p>
-                                </div>
-                            </td>
-                            <td>
-                                <p>
-                                    <t t-esc="start_order_id"/> - <t t-esc="end_order_id"/>
-                                </p>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
+                            <td style="width:28%">
                                 <div class="left_content" style="text-align: left;font-size: 15px;">
                                     <p>OPEN AMOUNT:</p>
                                 </div>
                             </td>
-                            <td>
+                            <td style="width:40%">
                                 <p>
                                     <t t-esc="cash_register_balance_start" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
@@ -80,12 +88,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>
+                            <td style="width:28%">
                                 <div class="left_content" style="text-align: left;font-size: 15px;">
                                     <p>CLOSE AMOUNT:</p>
                                 </div>
                             </td>
-                            <td>
+                            <td style="width:40%">
                                 <p>
                                     <t t-esc="cash_register_balance_end_real" t-options='{"widget": "float", "precision": 2}'/>
                                     <t t-esc="company.currency_id.name"/>
@@ -563,6 +571,15 @@
 
     <record id="x_pos_report" model="ir.actions.report">
         <field name="name">X Report</field>
+        <field name="model">pos.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fg_custom.report_x_pos_report</field>
+        <field name="report_file">fg_custom.report_x_pos_report</field>
+<!--        <field name="print_report_name">'XReport-%s' % object.name</field>-->
+    </record>
+
+    <record id="z_pos_report" model="ir.actions.report">
+        <field name="name">z Report</field>
         <field name="model">pos.session</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">fg_custom.report_x_pos_report</field>
