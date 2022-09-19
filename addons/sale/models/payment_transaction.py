@@ -113,6 +113,7 @@ class PaymentTransaction(models.Model):
 
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """
+<<<<<<< HEAD
         confirmed_orders = self._check_amount_and_confirm_order()
         confirmed_orders._send_order_confirmation_mail()
 
@@ -123,6 +124,32 @@ class PaymentTransaction(models.Model):
             self._invoice_sale_orders()
             self._send_invoice()
         return super()._reconcile_after_done()
+||||||| parent of c034547c96de... temp
+        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
+        for tx in self:
+            tx._check_amount_and_confirm_order()
+        # send order confirmation mail
+        sales_orders._send_order_confirmation_mail()
+        # invoice the sale orders if needed
+        self._invoice_sale_orders()
+        res = super()._reconcile_after_done()
+        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice') and any(so.state in ('sale', 'done') for so in self.sale_order_ids):
+            self.filtered(lambda t: t.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done')))._send_invoice()
+        return res
+=======
+        draft_orders = self.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent'))
+        for tx in self:
+            tx._check_amount_and_confirm_order()
+        confirmed_sales_orders = draft_orders.filtered(lambda so: so.state in ('sale', 'done'))
+        # send order confirmation mail
+        confirmed_sales_orders._send_order_confirmation_mail()
+        # invoice the sale orders if needed
+        self._invoice_sale_orders()
+        res = super()._reconcile_after_done()
+        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice') and any(so.state in ('sale', 'done') for so in self.sale_order_ids):
+            self.filtered(lambda t: t.sale_order_ids.filtered(lambda so: so.state in ('sale', 'done')))._send_invoice()
+        return res
+>>>>>>> c034547c96de... temp
 
     def _send_invoice(self):
         template_id = self.env['ir.config_parameter'].sudo().get_param(
