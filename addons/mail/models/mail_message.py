@@ -273,9 +273,10 @@ class Message(models.Model):
         # Non-employee see only messages with a subtype and not internal
         if not self.env['res.users'].has_group('base.group_user'):
             args = expression.AND([self._get_search_domain_share(), args])
-        # Perform a super with count as False, to have the ids, not a counter
+        # Modify args for super to have all ids, not part of them or a counter:
+        # we need to filter ids before returning final result
         ids = super(Message, self)._search(
-            args, offset=offset, limit=limit, order=order,
+            args, offset=0, limit=None, order=order,
             count=False, access_rights_uid=access_rights_uid)
         if not ids and count:
             return 0
@@ -317,7 +318,9 @@ class Message(models.Model):
             return len(final_ids)
         else:
             # re-construct a list based on ids, because set did not keep the original order
-            id_list = [id for id in ids if id in final_ids]
+            id_list = [id for id in ids if id in final_ids][offset:]
+            if limit:
+                id_list = id_list[:limit]
             return id_list
 
     @api.model
