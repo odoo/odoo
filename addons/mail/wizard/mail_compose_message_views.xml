@@ -33,9 +33,6 @@
                                 context="{'force_email':True, 'show_email':True}"/>
                         </div>
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
-                        <!-- mass post -->
-                        <field name="notify"
-                            attrs="{'invisible':[('composition_mode', '!=', 'mass_post')]}"/>
                     </group>
                     <field name="can_edit_body" invisible="1"/>
                     <div attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
