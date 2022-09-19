@@ -26,12 +26,9 @@
         </t>
         <t t-if="discussView.mobileAddItemHeaderAutocompleteInputView">
             <div class="o_Discuss_mobileAddItemHeader d-flex justify-content-center w-100 p-3 border-bottom bg-light">
-                <AutocompleteInput
+                <AutocompleteInputView
                     className="'o_Discuss_mobileAddItemHeaderInput flex-grow-1 mb-3 p-2 rounded border'"
                     record="discussView.mobileAddItemHeaderAutocompleteInputView"
-                    select="discussView.onMobileAddItemHeaderInputSelect"
-                    source="discussView.onMobileAddItemHeaderInputSource"
-                    onHide="discussView.onHideMobileAddItemHeader"
                 />
             </div>
         </t>

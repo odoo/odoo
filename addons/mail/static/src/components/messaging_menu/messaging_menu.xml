@@ -35,12 +35,9 @@
                                     <t t-call="mail.MessagingMenu.newMessageButton"/>
                                 </t>
                                 <t t-if="messagingMenu.mobileNewMessageAutocompleteInputView">
-                                    <AutocompleteInput
+                                    <AutocompleteInputView
                                         className="'o_MessagingMenu_mobileNewMessageInput mt-2 p-2 rounded-3'"
                                         record="messagingMenu.mobileNewMessageAutocompleteInputView"
-                                        select="messagingMenu.onMobileNewMessageInputSelect"
-                                        source="messagingMenu.onMobileNewMessageInputSource"
-                                        onHide="messagingMenu.onHideMobileNewMessage"
                                     />
                                 </t>
                             </div>

@@ -29,12 +29,9 @@
                     <t t-if="category.isOpen">
                         <t t-if="category.addingItemAutocompleteInputView">
                             <div class="o_DiscussSidebarCategory_addingItem d-flex mb-2">
-                                <AutocompleteInput
+                                <AutocompleteInputView
                                     className="'o_DiscussSidebarCategory_addingItemInput form-control mx-4 rounded'"
                                     record="category.addingItemAutocompleteInputView"
-                                    select="category.onAddItemAutocompleteSelect"
-                                    source="category.onAddItemAutocompleteSource"
-                                    onHide="category.onHideAddingItem"
                                 />
                             </div>
                         </t>
