@@ -6,8 +6,9 @@ import { registry } from "@web/core/registry";
 import { TimesheetFloatFactorField } from "../components/timesheet_float_factor/timesheet_float_factor_field";
 import { TimesheetFloatTimeField } from "../components/timesheet_float_time/timesheet_float_time_field";
 import { TimesheetFloatToggleField } from "../components/timesheet_float_toggle/timesheet_float_toggle";
+import {FloatFactorField} from "@web/views/fields/float_factor/float_factor_field";
 
-const timesheetUomService = {
+export const timesheetUomService = {
     dependencies: ["company"],
     start(env, { company }) {
         const timesheetUomWidget = { widget: "float_factor" };
@@ -35,7 +36,11 @@ const timesheetUomService = {
         } else if (timesheetUomWidget.widget === "float_time") {
             TimesheetUoMField = TimesheetFloatTimeField;
         } else {
-            TimesheetUoMField = fieldRegistry.get(timesheetUomWidget.widget) || TimesheetFloatFactorField;
+            let fieldRegistryWidget = fieldRegistry.get(timesheetUomWidget.widget);
+            if (fieldRegistryWidget === FloatFactorField) {
+                fieldRegistryWidget = TimesheetFloatFactorField;
+            }
+            TimesheetUoMField = fieldRegistryWidget;
         }
         fieldRegistry.add("timesheet_uom", TimesheetUoMField);
 
