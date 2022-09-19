@@ -404,6 +404,7 @@ class Meeting(models.Model):
         recurrence_fields = self._get_recurrent_fields()
         false_values = {field: False for field in recurrence_fields}  # computes need to set a value
         defaults = self.env['calendar.recurrence'].default_get(recurrence_fields)
+        default_rrule_values = self.recurrence_id.default_get(recurrence_fields)
         for event in self:
             if event.recurrency:
                 event.update(defaults)  # default recurrence values are needed to correctly compute the recurrence params
@@ -413,6 +414,7 @@ class Meeting(models.Model):
                     for field in recurrence_fields
                     if event.recurrence_id[field]
                 }
+                rrule_values = rrule_values or default_rrule_values
                 event.update({**false_values, **event_values, **rrule_values})
             else:
                 event.update(false_values)
