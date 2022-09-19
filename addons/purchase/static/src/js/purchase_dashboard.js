@@ -159,16 +159,25 @@ var PurchaseKanbanDashboardRenderer = KanbanRenderer.extend({
      * @private
      * @returns {Promise}
      */
-    _render: function () {
+    _renderView: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             var values = self.state.dashboardValues;
             var purchase_dashboard = QWeb.render('purchase.PurchaseDashboard', {
                 values: values,
             });
-            self.$el.parent().find(".o_purchase_dashboard").remove();
-            self.$el.before(purchase_dashboard);
+            self.$el.prepend(purchase_dashboard);
         });
+    // _render: function () {
+    //     var self = this;
+    //     return this._super.apply(this, arguments).then(function () {
+    //         var values = self.state.dashboardValues;
+    //         var purchase_dashboard = QWeb.render('purchase.PurchaseDashboard', {
+    //             values: values,
+    //         });
+    //         self.$el.parent().find(".o_purchase_dashboard").remove();
+    //         self.$el.before(purchase_dashboard);
+    //     });
     },
 
     /**
