@@ -41,7 +41,7 @@ export class SaleOrderLineProductField extends Many2OneField {
         return 'btn btn-secondary fa fa-pencil';
     }
 
-    _onFieldUpdate() { }
+    async _onFieldUpdate() { }
 
     onEditConfiguration() {
         if (this.isConfigurableLine) {

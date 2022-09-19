@@ -6,7 +6,7 @@ import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 
 patch(SaleOrderLineProductField.prototype, 'event_sale', {
 
-    _onFieldUpdate() {
+    async _onFieldUpdate() {
         this._super(...arguments);
         if (this.props.record.data.product_type === 'event') {
             this._openEventConfigurator();
