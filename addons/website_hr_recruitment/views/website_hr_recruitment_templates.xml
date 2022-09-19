@@ -288,7 +288,7 @@
                                     <h6 t-field="job.contract_type_id"/>
                                 </div>
                                 <hr t-if="job.job_details" class="w-50 my-3"/>
-                                <span t-esc="job.job_details"/>
+                                <div t-field="job.job_details"/>
                             </section>
                         </form>
                     </div>
