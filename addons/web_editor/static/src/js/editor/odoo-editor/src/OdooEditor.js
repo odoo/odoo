@@ -589,6 +589,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'paste', this._onPaste);
         this.addDomListener(this.editable, 'drop', this._onDrop);
 
+        this.addDomListener(this.document, 'copy', this._onClipboardCopy);
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
@@ -3081,6 +3082,26 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    _onClipboardCopy(clipboardEvent) {
+        if (this.isSelectionInEditable()) {
+            clipboardEvent.preventDefault();
+            const selection = this.document.getSelection();
+            const range = selection.getRangeAt(0);
+            const rangeContent = range.cloneContents();
+
+            const dataHtmlElement = document.createElement('data');
+            dataHtmlElement.append(rangeContent);
+            const odooHtml = dataHtmlElement.innerHTML;
+            const odooText = dataHtmlElement.innerText;
+            if (!clipboardEvent.clipboardData.getData('text/plain')) {
+                clipboardEvent.clipboardData.setData('text/plain', odooText);
+            }
+            if (!clipboardEvent.clipboardData.getData('text/html')) {
+                clipboardEvent.clipboardData.setData('text/html', odooHtml);
+            }
+            clipboardEvent.clipboardData.setData('text/odoo-editor', odooHtml);
+        }
+    }
     /**
      * @private
      */
@@ -3880,8 +3901,15 @@ export class OdooEditor extends EventTarget {
         ev.preventDefault();
         const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
+        const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');
-        if (clipboardHtml) {
+        if (odooEditorHtml) {
+            const fragment = parseHTML(odooEditorHtml);
+            DOMPurify.sanitize(fragment, { IN_PLACE: true });
+            if (fragment.hasChildNodes()) {
+                this.execCommand('insert', fragment);
+            }
+        } else if (clipboardHtml) {
             this.execCommand('insert', this._prepareClipboardData(clipboardHtml));
         } else if (files.length) {
             this.addImagesFiles(files);
