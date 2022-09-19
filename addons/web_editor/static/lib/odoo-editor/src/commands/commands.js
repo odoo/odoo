@@ -175,7 +175,11 @@ function insert(editor, data, isText = true) {
             currentNode.before(nodeToInsert);
             insertBefore = false;
         } else {
-            currentNode.after(nodeToInsert);
+            if (currentNode.tagName === "LI" && currentNode.hasChildNodes() && currentNode.firstChild.tagName === "BR") {
+                currentNode.firstChild.before(nodeToInsert);
+            } else {
+                currentNode.after(nodeToInsert);
+            }
         }
         if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
             currentNode.remove();
