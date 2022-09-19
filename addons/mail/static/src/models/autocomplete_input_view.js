@@ -8,16 +8,96 @@ registerModel({
     name: 'AutocompleteInputView',
     identifyingMode: 'xor',
     recordMethods: {
+        onBlur() {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                this.discussSidebarCategoryOwnerAsAddingItem.onHideAddingItem();
+                return;
+            }
+            if (this.discussViewOwnerAsMobileAddItemHeader) {
+                this.discussViewOwnerAsMobileAddItemHeader.onHideMobileAddItemHeader();
+                return;
+            }
+            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                this.messagingMenuOwnerAsMobileNewMessageInput.onHideMobileNewMessage();
+                return;
+            }
+        },
         /**
          * @param {FocusEvent} ev
          */
         onFocusin(ev) {
+            if (!this.exists()) {
+                return;
+            }
             if (this.chatWindowOwnerAsNewMessage) {
                 this.chatWindowOwnerAsNewMessage.onFocusInNewMessageFormInput(ev);
                 return;
             }
         },
-         /**
+        /**
+         * @param {MouseEvent} ev
+         */
+        onKeydown(ev) {
+            if (!this.exists()) {
+                return;
+            }
+            if (ev.key === 'Escape') {
+                this.onBlur();
+            }
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onSelect(ev, ui) {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.chatWindowOwnerAsNewMessage) {
+                this.chatWindowOwnerAsNewMessage.onAutocompleteSelect(ev, ui);
+                return;
+            }
+            if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                this.discussSidebarCategoryOwnerAsAddingItem.onAddItemAutocompleteSelect(ev, ui);
+                return;
+            }
+            if (this.discussViewOwnerAsMobileAddItemHeader) {
+                this.discussViewOwnerAsMobileAddItemHeader.onMobileAddItemHeaderInputSelect(ev, ui);
+                return;
+            }
+            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSelect(ev, ui);
+                return;
+            }
+        },
+        /**
+         * @param {Object} req
+         * @param {function} res
+         */
+        onSource(req, res) {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.chatWindowOwnerAsNewMessage) {
+                this.chatWindowOwnerAsNewMessage.onAutocompleteSource(req, res);
+                return;
+            }
+            if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                this.discussSidebarCategoryOwnerAsAddingItem.onAddItemAutocompleteSource(req, res);
+                return;
+            }
+            if (this.discussViewOwnerAsMobileAddItemHeader) {
+                this.discussViewOwnerAsMobileAddItemHeader.onMobileAddItemHeaderInputSource(req, res);
+                return;
+            }
+            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSource(req, res);
+                return;
+            }
+        },
+        /**
          * @private
          * @returns {boolean|FieldCommand}
          */
