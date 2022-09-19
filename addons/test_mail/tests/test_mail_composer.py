@@ -2,11 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from datetime import timedelta
+from freezegun import freeze_time
 from unittest.mock import DEFAULT, patch
 
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.fields import Datetime as FieldDatetime
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import users, Form
@@ -20,6 +24,8 @@ class TestMailComposer(TestMailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestMailComposer, cls).setUpClass()
+        cls.reference_now = FieldDatetime.from_string('2022-12-24 12:00:00')
+        cls.env.cr._now = cls.reference_now  # force create_date to check schedulers
 
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
@@ -74,6 +80,7 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             'mail_server_id': cls.mail_server_domain.id,
             'model_id': cls.env['ir.model']._get('mail.test.ticket').id,
             'reply_to': '{{ ctx.get("custom_reply_to") or "info@test.example.com" }}',
+            'scheduled_date': '{{ (object.create_date or datetime.datetime(2022, 12, 26, 18, 0, 0)) + datetime.timedelta(days=2) }}',
         })
 
     def _get_web_context(self, records, add_web=True, **values):
@@ -121,6 +128,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
+        self.assertFalse(composer_form.scheduled_date)
         self.assertEqual(literal_eval(composer_form.res_ids), self.test_record.ids)
         self.assertEqual(
             composer_form.subject, 'Re: %s' % self.test_record.name,
@@ -198,6 +206,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(literal_eval(composer_form.res_ids), self.test_record.ids)
+        self.assertEqual(composer_form.scheduled_date, FieldDatetime.to_string(self.reference_now + timedelta(days=2)))
         self.assertEqual(composer_form.subject, 'TemplateSubject %s' % self.test_record.name)
 
     @users('employee')
@@ -226,6 +235,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(literal_eval(composer_form.res_ids), self.test_records.ids)
+        self.assertEqual(composer_form.scheduled_date, self.template.scheduled_date)
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: comment in batch mode should have template raw subject if template')
 
@@ -253,6 +263,9 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertFalse(composer_form.reply_to_force_new)
         self.assertFalse(composer_form.res_ids)
+        self.assertEqual(composer_form.scheduled_date,
+                         '2022-12-28 18:00:00',
+                         'No record but rendered, see expression in template')
         self.assertEqual(composer_form.subject, 'TemplateSubject ')
 
     @users('employee')
@@ -273,6 +286,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(sorted(literal_eval(composer_form.res_ids)), sorted(self.test_records.ids))
+        self.assertFalse(composer_form.scheduled_date)
         self.assertFalse(composer_form.subject, 'MailComposer: mass mode should have void default subject if no template')
 
     @users('employee')
@@ -296,6 +310,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(sorted(literal_eval(composer_form.res_ids)), sorted(self.test_records.ids))
+        self.assertEqual(composer_form.scheduled_date, self.template.scheduled_date)
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
 
@@ -324,6 +339,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
         self.assertFalse(composer_form.res_ids)
+        self.assertEqual(composer_form.scheduled_date, self.template.scheduled_date)
         self.assertEqual(composer_form.subject, self.template.subject,
                          'MailComposer: mass mode should have template raw subject if template')
 
@@ -445,11 +461,13 @@ class TestComposerInternals(TestMailComposer):
                     self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                     self.assertEqual(composer.record_name, self.test_record.name)
+                    self.assertEqual(FieldDatetime.from_string(composer.scheduled_date), self.reference_now + timedelta(days=2))
                 else:
                     self.assertEqual(composer.subject, self.template.subject)
                     self.assertEqual(composer.body, self.template.body_html)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                     self.assertFalse(composer.record_name)
+                    self.assertEqual(composer.scheduled_date, self.template.scheduled_date)
 
                 # manual values is kept over template
                 composer.write({'subject': 'Back to my amazing subject'})
@@ -468,6 +486,8 @@ class TestComposerInternals(TestMailComposer):
                     # self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                     self.assertEqual(composer.record_name, self.test_record.name)
+                    # TDE FIXME: scheduled date is kept, not sure why
+                    self.assertEqual(FieldDatetime.from_string(composer.scheduled_date), self.reference_now + timedelta(days=2))
                 else:
                     # values are reset TDE FIXME: strange for subject
                     self.assertEqual(composer.subject, 'Back to my amazing subject')
@@ -476,6 +496,8 @@ class TestComposerInternals(TestMailComposer):
                     # self.assertFalse(composer.mail_server_id.id)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                     self.assertFalse(composer.record_name)
+                    # TDE FIXME: scheduled_Date is kept, not sure why
+                    self.assertEqual(composer.scheduled_date, self.template.scheduled_date)
 
                 # 2. check with default
                 ctx['default_template_id'] = self.template.id
@@ -491,11 +513,13 @@ class TestComposerInternals(TestMailComposer):
                     self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                     self.assertEqual(composer.record_name, self.test_record.name)
+                    self.assertEqual(FieldDatetime.from_string(composer.scheduled_date), self.reference_now + timedelta(days=2))
                 else:
                     self.assertEqual(composer.subject, self.template.subject)
                     self.assertEqual(composer.body, self.template.body_html)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                     self.assertFalse(composer.record_name)
+                    self.assertEqual(composer.scheduled_date, self.template.scheduled_date)
 
                 # 3. check at create
                 ctx.pop('default_template_id')
@@ -511,11 +535,13 @@ class TestComposerInternals(TestMailComposer):
                     self.assertEqual(composer.body, '<p>TemplateBody %s</p>' % self.test_record.name)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                     self.assertEqual(composer.record_name, self.test_record.name)
+                    self.assertEqual(FieldDatetime.from_string(composer.scheduled_date), self.reference_now + timedelta(days=2))
                 else:
                     self.assertEqual(composer.subject, self.template.subject)
                     self.assertEqual(composer.body, self.template.body_html)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
                     self.assertFalse(composer.record_name)
+                    self.assertEqual(composer.scheduled_date, self.template.scheduled_date)
 
                 # 4. template + user input
                 ctx['default_template_id'] = self.template.id
@@ -531,6 +557,7 @@ class TestComposerInternals(TestMailComposer):
                 self.assertEqual(composer.body, '<p>Test Body</p>')
                 self.assertEqual(composer.mail_server_id.id, False)
                 self.assertEqual(composer.record_name, 'CustomName')
+                self.assertFalse(composer.scheduled_date)
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -776,7 +803,7 @@ class TestComposerInternals(TestMailComposer):
 
 
 @tagged('mail_composer')
-class TestComposerResultsComment(TestMailComposer):
+class TestComposerResultsComment(TestMailComposer, CronMixinCase):
     """ Test global output of composer used in comment mode. Test notably
     notification and emails generated during this process. """
 
@@ -955,8 +982,20 @@ class TestComposerResultsComment(TestMailComposer):
         ))
         composer = composer_form.save()
         self.assertFalse(composer.reply_to_force_new, 'Mail: thread-enabled models should use auto thread by default')
-        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+
+        # due to scheduled_date, cron for sending notifciation will be used
+        schedule_cron_id = self.env.ref('mail.ir_cron_send_scheduled_message').id
+        with self.mock_mail_gateway(mail_unlink_sent=False), \
+             self.mock_mail_app(), \
+             freeze_time(self.reference_now), \
+             self.capture_triggers(schedule_cron_id) as capt:
             composer._action_send_mail()
+
+        # notification process should not have been sent
+        self.assertEqual(capt.records.call_at, self.reference_now + timedelta(days=2),
+                         msg='Should have created a cron trigger for the scheduled sending')
+        self.assertFalse(self._new_mails)
+        self.assertFalse(self._mails)
 
         # check new partners have been created based on emails given
         new_partners = self.env['res.partner'].search([
@@ -967,9 +1006,15 @@ class TestComposerResultsComment(TestMailComposer):
                          set(['test.to.1@test.example.com', 'test.to.2@test.example.com', 'test.cc.1@test.example.com'])
                         )
 
+        # Send the scheduled message from the CRON
+        with self.mock_mail_gateway(mail_unlink_sent=False), \
+             self.mock_mail_app(), \
+             freeze_time(self.reference_now + timedelta(days=3)):
+            self.env['mail.message.schedule'].sudo()._send_notifications_cron()
+
         # global outgoing: one mail.mail (all customer recipients, then all employee recipients)
         # and 5 emails, and 1 inbox notification (admin)
-        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail')
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 1 mail.mail per group')
         self.assertEqual(len(self._mails), 5, 'Should have sent 5 emails, one per recipient')
 
         # template is sent only to partners (email_to are transformed)
