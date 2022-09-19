@@ -235,11 +235,12 @@ class Page(models.Model):
                 FROM {table}
                 LEFT JOIN ir_ui_view v ON {table}.view_id = v.id
                 WHERE v.name ILIKE {search}
-                OR jsonb_path_query_array(v.arch_db,'$.*')::text ILIKE {search} 
+                OR COALESCE(v.arch_db->>{lang}, v.arch_db->>'en_US') ILIKE {search}
                 LIMIT {limit}
             """).format(
                 table=sql.Identifier(self._table),
                 search=sql.Placeholder('search'),
+                lang=sql.Literal(self.env.lang or 'en_US'),
                 limit=sql.Placeholder('limit'),
             )
             self.env.cr.execute(query, {

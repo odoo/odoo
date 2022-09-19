@@ -433,6 +433,7 @@ class expression(object):
             :attr query: Query object holding the final result
         """
         self._unaccent_wrapper = get_unaccent_wrapper(model._cr)
+        self._has_trigram = model.pool.has_trigram
         self.root_model = model
         self.root_alias = alias or model._table
 
@@ -960,22 +961,35 @@ class expression(object):
                         push_result(expr, params)
 
                 elif field.translate and right:
-                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
+                    expr = ''
+                    params = []
+
+                    if self._has_trigram and field.index == 'trigram' and sql_operator in ('=', 'like', 'ilike'):
+                        # a prefilter using trigram index to speed up '=', 'like', 'ilike'
+                        # '!=', '<=', '<', '>', '>=', 'in', 'not in', 'not like', 'not ilike' cannot use this trick
+                        _unaccent = self._unaccent(field)
+                        _left = _unaccent(f'''jsonb_path_query_array("{alias}"."{left}", '$.*')::text''')
+                        _sql_operator = 'like' if sql_operator == '=' else sql_operator
+                        expr = f"{_left} {_sql_operator} {_unaccent('%s')} AND "
+                        params.append(f'%{right}%')
+
+                    unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
+                    lang = model.env.lang or 'en_US'
+                    if lang == 'en_US':
+                        left = unaccent(f""""{alias}"."{left}"->>'en_US'""")
+                    else:
+                        left = unaccent(f'''COALESCE("{alias}"."{left}"->>'{lang}', "{alias}"."{left}"->>'en_US')''')
+
+                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     if need_wildcard:
                         right = '%%%s%%' % right
                     if sql_operator in ('in', 'not in'):
                         right = tuple(right)
 
-                    unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
-                    if need_wildcard:
-                        # Inactive languages are not removed in DB and can be searched by using this function
-                        left = unaccent(f'jsonb_path_query_array("{alias}"."{left}", \'$.*\')::text')
-                    else:
-                        lang = model.env.lang or 'en_US'
-                        left = unaccent(f'COALESCE("{alias}"."{left}"->>\'{lang}\', "{alias}"."{left}"->>\'en_US\')')
-                    instr = unaccent('%s')
-                    push_result(f"{left} {sql_operator} {instr}", [right])
+                    expr += f"{left} {sql_operator} {unaccent('%s')}"
+                    params.append(right)
+                    push_result(expr, params)
 
                 else:
                     expr, params = self.__leaf_to_sql(leaf, model, alias)
