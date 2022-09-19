@@ -68,15 +68,8 @@ registerModel({
                 if (!this.listRef || !this.listRef.el) {
                     return clear();
                 }
-                let distanceFromTopValue;
-                const buffer = this.topBufferAmount * this.rowHeight;
                 let offset = this.scrollPercentage * this.listRef.el.clientHeight;
-                if (offset < buffer) {
-                    distanceFromTopValue = 0;
-                } else {
-                    distanceFromTopValue = offset - buffer;
-                }
-                return distanceFromTopValue;
+                return offset - offset % this.rowHeight;
             },
             default: 0,
         }),
