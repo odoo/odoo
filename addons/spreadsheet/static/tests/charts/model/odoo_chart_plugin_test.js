@@ -133,11 +133,13 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.deepEqual(model.getters.getChartRuntime(chartId).chartJsConfig.data, {
             datasets: [
                 {
-                    backgroundColor: "rgb(31,119,180)",
+                    backgroundColor: "#1f77b466",
                     borderColor: "rgb(31,119,180)",
                     data: [1, 3],
                     label: "Count",
                     lineTension: 0,
+                    fill: "origin",
+                    pointBackgroundColor: "rgb(31,119,180)",
                 },
             ],
             labels: ["false", "true"],
@@ -360,6 +362,41 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             model.getters.getChart(chartId).dataSource,
             model.getters.getChart(chartIds[0]).dataSource,
             "The datasource is also duplicated"
+        );
+    });
+
+    QUnit.test("Line chart with stacked attribute is supported", async (assert) => {
+        const { model } = await createSpreadsheetWithGraph({ type: "odoo_line" });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const definition = model.getters.getChartDefinition(chartId);
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                stacked: true,
+            },
+            id: chartId,
+            sheetId,
+        });
+        assert.notOk(
+            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.xAxes[0].stacked
+        );
+        assert.ok(
+            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.yAxes[0].stacked
+        );
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                stacked: false,
+            },
+            id: chartId,
+            sheetId,
+        });
+        assert.notOk(
+            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.xAxes[0].stacked
+        );
+        assert.notOk(
+            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.yAxes[0].stacked
         );
     });
 });

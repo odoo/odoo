@@ -12,6 +12,8 @@ const { Component, onWillUnmount, useEffect, useRef, onWillStart } = owl;
 
 const NO_DATA = _lt("No data");
 
+export const LINE_FILL_TRANSPARENCY = 0.4;
+
 /**
  * @param {Object} chartArea
  * @returns {string}
@@ -23,7 +25,7 @@ function getMaxWidth(chartArea) {
 
 /**
  * Used to avoid too long legend items.
- * @param {string|Strin} label
+ * @param {string} label
  * @returns {string} shortened version of the input label
  */
 function shortenLabel(label) {
@@ -325,7 +327,7 @@ export class GraphRenderer extends Component {
             if (groupBy.length <= 1 && domains.length > 1) {
                 if (dataset.originIndex === 0) {
                     dataset.fill = "origin";
-                    dataset.backgroundColor = hexToRGBA(getColor(0), 0.4);
+                    dataset.backgroundColor = hexToRGBA(getColor(0), LINE_FILL_TRANSPARENCY);
                     dataset.borderColor = getColor(0);
                 } else if (dataset.originIndex === 1) {
                     dataset.borderColor = getColor(1);
@@ -346,7 +348,7 @@ export class GraphRenderer extends Component {
             dataset.pointBackgroundColor = dataset.borderColor;
             dataset.pointBorderColor = "rgba(0,0,0,0.2)";
             if (stacked) {
-                dataset.backgroundColor = hexToRGBA(dataset.borderColor, 0.4);
+                dataset.backgroundColor = hexToRGBA(dataset.borderColor, LINE_FILL_TRANSPARENCY);
             }
             if (cumulated) {
                 let accumulator = 0;
@@ -359,7 +361,7 @@ export class GraphRenderer extends Component {
         if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
             const dataset = data.datasets[0];
             dataset.fill = "origin";
-            dataset.backgroundColor = hexToRGBA(getColor(0), 0.4);
+            dataset.backgroundColor = hexToRGBA(getColor(0), LINE_FILL_TRANSPARENCY);
         }
         // center the points in the chart (without that code they are put
         // on the left and the graph seems empty)
