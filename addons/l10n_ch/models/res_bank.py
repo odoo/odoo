@@ -45,7 +45,7 @@ def validate_qr_iban(qr_iban):
     # We sanitize first so that _check_qr_iban_range() can extract correct IID from IBAN to validate it.
     sanitized_qr_iban = sanitize_account_number(qr_iban)
 
-    if sanitized_qr_iban[:2] != 'CH':
+    if sanitized_qr_iban[:2] not in ['CH', 'LI']:
         raise ValidationError(_("QR-IBAN numbers are only available in Switzerland."))
 
     # Now, check if it's valid QR-IBAN (based on its IID).
@@ -123,11 +123,11 @@ class ResPartnerBank(models.Model):
     def _compute_l10n_ch_show_subscription(self):
         for bank in self:
             if bank.partner_id:
-                bank.l10n_ch_show_subscription = bank.partner_id.ref_company_ids.country_id.code == 'CH'
+                bank.l10n_ch_show_subscription = bank.partner_id.ref_company_ids.country_id.code in ('CH', 'LI')
             elif bank.company_id:
-                bank.l10n_ch_show_subscription = bank.company_id.account_fiscal_country_id.code == 'CH'
+                bank.l10n_ch_show_subscription = bank.company_id.account_fiscal_country_id.code in ('CH', 'LI')
             else:
-                bank.l10n_ch_show_subscription = self.env.company.account_fiscal_country_id.code == 'CH'
+                bank.l10n_ch_show_subscription = self.env.company.account_fiscal_country_id.code in ('CH', 'LI')
 
     @api.depends('acc_number', 'acc_type')
     def _compute_sanitized_acc_number(self):
@@ -207,7 +207,7 @@ class ResPartnerBank(models.Model):
         CHXX 0900 0XXX XXXX XXXX K
         Where 09000 is the clearing number
         """
-        return iban.startswith('CH') and iban[4:9] == CLEARING
+        return iban.startswith(('CH', 'LI')) and iban[4:9] == CLEARING
 
     @api.model
     def _pretty_postal_num(self, number):
@@ -351,7 +351,7 @@ class ResPartnerBank(models.Model):
 
             return self.acc_type == 'iban' and \
                    self.partner_id.country_id.code == 'CH' and \
-                   (not debtor_partner or debtor_partner.country_id.code == 'CH') \
+                   (not debtor_partner or debtor_partner.country_id.code in ('CH', 'LI')) \
                    and currency.name in ('EUR', 'CHF')
 
         return super()._eligible_for_qr_code(qr_method, debtor_partner, currency)
