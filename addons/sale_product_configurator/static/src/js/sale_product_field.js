@@ -12,7 +12,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         this.rpc = useService("rpc");
     },
 
-    async _onFieldUpdate() {
+    async _onProductTemplateUpdate() {
         this._super(...arguments);
         const result = await this.orm.call(
             'product.template',
