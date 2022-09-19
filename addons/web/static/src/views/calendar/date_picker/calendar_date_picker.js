@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { calculateWeekNumber } from "../date_utils";
+//import { calculateWeekNumber } from "../date_utils";
 
 const { Component, onMounted, onWillUnmount, useEffect, useRef, xml } = owl;
 
@@ -39,7 +39,7 @@ export class CalendarDatePicker extends Component {
             monthNames: luxon.Info.months("short"),
             onSelect: this.onDateSelected.bind(this),
             showOtherMonths: true,
-            calculateWeek: calculateWeekNumber,
+            //calculateWeek: calculateWeekNumber, // JPP Je pense que c'est pas necesaire
             // defaultDate: this.props.model.date.toFormat("yyyy-MM-dd"),
             dateFormat: "yy-mm-dd",
         };
