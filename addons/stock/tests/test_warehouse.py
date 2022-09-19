@@ -117,6 +117,9 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(product.virtual_available, -5.0)
 
         customer_move.quantity_done = 5
+        self.env['stock.move.line'].create(dict(
+            customer_move._prepare_move_line_vals(),
+            qty_done=5))
         customer_move._action_done()
         self.assertEqual(product.qty_available, -5.0)
 
@@ -157,7 +160,7 @@ class TestWarehouse(TestStockCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
         })
-        self.env['stock.move'].create({
+        move = self.env['stock.move'].create({
             'name': productA.name,
             'product_id': productA.id,
             'product_uom_qty': 1,
@@ -168,6 +171,9 @@ class TestWarehouse(TestStockCommon):
         })
         picking_out.action_confirm()
         picking_out.move_ids.quantity_done = 1
+        self.env['stock.move.line'].create(dict(
+            move._prepare_move_line_vals(),
+            qty_done=1))
         picking_out._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
@@ -181,6 +187,9 @@ class TestWarehouse(TestStockCommon):
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
         return_pick.move_ids.quantity_done = 1
+        self.env['stock.move.line'].create(dict(
+            return_pick.move_ids._prepare_move_line_vals(),
+            qty_done=1))
         return_pick._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
@@ -200,7 +209,7 @@ class TestWarehouse(TestStockCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
         })
-        self.env['stock.move'].create({
+        move = self.env['stock.move'].create({
             'name': productA.name,
             'product_id': productA.id,
             'product_uom_qty': 1,
@@ -211,6 +220,9 @@ class TestWarehouse(TestStockCommon):
         })
         picking_out.action_confirm()
         picking_out.move_ids.quantity_done = 1
+        self.env['stock.move.line'].create(dict(
+            move._prepare_move_line_vals(),
+            qty_done=1))
         picking_out._action_done()
 
         # Make an inventory adjustment to set the quantity to 0
@@ -385,16 +397,24 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(picking_stock_transit)
         picking_stock_transit.action_assign()
         picking_stock_transit.move_ids[0].quantity_done = 1.0
+        # NTR Remove this after merge auto-distribute done_qty
+        picking_stock_transit.move_ids[0].move_line_ids.qty_done = 1.0
         picking_stock_transit._action_done()
 
         picking_transit_shop_namur = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_namur.lot_stock_id.id)])
         self.assertTrue(picking_transit_shop_namur)
         picking_transit_shop_namur.action_assign()
         picking_transit_shop_namur.move_ids[0].quantity_done = 1.0
+        self.env['stock.move.line'].create(dict(
+            picking_transit_shop_namur.move_ids[0]._prepare_move_line_vals(),
+            qty_done=1))
         picking_transit_shop_namur._action_done()
 
         picking_out_namur.action_assign()
         picking_out_namur.move_ids[0].quantity_done = 1.0
+        # NTR Remove this after merge auto-distribute done_qty
+        picking_out_namur.move_ids[0].move_line_ids.qty_done = 1.0
+
         picking_out_namur._action_done()
 
         # Check that the correct quantity has been provided to customer
@@ -429,16 +449,23 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(picking_stock_transit)
         picking_stock_transit.action_assign()
         picking_stock_transit.move_ids[0].quantity_done = 1.0
+        # NTR Remove this after merge auto-distribute done_qty
+        picking_stock_transit.move_ids[0].move_line_ids.qty_done = 1.0
         picking_stock_transit._action_done()
 
         picking_transit_shop_wavre = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_wavre.lot_stock_id.id)])
         self.assertTrue(picking_transit_shop_wavre)
         picking_transit_shop_wavre.action_assign()
         picking_transit_shop_wavre.move_ids[0].quantity_done = 1.0
+        self.env['stock.move.line'].create(dict(
+            picking_transit_shop_wavre.move_ids[0]._prepare_move_line_vals(),
+            qty_done=1))
         picking_transit_shop_wavre._action_done()
 
         picking_out_wavre.action_assign()
         picking_out_wavre.move_ids[0].quantity_done = 1.0
+        # NTR Remove this after merge auto-distribute done_qty
+        picking_out_wavre.move_ids[0].move_line_ids.qty_done = 1.0
         picking_out_wavre._action_done()
 
         # Check that the correct quantity has been provided to customer

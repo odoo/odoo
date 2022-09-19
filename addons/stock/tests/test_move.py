@@ -5140,6 +5140,7 @@ class StockMove(TransactionCase):
         move_out._action_confirm()
         move_out._action_assign()
         move_out.quantity_done = self.product.qty_available
+        self.env['stock.move.line'].create(dict(move_out._prepare_move_line_vals(), qty_done=move_out.quantity_done))
         move_out._action_done()
         self.product.detailed_type = 'consu'
 
@@ -5182,11 +5183,25 @@ class StockMove(TransactionCase):
         })
         picking.action_confirm()
         picking.action_assign()
+
         move1.quantity_done = 10
+        self.assertEqual(picking.move_ids.quantity_done, 10)
+        self.assertEqual(picking.move_ids._get_qty_done_mls(), 0)
+
+        self.env['stock.move.line'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 10.0,
+            'picking_id': picking.id,
+        })
         picking._action_done()
 
         self.assertEqual(len(picking.move_ids), 1, 'One move should exist for the picking.')
         self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
+        self.assertEqual(picking.move_ids.quantity_done, 10)
+        self.assertEqual(picking.move_ids._get_qty_done_mls(), 10)
 
         ml = self.env['stock.move.line'].create({
             'location_id': self.stock_location.id,
@@ -5227,6 +5242,8 @@ class StockMove(TransactionCase):
         picking.action_assign()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         move1.quantity_done = 1
+        # NTR Remove this after merge auto-distribute done_qty
+        move1.move_line_ids.qty_done = 1
         picking.action_put_in_pack()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(len(picking.move_line_ids), 2)
@@ -5328,8 +5345,12 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, self.stock_location), 0)
         move1.quantity_done = 1
+        # NTR Remove this after merge auto-distribute done_qty
+        move1.move_line_ids.qty_done = 1
         picking.action_put_in_pack()
-        move2.quantity_done = 2
+        move2.quantity_done = 1
+        # NTR Remove this after merge auto-distribute done_qty
+        move2.move_line_ids.qty_done = 2
         picking.action_put_in_pack()
         self.assertEqual(len(picking.move_line_ids), 2)
         line1_result_package = picking.move_line_ids[0].result_package_id
@@ -5560,6 +5581,8 @@ class StockMove(TransactionCase):
         picking.action_confirm()
         picking.action_assign()
         move1.quantity_done = 5
+        # NTR Remove this after merge auto-distribute done_qty
+        move1.move_line_ids.qty_done = 5
         picking.action_put_in_pack()  # Create a first package
         self.assertEqual(len(picking.move_line_ids), 2)
 
@@ -5602,6 +5625,9 @@ class StockMove(TransactionCase):
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
         move1.quantity_done = 5
+        self.env['stock.move.line'].create(dict(
+            move1._prepare_move_line_vals(),
+            qty_done=5))
         picking.action_put_in_pack()  # Create a package
 
         delivery_form = Form(picking)

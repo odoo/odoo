@@ -316,6 +316,9 @@ class TestKitPicking(common.TestMrpCommon):
             'location_id':  self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
         })
+
+        self.env['stock.move.line'].create(dict(move_receipt_1._prepare_move_line_vals(), qty_done=3))
+
         picking.button_validate()
 
         # We check that the picking has the correct quantities after its move were splitted.

@@ -143,6 +143,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         picking = so.picking_ids
         picking.move_ids.quantity_done = 5
+        # NTR Remove this after merge auto-distribute done_qty
+        picking.move_ids.move_line_ids.qty_done = 5
         picking.button_validate()
 
         invoice = so._create_invoices()
@@ -182,6 +184,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         picking = so.picking_ids
         picking.move_ids.quantity_done = 4
+        # NTR Remove this after merge auto-distribute done_qty
+        picking.move_ids.move_line_ids.qty_done = 4
         picking.button_validate()
 
         html = self.env['ir.actions.report']._render_qweb_html(
@@ -292,6 +296,8 @@ class TestSaleStockInvoices(TestSaleCommon):
         # Deliver 10 x LOT0001
         delivery01 = so.picking_ids
         delivery01.move_ids.quantity_done = 10
+        # NTR Remove this after merge auto-distribute done_qty
+        delivery01.move_ids.move_line_ids.qty_done = 10
         delivery01.button_validate()
         self.assertEqual(delivery01.move_line_ids.lot_id.name, 'LOT0001')
 
