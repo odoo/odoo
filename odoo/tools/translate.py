@@ -1516,7 +1516,7 @@ def _get_translation_upgrade_queries(cr, field):
               GROUP BY res_id
             )
             UPDATE {Model._table} m
-               SET "{field.name}" = m."{field.name}" || t.value
+               SET "{field.name}" =  t.value || m."{field.name}"
               FROM t
              WHERE t.res_id = m.id
         """
@@ -1541,21 +1541,32 @@ def _get_translation_upgrade_queries(cr, field):
                   FROM t0
               GROUP BY res_id
             )
-            SELECT t.res_id, m."{field.name}"->>'en_US', t.value
+            SELECT t.res_id, m."{field.name}", t.value
               FROM t
               JOIN "{Model._table}" m ON t.res_id = m.id
         """, [translation_name])
-        for id_, source_value, translations in cr.fetchall():
-            if not source_value:
+        for id_, old_values, translations in cr.fetchall():
+            if not old_values:
                 continue
-            new_value = {
-                lang: field.translate(terms_mapping.get, source_value)
+            # 'old_values' contain terms possibly updated from PO files during
+            #  the upgrade of modules; prefer those terms over the ones from
+            #  the out-of-date 'translations' dict
+            src_value = old_values.pop('en_US')
+            src_terms = field.get_trans_terms(src_value)
+            for lang, dst_value in old_values.items():
+                terms_mapping = translations.setdefault(lang, {})
+                dst_terms = field.get_trans_terms(dst_value)
+                for src_term, dst_term in zip(src_terms, dst_terms):
+                    if src_term != dst_term:
+                        terms_mapping[src_term] = dst_term
+            new_values = {
+                lang: field.translate(terms_mapping.get, src_value)
                 for lang, terms_mapping in translations.items()
             }
-            if "en_US" not in new_value:
-                new_value["en_US"] = field.translate(lambda v: None, source_value)
+            if "en_US" not in new_values:
+                new_values["en_US"] = field.translate(lambda v: None, src_value)
             query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
-            migrate_queries.append(cr.mogrify(query, [Json(new_value), id_]).decode())
+            migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
 
         query = "DELETE FROM _ir_translation WHERE type = 'model_terms' AND name = %s"
         cleanup_queries.append(cr.mogrify(query, [translation_name]).decode())
