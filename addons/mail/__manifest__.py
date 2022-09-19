@@ -189,6 +189,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/scss/*.scss',
             'mail/static/src/xml/*.xml',
             'mail/static/src/component_hooks/*.js',
+            'mail/static/src/backend_components/*/*',
             'mail/static/src/components/*/*.js',
             'mail/static/src/components/*/*.scss',
             'mail/static/src/components/*/*.xml',
