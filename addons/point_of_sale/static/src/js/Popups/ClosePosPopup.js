@@ -17,8 +17,9 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.moneyDetailsRef = useRef('moneyDetails');
             this.closeSessionClicked = false;
             this.moneyDetails = null;
-            this.state = useState({});
             Object.assign(this, this.props.info);
+            this.state = useState({});
+            Object.assign(this.state, this.props.info.state);
         }
         /**
          * @deprecated Don't remove. There might be overrides.
