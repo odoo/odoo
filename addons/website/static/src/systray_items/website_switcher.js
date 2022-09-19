@@ -6,11 +6,12 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import wUtils from 'website.utils';
 
-const { Component } = owl;
+const { Component, useState } = owl;
 
 export class WebsiteSwitcherSystray extends Component {
     setup() {
         this.websiteService = useService('website');
+        this.currentWebsite = useState(this.websiteService.currentWebsite);
     }
 
     getElements() {

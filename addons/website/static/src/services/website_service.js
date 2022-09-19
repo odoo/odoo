@@ -8,8 +8,6 @@ import { WebsiteLoader } from '../components/website_loader/website_loader';
 
 const { reactive, EventBus } = owl;
 
-const websiteSystrayRegistry = registry.category('website_systray');
-
 export const unslugHtmlDataObject = (repr) => {
     const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
     if (!match) {
@@ -24,11 +22,9 @@ export const unslugHtmlDataObject = (repr) => {
 const ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
 
 export const websiteService = {
-    dependencies: ['orm', 'action', 'user', 'dialog', 'hotkey'],
-    async start(env, { orm, action, user, dialog, hotkey }) {
+    dependencies: ['orm', 'action', 'user', 'hotkey'],
+    start(env, { orm, action, user, hotkey }) {
         let websites = [];
-        let currentWebsiteId;
-        let currentMetadata = {};
         let fullscreen;
         let pageDocument;
         let contentWindow;
@@ -53,11 +49,18 @@ export const websiteService = {
             snippetsLoaded: false,
             isMobile: false,
         });
+        const websiteDef = {
+            id: null,
+            domain: null,
+            metadata: {},
+            name: null,
+        };
+        const currentWebsite = reactive({ ...websiteDef });
         const bus = new EventBus();
 
         hotkey.add("escape", () => {
             // Toggle fullscreen mode when pressing escape.
-            if (!currentWebsiteId && !fullscreen) {
+            if (!currentWebsite.id && !fullscreen) {
                 // Only allow to use this feature while on the website app, or
                 // while it is already fullscreen (in case you left the website
                 // app in fullscreen mode, thanks to CTRL-K).
@@ -76,13 +79,21 @@ export const websiteService = {
             props: { bus },
         });
         return {
+            /**
+             * A setter is kept to fill the domain and name of the current
+             * website based on its id.
+             */
             set currentWebsiteId(id) {
-                if (id && id !== lastWebsiteId) {
+                currentWebsite.id = id;
+                if (websites.length) {
+                    const website = websites.find(w => w.id === id);
+                    currentWebsite.name = website.name;
+                    currentWebsite.domain = website.domain;
+                }
+                if (id !== lastWebsiteId) {
                     invalidateSnippetCache = true;
                     lastWebsiteId = id;
                 }
-                currentWebsiteId = id;
-                websiteSystrayRegistry.trigger('EDIT-WEBSITE');
             },
             /**
              * This represents the current website being edited in the
@@ -91,10 +102,6 @@ export const websiteService = {
              * not displayed.
              */
             get currentWebsite() {
-                const currentWebsite = websites.find(w => w.id === currentWebsiteId);
-                if (currentWebsite) {
-                    currentWebsite.metadata = currentMetadata;
-                }
                 return currentWebsite;
             },
             get websites() {
@@ -109,7 +116,7 @@ export const websiteService = {
             set pageDocument(document) {
                 pageDocument = document;
                 if (!document) {
-                    currentMetadata = {};
+                    Object.assign(currentWebsite, websiteDef);
                     contentWindow = null;
                     return;
                 }
@@ -118,14 +125,15 @@ export const websiteService = {
                 // Chrome.
                 const isWebsitePage = dataset && dataset.websiteId;
                 if (!isWebsitePage) {
-                    currentMetadata = {};
+                    currentWebsite.metadata = {};
                 } else {
-                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = dataset;
+                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid, websiteId } = dataset;
+                    this.currentWebsiteId = parseInt(websiteId, 10);
                     const contentMenus = [...document.querySelectorAll('[data-content_menu_id]')].map(menu => [
                         menu.dataset.menu_name,
                         menu.dataset.content_menu_id,
                     ]);
-                    currentMetadata = {
+                    currentWebsite.metadata = {
                         path: document.location.href,
                         mainObject: unslugHtmlDataObject(mainObject),
                         seoObject: unslugHtmlDataObject(seoObject),
@@ -146,7 +154,6 @@ export const websiteService = {
                     };
                 }
                 contentWindow = document.defaultView;
-                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
             },
             get pageDocument() {
                 return pageDocument;
@@ -198,7 +205,7 @@ export const websiteService = {
                     clearBreadcrumbs: true,
                     additionalContext: {
                         params: {
-                            website_id: websiteId || currentWebsiteId,
+                            website_id: websiteId,
                             path: path || (contentWindow && contentWindow.location.href) || '/',
                             enable_editor: edition,
                             edit_translations: translation,

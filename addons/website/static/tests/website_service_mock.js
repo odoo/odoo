@@ -4,14 +4,22 @@ import { patch } from '@web/core/utils/patch';
 import { registry } from '@web/core/registry';
 import { utils, clearRegistryWithCleanup } from '@web/../tests/helpers/mock_env';
 
+const { reactive } = owl;
+
 const { prepareRegistriesWithCleanup } = utils;
 
 function makeFakeWebsiteService() {
     return {
         start() {
+            const currentWebsite = reactive({
+                metadata: {},
+            });
             return {
                 get context() {
                     return {};
+                },
+                get currentWebsite() {
+                    return currentWebsite;
                 },
                 get isRestrictedEditor() {
                     return true;

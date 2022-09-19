@@ -153,7 +153,9 @@ export class PagePropertiesDialog extends FormViewDialog {
     }
 
     get resId() {
-        return this.props.resId || (this.website.currentWebsite && this.website.currentWebsite.metadata.mainObject.id);
+        return this.props.resId
+            || (this.website.currentWebsite.metadata.mainObject
+                && this.website.currentWebsite.metadata.mainObject.id);
     }
 
     clonePage() {

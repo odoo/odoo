@@ -6,7 +6,6 @@ import core from 'web.core';
 import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
-import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { routeToUrl } from "@web/core/browser/router_service";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -46,32 +45,15 @@ export class WebsitePreview extends Component {
         useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
 
         onWillStart(async () => {
-            const [backendWebsiteRepr] = await Promise.all([
-                this.orm.call('website', 'get_current_website'),
-                this.websiteService.fetchWebsites(),
-                this.websiteService.fetchUserGroups(),
-            ]);
-            this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
-
-            const encodedPath = encodeURIComponent(this.path);
-            if (this.websiteDomain && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
-                // The website domain might be the naked one while the naked one
-                // is actually redirecting to `www` (or the other way around).
-                // In such a case, we need to consider those 2 from the same
-                // domain and let the iframe load that "different" domain. The
-                // iframe will actually redirect to the correct one (naked/www),
-                // which will ends up with the same domain as the parent window
-                // URL (event if it wasn't, it wouldn't be an issue as those are
-                // really considered as the same domain, the user will share the
-                // same session and CORS errors won't be a thing in such a case)
-                window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
-            } else {
-                this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
+            await this.websiteService.fetchUserGroups();
+            if (this.websiteService.hasMultiWebsites) {
+                await this.websiteService.fetchWebsites();
+                const websiteId = this.props.action.context.params && this.props.action.context.params.website_id;
+                this.initialUrl = this._getUrl(websiteId, this.path);
             }
         });
 
         useEffect(() => {
-            this.websiteService.currentWebsiteId = this.websiteId;
             if (this.isRestored) {
                 return;
             }
@@ -107,7 +89,6 @@ export class WebsitePreview extends Component {
             });
             const { pathname, search, hash } = this.iframe.el.contentWindow.location;
             this.websiteService.lastUrl = `${pathname}${search}${hash}`;
-            this.websiteService.currentWebsiteId = null;
             this.websiteService.websiteRootInstance = undefined;
             this.websiteService.pageDocument = null;
         });
@@ -180,24 +161,6 @@ export class WebsitePreview extends Component {
             this.iframe.el.addEventListener('OdooFrameContentLoaded', toggleIsMobile);
             return () => this.iframe.el.removeEventListener('OdooFrameContentLoaded', toggleIsMobile);
         }, () => []);
-    }
-
-    get websiteId() {
-        let websiteId = this.props.action.context.params && this.props.action.context.params.website_id;
-        // When no parameter is passed to the client action, the current
-        // website from the backend (which is the last viewed/edited) will be
-        // taken.
-        if (!websiteId) {
-            websiteId = this.backendWebsiteId;
-        }
-        if (!websiteId) {
-            websiteId = this.websiteService.websites[0].id;
-        }
-        return websiteId;
-    }
-
-    get websiteDomain() {
-        return this.websiteService.websites.find(website => website.id === this.websiteId).domain;
     }
 
     get path() {
@@ -352,7 +315,7 @@ export class WebsitePreview extends Component {
                     target: 'new',
                     additionalContext: {
                         params: {
-                            website_id: this.websiteId,
+                            website_id: this.websiteService.currentWebsite.id,
                             url_return: $.deparam(href).url_return,
                         },
                     },
@@ -403,6 +366,38 @@ export class WebsitePreview extends Component {
             this.iframefallback.el.classList.remove('d-none');
             $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
         }
+    }
+
+    /**
+     * Returns the final url for the iframe (may go through /website/force in
+     * some conditions). If the targeted website is hosted on another domain,
+     * it will redirect the window.
+     * @param {number} websiteId
+     * @param {string} path
+     * @returns {string}
+     */
+    _getUrl(websiteId, path) {
+        if (this.websiteService.hasMultiWebsites && websiteId) {
+            const websiteDomain = this.websiteService.websites.find(website => website.id === websiteId).domain;
+            const hasWebsiteWithoutDomain = this.websiteService.websites.find(website => !website.domain);
+            const encodedPath = encodeURIComponent(path);
+            if (!websiteDomain || hasWebsiteWithoutDomain) {
+                return `/website/force/${websiteId}?path=${encodedPath}`;
+            } else if (!wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
+                // The website domain might be the naked one while the naked one
+                // is actually redirecting to `www` (or the other way around).
+                // In such a case, we need to consider those 2 from the same
+                // domain and let the iframe load that "different" domain. The
+                // iframe will actually redirect to the correct one (naked/www),
+                // which will ends up with the same domain as the parent window
+                // URL (event if it wasn't, it wouldn't be an issue as those are
+                // really considered as the same domain, the user will share the
+                // same session and CORS errors won't be a thing in such a case)
+                window.location.href = `${websiteDomain}/@/${encodedPath}`;
+                return;
+            }
+        }
+        return path;
     }
 }
 WebsitePreview.template = 'website.WebsitePreview';

@@ -261,7 +261,7 @@ class NewContentSystray extends Component {
     }
 
     onClick() {
-        this.websiteContext.showNewContentModal = !this.websiteContext.showNewContentModal;
+        this.website.context.showNewContentModal = !this.website.context.showNewContentModal;
     }
 }
 NewContentSystray.template = "website.NewContentSystray";

@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { useService, useBus } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, useState } = owl;
-
-const websiteSystrayRegistry = registry.category('website_systray');
+const { Component, onWillStart, useState, useEffect } = owl;
 
 export class EditInBackendSystray extends Component {
     setup() {
@@ -14,7 +12,10 @@ export class EditInBackendSystray extends Component {
         this.state = useState({mainObjectName: ''});
 
         onWillStart(this._updateMainObjectName);
-        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', this._updateMainObjectName);
+
+        useEffect(() => {
+            this._updateMainObjectName();
+        }, () => [this.websiteService.currentWebsite.metadata]);
     }
 
     editInBackend() {
@@ -36,7 +37,7 @@ EditInBackendSystray.template = "website.EditInBackendSystray";
 
 export const systrayItem = {
     Component: EditInBackendSystray,
-    isDisplayed: env => env.services.website.currentWebsite && env.services.website.currentWebsite.metadata.editableInBackend,
+    isDisplayed: env => env.services.website.currentWebsite.metadata.editableInBackend,
 };
 
 registry.category("website_systray").add("EditInBackend", systrayItem, { sequence: 9 });
