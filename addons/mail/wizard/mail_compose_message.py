@@ -387,18 +387,18 @@ class MailComposer(models.TransientModel):
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
-                'subject': self.subject,
-                'body': self.body or '',
-                'parent_id': self.parent_id and self.parent_id.id,
-                'partner_ids': [partner.id for partner in self.partner_ids],
                 'attachment_ids': [attach.id for attach in self.attachment_ids],
                 'author_id': self.author_id.id,
+                'body': self.body or '',
                 'email_from': self.email_from,
-                'record_name': self.record_name,
-                'reply_to_force_new': self.reply_to_force_new,
                 'mail_server_id': self.mail_server_id.id,
                 'mail_activity_type_id': self.mail_activity_type_id.id,
                 'message_type': 'email' if mass_mail_mode else self.message_type,
+                'parent_id': self.parent_id.id,
+                'partner_ids': self.partner_ids.ids,
+                'record_name': self.record_name,
+                'reply_to_force_new': self.reply_to_force_new,
+                'subject': self.subject,
             }
 
             # mass mailing: rendering override wizard static values
@@ -554,10 +554,12 @@ class MailComposer(models.TransientModel):
             template = self.env['mail.template'].browse(template_id)
             values = dict(
                 (field, template[field])
-                for field in ['subject', 'body_html',
+                for field in ('body_html',
                               'email_from',
+                              'mail_server_id',
                               'reply_to',
-                              'mail_server_id']
+                              'subject',
+                             )
                 if template[field]
             )
             if template.attachment_ids:
@@ -567,11 +569,16 @@ class MailComposer(models.TransientModel):
         elif template_id:
             values = self.generate_email_for_composer(
                 template_id, [res_id],
-                ['subject', 'body_html',
+                ('attachment_ids',
+                 'body_html',
+                 'email_cc',
                  'email_from',
-                 'email_cc', 'email_to', 'partner_to', 'reply_to',
-                 'attachment_ids', 'mail_server_id'
-                ]
+                 'email_to',
+                 'mail_server_id',
+                 'partner_to',
+                 'reply_to',
+                 'subject',
+                )
             )[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
             # be done further in the posting process, allowing to clean database if email not send
@@ -593,19 +600,28 @@ class MailComposer(models.TransientModel):
                 default_composition_mode=composition_mode,
                 default_model=model,
                 default_res_id=res_id
-            ).default_get(['composition_mode', 'model', 'res_id', 'parent_id',
-                           'subject', 'body',
+            ).default_get(['attachment_ids',
+                           'body',
+                           'composition_mode',
                            'email_from',
-                           'partner_ids', 'reply_to',
-                           'attachment_ids', 'mail_server_id'
+                           'mail_server_id',
+                           'model',
+                           'parent_id',
+                           'partner_ids',
+                           'reply_to',
+                           'res_id',
+                           'subject',
                           ])
             values = dict(
                 (key, default_values[key])
-                for key in ['subject', 'body',
+                for key in ('attachment_ids',
+                            'body',
                             'email_from',
-                            'partner_ids', 'reply_to',
-                            'attachment_ids', 'mail_server_id'
-                           ] if key in default_values)
+                            'mail_server_id',
+                            'partner_ids',
+                            'reply_to',
+                            'subject',
+                           ) if key in default_values)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -653,10 +669,10 @@ class MailComposer(models.TransientModel):
         results = dict.fromkeys(res_ids, False)
         for res_id in res_ids:
             results[res_id] = {
-                'subject': subjects[res_id],
                 'body': bodies[res_id],
                 'email_from': emails_from[res_id],
                 'reply_to': replies_to[res_id],
+                'subject': subjects[res_id],
             }
             results[res_id].update(default_recipients.get(res_id, dict()))
 
@@ -664,7 +680,13 @@ class MailComposer(models.TransientModel):
         if self.template_id:
             template_values = self.generate_email_for_composer(
                 self.template_id.id, res_ids,
-                ['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'])
+                ('attachment_ids',
+                 'email_to',
+                 'email_cc',
+                 'mail_server_id',
+                 'partner_to',
+                )
+            )
         else:
             template_values = {}
 
@@ -692,7 +714,7 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
-        returned_fields = fields + ['partner_ids', 'attachments']
+        returned_fields = list(fields) + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 
         template_values = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email(res_ids, fields)

@@ -13,7 +13,7 @@ from werkzeug import urls
 from odoo import _, api, fields, models, tools
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.exceptions import UserError, AccessError
-from odoo.tools import is_html_empty, safe_eval
+from odoo.tools import is_html_empty
 from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_inline_template, render_inline_template, template_env_globals
 
 _logger = logging.getLogger(__name__)
@@ -273,6 +273,10 @@ class MailRenderMixin(models.AbstractModel):
                               add_context=None, options=None):
         """ Render a raw QWeb template.
 
+        In addition to the generic evaluation context available, some other
+        variables are added:
+          * ``object``: record based on which the template is rendered;
+
         :param str template_src: raw QWeb template to render;
         :param str model: see ``MailRenderMixin._render_template()``;
         :param list res_ids: see ``MailRenderMixin._render_template()``;
@@ -283,8 +287,6 @@ class MailRenderMixin(models.AbstractModel):
         :param dict options: options for rendering (not used currently);
 
         :return dict: {res_id: string of rendered template based on record}
-
-        :notice: Experimental. Use at your own risks only.
         """
         results = dict.fromkeys(res_ids, u"")
         if not template_src:
@@ -473,6 +475,7 @@ class MailRenderMixin(models.AbstractModel):
         else:
             rendered = self._render_template_inline_template(template_src, model, res_ids,
                                                              add_context=add_context, options=options)
+
         if post_process:
             rendered = self._render_template_postprocess(rendered)
 
@@ -543,6 +546,7 @@ class MailRenderMixin(models.AbstractModel):
         :param string set_lang: force language for rendering. It should be a
           valid lang code matching an activate res.lang. Checked only if
           ``compute_lang`` is False;
+
         :param dict add_context: additional context to give to renderer;
         :param dict options: options for rendering;
         :param boolean post_process: perform a post processing on rendered result
@@ -570,7 +574,12 @@ class MailRenderMixin(models.AbstractModel):
             (res_id, rendered)
             for lang, (template, tpl_res_ids) in templates_res_ids.items()
             for res_id, rendered in template._render_template(
-                template[field], template.render_model, tpl_res_ids, engine=engine,
-                add_context=add_context, options=options, post_process=post_process
+                template[field],
+                template.render_model,
+                tpl_res_ids,
+                engine=engine,
+                add_context=add_context,
+                options=options,
+                post_process=post_process
             ).items()
         )
