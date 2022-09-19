@@ -267,5 +267,191 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
+        <record id="mail_template_sale_amount_mismatch" model="mail.template">
+            <field name="name">Sale Order: Transaction amount mismatch</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+        Hello,
+        <br/><br/>
+        <t t-set="transaction" t-value="object.get_portal_last_transaction()"/>
+            A payment was received for you order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span>
+            but its amount (<span style="font-weight:bold;" t-out="format_amount(transaction.amount, object.currency_id) or ''">$ 20.00</span>)
+            does not match the order amount (<span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>).
+            Please contact customer service.
+        <br/><br/>
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br/><br/>
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+        <br/><br/>
+    </p>
+<t t-if="hasattr(object, 'website_id') and object.website_id">
+    <div style="margin: 0px; padding: 0px;">
+        <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+            <tr style="border-bottom: 2px solid #dee2e6;">
+                <td style="width: 150px;"><span style="font-weight:bold;">Products</span></td>
+                <td></td>
+                <td width="15%" align="center"><span style="font-weight:bold;">Quantity</span></td>
+                <td width="20%" align="right"><span style="font-weight:bold;">
+                <t t-if="object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')">
+                    VAT Excl.
+                </t>
+                <t t-else="">
+                    VAT Incl.
+                </t>
+                </span></td>
+            </tr>
+        </table>
+        <t t-foreach="object.order_line" t-as="line">
+            <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and line.display_type in ['line_section', 'line_note']">
+                <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+                    <t t-set="loop_cycle_number" t-value="loop_cycle_number or 0" />
+                    <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
+                        <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" />
+                        <td colspan="4">
+                            <t t-if="line.display_type == 'line_section'">
+                                <span style="font-weight:bold;" t-out="line.name or ''">Taking care of Trees Course</span>
+                            </t>
+                            <t t-elif="line.display_type == 'line_note'">
+                                <i t-out="line.name or ''">Taking care of Trees Course</i>
+                            </t>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+            <t t-elif="(not hasattr(line, 'is_delivery') or not line.is_delivery)">
+                <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+                    <t t-set="loop_cycle_number" t-value="loop_cycle_number or 0" />
+                    <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
+                        <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" />
+                        <td style="width: 150px;">
+                            <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="width: 64px; height: 64px; object-fit: contain;" alt="Product image"></img>
+                        </td>
+                        <td align="left" t-out="line.product_id.name or ''">	Taking care of Trees Course</td>
+                        <td width="15%" align="center" t-out="line.product_uom_qty or ''">1</td>
+                        <td width="20%" align="right"><span style="font-weight:bold;">
+                        <t t-if="object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')">
+                            <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 10.00</t>
+                        </t>
+                        <t t-else="">
+                            <t t-out="format_amount(line.price_reduce_taxinc, object.currency_id) or ''">$ 10.00</t>
+                        </t>
+                        </span></td>
+                    </tr>
+                </table>
+            </t>
+        </t>
+    </div>
+    <div style="margin: 0px; padding: 0px;" t-if="hasattr(object, 'carrier_id') and object.carrier_id">
+        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+            <tr>
+                <td style="width: 60%"/>
+                <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">Delivery:</span></td>
+                <td style="width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 0.00</td>
+            </tr>
+            <tr>
+                <td style="width: 60%"/>
+                <td style="width: 30%;" align="right"><span style="font-weight:bold;">SubTotal:</span></td>
+                <td style="width: 10%;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
+            </tr>
+        </table>
+    </div>
+    <div style="margin: 0px; padding: 0px;" t-else="">
+        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+            <tr>
+                <td style="width: 60%"/>
+                <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">SubTotal:</span></td>
+                <td style="width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
+            </tr>
+        </table>
+    </div>
+    <div style="margin: 0px; padding: 0px;">
+        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+            <tr>
+                <td style="width: 60%"/>
+                <td style="width: 30%;" align="right"><span style="font-weight:bold;">Taxes:</span></td>
+                <td style="width: 10%;" align="right" t-out="format_amount(object.amount_tax, object.currency_id) or ''">$ 0.00</td>
+            </tr>
+            <tr>
+                <td style="width: 60%"/>
+                <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">Total:</span></td>
+                <td style="width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</td>
+            </tr>
+        </table>
+    </div>
+    <div t-if="object.partner_invoice_id" style="margin: 0px; padding: 0px;">
+        <table width="100%" style="color: #454748; font-size: 12px;">
+            <tr>
+                <td style="padding-top: 10px;">
+                    <span style="font-weight:bold;">Bill to:</span>
+                    <t t-out="object.partner_invoice_id.street or ''">1201 S Figueroa St</t>
+                    <t t-out="object.partner_invoice_id.city or ''">Los Angeles</t>
+                    <t t-out="object.partner_invoice_id.state_id.name or ''">California</t>
+                    <t t-out="object.partner_invoice_id.zip or ''">90015</t>
+                    <t t-out="object.partner_invoice_id.country_id.name or ''">United States</t>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight:bold;">Payment Method:</span>
+                    <t t-if="transaction.token_id">
+                        <t t-out="transaction.token_id.name or ''"></t>
+                    </t>
+                    <t t-else="">
+                        <t t-out="transaction.provider_id.sudo().name or ''"></t>
+                    </t>
+                    (<t t-out="format_amount(transaction.amount, object.currency_id) or ''">$ 10.00</t>)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div t-if="object.partner_shipping_id and not object.only_services" style="margin: 0px; padding: 0px;">
+        <table width="100%" style="color: #454748; font-size: 12px;">
+            <tr>
+                <td>
+                    <br/>
+                    <span style="font-weight:bold;">Ship to:</span>
+                    <t t-out="object.partner_shipping_id.street or ''">1201 S Figueroa St</t>
+                    <t t-out="object.partner_shipping_id.city or ''">Los Angeles</t>
+                    <t t-out="object.partner_shipping_id.state_id.name or ''">California</t>
+                    <t t-out="object.partner_shipping_id.zip or ''">90015</t>
+                    <t t-out="object.partner_shipping_id.country_id.name or ''">United States</t>
+                </td>
+            </tr>
+        </table>
+        <table t-if="hasattr(object, 'carrier_id') and object.carrier_id" width="100%" style="color: #454748; font-size: 12px;">
+            <tr>
+                <td>
+                    <span style="font-weight:bold;">Shipping Method:</span>
+                    <t t-out="object.carrier_id.name or ''"></t>
+                    <t t-if="object.amount_delivery == 0.0">
+                        (Free)
+                    </t>
+                    <t t-else="">
+                        (<t t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 10.00</t>)
+                    </t>
+                </td>
+            </tr>
+            <tr t-if="object.carrier_id.carrier_description">
+                <td>
+                    <strong>Shipping Description:</strong>
+                    <t t-out="object.carrier_id.carrier_description"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+</t>
+</div></field>
+            <field name="report_template" ref="action_report_saleorder"/>
+            <field name="report_name">{{ (object.name or '').replace('/','_') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
     </data>
 </odoo>

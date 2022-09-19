@@ -842,6 +842,23 @@ class SaleOrder(models.Model):
                 email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             )
 
+    def _send_order_amount_mismatch_mail(self):
+        if not self:
+            return
+
+        if self.env.su:
+            # sending mail in sudo was meant for it being sent from superuser
+            self = self.with_user(SUPERUSER_ID)
+
+        mail_template = self.env.ref('sale.mail_template_sale_amount_mismatch', raise_if_not_found=False)
+
+        for sale_order in self:
+            sale_order.with_context(force_send=True).message_post_with_template(
+                mail_template.id,
+                composition_mode='comment',
+                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+            )
+
     def action_done(self):
         for order in self:
             tx = order.sudo().transaction_ids._get_last()
