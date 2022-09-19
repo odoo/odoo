@@ -36,7 +36,7 @@ class TestAPI(TestMailCommon, TestRecipients):
         # post a note
         message = ticket_record.message_post(
             attachment_ids=attachments.ids,
-            body="<p>Initial Body</p>",
+            body=Markup("<p>Initial Body</p>"),
             message_type="comment",
             partner_ids=self.partner_1.ids,
         )
@@ -76,7 +76,7 @@ class TestAPI(TestMailCommon, TestRecipients):
 
         # cannot edit user comments (subtype)
         message = ticket_record.message_post(
-            body="<p>Initial Body</p>",
+            body=Markup("<p>Initial Body</p>"),
             message_type="comment",
             subtype_id=self.env.ref('mail.mt_comment').id,
         )
