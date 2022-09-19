@@ -90,6 +90,7 @@
             'website_sale/static/src/js/systray_items/*.js',
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
+            'website_sale/static/src/xml/website_sale_utils.xml',
         ],
         'web.assets_common': [
             'website_sale/static/src/js/tours/tour_utils.js',
