@@ -1345,6 +1345,11 @@ var SnippetsMenu = Widget.extend({
         defs.push((async () => {
             await this._loadSnippetsTemplates();
             await this._updateInvisibleDOM();
+            this.snippetEditors.forEach(editor => {
+                if (!editor.$target[0].dataset.visibility) {
+                    editor.toggleTargetVisibility(false);
+                }
+            });
         })());
 
         // Prepare snippets editor environment
