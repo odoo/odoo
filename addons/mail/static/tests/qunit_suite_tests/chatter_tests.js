@@ -283,10 +283,8 @@ QUnit.test('list activity exception widget with activity', async function (asser
     });
 
     assert.containsN(document.body, '.o_data_row', 2, "should have two records");
-    assert.doesNotHaveClass(document.querySelector('.o_data_row .o_activity_exception_cell div div'), 'fa-warning',
-        "there is no any exception activity on record");
-    assert.hasClass(document.querySelectorAll('.o_data_row .o_activity_exception_cell div div')[1], 'fa-warning',
-        "there is an exception on a record");
+    assert.containsNone(document.querySelectorAll('.o_data_row .o_activity_exception_cell')[0], '.o_ActivityException', "there is no any exception activity on record");
+    assert.containsOnce(document.querySelectorAll('.o_data_row .o_activity_exception_cell')[1], '.o_ActivityException', "there is an exception on a record");
 });
 
 QUnit.test('list activity widget: done the activity with "ENTER" keyboard shortcut', async function (assert) {
