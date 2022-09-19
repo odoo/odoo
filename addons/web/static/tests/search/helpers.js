@@ -7,6 +7,7 @@ import {
     getFixture,
     mount,
     mouseEnter,
+    nextTick,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -175,7 +176,7 @@ export async function editConditionOperator(el, index, operator) {
     await triggerEvent(select, null, "change");
 }
 
-export async function editConditionValue(el, index, value, valueIndex = 0) {
+export async function editConditionValue(el, index, value, valueIndex = 0, triggerChange = true) {
     const condition = findItem(el, `.o_filter_condition`, index);
     const target = findItem(
         condition,
@@ -183,7 +184,10 @@ export async function editConditionValue(el, index, value, valueIndex = 0) {
         valueIndex
     );
     target.value = value;
-    await triggerEvent(target, null, "change");
+    if (triggerChange) {
+        triggerEvent(target, null, "change");
+    }
+    await nextTick();
 }
 
 export async function applyFilter(el) {

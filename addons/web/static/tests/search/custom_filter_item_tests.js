@@ -3,6 +3,7 @@
 import {
     click,
     getFixture,
+    nextTick,
     patchDate,
     patchTimeZone,
     patchWithCleanup,
@@ -742,5 +743,30 @@ QUnit.module("Search", (hooks) => {
             2,
             "The delete button is shown as a trash icon"
         );
+    });
+
+    QUnit.test("condition value is not lost on deep render", async function (assert) {
+        const component = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+        });
+
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+
+        await editConditionField(target, 0, "char_field");
+        await editConditionValue(target, 0, "Coucou", 0, false);
+
+        let charInput = target.querySelector(".o_generator_menu_value .o_input");
+        assert.strictEqual(charInput.value, "Coucou");
+
+        component.render(true);
+        await nextTick();
+
+        charInput = target.querySelector(".o_generator_menu_value .o_input");
+        assert.strictEqual(charInput.value, "Coucou");
     });
 });
