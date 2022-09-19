@@ -809,7 +809,8 @@ odoo.define('pos_coupon.pos', function (require) {
 
             // Check if valid customer
             const customer = this.get_client();
-            if (program.rule_partners_domain && !program.valid_partner_ids.has(customer ? customer.id : 0)) {
+            const partnersDomain = program.rule_partners_domain || '[]';
+            if (partnersDomain !== '[]' && !program.valid_partner_ids.has(customer ? customer.id : 0)) {
                 return {
                     successful: false,
                     reason: "Current customer can't avail this program.",
