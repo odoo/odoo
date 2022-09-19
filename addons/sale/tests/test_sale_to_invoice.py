@@ -540,3 +540,38 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(line.qty_invoiced, 10)
         line.qty_delivered = 15
         self.assertEqual(line.qty_invoiced, 10)
+
+    def test_fiscal_position_on_create_invoice(self):
+        """
+        Test whenever a Fiscal Position is manually set that, when the invoice is created, the FP is not recomputed.
+        """
+        # create fiscal positions: auto-detect basen on NY-USA
+        auto_fp = self.env['account.fiscal.position'].create({
+            'auto_apply': True,
+            'country_id': self.env.ref('base.us').id,
+            'name': 'Auto FP',
+            'state_ids': [self.env.ref('base.state_us_27').id],
+        })
+        manual_fp = self.env['account.fiscal.position'].create({
+            'name': 'Manual FP',
+        })
+        # customer in New-York, USA
+        self.partner_a.write({
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_27').id,
+        })
+        so = self.env['sale.order'].create({
+            'fiscal_position_id': manual_fp.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+            'partner_id': self.partner_b.id,
+        })
+        so.write({'partner_id': self.partner_a})
+        self.assertEqual(so.fiscal_position_id.id, auto_fp.id, 'The FP should be recomputed on change of partner')
+        # change the fp manually
+        so.write({'fiscal_position_id': manual_fp.id})
+        so.action_confirm()
+        self.assertEqual(so.fiscal_position_id.id, manual_fp.id, 'The FP should not have been re-computed.')
+        # Create invoice
+        move = so._create_invoices()
+        self.assertEqual(move.fiscal_position_id.id, manual_fp.id,
+                         'The FP should not have been re-computed during the creation of the invoice.')
