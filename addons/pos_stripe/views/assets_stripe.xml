@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="stripe" inherit_id="point_of_sale.assets">
+        <xpath expr="//script[last()]" position="after">
+            <!-- As the following link does not end with '.js', it's not loaded when
+                 placed in __manifest__.py. The following declaration fix this problem -->
+            <script type="text/javascript" src="https://js.stripe.com/terminal/v1/"></script>
+            <script type="text/javascript" src="/pos_stripe/static/src/js/models.js"/>
+            <script type="text/javascript" src="/pos_stripe/static/src/js/payment_stripe.js"/>
+        </xpath>
+    </template>
+
+</odoo>
