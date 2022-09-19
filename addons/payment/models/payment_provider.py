@@ -82,12 +82,14 @@ class PaymentProvider(models.Model):
         comodel_name='ir.ui.view',
         help="The template rendering the inline payment form when making a payment by token.",
         domain=[('type', '=', 'qweb')],
+        ondelete='restrict',
     )
     express_checkout_form_view_id = fields.Many2one(
         string="Express Checkout Form Template",
         comodel_name='ir.ui.view',
         help="The template rendering the express payment methods' form.",
         domain=[('type', '=', 'qweb')],
+        ondelete='restrict',
     )
 
     # Availability fields.
