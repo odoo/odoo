@@ -299,6 +299,14 @@
                         <span t-if="receipt.client and receipt.client.name" class="pos-receipt-left-align"> <t t-esc="receipt.client.name"/></span>
                         <span t-else="" class="pos-receipt-right-align" style="width: 70%;overflow: hidden;">_______________________________________________</span>
                     </div>
+                    <div t-if="receipt.client and receipt.client.x_pwd_id">
+                        <span class="pos-receipt-left-align"><b>PWD ID: </b></span>
+                        <span class="pos-receipt-left-align"> <t t-esc="receipt.client.x_pwd_id"/></span>
+                    </div>
+                    <div t-if="receipt.client and receipt.client.x_senior_id">
+                        <span class="pos-receipt-left-align"><b>Senior ID: </b></span>
+                        <span class="pos-receipt-left-align"> <t t-esc="receipt.client.x_senior_id"/></span>
+                    </div>
                     <div>
                         <span class="pos-receipt-left-align"><b>Address: </b></span>
                         <span t-if="receipt.client and receipt.client.address" class="pos-receipt-left-align"> <t t-esc="receipt.client.address"/></span>
