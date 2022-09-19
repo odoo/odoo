@@ -327,33 +327,36 @@ class PropertiesCase(TransactionCase):
             msg='Writing None should not reset to the default value')
 
         # test the case where the definition record come from a default as well
-        self.env['test_new_api.message']._fields['discussion'].default = lambda __: self.discussion_2.id
-        message = self.env['test_new_api.message'].create({
-            'name': 'Test Message',
-            'author': self.user.id,
-        })
-        self.assertEqual(message.discussion, self.discussion_2)
-        self.assertEqual(
-            message.attributes[0]['value'],
-            'draft',
-            msg='Should have taken the default value')
+        def default_discussion(_record):
+            return self.discussion_2.id
 
-        # the definition record come from a default value
-        self.discussion_2.attributes_definition = [{
-            'name': 'test',
-            'type': 'char',
-            'default': 'default char',
-        }]
-        message = self.env['test_new_api.message'] \
-            .with_context(default_discussion=self.discussion_2) \
-            .create({'name': 'Test Message', 'author': self.user.id})
-        self.assertEqual(message.discussion, self.discussion_2)
-        self.assertEqual(message.attributes, [{
-            'name': 'test',
-            'type': 'char',
-            'default': 'default char',
-            'value': 'default char',
-        }])
+        with patch.object(self.env['test_new_api.message']._fields['discussion'], 'default', default_discussion):
+            message = self.env['test_new_api.message'].create({
+                'name': 'Test Message',
+                'author': self.user.id,
+            })
+            self.assertEqual(message.discussion, self.discussion_2)
+            self.assertEqual(
+                message.attributes[0]['value'],
+                'draft',
+                msg='Should have taken the default value')
+
+            # the definition record come from a default value
+            self.discussion_2.attributes_definition = [{
+                'name': 'test',
+                'type': 'char',
+                'default': 'default char',
+            }]
+            message = self.env['test_new_api.message'] \
+                .with_context(default_discussion=self.discussion_2) \
+                .create({'name': 'Test Message', 'author': self.user.id})
+            self.assertEqual(message.discussion, self.discussion_2)
+            self.assertEqual(message.attributes, [{
+                'name': 'test',
+                'type': 'char',
+                'default': 'default char',
+                'value': 'default char',
+            }])
 
         # test a default many2one
         self.discussion_1.attributes_definition = [
