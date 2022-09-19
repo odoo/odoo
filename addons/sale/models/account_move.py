@@ -23,8 +23,28 @@ class AccountMove(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
+<<<<<<< HEAD
     sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count')
 
+||||||| parent of 54e6de592db8... temp
+
+    fiscal_position_id = fields.Many2one(
+        compute='_compute_fiscal_position_id', store=True)
+
+
+    @api.depends('partner_shipping_id', 'company_id')
+    def _compute_fiscal_position_id(self):
+        # Trigger the change of fiscal position when the shipping address is modified.
+        for move in self:
+            fiscal_position = self.env['account.fiscal.position']\
+                .with_company(move.company_id)\
+                ._get_fiscal_position(move.partner_id, delivery=move.partner_shipping_id)
+            if fiscal_position:
+                move.fiscal_position_id = fiscal_position
+
+=======
+
+>>>>>>> 54e6de592db8... temp
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
         res = super(AccountMove, self).unlink()
