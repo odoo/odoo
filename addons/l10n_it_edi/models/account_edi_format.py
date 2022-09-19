@@ -218,9 +218,9 @@ class AccountEdiFormat(models.Model):
             'TD07': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
             'TD08': dict(move_types=['out_refund'], import_type='in_refund', simplified=True),
             'TD09': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
-            'TD17': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="service"),
-            'TD18': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
-            'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
+            'TD17': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', self_invoice=True, services_or_goods="service"),
+            'TD18': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
+            'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
         }
 
     def _l10n_it_get_document_type(self, invoice):
