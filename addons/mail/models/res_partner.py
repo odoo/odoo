@@ -130,7 +130,7 @@ class Partner(models.Model):
                     "isInternalUser": not main_user.share,
                 } if main_user else [('clear',)]
             if 'guest' in self.env.context:
-                data.pop('email')
+                data.pop('email', None)
             partners_format[partner] = data
         return partners_format
 
