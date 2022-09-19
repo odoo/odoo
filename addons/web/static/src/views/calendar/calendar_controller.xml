@@ -6,15 +6,16 @@
             <t t-set-slot="layout-buttons">
                 <t t-call="{{ props.buttonTemplate }}"/>
             </t>
-            <CalendarContainer t-slot-scope="container" t-props="containerProps">
-                <t t-if="container.showCalendar" t-component="props.Renderer" t-props="rendererProps" />
-                <div t-if="container.showSideBar" class="o_calendar_sidebar_container d-md-block">
+            <div class="o_calendar_container">
+                <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
+                <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps" />
+                <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block">
                     <div class="o_calendar_sidebar">
                         <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
                         <FilterPanel t-props="filterPanelProps" />
                     </div>
                 </div>
-            </CalendarContainer>
+            </div>
         </Layout>
     </t>
 

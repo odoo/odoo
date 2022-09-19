@@ -9,12 +9,12 @@ import { Layout } from "@web/search/layout";
 import { useModel } from "../model";
 import { FormViewDialog } from "../view_dialogs/form_view_dialog";
 import { useSetupView } from "../view_hook";
-import { CalendarContainer } from "./container/calendar_container";
 import { CalendarDatePicker } from "./date_picker/calendar_date_picker";
 import { CalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
+import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
 
-const { Component } = owl;
+const { Component, useState } = owl;
 
 const SCALE_LABELS = {
     day: _lt("Day"),
@@ -51,6 +51,10 @@ export class CalendarController extends Component {
         useSetupView({
             getLocalState: () => this.model.exportedState,
         });
+
+        this.state = useState({
+            showSideBar: !this.env.isSmall,
+        });
     }
 
     get rendererProps() {
@@ -77,8 +81,22 @@ export class CalendarController extends Component {
             model: this.model,
         };
     }
+    get mobileFilterPanelProps() {
+        return {
+            model: this.model,
+            sideBarShown: this.state.showSideBar,
+            toggleSideBar: () => (this.state.showSideBar = !this.state.showSideBar),
+        };
+    }
     get scaleLabels() {
         return SCALE_LABELS;
+    }
+    get showCalendar() {
+        return !this.env.isSmall || !this.state.showSideBar;
+    }
+
+    get showSideBar() {
+        return this.state.showSideBar;
     }
 
     async setDate(move) {
@@ -179,9 +197,9 @@ export class CalendarController extends Component {
     }
 }
 CalendarController.components = {
-    CalendarContainer,
     DatePicker: CalendarDatePicker,
     FilterPanel: CalendarFilterPanel,
+    MobileFilterPanel: CalendarMobileFilterPanel,
     QuickCreate: CalendarQuickCreate,
     Layout,
     Dropdown,

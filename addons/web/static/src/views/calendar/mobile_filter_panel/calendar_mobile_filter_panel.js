@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { CalendarFilterPanel } from "../filter_panel/calendar_filter_panel";
-
 const { Component } = owl;
 
 export class CalendarMobileFilterPanel extends Component {
@@ -26,7 +24,5 @@ export class CalendarMobileFilterPanel extends Component {
         });
     }
 }
-CalendarMobileFilterPanel.components = {
-    FilterPanel: CalendarFilterPanel,
-};
+CalendarMobileFilterPanel.components = {};
 CalendarMobileFilterPanel.template = "web.CalendarMobileFilterPanel";
