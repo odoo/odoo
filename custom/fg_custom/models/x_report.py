@@ -10,11 +10,8 @@ class FgXReport(models.AbstractModel):
     _description = 'X Report'
 
     def action_print(self, session_id):
-        # session_id = self.session_id
-        session_id = self.env['pos.session'].browse(session_id)
-        start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference asc')
-        end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference desc')
-        return_order_ids = session_id.order_ids.filtered(lambda x: x.is_refunded)
+        session_ids = self.env['pos.session'].browse(session_id)
+
         total_qty = 0
         total_discount_qty = 0
         total_vat = 0
@@ -30,70 +27,87 @@ class FgXReport(models.AbstractModel):
         tender_history = {}
         changes_order_count = 0.0
         changes_order_total = 0.0
-        for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
-            total_qty += 1
-            is_total_discount_qty = False
-            is_total_vat_qty = False
-            for line in order.lines:
-                if line.discount > 0:
-                    is_total_discount_qty = True
-                    total_discount_percentage += (line.price_unit * line.qty) - line.price_subtotal_incl
-                if line.price_unit >= 0 and not line.is_program_reward:
-                    current_total_vat = line.price_subtotal_incl - line.price_subtotal
-                    total_vat += current_total_vat
-                    if current_total_vat > 0:
-                        is_total_vat_qty = True
-                    total_amt += line.price_unit * line.qty
-                    str_non_zero_vat = ''
-                    for i in line.tax_ids_after_fiscal_position:
-                        str_non_zero_vat = i.is_non_zero_vat
-                    if str_non_zero_vat == 'is_vat':
-                        total_product_v += line.price_subtotal
-                    elif str_non_zero_vat == 'is_zero_vat':
-                        total_product_z += line.price_subtotal
-                    else:
-                        total_product_e += line.price_subtotal
-                else:
-                    is_total_discount_qty = True
-                    total_vat += line.price_subtotal_incl - line.price_subtotal
-                    str_non_zero_vat = ''
-                    for i in line.tax_ids_after_fiscal_position:
-                        str_non_zero_vat = i.is_non_zero_vat
-                    if str_non_zero_vat == 'is_vat':
-                        total_product_v += line.price_subtotal
-                    if line.is_program_reward:
-                        total_discount_coupon_minus += abs(line.price_unit)
-                    else:
-                        total_discount_global_minus += abs(line.price_unit)
-            if is_total_discount_qty:
-                total_discount_qty += 1
-            if is_total_vat_qty:
-                total_vat_qty += 1
-            if order.x_ext_source:
-                if order.x_ext_source in transactions_history:
-                    count = transactions_history[order.x_ext_source].get('count') + 1
-                    total = transactions_history[order.x_ext_source].get('total') + order.amount_total
-                    transactions_history[order.x_ext_source].update({'count': count, 'total': total})
-                else:
-                    transactions_history[order.x_ext_source] = {'count': 1, 'total': order.amount_total}
-            if order.payment_ids:
-                for pay in order.payment_ids:
-                    if pay.payment_method_id.name in tender_history:
-                        count = tender_history[pay.payment_method_id.name].get('count') + 1
-                        total = tender_history[pay.payment_method_id.name].get('total') + pay.amount
-                        tender_history[pay.payment_method_id.name].update({'count': count, 'total': total})
-                    else:
-                        tender_history[pay.payment_method_id.name] = {'count': 1, 'total': pay.amount}
-            if order.amount_return:
-                changes_order_count += len(order)
-                changes_order_total += order.amount_return
+        cash_register_balance_start = 0.0
+        cash_register_balance_end_real = 0.0
         tz_name = self.env.user.tz or 'UTC'
         localized_dt = timezone('UTC').localize(datetime.utcnow()).astimezone(timezone(tz_name))
-        session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
-        print('-report----localized_dt, session_start_at-', localized_dt, session_start_at)
-        data = {'session_name': session_id.name, 'start_at': session_start_at.strftime('%m/%d/%Y %H:%M:%S'),
-                 'start_order_id': start_order_id.pos_si_trans_reference, 'end_order_id': end_order_id.pos_si_trans_reference, 'cash_register_balance_start': session_id.cash_register_balance_start,
-                 'cash_register_balance_end_real': session_id.cash_register_balance_end_real, 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
+        return_order_ids = self.env['pos.order']
+        open_cashier_list = []
+        start_end_order_list = []
+
+        for session_id in session_ids:
+            start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference asc')
+            end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference desc')
+            return_order_ids |= session_id.order_ids.filtered(lambda x: x.is_refunded)
+            str_start_order_id = start_order_id.pos_si_trans_reference or '..'
+            str_end_order_id = end_order_id.pos_si_trans_reference or '..'
+            start_end_order_list.append(str_start_order_id + ' - ' + str_end_order_id)
+            for order in session_id.order_ids.filtered(lambda x: not x.is_refunded and x.amount_total > 0):
+                total_qty += 1
+                is_total_discount_qty = False
+                is_total_vat_qty = False
+                for line in order.lines:
+                    if line.discount > 0:
+                        is_total_discount_qty = True
+                        total_discount_percentage += (line.price_unit * line.qty) - line.price_subtotal_incl
+                    if line.price_unit >= 0 and not line.is_program_reward:
+                        current_total_vat = line.price_subtotal_incl - line.price_subtotal
+                        total_vat += current_total_vat
+                        if current_total_vat > 0:
+                            is_total_vat_qty = True
+                        total_amt += line.price_unit * line.qty
+                        str_non_zero_vat = ''
+                        for i in line.tax_ids_after_fiscal_position:
+                            str_non_zero_vat = i.is_non_zero_vat
+                        if str_non_zero_vat == 'is_vat':
+                            total_product_v += line.price_subtotal
+                        elif str_non_zero_vat == 'is_zero_vat':
+                            total_product_z += line.price_subtotal
+                        else:
+                            total_product_e += line.price_subtotal
+                    else:
+                        is_total_discount_qty = True
+                        total_vat += line.price_subtotal_incl - line.price_subtotal
+                        str_non_zero_vat = ''
+                        for i in line.tax_ids_after_fiscal_position:
+                            str_non_zero_vat = i.is_non_zero_vat
+                        if str_non_zero_vat == 'is_vat':
+                            total_product_v += line.price_subtotal
+                        if line.is_program_reward:
+                            total_discount_coupon_minus += abs(line.price_unit)
+                        else:
+                            total_discount_global_minus += abs(line.price_unit)
+                if is_total_discount_qty:
+                    total_discount_qty += 1
+                if is_total_vat_qty:
+                    total_vat_qty += 1
+                if order.x_ext_source:
+                    if order.x_ext_source in transactions_history:
+                        count = transactions_history[order.x_ext_source].get('count') + 1
+                        total = transactions_history[order.x_ext_source].get('total') + order.amount_total
+                        transactions_history[order.x_ext_source].update({'count': count, 'total': total})
+                    else:
+                        transactions_history[order.x_ext_source] = {'count': 1, 'total': order.amount_total}
+                if order.payment_ids:
+                    for pay in order.payment_ids:
+                        if pay.payment_method_id.name in tender_history:
+                            count = tender_history[pay.payment_method_id.name].get('count') + 1
+                            total = tender_history[pay.payment_method_id.name].get('total') + pay.amount
+                            tender_history[pay.payment_method_id.name].update({'count': count, 'total': total})
+                        else:
+                            tender_history[pay.payment_method_id.name] = {'count': 1, 'total': pay.amount}
+                if order.amount_return:
+                    changes_order_count += len(order)
+                    changes_order_total += order.amount_return
+
+            session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
+            print('-report----localized_dt, session_start_at-', localized_dt, session_start_at)
+            cash_register_balance_start += session_id.cash_register_balance_start
+            cash_register_balance_end_real += session_id.cash_register_balance_end_real
+            open_cashier_list.append([session_id.user_id.name, session_start_at.strftime('%m/%d/%Y %H:%M:%S')])
+        data = {'session_name': ', '.join(s.name for s in session_ids), 'open_cashier_list': open_cashier_list,
+                 'start_end_order_list': start_end_order_list, 'cash_register_balance_start': cash_register_balance_start,
+                 'cash_register_balance_end_real': cash_register_balance_end_real, 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
                  'total_amt': total_amt,
                  'total_qty': int(total_qty),
                  'return_order_count': len(return_order_ids),
