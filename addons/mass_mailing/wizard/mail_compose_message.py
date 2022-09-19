@@ -23,7 +23,6 @@ class MailComposeMessage(models.TransientModel):
         """ Override method that generated the mail content by creating the
         mailing.trace values in the o2m of mail_mail, when doing pure
         email mass mailing. """
-        now = fields.Datetime.now()
         self.ensure_one()
         res = super(MailComposeMessage, self).get_mail_values(res_ids)
         # use only for allowed models in mass mailing
@@ -32,37 +31,30 @@ class MailComposeMessage(models.TransientModel):
                 self.model_is_thread:
             mass_mailing = self.mass_mailing_id
             if not mass_mailing:
-                mass_mailing = self.env['mailing.mailing'].create({
-                    'campaign_id': self.campaign_id.id,
-                    'name': self.mass_mailing_name,
-                    'subject': self.subject,
-                    'state': 'done',
-                    'reply_to_mode': self.reply_to_mode,
-                    'reply_to': self.reply_to if self.reply_to_mode == 'new' else False,
-                    'sent_date': now,
-                    'body_html': self.body,
-                    'mailing_model_id': self.env['ir.model']._get(self.model).id,
-                    'mailing_domain': self.active_domain,
-                    'attachment_ids': [(6, 0, self.attachment_ids.ids)],
-                })
+                mass_mailing = self.env['mailing.mailing'].create(
+                    self._prepare_mailing_values()
+                )
                 self.mass_mailing_id = mass_mailing.id
 
             recipients_info = self._process_recipient_values(res)
             for res_id in res_ids:
                 mail_values = res[res_id]
                 if mail_values.get('body_html'):
-                    body = self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout',
-                                {'body': mail_values['body_html']},
-                                minimal_qcontext=True, raise_if_not_found=False)
+                    body = self.env['ir.qweb']._render(
+                        'mass_mailing.mass_mailing_mail_layout',
+                        {'body': mail_values['body_html']},
+                        minimal_qcontext=True,
+                        raise_if_not_found=False
+                    )
                     if body:
                         mail_values['body_html'] = body
 
                 trace_vals = {
-                    'model': self.model,
-                    'res_id': res_id,
-                    'mass_mailing_id': mass_mailing.id,
                     # if mail_to is void, keep falsy values to allow searching / debugging traces
                     'email': recipients_info[res_id]['mail_to'][0] if recipients_info[res_id]['mail_to'] else '',
+                    'mass_mailing_id': mass_mailing.id,
+                    'model': self.model,
+                    'res_id': res_id,
                 }
                 # propagate failed states to trace when still-born
                 if mail_values.get('state') == 'cancel':
@@ -73,11 +65,11 @@ class MailComposeMessage(models.TransientModel):
                     trace_vals['failure_type'] = mail_values['failure_type']
 
                 mail_values.update({
-                    'mailing_id': mass_mailing.id,
-                    'mailing_trace_ids': [(0, 0, trace_vals)],
+                    'auto_delete': not mass_mailing.keep_archives,
                     # email-mode: keep original message for routing
                     'is_notification': mass_mailing.reply_to_mode == 'update',
-                    'auto_delete': not mass_mailing.keep_archives,
+                    'mailing_id': mass_mailing.id,
+                    'mailing_trace_ids': [(0, 0, trace_vals)],
                 })
         return res
 
@@ -92,3 +84,19 @@ class MailComposeMessage(models.TransientModel):
         if self.mass_mailing_id:
             opt_out_list += self.mass_mailing_id._get_opt_out_list()
         return opt_out_list
+
+    def _prepare_mailing_values(self):
+        now = fields.Datetime.now()
+        return {
+            'attachment_ids': [(6, 0, self.attachment_ids.ids)],
+            'body_html': self.body,
+            'campaign_id': self.campaign_id.id,
+            'mailing_model_id': self.env['ir.model']._get(self.model).id,
+            'mailing_domain': self.active_domain,
+            'name': self.mass_mailing_name,
+            'reply_to': self.reply_to if self.reply_to_mode == 'new' else False,
+            'reply_to_mode': self.reply_to_mode,
+            'sent_date': now,
+            'state': 'done',
+            'subject': self.subject,
+        }
