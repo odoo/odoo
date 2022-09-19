@@ -1897,18 +1897,28 @@ class AccountMove(models.Model):
 
         # Compute groups_by_subtotal
         groups_by_subtotal = {}
+        tax_amount_total = 0.0
         for subtotal_title, groups in grouped_taxes.items():
-            groups_vals = [{
-                'tax_group_name': group.name,
-                'tax_group_amount': amounts['tax_amount'],
-                'tax_group_base_amount': amounts['base_amount'],
-                'formatted_tax_group_amount': formatLang(self.env, amounts['tax_amount'], currency_obj=currency),
-                'formatted_tax_group_base_amount': formatLang(self.env, amounts['base_amount'], currency_obj=currency),
-                'tax_group_id': group.id,
-                'group_key': '%s-%s' %(subtotal_title, group.id),
-            } for group, amounts in sorted(groups.items(), key=lambda l: l[0].sequence)]
+            groups_vals = []
+            for group, amounts in sorted(groups.items(), key=lambda l: l[0].sequence):
+                tax_group_amount = currency.round(amounts['tax_amount']) if currency else amounts['tax_amount']
+                tax_amount_total += tax_group_amount
+                groups_vals.append(
+                    {
+                        'tax_group_name': group.name,
+                        'tax_group_amount': tax_group_amount,
+                        'tax_group_base_amount': amounts['base_amount'],
+                        'formatted_tax_group_amount': formatLang(self.env, tax_group_amount, currency_obj=currency),
+                        'formatted_tax_group_base_amount': formatLang(self.env, amounts['base_amount'], currency_obj=currency),
+                        'tax_group_id': group.id,
+                        'group_key': '%s-%s' %(subtotal_title, group.id),
+                    }
+                )
 
             groups_by_subtotal[subtotal_title] = groups_vals
+
+        # Adjust amount_total based on tax_amount_total to avoid inconsistency.
+        amount_total = amount_untaxed + tax_amount_total
 
         # Compute subtotals
         subtotals_list = [] # List, so that we preserve their order
