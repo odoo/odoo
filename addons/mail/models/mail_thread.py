@@ -1983,7 +1983,7 @@ class MailThread(models.AbstractModel):
             'model': self._name,
             'res_id': self.id,
             # content
-            'body': body,
+            'body': body if isinstance(body,Markup) else Markup() + bodys,
             'subject': subject or False,
             'message_type': message_type,
             'parent_id': self._message_compute_parent_id(parent_id),
