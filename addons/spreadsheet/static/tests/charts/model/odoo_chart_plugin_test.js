@@ -6,6 +6,9 @@ import { OdooLineChart } from "@spreadsheet/chart/odoo_chart/odoo_line_chart";
 import { nextTick } from "@web/../tests/helpers/utils";
 import { createSpreadsheetWithGraph, insertGraphInSpreadsheet } from "../../utils/chart";
 import { createModelWithDataSource } from "../../utils/model";
+import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+
+const { toZone } = spreadsheet.helpers;
 
 QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
     QUnit.test("Can add an Odoo Bar chart", async (assert) => {
@@ -266,4 +269,39 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.yAxes[0].stacked
         );
     });
+
+    QUnit.test("Can copy/paste Odoo chart", async (assert) => {
+        const { model } = await createSpreadsheetWithGraph({ type: "odoo_pie" });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        model.dispatch("SELECT_FIGURE", { id: chartId });
+        model.dispatch("COPY");
+        model.dispatch("PASTE", { target: [toZone("A1")] });
+        const chartIds = model.getters.getChartIds(sheetId);
+        assert.strictEqual(chartIds.length, 2);
+        assert.ok(model.getters.getChart(chartIds[1]) instanceof OdooChart);
+        assert.strictEqual(
+            JSON.stringify(model.getters.getChartRuntime(chartIds[1])),
+            JSON.stringify(model.getters.getChartRuntime(chartId))
+        );
+    });
+
+    QUnit.test("Can cut/paste Odoo chart", async (assert) => {
+        const { model } = await createSpreadsheetWithGraph({ type: "odoo_pie" });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const chartRuntime = model.getters.getChartRuntime(chartId);
+        model.dispatch("SELECT_FIGURE", { id: chartId });
+        model.dispatch("CUT");
+        model.dispatch("PASTE", { target: [toZone("A1")] });
+        const chartIds = model.getters.getChartIds(sheetId);
+        assert.strictEqual(chartIds.length, 1);
+        assert.notEqual(chartIds[0], chartId);
+        assert.ok(model.getters.getChart(chartIds[0]) instanceof OdooChart);
+        assert.strictEqual(
+            JSON.stringify(model.getters.getChartRuntime(chartIds[0])),
+            JSON.stringify(chartRuntime)
+        );
+    });
+
 });

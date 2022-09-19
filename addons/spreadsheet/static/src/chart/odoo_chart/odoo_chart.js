@@ -108,6 +108,13 @@ export class OdooChart extends AbstractChart {
         return this;
     }
 
+    /**
+     * @returns {OdooChart}
+     */
+    copyInSheetId() {
+        return this;
+    }
+
     getContextCreation() {
         return {};
     }
