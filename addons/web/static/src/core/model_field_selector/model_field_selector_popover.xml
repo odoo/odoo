@@ -33,7 +33,7 @@
                     <t t-foreach="fieldKeys" t-as="fieldKey" t-key="fieldKey">
                         <t t-set="field" t-value="fields[fieldKey]" />
                         <t t-if="field.searchable and props.filter(field)">
-                            <li class="o_field_selector_item" t-on-click="() => this.onFieldSelected({ ...field, name: fieldKey })">
+                            <li class="o_field_selector_item" t-on-click="() => this.onFieldSelected({ ...field, name: fieldKey })" t-att-data-name="fieldKey">
                                 <t t-esc="field.string" />
                                 <t t-if="field.relation">
                                     <i
