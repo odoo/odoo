@@ -1848,7 +1848,7 @@ class BaseModel(metaclass=MetaModel):
         :return: dict holding the models and field required by the web client given the view type.
         :rtype: list
         """
-        if view_type in ('kanban', 'list', 'form'):
+        if view_type in ('kanban', 'tree', 'form'):
             for model_fields in models.values():
                 model_fields.update({'id', self.CONCURRENCY_CHECK_FIELD})
         elif view_type == 'search':
