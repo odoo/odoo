@@ -746,7 +746,7 @@ $-transition-duration: 200ms;
 .o_header_affixed {
     display: block;
     @include o-position-absolute(0, 0, auto, 0);
-    position: sticky;
+    position: fixed;
 
     &:not(.o_header_no_transition) {
         transition: transform $-transition-duration;
