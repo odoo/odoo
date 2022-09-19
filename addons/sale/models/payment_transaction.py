@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
-from odoo.tools import format_amount
+from odoo.tools import format_amount, str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -117,7 +117,7 @@ class PaymentTransaction(models.Model):
         confirmed_orders._send_order_confirmation_mail()
 
         # invoice the sale orders if needed and send it
-        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')):
             # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
             # even if only a partial payment was made.
             self._invoice_sale_orders()
