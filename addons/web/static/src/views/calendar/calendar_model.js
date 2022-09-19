@@ -212,8 +212,6 @@ export class CalendarModel extends Model {
                 // in week mode or day mode, convert allday event to event
                 end = start.plus({ hours: 2 });
             }
-        } else if (partialRecord.isAllDay) {
-            end = end.minus({ days: 1 });
         }
 
         const isDateEvent = this.fields[this.meta.fieldMapping.date_start].type === "date";
@@ -499,9 +497,6 @@ export class CalendarModel extends Model {
         }
         if (!fieldMapping.date_stop && duration) {
             end = start.plus({ hours: duration });
-        }
-        if (isAllDay && ["week", "month"].includes(scale)) {
-            end = end.plus({ days: 1 });
         }
 
         const showTime =

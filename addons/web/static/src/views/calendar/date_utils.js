@@ -8,6 +8,7 @@ import {
 } from "@web/core/l10n/dates";
 
 export function calculateWeekNumber(date) {
+    //WOWL: USED ONLY FOR THE DATEPICKER (NEEDED ???)
     return luxon.DateTime.fromJSDate(date).weekNumber;
 }
 

@@ -5,7 +5,6 @@ import { localization } from "@web/core/l10n/localization";
 import { renderToString } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";
-import { calculateWeekNumber } from "../date_utils";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
 
@@ -98,7 +97,7 @@ export class CalendarCommonRenderer extends Component {
             timeZone: luxon.Settings.defaultZone.name,
             unselectAuto: false,
             weekLabel: this.env._t("Week"),
-            weekNumberCalculation: calculateWeekNumber,
+            weekNumberCalculation: "ISO",
             weekNumbers: true,
             weekNumbersWithinDays: true,
             windowResize: this.onWindowResizeDebounced,
@@ -131,7 +130,10 @@ export class CalendarCommonRenderer extends Component {
             id: record.id,
             title: record.title,
             start: record.start.toISO(),
-            end: record.end.toISO(),
+            end:
+                ["week", "month"].includes(this.props.model.scale) && record.isAllDay
+                    ? record.end.plus({ days: 1 }).toISO()
+                    : record.end.toISO(),
             allDay: record.isAllDay,
         };
     }
@@ -214,12 +216,7 @@ export class CalendarCommonRenderer extends Component {
     }
     async onSelect(info) {
         this.popover.close();
-        const { allDay, start, end } = info;
-        await this.props.createRecord({
-            start: luxon.DateTime.fromJSDate(start),
-            end: luxon.DateTime.fromJSDate(end),
-            isAllDay: allDay,
-        });
+        await this.props.createRecord(this.FCEventToRecord(info));
         this.fc.api.unselect();
     }
     isSelectionAllowed(event) {
@@ -227,26 +224,28 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventDrop(info) {
         this.fc.api.unselect();
-        const { id, allDay, start, end } = info.event;
-        this.props.model.updateRecord(
-            {
-                id: this.props.model.records[id].id,
-                start: luxon.DateTime.fromJSDate(start),
-                end: luxon.DateTime.fromJSDate(end),
-                isAllDay: allDay,
-            },
-            { moved: true }
-        );
+        this.props.model.updateRecord(this.FCEventToRecord(info.event), { moved: true });
     }
     onEventResize(info) {
         this.fc.api.unselect();
-        const { id, allDay, start, end } = info.event;
-        this.props.model.updateRecord({
-            id: this.props.model.records[id].id,
+        this.props.model.updateRecord(this.FCEventToRecord(info.event));
+    }
+    FCEventToRecord(event) {
+        const { id, allDay, start, end } = event;
+        let luxonEnd = luxon.DateTime.fromJSDate(end);
+        if (["week", "month"].includes(this.props.model.scale) && allDay) {
+            luxonEnd = luxonEnd.minus({ days: 1 });
+        }
+
+        const res = {
             start: luxon.DateTime.fromJSDate(start),
-            end: luxon.DateTime.fromJSDate(end),
+            end: luxonEnd,
             isAllDay: allDay,
-        });
+        };
+        if (id) {
+            res.id = this.props.model.records[id].id;
+        }
+        return res;
     }
     onEventMouseEnter(info) {
         this.highlightEvent(info.event, "o_cw_custom_highlight");

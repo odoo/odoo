@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { CalendarArchParser } from "@web/views/calendar/calendar_arch_parser";
-import { FAKE_DATE, FAKE_FIELDS, makeEnv } from "./calendar_helpers";
+import { makeFakeDate, FAKE_FIELDS, makeEnv } from "./calendar_helpers";
 
 function parseArch(arch, options = {}) {
     const parser = new CalendarArchParser();
@@ -10,7 +10,7 @@ function parseArch(arch, options = {}) {
         { fake: "fields" in options ? options.fields : FAKE_FIELDS },
         "fake",
         options.context || {},
-        "date" in options ? options.date : FAKE_DATE
+        "date" in options ? options.date : makeFakeDate()
     );
 }
 
@@ -33,7 +33,6 @@ QUnit.test("defaults", (assert) => {
         canCreate: true,
         canDelete: true,
         canEdit: true,
-        // date: FAKE_DATE,
         eventLimit: 5,
         fieldMapping: {
             date_start: "start_date",
@@ -86,8 +85,8 @@ QUnit.test("canEdit", (assert) => {
 });
 
 QUnit.skipWOWL("date", async (assert) => {
-    let date = parseArch(`<calendar date_start="start_date" />`, { date: FAKE_DATE }).date;
-    assert.ok(date.equals(FAKE_DATE));
+    let date = parseArch(`<calendar date_start="start_date" />`, { date: makeFakeDate() }).date;
+    assert.ok(date.equals(makeFakeDate()));
 
     await makeEnv(); // we need localization service
     date = parseArch(`<calendar date_start="start_date" />`, {

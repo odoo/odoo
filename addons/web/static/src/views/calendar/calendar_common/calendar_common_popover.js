@@ -54,18 +54,13 @@ export class CalendarCommonPopover extends Component {
                 if (isSameDay) {
                     this.dateDuration = this.env._t("All day");
                 } else {
-                    const duration = end.diff(start, "days");
-                    const days = Math.round(duration.days);
-                    const dayString = days === 1 ? this.env._t("day") : this.env._t("days");
-                    this.dateDuration = duration.toFormat(`d '${dayString}'`);
+                    const duration = end.plus({ day: 1 }).diff(start, "days");
+                    this.dateDuration = duration.toFormat(`d '${this.env._t("days")}'`);
                 }
             }
         }
     }
     getFormattedDate(start, end, isAllDay) {
-        if (isAllDay) {
-            //end = end.minus({ days: 1 });
-        }
         const isSameDay = start.hasSame(end, "day");
         if (!isSameDay && start.hasSame(end, "month")) {
             // Simplify date-range if an event occurs into the same month (eg. "August, 4-5 2019")

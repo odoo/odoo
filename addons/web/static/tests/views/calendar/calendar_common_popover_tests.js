@@ -2,18 +2,17 @@
 
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
 import { click, getFixture } from "../../helpers/utils";
-import { makeEnv, makeFakeModel, mountComponent } from "./calendar_helpers";
+import { makeEnv, makeFakeDate, makeFakeModel, mountComponent } from "./calendar_helpers";
 
 let target;
-let fakeDate;
 
 function makeFakeRecord(data = {}) {
     return {
         id: 5,
         title: "Meeting",
         isAllDay: false,
-        start: fakeDate, //luxon.DateTime.local
-        end: fakeDate.plus({ hours: 3, minutes: 15 }),
+        start: makeFakeDate(),
+        end: makeFakeDate().plus({ hours: 3, minutes: 15 }),
         colorIndex: 0,
         isTimeHidden: false,
         rawRecord: {
@@ -43,7 +42,6 @@ async function start(params = {}) {
 QUnit.module("CalendarCommonPopover", ({ beforeEach }) => {
     beforeEach(() => {
         target = getFixture();
-        fakeDate = luxon.DateTime.local(2021, 7, 16, 8, 0, 0, 0);
     });
 
     QUnit.test("mount a CalendarCommonPopover", async (assert) => {
@@ -67,11 +65,11 @@ QUnit.module("CalendarCommonPopover", ({ beforeEach }) => {
         assert.strictEqual(dateTimeLabels, "Friday, July 16, 2021 (All day)");
     });
 
-    QUnit.test("date duration: is all day but 1 day diff", async (assert) => {
+    QUnit.test("date duration: is all day and two days duration", async (assert) => {
         await start({
             props: {
                 record: makeFakeRecord({
-                    end: fakeDate.plus({ days: 1 }),
+                    end: makeFakeDate().plus({ days: 1 }),
                     isAllDay: true,
                     isTimeHidden: true,
                 }),
@@ -79,28 +77,13 @@ QUnit.module("CalendarCommonPopover", ({ beforeEach }) => {
         });
         const dateTimeGroup = target.querySelector(`.list-group`);
         const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-        assert.strictEqual(dateTimeLabels, "July 16-17, 2021 (1 day)");
-    });
-
-    QUnit.test("date duration: is all day but 2 days diff", async (assert) => {
-        await start({
-            props: {
-                record: makeFakeRecord({
-                    end: fakeDate.plus({ days: 2 }),
-                    isAllDay: true,
-                    isTimeHidden: true,
-                }),
-            },
-        });
-        const dateTimeGroup = target.querySelector(`.list-group`);
-        const dateTimeLabels = dateTimeGroup.textContent.replace(/\s+/g, " ").trim();
-        assert.strictEqual(dateTimeLabels, "July 16-18, 2021 (2 days)");
+        assert.strictEqual(dateTimeLabels, "July 16-17, 2021 (2 days)");
     });
 
     QUnit.test("time duration: 1 hour diff", async (assert) => {
         await start({
             props: {
-                record: makeFakeRecord({ end: fakeDate.plus({ hours: 1 }) }),
+                record: makeFakeRecord({ end: makeFakeDate().plus({ hours: 1 }) }),
             },
             model: { isDateHidden: true },
         });
@@ -112,7 +95,7 @@ QUnit.module("CalendarCommonPopover", ({ beforeEach }) => {
     QUnit.test("time duration: 2 hours diff", async (assert) => {
         await start({
             props: {
-                record: makeFakeRecord({ end: fakeDate.plus({ hours: 2 }) }),
+                record: makeFakeRecord({ end: makeFakeDate().plus({ hours: 2 }) }),
             },
             model: { isDateHidden: true },
         });
@@ -124,7 +107,7 @@ QUnit.module("CalendarCommonPopover", ({ beforeEach }) => {
     QUnit.test("time duration: 1 minute diff", async (assert) => {
         await start({
             props: {
-                record: makeFakeRecord({ end: fakeDate.plus({ minutes: 1 }) }),
+                record: makeFakeRecord({ end: makeFakeDate().plus({ minutes: 1 }) }),
             },
             model: { isDateHidden: true },
         });
@@ -136,7 +119,7 @@ QUnit.module("CalendarCommonPopover", ({ beforeEach }) => {
     QUnit.test("time duration: 2 minutes diff", async (assert) => {
         await start({
             props: {
-                record: makeFakeRecord({ end: fakeDate.plus({ minutes: 2 }) }),
+                record: makeFakeRecord({ end: makeFakeDate().plus({ minutes: 2 }) }),
             },
             model: { isDateHidden: true },
         });

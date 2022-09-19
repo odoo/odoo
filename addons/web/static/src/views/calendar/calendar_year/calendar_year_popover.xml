@@ -34,7 +34,7 @@
     <t t-name="web.CalendarYearPopover.record" owl="1">
         <a
             href="#"
-            t-on-click.prevent="() => onRecordClick(record)"
+            t-on-click.prevent="() => this.onRecordClick(record)"
             t-attf-class="o_cw_popover_link btn-link d-block"
             t-att-data-id="record.id"
             t-att-data-title="record.title"

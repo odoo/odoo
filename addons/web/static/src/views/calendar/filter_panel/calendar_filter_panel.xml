@@ -20,13 +20,13 @@
                                     type="checkbox"
                                     name="select-all"
                                     class="position-absolute"
-                                    t-att-id="filterId"
+                                    t-attf-id="o_calendar_filter_{{filterId}}"
                                     t-att-checked="isAllActive(section)"
                                     t-on-change="(ev) => this.onAllFilterInputChange(section, ev)"
                                 />
                                 <label
                                     class="d-flex align-items-center m-0"
-                                    t-att-for="filterId"
+                                    t-attf-for="o_calendar_filter_{{filterId}}"
                                 >
                                     <span class="o_cw_filter_input_bg o_calendar_filter_all">
                                         <i class="fa fa-check position-relative" />
@@ -80,13 +80,13 @@
                 type="checkbox"
                 name="selection"
                 class="position-absolute"
-                t-att-id="filterId"
+                t-attf-id="o_calendar_filter_item_{{filterId}}"
                 t-att-checked="filter.active"
                 t-on-change="(ev) => this.onFilterInputChange(section, filter, ev)"
             />
             <label
                 class="d-flex align-items-start m-0"
-                t-att-for="filterId"
+                t-attf-for="o_calendar_filter_item_{{filterId}}"
             >
                 <span
                     class="o_cw_filter_input_bg align-items-start d-flex flex-shrink-0 justify-content-center position-relative me-1 o_beside_avatar"

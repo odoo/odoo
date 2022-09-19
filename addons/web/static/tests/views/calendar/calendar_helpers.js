@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { MainComponentsContainer } from "@web/core/main_components_container";
 import { uiService } from "@web/core/ui/ui_service";
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
@@ -12,97 +11,70 @@ export function makeEnv(services = {}) {
     setupViewRegistries();
     services = Object.assign(
         {
-            //  localization: makeFakeLocalizationService(),
-            //  orm: ormService,
-            // popover: popoverService,
             ui: uiService,
-            //      hotkey: hotkeyService,
         },
         services
     );
 
     for (const [key, service] of Object.entries(services)) {
-        registry.category("services").add(key, service);
+        registry.category("services").add(key, service, { force: true });
     }
 
-    return makeTestEnv();
+    return makeTestEnv({
+        config: {
+            setDisplayName: () => {},
+        },
+    });
 }
 
 //------------------------------------------------------------------------------
-
-class Wrapper extends owl.Component {
-    setup() {
-        this.subProps = { ...this.props.props };
-    }
-    async updateProps(action) {
-        action(this.subProps);
-        this.render();
-        await nextTick();
-    }
-}
-Wrapper.components = { MainComponentsContainer };
-Wrapper.template = owl.xml`
-    <div class="wrapper">
-        <t t-component="props.Component" t-props="subProps" />
-        <MainComponentsContainer />
-    </div>
-`;
 
 export async function mountComponent(C, env, props) {
     const target = getFixture();
-    const component = await mount(C, target, { env, props });
-    //debugger;
-    // const component = await owl.mount(Wrapper, {
-    //     target,
-    //     env,
-    //     props: {
-    //         Component: C,
-    //         props,
-    //     },
-    // });
-    // registerCleanup(() => component.destroy());
-    return component;
+    return await mount(C, target, { env, props });
 }
 
 //------------------------------------------------------------------------------
 
-export const FAKE_DATE = luxon.DateTime.utc(2021, 7, 16, 8, 0, 0, 0);
+export function makeFakeDate() {
+    return luxon.DateTime.local(2021, 7, 16, 8, 0, 0, 0);
+}
 
 export const FAKE_RECORDS = {
     1: {
         id: 1,
         title: "1 day, all day in July",
-        start: FAKE_DATE.toSQL(),
+        start: makeFakeDate(),
         isAllDay: true,
-        end: FAKE_DATE.toSQL(),
+        end: makeFakeDate(),
     },
     2: {
         id: 2,
         title: "3 days, all day in July",
-        start: FAKE_DATE.plus({ days: 2 }).toSQL(),
+        start: makeFakeDate().plus({ days: 2 }),
         isAllDay: true,
-        end: FAKE_DATE.plus({ days: 4 }).toSQL(),
+        end: makeFakeDate().plus({ days: 4 }),
     },
     3: {
         id: 3,
         title: "1 day, all day in June",
-        start: FAKE_DATE.plus({ months: -1 }).toSQL(),
+        start: makeFakeDate().plus({ months: -1 }),
         isAllDay: true,
-        end: FAKE_DATE.plus({ months: -1 }).toSQL(),
+        end: makeFakeDate().plus({ months: -1 }),
     },
     4: {
         id: 4,
         title: "3 days, all day in June",
-        start: FAKE_DATE.plus({ months: -1, days: 2 }).toSQL(),
+        start: makeFakeDate().plus({ months: -1, days: 2 }),
         isAllDay: true,
-        end: FAKE_DATE.plus({ months: -1, days: 4 }).toSQL(),
+        end: makeFakeDate().plus({ months: -1, days: 4 }),
     },
     5: {
         id: 5,
         title: "Over June and July",
-        start: FAKE_DATE.startOf("month").plus({ days: -2 }).toSQL(),
+        start: makeFakeDate().startOf("month").plus({ days: -2 }),
         isAllDay: true,
-        end: FAKE_DATE.startOf("month").plus({ days: 2 }).toSQL(),
+        end: makeFakeDate().startOf("month").plus({ days: 2 }),
     },
 };
 
@@ -239,7 +211,7 @@ export const FAKE_MODEL_STATE = {
     canCreate: true,
     canDelete: true,
     canEdit: true,
-    date: FAKE_DATE,
+    date: makeFakeDate(),
     fieldMapping: {
         date_start: "start_date",
         date_stop: "stop_date",
@@ -257,8 +229,8 @@ export const FAKE_MODEL_STATE = {
     hasEditDialog: false,
     hasQuickCreate: false,
     popoverFields: FAKE_POPOVER_FIELDS,
-    rangeEnd: FAKE_DATE.endOf("month"),
-    rangeStart: FAKE_DATE.startOf("month"),
+    rangeEnd: makeFakeDate().endOf("month"),
+    rangeStart: makeFakeDate().startOf("month"),
     records: FAKE_RECORDS,
     resModel: "event",
     scale: "month",

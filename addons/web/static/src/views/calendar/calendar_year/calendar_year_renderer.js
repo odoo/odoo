@@ -4,7 +4,6 @@ import { formatDate } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";
-import { calculateWeekNumber } from "../date_utils";
 import { useCalendarPopover, useFullCalendar } from "../hooks";
 import { CalendarYearPopover } from "./calendar_year_popover";
 
@@ -70,7 +69,7 @@ export class CalendarYearRenderer extends Component {
             timeZone: luxon.Settings.defaultZone.name,
             titleFormat: { month: "short", year: "numeric" },
             unselectAuto: false,
-            weekNumberCalculation: calculateWeekNumber,
+            weekNumberCalculation: "ISO",
             weekNumbers: false,
             windowResize: this.onWindowResizeDebounced,
         };
@@ -174,7 +173,7 @@ export class CalendarYearRenderer extends Component {
         await this.props.createRecord({
             // With date value we don't want to change the time, we need the exact date
             start: luxon.DateTime.fromJSDate(info.start),
-            end: luxon.DateTime.fromJSDate(info.end),
+            end: luxon.DateTime.fromJSDate(info.end).minus({ days: 1 }),
             isAllDay: true,
         });
         this.unselect();

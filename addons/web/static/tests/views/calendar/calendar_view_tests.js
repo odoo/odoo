@@ -1008,9 +1008,8 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`week numbering`, async (assert) => {
-        // week number depends on the week start, which depends on the locale
-        // the calendar library uses numbers [0 .. 6], while Odoo uses [1 .. 7]
-        // so if the modulo is not done, the week number is incorrect
+        // The week is now calculated by FullCalendar (ISO week). If it's start a sunday it
+        // returns the week of the monday.
 
         patchWithCleanup(localization, { weekStart: 7 });
 
@@ -1023,11 +1022,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
         });
 
-        assert.strictEqual(
-            target.querySelector(".fc-week-number").textContent,
-            // "Week 51", // with moment
-            "Week 49" // with luxon
-        );
+        assert.strictEqual(target.querySelector(".fc-week-number").textContent, "Week 50");
     });
 
     QUnit.test(`render popover`, async (assert) => {
@@ -2706,7 +2701,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 1);
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item").textContent,
-            "Wednesday, December 14, 2016 (1 day)"
+            "Wednesday, December 14, 2016 (All day)"
         );
     });
 
@@ -3336,7 +3331,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         const dayTops = target.querySelectorAll(".fc-day-top");
         assert.strictEqual(
             dayTops[0].querySelector(".fc-week-number").textContent,
-            "35",
+            "36",
             "The number of the week should be correct"
         );
         assert.strictEqual(dayTops[0].querySelector(".fc-day-number").textContent, "1");
