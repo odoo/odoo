@@ -7,7 +7,7 @@
             <field name="model">mail.compose.message</field>
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='notify']" position="after">
+                <xpath expr="//field[@name='auto_delete_message']" position="after">
                     <field name="model_is_thread" invisible="1"/>
                     <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
                         attrs="{'invisible': ['|', ('composition_mode', '!=', 'mass_mail'), ('model_is_thread', '!=', True)]}"/>
