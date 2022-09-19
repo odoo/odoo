@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="base.cn" model="res.country">
-        <field name="enforce_cities" eval="1"/>
+        <field name="address_view_id" ref="cn_partner_address_form" />
+        <field name="address_format" eval="'%(zip)s, %(country_name)s %(state_name)s %(city)s %(street)s %(street2)s'" />
+        <field name="enforce_cities" eval="1" />
     </record>
 </odoo>
