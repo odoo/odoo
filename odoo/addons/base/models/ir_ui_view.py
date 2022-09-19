@@ -1249,7 +1249,7 @@ actual arch.
                         self._postprocess_view(
                             child, field.comodel_name, editable=node_info['editable'], parent_name_manager=name_manager,
                         )
-                if field.type in ('many2one', 'many2many'):
+                if node_info['editable'] and field.type in ('many2one', 'many2many'):
                     node.set('model_access_rights', field.comodel_name)
 
             name_manager.has_field(node, node.get('name'), attrs)

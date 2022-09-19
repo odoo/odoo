@@ -234,6 +234,7 @@ export class MockServer {
         const processedNodes = params.processedNodes || [];
         const { arch, context, modelName } = params;
         const level = params.level || 0;
+        const editable = params.editable || true;
         const fields = deepCopy(params.fields);
         function isNodeProcessed(node) {
             return processedNodes.findIndex((n) => n.isSameNode(node)) > -1;
@@ -249,6 +250,7 @@ export class MockServer {
         } else {
             doc = arch;
         }
+        const editableView = editable && this._editableNode(doc, modelName);
         const inTreeView = doc.tagName === "tree";
         const inFormView = doc.tagName === "form";
         // mock _postprocess_access_rights
@@ -271,7 +273,11 @@ export class MockServer {
             const isGroupby = node.tagName === "groupby";
             if (isField) {
                 const fieldName = node.getAttribute("name");
-                fieldNodes[fieldName] = { node, isInvisible: node.getAttribute("invisible") };
+                fieldNodes[fieldName] = {
+                    node,
+                    isInvisible: node.getAttribute("invisible"),
+                    isEditable: editableView && this._editableNode(node, modelName),
+                };
                 // 'transfer_field_to_modifiers' simulation
                 const field = fields[fieldName];
                 if (!field) {
@@ -352,9 +358,9 @@ export class MockServer {
         });
         Object.keys(fieldNodes).forEach((field) => relatedModels[modelName].add(field));
         let relModel, relFields;
-        Object.entries(fieldNodes).forEach(([name, { node, isInvisible }]) => {
+        Object.entries(fieldNodes).forEach(([name, { node, isInvisible, isEditable }]) => {
             const field = fields[name];
-            if (field.type === "many2one" || field.type === "many2many") {
+            if (isEditable && (field.type === "many2one" || field.type === "many2many")) {
                 const canCreate = node.getAttribute("can_create");
                 node.setAttribute("can_create", canCreate || "true");
                 const canWrite = node.getAttribute("can_write");
@@ -401,6 +407,7 @@ export class MockServer {
                             context,
                             processedNodes,
                             level: level + 1,
+                            editable: editableView,
                         });
                         Object.entries(models).forEach(([modelName, fields]) => {
                             relatedModels[modelName] = relatedModels[modelName] || new Set();
@@ -431,6 +438,7 @@ export class MockServer {
                 fields: relFields,
                 context,
                 processedNodes,
+                editable: false,
             });
             Object.entries(models).forEach(([modelName, fields]) => {
                 relatedModels[modelName] = relatedModels[modelName] || new Set();
@@ -451,6 +459,27 @@ export class MockServer {
             type: viewType,
             models: this._getViewFields(modelName, viewType, relatedModels),
         };
+    }
+
+    _editableNode(node, modelName) {
+        if (node.tagName === "form") {
+            return true;
+        } else if (node.tagName === "tree") {
+            return !!node.getAttribute("editable");
+        } else if (node.tagName === "field") {
+            const fname = node.getAttribute("name");
+            const field = this.models[modelName].fields[fname];
+            return (
+                (!field.readonly ||
+                    (field.states &&
+                        _.any(Object.values(field.states), function (item) {
+                            return item.includes("readonly");
+                        }))) &&
+                (!["1", "True"].includes(node.getAttribute("readonly")) ||
+                    !_.isEmpty(evaluateExpr(node.getAttribute("attrs") || "{}")))
+            );
+        }
+        return false;
     }
 
     /**
