@@ -764,7 +764,7 @@
                 <search string="Search Purchase Order">
                     <field name="order_id"/>
                     <field name="product_id"/>
-                    <field name="partner_id" string="Vendor" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" string="Vendor"/>
                     <filter name="hide_cancelled" string="Hide cancelled lines" domain="[('state', '!=', 'cancel')]"/>
                     <group expand="0" string="Group By">
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
