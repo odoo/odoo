@@ -18,7 +18,6 @@ import warnings
 
 from decorator import decorator
 import psycopg2
-import psycopg2.errors
 import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
@@ -132,10 +131,7 @@ class BaseCursor:
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
         else:
-            try:
-                self.execute('RELEASE SAVEPOINT "%s"' % name)
-            except psycopg2.errors.InvalidSavepointSpecification:
-                _logger.error('Savepoint %s already released' % name)
+            self.execute('RELEASE SAVEPOINT "%s"' % name)
 
     def __enter__(self):
         """ Using the cursor as a contextmanager automatically commits and
