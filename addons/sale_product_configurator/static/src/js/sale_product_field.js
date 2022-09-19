@@ -13,6 +13,13 @@ import {
 
 patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
 
+    // TODO
+    // 1) optional products lines
+    // 2) autofocus on first attribute in configurator
+    //      unable to enter by hand custom values bc of it
+    // 3) wizard opened when the variant is chosen in the 'Product Variant' field
+    // 4) matrix
+
     setup() {
         this._super(...arguments);
 
@@ -33,9 +40,6 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 'product_id': [result.product_id.id, 'whatever'],
             });
             if (result.has_optional_products) {
-                // TODO
-                // need ability to add records on x2m
-                // from field widget
                 this._openProductConfigurator('options');
             }
         } else {
@@ -78,9 +82,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                     'product_no_variant_attribute_value_ids': this.props.record.data.product_no_variant_attribute_value_ids.records.map(
                         record => record.data.id
                     ),
-                    // TODO test when line is setup
-                    // 'product_no_variant_attribute_value_ids': '',
-                    // TODO do we still need to give the context ? to investigate
+                    'context': this.props.record.context,
                 },
             )
         );
@@ -98,8 +100,18 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         $modal.find(productSelector).val(productId);
         const variantValues = getSelectedVariantValues($modal);
         const noVariantAttributeValues = getNoVariantAttributeValues($modal);
-        const customAttributeValues = false;
-
+        const customAttributeValues = this.props.record.data.product_custom_attribute_value_ids.records.map(
+            record => {
+                // NOTE: this dumb formatting is necessary to avoid
+                // modifying the shared code between frontend & backend for now.
+                return {
+                    'custom_value': record.data.custom_value,
+                    'custom_product_template_attribute_value_id': {
+                        'res_id': record.data.custom_product_template_attribute_value_id[0],
+                    },
+                };
+            }
+        );
         this.rootProduct = {
             product_id: productId,
             product_template_id: parseInt(productTemplateId),
@@ -130,21 +142,15 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             // HACK: do not block line save bc the description was considered invalid
             //  when we clicked on another part of the dom than the 'confirm' button
             this.props.record._removeInvalidFields(['name']);
-            this.props.record.update({
-                // TODO find a way to get the real product name
-                // bc 'whatever' is really displayed when showing the 'Product Variant' column
-                'product_id': [mainProduct.product_id, 'whatever'],
-                'product_uom_qty': mainProduct.quantity,
-                // don't think the ptmpl_id update is useful, will be the same anyway
-                //'product_template_id': [mainProduct.product_template_id, 'whatever'],
-                // TODO custom & novariant attribute values
-            });
+            this.props.record.update(
+                this._convertConfiguratorDataToUpdateData(mainProduct)
+            );
         });
         optionalProductsModal.on("closed", null, () => {
             if (confirmed) {
                 return;
             }
-            if (this.mode != 'edit') {
+            if (mode != 'edit') {
                 this.props.record.update({
                     'product_template_id': false,
                     'product_id': false,
@@ -154,4 +160,62 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             }
         });
     },
+
+    _convertConfiguratorDataToUpdateData(mainProduct) {
+        let result = {
+            // TODO find a way to get the real product name
+            // bc 'whatever' is really displayed when showing the 'Product Variant' column
+            'product_id': [mainProduct.product_id, 'whatever'],
+            'product_uom_qty': mainProduct.quantity,
+            // don't think the ptmpl_id update is useful, will be the same anyway
+            //'product_template_id': [mainProduct.product_template_id, 'whatever'],
+        };
+        var customAttributeValues = mainProduct.product_custom_attribute_values;
+        var customValuesCommands = [{ operation: "DELETE_ALL" }];
+        if (customAttributeValues && customAttributeValues.length !== 0) {
+            _.each(customAttributeValues, function (customValue) {
+                // FIXME awa: This could be optimized by adding a "disableDefaultGet" to avoid
+                // having multiple default_get calls that are useless since we already
+                // have all the default values locally.
+                // However, this would mean a lot of changes in basic_model.js to handle
+                // those "default_" values and set them on the various fields (text,o2m,m2m,...).
+                // -> This is not considered as worth it right now.
+                customValuesCommands.push({
+                    operation: "CREATE",
+                    context: [
+                        {
+                            default_custom_product_template_attribute_value_id:
+                                customValue.custom_product_template_attribute_value_id,
+                            default_custom_value: customValue.custom_value,
+                        },
+                    ],
+                });
+            });
+        }
+
+        result["product_custom_attribute_value_ids"] = {
+            operation: "MULTI",
+            commands: customValuesCommands,
+        };
+
+        var noVariantAttributeValues = mainProduct.no_variant_attribute_values;
+        var noVariantCommands = [{ operation: "DELETE_ALL" }];
+        if (noVariantAttributeValues && noVariantAttributeValues.length !== 0) {
+            var resIds = _.map(noVariantAttributeValues, function (noVariantValue) {
+                return { id: parseInt(noVariantValue.value) };
+            });
+
+            noVariantCommands.push({
+                operation: "ADD_M2M",
+                ids: resIds,
+            });
+        }
+
+        result["product_no_variant_attribute_value_ids"] = {
+            operation: "MULTI",
+            commands: noVariantCommands,
+        };
+
+        return result;
+    }
 });
