@@ -18,8 +18,12 @@ export class FloatToggleField extends Component {
         this.props.update(this.props.range[currentIndex] / this.props.factor);
     }
 
+    get factor() {
+        return this.props.factor;
+    }
+
     get formattedValue() {
-        return formatFloat(this.props.value * this.props.factor, {
+        return formatFloat(this.props.value * this.factor, {
             digits: this.props.digits,
         });
     }
