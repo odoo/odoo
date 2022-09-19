@@ -33,14 +33,18 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         const result = await this.orm.call(
             'product.template',
             'get_single_product_variant',
-            [this.props.record.data[this.props.name][0]],
+            [this.props.record.data.product_template_id[0]],
         );
         if(result && result.product_id){
-            this.props.record.update({
-                'product_id': [result.product_id.id, 'whatever'],
-            });
-            if (result.has_optional_products) {
-                this._openProductConfigurator('options');
+            if (this.props.record.data.product_id != result.product_id.id) {
+                this.props.record.update({
+                    'product_id': [result.product_id, 'whatever'],
+                });
+                if (result.has_optional_products) {
+                    this._openProductConfigurator('options');
+                } else {
+                    this.productConfigured = true;
+                }
             }
         } else {
             if (!result.add_mode || result.add_mode === 'configurator') {
@@ -142,6 +146,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             // HACK: do not block line save bc the description was considered invalid
             //  when we clicked on another part of the dom than the 'confirm' button
             this.props.record._removeInvalidFields(['name']);
+            this.productConfigured = true;
             this.props.record.update(
                 this._convertConfiguratorDataToUpdateData(mainProduct)
             );
