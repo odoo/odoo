@@ -1684,12 +1684,12 @@ class StockMove(models.Model):
     def _action_done(self, cancel_backorder=False):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
 
-        for move in self:
-            if move.is_action_show_details_danger:
-                raise UserError(f'Move of product {move.product_id.name} with demand of {move.product_qty} has inconsistent done value {move._get_qty_done_mls()} vs {move.quantity_done}')
-
         moves = self.exists().filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_ids_todo = OrderedSet()
+
+        for move in self.exists():
+            if move.is_action_show_details_danger:
+                raise UserError(f'Move of product {move.product_id.name} with demand of {move.product_qty} has inconsistent done value {move._get_qty_done_mls()} vs {move.quantity_done}')
 
         # Cancel moves where necessary ; we should do it before creating the extra moves because
         # this operation could trigger a merge of moves.

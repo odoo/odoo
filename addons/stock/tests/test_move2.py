@@ -1520,6 +1520,9 @@ class TestSinglePicking(TestStockCommon):
 
         delivery_order.action_confirm()
         delivery_order.move_ids.quantity_done = 2
+        self.env['stock.move.line'].create(dict(
+            delivery_order.move_ids._prepare_move_line_vals(),
+            qty_done=2))
         # do not set a lot_id or lot_name, it should work
         delivery_order._action_done()
 
@@ -1553,6 +1556,9 @@ class TestSinglePicking(TestStockCommon):
 
         delivery_order.action_confirm()
         delivery_order.move_ids.quantity_done = 2
+        self.env['stock.move.line'].create(dict(
+            delivery_order.move_ids._prepare_move_line_vals(),
+            qty_done=2))
         move_line = delivery_order.move_ids.move_line_ids
 
         # not lot_name set, should raise
@@ -1593,6 +1599,9 @@ class TestSinglePicking(TestStockCommon):
 
         delivery_order.action_confirm()
         delivery_order.move_ids.quantity_done = 2
+        self.env['stock.move.line'].create(dict(
+            delivery_order.move_ids._prepare_move_line_vals(),
+            qty_done=2))
         move_line = delivery_order.move_ids.move_line_ids
 
         # not lot_name set, should raise
@@ -1633,6 +1642,9 @@ class TestSinglePicking(TestStockCommon):
 
         delivery_order.action_confirm()
         delivery_order.move_ids.quantity_done = 2
+        self.env['stock.move.line'].create(dict(
+            delivery_order.move_ids._prepare_move_line_vals(),
+            qty_done=2))
         move_line = delivery_order.move_ids.move_line_ids
 
         # not lot_name set, should raise

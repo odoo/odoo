@@ -592,6 +592,8 @@ class TestUnbuild(TestMrpCommon):
         # Transfer it
         for ml in picking.move_ids_without_package:
             ml.quantity_done = 1
+            # NTR Remove this after merge auto-distribute done_qty
+            ml.move_line_ids.qty_done = 1
         picking._action_done()
 
         # Check the available quantity of components and final product in stock
