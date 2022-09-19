@@ -46,7 +46,7 @@
             <xpath expr="//div[@name='bottom_right']" position="replace">
                 <field name="website_url" invisible="1"/>
                 <div class="o_link_trackers col-6 text-end">
-                    <a t-att-href="record.website_url.raw_value" target="_blank">
+                    <a type="object" name="open_website_url">
                         <i class="fa fa-fw fa-external-link" role="img"></i>
                         Job Page
                     </a>
