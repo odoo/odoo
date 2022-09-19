@@ -10,7 +10,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="o_notebook_content bg-white pt-3 tab-content">
+            <div class="o_notebook_content tab-content">
                 <div class="tab-pane active" t-ref="activePane">
                     <t t-if="page" t-component="page.Component" t-key="state.currentPage" t-props="page.props" />
                     <t t-else="" t-slot="{{ state.currentPage }}" />
