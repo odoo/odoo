@@ -7,7 +7,7 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from odoo import api, fields, models, _, SUPERUSER_ID
-from odoo.tools import float_compare
+from odoo.tools import str2bool
 
 
 _logger = logging.getLogger(__name__)
@@ -143,7 +143,7 @@ class PaymentTransaction(models.Model):
         ])._send_invoice()
 
     def _invoice_sale_orders(self):
-        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')):
             for trans in self.filtered(lambda t: t.sale_order_ids):
                 trans = trans.with_company(trans.acquirer_id.company_id)\
                     .with_context(company_id=trans.acquirer_id.company_id.id)
