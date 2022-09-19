@@ -909,13 +909,13 @@
         </t>
     </div>
 </div>
-<div aria-atomic="true" t-name="ModelFieldSelector" t-attf-class="o_field_selector#{!widget.options.readonly ? ' o_edit_mode o_input' : ''}">
+<div aria-atomic="true" t-name="ModelFieldSelector" t-attf-class="o_field_selector o_legacy_field_selector#{!widget.options.readonly ? ' o_edit_mode o_input' : ''}">
     <div class="o_field_selector_value" tabindex="0"/>
     <div class="o_field_selector_controls" tabindex="0">
         <i role="alert" class="fa fa-exclamation-triangle o_field_selector_warning d-none" title="Invalid field chain" aria-label="Invalid field chain"/>
     </div>
 </div>
-<div  t-name="ModelFieldSelector.popover" class="o_field_selector_popover d-none" tabindex="0">
+<div  t-name="ModelFieldSelector.popover" class="o_field_selector_popover o_legacy_field_selector_popover d-none" tabindex="0">
     <div class="o_field_selector_popover_header text-center">
         <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
         <div class="o_field_selector_title"/>
