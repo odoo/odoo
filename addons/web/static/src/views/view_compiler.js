@@ -345,6 +345,9 @@ export class ViewCompiler {
                 button.setAttribute(name, toStringExpression(value));
             }
         }
+        if (el.hasAttribute("data-hotkey")) {
+            button.setAttribute("hotkey", toStringExpression(el.getAttribute("data-hotkey")));
+        }
 
         button.setAttribute("clickParams", JSON.stringify(clickParams));
         combineAttributes(
