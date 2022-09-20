@@ -2,10 +2,33 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 import base64
+<<<<<<< HEAD
+||||||| parent of bcc15ac187d0... temp
+import datetime
+=======
+import io
+>>>>>>> bcc15ac187d0... temp
 
+<<<<<<< HEAD
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError
+||||||| parent of bcc15ac187d0... temp
+from odoo import fields, models, api, _, tools
+from odoo.addons.iap import jsonrpc
+from odoo.exceptions import UserError, AccessError
+=======
+from PyPDF2 import PdfFileReader, PdfFileMerger
+from reportlab.platypus import Frame, Paragraph, KeepInFrame
+from reportlab.lib.units import mm
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.pdfgen.canvas import Canvas
+
+from odoo import fields, models, api, _
+from odoo.addons.iap import jsonrpc
+from odoo.exceptions import UserError, AccessError
+>>>>>>> bcc15ac187d0... temp
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
@@ -132,7 +155,17 @@ class SnailmailLetter(models.Model):
             else:
                 report_name = 'Document'
             filename = "%s.%s" % (report_name, "pdf")
+<<<<<<< HEAD
             pdf_bin, _ = report.with_context(snailmail_layout=not self.cover)._render_qweb_pdf(self.res_id)
+||||||| parent of bcc15ac187d0... temp
+            pdf_bin, _ = report.with_context(snailmail_layout=not self.cover).render_qweb_pdf(self.res_id)
+=======
+            if not self.cover:
+                raise UserError(_("Snailmails without covers are no longer supported in Odoo 13.\nPlease enable the 'Add a Cover Page' option in your Invoicing settings or upgrade your Odoo."))
+            pdf_bin, unused_filetype = report.with_context(snailmail_layout=not self.cover).render_qweb_pdf(self.res_id)
+            if self.cover:
+                pdf_bin = self._append_cover_page(pdf_bin)
+>>>>>>> bcc15ac187d0... temp
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
                 'datas': base64.b64encode(pdf_bin),
@@ -195,7 +228,6 @@ class SnailmailLetter(models.Model):
         dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         documents = []
 
-        batch = len(self) > 1
         for letter in self:
             document = {
                 # generic informations to send
@@ -414,3 +446,81 @@ class SnailmailLetter(models.Model):
         record.ensure_one()
         required_keys = ['street', 'city', 'zip', 'country_id']
         return all(record[key] for key in required_keys)
+<<<<<<< HEAD
+||||||| parent of bcc15ac187d0... temp
+
+    def _format_snailmail_failures(self):
+        """
+        A shorter message to notify a failure update
+        """
+        failures_infos = []
+        for letter in self:
+            info = {
+                'message_id': letter.message_id.id,
+                'record_name': letter.message_id.record_name,
+                'model_name': self.env['ir.model']._get(letter.model).display_name,
+                'uuid': letter.message_id.message_id,
+                'res_id': letter.res_id,
+                'model': letter.model,
+                'last_message_date': letter.message_id.date,
+                'module_icon': '/snailmail/static/img/snailmail_failure.png',
+                'snailmail_status': letter.error_code if letter.state == 'error' else '',
+                'snailmail_error': letter.state == 'error',
+                'failure_type': 'snailmail',
+            }
+            failures_infos.append(info)
+        return failures_infos
+=======
+
+    def _format_snailmail_failures(self):
+        """
+        A shorter message to notify a failure update
+        """
+        failures_infos = []
+        for letter in self:
+            info = {
+                'message_id': letter.message_id.id,
+                'record_name': letter.message_id.record_name,
+                'model_name': self.env['ir.model']._get(letter.model).display_name,
+                'uuid': letter.message_id.message_id,
+                'res_id': letter.res_id,
+                'model': letter.model,
+                'last_message_date': letter.message_id.date,
+                'module_icon': '/snailmail/static/img/snailmail_failure.png',
+                'snailmail_status': letter.error_code if letter.state == 'error' else '',
+                'snailmail_error': letter.state == 'error',
+                'failure_type': 'snailmail',
+            }
+            failures_infos.append(info)
+        return failures_infos
+
+    def _append_cover_page(self, invoice_bin: bytes):
+        address = self.partner_id.contact_address.replace('\n', '<br/>')
+        address_x = 118 * mm
+        address_y = 60 * mm
+        frame_width = 85.5 * mm
+        frame_height = 25.5 * mm
+
+        cover_buf = io.BytesIO()
+        canvas = Canvas(cover_buf, pagesize=A4)
+        styles = getSampleStyleSheet()
+
+        frame = Frame(address_x, A4[1] - address_y - frame_height, frame_width, frame_height)
+        story = [Paragraph(address, styles['Normal'])]
+        address_inframe = KeepInFrame(0, 0, story)
+        frame.addFromList([address_inframe], canvas)
+        canvas.save()
+        cover_buf.seek(0)
+
+        invoice = PdfFileReader(io.BytesIO(invoice_bin))
+        cover_bin = io.BytesIO(cover_buf.getvalue())
+        cover_file = PdfFileReader(cover_bin)
+        merger = PdfFileMerger()
+
+        merger.append(cover_file, import_bookmarks=False)
+        merger.append(invoice, import_bookmarks=False)
+
+        out_buff = io.BytesIO()
+        merger.write(out_buff)
+        return out_buff.getvalue()
+>>>>>>> bcc15ac187d0... temp
