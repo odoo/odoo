@@ -52,8 +52,14 @@ const KanbanActivity = AbstractField.extend({
      * @param {integer} previousActivityTypeID
      * @return {Promise}
      */
-    scheduleActivity() {
-        return this._openActivityForm(false);
+    async scheduleActivity() {
+        const messaging = await owl.Component.env.services.messaging.get();
+        const thread = messaging.models['Thread'].insert({ id: this.res_id, model: this.model });
+        await messaging.openActivityForm({
+            defaultActivityTypeId: this.defaultActivityType,
+            thread,
+        });
+        this._reload();
     },
 
     //------------------------------------------------------------
@@ -122,10 +128,18 @@ const KanbanActivity = AbstractField.extend({
      * @param {MouseEvent} ev
      * @returns {Promise}
      */
-    _onEditActivity(ev) {
+    async _onEditActivity(ev) {
         ev.preventDefault();
-        const activityID = $(ev.currentTarget).data('activity-id');
-        return this._openActivityForm(activityID);
+        const activityId = $(ev.currentTarget).data('activity-id');
+        const messaging = await owl.Component.env.services.messaging.get();
+        const thread = messaging.models['Thread'].insert({ id: this.res_id, model: this.model });
+        const activity = messaging.models['Activity'].insert({ id: activityId, thread });
+        await messaging.openActivityForm({
+            activity,
+            defaultActivityTypeId: this.defaultActivityType,
+            thread,
+        });
+        this._reload();
     },
     /**
      * @private
@@ -339,9 +353,15 @@ const KanbanActivity = AbstractField.extend({
      * @param {MouseEvent} ev
      * @returns {Promise}
      */
-    _onScheduleActivity(ev) {
+    async _onScheduleActivity(ev) {
         ev.preventDefault();
-        return this._openActivityForm(false);
+        const messaging = await owl.Component.env.services.messaging.get();
+        const thread = messaging.models['Thread'].insert({ id: this.res_id, model: this.model });
+        await messaging.openActivityForm({
+            defaultActivityTypeId: this.defaultActivityType,
+            thread,
+        });
+        this._reload();
     },
     /**
      * @private
@@ -356,22 +376,6 @@ const KanbanActivity = AbstractField.extend({
             model: this.model,
             method: 'activity_send_mail',
             args: [[this.res_id], templateID],
-        });
-        this._reload();
-    },
-    /**
-     * @private
-     * @param {integer} id
-     * @return {Promise}
-     */
-    async _openActivityForm(id) {
-        const messaging = await owl.Component.env.services.messaging.get();
-        const thread = messaging.models['Thread'].insert({ id: this.res_id, model: this.model });
-        const activity = id ? messaging.models['Activity'].insert({ id, thread }) : undefined;
-        await messaging.openActivityForm({
-            activity,
-            defaultActivityTypeId: this.defaultActivityType,
-            thread,
         });
         this._reload();
     },
