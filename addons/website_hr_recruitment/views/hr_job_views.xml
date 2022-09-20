@@ -17,7 +17,7 @@
             <xpath expr="//div[@name='kanban_boxes']" position="inside">
                 <field name="website_url" invisible="1"/>
                 <div class="col-6">
-                    <field name="is_published" widget='boolean_toggle'/>
+                    <field name="is_published" widget="boolean_toggle" class="me-1"/>
                     <t t-if="record.is_published.raw_value">Published</t>
                     <t t-else="">Not published</t>
                 </div>
