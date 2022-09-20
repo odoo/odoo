@@ -1559,6 +1559,10 @@ patch(MockServer.prototype, 'mail', {
                 ])[0];
                 response.subtype_description = subtype.description;
             }
+            if (message.author_guest_id) {
+                const [guest] = this.pyEnv['mail.guest'].searchRead([['id', '=', message.author_guest_id]]);
+                response['guestAuthor'] = { id: guest.id, name: guest.name };
+            }
             return response;
         });
     },
