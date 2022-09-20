@@ -8,7 +8,7 @@ var createView = testUtils.createView;
 
 QUnit.module('fields', {}, function () {
 
-QUnit.module('signature', {
+QUnit.module('signature legacy', {
     beforeEach: function () {
         this.data = {
             partner: {
