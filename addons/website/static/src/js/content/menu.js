@@ -2,7 +2,6 @@ odoo.define('website.content.menu', function (require) {
 'use strict';
 
 const config = require('web.config');
-var dom = require('web.dom');
 var publicWidget = require('web.public.widget');
 var animations = require('website.content.snippets.animation');
 const extraMenuUpdateCallbacks = [];
@@ -72,10 +71,23 @@ const BaseAnimatedHeader = animations.Animation.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Adapt the 'right' css property of the header by adding the size of a
+     * scrollbar if any.
+     *
      * @private
      */
     _adaptFixedHeaderPosition() {
-        dom.compensateScrollbar(this.el, this.fixedHeader, false, 'right');
+        // Compensate scrollbar
+        this.el.style.removeProperty('right');
+        if (this.fixedHeader) {
+            const scrollableEl = $(this.el).parent().closestScrollable()[0];
+            const style = window.getComputedStyle(this.el);
+            const borderLeftWidth = parseInt(style.borderLeftWidth.replace('px', ''));
+            const borderRightWidth = parseInt(style.borderRightWidth.replace('px', ''));
+            const bordersWidth = borderLeftWidth + borderRightWidth;
+            const newValue = parseInt(style['right']) + scrollableEl.offsetWidth - scrollableEl.clientWidth - bordersWidth;
+            this.el.style.setProperty('right', `${newValue}px`, 'important');
+        }
     },
     /**
      * @private
