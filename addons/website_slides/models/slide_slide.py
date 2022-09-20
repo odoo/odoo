@@ -250,6 +250,9 @@ class Slide(models.Model):
         for slide in self:
             slide.is_new_slide = slide.date_published > fields.Datetime.now() - relativedelta(days=7) if slide.is_published else False
 
+    def _get_placeholder_filename(self, field):
+        return self.channel_id._get_placeholder_filename(field)
+
     @api.depends('channel_id.slide_ids.is_category', 'channel_id.slide_ids.sequence')
     def _compute_category_id(self):
         """ Will take all the slides of the channel for which the index is higher
