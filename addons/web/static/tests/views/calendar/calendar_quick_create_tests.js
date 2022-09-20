@@ -23,7 +23,7 @@ async function start(params = {}) {
     });
 }
 
-QUnit.module("CalendarQuickCreate", ({ beforeEach }) => {
+QUnit.module("CalendarView - QuickCreate", ({ beforeEach }) => {
     beforeEach(() => {
         target = getFixture();
     });

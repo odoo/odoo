@@ -28,7 +28,7 @@ async function start(params = {}) {
     });
 }
 
-QUnit.module("CalendarYearPopover", ({ beforeEach }) => {
+QUnit.module("CalendarView - YearPopover", ({ beforeEach }) => {
     beforeEach(() => {
         target = getFixture();
         fakePopoverRecords = [

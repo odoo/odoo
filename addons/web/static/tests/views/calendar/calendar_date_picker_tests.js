@@ -16,7 +16,7 @@ async function start(params = {}) {
     });
 }
 
-QUnit.module("CalendarDatePicker", ({ beforeEach }) => {
+QUnit.module("CalendarView - DatePicker", ({ beforeEach }) => {
     beforeEach(() => {
         target = getFixture();
         patchDate(2021, 7, 14, 8, 0, 0);

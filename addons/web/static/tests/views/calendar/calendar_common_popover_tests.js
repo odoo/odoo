@@ -39,7 +39,7 @@ async function start(params = {}) {
 
 /** @todo Add tests for fields **/
 
-QUnit.module("CalendarCommonPopover", ({ beforeEach }) => {
+QUnit.module("CalendarView - CommonPopover", ({ beforeEach }) => {
     beforeEach(() => {
         target = getFixture();
     });

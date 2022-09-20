@@ -26,7 +26,7 @@ async function start(params = {}) {
     });
 }
 
-QUnit.module("CalendarYearRenderer", ({ beforeEach }) => {
+QUnit.module("CalendarView - YearRenderer", ({ beforeEach }) => {
     beforeEach(() => {
         target = getFixture();
     });

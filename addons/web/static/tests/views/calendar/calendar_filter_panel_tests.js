@@ -16,7 +16,7 @@ async function start(params = {}) {
     });
 }
 
-QUnit.module("CalendarFilterPanel", ({ beforeEach }) => {
+QUnit.module("CalendarView - FilterPanel", ({ beforeEach }) => {
     beforeEach(() => {
         target = getFixture();
     });

@@ -14,7 +14,7 @@ function check(assert, paramName, paramValue, expectedName, expectedValue) {
     assert.strictEqual(data[expectedName], expectedValue);
 }
 
-QUnit.module("CalendarArchParser");
+QUnit.module("CalendarView - ArchParser");
 
 QUnit.test("throw if date_start is not set", (assert) => {
     assert.throws(() => {

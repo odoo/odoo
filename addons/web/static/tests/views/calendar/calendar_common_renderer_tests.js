@@ -33,7 +33,7 @@ async function start(params = {}) {
     });
 }
 
-QUnit.module("CalendarCommonRenderer", ({ beforeEach }) => {
+QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
     beforeEach(() => {
         target = getFixture();
     });
