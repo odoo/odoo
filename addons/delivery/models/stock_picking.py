@@ -63,7 +63,7 @@ class StockPicking(models.Model):
                     weight += move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id) * move_line.product_id.weight
             picking.weight_bulk = weight
 
-    @api.depends('package_ids', 'weight_bulk')
+    @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
     def _compute_shipping_weight(self):
         for picking in self:
             picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight for pack in picking.package_ids])
