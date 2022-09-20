@@ -146,9 +146,17 @@ class SnailmailLetter(models.Model):
             else:
                 report_name = 'Document'
             filename = "%s.%s" % (report_name, "pdf")
+<<<<<<< HEAD
             pdf_bin, _ = self.env['ir.actions.report'].with_context(snailmail_layout=not self.cover)._render_qweb_pdf(report, self.res_id)
             if self.cover:
                 pdf_bin = self._append_cover_page(pdf_bin)
+||||||| parent of a5d0ae7a1775... temp
+            pdf_bin, _ = report.with_context(snailmail_layout=not self.cover)._render_qweb_pdf(self.res_id)
+=======
+            pdf_bin, _ = report.with_context(snailmail_layout=not self.cover)._render_qweb_pdf(self.res_id)
+            if self.cover:
+                pdf_bin = self._append_cover_page(pdf_bin)
+>>>>>>> a5d0ae7a1775... temp
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
                 'datas': base64.b64encode(pdf_bin),
