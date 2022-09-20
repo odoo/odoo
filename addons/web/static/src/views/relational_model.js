@@ -951,7 +951,6 @@ export class Record extends DataPoint {
     }
 
     async update(changes) {
-        debugger;
         if (this._urgentSave) {
             return this._update(changes);
         }
