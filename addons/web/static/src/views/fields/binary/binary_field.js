@@ -9,7 +9,7 @@ import { _lt } from "@web/core/l10n/translation";
 
 const { Component, onWillUpdateProps, useState } = owl;
 
-function isBinarySize(value) {
+export function isBinarySize(value) {
     return /^\d+(\.\d*)? [^0-9]+$/.test(value);
 }
 
