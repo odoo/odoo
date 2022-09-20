@@ -51,6 +51,8 @@
                     <field name="hr_icon_display" invisible="1"/>
                     <field name="image_128" invisible="1" />
                     <field name="company_id" invisible="1"/>
+                    <field name="last_activity_time" invisible="1"/>
+                    <field name="last_activity" invisible="1"/>
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
@@ -63,19 +65,19 @@
                         <div class="oe_title">
                             <h1 class="d-flex">
                                 <field name="name" placeholder="Employee's Name" required="True" style="font-size: min(4vw, 2.6rem);" />
-                                <field name="last_activity_time" invisible="1"/>
-                                <field name="last_activity" invisible="1"/>
-                                <div id="hr_presence_status" attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}" class="ms-1">
-                                    <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                    <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_present')]}" aria-label="Present" title="Present"/>
-                                    <!-- Employee is not present and it is normal according to his work schedule -->
-                                    <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_icon_display', '!=', 'present_absent')]}" aria-label="Absent" title="Absent" name="presence_absent"/>
-                                    <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                                    <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
-                                    <!-- Employee is not here but according to his work schedule, he should be connected -->
-                                    <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}" aria-label="To define" title="To define" name="presence_to_define"/>
+                                <div class="d-flex align-items-end fs-6" style="height: min(4vw, 2.6rem); padding-bottom: 1px;">
+                                    <div id="hr_presence_status" attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}" class="ms-1">
+                                        <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                                        <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_present')]}" aria-label="Present" title="Present"/>
+                                        <!-- Employee is not present and it is normal according to his work schedule -->
+                                        <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'present_absent')]}" aria-label="Absent" title="Absent" name="presence_absent"/>
+                                        <!-- Employee is connected but according to his work schedule, he should not work for now  -->
+                                        <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
+                                        <!-- Employee is not here but according to his work schedule, he should be connected -->
+                                        <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}" aria-label="To define" title="To define" name="presence_to_define"/>
+                                    </div>
+                                    <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments align-middle fs-6"/></a>
                                 </div>
-                                <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments align-middle fs-6"/></a>
                             </h1>
                             <h2>
                                 <field name="job_title" placeholder="Job Position" />
