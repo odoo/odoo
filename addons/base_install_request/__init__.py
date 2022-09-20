@@ -14,7 +14,7 @@ def _auto_install_apps(cr, registry):
     env['ir.module.module'].sudo().search([
         ('name', 'in', [
             # Community
-            'board', 'hr', 'mass_mailing', 'project', 'survey',
+            'hr', 'mass_mailing', 'project', 'survey',
             # Enterprise
             'appointment', 'knowledge', 'planning', 'sign',
         ]),
