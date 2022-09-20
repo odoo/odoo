@@ -27,7 +27,7 @@ export const busService = {
     dependencies: ['localization', 'multi_tab', 'notification'],
 
     start(env, { multi_tab: multiTab }) {
-        if (multiTab.getSharedValue('dbuuid') !== session.dbuuid) {
+        if (session.dbuuid && multiTab.getSharedValue('dbuuid') !== session.dbuuid) {
             multiTab.setSharedValue('dbuuid', session.dbuuid);
             multiTab.removeSharedValue('last_notification_id');
         }
