@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
-        self.generated_coupon_ids.write({'state': 'new'})
+        self.generated_coupon_ids.write({'state': 'new', 'partner_id': self.partner_id})
         self.applied_coupon_ids.write({'state': 'used'})
         self._send_reward_coupon_mail()
         return super(SaleOrder, self).action_confirm()
