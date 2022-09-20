@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
 import { CalendarArchParser } from "@web/views/calendar/calendar_arch_parser";
-import { makeFakeDate, FAKE_FIELDS, makeEnv } from "./calendar_helpers";
+import { FAKE_FIELDS } from "./calendar_helpers";
 
 function parseArch(arch, options = {}) {
     const parser = new CalendarArchParser();
-    return parser.parse(
-        arch,
-        { fake: "fields" in options ? options.fields : FAKE_FIELDS },
-        "fake",
-        options.context || {},
-        "date" in options ? options.date : makeFakeDate()
-    );
+    return parser.parse(arch, { fake: "fields" in options ? options.fields : FAKE_FIELDS }, "fake");
 }
 
 function check(assert, paramName, paramValue, expectedName, expectedValue) {
@@ -84,22 +78,6 @@ QUnit.test("canEdit", (assert) => {
     );
 });
 
-QUnit.skipWOWL("date", async (assert) => {
-    let date = parseArch(`<calendar date_start="start_date" />`, { date: makeFakeDate() }).date;
-    assert.ok(date.equals(makeFakeDate()));
-
-    await makeEnv(); // we need localization service
-    date = parseArch(`<calendar date_start="start_date" />`, {
-        context: { initial_date: "2021-07-16 08:00:00" },
-    }).date;
-    assert.ok(date.equals(luxon.DateTime.utc(2021, 7, 16, 8, 0, 0)));
-
-    date = parseArch(`<calendar date_start="start_date" />`, {
-        date: null, // force default date
-    }).date;
-    assert.ok(date.diff(luxon.DateTime.utc(), "seconds").seconds < 1);
-});
-
 QUnit.test("eventLimit", (assert) => {
     check(assert, "event_limit", "2", "eventLimit", 2);
     check(assert, "event_limit", "5", "eventLimit", 5);
@@ -110,15 +88,6 @@ QUnit.test("eventLimit", (assert) => {
 
     assert.throws(() => {
         parseArch(`<calendar date_start="start_date" event_limit="" />`);
-    });
-});
-
-QUnit.skipWOWL("formViewId", (assert) => {
-    check(assert, "form_view_id", "", "formViewId", null);
-    check(assert, "form_view_id", "153", "formViewId", 153);
-
-    assert.throws(() => {
-        parseArch(`<calendar date_start="start_date" form_view_id="one" />`);
     });
 });
 
