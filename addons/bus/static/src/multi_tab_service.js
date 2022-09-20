@@ -51,7 +51,11 @@ export const multiTabService = {
 
         function getItemFromStorage(key, defaultValue) {
             const item = browser.localStorage.getItem(generateLocalStorageKey(key));
-            return item ? JSON.parse(item) : defaultValue;
+            try {
+                return item ? JSON.parse(item) : defaultValue;
+            } catch {
+                return item;
+            }
         }
 
         function setItemInStorage(key, value) {
@@ -200,6 +204,9 @@ export const multiTabService = {
              * @param {any} value
              */
             setSharedValue(key, value) {
+                if (value === undefined) {
+                    return this.removeSharedValue(key);
+                }
                 setItemInStorage(key, value);
             },
             /**
