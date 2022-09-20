@@ -901,10 +901,10 @@ class TranslationModuleReader:
                  retrieve source terms only if not set
     """
 
-    def __init__(self, cr, modules=None, lang='en_US'):
+    def __init__(self, cr, modules=None, lang=None):
         self._cr = cr
         self._modules = modules or ['all']
-        self._lang = lang
+        self._lang = lang or 'en_US'
         self.env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
         self._to_translate = []
         self._path_list = [(path, True) for path in odoo.addons.__path__]
