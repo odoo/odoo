@@ -12,9 +12,19 @@ export class ProjectStateSelectionField extends StateSelectionField {
         this.colors = STATUS_COLORS;
     }
 
+    /**
+     * @override
+     */
     get showLabel() {
         return !this.props.hideLabel;
     }
+
+    /**
+     * @override
+     */
+    get options() {
+        return super.options.filter(o => o[0] !== 'to_define');
+    }
 }
 
-registry.category('fields').add('project_state_selection', ProjectStateSelectionField);
+registry.category('fields').add('kanban.project_state_selection', ProjectStateSelectionField);
