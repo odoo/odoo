@@ -1514,7 +1514,7 @@ class Picking(models.Model):
         report = self.env.ref('stock.action_report_delivery')._render_qweb_pdf(self.id)
         filename = "%s_signed_delivery_slip" % self.name
         if self.partner_id:
-            message = _('Order signed by %s') % (self.partner_id.name)
+            message = _('Order signed by %s') % (self.env.user.name)
         else:
             message = _('Order signed')
         self.message_post(
