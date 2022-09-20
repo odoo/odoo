@@ -6,34 +6,35 @@ import { companyService } from "@web/webclient/company_service";
 import { timesheetUomService } from "../src/services/timesheet_uom_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { makeView, setupViewRegistries} from "@web/../tests/views/helpers";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
 QUnit.module("Timesheet UOM Widgets", (hooks) => {
-    const serverData = {
-        models: {
-            'account.analytic.line': {
-                fields: {
-                    unit_amount: { string: "Unit Amount", type: "float" },
-                },
-                records: [
-                    { id: 1, unit_amount: 8 }
-                ],
-            },
-        },
-        views: {
-            "account.analytic.line,false,list": `
-                <tree>
-                    <field name="unit_amount" widget="timesheet_uom"/>
-                </tree>
-            `,
-        },
-    };
+    let serverData;
     let target;
     hooks.beforeEach(async function (assert) {
         setupViewRegistries();
         target = getFixture();
+        serverData = {
+            models: {
+                'account.analytic.line': {
+                    fields: {
+                        unit_amount: { string: "Unit Amount", type: "float" },
+                    },
+                    records: [
+                        { id: 1, unit_amount: 8 }
+                    ],
+                },
+            },
+            views: {
+                "account.analytic.line,false,list": `
+                    <tree>
+                        <field name="unit_amount" widget="timesheet_uom"/>
+                    </tree>
+                `,
+            },
+        };
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("timesheet_uom", timesheetUomService);
         serviceRegistry.add("company", companyService, { force: true });
@@ -78,6 +79,25 @@ QUnit.module("Timesheet UOM Widgets", (hooks) => {
             resModel: "account.analytic.line",
         });
         assert.containsOnce(target, 'div[name="unit_amount"]:contains("1")', "TimesheetFloatToggleField should take `timesheet_uom_factor` into account");
+    });
+
+    QUnit.test("ranges are working properly in TimesheetFloatToggleField", async function (assert) {
+        serverData.models["account.analytic.line"].records[0].unit_amount = 1;
+        serverData.views["account.analytic.line,false,list"] = serverData.views["account.analytic.line,false,list"].replace('<tree', '<tree editable="bottom"')
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "account.analytic.line",
+        });
+        // Enter edit mode
+        await click(target, 'div[name="unit_amount"]');
+
+        await click(target, 'div[name="unit_amount"] .o_field_float_toggle');
+        assert.containsOnce(target, 'div[name="unit_amount"]:contains("0.00")', "ranges are working properly in TimesheetFloatToggleField");
+        await click(target, 'div[name="unit_amount"] .o_field_float_toggle');
+        assert.containsOnce(target, 'div[name="unit_amount"]:contains("0.50")', "ranges are working properly in TimesheetFloatToggleField");
+        await click(target, 'div[name="unit_amount"] .o_field_float_toggle');
+        assert.containsOnce(target, 'div[name="unit_amount"]:contains("1.00")', "ranges are working properly in TimesheetFloatToggleField");
     });
 
     QUnit.module("TimesheetFloatTimeField");
