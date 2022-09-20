@@ -2,9 +2,10 @@
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { registry } from "@web/core/registry";
+import { isBinarySize } from "@web/views/fields/binary/binary_field";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -18,10 +19,6 @@ export const fileTypeMagicWordMap = {
     P: "svg+xml",
 };
 const placeholder = "/web/static/img/placeholder.png";
-
-function isBinarySize(value) {
-    return /^\d+(\.\d*)? [^0-9]+$/.test(value);
-}
 
 /**
  * Formats a value to be injected in the image's url in order for that url
@@ -139,8 +136,14 @@ ImageField.extractProps = ({ attrs }) => {
         zoomDelay: attrs.options.zoom_delay,
         previewImage: attrs.options.preview_image,
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
-        width: attrs.options.size && Boolean(attrs.options.size[0]) ? attrs.options.size[0] : attrs.width,
-        height: attrs.options.size && Boolean(attrs.options.size[1]) ? attrs.options.size[1] : attrs.height,
+        width:
+            attrs.options.size && Boolean(attrs.options.size[0])
+                ? attrs.options.size[0]
+                : attrs.width,
+        height:
+            attrs.options.size && Boolean(attrs.options.size[1])
+                ? attrs.options.size[1]
+                : attrs.height,
     };
 };
 

@@ -16,8 +16,8 @@
                 -> otherwise, it will adapt the space between characters to fill
                 the image with the text.
     -->
-    <t t-name="web.legacy.sign_svg_text" name="SVG Signature Text">
-        <svg t-att-width="width" t-att-height="height">
+    <t t-name="web.sign_svg_text" name="SVG Signature Text" owl="1">
+        <svg t-att-width="width" t-att-height="height" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs>
                 <style type="text/css">
                     @font-face {
@@ -37,11 +37,11 @@
     </t>
 
     <!-- Template for the widget webSignNameAndDraw. -->
-    <t t-name="web.sign_name_and_signature">
+    <t t-name="web.NameAndSignature" owl="1">
         <div class="o_web_sign_name_and_signature">
-            <div class="o_web_sign_name_group">
-                <label class="col-form-label" t-att-for="'o_web_sign_name_input_' + widget.htmlId">Full Name</label>
-                <input type="text" name="signer" t-att-id="'o_web_sign_name_input_' + widget.htmlId" class="o_web_sign_name_input form-control" t-att-value="widget.defaultName" placeholder="Type your name to sign" required=""/>
+            <div t-if="!props.noInputName" class="o_web_sign_name_group">
+                <label class="col-form-label" t-att-for="'o_web_sign_name_input_' + htmlId">Full Name</label>
+                <input type="text" name="signer" t-att-id="'o_web_sign_name_input_' + htmlId" class="o_web_sign_name_input form-control" t-on-input="onInputSignName" t-att-value="props.signature.name" t-ref="signNameInput" placeholder="Type your name to sign" required=""/>
             </div>
 
             <!--
@@ -49,60 +49,57 @@
                 border, but we remove the padding from the body, so the canvas
                 will overflow on the corners without this rule.
             -->
-            <div class="o_web_sign_signature_group bg-white card mt-3" style="overflow: hidden;">
+            <div t-if="state.showSignatureArea" class="o_web_sign_signature_group bg-white card mt-3" style="overflow: hidden;">
                 <div class="card-header">
                     <div class="row g-0">
-                        <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ widget.signMode === 'auto' ? 'active': '' }}">
+                        <div t-if="!props.noInputName or defaultName" class="col-auto">
+                            <a role="button" href="#" t-on-click.prevent="() => this.setMode('auto')" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ state.signMode === 'auto' ? 'active': '' }}">
                                 Auto
                             </a>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_draw_button me-2 btn btn-light {{ widget.signMode === 'draw' ? 'active': '' }}">
+                            <a role="button" href="#" t-on-click.prevent="() => this.setMode('draw')" t-attf-class="o_web_sign_draw_button me-2 btn btn-light {{ state.signMode === 'draw' ? 'active': '' }}">
                                 Draw
                             </a>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ widget.signMode === 'load' ? 'active': '' }}">
+                            <a role="button" href="#" t-on-click.prevent="() => this.setMode('load')" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ state.signMode === 'load' ? 'active': '' }}">
                                 Load
                             </a>
                         </div>
-                        <div t-attf-class="o_web_sign_draw_clear col-auto ms-auto {{ widget.signMode !== 'draw' ? 'd-none' : '' }}">
-                            <a role="button" href="#" class="btn btn-link">
+                        <div t-if="state.signMode === 'draw'" t-attf-class="o_web_sign_draw_clear col-auto ms-auto">
+                            <a role="button" href="#" t-on-click.prevent="onClickSignDrawClear" class="btn btn-link">
                                 Clear
                             </a>
                         </div>
-                        <div t-attf-class="o_web_sign_auto_select_style col-auto ms-auto {{ widget.signMode !== 'auto' ? 'd-none' : '' }}">
-                            <a role="button" href="#" class="btn btn-link">
-                                Style
-                            </a>
-                        </div>
-                        <div t-attf-class="o_web_sign_load_file col-auto {{ widget.signMode !== 'load' ? 'd-none' : '' }}">
-                            <input type="file" role="button" name="files[]" class="btn btn-link py-0"/>
+
+                        <Dropdown t-if="state.signMode === 'auto'" class="'o_web_sign_auto_select_style col-auto ms-auto'" togglerClass="'btn btn-link'">
+                            <t t-set-slot="toggler">
+                                    Style
+                            </t>
+                            <t t-foreach="fonts" t-as="font" t-key="font_index">
+                                <DropdownItem onSelected="() => this.onSelectFont(font_index)">
+                                    <img class="img-fluid" t-att-src="getSVGTextFont(font)"/>
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+
+                        <div t-if="state.signMode === 'load'" class="o_web_sign_load_file col-auto">
+                            <input t-ref="signInputLoad" type="file" role="button" name="files[]" class="btn btn-link py-0" t-on-change="onChangeSignLoadInput"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="o_signature_stroke position-absolute"/>
 
-                <div class="o_web_sign_signature p-0 bg-transparent position-relative"/>
+                <div t-if="state.showSignatureArea" t-ref="signature" t-att-style="signatureStyle" class="o_web_sign_signature p-0 bg-transparent position-relative"/>
 
-                <div t-attf-class="o_web_sign_load_invalid card-footer d-none">
+                <div t-if="loadIsInvalid" t-attf-class="o_web_sign_load_invalid card-footer d-none">
                     <div class="alert alert-danger mb-0" role="alert">
                         This file is invalid. Please select an image.
                     </div>
                 </div>
             </div>
-
-            <div class="o_web_sign_auto_font_selection card d-none h-100 flex-column">
-                <div class="card-header">Styles</div>
-                <div class="o_web_sign_auto_font_list card-body text-center p-3 flex-grow-1"/>
-            </div>
         </div>
     </t>
-    <div t-name="web.signature_dialog">
-        <div class="o_web_sign_name_and_signature"/>
-
-        <div class="mt16 small">By clicking Adopt &amp; Sign, I agree that the chosen signature/initials will be a valid electronic representation of my hand-written signature/initials for all purposes when it is used on documents, including legally binding contracts.</div>
-    </div>
 </templates>
