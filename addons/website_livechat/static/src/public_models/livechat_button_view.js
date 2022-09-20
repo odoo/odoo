@@ -3,7 +3,7 @@
 import { patchRecordMethods } from '@mail/model/model_core';
 import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
-import '@im_livechat/models/livechat_button_view';
+import '@im_livechat/public_models/livechat_button_view';
 
 import { set_cookie, unaccent } from 'web.utils';
 

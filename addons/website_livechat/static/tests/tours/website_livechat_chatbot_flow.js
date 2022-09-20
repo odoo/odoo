@@ -4,7 +4,7 @@ import tour from "web_tour.tour";
 
 import { patchRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
-import '@im_livechat/models/livechat_button_view';
+import '@im_livechat/public_models/livechat_button_view';
 
 patchRecordMethods('LivechatButtonView', {
     /**
