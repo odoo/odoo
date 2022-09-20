@@ -4,9 +4,7 @@ import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { patchWebsocketWorkerWithCleanup } from '@bus/../tests/helpers/mock_websocket';
 
 import { patch } from "@web/core/utils/patch";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { MockServer } from "@web/../tests/helpers/mock_server";
-import { makeDeferred } from "@web/../tests/helpers/utils";
 
 patch(MockServer.prototype, 'bus', {
     init() {
@@ -39,26 +37,6 @@ patch(MockServer.prototype, 'bus', {
             const { inactivity_period, im_status_ids_by_model } = data;
             this._mockIrWebsocket__updatePresence(inactivity_period, im_status_ids_by_model);
         }
-    },
-
-    /**
-     * @override
-     */
-    async _performRPC(route, args) {
-        if (route === '/longpolling/poll') {
-            const longpollingPromise = makeDeferred();
-            if (this.hasLostConnection) {
-                longpollingPromise.reject(new ConnectionLostError());
-                this.hasLostConnection = false;
-            } else if (this.notificationsToBeResolved.length) {
-                longpollingPromise.resolve(this.notificationsToBeResolved);
-                this.notificationsToBeResolved = [];
-            } else {
-                this.pendingLongpollingPromise = longpollingPromise;
-            }
-            return longpollingPromise;
-        }
-        return this._super(route, args);
     },
     /**
      * Simulates `_sendone` on `bus.bus`.
