@@ -36,6 +36,7 @@
                             <field name="partner_id" force_save="1"/>
                             <field name="email" attrs="{'readonly': [('is_internal', '=', True)]}"/>
                             <field name="email_state" invisible="1"/>
+                            <field name="parent_partner_id" invisible="1"/>
                             <button name="action_refresh_modal" type="object" icon="fa-check text-success"
                                 attrs="{'invisible': [('email_state', '!=', 'ok')]}" title="Valid Email Address"/>
                             <button name="action_refresh_modal" type="object" icon="fa-times text-danger"
@@ -49,6 +50,8 @@
                                 attrs="{'invisible': ['|', '|', ('is_portal', '=', True), ('is_internal', '=', True), ('email_state', '!=', 'ok')]}"/>
                             <button string="Revoke Access" name="action_revoke_access" type="object" class="btn-secondary"
                                 attrs="{'invisible': ['|', ('is_portal', '=', False), ('is_internal', '=', True)]}"/>
+                            <button string="Dissociate from Parent Company" name="action_dissociate_from_company" type="object" class="btn-secondary"
+                                attrs="{'invisible': ['|', '|', ('is_portal', '=', False), ('is_internal', '=', True), ('parent_partner_id', '=', False)]}"/>
                             <button string="Re-Invite" name="action_invite_again" type="object" class="btn-secondary"
                                 attrs="{'invisible': ['|', '|', ('is_portal', '=', False), ('is_internal', '=', True), ('email_state', '!=', 'ok')]}"/>
                             <button string="Internal User" attrs="{'invisible': [('is_internal', '=', False)]}"

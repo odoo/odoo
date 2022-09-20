@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from markupsafe import Markup
 
 from odoo.tools.translate import _
 from odoo.tools import email_normalize
@@ -82,6 +83,7 @@ class PortalWizardUser(models.TransientModel):
 
     wizard_id = fields.Many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', string='Contact', required=True, readonly=True, ondelete='cascade')
+    parent_partner_id = fields.Many2one('res.partner', related='partner_id.parent_id', store=False, readonly=True)
     email = fields.Char('Email')
 
     user_id = fields.Many2one('res.users', string='User', compute='_compute_user_id', compute_sudo=True)
@@ -194,6 +196,26 @@ class PortalWizardUser(models.TransientModel):
 
         self._update_partner_email()
         self.with_context(active_test=True)._send_email()
+
+        return self.action_refresh_modal()
+
+    def action_dissociate_from_company(self):
+        """ Keep the portal access but remove from the company """
+        self.ensure_one()
+        if not self.is_portal:
+            raise UserError(_('The partner "%s" has no portal access or is internal.', self.partner_id.name))
+
+        # Remove the sign up token, so it can not be used
+        partner_sudo = self.partner_id.sudo()
+        user_sudo = self.user_id.sudo()
+        if user_sudo.partner_id != self.partner_id:
+            raise UserError(_("Selected user %r and partner %r do not match", user_sudo.login, self.partner_id.name))
+
+        new_partner = partner_sudo.copy({'parent_id':False})
+        new_partner.message_post(body=Markup("%s was dissociated from %s") % (new_partner.name, partner_sudo.parent_id.name))
+        user_sudo.write({'partner_id': new_partner.id})
+        partner_sudo.write({'parent_id': False, 'active': False})
+        self.partner_id = new_partner
 
         return self.action_refresh_modal()
 
