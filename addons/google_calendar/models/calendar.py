@@ -193,7 +193,10 @@ class Meeting(models.Model):
             'location': self.location or '',
             'guestsCanModify': True,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
-            'attendees': [{'email': attendee.email, 'responseStatus': attendee.state} for attendee in self.attendee_ids],
+            'attendees': [{
+                'email': attendee.email,
+                'responseStatus': attendee.state or 'needsAction',
+            } for attendee in self.attendee_ids if attendee.email],
             'extendedProperties': {
                 'shared': {
                     '%s_odoo_id' % self.env.cr.dbname: self.id,

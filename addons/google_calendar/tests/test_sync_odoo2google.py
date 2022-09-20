@@ -68,6 +68,40 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertFalse('%s_owner_id' % self.env.cr.dbname in values.get('extendedProperties', {}).get('shared', {}))
 
     @patch_api
+    def test_event_without_attendee_state(self):
+        partner_1 = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        partner_2 = self.env['res.partner'].create({'name': 'Phineas', 'email': 'phineas@opoo.com'})
+        partner_3 = self.env['res.partner'].create({'name': 'Ferb'})
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner_1.id), (4, partner_2.id), (4, partner_3.id)],
+            'privacy': 'private',
+            'need_sync': False,
+        })
+        attendee_2 = event.attendee_ids.filtered(lambda a: a.partner_id.id == partner_2.id)
+        attendee_2.write({
+            'state': False,
+        })
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'visibility': 'private',
+            'guestsCanModify': True,
+            'reminders': {'useDefault': False, 'overrides': []},
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'needsAction'},
+                          {'email': 'phineas@opoo.com', 'responseStatus': 'needsAction'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}}
+        })
+
+    @patch_api
     def test_event_allday_creation(self):
         event = self.env['calendar.event'].create({
             'name': "Event",
