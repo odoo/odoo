@@ -144,7 +144,6 @@ class PortalWizardUser(models.TransientModel):
             raise UserError(_('The partner "%s" already has the portal access.', self.partner_id.name))
 
         group_portal = self.env.ref('base.group_portal')
-        group_public = self.env.ref('base.group_public')
 
         self._update_partner_email()
         user_sudo = self.user_id.sudo()
@@ -155,7 +154,7 @@ class PortalWizardUser(models.TransientModel):
             user_sudo = self.sudo().with_company(company.id)._create_user()
 
         if not user_sudo.active or not self.is_portal:
-            user_sudo.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
+            user_sudo.write({'active': True, 'groups_id': [(4, group_portal.id)]})
             # prepare for the signup process
             user_sudo.partner_id.signup_prepare()
 
@@ -172,9 +171,6 @@ class PortalWizardUser(models.TransientModel):
         if not self.is_portal:
             raise UserError(_('The partner "%s" has no portal access or is internal.', self.partner_id.name))
 
-        group_portal = self.env.ref('base.group_portal')
-        group_public = self.env.ref('base.group_public')
-
         self._update_partner_email()
 
         # Remove the sign up token, so it can not be used
@@ -182,13 +178,9 @@ class PortalWizardUser(models.TransientModel):
 
         user_sudo = self.user_id.sudo()
 
-        # remove the user from the portal group
         if user_sudo and user_sudo.has_group('base.group_portal'):
             # if user belongs to portal only, deactivate it
-            if len(user_sudo.groups_id) <= 1:
-                user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
-            else:
-                user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)]})
+            user_sudo.write({'active': False})
 
         return self.action_refresh_modal()
 

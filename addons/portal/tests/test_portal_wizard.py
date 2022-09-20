@@ -75,46 +75,6 @@ class TestPortalWizard(MailCommon):
         self.assertSentEmail(self.env.user.partner_id, [self.partner])
 
     @users('admin')
-    def test_portal_wizard_public_user(self):
-        """Test to grant the access to a public user.
-
-        Should remove the group "base.group_public" and add the group "base.group_portal"
-        """
-        group_public = self.env.ref('base.group_public')
-        public_partner = self.public_user.partner_id
-        portal_wizard = self.env['portal.wizard'].with_context(active_ids=[public_partner.id]).create({})
-
-        self.assertEqual(len(portal_wizard.user_ids), 1)
-        portal_user = portal_wizard.user_ids
-
-        self.assertEqual(portal_user.user_id, self.public_user)
-        self.assertFalse(portal_user.is_portal)
-        self.assertFalse(portal_user.is_internal)
-
-        portal_user.email = 'new_email@example.com'
-        with self.mock_mail_gateway():
-            portal_user.action_grant_access()
-
-        self.assertTrue(portal_user.is_portal)
-        self.assertFalse(portal_user.is_internal)
-
-        self.assertTrue(self.public_user.has_group('base.group_portal'), 'Must add the group portal')
-        self.assertFalse(self.public_user.has_group('base.group_public'), 'Must remove the group public')
-        self.assertEqual(public_partner.email, 'new_email@example.com', 'Must change the email of the partner')
-        self.assertEqual(self.public_user.email, 'new_email@example.com', 'Must change the email of the user')
-        self.assertSentEmail(self.env.user.partner_id, [public_partner])
-
-        with self.mock_mail_gateway():
-            portal_user.action_revoke_access()
-
-        self.assertEqual(portal_user.user_id, self.public_user, 'Must keep the user even if it is archived')
-        self.assertEqual(group_public, portal_user.user_id.groups_id, 'Must add the group public after removing the portal group')
-        self.assertFalse(portal_user.user_id.active, 'Must have archived the user')
-        self.assertFalse(portal_user.is_portal)
-        self.assertFalse(portal_user.is_internal)
-        self.assertNotSentEmail()
-
-    @users('admin')
     def test_portal_wizard_internal_user(self):
         """Internal user can not be managed from this wizard."""
         internal_partner = self.internal_user.partner_id
