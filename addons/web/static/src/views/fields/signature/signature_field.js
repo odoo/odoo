@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { isBinarySize } from "@web/views/fields/binary/binary_field";
+import { isBinarySize } from "@web/core/utils/binary";
 import { fileTypeMagicWordMap, imageCacheKey } from "@web/views/fields/image/image_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 

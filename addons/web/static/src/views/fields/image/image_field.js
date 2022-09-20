@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { isBinarySize } from "@web/views/fields/binary/binary_field";
+import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
