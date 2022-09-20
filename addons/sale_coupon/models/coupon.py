@@ -11,6 +11,7 @@ class Coupon(models.Model):
         help="The sales order from which coupon is generated")
     sales_order_id = fields.Many2one('sale.order', 'Used in', readonly=True,
         help="The sales order on which the coupon is applied")
+    partner_id = fields.Many2one(related='order_id.partner_id', store=True)
 
     def _check_coupon_code(self, order_date, partner_id, **kwargs):
         message = super(Coupon, self)._check_coupon_code(order_date, partner_id, **kwargs)
