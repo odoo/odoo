@@ -2777,6 +2777,36 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_list_number")), cellVals);
     });
 
+    QUnit.test("date field aggregates in grouped lists", async function (assert) {
+        // this test simulates a scenario where a date field has a group_operator
+        // and the web_read_group thus return a value for that field for each group
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            groupBy: ["m2o"],
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="date"/>
+                </tree>`,
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read_group") {
+                    const res = await performRPC(...arguments);
+                    res.groups[0].date = "2021-03-15";
+                    res.groups[1].date = "2021-02-11";
+                    return res;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_group_header")), [
+            `Value 1 (3) `,
+            `Value 2 (1) `,
+        ]);
+    });
+
     QUnit.test(
         "hide aggregated value in grouped lists when no data provided by RPC call",
         async function (assert) {

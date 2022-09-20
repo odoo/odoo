@@ -30,6 +30,7 @@ const preloadedDataRegistry = registry.category("preloadedData");
 
 const { CREATE, UPDATE, DELETE, FORGET, LINK_TO, DELETE_ALL, REPLACE_WITH } = x2ManyCommands;
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
+const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 const DEFAULT_HANDLE_FIELD = "sequence";
 const DEFAULT_QUICK_CREATE_FIELDS = {
     display_name: { string: "Display name", type: "char" },
@@ -2411,7 +2412,9 @@ export class DynamicGroupList extends DynamicList {
                     default: {
                         // other optional aggregated fields
                         if (key in this.fields) {
-                            groupParams.aggregates[key] = value;
+                            if (AGGREGATABLE_FIELD_TYPES.includes(this.fields[key].type)) {
+                                groupParams.aggregates[key] = value;
+                            }
                         }
                     }
                 }
