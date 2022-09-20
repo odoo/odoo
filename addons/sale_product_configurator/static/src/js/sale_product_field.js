@@ -14,7 +14,6 @@ import {
 patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
 
     // TODO
-    // 1) optional products lines
     // 2) autofocus on first attribute in configurator
     //      unable to enter by hand custom values bc of it
     // 3) wizard opened when the variant is chosen in the 'Product Variant' field
@@ -35,10 +34,10 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             'get_single_product_variant',
             [this.props.record.data.product_template_id[0]],
         );
-        if(result && result.product_id){
+        if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
                 this.props.record.update({
-                    'product_id': [result.product_id, 'whatever'],
+                    product_id: [result.product_id, 'whatever'],
                 });
                 if (result.has_optional_products) {
                     this._openProductConfigurator('options');
@@ -77,16 +76,16 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             await this.rpc(
                 "/sale_product_configurator/configure",
                 {
-                    'product_template_id': productTemplateId,
-                    'quantity': this.props.record.data.product_uom_qty || 1,
-                    'pricelist_id': pricelistId, // HOW to get this from SO ?
-                    'product_template_attribute_value_ids': this.props.record.data.product_template_attribute_value_ids.records.map(
+                    product_template_id: productTemplateId,
+                    quantity: this.props.record.data.product_uom_qty || 1,
+                    pricelist_id: pricelistId, // HOW to get this from SO ?
+                    product_template_attribute_value_ids: this.props.record.data.product_template_attribute_value_ids.records.map(
                         record => record.data.id
                     ),
-                    'product_no_variant_attribute_value_ids': this.props.record.data.product_no_variant_attribute_value_ids.records.map(
+                    product_no_variant_attribute_value_ids: this.props.record.data.product_no_variant_attribute_value_ids.records.map(
                         record => record.data.id
                     ),
-                    'context': this.props.record.context,
+                    context: this.props.record.context,
                 },
             )
         );
@@ -109,16 +108,16 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 // NOTE: this dumb formatting is necessary to avoid
                 // modifying the shared code between frontend & backend for now.
                 return {
-                    'custom_value': record.data.custom_value,
-                    'custom_product_template_attribute_value_id': {
-                        'res_id': record.data.custom_product_template_attribute_value_id[0],
+                    custom_value: record.data.custom_value,
+                    custom_product_template_attribute_value_id: {
+                        res_id: record.data.custom_product_template_attribute_value_id[0],
                     },
                 };
             }
         );
         this.rootProduct = {
             product_id: productId,
-            product_template_id: parseInt(productTemplateId),
+            product_template_id: productTemplateId,
             quantity: parseFloat($modal.find('input[name="add_qty"]').val() || 1),
             variant_values: variantValues,
             product_custom_attribute_values: customAttributeValues,
@@ -142,14 +141,21 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 mainProduct,
                 ...optionalProducts
             ] = await optionalProductsModal.getAndCreateSelectedProducts();
-            // TODO optionalProducts
             // HACK: do not block line save bc the description was considered invalid
             //  when we clicked on another part of the dom than the 'confirm' button
             this.props.record._removeInvalidFields(['name']);
             this.productConfigured = true;
-            this.props.record.update(
+            await this.props.record.update(
                 this._convertConfiguratorDataToUpdateData(mainProduct)
             );
+            const optionalProductLinesCreationContext = this._convertConfiguratorDataToLinesCreationContext(optionalProducts);
+            for (let optionalProductLineCreationContext of optionalProductLinesCreationContext) {
+                await saleOrderRecord.data.order_line.addNew({
+                    position: 'bottom',
+                    context: optionalProductLineCreationContext,
+                    mode: 'readonly',  // whatever but not edit !
+                });
+            }
         });
         optionalProductsModal.on("closed", null, () => {
             if (confirmed) {
@@ -157,10 +163,10 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             }
             if (mode != 'edit') {
                 this.props.record.update({
-                    'product_template_id': false,
-                    'product_id': false,
-                    'product_uom_qty': 1.0,
-                    // TODO reset custom/novariant values (and remove onchange logic)
+                    product_template_id: false,
+                    product_id: false,
+                    product_uom_qty: 1.0,
+                    // TODO reset custom/novariant values (and remove onchange logic?)
                 });
             }
         });
@@ -170,8 +176,8 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         let result = {
             // TODO find a way to get the real product name
             // bc 'whatever' is really displayed when showing the 'Product Variant' column
-            'product_id': [mainProduct.product_id, 'whatever'],
-            'product_uom_qty': mainProduct.quantity,
+            product_id: [mainProduct.product_id, 'whatever'],
+            product_uom_qty: mainProduct.quantity,
             // don't think the ptmpl_id update is useful, will be the same anyway
             //'product_template_id': [mainProduct.product_template_id, 'whatever'],
         };
@@ -179,12 +185,6 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         var customValuesCommands = [{ operation: "DELETE_ALL" }];
         if (customAttributeValues && customAttributeValues.length !== 0) {
             _.each(customAttributeValues, function (customValue) {
-                // FIXME awa: This could be optimized by adding a "disableDefaultGet" to avoid
-                // having multiple default_get calls that are useless since we already
-                // have all the default values locally.
-                // However, this would mean a lot of changes in basic_model.js to handle
-                // those "default_" values and set them on the various fields (text,o2m,m2m,...).
-                // -> This is not considered as worth it right now.
                 customValuesCommands.push({
                     operation: "CREATE",
                     context: [
@@ -198,7 +198,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             });
         }
 
-        result["product_custom_attribute_value_ids"] = {
+        result.product_custom_attribute_value_ids = {
             operation: "MULTI",
             commands: customValuesCommands,
         };
@@ -216,11 +216,47 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             });
         }
 
-        result["product_no_variant_attribute_value_ids"] = {
+        result.product_no_variant_attribute_value_ids = {
             operation: "MULTI",
             commands: noVariantCommands,
         };
 
         return result;
-    }
+    },
+
+    /**
+     * Will map the optional producs data to sale.order.line
+     * creation contexts.
+     *
+     * @param {Array} optionalProductsData The optional products data given by the configurator
+     *
+     * @private
+     */
+    _convertConfiguratorDataToLinesCreationContext: function (optionalProductsData) {
+        return optionalProductsData.map(productData => {
+            return {
+                default_product_id: productData.product_id,
+                default_product_template_id: productData.product_template_id,
+                default_product_uom_qty: productData.quantity,
+                default_product_no_variant_attribute_value_ids: productData.no_variant_attribute_values.map(
+                    noVariantAttributeData => {
+                        return [4, parseInt(noVariantAttributeData.value)];
+                    }
+                ),
+                default_product_custom_attribute_value_ids: productData.product_custom_attribute_values.map(
+                    customAttributeData => {
+                        return [
+                            0,
+                            0,
+                            {
+                                custom_product_template_attribute_value_id:
+                                    customAttributeData.custom_product_template_attribute_value_id,
+                                custom_value: customAttributeData.custom_value,
+                            },
+                        ];
+                    }
+                )
+            };
+        });
+    },
 });
