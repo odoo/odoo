@@ -52,16 +52,32 @@ registerModel({
         }),
         emojiCategories: many('EmojiCategory', {
             compute() {
-                if (!this.emojiRegistry) {
-                    return clear();
+                let value = [];
+                if (this.emojiRegistryAsFrequentlyUsed && this.messaging && this.messaging.emojiRegistry && this.messaging.emojiRegistry.frequentlyUsedCategory) {
+                    value.push(this.messaging.emojiRegistry.frequentlyUsedCategory);
                 }
-                return [this.emojiDataCategory];
+                return [...value, this.emojiDataCategory];
             },
             inverse: 'allEmojis',
         }),
         emojiDataCategory: one('EmojiCategory'),
         emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', {
             inverse: 'emoji',
+        }),
+        emojiRegistryAsFrequentlyUsed: one('EmojiRegistry', {
+            inverse: 'allFrequentlyUsedEmojis',
+        }),
+        emojiRegistryAsUsedEmoji: one('EmojiRegistry', {
+            compute() {
+                if (!this.emojiRegistry) {
+                    return clear();
+                }
+                if (this.useAmount === 0) {
+                    return clear();
+                }
+                return this.emojiRegistry;
+            },
+            inverse: 'allUsedEmojis',
         }),
         emojiRegistry: one('EmojiRegistry', {
             compute() {
@@ -92,6 +108,9 @@ registerModel({
             compute() {
                 return [...this.shortcodes, ...this.emoticons];
             },
+        }),
+        useAmount: attr({
+            default: 0,
         }),
     },
 });

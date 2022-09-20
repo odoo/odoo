@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { increment } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiView',
@@ -10,9 +11,21 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
+            if (!this.exists()) {
+                return;
+            }
             if (!this.emojiGridItemViewOwner.emojiGridRowViewOwner) {
                 return;
             }
+            const emoji = this.emoji;
+            this._onClick(ev);
+            emoji.update({ useAmount: increment() });
+        },
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClick(ev) {
             if (this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
                 this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
                 return;
