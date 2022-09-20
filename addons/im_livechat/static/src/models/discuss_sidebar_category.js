@@ -14,6 +14,14 @@ addFields('DiscussSidebarCategory', {
 });
 
 patchFields('DiscussSidebarCategory', {
+    categoryItemsOrderedByLastAction: {
+        compute() {
+            if (this.discussAsLivechat) {
+                return this.categoryItems;
+            }
+            return this._super();
+        },
+    },
     isServerOpen: {
         compute() {
             // there is no server state for non-users (guests)
@@ -37,18 +45,18 @@ patchFields('DiscussSidebarCategory', {
             return this._super();
         },
     },
-    serverStateKey: {
+    orderedCategoryItems: {
         compute() {
             if (this.discussAsLivechat) {
-                return 'is_discuss_sidebar_category_livechat_open';
+                return this.categoryItemsOrderedByLastAction;
             }
             return this._super();
         },
     },
-    sortComputeMethod: {
+    serverStateKey: {
         compute() {
             if (this.discussAsLivechat) {
-                return 'last_action';
+                return 'is_discuss_sidebar_category_livechat_open';
             }
             return this._super();
         },
