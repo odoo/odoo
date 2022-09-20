@@ -40,7 +40,7 @@ export class LeaveStatsComponent extends Component {
     }
 
     get department() {
-        return this.props.record.data.department_id.data;
+        return this.props.record.data.department_id && this.props.record.data.department_id.data;
     }
 
     get employee() {
