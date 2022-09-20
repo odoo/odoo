@@ -53,8 +53,7 @@ const KanbanActivity = AbstractField.extend({
      * @return {Promise}
      */
     scheduleActivity() {
-        const callback = this._reload.bind(this);
-        return this._openActivityForm(false, callback);
+        return this._openActivityForm(false);
     },
 
     //------------------------------------------------------------
@@ -126,7 +125,7 @@ const KanbanActivity = AbstractField.extend({
     _onEditActivity(ev) {
         ev.preventDefault();
         const activityID = $(ev.currentTarget).data('activity-id');
-        return this._openActivityForm(activityID, this._reload.bind(this));
+        return this._openActivityForm(activityID);
     },
     /**
      * @private
@@ -342,7 +341,7 @@ const KanbanActivity = AbstractField.extend({
      */
     _onScheduleActivity(ev) {
         ev.preventDefault();
-        return this._openActivityForm(false, this._reload.bind(this));
+        return this._openActivityForm(false);
     },
     /**
      * @private
@@ -363,10 +362,9 @@ const KanbanActivity = AbstractField.extend({
     /**
      * @private
      * @param {integer} id
-     * @param {function} callback
      * @return {Promise}
      */
-    _openActivityForm(id, callback) {
+    _openActivityForm(id) {
         const context = {
             default_res_id: this.res_id,
             default_res_model: this.model,
@@ -385,7 +383,7 @@ const KanbanActivity = AbstractField.extend({
                 context,
                 res_id: id || false,
             },
-            { on_close: callback },
+            { on_close: () => this._reload() },
         );
     },
     /**
