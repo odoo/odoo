@@ -99,8 +99,7 @@
 <!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->
 <template id="slide_aside_card" name="Related Slide">
     <a class="list-group-item list-group-item-action d-flex align-items-start px-2" t-att-href="'/slides/slide/%s' % (slug(aside_slide))">
-        <t t-set="slide_image" t-value="website.image_url(aside_slide, 'image_256') if can_access_channel or aside_slide.is_preview else slide.channel_id.website_background_image_url"/>
-        <div class="me-1 border o_wslides_background_image_aside_card" t-attf-style="background-image: url(#{slide_image});"/>
+        <div class="me-1 border o_wslides_background_image_aside_card" t-attf-style="background-image: url(#{website.image_url(aside_slide, 'image_256')});"/>
         <div class="overflow-hidden d-flex flex-column justify-content-start">
             <h6 t-esc="aside_slide.name" class="o_wslides_desc_truncate_2 mb-1" style="line-height: 1.15"/>
             <small class="text-600">

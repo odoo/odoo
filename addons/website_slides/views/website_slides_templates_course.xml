@@ -122,7 +122,7 @@
                             <!-- ==== Header Left ==== -->
                             <div class="col-12 col-md-4 col-lg-3 position-relative">
                                 <div class="d-flex align-items-end justify-content-around h-100">
-                                    <div t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"}' class="h-100"/>
+                                    <div t-field="channel.image_1920" t-options="{'widget': 'image', 'class' : 'o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0', 'preview_image': 'image_1024'}" class="h-100"/>
                                 </div>
                             </div>
 
@@ -538,18 +538,11 @@
     <div class="o_wslides_promoted_slide">
         <div t-if="not search and not search_slide_category and slide_promoted" class="container py-1 mb-2">
             <div class="card flex-column flex-lg-row">
-                <t t-set="image_url" t-value="website.image_url(slide_promoted, 'image_512')"/>
-
-                <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
-                   t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
-                    <div t-if="slide_promoted.image_1920" t-field="slide_promoted.image_1920"
-                         t-options="{'widget': 'image', 'style': 'height:100%', 'preview_image': 'image_512'}" class="h-100"/>
-                    <div t-else="" t-attf-style="background-image:url(#{image_url});" class="o_wslides_background_image h-lg-100"/>
+                <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher" t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
+                    <div t-field="slide_promoted.image_1920" t-options="{'widget': 'image', 'style': 'height:100%', 'preview_image': 'image_512'}" class="h-100"/>
                 </a>
                 <div t-else="" class="w-100 w-lg-50 flex-shrink-0 rounded">
-                    <div t-if="slide_promoted.image_1920" t-field="slide_promoted.image_1920"
-                         t-options="{'widget': 'image', 'style': 'height:100%', 'preview_image': 'image_512'}" class="h-100"/>
-                    <div t-else="" t-attf-style="background-image:url(#{image_url});" class="o_wslides_background_image h-lg-100"/>
+                    <div t-field="slide_promoted.channel_id.image_1920" t-options="{'widget': 'image', 'style': 'height:100%', 'preview_image': 'image_512'}" class="h-100"/>
                 </div>
 
                 <div class="card-body">
@@ -747,14 +740,10 @@
         <t t-if="slide.is_new_slide and not channel_progress[slide.id].get('completed')" t-call="website_slides.course_card_information"/>
         <t t-set="can_access" t-value="slide.is_preview or channel.is_member or channel.can_publish"/>
         <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name" style="height:150px">
-            <div t-if="slide.image_1920" t-field="slide.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}"
-                 class="o_wslides_background_image h-100"/>
-            <div t-else="" class="o_wslides_background_image">
-                <img t-att-src="channel.website_background_image_url" class="img img-fluid"/>
-            </div>
+            <div t-field="slide.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100"/>
         </a>
         <div t-else="" class="o_wslides_background_image" style="height:150px">
-            <img t-att-src="channel.website_background_image_url" class="img img-fluid"/>
+            <div t-field="slide.channel_id.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100"/>
         </div>
         <i t-if="channel_progress[slide.id].get('completed')" class="position-absolute py-1 px-2 h5 fa fa-check-circle text-primary" style="right:0; top:0;"/>
 
