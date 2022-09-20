@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:58+0000\n"
-"PO-Revision-Date: 2022-04-19 13:58+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,6 +32,18 @@ msgid "SMS Template"
 msgstr ""
 
 #. module: project_sms
+#: model:ir.model.fields,help:project_sms.field_project_project_stage__sms_template_id
+#: model:ir.model.fields,help:project_sms.field_project_task_type__sms_template_id
+msgid "SMS sent when a task is moved to this stage."
+msgstr ""
+
+#. module: project_sms
+#: model:ir.actions.act_window,name:project_sms.project_project_act_window_sms_composer
+#: model:ir.actions.act_window,name:project_sms.project_task_act_window_sms_composer
+msgid "Send SMS Text Message"
+msgstr ""
+
+#. module: project_sms
 #: model:ir.model,name:project_sms.model_project_task
 msgid "Task"
 msgstr ""
@@ -39,10 +51,4 @@ msgstr ""
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_task_type
 msgid "Task Stage"
-msgstr ""
-
-#. module: project_sms
-#: model:ir.model.fields,help:project_sms.field_project_project_stage__sms_template_id
-#: model:ir.model.fields,help:project_sms.field_project_task_type__sms_template_id
-msgid "Template used to render SMS reminder content."
 msgstr ""

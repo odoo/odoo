@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-20 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,11 +63,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "&amp;nbsp;"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "&amp;times;"
 msgstr ""
 
 #. module: purchase
@@ -547,28 +542,28 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Draft RFQs"
 msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
 msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All RFQs"
 msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Waiting RFQs"
 msgstr ""
@@ -694,9 +689,9 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
-msgid "Avg Order Value ("
+msgid "Avg Order Value"
 msgstr ""
 
 #. module: purchase
@@ -768,10 +763,8 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
-"Calls for tenders are used when you want to generate requests for quotations"
-" to several vendors for a given set of products. You can configure per "
-"product if you directly do a Request for Quotation to one vendor or if you "
-"want a Call for Tenders to compare offers from several vendors."
+"Calls for tenders are when you want to generate requests for quotations with"
+" several vendors for a given set of products to compare offers."
 msgstr ""
 
 #. module: purchase
@@ -989,7 +982,7 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Days"
 msgstr ""
@@ -1028,13 +1021,6 @@ msgstr ""
 msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
-msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_report__date_order
-msgid ""
-"Depicts the date when the Quotation should be validated and converted into a"
-" purchase order."
 msgstr ""
 
 #. module: purchase
@@ -1321,7 +1307,7 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Late"
 msgstr ""
@@ -1339,7 +1325,7 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
 msgstr ""
@@ -1481,14 +1467,14 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
 msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
 msgstr ""
@@ -1505,14 +1491,14 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
 msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
 msgstr ""
@@ -1561,9 +1547,8 @@ msgid "No Message"
 msgstr ""
 
 #. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.purchase_action_dashboard_kanban
-#: model_terms:ir.actions.act_window,help:purchase.purchase_action_dashboard_list
-msgid "No RFQs to display"
+#: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
+msgid "No Purchase Analysis"
 msgstr ""
 
 #. module: purchase
@@ -1765,12 +1750,6 @@ msgid "Payment terms"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:0
-#, python-format
-msgid "Please define an accounting purchase journal for the company %s (%s)."
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
 msgid "Portal Access URL"
 msgstr ""
@@ -1778,13 +1757,6 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
-#: model:ir.model.fields,field_description:purchase.field_product_product__property_account_creditor_price_difference
-#: model:ir.model.fields,field_description:purchase.field_product_template__property_account_creditor_price_difference
-msgid "Price Difference Account"
 msgstr ""
 
 #. module: purchase
@@ -1808,7 +1780,7 @@ msgid "Priority"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_product_product
+#: model:ir.model,name:purchase.model_product_template
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__product_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_id
@@ -1829,7 +1801,6 @@ msgid "Product Categories"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_product_category
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
@@ -1841,7 +1812,6 @@ msgid "Product Packaging"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_product_template
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
 msgid "Product Template"
 msgstr ""
@@ -1849,6 +1819,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_type
 msgid "Product Type"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_product
+msgid "Product Variant"
 msgstr ""
 
 #. module: purchase
@@ -1893,14 +1868,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_graph
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
 msgid "Purchase Analysis"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
-msgid ""
-"Purchase Analysis allows you to easily check and analyse your company "
-"purchase history and performance. From this menu you can track your "
-"negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
 
 #. module: purchase
@@ -1969,6 +1936,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_account_payment__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
 msgid "Purchase Order Count"
@@ -2094,9 +2064,9 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
-msgid "Purchased Last 7 Days ("
+msgid "Purchased Last 7 Days"
 msgstr ""
 
 #. module: purchase
@@ -2107,6 +2077,7 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Purchases"
 msgstr ""
 
@@ -2181,6 +2152,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__sent
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__sent
+#: model:mail.message.subtype,name:purchase.mt_rfq_sent
 msgid "RFQ Sent"
 msgstr ""
 
@@ -2196,7 +2168,7 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "RFQs Sent Last 7 Days"
 msgstr ""
@@ -2339,8 +2311,6 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
-#: model:ir.actions.act_window,name:purchase.purchase_action_dashboard_kanban
-#: model:ir.actions.act_window,name:purchase.purchase_action_dashboard_list
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
@@ -2574,8 +2544,8 @@ msgid "Tax Country"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals_json
-msgid "Tax Totals Json"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
+msgid "Tax Totals"
 msgstr ""
 
 #. module: purchase
@@ -2646,19 +2616,10 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_product__property_account_creditor_price_difference
-#: model:ir.model.fields,help:purchase.field_product_template__property_account_creditor_price_difference
+#: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid ""
-"This account is used in automated inventory valuation to record the price "
-"difference between a purchase order and its related vendor bill when "
-"validating this vendor bill."
-msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
-msgid ""
-"This account will be used to value price difference between purchase price "
-"and accounting cost."
+"This analysis allows you to easily check and analyse your company purchase history and performance.\n"
+"                You can track your negotiation performance, the delivery performance of your vendors, etc"
 msgstr ""
 
 #. module: purchase
@@ -2733,7 +2694,7 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "To Send"
 msgstr ""
@@ -2872,11 +2833,6 @@ msgid "User"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_res_config_settings__company_currency_id
-msgid "Utility field to express amount currency"
-msgstr ""
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Variant Grid Entry"
 msgstr ""
@@ -2948,7 +2904,7 @@ msgstr ""
 
 #. module: purchase
 #. openerp-web
-#: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Waiting"
 msgstr ""

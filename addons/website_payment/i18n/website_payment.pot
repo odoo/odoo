@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -79,11 +79,6 @@ msgid "A year of cultural awakening."
 msgstr ""
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__acquirers_state
-msgid "Acquirers State"
-msgstr ""
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Payments"
 msgstr ""
@@ -149,8 +144,14 @@ msgid "Configure %s"
 msgstr ""
 
 #. module: website_payment
+#: model:ir.actions.server,name:website_payment.action_stripe_connect_account
+msgid "Connect to Stripe"
+msgstr ""
+
+#. module: website_payment
 #. openerp-web
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#: model:ir.model,name:website_payment.model_res_country
 #, python-format
 msgid "Country"
 msgstr ""
@@ -191,6 +192,11 @@ msgstr ""
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Default Amount"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Descriptions"
 msgstr ""
 
 #. module: website_payment
@@ -278,19 +284,29 @@ msgid "Is Donation"
 msgstr ""
 
 #. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
+#: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
+msgid "Is Stripe Supported Country"
+msgstr ""
+
+#. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
 msgid "Is donation"
 msgstr ""
 
 #. module: website_payment
-#: model:ir.model.fields,help:website_payment.field_account_payment__is_donation
-#: model:ir.model.fields,help:website_payment.field_payment_transaction__is_donation
-msgid "Is the payment a donation"
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation
+msgid "Make a Donation"
 msgstr ""
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation
-msgid "Make a Donation"
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Maximum"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Minimum"
 msgstr ""
 
 #. module: website_payment
@@ -314,7 +330,7 @@ msgid "Name is required."
 msgstr ""
 
 #. module: website_payment
-#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__acquirers_state__none
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__none
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "None"
 msgstr ""
@@ -330,18 +346,18 @@ msgid "One year in high school."
 msgstr ""
 
 #. module: website_payment
-#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__acquirers_state__other_than_paypal
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
 msgid "Other than Paypal"
-msgstr ""
-
-#. module: website_payment
-#: model:ir.model,name:website_payment.model_payment_acquirer
-msgid "Payment Acquirer"
 msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "Payment Details"
+msgstr ""
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_provider
+msgid "Payment Provider"
 msgstr ""
 
 #. module: website_payment
@@ -367,7 +383,7 @@ msgid "Paypal - Express Checkout"
 msgstr ""
 
 #. module: website_payment
-#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__acquirers_state__paypal_only
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
 msgid "Paypal Only"
 msgstr ""
 
@@ -381,6 +397,11 @@ msgstr ""
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Pre-filled Options"
+msgstr ""
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
+msgid "Providers State"
 msgstr ""
 
 #. module: website_payment
@@ -415,6 +436,18 @@ msgstr ""
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Some information is missing to process your payment."
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Step"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
 msgstr ""
 
 #. module: website_payment
@@ -472,7 +505,7 @@ msgid "We could not obtain payment fees."
 msgstr ""
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_payment_acquirer__website_id
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
 msgid "Website"
 msgstr ""
 
@@ -489,24 +522,4 @@ msgstr ""
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "made on"
-msgstr ""
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
-msgid "⌙ Descriptions"
-msgstr ""
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
-msgid "⌙ Maximum"
-msgstr ""
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
-msgid "⌙ Minimum"
-msgstr ""
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
-msgid "⌙ Step"
 msgstr ""

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2022-06-09 14:05+0000\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-20 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,13 +35,6 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sale: </strong>"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_image
-msgid ""
-"A background image used to display a floor layout in the point of sale "
-"interface"
 msgstr ""
 
 #. module: pos_restaurant
@@ -157,11 +150,6 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__name
 msgid "An internal identification of the printer"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__name
-msgid "An internal identification of the restaurant floor"
 msgstr ""
 
 #. module: pos_restaurant
@@ -982,6 +970,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
@@ -1026,19 +1015,12 @@ msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
-msgid ""
-"The background color of the floor layout, (must be specified in a html-"
-"compatible format)"
+msgid "The background color of the floor in a html-compatible format"
 msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
 msgid "The default number of customer served at this table."
-msgstr ""
-
-#. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__table_ids
-msgid "The list of tables in this floor"
 msgstr ""
 
 #. module: pos_restaurant
@@ -1198,11 +1180,6 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Unsynced order"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
-msgid "Used to sort Floors"
 msgstr ""
 
 #. module: pos_restaurant

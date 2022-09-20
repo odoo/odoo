@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,13 +40,6 @@ msgid "Grid Update"
 msgstr ""
 
 #. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__report_grids
-msgid ""
-"If set, the matrix of the products configurable by matrix will be shown on "
-"the report of the order."
-msgstr ""
-
-#. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
 msgstr ""
@@ -62,13 +55,13 @@ msgid "Print Variant Grids"
 msgstr ""
 
 #. module: sale_product_matrix
-#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
-msgid "Product Configurator"
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
 msgstr ""
 
 #. module: sale_product_matrix
-#: model:ir.model,name:sale_product_matrix.model_product_template
-msgid "Product Template"
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Product Configurator"
 msgstr ""
 
 #. module: sale_product_matrix
@@ -82,21 +75,11 @@ msgid "Sales Variant Selection"
 msgstr ""
 
 #. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
-msgid "Technical field for product_matrix functionalities."
-msgstr ""
-
-#. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
 msgid ""
 "Technical local storage of grid. \n"
 "If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
-msgstr ""
-
-#. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
-msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
 
 #. module: sale_product_matrix

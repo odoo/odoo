@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2022-06-09 14:05+0000\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-20 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid ""
 "<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
-"                            <span class=\"fa fa-exclamation-triangle text-danger pl-3\">\n"
+"                            <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
 "                            </span>\n"
 "                            <span class=\"text-danger\">\n"
 "                                All applications will lose their hired date and hired status.\n"
@@ -121,7 +121,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid ""
-"<span class=\"badge badge-pill badge-danger float-end mr-4\" "
+"<span class=\"badge rounded-pill text-bg-danger float-end me-4\" "
 "attrs=\"{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=',"
 " False)]}\">Refused</span>"
 msgstr ""
@@ -129,6 +129,13 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<span class=\"bg-success\">Hired</span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 msgstr ""
 
 #. module: hr_recruitment
@@ -182,18 +189,11 @@ msgid ""
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
 "                <t t-if=\"object.user_id\">\n"
 "                    <h3 style=\"color:#9A6C8E;\"><strong>Your Contact:</strong></h3>\n"
-"                    <table>\n"
-"                        <tr>\n"
-"                            <td width=\"75\">\n"
-"                                <img t-attf-src=\"/web/image/res.users/{{ object.user_id.id }}/avatar_128\" alt=\"Avatar\" style=\"vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;\"/>\n"
-"                            </td>\n"
-"                            <td>\n"
-"                                <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
-"                                <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
-"                                <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
+"                    <p>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"                        <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
+"                        <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
+"                    </p>\n"
 "                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </t>\n"
 "\n"
@@ -249,7 +249,6 @@ msgid ""
 "            <div style=\"text-align: center\">\n"
 "                <h2>Congratulations!</h2>\n"
 "                <div style=\"color:grey;\">Your resume has been positively reviewed.</div>\n"
-"                <img src=\"/hr_recruitment/static/src/img/congratulations.png\" alt=\"Congratulations!\" style=\"width:175px;margin:20px 0;\"/>\n"
 "            </div>\n"
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                We just reviewed your resume, and it caught our\n"
@@ -262,19 +261,10 @@ msgid ""
 "                </div>\n"
 "\n"
 "                <t t-if=\"object.user_id\">\n"
-"                    You will soon be contacted by:\n"
-"                    <table>\n"
-"                        <tr>\n"
-"                            <td width=\"75\">\n"
-"                                <img t-attf-src=\"/web/image/res.users/{{ object.user_id.id }}/avatar_128\" alt=\"Avatar\" style=\"vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;\"/>\n"
-"                            </td>\n"
-"                            <td>\n"
-"                                <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
-"                                <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
-"                                <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
+"                    You will soon be contacted by:<br/>\n"
+"                    <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"                    <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
+"                    <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
 "                    <br/><br/>\n"
 "                </t>\n"
 "                See you soon,\n"
@@ -661,6 +651,11 @@ msgid "Application Count"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
+msgid "Application Status"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Application Summary"
 msgstr ""
@@ -757,24 +752,9 @@ msgid "Blocked"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
-msgid "By Department"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_job
-msgid "By Job"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position_interviewer
 msgid "By Job Positions"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
-msgid "By Recruiter"
 msgstr ""
 
 #. module: hr_recruitment
@@ -784,6 +764,16 @@ msgid ""
 "applications automatically. You can even use multiple trackers to get "
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "CV Digitization (OCR)"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "CV Display"
 msgstr ""
 
 #. module: hr_recruitment
@@ -962,11 +952,6 @@ msgid "Days to Open"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__null_value
-msgid "Default Value"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_defaults
 msgid "Default Values"
 msgstr ""
@@ -1048,8 +1033,19 @@ msgid "Digest"
 msgstr ""
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Digitize your CV to extract name and email automatically."
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Discard"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:res.groups,name:hr_recruitment.group_applicant_cv_display
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Display CV on application form"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1190,6 +1186,11 @@ msgid "Employees"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
+msgid "Employment Types"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
 msgid "Excellent"
 msgstr ""
@@ -1230,20 +1231,8 @@ msgid "Favorite User"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__model_object_field
-msgid "Field"
-msgstr ""
-
-#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_hr_recruitment_list_view
 msgid "File"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__copyvalue
-msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1288,16 +1277,6 @@ msgid "Get Refuse Reason"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree__sequence
-msgid "Gives the sequence order when displaying a list of degrees."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__sequence
-msgid "Gives the sequence order when displaying a list of stages."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
 msgid "Good"
 msgstr ""
@@ -1328,6 +1307,11 @@ msgid "Grey Kanban Label"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__group_applicant_cv_display
+msgid "Group Applicant Cv Display"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Group By"
@@ -1354,6 +1338,7 @@ msgid "Hire Date"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__hired
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Hired"
 msgstr ""
@@ -1452,11 +1437,7 @@ msgid "Interview Forms"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_id
-msgid "Interviewer"
-msgstr ""
-
-#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
 msgstr ""
@@ -1697,6 +1678,11 @@ msgid "Let’s go back to the dashboard."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
+msgid "LinkedIn Profile"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_cc
 msgid "List of cc from incoming emails."
 msgstr ""
@@ -1718,7 +1704,13 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__medium_id
 msgid "Medium"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_mediums
+msgid "Mediums"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1969,6 +1961,7 @@ msgid "Old Application"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__ongoing
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
 msgstr ""
@@ -1994,11 +1987,6 @@ msgid ""
 "email. If not set, the english version will be used. This should usually be "
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__null_value
-msgid "Optional value to use if the target field is empty"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2044,11 +2032,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone
 msgid "Phone"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__copyvalue
-msgid "Placeholder Expression"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2192,6 +2175,7 @@ msgid "Refuse Reasons"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2217,6 +2201,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__requirements
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Requirements"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+msgid "Reserve"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2288,15 +2278,13 @@ msgid "Second Interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__model_object_field
-msgid ""
-"Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
+msgid "Send"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-msgid "Send"
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_extract
+msgid "Send CV to OCR to fill applications"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2370,8 +2358,11 @@ msgid "Source of Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_sources
+msgid "Sources"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
 msgstr ""
@@ -2434,16 +2425,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__sub_model_object_field
-msgid "Sub-field"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__sub_object
-msgid "Sub-model"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__subject
 msgid "Subject"
 msgstr ""
@@ -2475,6 +2456,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Tags"
 msgstr ""
 
@@ -2617,6 +2600,11 @@ msgid "UTM Source"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm
+msgid "UTMs"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Unarchive"
 msgstr ""
@@ -2633,6 +2621,11 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+msgid "Use OCR to fill data from a picture of the CV or the file itself"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Use emails and links trackers"
 msgstr ""
@@ -2646,13 +2639,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
-msgid "User Email"
+#: model:ir.model,name:hr_recruitment.model_res_users
+msgid "User"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_res_users
-msgid "Users"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
+msgid "User Email"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2680,20 +2673,6 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__sub_model_object_field
-msgid ""
-"When a relationship field is selected as first field, this field lets you "
-"select the target field within the destination document model (sub-model)."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__sub_object
-msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
 msgstr ""
 
 #. module: hr_recruitment

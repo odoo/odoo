@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
-msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
+msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -45,6 +45,13 @@ msgid ""
 msgstr ""
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
+msgid ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                    Write one."
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
@@ -53,7 +60,7 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
-msgid "<small class=\"badge badge-danger\">Unpublished</small>"
+msgid "<small class=\"badge text-bg-danger\">Unpublished</small>"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -163,11 +170,6 @@ msgid "Can Publish"
 msgstr ""
 
 #. module: website_event_exhibitor
-#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__subtitle
-msgid "Catchy marketing sentence for promote"
-msgstr ""
-
-#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__chat_room_id
 msgid "Chat Room"
 msgstr ""
@@ -182,6 +184,11 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
 msgid "Connect"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
+msgid "Countries"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -231,7 +238,8 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_type__exhibitor_menu
-msgid "Display exhibitors on website"
+msgid ""
+"Display exhibitors on website, in the footer of every page of the event."
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -260,6 +268,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 #, python-format
 msgid "Event"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
+msgid "Event Page"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -326,6 +339,11 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor__exhibitor_type__sponsor
+msgid "Footer Logo Only"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -673,7 +691,6 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #: code:addons/website_event_exhibitor/models/event_sponsor.py:0
-#: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor__exhibitor_type__sponsor
 #, python-format
 msgid "Sponsor"
 msgstr ""
@@ -731,13 +748,9 @@ msgid "Sponsor image"
 msgstr ""
 
 #. module: website_event_exhibitor
-#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sponsor_type_id
-msgid "Sponsoring Level"
-msgstr ""
-
-#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__sponsor_ids
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
 msgid "Sponsors"
 msgstr ""
 
@@ -747,6 +760,16 @@ msgstr ""
 msgid ""
 "Sponsors are advertised on your event pages.<br>\n"
 "    Exhibitors have a dedicated page a with chat room for people to connect with them."
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
+msgid "Sponsorship"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sponsor_type_id
+msgid "Sponsorship Level"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -772,8 +795,18 @@ msgid "The full URL to access the document through the website."
 msgstr ""
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
+msgid "The sponsor website description is missing."
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__event_date_tz
 msgid "Timezone"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
+msgid "Top Bar Filter"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -837,6 +870,7 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "e.g. \"Openwood specializes in home decoration...\""
 msgstr ""
 

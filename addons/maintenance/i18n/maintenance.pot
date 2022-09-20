@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-20 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
+msgid "<span class=\"badge text-bg-warning float-end\">Canceled</span>"
 msgstr ""
 
 #. module: maintenance
@@ -601,8 +601,11 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -1134,6 +1137,13 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_sms_error
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_sms_error
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
 msgstr ""
@@ -1353,6 +1363,20 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
 msgid "Warranty Expiration Date"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__website_message_ids
+msgid "Website communication history"
 msgstr ""
 
 #. module: maintenance

@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "\" to validate your action."
+msgstr ""
 
 #. module: portal
 #. openerp-web
@@ -23,14 +28,20 @@ msgid "%1d days overdue"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:0
-#, python-format
-msgid "%s is not the reference of a report"
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "1. Enter your password to confirm you own this account"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid ""
+"2. Confirm you want to delete your account by\n"
+"                                        copying down your login ("
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
-msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
+msgid "<i class=\"fa fa-arrow-right me-1\"/>Back to edit mode"
 msgstr ""
 
 #. module: portal
@@ -43,6 +54,21 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_account_link
+msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-muted\"/> My Account"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-muted\"/> Logout"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+msgid "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/> Apps"
 msgstr ""
 
 #. module: portal
@@ -61,7 +87,7 @@ msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid ""
 "<small class=\"form-text text-muted\">Changing company name or VAT number is"
 " not allowed once document(s) have been issued for your account. <br/>Please"
@@ -70,17 +96,17 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
-msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
+msgid "<span class=\"small me-1 navbar-text\">Filter By:</span>"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
-msgid "<span class=\"small mr-1 navbar-text\">Group By:</span>"
+msgid "<span class=\"small me-1 navbar-text\">Group By:</span>"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
-msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
+msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
 msgstr ""
 
 #. module: portal
@@ -123,9 +149,6 @@ msgid ""
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Activate Account</strong>\n"
-"                            </a>\n"
-"                            <a href=\"/web/login\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px;\">\n"
-"                                <strong>Log in</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        <t t-out=\"object.wizard_id.welcome_message or ''\">Welcome to our company's portal.</t>\n"
@@ -197,6 +220,12 @@ msgid "Account Security"
 msgstr ""
 
 #. module: portal
+#: code:addons/portal/controllers/portal.py:0
+#, python-format
+msgid "Account deleted!"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
 msgstr ""
@@ -224,9 +253,19 @@ msgid "Added On"
 msgstr ""
 
 #. module: portal
+#: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
+msgid "Already Registered"
+msgstr ""
+
+#. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Are you sure you want to do this?"
 msgstr ""
 
 #. module: portal
@@ -239,6 +278,7 @@ msgstr ""
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, python-format
 msgid "Cancel"
@@ -251,7 +291,7 @@ msgstr ""
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
@@ -259,7 +299,7 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
@@ -273,7 +313,7 @@ msgid "Check failed"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "City"
 msgstr ""
 
@@ -294,7 +334,7 @@ msgid "Close"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Company Name"
 msgstr ""
 
@@ -348,12 +388,12 @@ msgid "Could not save file <strong>%s</strong>"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Country"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Country..."
 msgstr ""
 
@@ -413,6 +453,11 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Delete Account"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Description"
 msgstr ""
 
@@ -425,6 +470,16 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Developer API Keys"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid ""
+"Disable your account, preventing any further login.<br/>\n"
+"                                        <b>\n"
+"                                            <i class=\"fa fa-exclamation-triangle text-danger\"/>\n"
+"                                            This action cannot be undone.\n"
+"                                        </b>"
 msgstr ""
 
 #. module: portal
@@ -462,8 +517,13 @@ msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Email"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Email Address already taken by another user"
 msgstr ""
 
 #. module: portal
@@ -561,6 +621,16 @@ msgid "Internal notes are only displayed to internal users."
 msgstr ""
 
 #. module: portal
+#: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ko
+msgid "Invalid"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Invalid Email Address"
+msgstr ""
+
+#. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -640,11 +710,6 @@ msgid "Link"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-msgid "Logout"
-msgstr ""
-
-#. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
 msgstr ""
@@ -664,12 +729,7 @@ msgid "Multi company reports are not supported."
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.my_account_link
-msgid "My Account"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Name"
 msgstr ""
 
@@ -703,6 +763,11 @@ msgid "Next"
 msgstr ""
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+msgid "No Documents to display"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
 msgstr ""
@@ -732,6 +797,11 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Password"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
 msgstr ""
 
@@ -741,7 +811,7 @@ msgid "Password:"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Phone"
 msgstr ""
 
@@ -807,6 +877,13 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Published on %s"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid ""
+"Put my email and phone in a block list to make sure I'm never contacted "
+"again"
 msgstr ""
 
 #. module: portal
@@ -919,12 +996,17 @@ msgid "Some required fields are empty."
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "State / Province"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
+msgid "Status"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Street"
 msgstr ""
 
@@ -971,7 +1053,7 @@ msgstr ""
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
-msgid "The contact \"%s\" has the same email has an existing user (%s)."
+msgid "The contact \"%s\" has the same email as an existing user"
 msgstr ""
 
 #. module: portal
@@ -1010,7 +1092,7 @@ msgstr ""
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
-msgid "The partner \"%s\" has no portal access."
+msgid "The partner \"%s\" has no portal access or is internal."
 msgstr ""
 
 #. module: portal
@@ -1073,8 +1155,18 @@ msgid "Users"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "VAT Number"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ok
+msgid "Valid"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Valid Email Address"
 msgstr ""
 
 #. module: portal
@@ -1095,72 +1187,26 @@ msgid "Visible"
 msgstr ""
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_crm_team_member__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_loyalty_card__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
 msgstr ""
 
 #. module: portal
-#: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
-#: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
-#: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
-#: model:ir.model.fields,help:portal.field_crm_team_member__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
-#: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
-#: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
-#: model:ir.model.fields,help:portal.field_loyalty_card__website_message_ids
-#: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
-#: model:ir.model.fields,help:portal.field_product_product__website_message_ids
-#: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
@@ -1193,6 +1239,11 @@ msgid "Write down your key"
 msgstr ""
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Wrong password."
+msgstr ""
+
+#. module: portal
 #: code:addons/portal/wizard/portal_share.py:0
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
@@ -1218,6 +1269,11 @@ msgid "You must be"
 msgstr ""
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "You should enter \""
+msgstr ""
+
+#. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
@@ -1234,7 +1290,7 @@ msgid "Your contact"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Zip / Postal Code"
 msgstr ""
 
@@ -1298,7 +1354,7 @@ msgid "res.users.apikeys.description"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "select..."
 msgstr ""
 
