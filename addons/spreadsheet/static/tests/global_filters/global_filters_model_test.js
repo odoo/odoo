@@ -1391,7 +1391,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             });
             assert.deepEqual(model.getters.getGlobalFilterValue("42"), newValue);
             model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters: [{ filterId: "42" }] });
-            assert.deepEqual(model.getters.getGlobalFilterValue("42"), { yearOffset: undefined });
+            assert.deepEqual(model.getters.getGlobalFilterValue("42"), {
+                yearOffset: undefined,
+                preventAutomaticValue: true,
+            });
         }
     );
 
