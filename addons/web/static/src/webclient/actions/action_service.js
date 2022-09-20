@@ -161,9 +161,6 @@ function makeActionManager(env) {
                     additional_context,
                 });
                 action = await actionCache[key];
-                if (action.help) {
-                    action.help = markup(action.help);
-                }
             } else {
                 action = await actionCache[key];
             }
@@ -203,11 +200,9 @@ function makeActionManager(env) {
                     : domain;
         }
         if (action.help) {
-            const htmlHelp = document.createElement("div");
-            htmlHelp.innerHTML = action.help;
-            if (!htmlHelp.innerText.trim()) {
-                delete action.help;
-            }
+            action.help = markup(action.help);
+        } else {
+            delete action.help;
         }
         action = { ...action }; // manipulate a copy to keep cached action unmodified
         action.jsId = `action_${++id}`;
@@ -1152,9 +1147,6 @@ function makeActionManager(env) {
             context: makeContext([env.services.user.context, action.context]),
         });
         let nextAction = await keepLast.add(runProm);
-        if (nextAction.help) {
-            nextAction.help = markup(nextAction.help);
-        }
         nextAction = nextAction || { type: "ir.actions.act_window_close" };
         return doAction(nextAction, options);
     }
@@ -1261,9 +1253,6 @@ function makeActionManager(env) {
                 action && typeof action === "object"
                     ? action
                     : { type: "ir.actions.act_window_close" };
-            if (action.help) {
-                action.help = markup(action.help);
-            }
         } else if (params.type === "action") {
             // execute a given action, so load it first
             context.active_id = params.resId || null;
