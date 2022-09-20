@@ -28,6 +28,9 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'mail.assets_messaging': [
             'website_livechat/static/src/models/*.js',
         ],
+        'mail.assets_public_livechat': [
+            'website_livechat/static/src/public_models/*.js',
+        ],
         'mail.assets_discuss_public': [
             'website_livechat/static/src/components/*/*',
         ],

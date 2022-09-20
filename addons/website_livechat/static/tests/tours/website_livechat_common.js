@@ -3,7 +3,7 @@ odoo.define('website_livechat.tour_common', function (require) {
 
 const { patchRecordMethods } = require('@mail/model/model_core');
 // ensure that the model definition is loaded before the patch
-require('@im_livechat/models/livechat_button_view');
+require('@im_livechat/public_models/livechat_button_view');
 
 const { Markup } = require('web.utils');
 
