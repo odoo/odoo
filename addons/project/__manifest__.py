@@ -85,9 +85,7 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.qunit_suite_tests': [
-            'project/static/tests/project_test_utils.js',
-            'project/static/tests/burndown_chart_tests.js',
-            'project/static/tests/project_form_tests.js',
+            'project/static/tests/**/*.js',
         ],
         'web.assets_tests': [
             'project/static/tests/tours/**/*',
