@@ -3,11 +3,14 @@
 import { loadCSS, loadJS } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
 
 const { onMounted, onPatched, onWillStart, onWillUnmount, useComponent, useRef } = owl;
 
 export function useCalendarPopover(component) {
-    const popovers = usePopover();
+    const owner = useComponent();
+    const popover = usePopover();
+    const dialog = useService("dialog");
     let remove = null;
     function close() {
         if (remove) {
@@ -19,13 +22,15 @@ export function useCalendarPopover(component) {
         close,
         open(target, props, popoverClass) {
             close();
-            remove = popovers.add(target, component, props, {
-                popoverClass,
-                position: "right",
-                onClose() {
-                    remove = null;
-                },
-            });
+            if (owner.env.isSmall) {
+                remove = dialog.add(component, props, { onClose: () => (remove = null) });
+            } else {
+                remove = popover.add(target, component, props, {
+                    popoverClass,
+                    position: "right",
+                    onClose: () => (remove = null),
+                });
+            }
         },
     };
 }

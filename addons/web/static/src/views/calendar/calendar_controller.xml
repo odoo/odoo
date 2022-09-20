@@ -6,6 +6,16 @@
             <t t-set-slot="layout-buttons">
                 <t t-call="{{ props.buttonTemplate }}"/>
             </t>
+
+            <t t-if="env.isSmall" t-set-slot="control-panel-bottom-right">
+                <button class="o_cp_today_button btn btn-sm btn-link" t-on-click="() => this.setDate('today')">
+                    <span class="fa-stack o_calendar_button_today">
+                        <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today" />
+                        <strong class="o_calendar_text fa-stack-1x" t-esc="getTodayDay()" />
+                    </span>
+                </button>
+            </t>
+
             <div class="o_calendar_container">
                 <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
                 <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps" />

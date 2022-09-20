@@ -2,7 +2,7 @@
 
 import { CalendarDatePicker } from "@web/views/calendar/date_picker/calendar_date_picker";
 import { click, getFixture, patchDate } from "../../helpers/utils";
-import { makeEnv, makeFakeModel, mountComponent } from "./calendar_helpers";
+import { makeEnv, makeFakeModel, mountComponent } from "./helpers";
 
 let target;
 

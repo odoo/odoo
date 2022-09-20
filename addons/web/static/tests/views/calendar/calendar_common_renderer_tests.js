@@ -11,7 +11,7 @@ import {
     selectTimeRange,
     clickEvent,
     makeFakeDate,
-} from "./calendar_helpers";
+} from "./helpers";
 
 let target;
 

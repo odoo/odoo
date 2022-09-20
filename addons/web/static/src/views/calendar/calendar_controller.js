@@ -99,6 +99,10 @@ export class CalendarController extends Component {
         return this.state.showSideBar;
     }
 
+    getTodayDay() {
+        return luxon.DateTime.local().day;
+    }
+
     async setDate(move) {
         let date = null;
         switch (move) {

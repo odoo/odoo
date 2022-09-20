@@ -20,6 +20,11 @@ const SCALE_TO_HEADER_FORMAT = {
     week: "EEE d",
     month: "EEEE",
 };
+const SHORT_SCALE_TO_HEADER_FORMAT = {
+    ...SCALE_TO_HEADER_FORMAT,
+    day: "D",
+    month: "EEE",
+};
 const HOUR_FORMATS = {
     12: {
         hour: "numeric",
@@ -57,9 +62,9 @@ export class CalendarCommonRenderer extends Component {
         return {
             allDaySlot: this.props.model.hasAllDaySlot,
             allDayText: this.env._t("All day"),
-            columnHeaderFormat: SCALE_TO_HEADER_FORMAT[this.props.model.scale],
-            dayNames: luxon.Info.weekdays("long"),
-            dayNamesShort: luxon.Info.weekdays("short"),
+            columnHeaderFormat: this.env.isSmall
+                ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
+                : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
             dayRender: this.onDayRender,
             defaultDate: this.props.model.date.toISO(),
             defaultView: SCALE_TO_FC_VIEW[this.props.model.scale],
@@ -83,8 +88,6 @@ export class CalendarCommonRenderer extends Component {
             height: "parent",
             locale: luxon.Settings.defaultLocale,
             longPressDelay: 500,
-            monthNames: luxon.Info.months("long"),
-            monthNamesShort: luxon.Info.months("short"),
             navLinks: false,
             nowIndicator: true,
             plugins: ["dayGrid", "interaction", "timeGrid", "luxon"],
@@ -96,10 +99,11 @@ export class CalendarCommonRenderer extends Component {
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
             unselectAuto: false,
-            weekLabel: this.env._t("Week"),
+            weekLabel:
+                this.props.model.scale === "month" && this.env.isSmall ? "" : this.env._t("Week"),
             weekNumberCalculation: "ISO",
             weekNumbers: true,
-            weekNumbersWithinDays: true,
+            weekNumbersWithinDays: !this.env.isSmall,
             windowResize: this.onWindowResizeDebounced,
         };
     }

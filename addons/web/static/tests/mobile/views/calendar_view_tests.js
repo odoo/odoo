@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-import { click, getFixture, nextTick, patchDate } from "../../helpers/utils";
+import { browser } from "@web/core/browser/browser";
+import { click, getFixture, nextTick, patchDate, patchWithCleanup } from "../../helpers/utils";
+import { clickEvent, toggleSectionFilter } from "../../views/calendar/helpers";
 import { makeView, setupViewRegistries } from "../../views/helpers";
 
 // const CalendarRenderer = require("web.CalendarRenderer");
@@ -19,10 +21,10 @@ QUnit.module("Views", ({ beforeEach }) => {
     beforeEach(() => {
         // 2016-12-12 08:00:00
         patchDate(2016, 11, 12, 8, 0, 0);
-        // patchWithCleanup(browser, {
-        //     setTimeout: (fn) => fn(),
-        //     clearTimeout: () => { },
-        // });
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
 
         target = getFixture();
 
@@ -98,9 +100,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
     QUnit.module("CalendarView - Mobile");
 
-    QUnit.todo("simple calendar rendering in mobile", async function (assert) {
-        assert.expect(7);
-
+    QUnit.test("simple calendar rendering in mobile", async function (assert) {
         await makeView({
             type: "calendar",
             resModel: "event",
@@ -125,38 +125,53 @@ QUnit.module("Views", ({ beforeEach }) => {
             ".fc-view-container > .fc-timeGridWeek-view",
             "should display the current week"
         );
+        assert.equal(
+            target.querySelector(".breadcrumb-item").textContent,
+            "undefined (Dec 11 – 17, 2016)"
+        );
 
         // switch to day mode
         await click(target, ".o_control_panel .scale_button_selection");
         await click(target, ".o_control_panel .o_calendar_button_day");
+        await nextTick();
         assert.containsOnce(
             target,
             ".fc-view-container > .fc-timeGridDay-view",
             "should display the current day"
         );
+        assert.equal(
+            target.querySelector(".breadcrumb-item").textContent,
+            "undefined (December 12, 2016)"
+        );
 
         // switch to month mode
         await click(target, ".o_control_panel .scale_button_selection");
         await click(target, ".o_control_panel .o_calendar_button_month");
+        await nextTick();
         assert.containsOnce(
             target,
             ".fc-view-container > .fc-dayGridMonth-view",
             "should display the current month"
         );
+        assert.equal(
+            target.querySelector(".breadcrumb-item").textContent,
+            "undefined (December 2016)"
+        );
 
         // switch to year mode
         await click(target, ".o_control_panel .scale_button_selection");
         await click(target, ".o_control_panel .o_calendar_button_year");
+        await nextTick();
         assert.containsOnce(
             target,
             ".fc-view-container > .fc-dayGridYear-view",
             "should display the current year"
         );
+        assert.equal(target.querySelector(".breadcrumb-item").textContent, "undefined (2016)");
     });
 
-    QUnit.todo("calendar: popover rendering in mobile", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("calendar: popover is rendered as dialog in mobile", async function (assert) {
+        // Legacy name of this test: "calendar: popover rendering in mobile"
         await makeView({
             type: "calendar",
             resModel: "event",
@@ -167,46 +182,18 @@ QUnit.module("Views", ({ beforeEach }) => {
                 </calendar>`,
         });
 
-        const fullCalendarEvent = target.querySelector(".fc-event");
+        await clickEvent(target, 1);
+        assert.containsNone(target, ".o_cw_popover");
+        assert.containsOnce(target, ".modal");
+        assert.hasClass(target.querySelector(".modal"), "o_modal_full");
 
-        await click(target, fullCalendarEvent);
-        await nextTick();
-
-        let popover = document.querySelector(".o_cw_popover");
-        assert.ok(popover !== null, "there should be a modal");
-        assert.ok(
-            popover.parentNode === document.body,
-            "the container of popover must be the body"
-        );
-
-        // Check if the popover is "fullscreen"
-        const actualPosition = popover.getBoundingClientRect();
-        const windowRight = document.documentElement.clientWidth;
-        const windowBottom = document.documentElement.clientHeight;
-        const expectedPosition = [0, windowRight, windowBottom, 0];
-
-        assert.deepEqual(
-            [actualPosition.top, actualPosition.right, actualPosition.bottom, actualPosition.left],
-            expectedPosition,
-            "popover should be at position 0 " +
-                windowRight +
-                " " +
-                windowBottom +
-                " 0 (top right bottom left)"
-        );
-        const closePopoverButton = document.querySelector(".o_cw_popover_close");
-        await click(target, closePopoverButton);
-
-        popover = document.querySelector(".o_cw_popover");
-        assert.ok(popover === null, "there should be any modal");
+        assert.containsN(target, ".modal-footer .btn", 2);
+        assert.containsOnce(target, ".modal-footer .btn.btn-primary.o_cw_popover_edit");
+        assert.containsOnce(target, ".modal-footer .btn.btn-secondary.o_cw_popover_delete");
     });
 
     QUnit.todo("calendar: today button", async function (assert) {
         assert.expect(1);
-        // Take the current day
-        const initialDate = new Date();
-        // Increment by two days to avoid test error near midnight
-        initialDate.setDate(initialDate.getDate() + 2);
 
         await makeView({
             type: "calendar",
@@ -215,21 +202,27 @@ QUnit.module("Views", ({ beforeEach }) => {
             arch: `<calendar mode="day" date_start="start" date_stop="stop"></calendar>`,
         });
 
-        const previousDate = target.querySelector(".fc-day-header[data-date]").dataset.date;
-        const todayButton = target.querySelector(".o_calendar_button_today");
-        await click(target, todayButton);
+        // TO MAKE this test pass:
+        // - implement the prev/next scale left/right swipe actions
+        // - make the view
+        // - check that the day header indicates today
+        // - swipe left or right
+        // - check that the day header indicates the new day
+        // - click on the today button
+        // - check that the day header indicates today
 
-        const newDate = target.querySelector(".fc-day-header[data-date]").dataset.date;
-        assert.notEqual(
-            newDate,
-            previousDate,
-            "The today button must change the view to the today date"
-        );
+        // const previousDate = target.querySelector(".fc-day-header[data-date]").dataset.date;
+        // await click(target, ".o_calendar_button_today");
+
+        // const newDate = target.querySelector(".fc-day-header[data-date]").dataset.date;
+        // assert.notEqual(
+        //     newDate,
+        //     previousDate,
+        //     "The today button must change the view to the today date"
+        // );
     });
 
-    QUnit.todo("calendar: show and change other calendar", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("calendar: show and change other calendar", async function (assert) {
         await makeView({
             type: "calendar",
             resModel: "event",
@@ -241,32 +234,36 @@ QUnit.module("Views", ({ beforeEach }) => {
                 </calendar>`,
         });
 
-        let otherCalendarPanel = target.querySelector(".o_other_calendar_panel");
-        assert.ok(otherCalendarPanel !== null, "there should be a panel over the calendar");
-        const span = otherCalendarPanel.querySelectorAll(".o_filter > span");
-        assert.equal(
-            span.length,
+        assert.containsOnce(target, ".o_other_calendar_panel");
+        assert.containsN(
+            target,
+            ".o_other_calendar_panel .o_filter > *",
             3,
-            "Panel should contains 3 span (1 label (USER) + 2 resources (user 1/2)"
+            "should contains 3 child nodes -> 1 label (USER) + 2 resources (user 1/2)"
+        );
+        assert.containsNone(target, ".o_calendar_sidebar");
+        assert.containsOnce(target, ".o_calendar_view");
+
+        // Toggle the other calendar panel should hide the calendar view and show the sidebar
+        await click(target, ".o_other_calendar_panel");
+        assert.containsOnce(target, ".o_calendar_sidebar");
+        assert.containsNone(target, ".o_calendar_view");
+        assert.containsOnce(target, ".o_calendar_filter");
+        assert.containsOnce(target, ".o_calendar_filter[data-name=partner_id]");
+
+        // Toggle the whole section filters by unchecking the all items checkbox
+        await toggleSectionFilter(target, "partner_id");
+        assert.containsN(
+            target,
+            ".o_other_calendar_panel .o_filter > *",
+            1,
+            "should contains 1 child node -> 1 label (USER)"
         );
 
-        const calendarSidebar = target.querySelector(".o_calendar_sidebar");
-        const calendarElement = target.querySelector(".o_legacy_calendar_view");
-        assert.isVisible(calendarElement, "the calendar should be visible");
-        assert.isNotVisible(calendarSidebar, "the panel with other calendar shouldn't be visible");
-        otherCalendarPanel = target.querySelector(".o_other_calendar_panel");
-        await click(target, otherCalendarPanel);
-
-        assert.isNotVisible(calendarElement, "the calendar shouldn't be visible");
-        assert.isVisible(calendarSidebar, "the panel with other calendar should be visible");
-        otherCalendarPanel = target.querySelector(".o_other_calendar_panel");
-        await click(target, otherCalendarPanel);
-
-        assert.isVisible(calendarElement, "the calendar should be visible again");
-        assert.isNotVisible(
-            calendarSidebar,
-            "the panel with other calendar shouldn't be visible again"
-        );
+        // Toggle again the other calendar panel should hide the sidebar and show the calendar view
+        await click(target, ".o_other_calendar_panel");
+        assert.containsNone(target, ".o_calendar_sidebar");
+        assert.containsOnce(target, ".o_calendar_view");
     });
 
     QUnit.todo('calendar: short tap on "Free Zone" opens quick create', async function (assert) {

@@ -10,7 +10,7 @@
                         <span class="text-nowrap fw-bold text-uppercase me-1" t-esc="section.label" />
 
                         <t t-foreach="getSortedFilters(section)" t-as="filter" t-key="filter.value">
-                            <span class="d-flex align-items-center text-nowrap ms-1 me-2">
+                            <span t-if="filter.active" class="d-flex align-items-center text-nowrap ms-1 me-2">
                                 <span t-attf-class="o_color_{{filter.colorIndex}}">⬤</span>
                                 <span class="ms-1 fw-bold text-nowrap" t-esc="filter.label" />
                             </span>

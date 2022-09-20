@@ -2,13 +2,7 @@
 
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
 import { click, getFixture } from "../../helpers/utils";
-import {
-    mountComponent,
-    makeEnv,
-    makeFakeModel,
-    FAKE_RECORDS,
-    makeFakeDate,
-} from "./calendar_helpers";
+import { mountComponent, makeEnv, makeFakeModel, FAKE_RECORDS, makeFakeDate } from "./helpers";
 
 let target, fakePopoverRecords;
 

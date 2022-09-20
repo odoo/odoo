@@ -1,10 +1,17 @@
 /** @odoo-module **/
 
+import { Dialog } from "@web/core/dialog/dialog";
+import { formatDate } from "@web/core/l10n/dates";
+
 const { Component } = owl;
 
 export class CalendarYearPopover extends Component {
     get recordGroups() {
         return this.computeRecordGroups();
+    }
+
+    get dialogTitle() {
+        return formatDate(this.props.date, { format: "DDD" });
     }
 
     computeRecordGroups() {
@@ -71,6 +78,7 @@ export class CalendarYearPopover extends Component {
         this.props.close();
     }
 }
+CalendarYearPopover.components = { Dialog };
 CalendarYearPopover.template = "web.CalendarYearPopover";
 CalendarYearPopover.props = {
     close: Function,

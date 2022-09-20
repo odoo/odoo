@@ -3,13 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
 import { getFixture, patchWithCleanup } from "../../helpers/utils";
-import {
-    clickDate,
-    mountComponent,
-    selectDateRange,
-    makeEnv,
-    makeFakeModel,
-} from "./calendar_helpers";
+import { clickDate, mountComponent, selectDateRange, makeEnv, makeFakeModel } from "./helpers";
 
 let target;
 

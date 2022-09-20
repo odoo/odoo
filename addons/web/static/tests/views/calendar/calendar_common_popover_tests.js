@@ -2,7 +2,7 @@
 
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
 import { click, getFixture } from "../../helpers/utils";
-import { makeEnv, makeFakeDate, makeFakeModel, mountComponent } from "./calendar_helpers";
+import { makeEnv, makeFakeDate, makeFakeModel, mountComponent } from "./helpers";
 
 let target;
 

@@ -33,7 +33,7 @@ import {
     selectTimeRange,
     toggleFilter,
     toggleSectionFilter,
-} from "../../views/calendar/calendar_helpers";
+} from "../../views/calendar/helpers";
 import { makeView, setupViewRegistries } from "../../views/helpers";
 import { createWebClient, doAction } from "../../webclient/helpers";
 import { browser } from "@web/core/browser/browser";

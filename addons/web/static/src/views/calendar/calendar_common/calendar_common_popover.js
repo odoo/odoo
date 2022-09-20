@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Dialog } from "@web/core/dialog/dialog";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { Field } from "../../fields/field";
 import { Record } from "../../record";
@@ -82,6 +83,7 @@ export class CalendarCommonPopover extends Component {
     }
 }
 CalendarCommonPopover.components = {
+    Dialog,
     Field,
     Record,
 };

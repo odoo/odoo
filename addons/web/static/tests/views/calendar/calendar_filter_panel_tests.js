@@ -2,7 +2,7 @@
 
 import { CalendarFilterPanel } from "@web/views/calendar/filter_panel/calendar_filter_panel";
 import { click, getFixture, triggerEvent } from "../../helpers/utils";
-import { makeEnv, makeFakeModel, mountComponent } from "./calendar_helpers";
+import { makeEnv, makeFakeModel, mountComponent } from "./helpers";
 
 let target;
 

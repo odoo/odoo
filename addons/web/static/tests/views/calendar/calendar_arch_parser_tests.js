@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { CalendarArchParser } from "@web/views/calendar/calendar_arch_parser";
-import { FAKE_FIELDS } from "./calendar_helpers";
+import { FAKE_FIELDS } from "./helpers";
 
 function parseArch(arch, options = {}) {
     const parser = new CalendarArchParser();
