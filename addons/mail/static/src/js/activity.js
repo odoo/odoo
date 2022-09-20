@@ -48,20 +48,6 @@ const KanbanActivity = AbstractField.extend({
         this.isActivityViewCell = options.isActivityViewCell;
     },
 
-    /**
-     * @param {integer} previousActivityTypeID
-     * @return {Promise}
-     */
-    async scheduleActivity() {
-        const messaging = await owl.Component.env.services.messaging.get();
-        const thread = messaging.models['Thread'].insert({ id: this.res_id, model: this.model });
-        await messaging.openActivityForm({
-            defaultActivityTypeId: this.defaultActivityType,
-            thread,
-        });
-        this._reload();
-    },
-
     //------------------------------------------------------------
     // Private
     //------------------------------------------------------------
