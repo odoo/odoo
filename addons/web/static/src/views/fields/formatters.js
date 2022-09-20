@@ -5,6 +5,7 @@ import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { escape, intersperse, nbsp, sprintf } from "@web/core/utils/strings";
+import { isBinarySize } from "@web/core/utils/binary";
 import { session } from "@web/session";
 
 // -----------------------------------------------------------------------------
@@ -85,9 +86,35 @@ function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
     return int + decimalPoint + decimalPart + symbol;
 }
 
+function humanSize(value) {
+    if (!value) {
+        return "";
+    }
+    const suffix = value < 1024 ? " " + _t("Bytes") : "b";
+    return (
+        humanNumber(value, {
+            decimals: 2,
+        }) + suffix
+    );
+}
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
+
+/**
+ * @param {string} [value] base64 representation of the binary
+ * @returns {string}
+ */
+export function formatBinary(value) {
+    if (!isBinarySize(value)) {
+        // Computing approximate size out of base64 encoded string
+        // http://en.wikipedia.org/wiki/Base64#MIME
+        return humanSize(value.length / 1.37);
+    }
+    // already bin_size
+    return value;
+}
 
 /**
  * @param {boolean} value
@@ -369,9 +396,9 @@ export function formatPercentage(value, options = {}) {
  */
 function formatProperties(value, field) {
     if (!value || !value.length) {
-        return '';
+        return "";
     }
-    return value.map(property => property['string']).join(', ');
+    return value.map((property) => property["string"]).join(", ");
 }
 
 /**
@@ -411,6 +438,7 @@ export function formatText(value) {
 
 registry
     .category("formatters")
+    .add("binary", formatBinary)
     .add("boolean", formatBoolean)
     .add("char", formatChar)
     .add("date", formatDate)

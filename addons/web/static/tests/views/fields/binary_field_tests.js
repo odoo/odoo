@@ -13,6 +13,9 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
 
+const BINARY_FILE =
+    "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
+
 let serverData;
 let target;
 
@@ -376,4 +379,24 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps([], "We shouldn't have passed through steps");
         }
     );
+
+    QUnit.test("Binary field in list view", async function (assert) {
+        serverData.models.partner.records[0].document = BINARY_FILE;
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <tree>
+                        <field name="document" filename="yooo"/>
+                    </tree>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_data_row .o_data_cell").textContent,
+            "93.43 Bytes"
+        );
+    });
 });
