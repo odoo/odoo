@@ -4,5 +4,5 @@ document.addEventListener('DOMContentLoaded', function (evt) {
     var style = window.getComputedStyle(recipientAddress, null); 
     var height = parseFloat(style.getPropertyValue('height'));
     var fontSize = parseFloat(style.getPropertyValue('font-size'));
-    recipientAddress.style.fontSize = (85 / (height / fontSize)) + 'px';   
+    recipientAddress.style.fontSize = (130 / (height / fontSize)) + 'px';
 });
