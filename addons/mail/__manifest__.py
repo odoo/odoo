@@ -189,8 +189,6 @@ For more specific needs, you may also assign custom-defined actions
             # defines mixins and variables used by multiple components
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
-            'mail/static/src/fields/*.js',
-            'mail/static/src/fields/*.xml',
             'mail/static/src/utils/*.js',
             'mail/static/src/scss/*.scss',
             'mail/static/src/xml/*.xml',
@@ -201,6 +199,8 @@ For more specific needs, you may also assign custom-defined actions
             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
             'mail/static/src/views/**/*.js',
+            'mail/static/src/views/**/*.xml',
+            'mail/static/src/views/**/*.scss',
             'mail/static/src/webclient/commands/*.js',
             'mail/static/src/widgets/*/*.js',
             'mail/static/src/widgets/*/*.scss',
