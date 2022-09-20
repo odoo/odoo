@@ -34280,7 +34280,7 @@
     display: grid;
     grid-template-columns: auto 350px;
     * {
-      font-family: "Roboto", "RobotoDraft", Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     }
     &,
     *,

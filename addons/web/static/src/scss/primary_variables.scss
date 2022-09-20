@@ -9,12 +9,12 @@ $o-font-size-base: 13rem * (1px / $o-root-font-size) !default;
 $o-font-size-base-touch: 15px !default;
 $o-line-height-base: 1.5 !default; // This is BS default
 
-// This is the bootstrap default, it is duplicated here as we need to process
+// Global sans-serif fonts stack, defined here as we need to process
 // it before actually using it (to add more unicode support with the special
 // Odoo font for example). Adding unicode support is not done directly here as
 // this font can be used by the website where the unicode support is already
 // automatically added.
-$o-system-fonts: (system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji") !default;
+$o-system-fonts: (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji") !default;
 
 // Colors
 // This is BS default
@@ -56,6 +56,11 @@ $o-theme-text-colors: (
 
 $o-opacity-disabled: .5 !default;
 $o-opacity-muted: .76 !default;
+
+$o-font-family-sans-serif: o-add-unicode-support-font($o-system-fonts) !default;
+$o-font-family-monospace: o-add-unicode-support-font((SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace)) !default;
+
+$o-headings-font-family: o-add-unicode-support-font(("SF Pro Display", $o-system-fonts)) !default;
 
 $o-main-text-color: $o-gray-700 !default;
 $o-main-bg-color: #f0eeee !default;
