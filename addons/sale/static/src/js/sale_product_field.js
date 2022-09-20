@@ -36,6 +36,7 @@ export class SaleOrderLineProductField extends Many2OneField {
                     // FIXME productConfigured = temp solution
                     //      we need a safe way to link configurators logic
                     //      even if both template & variant columns are enabled
+                    //      jQuery ???
                     this.productConfigured = false;
                     this._onProductUpdate();
                 }
@@ -55,7 +56,7 @@ export class SaleOrderLineProductField extends Many2OneField {
         return 'btn btn-secondary fa fa-pencil';
     }
 
-    async _onProductTemplateUpdate() {}
+    async _onProductTemplateUpdate() { }
     async _onProductUpdate() { }
 
     onEditConfiguration() {
