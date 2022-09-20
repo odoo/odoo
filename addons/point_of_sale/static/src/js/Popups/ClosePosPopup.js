@@ -18,10 +18,11 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.cashControl = this.env.pos.config.cash_control;
             this.closeSessionClicked = false;
             this.moneyDetails = null;
+            Object.assign(this, this.props.info);
             this.state = useState({
                 displayMoneyDetailsPopup: false,
             });
-            Object.assign(this, this.props.info);
+            Object.assign(this.state, this.props.info.state);
         }
         //@override
         async confirm() {
