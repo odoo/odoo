@@ -2,7 +2,7 @@
 <odoo>
         <!-- wizard action on res.partner -->
         <record id="partner_wizard_action_create_and_open" model="ir.actions.server">
-            <field name="name">Grant portal access</field>
+            <field name="name">Portal access management</field>
             <field name="model_id" ref="portal.model_portal_wizard"/>
             <field name="binding_model_id" ref="base.model_res_partner"/>
             <field name="state">code</field>
@@ -10,7 +10,7 @@
         </record>
 
         <record id="partner_wizard_action" model="ir.actions.act_window">
-            <field name="name">Grant portal access</field>
+            <field name="name">Portal access management</field>
             <field name="res_model">portal.wizard</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -19,7 +19,7 @@
 
         <!-- wizard view -->
         <record id="wizard_view" model="ir.ui.view">
-            <field name="name">Grant portal access</field>
+            <field name="name">Portal access management</field>
             <field name="model">portal.wizard</field>
             <field name="arch" type="xml">
                 <form string="Portal Access Management">
