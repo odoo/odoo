@@ -1,97 +1,46 @@
 /** @odoo-module */
 
 import tour from 'web_tour.tour'
+import wTourUtils from 'website.tour_utils';
+import wsTourUtils from 'website_sale.tour_utils';
 
 tour.register('onsite_payment_tour', {
-    test: true,
-    url: '/shop'
-}, [ // first test : test whole onsite payment flow with physical products.
-    {
-        content: 'Select the first product',
-        trigger: 'a:contains("Customizable Desk")',
-    }, {
-        content: 'Add the product to the cart',
-        trigger: 'a:contains("ADD TO CART")'
-    }, {
-        content: 'Go to checkout page',
-        trigger: 'button:contains("Proceed to Checkout")'
-    }, {
-        content: 'Go to payment page',
-        trigger: 'a:contains("Process Checkout")'
-    }, {
-        content: 'Click on onsite delivery carrier',
-        trigger: '.o_delivery_carrier_select:contains("On Site")'
-    }, {
-        content: 'Click on on site payment provider',
-        trigger: '.o_payment_option_card:contains("Pay in store when picking the product")'
-    }, {
-        content: 'Click the pay button',
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)'
-    }, {
-        content: 'Await the confirmation page',
-        trigger: 'td:contains("Pay in store when picking the product")'
-    }, {
-        content: 'Head back to main page',
-        trigger: '.nav-link:contains("Shop")'
+        test: true,
+        url: '/web',
     },
+    [
+        ...wsTourUtils.addToCart({productName: 'Chair floor protection'}),
+        wsTourUtils.goToCart(),
+        wTourUtils.clickOnElement('Proceed to checkout', 'a:contains(Process Checkout)'),
+        ...wsTourUtils.fillAdressForm(),
+        wTourUtils.clickOnElement('Example shipping On Site', '.o_delivery_carrier_select:contains("Example shipping On Site")'),
+        wTourUtils.clickOnElement('pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
+        {
+            content: "Check if the payment is successful",
+            trigger: 'p:contains(Your order has been saved. Please come to the store to pay for your products)',
+        },
 
+        // Test multi products (Either physical or not)
+        ...wsTourUtils.addToCart({productName: 'Customizable Desk', productHasVariants: true}),
+        ...wsTourUtils.addToCart({productName: 'Warranty'}),
+        wsTourUtils.goToCart({quantity: 2}),
+        wTourUtils.clickOnElement('Go to payment page', 'a:contains("Process Checkout")'),
+        ...wsTourUtils.fillAdressForm(),
+        wTourUtils.clickOnElement('"Pay in store when picking the product"', '.o_delivery_carrier_select:contains("Example shipping On Site")'),
+        wTourUtils.clickOnElement('Pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
+        {
+            content: "Check if the payment is successful",
+            trigger: 'p:contains(Your order has been saved. Please come to the store to pay for your products)',
+        },
 
-    { // Test multi products (Either physical or not)
-        content: 'Select the first product',
-        trigger: 'a:contains("Customizable Desk")',
-    }, {
-        content: 'Add the product to the cart',
-        trigger: 'a:contains("ADD TO CART")'
-    }, {
-        content: 'Validate variant choice',
-        trigger: 'button:contains("Continue Shopping")'
-    }, {
-        content: 'Head back to main page',
-        trigger: '.nav-link:contains("Shop")'
-    }, {
-        content: 'Select the second product (Non physical)',
-        trigger: 'a:contains("Warranty")',
-    }, {
-        content: 'Add the product to the cart',
-        trigger: 'a:contains("ADD TO CART")'
-    }, {
-        content: 'Go to cart',
-        trigger: '.nav-link[href="/shop/cart"]:contains("2")'
-    }, {
-        content: 'Go to payment page',
-        trigger: 'a:contains("Process Checkout")'
-    }, {
-        content: 'Click on onsite delivery carrier',
-        trigger: '.o_delivery_carrier_select:contains("On Site")'
-    }, {
-        content: 'Click on on site payment provider',
-        trigger: '.o_payment_option_card:contains("Pay in store when picking the product")'
-    }, {
-        content: 'Click the pay button',
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)'
-    }, {
-        content: 'Await the confirmation page',
-        trigger: 'td:contains("Pay in store when picking the product")'
-    }, {
-        content: 'Head back to main page',
-        trigger: '.nav-link:contains("Shop")'
-    },
-    // Test without any physical product (option pay on site should not appear)
-
-    {
-        content: 'Select the (Non physical) product',
-        trigger: 'a:contains("Warranty")',
-    }, {
-        content: 'Add the product to the cart',
-        trigger: 'a:contains("ADD TO CART")'
-    }, {
-        content: 'Go to cart',
-        trigger: '.nav-link[href="/shop/cart"]:contains("1")'
-    }, {
-        content: 'Go to payment page',
-        trigger: 'a:contains("Process Checkout")'
-    }, {
-        content: 'Assert pay on site is NOT an option',
-        trigger: 'body:not(:contains("Pay in store when picking the product"))'
-    }
-]);
+        // Test without any physical product (option pay on site should not appear)
+        ...wsTourUtils.addToCart({productName: 'Warranty'}),
+        wsTourUtils.goToCart(),
+        wTourUtils.clickOnElement('Go to payment page', 'a:contains("Process Checkout")'),
+        ...wsTourUtils.fillAdressForm(),
+        {
+            content: 'Assert pay on site is NOT an option',
+            trigger: 'body:not(:contains("Test Payment Provider"))',
+        },
+    ]
+);
