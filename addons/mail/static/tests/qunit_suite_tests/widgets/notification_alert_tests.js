@@ -31,7 +31,7 @@ QUnit.test('notification_alert widget: display blocked notification alert', asyn
 
     assert.containsOnce(
         document.body,
-        '.o_notification_alert',
+        '.o_NotificationAlert',
         "Blocked notification alert should be displayed"
     );
 });
@@ -57,7 +57,7 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
 
     assert.containsNone(
         document.body,
-        '.o_notification_alert',
+        '.o_NotificationAlert',
         "Blocked notification alert should not be displayed"
     );
 });
@@ -83,7 +83,7 @@ QUnit.test('notification_alert widget: no notification alert when default', asyn
 
     assert.containsNone(
         document.body,
-        '.o_notification_alert',
+        '.o_NotificationAlert',
         "Blocked notification alert should not be displayed"
     );
 });
