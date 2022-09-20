@@ -24,7 +24,10 @@ class StockPicking(models.Model):
 
     def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
         res = super()._prepare_subcontract_mo_vals(subcontract_move, bom)
-        if not res.get('picking_type_id') and subcontract_move.location_dest_id.usage == 'customer':
+        if not res.get('picking_type_id') and (
+                subcontract_move.location_dest_id.usage == 'customer'
+                or subcontract_move.location_dest_id.is_subcontracting_location
+        ):
             # If the if-condition is respected, it means that `subcontract_move` is not
             # related to a specific warehouse. This can happen if, for instance, the user
             # confirms a PO with a subcontracted product that should be delivered to a
