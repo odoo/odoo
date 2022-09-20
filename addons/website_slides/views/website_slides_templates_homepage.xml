@@ -332,11 +332,8 @@
     <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}" t-cache="channel if is_public_user else None">
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
         <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" style="height:120px">
-            <div t-if="channel.image_1920" t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100 ">
+            <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100">
                 <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
-            </div>
-            <div t-else="" class="o_wslides_background_image">
-                <img t-att-src="channel.website_background_image_url" class=" img img-fluid"/>
             </div>
         </a>
         <div class="card-body d-flex flex-column p-3">

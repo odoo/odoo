@@ -296,7 +296,7 @@ class Channel(models.Model):
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
         help="Group of users allowed to publish contents on a documentation course.")
-    website_background_image_url = fields.Char('Background image URL', compute='_compute_website_background_image_url')
+    website_default_background_image_url = fields.Char('Background image URL', compute='_compute_website_default_background_image_url')
     # not stored access fields, depending on each user
     completed = fields.Boolean('Done', compute='_compute_user_statistics', compute_sudo=False)
     completion = fields.Integer('Completion', compute='_compute_user_statistics', compute_sudo=False)
@@ -448,12 +448,6 @@ class Channel(models.Model):
             else:
                 record.can_publish = self.env.user.has_group('website_slides.group_website_slides_manager')
 
-    def _get_placeholder_filename(self, field):
-        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
-        if field in image_fields:
-            return 'website_slides/static/src/img/channel-%s-default.jpg' % ('training' if self.channel_type == 'training' else 'documentation')
-        return super()._get_placeholder_filename(field)
-
     @api.model
     def _get_can_publish_error_message(self):
         return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
@@ -477,14 +471,10 @@ class Channel(models.Model):
             new_slides = new_published_slides.filtered(lambda slide: slide.channel_id == channel)
             channel.partner_has_new_content = any(slide not in slide_partner_completed for slide in new_slides)
 
-    @api.depends('image_1920', 'channel_type')
-    def _compute_website_background_image_url(self):
+    @api.depends('channel_type')
+    def _compute_website_default_background_image_url(self):
         for channel in self:
-            channel.website_background_image_url = (
-                channel.website_id.image_url(channel, 'image_256') if channel.image_1920
-                else '/website_slides/static/src/img/channel-%s-default.jpg'
-                     % ('training' if channel.channel_type == 'training' else 'documentation')
-            )
+            channel.website_default_background_image_url = f'website_slides/static/src/img/channel-{channel.channel_type}-default.jpg'
 
     @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
@@ -993,3 +983,9 @@ class Channel(models.Model):
             'mapping': mapping,
             'icon': 'fa-graduation-cap',
         }
+
+    def _get_placeholder_filename(self, field):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields:
+            return self.website_default_background_image_url
+        return super()._get_placeholder_filename(field)
