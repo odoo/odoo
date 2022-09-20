@@ -10,14 +10,15 @@ export class FloatToggleField extends Component {
     // TODO perf issue (because of update round trip)
     // we probably want to have a state and a useEffect or onWillUpateProps
     onChange() {
-        let currentIndex = this.props.range.indexOf(this.props.value * this.props.factor);
+        let currentIndex = this.props.range.indexOf(this.props.value * this.factor);
         currentIndex++;
         if (currentIndex > this.props.range.length - 1) {
             currentIndex = 0;
         }
-        this.props.update(this.props.range[currentIndex] / this.props.factor);
+        this.props.update(this.props.range[currentIndex] / this.factor);
     }
 
+    // This property has been created in order to allow overrides in other modules.
     get factor() {
         return this.props.factor;
     }
