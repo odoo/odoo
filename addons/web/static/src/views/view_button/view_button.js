@@ -130,6 +130,7 @@ ViewButton.props = [
     "className?",
     "context?",
     "clickParams?",
+    "hotkey?",
     "icon?",
     "defaultRank?",
     "disabled?",

@@ -3014,6 +3014,35 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "onchange", "create", "read", "execute_action", "read"]);
     });
 
+    QUnit.test("buttons with data-hotkey attribute", async function (assert) {
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        assert.step(params.name);
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <button name="validate" string="Validate" type="object" data-hotkey="v"/>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, ".o_form_readonly button[data-hotkey=v]");
+        triggerHotkey("alt+v");
+        await nextTick();
+        assert.verifySteps(["validate"]);
+    });
+
     QUnit.test("change and save char", async function (assert) {
         assert.expect(6);
 
