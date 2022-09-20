@@ -8,6 +8,7 @@ import requests
 from werkzeug import urls
 
 from odoo import api, fields, models, _
+from odoo.tools.json import scriptsafe as json_safe
 
 _logger = logging.getLogger(__name__)
 
@@ -104,7 +105,7 @@ class GoogleService(models.AbstractModel):
             headers = {}
 
         # Remove client_secret key from logs
-        _log_params = (params or {}).copy()
+        _log_params = isinstance(params, dict) and params.copy() or (params or '').startswith('{"') and json_safe.loads(params) or {}
         if _log_params.get('client_secret'):
             _log_params['client_secret'] = _log_params['client_secret'][0:4] + 'x' * 12
 
