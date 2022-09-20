@@ -2106,17 +2106,18 @@
                                 <h3 class="text-start mt-3">
                                     <strong>Payment Information:</strong>
                                 </h3>
+                                <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
                                 <table class="table">
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="order.get_portal_last_transaction().provider_id.sudo().name" />
+                                                <t t-esc="payment_tx_id.provider_id.sudo().name" />
                                             </td>
                                             <td class="text-end" width="100">
                                                 <strong>Total:</strong>
                                             </td>
                                             <td class="text-end" width="100">
-                                                <strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
+                                                <strong t-field="payment_tx_id.amount" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -2200,7 +2201,8 @@
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
             <div t-attf-class="card #{
                 (payment_tx_id.state == 'pending' and 'bg-info') or
-                (payment_tx_id.state == 'done' and 'alert-success') or
+                (payment_tx_id.state == 'done' and order.amount_total == payment_tx_id.amount and 'alert-success') or
+                (payment_tx_id.state == 'done' and order.amount_total != payment_tx_id.amount and 'bg-warning') or
                 (payment_tx_id.state == 'authorized' and 'alert-success') or
                 'bg-danger'}">
                 <div class="card-header">
@@ -2213,6 +2215,10 @@
                     </t>
                     <t t-if="payment_tx_id.state == 'done'">
                         <span t-if='payment_tx_id.provider_id.sudo().done_msg' t-out="payment_tx_id.provider_id.sudo().done_msg"/>
+                    </t>
+                    <t t-if="payment_tx_id.state == 'done' and order.amount_total != payment_tx_id.amount">
+                        <span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.
+                        Please contact the responsible of the shop for more information.</span>
                     </t>
                     <t t-if="payment_tx_id.state == 'cancel'">
                         <t t-out="payment_tx_id.provider_id.sudo().cancel_msg"/>
