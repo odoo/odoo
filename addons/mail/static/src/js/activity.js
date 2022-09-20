@@ -53,7 +53,7 @@ const KanbanActivity = AbstractField.extend({
      * @return {Promise}
      */
     scheduleActivity() {
-        const callback = this._reload.bind(this, { activity: true, thread: true });
+        const callback = this._reload.bind(this);
         return this._openActivityForm(false, callback);
     },
 
@@ -86,7 +86,7 @@ const KanbanActivity = AbstractField.extend({
             },
             context: this.record.getContext(),
         });
-        this._reload({ activity: true, thread: true });
+        this._reload();
     },
     /**
      * Send a feedback and proposes to schedule next activity
@@ -126,7 +126,7 @@ const KanbanActivity = AbstractField.extend({
     _onEditActivity(ev) {
         ev.preventDefault();
         const activityID = $(ev.currentTarget).data('activity-id');
-        return this._openActivityForm(activityID, this._reload.bind(this, { activity: true, thread: true }));
+        return this._openActivityForm(activityID, this._reload.bind(this));
     },
     /**
      * @private
@@ -358,7 +358,7 @@ const KanbanActivity = AbstractField.extend({
             method: 'activity_send_mail',
             args: [[this.res_id], templateID],
         });
-        this._reload({ activity: true, thread: true, followers: true });
+        this._reload();
     },
     /**
      * @private
