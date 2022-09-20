@@ -44,7 +44,7 @@ export class MassMailingHtmlField extends HtmlField {
     get wysiwygOptions() {
         return {
             ...super.wysiwygOptions,
-            onIframeUpdated: this.env.onIframeUpdated,
+            onIframeUpdated: () => this.onIframeUpdated(),
             snippets: 'mass_mailing.email_designer_snippets',
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
