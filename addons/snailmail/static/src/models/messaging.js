@@ -3,7 +3,7 @@
 import { addFields, addRecordMethods } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 // ensure that the model definition is loaded before the patch
-import '@mail/models/messaging';
+import '@mail/core_models/messaging';
 
 addRecordMethods('Messaging', {
     async fetchSnailmailCreditsUrl() {
