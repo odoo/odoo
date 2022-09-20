@@ -55,9 +55,9 @@ QUnit.module('hr', {}, function () {
             views: [[false, 'list']],
         });
 
-        assert.strictEqual(document.querySelector('.o_data_cell span').innerText, 'Mario');
-        assert.strictEqual(document.querySelectorAll('.o_data_cell span')[1].innerText, 'Luigi');
-        assert.strictEqual(document.querySelectorAll('.o_data_cell span')[2].innerText, 'Mario');
+        assert.strictEqual(document.querySelector('.o_data_cell span:not(.o_m2o_avatar)').innerText, 'Mario');
+        assert.strictEqual(document.querySelectorAll('.o_data_cell span:not(.o_m2o_avatar)')[1].innerText, 'Luigi');
+        assert.strictEqual(document.querySelectorAll('.o_data_cell span:not(.o_m2o_avatar)')[2].innerText, 'Mario');
 
         // click on first employee
         await afterNextRender(() =>
@@ -223,14 +223,14 @@ QUnit.module('hr', {}, function () {
             res_id: m2xAvatarEmployeeId1,
             views: [[false, 'form']],
         });
-        assert.containsN(document.body, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+        assert.containsN(document.body, '.o_field_many2many_avatar_employee .badge', 2,
             "should have 2 records");
-        assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
+        assert.strictEqual(document.querySelector('.o_field_many2many_avatar_employee .badge img').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
 
-        await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
-        await dom.click(document.querySelectorAll('.o_field_many2manytags.avatar .badge .o_m2m_avatar')[1]);
+        await dom.click(document.querySelector('.o_field_many2many_avatar_employee .badge .o_m2m_avatar'));
+        await dom.click(document.querySelectorAll('.o_field_many2many_avatar_employee .badge .o_m2m_avatar')[1]);
 
         assert.verifySteps([
             `read m2x.avatar.employee ${m2xAvatarEmployeeId1}`,
@@ -279,7 +279,7 @@ QUnit.module('hr', {}, function () {
             res_model: 'm2x.avatar.employee',
             views: [[false, 'list']],
         });
-        assert.containsN(document.body, '.o_data_cell:first .o_field_many2manytags > span', 2,
+        assert.containsN(document.body, '.o_data_cell:first .o_field_many2many_avatar_employee > div > span', 2,
             "should have two avatar");
 
         // click on first employee badge
@@ -366,12 +366,12 @@ QUnit.module('hr', {}, function () {
             res_model: 'm2x.avatar.employee',
             views: [[false, 'kanban']],
         });
-        assert.containsN(document.body, '.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar', 2,
+        assert.containsN(document.body, '.o_kanban_record:first .o_field_many2many_avatar_employee img.o_m2m_avatar', 2,
             "should have 2 avatar images");
-        assert.strictEqual(document.querySelector('.o_kanban_record .o_field_many2manytags img.o_m2m_avatar').getAttribute('data-src'),
+        assert.strictEqual(document.querySelector('.o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
-        assert.strictEqual(document.querySelectorAll('.o_kanban_record .o_field_many2manytags img.o_m2m_avatar')[1].getAttribute('data-src'),
+        assert.strictEqual(document.querySelectorAll('.o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar')[1].getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId2}/avatar_128`,
             "should have correct avatar image");
 
@@ -428,14 +428,14 @@ QUnit.module('hr', {}, function () {
             views: [[false, 'form']],
         });
 
-        assert.containsN(document.body, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+        assert.containsN(document.body, '.o_field_many2many_avatar_employee .badge', 2,
             "should have 2 records");
-        assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
+        assert.strictEqual(document.querySelector('.o_field_many2many_avatar_employee .badge img').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
 
-        await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
-        await dom.click(document.querySelectorAll('.o_field_many2manytags.avatar .badge .o_m2m_avatar')[1]);
+        await dom.click(document.querySelector('.o_field_many2many_avatar_employee .badge .o_m2m_avatar'));
+        await dom.click(document.querySelectorAll('.o_field_many2many_avatar_employee .badge .o_m2m_avatar')[1]);
 
         assert.verifySteps([
             `read m2x.avatar.employee ${hrEmployeePublicId1}`,
