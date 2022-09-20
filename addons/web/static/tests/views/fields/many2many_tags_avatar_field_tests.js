@@ -204,8 +204,14 @@ QUnit.module("Fields", (hooks) => {
             ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
         );
         assert.strictEqual(
-            tag.dataset["tooltip"],
-            "record 6<br/>record 7",
+            tag.dataset["tooltipTemplate"],
+            "web.TagsList.Tooltip",
+            "uses the proper tooltip template",
+        );
+        const tooltipInfo = JSON.parse(tag.dataset["tooltipInfo"]);
+        assert.strictEqual(
+            tooltipInfo.tags.map(tag => tag.text).join(" "),
+            'record 6 record 7',
             "shows a tooltip on hover"
         );
 
@@ -228,7 +234,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("widget many2many_tags_avatar in kanban view", async function (assert) {
-        assert.expect(12);
+        assert.expect(13);
 
         const records = [];
         for (let id = 5; id <= 15; id++) {
@@ -355,9 +361,15 @@ QUnit.module("Fields", (hooks) => {
             ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
         );
         assert.strictEqual(
-            tag.dataset["tooltip"],
-            "aaa<br/>record 5",
-            "shows a tooltip on hover with the right text"
+            tag.dataset["tooltipTemplate"],
+            "web.TagsList.Tooltip",
+            "uses the proper tooltip template",
+        );
+        const tooltipInfo = JSON.parse(tag.dataset["tooltipInfo"]);
+        assert.strictEqual(
+            tooltipInfo.tags.map(tag => tag.text).join(" "),
+            'aaa record 5',
+            "shows a tooltip on hover"
         );
 
         await click(

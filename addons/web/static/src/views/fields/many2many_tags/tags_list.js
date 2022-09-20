@@ -15,8 +15,13 @@ export class TagsList extends Component {
         }
         return this.props.tags.slice(this.props.itemsVisible - 1);
     }
-    get tooltip() {
-        return this.otherTags.map((i) => i.text).join("<br/>");
+    get tooltipInfo() {
+        return JSON.stringify({
+            tags: this.otherTags.map((tag) => ({
+                text: tag.text,
+                id: tag.id,
+            })),
+        });
     }
 }
 TagsList.template = "web.TagsList";

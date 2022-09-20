@@ -13,10 +13,16 @@
                 <a tabIndex="-1" t-if="tag.onDelete" t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"></a>
             </span>
         </t>
-        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" t-att-data-tooltip="tooltip">
+        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
             <span t-if="otherTags.length > 9" t-esc="'9+'" />
             <span t-else="" t-esc="'+' + otherTags.length" />
         </span>
+    </t>
+
+    <t t-name="web.TagsList.Tooltip" owl="1">
+        <t t-foreach="tags" t-as="tag" t-key="tag.id">
+            <div t-esc="tag.text"/>
+        </t>
     </t>
 
 </templates>
