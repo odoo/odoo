@@ -72,8 +72,3 @@ class Job(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('hr_recruitment.menu_hr_recruitment_root').id
-
-    def open_website_url(self):
-        action = super().open_website_url()
-        action['target'] = 'new'
-        return action
