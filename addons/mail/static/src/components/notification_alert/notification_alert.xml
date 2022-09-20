@@ -2,12 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationAlert" owl="1">
-        <div class="o_NotificationAlert" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="messaging">
-                <center t-if="messaging.isNotificationBlocked" class="o_notification_alert alert alert-primary">
-                    Odoo Push notifications have been blocked. Go to your browser settings to allow them.
-                </center>
-            </t>
+        <div t-if="messaging and messaging.isNotificationBlocked" class="o_NotificationAlert alert alert-primary d-flex justify-content-center" t-attf-class="{{ className }}" t-ref="root">
+            Odoo Push notifications have been blocked. Go to your browser settings to allow them.
         </div>
     </t>
 
