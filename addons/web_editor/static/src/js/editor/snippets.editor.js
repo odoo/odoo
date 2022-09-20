@@ -914,6 +914,42 @@ var SnippetEditor = Widget.extend({
         }
         return result;
     },
+    /**
+     * Called when an "over" dropzone event happens after an other "over"
+     * without an "out" between them. It escapes the previous dropzone.
+     *
+     * @private
+     * @param {Object} self
+     *      the same `self` variable as when we are in `_onDragAndDropStart`
+     * @param {Element} currentDropzoneEl
+     *      the dropzone over which we are currently dragging
+     */
+    _outPreviousDropzone(self, currentDropzoneEl) {
+        const previousDropzoneEl = this;
+        const rowEl = previousDropzoneEl.parentNode;
+
+        if (rowEl.classList.contains('o_grid_mode')) {
+            document.body.removeEventListener('mousemove', self.onDragMove, false);
+            const fromGridToGrid = currentDropzoneEl.classList.contains('oe_grid_zone');
+            if (fromGridToGrid) {
+                // If we went from a grid dropzone to an other grid one.
+                rowEl.style.removeProperty('position');
+            } else {
+                // If we went from a grid dropzone to a normal one.
+                gridUtils._gridCleanUp(rowEl, self.$target[0]);
+                self.$target[0].style.removeProperty('z-index');
+            }
+
+            // Removing the drag helper and the background grid and
+            // resizing the grid and the dropzone.
+            self.dragState.dragHelperEl.remove();
+            self.dragState.backgroundGridEl.remove();
+            gridUtils._resizeGrid(rowEl);
+            const rowCount = parseInt(rowEl.dataset.rowCount);
+            previousDropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
+        }
+        previousDropzoneEl.classList.remove('invisible');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -977,7 +1013,7 @@ var SnippetEditor = Widget.extend({
 
                 // Storing the current grid and grid area to use them for the
                 // history.
-                this.dragState.previousGrid = rowEl;
+                this.dragState.startingGrid = rowEl;
                 this.dragState.prevGridArea = self.$target[0].style.gridArea;
 
                 // Reload the images.
@@ -1084,6 +1120,16 @@ var SnippetEditor = Widget.extend({
                 const $dropzone = $(this).first().after(self.$target);
                 $dropzone.addClass('invisible');
 
+                // Checking if the "out" event happened before this "over": if
+                // `self.dragState.currentDropzoneEl` exists, "out" didn't
+                // happen because it deletes it. We are therefore in the case
+                // of an "over" after an "over" and we need to escape the
+                // previous dropzone first.
+                if (self.dragState.currentDropzoneEl) {
+                    self._outPreviousDropzone.apply(self.dragState.currentDropzoneEl, [self, $dropzone[0]]);
+                }
+                self.dragState.currentDropzoneEl = $dropzone[0];
+
                 if ($dropzone[0].classList.contains('oe_grid_zone')) {
                     // Case where the column we are dragging is over a grid
                     // dropzone.
@@ -1138,7 +1184,6 @@ var SnippetEditor = Widget.extend({
                     self.dragState.currentHeight = rowEl.clientHeight;
                     self.dragState.dragHelperEl = dragHelperEl;
                     self.dragState.backgroundGridEl = backgroundGridEl;
-                    self.dragState.dropzoneEl = $dropzone[0];
                     self.onDragMove = self._onDragMove.bind(self);
                     document.body.addEventListener('mousemove', self.onDragMove, false);
                 }
@@ -1146,26 +1191,37 @@ var SnippetEditor = Widget.extend({
             out: function () {
                 const dropzoneEl = this;
                 const rowEl = dropzoneEl.parentNode;
-                if (rowEl.classList.contains('o_grid_mode')) {
-                    // Removing the listener + cleaning.
-                    document.body.removeEventListener('mousemove', self.onDragMove, false);
-                    gridUtils._gridCleanUp(rowEl, self.$target[0]);
-                    self.$target[0].style.removeProperty('z-index');
 
-                    // Removing the drag helper and the background grid and
-                    // resizing the grid and the dropzone.
-                    self.dragState.dragHelperEl.remove();
-                    self.dragState.backgroundGridEl.remove();
-                    gridUtils._resizeGrid(rowEl);
-                    const rowCount = parseInt(rowEl.dataset.rowCount);
-                    dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
-                }
+                // Checking if the "out" event happens right after the "over"
+                // of the same dropzone. If it is not the case, we don't do
+                // anything since the previous dropzone was already escaped (at
+                // the start of the over).
+                const sameDropzoneAsCurrent = self.dragState.currentDropzoneEl === dropzoneEl;
 
-                var prev = self.$target.prev();
-                if (this === prev[0]) {
-                    self.dropped = false;
-                    self.$target.detach();
-                    $(this).removeClass('invisible');
+                if (sameDropzoneAsCurrent) {
+                    if (rowEl.classList.contains('o_grid_mode')) {
+                        // Removing the listener + cleaning.
+                        document.body.removeEventListener('mousemove', self.onDragMove, false);
+                        gridUtils._gridCleanUp(rowEl, self.$target[0]);
+                        self.$target[0].style.removeProperty('z-index');
+
+                        // Removing the drag helper and the background grid and
+                        // resizing the grid and the dropzone.
+                        self.dragState.dragHelperEl.remove();
+                        self.dragState.backgroundGridEl.remove();
+                        gridUtils._resizeGrid(rowEl);
+                        const rowCount = parseInt(rowEl.dataset.rowCount);
+                        dropzoneEl.style.gridRowEnd = Math.max(rowCount + 1, 1);
+                    }
+
+                    var prev = self.$target.prev();
+                    if (this === prev[0]) {
+                        self.dropped = false;
+                        self.$target.detach();
+                        $(this).removeClass('invisible');
+                    }
+
+                    delete self.dragState.currentDropzoneEl;
                 }
             },
         });
@@ -1317,7 +1373,7 @@ var SnippetEditor = Widget.extend({
         });
         this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
         const samePositionAsStart = this.$target[0].classList.contains('o_grid_item')
-            ? (this.$target[0].parentNode === this.dragState.previousGrid
+            ? (this.$target[0].parentNode === this.dragState.startingGrid
                 && this.$target[0].style.gridArea === this.dragState.prevGridArea)
             : this._dropSiblings.prev === this.$target.prev()[0] && this._dropSiblings.next === this.$target.next()[0];
         if (!samePositionAsStart) {
@@ -1534,7 +1590,7 @@ var SnippetEditor = Widget.extend({
         const startingHeight = this.dragState.startingHeight;
         const currentHeight = this.dragState.currentHeight;
         const backgroundGridEl = this.dragState.backgroundGridEl;
-        const dropzoneEl = this.dragState.dropzoneEl;
+        const dropzoneEl = this.dragState.currentDropzoneEl;
         const rowOverflow = Math.round((bottom - currentHeight) / (gridProp.rowSize + gridProp.rowGap));
         const updateRows = bottom > currentHeight || bottom <= currentHeight && bottom > startingHeight;
         const rowCount = Math.max(rowEl.dataset.rowCount, this.dragState.columnRowCount);
