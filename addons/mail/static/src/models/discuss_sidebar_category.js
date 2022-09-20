@@ -169,6 +169,49 @@ registerModel({
             default: '',
         }),
         /**
+         * Determines the discuss sidebar category items that are displayed by
+         * this discuss sidebar category.
+         */
+        categoryItems: many('DiscussSidebarCategoryItem', {
+            inverse: 'category',
+        }),
+        categoryItemsOrderedByLastAction: many('DiscussSidebarCategoryItem', {
+            compute() {
+                if (this.discussAsChat) {
+                    return this.categoryItems;
+                }
+                // clear if the value is not going to be used, so that it avoids
+                // sorting the items for nothing
+                return clear();
+            },
+            sort() {
+                return [
+                    ['truthy-first', 'thread'],
+                    ['truthy-first', 'thread.lastInterestDateTime'],
+                    ['most-recent-first', 'thread.lastInterestDateTime'],
+                    ['greater-first', 'channel.id'],
+                ];
+            },
+        }),
+        categoryItemsOrderedByName: many('DiscussSidebarCategoryItem', {
+            compute() {
+                if (this.discussAsChannel) {
+                    return this.categoryItems;
+                }
+                // clear if the value is not going to be used, so that it avoids
+                // sorting the items for nothing
+                return clear();
+            },
+            sort() {
+                return [
+                    ['truthy-first', 'thread'],
+                    ['truthy-first', 'thread.displayName'],
+                    ['case-insensitive-asc', 'thread.displayName'],
+                    ['smaller-first', 'channel.id'],
+                ];
+            },
+        }),
+        /**
          * The title text in UI for command `add`
          */
         commandAddTitleText: attr({
@@ -182,31 +225,6 @@ registerModel({
                 return clear();
             },
             default: '',
-        }),
-        /**
-         * Determines the discuss sidebar category items that are displayed by
-         * this discuss sidebar category.
-         */
-        categoryItems: many('DiscussSidebarCategoryItem', {
-            inverse: 'category',
-            sort() {
-                switch (this.sortComputeMethod) {
-                    case 'name':
-                        return [
-                            ['truthy-first', 'thread'],
-                            ['truthy-first', 'thread.displayName'],
-                            ['case-insensitive-asc', 'thread.displayName'],
-                            ['smaller-first', 'channel.id'],
-                        ];
-                    case 'last_action':
-                        return [
-                            ['truthy-first', 'thread'],
-                            ['truthy-first', 'thread.lastInterestDateTime'],
-                            ['most-recent-first', 'thread.lastInterestDateTime'],
-                            ['greater-first', 'channel.id'],
-                        ];
-                }
-            },
         }),
         /**
          * States the total amount of unread/action-needed threads in this
@@ -231,7 +249,7 @@ registerModel({
          */
         filteredCategoryItems: many('DiscussSidebarCategoryItem', {
             compute() {
-                let categoryItems = this.categoryItems;
+                let categoryItems = this.orderedCategoryItems;
                 const searchValue = this.messaging.discuss.sidebarQuickSearchValue;
                 if (searchValue) {
                     const qsVal = searchValue.toLowerCase();
@@ -343,6 +361,17 @@ registerModel({
                 return clear();
             },
         }),
+        orderedCategoryItems: many('DiscussSidebarCategoryItem', {
+            compute() {
+                if (this.discussAsChannel) {
+                    return this.categoryItemsOrderedByName;
+                }
+                if (this.discussAsChat) {
+                    return this.categoryItemsOrderedByLastAction;
+                }
+                return clear();
+            },
+        }),
         /**
          * The key used in the server side for the category state
          */
@@ -356,22 +385,6 @@ registerModel({
                 }
                 return clear();
             },
-        }),
-        /**
-         * Determines the sorting method of channels in this category.
-         * Must be one of: 'name', 'last_action'.
-         */
-        sortComputeMethod: attr({
-            compute() {
-                if (this.discussAsChannel) {
-                    return 'name';
-                }
-                if (this.discussAsChat) {
-                    return 'last_action';
-                }
-                return clear();
-            },
-            required: true,
         }),
         /**
          * Channel type which is supported by the category.
