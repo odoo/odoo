@@ -53,7 +53,6 @@
             'hr/static/src/models/*.js',
         ],
         'web.assets_backend': [
-            'hr/static/src/mixins/*.js',
             'hr/static/src/views/**/*.js',
             'hr/static/src/components/**/*',
             'hr/static/src/user_menu/*.js',
