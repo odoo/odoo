@@ -99,6 +99,11 @@ export class Field extends Component {
             [`o_field_${this.type}`]: true,
             [_class]: Boolean(_class),
         };
+        if (this.FieldComponent.additionalClasses) {
+            for (const cls of this.FieldComponent.additionalClasses) {
+                classNames[cls] = true;
+            }
+        }
 
         // generate field decorations classNames (only if field-specific decorations
         // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
