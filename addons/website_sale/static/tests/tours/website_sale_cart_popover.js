@@ -5,9 +5,16 @@ import wTourUtils from 'website.tour_utils';
 
 tour.register('website_sale_cart_popover_tour', {
         test: true,
-        url: '/shop/chair-floor-protection-29',
+        url: '/shop',
     },
     [
+        {
+            content: "Search for the product",
+            trigger: 'form input[name="search"]',
+            run: 'text website_sale_cart_popover_tour_product'
+        },
+        wTourUtils.clickOnElement('Search', 'form:has(input[name="search"]) .oe_search_button'),
+        wTourUtils.clickOnElement('website_sale_cart_popover_tour_product', 'a:contains(website_sale_cart_popover_tour_product)'),
         wTourUtils.clickOnElement('Add to Cart', '#product_detail form[action^="/shop/cart/update"] #add_to_cart'),
         {
             content: "hover on cart popover",
