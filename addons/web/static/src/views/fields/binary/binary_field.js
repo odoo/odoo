@@ -2,17 +2,13 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { isBinarySize } from "@web/core/utils/binary";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 import { _lt } from "@web/core/l10n/translation";
 
 const { Component, onWillUpdateProps, useState } = owl;
-
-export function isBinarySize(value) {
-    return /^\d+(\.\d*)? [^0-9]+$/.test(value);
-}
-
 export class BinaryField extends Component {
     setup() {
         this.notification = useService("notification");
