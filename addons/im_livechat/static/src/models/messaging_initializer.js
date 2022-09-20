@@ -8,16 +8,6 @@ import '@mail/models/messaging_initializer';
 patchRecordMethods('MessagingInitializer', {
     /**
      * @override
-     */
-    async performInitRpc() {
-        if (this.messaging.publicLivechatGlobal) {
-            return {};
-        } else {
-            return this._super();
-        }
-    },
-    /**
-     * @override
      * @param {Object[]} [param0.channel_livechat=[]]
      */
     _initCommands() {
