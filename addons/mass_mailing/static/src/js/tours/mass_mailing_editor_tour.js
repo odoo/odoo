@@ -21,7 +21,7 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         trigger: '[name="body_arch"] iframe #empty',
     }, {
         content: 'wait for the editor to be rendered',
-        trigger: '[name="body_arch"] iframe .o_editable',
+        trigger: '[name="body_arch"] iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',
         run: () => {},
     }, {
         content: 'drag the "Title" snippet from the design panel and drop it in the editor',
