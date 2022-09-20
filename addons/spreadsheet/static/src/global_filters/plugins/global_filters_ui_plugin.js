@@ -157,7 +157,13 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
 
         const value = filterId in this.values ? this.values[filterId].value : filter.defaultValue;
 
-        if (filter.type === "date" && isEmpty(value) && filter.defaultsToCurrentPeriod) {
+        const preventAutomaticValue =
+            this.values[filterId] &&
+            this.values[filterId].value &&
+            this.values[filterId].value.preventAutomaticValue;
+        const defaultsToCurrentPeriod = !preventAutomaticValue && filter.defaultsToCurrentPeriod;
+
+        if (filter.type === "date" && isEmpty(value) && defaultsToCurrentPeriod) {
             return this._getValueOfCurrentPeriod(filterId);
         }
 
@@ -299,7 +305,7 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 value = "";
                 break;
             case "date":
-                value = { yearOffset: undefined };
+                value = { yearOffset: undefined, preventAutomaticValue: true };
                 break;
             case "relation":
                 value = [];
