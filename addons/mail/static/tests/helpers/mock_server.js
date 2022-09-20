@@ -677,7 +677,7 @@ patch(MockServer.prototype, 'mail', {
             res_model: 'mail.activity',
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
-        }
+        };
     },
     /**
      * Simulates `get_activity_data` on `mail.activity`.

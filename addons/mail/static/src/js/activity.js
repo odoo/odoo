@@ -364,27 +364,16 @@ const KanbanActivity = AbstractField.extend({
      * @param {integer} id
      * @return {Promise}
      */
-    _openActivityForm(id) {
-        const context = {
-            default_res_id: this.res_id,
-            default_res_model: this.model,
-        };
-        if (this.defaultActivityType !== undefined) {
-            context.default_activity_type_id = this.defaultActivityType;
-        }
-        return this.do_action(
-            {
-                type: 'ir.actions.act_window',
-                name: _t("Schedule Activity"),
-                res_model: 'mail.activity',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context,
-                res_id: id || false,
-            },
-            { on_close: () => this._reload() },
-        );
+    async _openActivityForm(id) {
+        const messaging = await owl.Component.env.services.messaging.get();
+        const thread = messaging.models['Thread'].insert({ id: this.res_id, model: this.model });
+        const activity = id ? messaging.models['Activity'].insert({ id, thread }) : undefined;
+        await messaging.openActivityForm({
+            activity,
+            defaultActivityTypeId: this.defaultActivityType,
+            thread,
+        });
+        this._reload();
     },
     /**
      * @private
