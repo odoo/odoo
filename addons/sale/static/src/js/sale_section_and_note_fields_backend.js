@@ -8,10 +8,10 @@ const { useSubEnv } = owl;
 export class SaleSectionAndNoteFieldOne2Many extends  SectionAndNoteFieldOne2Many {
     setup() {
         super.setup();
-       
+
         const getList = () => this.list;
         useSubEnv({
-            get x2mList() { return getList() }
+            get x2mList() { return getList(); }
         });
     }
 }
