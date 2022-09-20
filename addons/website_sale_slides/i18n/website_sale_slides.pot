@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,21 +37,12 @@ msgstr ""
 #. module: website_sale_slides
 #: code:addons/website_sale_slides/models/product_product.py:0
 #, python-format
-msgid ""
-"Access to:\n"
-"%s"
+msgid "Access to:%s%s"
 msgstr ""
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
-msgid "Buy Course"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
-#, python-format
-msgid "Buy course"
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+msgid "Buy Now Button"
 msgstr ""
 
 #. module: website_sale_slides
@@ -59,6 +50,13 @@ msgstr ""
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Buy the course to validate your answers!"
+msgstr ""
+
+#. module: website_sale_slides
+#. openerp-web
+#: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
+#, python-format
+msgid "Buy this Course"
 msgstr ""
 
 #. module: website_sale_slides
@@ -76,6 +74,11 @@ msgstr ""
 #: model:product.product,name:website_sale_slides.default_product_course
 #: model:product.template,name:website_sale_slides.default_product_course_product_template
 msgid "Course Access"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+msgid "Course Page"
 msgstr ""
 
 #. module: website_sale_slides
@@ -99,16 +102,19 @@ msgid "Defines how people can enroll to your Course."
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form_add_inherit_sale_slides
 msgid "Enroll Policy"
 msgstr ""
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
 msgid "Free Preview"
+msgstr ""
+
+#. module: website_sale_slides
+#: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
+msgid "Join this Course"
 msgstr ""
 
 #. module: website_sale_slides
@@ -123,20 +129,6 @@ msgstr ""
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
 msgid "No sales data yet!"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
-#, python-format
-msgid "On Invitation"
-msgstr ""
-
-#. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
-#, python-format
-msgid "On Payment"
 msgstr ""
 
 #. module: website_sale_slides
@@ -155,17 +147,9 @@ msgid "Preview"
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
-#: model:ir.model,name:website_sale_slides.model_product_product
-#: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_id
-#, python-format
-msgid "Product"
-msgstr ""
-
-#. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_template
-msgid "Product Template"
+#: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_id
+msgid "Product"
 msgstr ""
 
 #. module: website_sale_slides
@@ -175,15 +159,13 @@ msgid "Product Type"
 msgstr ""
 
 #. module: website_sale_slides
-#: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
-msgid "Product is required for on payment channels."
+#: model:ir.model,name:website_sale_slides.model_product_product
+msgid "Product Variant"
 msgstr ""
 
 #. module: website_sale_slides
-#. openerp-web
-#: code:addons/website_sale_slides/static/src/xml/website_slides_channel.xml:0
-#, python-format
-msgid "Public"
+#: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
+msgid "Product is required for on payment channels."
 msgstr ""
 
 #. module: website_sale_slides

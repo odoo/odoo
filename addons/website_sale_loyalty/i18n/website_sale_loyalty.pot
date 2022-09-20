@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:58+0000\n"
-"PO-Revision-Date: 2022-04-19 13:58+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,16 @@ msgstr ""
 #: code:addons/website_sale_loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "A coupon with the same code was found."
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_form_inherit_website_sale_loyalty
+msgid "All websites"
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__ecommerce_ok
+msgid "Available on Website"
 msgstr ""
 
 #. module: website_sale_loyalty
@@ -48,11 +58,6 @@ msgid "Coupon"
 msgstr ""
 
 #. module: website_sale_loyalty
-#: model:ir.ui.menu,name:website_sale_loyalty.menu_promotion_type_config
-msgid "Coupons & Loyalty"
-msgstr ""
-
-#. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_coupon_share
 msgid "Create links that apply a coupon and redirect to a specific page"
 msgstr ""
@@ -65,6 +70,21 @@ msgstr ""
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order__disabled_auto_rewards
+msgid "Disabled Auto Rewards"
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model:ir.ui.menu,name:website_sale_loyalty.menu_discount_loyalty_type_config
+msgid "Discount & Loyalty"
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.reduction_coupon_code
+msgid "Discount code or gift card"
 msgstr ""
 
 #. module: website_sale_loyalty
@@ -88,18 +108,18 @@ msgid "Done"
 msgstr ""
 
 #. module: website_sale_loyalty
-#: model:ir.model,name:website_sale_loyalty.model_loyalty_generate_wizard
-msgid "Generate Coupons"
-msgstr ""
-
-#. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
 msgid "Generate Short Link"
 msgstr ""
 
 #. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.pay_with_gift_card_form
-msgid "Gift card code..."
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.sale_coupon_result
+msgid "Gift card or discount code..."
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model:ir.ui.menu,name:website_sale_loyalty.menu_gift_ewallet_type_config
+msgid "Gift cards & eWallet"
 msgstr ""
 
 #. module: website_sale_loyalty
@@ -148,11 +168,6 @@ msgid "Loyalty Rule"
 msgstr ""
 
 #. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.pay_with_gift_card_form
-msgid "Pay"
-msgstr ""
-
-#. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Pay with eWallet"
 msgstr ""
@@ -196,16 +211,17 @@ msgid "Sales Order"
 msgstr ""
 
 #. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_card_view_tree_inherit_website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_tree_inherit_website_sale_loyalty
-msgid "Share"
+#: model:ir.model,name:website_sale_loyalty.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 
 #. module: website_sale_loyalty
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_card_view_tree_inherit_website_sale_loyalty
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_tree_inherit_website_sale_loyalty
 #, python-format
-msgid "Share Coupon"
+msgid "Share"
 msgstr ""
 
 #. module: website_sale_loyalty
@@ -216,6 +232,11 @@ msgstr ""
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
 msgid "Share Loyalty Card"
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.snippet_options
+msgid "Show Discount in Subtotal"
 msgstr ""
 
 #. module: website_sale_loyalty
@@ -244,15 +265,10 @@ msgid "The shared website should correspond to the website of the program."
 msgstr ""
 
 #. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
-msgid "Use a gift card"
-msgstr ""
-
-#. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__website_id
-#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_generate_wizard__website_id
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__website_id
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_rule__website_id
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_form_inherit_website_sale_loyalty
 msgid "Website"
 msgstr ""
 
@@ -271,11 +287,6 @@ msgstr ""
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "You have successfully applied the following code:"
-msgstr ""
-
-#. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.sale_coupon_result
-msgid "code..."
 msgstr ""
 
 #. module: website_sale_loyalty
