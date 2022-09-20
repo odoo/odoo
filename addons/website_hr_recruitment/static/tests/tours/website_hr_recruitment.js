@@ -6,7 +6,7 @@
     function applyForAJob(jobName, application) {
         return [{
             content: "Select Job",
-            trigger: `.oe_website_jobs h3 span:contains(${jobName})`,
+            trigger: `.oe_website_jobs h3:contains(${jobName})`,
         }, {
             content: "Apply",
             trigger: ".js_hr_recruitment a:contains('Apply')",
@@ -31,7 +31,7 @@
             trigger: ".s_website_form_send",
         }, {
             content: "Check the form is submitted without errors",
-            trigger: ".oe_structure:has(h1:contains('Congratulations'))",
+            trigger: "#jobs_thankyou h1:contains('Congratulations')",
         }];
     }
 

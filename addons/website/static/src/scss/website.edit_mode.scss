@@ -120,6 +120,9 @@ $-editor-messages-margin-x: 2%;
             color: #aaa;
         }
     }
+    &[data-oe-type=html].oe_empty:empty {
+        @extend %o-editor-messages;
+    }
 }
 .editor_enable [data-oe-readonly]:hover {
     cursor: default;
