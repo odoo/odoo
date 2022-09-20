@@ -76,6 +76,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.account',
         string='Account',
         compute='_compute_account_id', store=True, readonly=False, precompute=True,
+        inverse='_inverse_account_id',
         index=True,
         ondelete="cascade",
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
@@ -1115,6 +1116,13 @@ class AccountMoveLine(models.Model):
         ])
         lines_to_modify.analytic_line_ids.unlink()
         lines_to_modify._create_analytic_lines()
+
+    @api.onchange('account_id')
+    def _inverse_account_id(self):
+        self._conditional_add_to_compute('tax_ids', lambda line: (
+            line.account_id.tax_ids
+            and not line.product_id.taxes_id.filtered(lambda tax: tax.company_id == line.company_id)
+        ))
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
