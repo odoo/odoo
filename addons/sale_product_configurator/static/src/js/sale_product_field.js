@@ -49,6 +49,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             if (!result.add_mode || result.add_mode === 'configurator') {
                 this._openProductConfigurator('add');
             } else {
+                // only triggered when sale_product_matrix is installed.
                 this._openGridConfigurator();
             }
         }
