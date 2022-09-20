@@ -6,7 +6,7 @@ import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 
 patch(SaleOrderLineProductField.prototype, 'event_sale', {
 
-    _onFieldUpdate() {
+    async _onProductUpdate() {
         this._super(...arguments);
         if (this.props.record.data.product_type === 'event') {
             this._openEventConfigurator();
@@ -15,18 +15,13 @@ patch(SaleOrderLineProductField.prototype, 'event_sale', {
 
     _editLineConfiguration() {
         this._super(...arguments);
-        if (this.isEventLine) {
-            this._openEventConfigurator(this.props);
+        if (this.props.record.data.product_type === 'event') {
+            this._openEventConfigurator();
         }
     },
 
     get isConfigurableLine() {
-        return this._super(...arguments) || Boolean(this.props.record.data.event_ticket_id)
-    },
-
-    // maybe not useful to have isEventLine prop
-    get isEventLine() {
-        return Boolean(this.props.record.data.product_type === 'event');
+        return this._super(...arguments) || Boolean(this.props.record.data.event_ticket_id);
     },
 
     async _openEventConfigurator() {
@@ -55,7 +50,6 @@ patch(SaleOrderLineProductField.prototype, 'event_sale', {
                             });
                         }
                     } else {
-                        // do not reopen the wizard because of the record update.
                         const eventConfiguration = closeInfo.eventConfiguration;
                         this.props.record.update({
                             'event_id': [eventConfiguration.event_id.id, 'dunno'],

@@ -86,7 +86,7 @@ class SaleOrderLine(models.Model):
         registrations = RegistrationSudo.search([('sale_order_line_id', 'in', self.ids)])
         registrations_vals = []
         for so_line in self:
-            if not line.product_type == 'event':
+            if not so_line.product_type == 'event':
                 continue
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:

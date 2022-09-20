@@ -97,7 +97,7 @@ class HrExpense(models.Model):
     ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft')
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
     sheet_is_editable = fields.Boolean(compute='_compute_sheet_is_editable')
-    approved_by = fields.Many2one('res.users', string='Approved By', related='sheet_id.user_id')
+    approved_by = fields.Many2one('res.users', string='Approved By', related='sheet_id.user_id', tracking=False)
     approved_on = fields.Datetime(string='Approved On', related='sheet_id.approval_date')
     reference = fields.Char("Bill Reference")
     is_refused = fields.Boolean("Explicitly Refused by manager or accountant", readonly=True, copy=False)
@@ -1076,6 +1076,7 @@ class HrExpenseSheet(models.Model):
         return res
 
     def action_unpost(self):
+        self = self.with_context(clean_context(self.env.context))
         for sheet in self:
             move = sheet.account_move_id
             sheet.account_move_id = False
