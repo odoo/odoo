@@ -114,7 +114,7 @@ class Lead(models.Model):
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        compute='_compute_team_id', ondelete="set null", readonly=False, store=True)
+        compute='_compute_team_id', ondelete="set null", readonly=False, store=True, precompute=True)
     company_id = fields.Many2one(
         'res.company', string='Company', index=True,
         compute='_compute_company_id', readonly=False, store=True)
@@ -124,6 +124,9 @@ class Lead(models.Model):
     type = fields.Selection([
         ('lead', 'Lead'), ('opportunity', 'Opportunity')], required=True, tracking=15, index=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity')
+    properties = fields.Properties(
+        'Properties', definition='team_id.lead_properties',
+        copy=True)
     # Pipeline management
     priority = fields.Selection(
         crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True,
