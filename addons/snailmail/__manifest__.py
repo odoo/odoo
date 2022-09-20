@@ -30,7 +30,7 @@ Allows users to send documents by post
         ],
         'snailmail.report_assets_snailmail': [
             ('include', 'web._assets_helpers'),
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'snailmail/static/src/scss/snailmail_external_layout_asset.scss',
             'snailmail/static/src/js/snailmail_external_layout.js',

@@ -193,7 +193,7 @@ Help your customers with this chat, and analyse their feedback.
 
             ('include', 'web._assets_helpers'),
 
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'im_livechat/static/src/scss/im_livechat_bootstrap.scss',
             'im_livechat/static/src/legacy/public_livechat.scss',
