@@ -128,7 +128,7 @@ class PropertiesCase(TransactionCase):
 
         expected = self.discussion_2.attributes_definition
         for property_definition in expected:
-            property_definition['value'] = None
+            property_definition['value'] = False
 
         self.assertEqual(self.message_3.read(['attributes'])[0]['attributes'], expected)
         self.assertEqual(self.message_3.attributes, expected)
@@ -489,7 +489,7 @@ class PropertiesCase(TransactionCase):
                 "type": "char",
                 "string": "Color Code",
                 "default": "blue",
-                "value": None,
+                "value": False,
             }, {
                 "name": "moderator_partner_id",
                 "type": "many2one",
@@ -557,7 +557,7 @@ class PropertiesCase(TransactionCase):
                 'type': 'many2one',
                 'comodel': 'res.partner',
                 'default': (partner.id, partner.display_name),
-                'value': None,
+                'value': False,
             }],
         )
         partner.unlink()
@@ -567,8 +567,8 @@ class PropertiesCase(TransactionCase):
                 'name': 'moderator_partner_id',
                 'type': 'many2one',
                 'comodel': 'res.partner',
-                'default': None,
-                'value': None,
+                'default': False,
+                'value': False,
             }],
         )
 
@@ -1054,7 +1054,7 @@ class PropertiesCase(TransactionCase):
                     'string': 'Partner',
                     'type': 'many2one',
                     'comodel': 'test_new_api.partner',
-                    'value': None,
+                    'value': False,
                 }],
                 msg='Should take the new definition when changing the definition record',
             )
@@ -1115,7 +1115,7 @@ class PropertiesCase(TransactionCase):
                 'type': 'many2one',
                 'string': 'Partner',
                 'comodel': 'test_new_api.partner',
-                'value': None,
+                'value': False,
             }],
         )
 
