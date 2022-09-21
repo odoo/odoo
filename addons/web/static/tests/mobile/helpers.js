@@ -35,10 +35,24 @@ async function swipe(target, selector, direction) {
     await triggerEvent(target, selector, "touchend", {});
 }
 
-export function swipeRight(target, selector) {
+/**
+ * Will simulate a swipe right on the target element with the given selector.
+ *
+ * @param {HTMLElement} target
+ * @param {DOMSelector} [selector]
+ * @returns {Promise}
+ */
+export async function swipeRight(target, selector) {
     return swipe(target, selector, "right");
 }
 
-export function swipeLeft(target, selector) {
+/**
+ * Will simulate a swipe left on the target element with the given selector.
+ *
+ * @param {HTMLElement} target
+ * @param {DOMSelector} [selector]
+ * @returns {Promise}
+ */
+export async function swipeLeft(target, selector) {
     return swipe(target, selector, "left");
 }
