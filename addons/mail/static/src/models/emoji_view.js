@@ -22,6 +22,10 @@ registerModel({
                 this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
                 return;
             }
+            if (this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messagingEmojiPicker) {
+                this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messagingEmojiPicker.onClickEmoji(ev);
+                return;
+            }
         },
         /**
          * @param {MouseEvent} ev

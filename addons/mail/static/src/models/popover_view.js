@@ -74,6 +74,9 @@ registerModel({
          */
         anchorRef: attr({
             compute() {
+                if (this.messagingEmojiPicker) {
+                    return { el: document.querySelector('.web-editor-emoji-picker') };
+                }
                 if (this.activityViewOwnerAsMarkDone) {
                     return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
                 }
@@ -233,6 +236,9 @@ registerModel({
          */
         emojiPickerView: one('EmojiPickerView', {
             compute() {
+                if (this.messagingEmojiPicker) {
+                    return {};
+                }
                 if (this.composerViewOwnerAsEmoji) {
                     return {};
                 }
@@ -272,12 +278,18 @@ registerModel({
             identifying: true,
             inverse: 'notificationPopoverView',
         }),
+        messagingEmojiPicker: one('Messaging', {
+            inverse: 'emojiPicker',
+        }),
         /**
          * Position of the popover view relative to its anchor point.
          * Valid values: 'top', 'right', 'bottom', 'left'
          */
         position: attr({
             compute() {
+                if (this.messagingEmojiPicker) {
+                    return 'bottom-end';
+                }
                 if (this.activityViewOwnerAsMarkDone) {
                     return 'right';
                 }
