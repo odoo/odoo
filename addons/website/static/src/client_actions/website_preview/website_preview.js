@@ -127,6 +127,7 @@ export class WebsitePreview extends Component {
         }, () => []);
 
         useEffect(() => {
+            let leftOnBackNavigation = false;
             // When reaching a "regular" url of the webclient's router, an
             // hashchange event should be dispatched to properly display the
             // content of the previous URL before reaching the client action,
@@ -136,12 +137,18 @@ export class WebsitePreview extends Component {
                     window.dispatchEvent(new HashChangeEvent('hashchange', {
                         newURL: window.location.href.toString()
                     }));
+                    leftOnBackNavigation = true;
                 }
             };
             window.addEventListener('popstate', handleBackNavigation);
             return () => {
-                history.pushState({}, null, this.backendUrl);
                 window.removeEventListener('popstate', handleBackNavigation);
+                // When leaving the client action, its original url is pushed
+                // so that the router can replay the action on back navigation
+                // from other screens.
+                if (!leftOnBackNavigation) {
+                    history.pushState({}, null, this.backendUrl);
+                }
             };
         }, () => []);
 
