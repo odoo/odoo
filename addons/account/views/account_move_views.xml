@@ -813,8 +813,12 @@
                                        attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
-                                <label for="invoice_payment_term_id" string="Due Date"
-                                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                <div class="o_td_label" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                                    <label for="invoice_payment_term_id" string="Due Date"
+                                           attrs="{'invisible': [('invoice_payment_term_id', '!=', False)]}"/>
+                                    <label for="invoice_payment_term_id" string="Payment terms"
+                                           attrs="{'invisible': [('invoice_payment_term_id', '=', False)]}"/>
+                                </div>
                                 <div class="d-flex" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
                                     <field name="invoice_date_due" force_save="1"
                                            placeholder="Date"
@@ -822,6 +826,7 @@
                                     <span class="o_form_label mx-3 oe_edit_only"
                                           attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}"> or </span>
                                     <field name="invoice_payment_term_id"
+                                           context="{'example_date': invoice_date, 'example_amount': tax_totals['amount_total']}"
                                            placeholder="Terms"/>
                                 </div>
 
