@@ -48,6 +48,7 @@ class PhoneMixin(models.AbstractModel):
     phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
 
     def _search_phone_mobile_search(self, operator, value):
+        value = value.strip() if isinstance(value, str) else value
         phone_fields = [
             fname for fname in self._phone_get_number_fields()
             if fname in self._fields and self._fields[fname].store
@@ -55,7 +56,14 @@ class PhoneMixin(models.AbstractModel):
         if not phone_fields:
             raise UserError(_('Missing definition of phone fields.'))
 
-        value = value.strip()
+        # search if phone/mobile is set or not
+        if (value is True or not value) and operator in ('=', '!='):
+            if value:
+                # inverse the operator
+                operator = '=' if operator == '!=' else '!='
+            op = expression.AND if operator == '=' else expression.OR
+            return op([[(phone_field, operator, False)] for phone_field in phone_fields])
+
         if len(value) < 3:
             raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
 

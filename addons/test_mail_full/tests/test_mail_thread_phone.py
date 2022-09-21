@@ -47,6 +47,29 @@ class TestMailThreadPhone(TestMailFullCommon, TestMailFullRecipients):
         )
 
     @users('employee')
+    def test_search_phone_mobile_search_boolean(self):
+        test_phone_records = self.test_phone_records.with_env(self.env)
+
+        # test Falsy -> is set / is not set
+        for test_values in [False, '', ' ']:
+            # test is not set -> both fields should be not set
+            results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', test_values)])
+            self.assertEqual(results, test_phone_records[-1],
+                             'Search on phone_mobile_search: = False: record with two void values')
+            # test is set -> at least one field should be set
+            results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '!=', test_values)])
+            self.assertEqual(results, test_phone_records[:-1],
+                             'Search on phone_mobile_search: != False: record at least one value set')
+
+        # test Truthy -> is set / is not set
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', True)])
+        self.assertEqual(results, test_phone_records[:-1],
+                         'Search on phone_mobile_search: = True: record at least one value set')
+        results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '!=', True)])
+        self.assertEqual(results, test_phone_records[-1],
+                         'Search on phone_mobile_search: != True: record with two void values')
+
+    @users('employee')
     def test_search_phone_mobile_search_equal(self):
         """ Test searching by phone/mobile with direct search """
         test_phone_records = self.test_phone_records.with_env(self.env)
