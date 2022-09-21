@@ -285,7 +285,7 @@ export class MockServer {
                 }
                 const defaultValues = {};
                 const stateExceptions = {}; // what is this ?
-                modifiersNames.forEach((attr) => {
+                (editableView && modifiersNames || ["invisible"]).forEach((attr) => {
                     stateExceptions[attr] = [];
                     defaultValues[attr] = !!field[attr];
                 });
