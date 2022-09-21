@@ -27,7 +27,7 @@
                             <a t-att-title="line.date"
                                role="button"
                                class="oe_form_field btn btn-link open_account_move"
-                               t-att-move-id="line.move_id"
+                               t-on-click="() => this.openMove(line.move_id)"
                                style="margin-right: 5px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-left: 0px; width:100%; text-align:left;"
                                data-bs-toggle="tooltip"
                                t-att-payment-id="account_payment_id"
