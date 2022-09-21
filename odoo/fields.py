@@ -3347,7 +3347,7 @@ class Properties(Field):
         for record in records:
             record[self.name] = self._add_default_values(
                 record.env,
-                {self.name: False, self.definition_record: record[self.definition_record]},
+                {self.name: record[self.name], self.definition_record: record[self.definition_record]},
             )
 
     def _add_default_values(self, env, values):
@@ -3390,9 +3390,8 @@ class Properties(Field):
 
         for properties_value in properties_list_values:
             if properties_value.get('value') is None:
-                default = properties_value.get('default')
-                if default:
-                    properties_value['value'] = default
+                default = properties_value.get('default') or False
+                properties_value['value'] = default
 
         return properties_list_values
 
@@ -3428,7 +3427,7 @@ class Properties(Field):
                         # protect from access error message, show an empty name
                         property_definition[value_key] = (property_value, None)
                     except MissingError:
-                        property_definition[value_key] = None
+                        property_definition[value_key] = False
 
                 elif property_type == 'many2many' and property_value and is_list_of(property_value, int):
                     property_definition[value_key] = []
@@ -3509,7 +3508,8 @@ class Properties(Field):
                 # E.G. convert zero to False
                 property_value = bool(property_value)
 
-            elif property_type == 'char' and not isinstance(property_value, str):
+            elif property_type == 'char' and not isinstance(property_value, str) \
+                    and property_value is not None:
                 property_value = False
 
             elif property_value and property_type == 'selection':
@@ -3586,7 +3586,7 @@ class Properties(Field):
 
         dict_value = {}
         for property_definition in values_list:
-            property_value = property_definition.get('value')
+            property_value = property_definition.get('value') or False
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
 
