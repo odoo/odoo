@@ -184,14 +184,12 @@ registerModel({
                 // sorting the items for nothing
                 return clear();
             },
-            sort() {
-                return [
-                    ['truthy-first', 'thread'],
-                    ['truthy-first', 'thread.lastInterestDateTime'],
-                    ['most-recent-first', 'thread.lastInterestDateTime'],
-                    ['greater-first', 'channel.id'],
-                ];
-            },
+            sort: [
+                ['truthy-first', 'thread'],
+                ['truthy-first', 'thread.lastInterestDateTime'],
+                ['most-recent-first', 'thread.lastInterestDateTime'],
+                ['greater-first', 'channel.id'],
+            ],
         }),
         categoryItemsOrderedByName: many('DiscussSidebarCategoryItem', {
             compute() {
@@ -202,14 +200,12 @@ registerModel({
                 // sorting the items for nothing
                 return clear();
             },
-            sort() {
-                return [
-                    ['truthy-first', 'thread'],
-                    ['truthy-first', 'thread.displayName'],
-                    ['case-insensitive-asc', 'thread.displayName'],
-                    ['smaller-first', 'channel.id'],
-                ];
-            },
+            sort: [
+                ['truthy-first', 'thread'],
+                ['truthy-first', 'thread.displayName'],
+                ['case-insensitive-asc', 'thread.displayName'],
+                ['smaller-first', 'channel.id'],
+            ],
         }),
         /**
          * The title text in UI for command `add`

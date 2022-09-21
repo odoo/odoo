@@ -58,17 +58,15 @@ registerModel({
                 return this.follower.subtypes.map(subtype => ({ subtype }));
             },
             inverse: 'followerSubtypeListOwner',
-            sort() {
-                return [
-                    ['falsy-first', 'subtype.parentModel'],
-                    ['case-insensitive-asc', 'subtype.parentModel'],
-                    ['falsy-first', 'subtype.resModel'],
-                    ['case-insensitive-asc', 'subtype.resModel'],
-                    ['smaller-first', 'subtype.isInternal'],
-                    ['smaller-first', 'subtype.sequence'],
-                    ['smaller-first', 'subtype.id'],
-                ];
-            },
+            sort: [
+                ['falsy-first', 'subtype.parentModel'],
+                ['case-insensitive-asc', 'subtype.parentModel'],
+                ['falsy-first', 'subtype.resModel'],
+                ['case-insensitive-asc', 'subtype.resModel'],
+                ['smaller-first', 'subtype.isInternal'],
+                ['smaller-first', 'subtype.sequence'],
+                ['smaller-first', 'subtype.id'],
+            ],
         }),
     },
 });

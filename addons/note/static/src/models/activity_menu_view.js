@@ -65,7 +65,7 @@ patchFields('ActivityMenuView', {
         sort() {
             return [
                 ['truthy-first', 'isNote'],
-                ...this._super(),
+                ...this._super,
             ];
         },
     },

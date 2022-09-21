@@ -65,9 +65,7 @@ registerModel({
     },
     fields: {
         activityGroups: many('ActivityGroup', {
-            sort() {
-                return [['smaller-first', 'irModel.id']];
-            }
+            sort: [['smaller-first', 'irModel.id']],
         }),
         activityGroupViews: many('ActivityGroupView', {
             compute() {

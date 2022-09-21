@@ -1115,11 +1115,7 @@ registerModel({
         attachmentsInWebClientView: many('Attachment', {
             inverse: 'threadsAsAttachmentsInWebClientView',
             readonly: true,
-            sort() {
-                return [
-                    ['greater-first', 'id'],
-                ];
-            },
+            sort: [['greater-first', 'id']],
         }),
         authorizedGroupFullName: attr(),
         cache: one('ThreadCache', {

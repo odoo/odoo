@@ -126,11 +126,7 @@ registerModel({
         }),
         messageActionViews: many('MessageActionView', {
             related: 'messageActions.messageActionView',
-            sort() {
-                return [
-                    ['smaller-first', 'messageAction.sequence'],
-                ];
-            },
+            sort: [['smaller-first', 'messageAction.sequence']],
         }),
         /**
          * States the message view that controls this message action list.

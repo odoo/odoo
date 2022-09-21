@@ -52,15 +52,11 @@ registerModel({
                 return this.dataCategories;
             },
             inverse: 'emojiRegistry',
-            sort() {
-                return [['smaller-first', 'sortId']];
-            },
+            sort: [['smaller-first', 'sortId']],
         }),
         allEmojis: many('Emoji', {
             inverse: 'emojiRegistry',
-            sort() {
-                return [['smaller-first', 'codepoints']];
-            }
+            sort: [['smaller-first', 'codepoints']],
         }),
         dataCategories: many('EmojiCategory'),
     },

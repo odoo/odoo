@@ -70,11 +70,7 @@ registerModel({
                 return clear();
             },
             inverse: 'emojiGridViewRowRegistryOwner',
-            sort() {
-                return [
-                    ['smaller-first', 'index'],
-                ];
-            },
+            sort: [['smaller-first', 'index']],
         }),
         emojiGridViewOwner: one('EmojiGridView', {
             compute() {
