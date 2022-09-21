@@ -134,6 +134,7 @@
         <field name="model">fleet.vehicle.model</field>
         <field name="arch" type="xml">
             <search string="Vehicles costs" >
+                <field name="name" string="Model" />
                 <field name="brand_id" />
                 <group expand="1" string="Group By">
                     <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Contains Vehicles"/>
