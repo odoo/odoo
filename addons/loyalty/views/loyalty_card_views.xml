@@ -8,7 +8,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="code"/>
+                            <field name="code" readonly="1"/>
                             <field name="expiration_date"/>
                             <field name="partner_id"/>
                             <label string="Balance" for="points"/>
@@ -30,8 +30,8 @@
         <field name="name">loyalty.card.view.tree</field>
         <field name="model">loyalty.card</field>
         <field name="arch" type="xml">
-            <tree string="Coupons" create="false" edit="false" delete="false" js_class="loyalty_card_list_view">
-                <field name="code"/>
+            <tree string="Coupons" edit="false" delete="false" js_class="loyalty_card_list_view">
+                <field name="code" readonly="1"/>
                 <field name="create_date" optional="hide"/>
                 <field name="points_display" string="Balance"/>
                 <field name="expiration_date"/>
