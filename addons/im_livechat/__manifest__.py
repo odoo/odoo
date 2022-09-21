@@ -62,8 +62,7 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/services/messaging_service.js',
         ],
         'web.assets_backend': [
-            'im_livechat/static/src/js/im_livechat_channel_form_view.js',
-            'im_livechat/static/src/js/im_livechat_channel_form_controller.js',
+            'im_livechat/static/src/js/colors_reset_button/*',
             'im_livechat/static/src/js/im_livechat_chatbot_form_view.js',
             'im_livechat/static/src/js/im_livechat_chatbot_form_controller.js',
             'im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js',
