@@ -2159,10 +2159,36 @@ const Wysiwyg = Widget.extend({
         $('.o_editable')
             .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
 
-        const defs = _.map(_.groupBy($allBlocks.toArray(),
-            function($obj) {
-            return $obj.dataset['oe-model'] + $obj.dataset['oe-field'] + $obj.dataset['oe-id']
-        }), (els) => {
+        const saveElementFuncName = this.options.enableTranslation
+            ? '_saveTranslationElement'
+            : '_saveElement';
+
+        // Group elements to save if possible.
+        const groupedElements = _.groupBy($allBlocks.toArray(), el => {
+            const model = el.dataset.oeModel;
+            const field = el.dataset.oeField;
+
+            // There are elements which have no linked model as something
+            // special is to be done "to save them" (potential override to
+            // `_saveElement` which is expected to be called for each unique
+            // dirty element). In that case, do not group those elements.
+            if (!model) {
+                return _.uniqueId('special-element-to-save-');
+            }
+
+            // Do not group elements which are parts of views, unless we are
+            // in translate mode.
+            if (!this.options.enableTranslation
+                    && (model === 'ir.ui.view' && field === 'arch')) {
+                return _.uniqueId('view-part-to-save-');
+            }
+
+            // Otherwise, group elements which are from the same field of the
+            // same record (`_saveElement` will only consider the first one and
+            // `_saveTranslationElement` can handle the set if it makes sense).
+            return `${model}::${el.dataset.oeId}::${field}`;
+        });
+        const proms = Object.values(groupedElements).map(els => {
             const $els = $(els);
 
             $els.find('[class]').filter(function () {
@@ -2173,11 +2199,7 @@ const Wysiwyg = Widget.extend({
 
             // TODO: Add a queue with concurrency limit in webclient
             return this.saving_mutex.exec(() => {
-                let saveElement = '_saveElement';
-                if (this.options.enableTranslation) {
-                    saveElement = '_saveTranslationElement';
-                }
-                return this[saveElement]($els, context || this.options.context)
+                return this[saveElementFuncName]($els, context || this.options.context)
                 .then(function () {
                     $els.removeClass('o_dirty');
                 }).guardedCatch(function (response) {
@@ -2198,7 +2220,7 @@ const Wysiwyg = Widget.extend({
                 });
             });
         });
-        return Promise.all(defs).then(function () {
+        return Promise.all(proms).then(function () {
             window.onbeforeunload = null;
         }).guardedCatch((failed) => {
             // If there were errors, re-enable edition
