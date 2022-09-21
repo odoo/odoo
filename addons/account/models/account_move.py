@@ -209,7 +209,7 @@ class AccountMove(models.Model):
         string="Payment", copy=False, check_company=True)
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
-        string="Statement Line", copy=False, check_company=True)
+        string="Statement Line", copy=False, check_company=True, index=True)
 
     # === Amount fields ===
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, tracking=True,
