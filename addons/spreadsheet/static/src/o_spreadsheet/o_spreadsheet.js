@@ -181,6 +181,7 @@
         CellErrorType["InvalidReference"] = "#REF";
         CellErrorType["BadExpression"] = "#BAD_EXPR";
         CellErrorType["CircularDependency"] = "#CYCLE";
+        CellErrorType["UnknownFunction"] = "#NAME?";
         CellErrorType["GenericError"] = "#ERROR";
     })(CellErrorType || (CellErrorType = {}));
     var CellErrorLevel;
@@ -213,6 +214,11 @@
     class NotAvailableError extends EvaluationError {
         constructor() {
             super(CellErrorType.NotAvailable, _lt("Data not available"), CellErrorLevel.silent);
+        }
+    }
+    class UnknownFunctionError extends EvaluationError {
+        constructor(fctName) {
+            super(CellErrorType.UnknownFunction, _lt('Unknown function: "%s"', fctName));
         }
     }
 
@@ -661,27 +667,35 @@
     function clip(val, min, max) {
         return val < min ? min : val > max ? max : val;
     }
-    /** Get the default height of the cell. The height depends on the font size */
-    function getDefaultCellHeight(style) {
+    /** Get the default height of the cell. The height depends on the font size and
+     * the number of broken line text in the cell */
+    function getDefaultCellHeight(style, numberOfLines) {
         if (!(style === null || style === void 0 ? void 0 : style.fontSize)) {
             return DEFAULT_CELL_HEIGHT;
         }
-        return fontSizeInPixels(style) + 2 * PADDING_AUTORESIZE_VERTICAL;
+        return ((numberOfLines || 1) * (computeTextFontSizeInPixels(style) + MIN_CELL_TEXT_MARGIN) -
+            MIN_CELL_TEXT_MARGIN +
+            2 * PADDING_AUTORESIZE_VERTICAL);
     }
-    function fontSizeInPixels(style) {
+    function computeTextWidth(context, text, style) {
+        context.save();
+        context.font = computeTextFont(style);
+        const textWidth = context.measureText(text).width;
+        context.restore();
+        return textWidth;
+    }
+    function computeTextFont(style) {
+        const italic = style.italic ? "italic " : "";
+        const weight = style.bold ? "bold" : DEFAULT_FONT_WEIGHT;
+        const size = computeTextFontSizeInPixels(style);
+        return `${italic}${weight} ${size}px ${DEFAULT_FONT}`;
+    }
+    function computeTextFontSizeInPixels(style) {
         const sizeInPt = style.fontSize || DEFAULT_FONT_SIZE;
         if (!fontSizeMap[sizeInPt]) {
             throw new Error("Size of the font is not supported");
         }
         return fontSizeMap[sizeInPt];
-    }
-    function computeTextWidth(context, text, style) {
-        const italic = style.italic ? "italic " : "";
-        const weight = style.bold ? "bold" : DEFAULT_FONT_WEIGHT;
-        const sizeInPt = style.fontSize || DEFAULT_FONT_SIZE;
-        const size = fontSizeMap[sizeInPt];
-        context.font = `${italic}${weight} ${size}px ${DEFAULT_FONT}`;
-        return context.measureText(text).width;
     }
     /**
      * Return the font size that makes the width of a text match the given line width.
@@ -713,10 +727,8 @@
         }
         return fontSize;
     }
-    function computeIconWidth(context, style) {
-        const sizeInPt = style.fontSize || DEFAULT_FONT_SIZE;
-        const size = fontSizeMap[sizeInPt];
-        return size + 2 * MIN_CF_ICON_MARGIN;
+    function computeIconWidth(style) {
+        return computeTextFontSizeInPixels(style) + 2 * MIN_CF_ICON_MARGIN;
     }
     /**
      * Create a range from start (included) to end (excluded).
@@ -4072,6 +4084,10 @@
         const result = env.model.dispatch("PASTE", { target, pasteOption });
         handlePasteResult(env, result);
     }
+    function interactivePasteFromOS(env, target, text) {
+        const result = env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", { target, text });
+        handlePasteResult(env, result);
+    }
 
     //------------------------------------------------------------------------------
     // Helpers
@@ -4139,10 +4155,7 @@
         const osClipboard = await readOsClipboard(env);
         const target = env.model.getters.getSelectedZones();
         if (osClipboard && osClipboard !== spreadsheetClipboard) {
-            env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", {
-                target,
-                text: osClipboard,
-            });
+            interactivePasteFromOS(env, target, osClipboard);
         }
         else {
             interactivePaste(env, target);
@@ -5434,17 +5447,36 @@
         .addChild("format_font_size", ["format"], {
         name: _lt("Font size"),
         sequence: 60,
+    })
+        .addChild("format_wrapping", ["format"], {
+        name: _lt("Wrapping"),
+        sequence: 70,
         separator: true,
+    })
+        .addChild("format_wrapping_overflow", ["format", "format_wrapping"], {
+        name: "Overflow",
+        sequence: 10,
+        action: (env) => setStyle(env, { wrapping: "overflow" }),
+    })
+        .addChild("format_wrapping_wrap", ["format", "format_wrapping"], {
+        name: "Wrap",
+        sequence: 20,
+        action: (env) => setStyle(env, { wrapping: "wrap" }),
+    })
+        .addChild("format_wrapping_clip", ["format", "format_wrapping"], {
+        name: "Clip",
+        sequence: 30,
+        action: (env) => setStyle(env, { wrapping: "clip" }),
     })
         .addChild("format_cf", ["format"], {
         name: _lt("Conditional formatting"),
-        sequence: 70,
+        sequence: 80,
         action: OPEN_CF_SIDEPANEL_ACTION,
         separator: true,
     })
         .addChild("format_clearFormat", ["format"], {
         name: _lt("Clear formatting"),
-        sequence: 80,
+        sequence: 90,
         action: FORMAT_CLEARFORMAT_ACTION,
         separator: true,
     });
@@ -6055,7 +6087,7 @@
         }
         else {
             let diff = keyValue.value - baselineEvaluated.value;
-            if (baselineMode === "percentage") {
+            if (baselineMode === "percentage" && diff !== 0) {
                 diff = (diff / baselineEvaluated.value) * 100;
             }
             if (baselineMode !== "percentage" && baselineEvaluated.format) {
@@ -14052,10 +14084,15 @@
     // -----------------------------------------------------------------------------
     const ISLOGICAL = {
         description: _lt("Whether a value is `true` or `false`."),
-        args: args(`value (any) ${_lt("The value to be verified as a logical TRUE or FALSE.")}`),
+        args: args(`value (any, lazy) ${_lt("The value to be verified as a logical TRUE or FALSE.")}`),
         returns: ["BOOLEAN"],
         compute: function (value) {
-            return typeof value === "boolean";
+            try {
+                return typeof value() === "boolean";
+            }
+            catch (e) {
+                return false;
+            }
         },
         isExported: true,
     };
@@ -14082,10 +14119,15 @@
     // -----------------------------------------------------------------------------
     const ISNONTEXT = {
         description: _lt("Whether a value is non-textual."),
-        args: args(`value (any) ${_lt("The value to be checked.")}`),
+        args: args(`value (any, lazy) ${_lt("The value to be checked.")}`),
         returns: ["BOOLEAN"],
         compute: function (value) {
-            return typeof value !== "string";
+            try {
+                return typeof value() !== "string";
+            }
+            catch (e) {
+                return true;
+            }
         },
         isExported: true,
     };
@@ -14094,10 +14136,15 @@
     // -----------------------------------------------------------------------------
     const ISNUMBER = {
         description: _lt("Whether a value is a number."),
-        args: args(`value (any) ${_lt("The value to be verified as a number.")}`),
+        args: args(`value (any, lazy) ${_lt("The value to be verified as a number.")}`),
         returns: ["BOOLEAN"],
         compute: function (value) {
-            return typeof value === "number";
+            try {
+                return typeof value() === "number";
+            }
+            catch (e) {
+                return false;
+            }
         },
         isExported: true,
     };
@@ -14106,10 +14153,15 @@
     // -----------------------------------------------------------------------------
     const ISTEXT = {
         description: _lt("Whether a value is text."),
-        args: args(`value (any) ${_lt("The value to be verified as text.")}`),
+        args: args(`value (any, lazy) ${_lt("The value to be verified as text.")}`),
         returns: ["BOOLEAN"],
         compute: function (value) {
-            return typeof value === "string";
+            try {
+                return typeof value() === "string";
+            }
+            catch (e) {
+                return false;
+            }
         },
         isExported: true,
     };
@@ -15359,6 +15411,7 @@
         return null;
     }
 
+    const functionRegex = /[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*/;
     const UNARY_OPERATORS_PREFIX = ["-", "+"];
     const UNARY_OPERATORS_POSTFIX = ["%"];
     const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
@@ -15396,7 +15449,7 @@
         throw new Error(_lt("Unknown token: %s", token.value));
     }
     function parsePrefix(current, tokens) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         switch (current.type) {
             case "DEBUGGER":
                 const next = parseExpression(tokens, 1000);
@@ -15461,6 +15514,9 @@
                 }
                 else {
                     if (current.value) {
+                        if (functionRegex.test(current.value) && ((_d = tokens[0]) === null || _d === void 0 ? void 0 : _d.type) === "LEFT_PAREN") {
+                            throw new UnknownFunctionError(current.value);
+                        }
                         throw new Error(_lt("Invalid formula"));
                     }
                     return { type: "STRING", value: current.value };
@@ -19512,6 +19568,9 @@
                 // not main button, probably a context menu
                 return;
             }
+            if (ev.ctrlKey) {
+                this.env.model.dispatch("PREPARE_SELECTION_INPUT_EXPANSION");
+            }
             const [col, row] = this.getCartesianCoordinates(ev);
             if (col < 0 || row < 0) {
                 return;
@@ -19588,7 +19647,7 @@
             };
             const onMouseUp = (ev) => {
                 clearTimeout(timeOutId);
-                this.env.model.dispatch(ev.ctrlKey ? "PREPARE_SELECTION_INPUT_EXPANSION" : "STOP_SELECTION_INPUT");
+                this.env.model.dispatch("STOP_SELECTION_INPUT");
                 this.gridOverlay.el.removeEventListener("mousemove", onMouseMove);
                 if (this.env.model.getters.isPaintingFormat()) {
                     this.env.model.dispatch("PASTE", {
@@ -19761,10 +19820,7 @@
                     interactivePaste(this.env, target);
                 }
                 else {
-                    this.env.model.dispatch("PASTE_FROM_OS_CLIPBOARD", {
-                        target,
-                        text: content,
-                    });
+                    interactivePasteFromOS(this.env, target, content);
                 }
             }
         }
@@ -20021,7 +20077,7 @@
      * Cell containing a formula which could not be compiled
      * or a content which could not be parsed.
      */
-    class BadExpressionCell extends AbstractCell {
+    class ErrorCell extends AbstractCell {
         /**
          * @param id
          * @param content Invalid formula string
@@ -20030,7 +20086,7 @@
          */
         constructor(id, content, error, properties) {
             super(id, lazy({
-                value: CellErrorType.BadExpression,
+                value: error.errorType,
                 type: CellValueType.error,
                 error,
             }), properties);
@@ -20129,7 +20185,9 @@
                 return builder.createCell(id, content, properties, sheetId, getters);
             }
             catch (error) {
-                return new BadExpressionCell(id, content, new BadExpressionError(error.message || DEFAULT_ERROR_MESSAGE), properties);
+                return new ErrorCell(id, content, error instanceof EvaluationError
+                    ? error
+                    : new BadExpressionError(error.message || DEFAULT_ERROR_MESSAGE), properties);
             }
         };
     }
@@ -24276,7 +24334,7 @@
                     }
                     break;
                 case "CLEAR_FORMATTING":
-                    this.clearStyles(cmd.sheetId, cmd.target);
+                    this.clearFormatting(cmd.sheetId, cmd.target);
                     break;
                 case "ADD_COLUMNS_ROWS":
                     if (cmd.dimension === "COL") {
@@ -24319,9 +24377,9 @@
             }
         }
         /**
-         * Clear the styles of zones
+         * Clear the styles and format of zones
          */
-        clearStyles(sheetId, zones) {
+        clearFormatting(sheetId, zones) {
             for (let zone of zones) {
                 for (let col = zone.left; col <= zone.right; col++) {
                     for (let row = zone.top; row <= zone.bottom; row++) {
@@ -24331,6 +24389,7 @@
                             col,
                             row,
                             style: null,
+                            format: "",
                         });
                     }
                 }
@@ -25414,6 +25473,7 @@
                 return DEFAULT_CELL_HEIGHT;
             }
             const cell = this.getters.getCell(sheetId, col, row);
+            // TO DO: take multiline cells into account to compute the cell height
             return getDefaultCellHeight(cell === null || cell === void 0 ? void 0 : cell.style);
         }
         /**
@@ -25783,6 +25843,22 @@
             const mergeId = sheetMap ? col in sheetMap && ((_a = sheetMap[col]) === null || _a === void 0 ? void 0 : _a[row]) : undefined;
             return mergeId ? this.getMergeById(sheetId, mergeId) : undefined;
         }
+        getMergesInZone(sheetId, zone) {
+            var _a;
+            const sheetMap = this.mergeCellMap[sheetId];
+            if (!sheetMap)
+                return [];
+            const mergeIds = new Set();
+            for (const { col, row } of positions(zone)) {
+                const mergeId = (_a = sheetMap[col]) === null || _a === void 0 ? void 0 : _a[row];
+                if (mergeId) {
+                    mergeIds.add(mergeId);
+                }
+            }
+            return Array.from(mergeIds)
+                .map((mergeId) => this.getMergeById(sheetId, mergeId))
+                .filter(isDefined$1);
+        }
         /**
          * Return true if the zone intersects an existing merge:
          * if they have at least a common cell
@@ -26094,6 +26170,7 @@
         "doesRowsHaveCommonMerges",
         "getMerges",
         "getMerge",
+        "getMergesInZone",
         "isSingleCellOrMerge",
     ];
     function exportMerges(merges) {
@@ -28154,11 +28231,19 @@
                 .split("\n")
                 .map((vals) => vals.split("\t"));
         }
+        isPasteAllowed(target, clipboardOption) {
+            const sheetId = this.getters.getActiveSheetId();
+            const pasteZone = this.getPasteZone(target);
+            if (this.getters.doesIntersectMerge(sheetId, pasteZone)) {
+                return 2 /* WillRemoveExistingMerge */;
+            }
+            return 0 /* Success */;
+        }
         paste(target) {
             const values = this.values;
-            const { left: activeCol, top: activeRow } = target[0];
-            const width = Math.max.apply(Math, values.map((a) => a.length));
-            const height = values.length;
+            const pasteZone = this.getPasteZone(target);
+            const { left: activeCol, top: activeRow } = pasteZone;
+            const { width, height } = zoneToDimension(pasteZone);
             const sheetId = this.getters.getActiveSheetId();
             this.addMissingDimensions(width, height, activeCol, activeRow);
             for (let i = 0; i < values.length; i++) {
@@ -28181,6 +28266,17 @@
         }
         getClipboardContent() {
             return this.values.map((values) => values.join("\t")).join("\n");
+        }
+        getPasteZone(target) {
+            const height = this.values.length;
+            const width = Math.max(...this.values.map((a) => a.length));
+            const { left: activeCol, top: activeRow } = target[0];
+            return {
+                top: activeRow,
+                left: activeCol,
+                bottom: activeRow + height - 1,
+                right: activeCol + width - 1,
+            };
         }
     }
 
@@ -28211,6 +28307,10 @@
                     }
                     const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
                     return this.state.isPasteAllowed(cmd.target, { pasteOption });
+                case "PASTE_FROM_OS_CLIPBOARD": {
+                    const state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
+                    return state.isPasteAllowed(cmd.target);
+                }
                 case "INSERT_CELL": {
                     const { cut, paste } = this.getInsertCellsTargets(cmd.zone, cmd.shiftDimension);
                     const state = this.getClipboardStateForCopyCells(cut, "CUT");
@@ -29287,7 +29387,7 @@
         updateSearch(toSearch, searchOptions) {
             this.searchOptions = searchOptions;
             if (toSearch !== this.toSearch) {
-                this.selectedMatchIndex = 0;
+                this.selectedMatchIndex = null;
             }
             this.toSearch = toSearch;
             this.updateRegex();
@@ -29366,7 +29466,7 @@
             }
             //modulo of negative value to be able to cycle in both directions with previous and next
             nextIndex = ((nextIndex % matches.length) + matches.length) % matches.length;
-            if (this.selectedMatchIndex !== nextIndex) {
+            if (this.selectedMatchIndex === null || this.selectedMatchIndex !== nextIndex) {
                 this.selectedMatchIndex = nextIndex;
                 this.selection.selectCell(matches[nextIndex].col, matches[nextIndex].row);
             }
@@ -29886,17 +29986,13 @@
         }
         drawTexts(renderingContext) {
             const { ctx, thinLineWidth } = renderingContext;
-            ctx.textBaseline = "middle";
+            ctx.textBaseline = "top";
             let currentFont;
             for (let box of this.boxes) {
                 if (box.content) {
                     const style = box.style || {};
                     const align = box.content.align || "left";
-                    const italic = style.italic ? "italic " : "";
-                    const weight = style.bold ? "bold" : DEFAULT_FONT_WEIGHT;
-                    const sizeInPt = style.fontSize || DEFAULT_FONT_SIZE;
-                    const size = fontSizeMap[sizeInPt];
-                    const font = `${italic}${weight} ${size}px ${DEFAULT_FONT}`;
+                    const font = computeTextFont(style);
                     if (font !== currentFont) {
                         currentFont = font;
                         ctx.font = font;
@@ -29921,21 +30017,29 @@
                         ctx.rect(x, y, width, height);
                         ctx.clip();
                     }
-                    ctx.fillText(box.content.text, Math.round(x), Math.round(y));
-                    if (style.strikethrough || style.underline) {
-                        if (align === "right") {
-                            x = x - box.content.width;
+                    const brokenLineNumber = box.content.multiLineText.length;
+                    const size = computeTextFontSizeInPixels(style);
+                    const contentHeight = brokenLineNumber * (size + MIN_CELL_TEXT_MARGIN) - MIN_CELL_TEXT_MARGIN;
+                    let brokenLineY = y - contentHeight / 2;
+                    for (let brokenLine of box.content.multiLineText) {
+                        ctx.fillText(brokenLine, Math.round(x), Math.round(brokenLineY));
+                        if (style.strikethrough || style.underline) {
+                            const lineWidth = computeTextWidth(ctx, brokenLine, style);
+                            let _x = x;
+                            if (align === "right") {
+                                _x -= lineWidth;
+                            }
+                            else if (align === "center") {
+                                _x -= lineWidth / 2;
+                            }
+                            if (style.strikethrough) {
+                                ctx.fillRect(_x, brokenLineY + size / 2, lineWidth, 2.6 * thinLineWidth);
+                            }
+                            if (style.underline) {
+                                ctx.fillRect(_x, brokenLineY + size + 1, lineWidth, 1.3 * thinLineWidth);
+                            }
                         }
-                        else if (align === "center") {
-                            x = x - box.content.width / 2;
-                        }
-                        if (style.strikethrough) {
-                            ctx.fillRect(x, y, box.content.width, 2.6 * thinLineWidth);
-                        }
-                        if (style.underline) {
-                            y = box.y + box.height / 2 + 1 + size / 2;
-                            ctx.fillRect(x, y, box.content.width, 1.3 * thinLineWidth);
-                        }
+                        brokenLineY += MIN_CELL_TEXT_MARGIN + size;
                     }
                     if (box.clipRect) {
                         ctx.restore();
@@ -30091,8 +30195,7 @@
             }
             /** Icon CF */
             const cfIcon = this.getters.getConditionalIcon(col, row);
-            const fontSize = box.style.fontSize || DEFAULT_FONT_SIZE;
-            const fontSizePX = fontSizeMap[fontSize];
+            const fontSizePX = computeTextFontSizeInPixels(box.style);
             const iconBoxWidth = cfIcon ? 2 * MIN_CF_ICON_MARGIN + fontSizePX : 0;
             if (cfIcon) {
                 box.image = {
@@ -30105,11 +30208,15 @@
             /** Content */
             const text = this.getters.getCellText(cell, showFormula);
             const textWidth = this.getters.getTextWidth(cell);
+            const wrapping = this.getters.getCellStyle(cell).wrapping || "overflow";
+            const multiLineText = wrapping === "wrap"
+                ? this.getters.getCellMultiLineText(cell, width - 2 * MIN_CELL_TEXT_MARGIN)
+                : [text];
             const contentWidth = iconBoxWidth + textWidth;
             const align = this.computeCellAlignment(cell, contentWidth > width);
             box.content = {
-                text,
-                width: textWidth,
+                multiLineText,
+                width: wrapping === "overflow" ? textWidth : width,
                 align,
             };
             /** Error */
@@ -30118,7 +30225,7 @@
                 box.error = cell.evaluated.error.message;
             }
             /** ClipRect */
-            const isOverflowing = contentWidth > width || fontSizeMap[fontSize] > height;
+            const isOverflowing = contentWidth > width || fontSizePX > height;
             if (cfIcon) {
                 box.clipRect = {
                     x: box.x + iconBoxWidth,
@@ -30127,7 +30234,7 @@
                     height,
                 };
             }
-            else if (isOverflowing) {
+            else if (isOverflowing && wrapping === "overflow") {
                 let nextColIndex, previousColIndex;
                 const isCellInMerge = this.getters.isInMerge(sheetId, col, row);
                 if (isCellInMerge) {
@@ -30172,6 +30279,14 @@
                         break;
                     }
                 }
+            }
+            else if (wrapping === "clip" || wrapping === "wrap") {
+                box.clipRect = {
+                    x: box.x,
+                    y: box.y,
+                    width,
+                    height,
+                };
             }
             return box;
         }
@@ -32053,7 +32168,7 @@
                             this.dispatch("RESIZE_COLUMNS_ROWS", {
                                 elements: [col],
                                 dimension: "COL",
-                                size: size + 2 * PADDING_AUTORESIZE_HORIZONTAL,
+                                size,
                                 sheetId: cmd.sheetId,
                             });
                         }
@@ -32075,13 +32190,19 @@
         // Getters
         // ---------------------------------------------------------------------------
         getCellWidth(cell) {
-            let width = this.getTextWidth(cell);
+            let contentWidth = this.getTextWidth(cell);
             const cellPosition = this.getters.getCellPosition(cell.id);
             const icon = this.getters.getConditionalIcon(cellPosition.col, cellPosition.row);
             if (icon) {
-                width += computeIconWidth(this.ctx, this.getters.getCellStyle(cell));
+                contentWidth += computeIconWidth(this.getters.getCellStyle(cell));
             }
-            return width;
+            contentWidth += 2 * PADDING_AUTORESIZE_HORIZONTAL;
+            if (this.getters.getCellStyle(cell).wrapping === "wrap") {
+                const zone = positionToZone(this.getters.getCellPosition(cell.id));
+                const colWidth = this.getters.getColSize(this.getters.getActiveSheetId(), zone.left);
+                return Math.min(colWidth, contentWidth);
+            }
+            return contentWidth;
         }
         getTextWidth(cell) {
             const text = this.getters.getCellText(cell, this.getters.shouldShowFormulas());
@@ -32096,6 +32217,54 @@
                 return cell.formattedValue;
             }
         }
+        getCellMultiLineText(cell, width) {
+            const style = this.getters.getCellStyle(cell);
+            const text = this.getters.getCellText(cell);
+            const words = text.split(" ");
+            const brokenText = [];
+            let textLine = "";
+            let availableWidth = width;
+            for (let word of words) {
+                const splitWord = this.splitWordToSpecificWidth(this.ctx, word, width, style);
+                const lastPart = splitWord.pop();
+                const lastPartWidth = computeTextWidth(this.ctx, lastPart, style);
+                // At this step: "splitWord" is an array composed of parts of word whose
+                // length is at most equal to "width".
+                // Last part contains the end of the word.
+                // Note that: When word length is less than width, then lastPart is equal
+                // to word and splitWord is empty
+                if (splitWord.length) {
+                    if (textLine !== "") {
+                        brokenText.push(textLine);
+                        textLine = "";
+                        availableWidth = width;
+                    }
+                    splitWord.forEach((wordPart) => {
+                        brokenText.push(wordPart);
+                    });
+                    textLine = lastPart;
+                    availableWidth = width - lastPartWidth;
+                }
+                else {
+                    // here "lastPart" is equal to "word" and the "word" size is smaller than "width"
+                    const _word = textLine === "" ? lastPart : " " + lastPart;
+                    const wordWidth = computeTextWidth(this.ctx, _word, style);
+                    if (wordWidth <= availableWidth) {
+                        textLine += _word;
+                        availableWidth -= wordWidth;
+                    }
+                    else {
+                        brokenText.push(textLine);
+                        textLine = lastPart;
+                        availableWidth = width - lastPartWidth;
+                    }
+                }
+            }
+            if (textLine !== "") {
+                brokenText.push(textLine);
+            }
+            return brokenText;
+        }
         // ---------------------------------------------------------------------------
         // Grid manipulation
         // ---------------------------------------------------------------------------
@@ -32104,8 +32273,28 @@
             const sizes = cells.map((cell) => this.getCellWidth(cell));
             return Math.max(0, ...sizes);
         }
+        splitWordToSpecificWidth(ctx, word, width, style) {
+            const wordWidth = computeTextWidth(ctx, word, style);
+            if (wordWidth <= width) {
+                return [word];
+            }
+            const splitWord = [];
+            let wordPart = "";
+            for (let l of word) {
+                const wordPartWidth = computeTextWidth(ctx, wordPart + l, style);
+                if (wordPartWidth > width) {
+                    splitWord.push(wordPart);
+                    wordPart = l;
+                }
+                else {
+                    wordPart += l;
+                }
+            }
+            splitWord.push(wordPart);
+            return splitWord;
+        }
     }
-    SheetUIPlugin.getters = ["getCellWidth", "getTextWidth", "getCellText"];
+    SheetUIPlugin.getters = ["getCellWidth", "getTextWidth", "getCellText", "getCellMultiLineText"];
 
     /**
      * Viewport plugin.
@@ -33517,7 +33706,6 @@
                 clipboard: navigator.clipboard,
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
-            owl.useExternalListener(document.body, "keyup", this.onKeyup.bind(this));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
             owl.onMounted(() => this.bindModelEvents());
             owl.onWillUnmount(() => this.unbindModelEvents());
@@ -33575,15 +33763,7 @@
             var _a, _b;
             (_b = (_a = this.props).onContentSaved) === null || _b === void 0 ? void 0 : _b.call(_a, this.model.exportData());
         }
-        onKeyup(ev) {
-            if (ev.key === "Control") {
-                this.model.dispatch("STOP_SELECTION_INPUT");
-            }
-        }
         onKeydown(ev) {
-            if (ev.key === "Control" && !ev.repeat) {
-                this.model.dispatch("PREPARE_SELECTION_INPUT_EXPANSION");
-            }
             let keyDownString = "";
             if (ev.ctrlKey || ev.metaKey) {
                 keyDownString += "CTRL+";
@@ -37580,8 +37760,8 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-09-13T07:37:09.243Z';
-    exports.__info__.hash = 'fd4cd7c';
+    exports.__info__.date = '2022-09-21T15:11:43.059Z';
+    exports.__info__.hash = 'fd4d309';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
