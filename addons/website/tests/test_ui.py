@@ -314,3 +314,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_22_website_gray_color_palette(self):
         self.start_tour('/web', 'website_gray_color_palette', login='admin')
+
+    def test_23_website_multi_edition(self):
+        self.start_tour('/@?enable_editor=1', 'website_multi_edition', login='admin')
