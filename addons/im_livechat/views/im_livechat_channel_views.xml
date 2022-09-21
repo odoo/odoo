@@ -69,7 +69,7 @@
             <field name="name">im_livechat.channel.form</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
-                <form js_class="im_livechat_channel_form_view_js">
+                <form>
                     <header>
                         <button type="object" name="action_join" class="oe_highlight" string="Join Channel" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
                         <button type="object" name="action_quit" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
@@ -130,9 +130,7 @@
                                         <div class="o_livechat_layout_colors d-flex align-items-center align-middle">
                                             <field name="button_background_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
                                             <field name="button_text_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <button class="btn btn-link oe_edit_only o_im_livechat_channel_form_button_colors_reset_button" aria-label="Reset to default colors" title="Reset to default colors">
-                                                <span class="fa fa-refresh mb-4"/>
-                                            </button>
+                                            <widget name="colors_reset_button" options="{'default_colors': {'button_background_color': '#878787', 'button_text_color': '#FFFFFF'}}" />
                                         </div>
                                     </group>
                                     <group string="Livechat Window">
@@ -142,9 +140,7 @@
                                         <div class="o_livechat_layout_colors d-flex align-items-center align-middle">
                                             <field name="header_background_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
                                             <field name="title_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <button class="btn btn-link oe_edit_only o_im_livechat_channel_form_chat_window_colors_reset_button" aria-label="Reset to default colors" title="Reset to default colors">
-                                                <span class="fa fa-refresh mb-4"/>
-                                            </button>
+                                            <widget name="colors_reset_button" options="{'default_colors': {'header_background_color': '#875A7B', 'title_color': '#FFFFFF'}}" />
                                         </div>
                                     </group>
                                 </group>
