@@ -77,7 +77,7 @@ registerModel({
          * @returns {string}
          */
         toString() {
-            return `model(${this.name})`;
+            return this.name;
         },
     },
     modelGetters: {

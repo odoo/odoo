@@ -381,7 +381,7 @@ export class ModelField {
                         }
                         break;
                     default:
-                        throw new Error(`Field "${this.model.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(`Field "${this}" (${this.fieldType} type) does not support command "${commandName}"`);
                 }
             } else if (this.fieldType === 'relation') {
                 switch (commandName) {
@@ -426,7 +426,7 @@ export class ModelField {
                         }
                         break;
                     default:
-                        throw new Error(`Field "${this.model.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(`Field "${this}" (${this.fieldType} type) does not support command "${commandName}"`);
                 }
             }
         }
@@ -448,7 +448,7 @@ export class ModelField {
      * @returns {string}
      */
     toString() {
-        return `field(${this.fieldName})`;
+        return `${this.model}/${this.fieldName}`;
     }
 
     //--------------------------------------------------------------------------
