@@ -57,6 +57,8 @@ def report_configuration():
     """
     config = odoo.tools.config
     _logger.info("Odoo version %s", __version__)
+    if 'beta' in __version__:
+        _logger.runbot('⚠️ This version is not suitable for production usage ⚠️')
     if os.path.isfile(config.rcfile):
         _logger.info("Using configuration file at " + config.rcfile)
     _logger.info('addons paths: %s', odoo.addons.__path__)

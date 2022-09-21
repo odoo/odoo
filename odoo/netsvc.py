@@ -32,6 +32,8 @@ class PostgreSQLHandler(logging.Handler):
     def emit(self, record):
         ct = threading.current_thread()
         ct_db = getattr(ct, 'dbname', None)
+        if not ct_db and tools.config['db_name'] and ',' not in tools.config['db_name']:
+            ct_db = tools.config['db_name']
         dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
         if not dbname:
             return
