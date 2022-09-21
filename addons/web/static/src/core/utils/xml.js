@@ -49,22 +49,12 @@ export class XMLParser {
      * @returns {Element}
      */
     parseXML(arch) {
-        const cleanedArch = arch.replace(/&amp;nbsp;/g, "<nbsp/>");
-        const xml = parser.parseFromString(cleanedArch, "text/xml");
+        // const cleanedArch = arch.replace(/&amp;nbsp;/g, "");
+        const xml = parser.parseFromString(arch, "text/xml");
         if (hasParsingError(xml)) {
             throw new Error(
                 `An error occured while parsing ${arch}: ${xml.getElementsByTagName("parsererror")}`
             );
-        }
-        // We don't want to remove nbsp from xml templates completely
-        // but we have to replace them during the parsing, so if there
-        // were nbsp in the arch, we replace the temporary <nbsp/> by
-        // the appropriate nbsp character
-        if (cleanedArch !== arch) {
-            const nbspList = xml.querySelectorAll("nbsp");
-            for (const space of nbspList) {
-                space.replaceWith(nbsp);
-            }
         }
         return xml.documentElement;
     }
