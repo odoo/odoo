@@ -153,6 +153,11 @@ registerModel({
                         help: this.env._t("List users in the current channel"),
                         methodName: 'execute_command_who',
                         name: "who",
+                    },
+                    {
+                        help: this.env._t("Open the emoji picker"),
+                        methodName: 'execute_command_emoji',
+                        name: "emoji",
                     }
                 ]),
             });

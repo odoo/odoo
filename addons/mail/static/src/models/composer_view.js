@@ -655,7 +655,11 @@ registerModel({
             if (this.composer.thread.channel) {
                 const command = this._getCommandFromText(this.composer.textInputContent);
                 if (command) {
-                    await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
+                    if (command.methodName === 'execute_command_emoji') {
+                        this.update({ emojisPopoverView: {} });
+                    } else {
+                        await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
+                    }
                     if (this.composer.exists()) {
                         this.composer._reset();
                     }
