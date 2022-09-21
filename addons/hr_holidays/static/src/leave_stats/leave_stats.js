@@ -2,7 +2,7 @@
 
 import { useService } from '@web/core/utils/hooks';
 import { getLangDateFormat } from 'web.time';
-import widgetRegistry from 'web.widgetRegistry';
+import { registry } from '@web/core/registry'
 
 const { Component, useState, onWillStart, onWillUpdateProps } = owl;
 
@@ -115,4 +115,4 @@ export class LeaveStatsComponent extends Component {
 }
 
 LeaveStatsComponent.template = 'hr_holidays.LeaveStatsComponent';
-widgetRegistry.add('hr_leave_stats', LeaveStatsComponent);
+registry.category('view_widgets').add('hr_leave_stats', LeaveStatsComponent);
