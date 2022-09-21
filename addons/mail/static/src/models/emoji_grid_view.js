@@ -19,15 +19,9 @@ registerModel({
             });
         },
         doJumpToCategorySelectedByUser() {
-            let categoryRowScrollPosition = Math.max(
-                0,
-                // Index of the beginning of the category
-                (this.rowHeight * this.categorySelectedByUser.emojiGridRowView.index)
-                -
-                // Cancels the amount of buffer rows
-                (this.rowHeight * this.topBufferAmount)
-            );
-            this.containerRef.el.scrollTo({ top: categoryRowScrollPosition });
+            this.containerRef.el.scrollTo({
+                top: this.rowHeight * this.categorySelectedByUser.emojiGridRowView.index,
+            });
             this.update({ categorySelectedByUser: clear() });
         },
         /**
