@@ -479,8 +479,9 @@ class Registry(Mapping):
 
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
+
         expected = [
-            (f"{Model._table}_{field.name}_index", Model._table, field, getattr(field, 'unaccent', False))
+            (sql.make_index_name(Model._table, field.name), Model._table, field, getattr(field, 'unaccent', False))
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -496,12 +497,11 @@ class Registry(Mapping):
         existing = dict(cr.fetchall())
 
         for indexname, tablename, field, unaccent in expected:
-            column_expression = f'"{field.name}"'
             index = field.index
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
             if index and indexname not in existing and \
                     ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
-
+                column_expression = f'"{field.name}"'
                 if index == 'trigram':
                     if field.translate:
                         column_expression = f'''(jsonb_path_query_array({column_expression}, '$.*')::text)'''

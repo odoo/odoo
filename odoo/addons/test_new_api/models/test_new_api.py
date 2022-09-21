@@ -530,6 +530,7 @@ class Order(models.Model):
     _name = _description = 'test_new_api.order'
 
     line_ids = fields.One2many('test_new_api.order.line', 'order_id')
+    line_short_field_name = fields.Integer(index=True)
 
 
 class OrderLine(models.Model):
@@ -538,6 +539,9 @@ class OrderLine(models.Model):
     order_id = fields.Many2one('test_new_api.order', required=True, ondelete='cascade')
     product = fields.Char()
     reward = fields.Boolean()
+    short_field_name = fields.Integer(index=True)
+    very_very_very_very_very_long_field_name_1 = fields.Integer(index=True)
+    very_very_very_very_very_long_field_name_2 = fields.Integer(index=True)
 
     def unlink(self):
         # also delete associated reward lines
