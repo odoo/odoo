@@ -739,11 +739,7 @@ registerModel({
         trackingValues: many('TrackingValue', {
             inverse: 'messageOwner',
             isCausal: true,
-            sort() {
-                return [
-                    ['smaller-first', 'id'],
-                ];
-            },
+            sort: [['smaller-first', 'id']],
         }),
     },
 });

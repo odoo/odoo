@@ -311,20 +311,13 @@ export function patchFields(modelName, fields) {
                 case 'sort':
                     addContextToErrors(() => {
                         if (!fieldDefinition.sort) {
-                            throw new Error(`not a sorted field.`);
-                        }
-                        if (typeof fieldDefinition.sort !== 'function') {
-                            throw new Error(`the sort function must be inlined in the original definition.`);
+                            throw new Error(`no sorting rules in the original definition.`);
                         }
                         if (typeof attributeData !== 'function') {
-                            throw new Error(`the sort must be a function.`);
+                            throw new Error(`the value of the 'sort' attribute must be a transform function to apply to the sorting rules array.`);
                         }
                     }, `Cannot patch sort function of field "${fieldName}" on "${modelName}": `);
-                    const sortBeforePatch = fieldDefinition.sort;
-                    fieldDefinition.sort = function () {
-                        this._super = sortBeforePatch;
-                        return attributeData.call(this);
-                    };
+                    fieldDefinition.sort = attributeData.call({ _super: fieldDefinition.sort });
                     break;
                 default:
                     throw new Error(`Cannot patch field "${fieldName}" on "${modelName}": unsupported field attribute "${attributeName}".`);

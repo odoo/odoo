@@ -75,12 +75,10 @@ registerModel({
                 }
                 return callParticipants;
             },
-            sort() {
-                return [
-                    ['truthy-first', 'rtcSession'],
-                    ['smaller-first', 'rtcSession.id'],
-                ];
-            },
+            sort: [
+                ['truthy-first', 'rtcSession'],
+                ['smaller-first', 'rtcSession.id'],
+            ],
         }),
         channelMembers: many('ChannelMember', {
             inverse: 'channel',
@@ -225,21 +223,17 @@ registerModel({
         }),
         orderedOfflineMembers: many('ChannelMember', {
             inverse: 'channelAsOfflineMember',
-            sort() {
-                return [
-                    ['truthy-first', 'persona.name'],
-                    ['case-insensitive-asc', 'persona.name'],
-                ];
-            },
+            sort: [
+                ['truthy-first', 'persona.name'],
+                ['case-insensitive-asc', 'persona.name'],
+            ],
         }),
         orderedOnlineMembers: many('ChannelMember', {
             inverse: 'channelAsOnlineMember',
-            sort() {
-                return [
-                    ['truthy-first', 'persona.name'],
-                    ['case-insensitive-asc', 'persona.name'],
-                ];
-            },
+            sort: [
+                ['truthy-first', 'persona.name'],
+                ['case-insensitive-asc', 'persona.name'],
+            ],
         }),
         /**
          * Message unread counter coming from server.
