@@ -400,11 +400,11 @@ export class Record extends DataPoint {
         return !this._invalidFields.size;
     }
 
-    async switchMode(mode) {
+    async switchMode(mode, options) {
         if (this.mode === mode) {
             return true;
         }
-        const canSwitch = await this._onWillSwitchMode(this, mode);
+        const canSwitch = await this._onWillSwitchMode(this, mode, options);
         if (canSwitch === false) {
             return false;
         }
@@ -824,37 +824,36 @@ export class Record extends DataPoint {
 }
 
 export class StaticList extends DataPoint {
-    setup(params, state) {
+    setup(params) {
         /** @type {Record[]} */
         this.records = [];
 
         this.handleField = params.handleField;
 
         this.editedRecord = null;
-        this.onRecordWillSwitchMode = async (record, mode) => {
+        this.onRecordWillSwitchMode = async (record, mode, options = {}) => {
             if (mode === "edit") {
                 await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
                 this.model.__bm__.freezeOrder(this.__bm_handle__);
             }
 
             const editedRecord = this.editedRecord;
-            if (editedRecord && editedRecord.id === record.id && mode === "readonly") {
-                const valid = await record.checkValidity();
-                if (valid) {
-                    this.editedRecord = null;
-                }
-                return valid;
-            }
+            this.editedRecord = null;
             if (editedRecord) {
-                const isValid = await editedRecord.checkValidity();
-                if (!isValid) {
-                    if (editedRecord.canBeAbandoned) {
-                        this.abandonRecord(editedRecord.id);
-                    } else {
-                        return false;
-                    }
-                } else {
+                // Validity is checked if one of the following is true:
+                // - "switchMode" has been called with explicit "checkValidity"
+                // - the record is dirty
+                // - the record is new and can be abandonned
+                const shouldCheckValidity =
+                    options.checkValidity || editedRecord.isDirty || editedRecord.canBeAbandoned;
+                const isValid = !shouldCheckValidity || (await editedRecord.checkValidity());
+                if (isValid) {
                     await editedRecord.switchMode("readonly");
+                } else if (editedRecord.id !== record.id && editedRecord.canBeAbandoned) {
+                    this.abandonRecord(editedRecord.id);
+                } else {
+                    this.editedRecord = editedRecord;
+                    return false;
                 }
             }
             if (mode === "edit") {

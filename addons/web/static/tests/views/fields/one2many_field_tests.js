@@ -12287,6 +12287,53 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("Navigate from an invalid but not dirty row", async (assert) => {
+        serverData.models.partner.records[0].p = [2, 4];
+        serverData.models.partner.records[1].display_name = ""; // invalid record
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name" required="1" />
+                            <field name="int_field" readonly="1" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mode: "edit",
+        });
+
+        await click(target.querySelector(".o_data_cell")); // edit the first row
+
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
+        assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_selected_row");
+
+        triggerHotkey("Tab"); // navigate with "Tab" to the second row
+        await nextTick();
+
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
+        assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
+        assert.containsNone(target, ".o_invalid_cell");
+
+        await click(target.querySelector(".o_data_cell")); // come back on first row
+
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
+        assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_selected_row");
+        assert.containsNone(target, ".o_invalid_cell");
+
+        triggerHotkey("Enter"); // try to navigate with "Enter" to the second row
+        await nextTick();
+
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
+        assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_selected_row");
+        assert.containsOnce(target, ".o_invalid_cell");
+    });
+
     QUnit.test("Check onchange with two consecutive one2one", async function (assert) {
         serverData.models.product.fields.product_partner_ids = {
             string: "User",
@@ -12664,7 +12711,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test('nested one2manys, multi page, onchange', async function (assert) {
+    QUnit.test("nested one2manys, multi page, onchange", async function (assert) {
         serverData.models.partner.records[2].int_field = 5;
         serverData.models.partner.records[0].p = [2, 4]; // limit 1 -> record 4 will be on second page
         serverData.models.partner.records[1].turtles = [1];
@@ -12673,10 +12720,10 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.turtle.records[1].turtle_int = 2;
 
         serverData.models.partner.onchanges.int_field = function (obj) {
-           assert.step('onchange')
-           obj.p = [[5]]
-           obj.p.push([1, 2, { turtles: [[5], [1, 1, { turtle_int: obj.int_field }]] }]);
-           obj.p.push([1, 4, { turtles: [[5], [1, 2, { turtle_int: obj.int_field }]] }]);
+            assert.step("onchange");
+            obj.p = [[5]];
+            obj.p.push([1, 2, { turtles: [[5], [1, 1, { turtle_int: obj.int_field }]] }]);
+            obj.p.push([1, 4, { turtles: [[5], [1, 2, { turtle_int: obj.int_field }]] }]);
         };
 
         await makeView({
@@ -12699,14 +12746,14 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            mode: 'edit',
+            mode: "edit",
         });
 
         await editInput(target, ".o_field_widget[name=int_field] input", "5");
-        assert.verifySteps(['onchange'])
+        assert.verifySteps(["onchange"]);
 
         await clickSave(target);
-        assert.strictEqual(serverData.models.partner.records[0].int_field, 5)
+        assert.strictEqual(serverData.models.partner.records[0].int_field, 5);
         assert.strictEqual(serverData.models.turtle.records[1].turtle_int, 5);
         assert.strictEqual(serverData.models.turtle.records[0].turtle_int, 5);
     });
