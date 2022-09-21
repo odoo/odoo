@@ -12,7 +12,13 @@ RELEASE_LEVELS_DISPLAY = {ALPHA: ALPHA,
 # properly comparable using normal operators, for example:
 #  (6,1,0,'beta',0) < (6,1,0,'candidate',1) < (6,1,0,'candidate',2)
 #  (6,1,0,'candidate',2) < (6,1,0,'final',0) < (6,1,2,'final',0)
+<<<<<<< HEAD
 version_info = (16, 1, 0, ALPHA, 1, '')
+||||||| parent of fb012e5253c3... temp
+version_info = (16, 0, 0, ALPHA, 0, '')
+=======
+version_info = (16, 0, 0, BETA, 0, '')
+>>>>>>> fb012e5253c3... temp
 version = '.'.join(str(s) for s in version_info[:2]) + RELEASE_LEVELS_DISPLAY[version_info[3]] + str(version_info[4] or '') + version_info[5]
 series = serie = major_version = '.'.join(str(s) for s in version_info[:2])
 
