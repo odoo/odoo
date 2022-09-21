@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.CalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary" owl="1">
+        <xpath expr="//DatePicker" position="replace"/>
+    </t>
+
+    <t t-name="hr_holidays.CalendarController.controlButtons" t-inherit="web.CalendarController.controlButtons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//span[hasclass('o_calendar_scale_buttons')]" position="after">
+            <span class="o_timeoff_buttons">
+                <button class="btn btn-primary btn-time-off mx-1" t-on-click="newTimeOffRequest" type="button">
+                    New Time Off
+                </button>
+                <button class="btn btn-secondary" t-on-click="newAllocationRequest" type="button">
+                    <t t-if="employeeId">New</t> Allocation Request
+                </button>
+            <span>
+        </xpath>
+    </t>
+
+</templates>
