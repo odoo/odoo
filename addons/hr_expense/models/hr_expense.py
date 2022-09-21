@@ -152,11 +152,16 @@ class HrExpense(models.Model):
             else:
                 expense.state = "done"
 
-    @api.depends('quantity', 'unit_amount', 'tax_ids', 'currency_id')
+    @api.depends('quantity', 'unit_amount', 'tax_ids', 'currency_id', 'product_uom_id')
     def _compute_amount(self):
+        product_uom_hour = self.env.ref('uom.product_uom_hour')
         for expense in self:
             if expense.unit_amount:
-                taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
+                if expense.product_uom_id == product_uom_hour:
+                    quantity = expense.quantity / product_uom_hour.factor
+                    taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, quantity, expense.product_id, expense.employee_id.user_id.partner_id)
+                else:
+                    taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
                 expense.total_amount = taxes.get('total_included')
 
     @api.depends('total_amount', 'tax_ids', 'currency_id')
