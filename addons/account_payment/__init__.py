@@ -21,6 +21,6 @@ def uninstall_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     installed_providers = env['payment.provider'].search([('module_id.state', '=', 'installed')])
     env['account.payment.method'].search([
-        ('code', 'in', installed_providers.mapped('provider')),
+        ('code', 'in', installed_providers.mapped('code')),
         ('payment_type', '=', 'inbound'),
     ]).unlink()
