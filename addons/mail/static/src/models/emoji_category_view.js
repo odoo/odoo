@@ -11,15 +11,7 @@ registerModel({
          */
         onClick() {
             this.emojiPickerView.emojiSearchBarView.reset();
-            let categoryRowScrollPosition = Math.max(
-                0,
-                // Index of the beginning of the category
-                (this.emojiPickerView.emojiGridView.rowHeight * this.viewCategory.emojiGridRowView.index)
-                -
-                // Cancels the amount of buffer rows
-                (this.emojiPickerView.emojiGridView.rowHeight * this.emojiPickerView.emojiGridView.topBufferAmount)
-            );
-            this.emojiPickerView.emojiGridView.containerRef.el.scrollTo({ top: categoryRowScrollPosition });
+            this.emojiPickerView.emojiGridView.update({ categorySelectedByUser: this.viewCategory });
         },
         /**
          * @param {MouseEvent} ev
