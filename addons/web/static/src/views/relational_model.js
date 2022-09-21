@@ -1400,7 +1400,7 @@ class DynamicList extends DataPoint {
 
         this.editedRecord = null;
         this.onCreateRecord = params.onCreateRecord || (() => {});
-        this.onRecordWillSwitchMode = async (record, mode) => {
+        this.onRecordWillSwitchMode = async (record, mode, options) => {
             const editedRecord = this.editedRecord;
             this.editedRecord = null;
             if (!params.onRecordWillSwitchMode && editedRecord) {
@@ -1419,7 +1419,7 @@ class DynamicList extends DataPoint {
                 this.editedRecord = record;
             }
             if (params.onRecordWillSwitchMode) {
-                await params.onRecordWillSwitchMode(record, mode);
+                await params.onRecordWillSwitchMode(record, mode, options);
             }
         };
     }
@@ -2706,17 +2706,25 @@ export class StaticList extends DataPoint {
         this.getParentRecordContext = params.getParentRecordContext;
 
         this.editedRecord = null;
-        this.onRecordWillSwitchMode = async (record, mode) => {
+        this.onRecordWillSwitchMode = async (record, mode, options) => {
             const editedRecord = this.editedRecord;
-            if (editedRecord && editedRecord.id === record.id && mode === "readonly") {
-                const valid = await record.checkValidity();
-                if (valid) {
-                    this.editedRecord = null;
-                }
-                return valid;
-            }
+            this.editedRecord = null;
             if (editedRecord) {
-                await editedRecord.switchMode("readonly");
+                // Validity is checked if one of the following is true:
+                // - "switchMode" has been called with explicit "checkValidity"
+                // - the record is dirty
+                // - the record is new and can be abandonned
+                const shouldCheckValidity =
+                    options.checkValidity || editedRecord.isDirty || editedRecord.canBeAbandoned;
+                const isValid = !shouldCheckValidity || (await editedRecord.checkValidity());
+                if (isValid) {
+                    await editedRecord.switchMode("readonly");
+                } else if (editedRecord.id !== record.id && editedRecord.canBeAbandoned) {
+                    this.abandonRecord(editedRecord.id);
+                } else {
+                    this.editedRecord = editedRecord;
+                    return false;
+                }
             }
             if (mode === "edit") {
                 this.editedRecord = record;

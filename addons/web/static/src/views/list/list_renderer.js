@@ -1154,46 +1154,6 @@ export class ListRenderer extends Component {
         return false;
     }
 
-    applyCellKeydownEditModeLastRow(hotkey, cell, group, record) {
-        const { activeActions, cycleOnTab, list } = this.props;
-        const row = cell.parentElement;
-        switch (hotkey) {
-            case "tab":
-                // X2many add a line
-                if (this.displayRowCreates) {
-                    if (record.isNew && !record.isDirty) {
-                        list.unselectRecord(true);
-                        return false;
-                    }
-                    // add a line
-                    if (record.checkValidity()) {
-                        const { context } = this.creates[0];
-                        this.add({ context });
-                    }
-                } else if (
-                    activeActions.create &&
-                    !record.canBeAbandoned &&
-                    (record.isDirty || this.lastIsDirty)
-                ) {
-                    this.add({ group });
-                } else if (cycleOnTab) {
-                    if (record.canBeAbandoned) {
-                        list.unselectRecord(true);
-                    }
-                    const futureRecord = list.records[0];
-                    if (record === futureRecord) {
-                        // Refocus first cell of same record
-                        const toFocus = this.findNextFocusableOnRow(row);
-                        this.focus(toFocus);
-                    } else {
-                        futureRecord.switchMode("edit");
-                    }
-                } else {
-                    return false;
-                }
-        }
-    }
-
     /**
      * @param {string} hotkey
      * @param {HTMLTableCellElement} cell
@@ -1308,12 +1268,12 @@ export class ListRenderer extends Component {
                 }
 
                 if (futureRecord) {
-                    futureRecord.switchMode("edit");
+                    futureRecord.switchMode("edit", { checkValidity: true });
                 } else if (this.lastIsDirty || !record.canBeAbandoned || this.displayRowCreates) {
                     this.add({ group });
                 } else {
                     futureRecord = list.records.at(0);
-                    futureRecord.switchMode("edit");
+                    futureRecord.switchMode("edit", { checkValidity: true });
                 }
                 break;
             }
