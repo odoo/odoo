@@ -395,6 +395,7 @@ class IrActionsReport(models.Model):
             header=None,
             footer=None,
             landscape=False,
+            report_ref=False,
             specific_paperformat_args=None,
             set_viewport_size=False):
         '''Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
@@ -404,12 +405,18 @@ class IrActionsReport(models.Model):
         :param str header: The html header of the report containing all headers.
         :param str footer: The html footer of the report containing all footers.
         :param landscape: Force the pdf to be rendered under a landscape format.
+        :param report_ref: Can be one of
+            - ir.actions.report id
+            - ir.actions.report record
+            - ir.model.data reference to ir.actions.report
+            - ir.actions.report report_name
         :param specific_paperformat_args: dict of prioritized paperformat arguments.
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
         :return: Content of the pdf as bytes
         :rtype: bytes
         '''
-        paperformat_id = self.get_paperformat()
+        report = self._get_report(report_ref) if report_ref else self
+        paperformat_id = report.get_paperformat()
 
         # Build the base command args for wkhtmltopdf bin
         command_args = self._build_wkhtmltopdf_args(
@@ -711,6 +718,7 @@ class IrActionsReport(models.Model):
                 bodies,
                 header=header,
                 footer=footer,
+                report_ref=report_ref,
                 landscape=self._context.get('landscape'),
                 specific_paperformat_args=specific_paperformat_args,
                 set_viewport_size=self._context.get('set_viewport_size'),
