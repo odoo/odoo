@@ -12,23 +12,18 @@ registerModel({
          */
         onClickAddAttachment() {
             this.fileUploader.openBrowserFileUploader();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeAttachmentList() {
-            return (this.chatter.thread && this.chatter.thread.allAttachments.length > 0)
-                ? {}
-                : clear();
-        },
+        }
     },
     fields: {
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
         attachmentList: one('AttachmentList', {
-            compute: '_computeAttachmentList',
+            compute() {
+                return (this.chatter.thread && this.chatter.thread.allAttachments.length > 0)
+                    ? {}
+                    : clear();
+            },
             inverse: 'attachmentBoxViewOwner',
         }),
         chatter: one('Chatter', {

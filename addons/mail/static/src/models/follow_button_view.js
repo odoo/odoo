@@ -8,16 +8,6 @@ registerModel({
     name: 'FollowButtonView',
     recordMethods: {
         /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsDisabled() {
-            if (!this.chatterOwner) {
-                return clear();
-            }
-            return !this.chatterOwner.hasReadAccess;
-        },
-        /**
          * @param {MouseEvent} ev
          */
         onClickFollow(ev) {
@@ -29,6 +19,7 @@ registerModel({
             }
             this.chatterOwner.thread.follow();
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -42,6 +33,7 @@ registerModel({
             this.chatterOwner.thread.unfollow();
             this.chatterOwner.reloadParentView({ fieldNames: ['message_follower_ids'] });
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -51,6 +43,7 @@ registerModel({
             }
             this.update({ isUnfollowButtonHighlighted: true });
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -59,7 +52,7 @@ registerModel({
                 return;
             }
             this.update({ isUnfollowButtonHighlighted: false });
-        },
+        }
     },
     fields: {
         chatterOwner: one('Chatter', {
@@ -67,7 +60,12 @@ registerModel({
             inverse: 'followButtonView',
         }),
         isDisabled: attr({
-            compute: '_computeIsDisabled',
+            compute() {
+                if (!this.chatterOwner) {
+                    return clear();
+                }
+                return !this.chatterOwner.hasReadAccess;
+            },
         }),
         isUnfollowButtonHighlighted: attr({
             default: false,

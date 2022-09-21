@@ -45,12 +45,14 @@ registerModel({
         closeSubtypes() {
             this.update({ followerSubtypeListDialog: clear() });
         },
+
         /**
          * Opens the most appropriate view that is a profile for this follower.
          */
         async openProfile() {
             return this.partner.openProfile();
         },
+
         /**
          * Remove this follower from its related thread.
          */
@@ -71,6 +73,7 @@ registerModel({
             }
             this.delete();
         },
+
         /**
          * @param {FollowerSubtype} subtype
          */
@@ -79,6 +82,7 @@ registerModel({
                 this.update({ selectedSubtypes: link(subtype) });
             }
         },
+
         /**
          * Show (editable) list of subtypes of this follower.
          */
@@ -104,6 +108,7 @@ registerModel({
             }
             this.update({ followerSubtypeListDialog: {} });
         },
+
         /**
          * @param {FollowerSubtype} subtype
          */
@@ -112,6 +117,7 @@ registerModel({
                 this.update({ selectedSubtypes: unlink(subtype) });
             }
         },
+
         /**
          * Update server-side subscription of subtypes of this follower.
          */
@@ -140,38 +146,25 @@ registerModel({
                 });
             }
             this.closeSubtypes();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFollowedThreadAsFollowerOfCurrentPartner() {
-            if (!this.followedThread) {
-                return clear();
-            }
-            if (!this.messaging.currentPartner) {
-                return clear();
-            }
-            if (this.partner === this.messaging.currentPartner) {
-                return this.followedThread;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsEditable() {
-            const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-            return this.messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
-        },
+        }
     },
     fields: {
         followedThread: one('Thread', {
             inverse: 'followers',
         }),
         followedThreadAsFollowerOfCurrentPartner: one('Thread', {
-            compute: '_computeFollowedThreadAsFollowerOfCurrentPartner',
+            compute() {
+                if (!this.followedThread) {
+                    return clear();
+                }
+                if (!this.messaging.currentPartner) {
+                    return clear();
+                }
+                if (this.partner === this.messaging.currentPartner) {
+                    return this.followedThread;
+                }
+                return clear();
+            },
             inverse: 'followerOfCurrentPartner',
         }),
         followerSubtypeListDialog: one('Dialog', {
@@ -190,7 +183,10 @@ registerModel({
          * States whether the follower's subtypes are editable by current user.
          */
         isEditable: attr({
-            compute: '_computeIsEditable',
+            compute() {
+                const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
+                return this.messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
+            },
         }),
         partner: one('Partner', {
             required: true,

@@ -16,12 +16,14 @@ registerModel({
             }
             this._backupFeedback();
         },
+
         /**
          * Handles click on this "Discard" button.
          */
         onClickDiscard() {
             this._close();
         },
+
         /**
          * Handles click on this "Done" button.
          */
@@ -35,6 +37,7 @@ registerModel({
             }
             chatter.reloadParentView();
         },
+
         /**
          * Handles click on this "Done & Schedule Next" button.
          */
@@ -48,6 +51,7 @@ registerModel({
             }
             chatter.reloadParentView();
         },
+
         /**
          * Handles keydown on this activity mark done.
          */
@@ -56,6 +60,7 @@ registerModel({
                 this._close();
             }
         },
+
         /**
          * @private
          */
@@ -64,42 +69,33 @@ registerModel({
                 feedbackBackup: this.feedbackTextareaRef.el.value,
             });
         },
+
         /**
          * @private
          */
         _close() {
             this._backupFeedback();
             this.activityViewOwner.update({ markDonePopoverView: clear() });
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActivityViewOwner() {
-            if (this.popoverViewOwner.activityViewOwnerAsMarkDone) {
-                return this.popoverViewOwner.activityViewOwnerAsMarkDone;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeHeaderText() {
-            if (this.activityViewOwner) {
-                return this.activityViewOwner.markDoneText;
-            }
-            return clear();
-        },
+        }
     },
     fields: {
         activityViewOwner: one('ActivityView', {
-            compute: '_computeActivityViewOwner',
+            compute() {
+                if (this.popoverViewOwner.activityViewOwnerAsMarkDone) {
+                    return this.popoverViewOwner.activityViewOwnerAsMarkDone;
+                }
+                return clear();
+            },
         }),
         component: attr(),
         feedbackTextareaRef: attr(),
         headerText: attr({
-            compute: '_computeHeaderText',
+            compute() {
+                if (this.activityViewOwner) {
+                    return this.activityViewOwner.markDoneText;
+                }
+                return clear();
+            },
             default: '',
         }),
         popoverViewOwner: one('PopoverView', {

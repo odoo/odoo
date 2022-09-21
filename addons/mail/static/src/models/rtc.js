@@ -37,6 +37,7 @@ registerModel({
             await this._setDeafState(true);
             this.messaging.soundEffects.deafen.play();
         },
+
         /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
          *
@@ -55,6 +56,7 @@ registerModel({
                 this.channel.endCall();
             }
         },
+
         /**
          * @param {number} sender id of the session that sent the notification
          * @param {String} content JSON
@@ -93,6 +95,7 @@ registerModel({
                     break;
             }
         },
+
         /**
          * @param {Object} param0
          * @param {string} param0.currentSessionId the Id of the 'RtcSession'
@@ -116,10 +119,12 @@ registerModel({
                 await this._toggleVideoBroadcast({ type: videoType });
             }
         },
+
         async mute() {
             await this._setMuteState(true);
             this.messaging.soundEffects.mute.play();
         },
+
         /**
          * @param {number[]} targetToken
          * @param {Object} param1
@@ -163,12 +168,14 @@ registerModel({
                 }
             }
         },
+
         /**
          * @param {MouseEvent} ev
          */
         onClickActivityNoticeButton(ev) {
             this.channel.open();
         },
+
         /**
          * Resets the state of the model and cleanly ends all connections and
          * streams.
@@ -205,6 +212,7 @@ registerModel({
                 audioTrack: clear(),
             });
         },
+
         /**
          * Mutes and unmutes the microphone, will not unmute if deaf.
          *
@@ -216,22 +224,26 @@ registerModel({
                 await this.mute();
             }
         },
+
         /**
          * toggles screen broadcasting to peers.
          */
         async toggleScreenShare() {
             this._toggleVideoBroadcast({ type: 'display' });
         },
+
         /**
          * Toggles user video (eg: webcam) broadcasting to peers.
          */
         async toggleUserVideo({ force } = {}) {
             this._toggleVideoBroadcast({ type: 'user-video', force });
         },
+
         async undeafen() {
             await this._setDeafState(false);
             this.messaging.soundEffects.undeafen.play();
         },
+
         async unmute() {
             if (this.audioTrack) {
                 await this._setMuteState(false);
@@ -241,6 +253,7 @@ registerModel({
             }
             this.messaging.soundEffects.unmute.play();
         },
+
         /**
          * @param {Boolean} audio
          */
@@ -297,6 +310,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * @param {MediaTrackConstraints Object} constraints
          */
@@ -305,6 +319,7 @@ registerModel({
             this.update({ videoConfig });
             this.videoTrack && this.videoTrack.applyConstraints(this.videoConfig);
         },
+
         /**
          * Updates the way broadcast of the local audio track is handled,
          * attaches an audio monitor for voice activation if necessary.
@@ -345,6 +360,7 @@ registerModel({
             }
             await this._updateLocalAudioTrackEnabledState();
         },
+
         /**
          * @private
          * @param {String} token
@@ -378,6 +394,7 @@ registerModel({
                 this.logs[token].state = state;
             }
         },
+
         /**
          * @private
          * @param {RtcSession} rtcSession
@@ -389,6 +406,7 @@ registerModel({
             }
             rtcSession.update({ isCurrentUserInitiatorOfConnectionOffer: true });
         },
+
         /**
          * Call all the sessions that do not have an already initialized peerConnection.
          *
@@ -412,13 +430,7 @@ registerModel({
                 this._callPeer(rtcSession);
             }
         },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computePingInterval() {
-            return this.messaging.browser.setInterval(this._onPingInterval, 30000); // 30 seconds
-        },
+
         /**
          * Creates and setup a RTCPeerConnection.
          *
@@ -502,6 +514,7 @@ registerModel({
             });
             return rtcSession;
         },
+
         /**
          * @private
          * @param {RtcSession} rtcSession
@@ -529,6 +542,7 @@ registerModel({
                 // ignored the transaction may have been resolved by another concurrent offer.
             }
         },
+
         /**
          * @private
          * @param {RtcSession} rtcSession
@@ -548,6 +562,7 @@ registerModel({
                 this._recoverConnection(rtcSession, { delay: this.recoveryTimeout, reason: 'failed at adding ice candidate' });
             }
         },
+
         /**
          * @private
          * @param {RtcSession} rtcSession
@@ -596,6 +611,7 @@ registerModel({
             });
             this._recoverConnection(rtcSession, { delay: this.recoveryTimeout, reason: 'standard answer timeout' });
         },
+
         /**
          * @private
          * @param {RtcSession} rtcSession
@@ -626,6 +642,7 @@ registerModel({
                 rtcSession.update({ videoStream: clear() });
             }
         },
+
         /**
          * @param {RtcSession} rtcSession
          * @param {string} [reason]
@@ -649,6 +666,7 @@ registerModel({
             this._removePeer(rtcSession.id);
             this._callPeer(rtcSession);
         },
+
         /**
          * Pings the server to ensure this session is kept alive.
          */
@@ -666,6 +684,7 @@ registerModel({
                 channel.updateRtcSessions(rtcSessions);
             }
         },
+
         /**
          * Attempts a connection recovery by closing and restarting the call
          * from the receiving end.
@@ -687,6 +706,7 @@ registerModel({
                 ),
             });
         },
+
         /**
          * Cleans up a peer by closing all its associated content and the connection.
          *
@@ -713,6 +733,7 @@ registerModel({
             });
             this._addLogEntry(sessionId, 'peer removed', { step: 'peer removed' });
         },
+
         /**
          * Terminates the Transceivers of the peer connection.
          *
@@ -736,6 +757,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * Sends this peer notifications to send as soon as the last pending
          * sending finishes.
@@ -779,6 +801,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * Returns a string representation of a data channel for logging and
          * debugging purposes.
@@ -803,6 +826,7 @@ registerModel({
             ];
             return JSON.stringify(Object.fromEntries(toLog.map(p => [p, dataChannel[p]])));
         },
+
         /**
          * @param {Boolean} isDeaf
          */
@@ -816,6 +840,7 @@ registerModel({
             }
             await this._updateLocalAudioTrackEnabledState();
         },
+
         /**
          * @param {Boolean} isSelfMuted
          */
@@ -823,6 +848,7 @@ registerModel({
             this.currentRtcSession.updateAndBroadcast({ isSelfMuted });
             await this._updateLocalAudioTrackEnabledState();
         },
+
         /**
          * Updates the "isTalking" state of the current user and sets the
          * enabled state of its audio track accordingly.
@@ -842,6 +868,7 @@ registerModel({
                 await this._updateLocalAudioTrackEnabledState();
             }
         },
+
         /**
          * @private
          * @param {Object} trackOptions
@@ -862,6 +889,7 @@ registerModel({
                 isCameraOn: !!this.sendUserVideo,
             });
         },
+
         /**
          * @private
          * @param {Object} param0
@@ -886,6 +914,7 @@ registerModel({
                 this.currentRtcSession.updateStream(this.videoTrack);
             }
         },
+
         /**
          * Sets the enabled property of the local audio track and notifies
          * peers of the new state.
@@ -910,6 +939,7 @@ registerModel({
                 },
             });
         },
+
         /**
          * @private
          * @param {String} type 'user-video' or 'display'
@@ -998,6 +1028,7 @@ registerModel({
                 sendDisplay: type === 'display' && !!videoTrack,
             });
         },
+
         /**
          * @private
          * @param {Event} ev
@@ -1007,6 +1038,7 @@ registerModel({
                 await this.channel.performRpcLeaveCall();
             }
         },
+
         /**
          * @private
          * @param {String} state the new state of the connection
@@ -1024,6 +1056,7 @@ registerModel({
                     break;
             }
         },
+
         /**
          * @private
          * @param {String} connectionState the new state of the connection
@@ -1050,6 +1083,7 @@ registerModel({
                     break;
             }
         },
+
         /**
          * @private
          * @param {keyboardEvent} ev
@@ -1073,6 +1107,7 @@ registerModel({
                 this._setSoundBroadcast(true);
             }
         },
+
         /**
          * @private
          * @param {keyboardEvent} ev
@@ -1097,6 +1132,7 @@ registerModel({
                 ),
             });
         },
+
         /**
          * @private
          */
@@ -1104,6 +1140,7 @@ registerModel({
             this.update({ pushToTalkTimeout: clear() });
             this._setSoundBroadcast(false);
         },
+
         /**
          * @private
          */
@@ -1117,13 +1154,14 @@ registerModel({
             }
             this._callSessions();
         },
+
         /**
          * @private
          * @param {boolean} isAboveThreshold
          */
         _onThresholdAudioMonitor(isAboveThreshold) {
             this._setSoundBroadcast(isAboveThreshold);
-        },
+        }
     },
     fields: {
         /**
@@ -1223,7 +1261,9 @@ registerModel({
          *   established but failed or timed out.
          */
         pingInterval: attr({
-            compute: '_computePingInterval',
+            compute() {
+                return this.messaging.browser.setInterval(this._onPingInterval, 30000); // 30 seconds
+            },
         }),
         /**
          * The protocols for each RTC ICE candidate types.

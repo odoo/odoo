@@ -47,6 +47,7 @@ registerModel({
                 });
             }
         },
+
         askFeedback() {
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_composer input').prop('disabled', true);
             this.messaging.publicLivechatGlobal.update({ feedbackView: {} });
@@ -67,6 +68,7 @@ registerModel({
                 .removeClass('d-none')
                 .val('');
         },
+
         /**
          * Restart the script and then trigger the "next step" (which will be the first of the script
          * in this case).
@@ -104,10 +106,12 @@ registerModel({
                 ),
             });
         },
+
         closeChat() {
             this.messaging.publicLivechatGlobal.update({ chatWindow: clear() });
             set_cookie('im_livechat_session', "", -1); // remove cookie
         },
+
         /**
          * Called when the visitor leaves the livechat chatter the first time (first click on X button)
          * this will deactivate the mail_channel, notify operator that visitor has left the channel.
@@ -120,6 +124,7 @@ registerModel({
                 set_cookie('im_livechat_session', "", -1); // remove cookie
             }
         },
+
         openChat() {
             if (this.isOpenChatDebounced) {
                 this.openChatDebounced();
@@ -127,6 +132,7 @@ registerModel({
                 this._openChat();
             }
         },
+
         async openChatWindow() {
             this.messaging.publicLivechatGlobal.update({ chatWindow: {} });
             await this.messaging.publicLivechatGlobal.chatWindow.widget.appendTo($('body'));
@@ -136,6 +142,7 @@ registerModel({
             this.widget.$el.hide();
             this._openChatWindowChatbot();
         },
+
         /**
          * @param {Object} message
          */
@@ -144,6 +151,7 @@ registerModel({
             await this._sendMessage(message);
             this._sendMessageChatbotAfter();
         },
+
         start() {
             this.widget.$el.text(this.buttonText);
             if (this.messaging.publicLivechatGlobal.history) {
@@ -168,118 +176,14 @@ registerModel({
             if (this.buttonTextColor) {
                 this.widget.$el.css('color', this.buttonTextColor);
             }
-    
+
             // If website_event_track installed, put the livechat banner above the PWA banner.
             const pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
             if (pwaBannerHeight) {
                 this.widget.$el.css('bottom', pwaBannerHeight + 'px');
             }
         },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeButtonBackgroundColor() {
-            return this.messaging.publicLivechatGlobal.options.button_background_color;
-        },
-        /**
-         * @returns {string}
-         */
-        _computeButtonText() {
-            if (this.messaging.publicLivechatGlobal.options.button_text) {
-                return this.messaging.publicLivechatGlobal.options.button_text;
-            }
-            return this.env._t("Chat with one of our collaborators");
-        },
-        /**
-         * @returns {string}
-         */
-        _computeButtonTextColor() {
-            return this.messaging.publicLivechatGlobal.options.button_text_color;
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeCurrentPartnerId() {
-            if (!this.messaging.publicLivechatGlobal.isAvailable) {
-                return clear();
-            }
-            return this.messaging.publicLivechatGlobal.options.current_partner_id;
-        },
-        /**
-        * @private
-        * @returns {string}
-        */
-        _computeDefaultMessage() {
-            if (this.messaging.publicLivechatGlobal.options.default_message) {
-                return this.messaging.publicLivechatGlobal.options.default_message;
-            }
-            return this.env._t("How may I help you?");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeDefaultUsername() {
-            if (this.messaging.publicLivechatGlobal.options.default_username) {
-                return this.messaging.publicLivechatGlobal.options.default_username;
-            }
-            return this.env._t("Visitor");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeHeaderBackgroundColor() {
-            return this.messaging.publicLivechatGlobal.options.header_background_color;
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeInputPlaceholder() {
-            if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
-                // void the default livechat placeholder in the user input
-                // as we use it for specific things (e.g: showing "please select an option above")
-                return clear();
-            }
-            if (this.messaging.publicLivechatGlobal.options.input_placeholder) {
-                return this.messaging.publicLivechatGlobal.options.input_placeholder;
-            }
-            return this.env._t("Ask something ...");
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeIsOpenChatDebounced() {
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {_.debounce}
-         */
-        _computeOpenChatDebounced() {
-            return _.debounce(this._openChat, 200, true);
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeServerUrl() {
-            if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
-                return this.messaging.publicLivechatGlobal.chatbot.serverUrl;
-            }
-            return this.messaging.publicLivechatGlobal.serverUrl;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeTitleColor() {
-            return this.messaging.publicLivechatGlobal.options.title_color;
-        },
+
         /**
          * @private
          */
@@ -344,6 +248,7 @@ registerModel({
                 this.update({ isOpeningChat: false });
             });
         },
+
         /**
          * Resuming the chatbot script if we are currently running one.
          *
@@ -371,6 +276,7 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.processStep();
             }
         },
+
         /**
          * @private
          * @param {Object} message
@@ -402,6 +308,7 @@ registerModel({
             }
             this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
         },
+
         /**
          * @private
          */
@@ -435,6 +342,7 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
         },
+
         /**
          * When the Customer sends a message, we need to act depending on our current state:
          * - If the conversation has been forwarded to an operator
@@ -461,39 +369,77 @@ registerModel({
             ) {
                 await this.messaging.publicLivechatGlobal.chatbot.postWelcomeMessages();
             }
-        },
+        }
     },
     fields: {
         autoOpenChatTimeout: attr(),
         buttonBackgroundColor: attr({
-            compute: '_computeButtonBackgroundColor',
+            compute() {
+                return this.messaging.publicLivechatGlobal.options.button_background_color;
+            },
         }),
         buttonText: attr({
-            compute: '_computeButtonText',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.options.button_text) {
+                    return this.messaging.publicLivechatGlobal.options.button_text;
+                }
+                return this.env._t("Chat with one of our collaborators");
+            },
         }),
         buttonTextColor: attr({
-            compute: '_computeButtonTextColor',
+            compute() {
+                return this.messaging.publicLivechatGlobal.options.button_text_color;
+            },
         }),
         chatbotNextStepTimeout: attr(),
         chatbotWelcomeMessageTimeout: attr(),
         currentPartnerId: attr({
-            compute: '_computeCurrentPartnerId',
+            compute() {
+                if (!this.messaging.publicLivechatGlobal.isAvailable) {
+                    return clear();
+                }
+                return this.messaging.publicLivechatGlobal.options.current_partner_id;
+            },
         }),
         defaultMessage: attr({
-            compute: '_computeDefaultMessage',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.options.default_message) {
+                    return this.messaging.publicLivechatGlobal.options.default_message;
+                }
+                return this.env._t("How may I help you?");
+            },
         }),
         defaultUsername: attr({
-            compute: '_computeDefaultUsername',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.options.default_username) {
+                    return this.messaging.publicLivechatGlobal.options.default_username;
+                }
+                return this.env._t("Visitor");
+            },
         }),
         headerBackgroundColor: attr({
-            compute: '_computeHeaderBackgroundColor',
+            compute() {
+                return this.messaging.publicLivechatGlobal.options.header_background_color;
+            },
         }),
         inputPlaceholder: attr({
-            compute: '_computeInputPlaceholder',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
+                    // void the default livechat placeholder in the user input
+                    // as we use it for specific things (e.g: showing "please select an option above")
+                    return clear();
+                }
+                if (this.messaging.publicLivechatGlobal.options.input_placeholder) {
+                    return this.messaging.publicLivechatGlobal.options.input_placeholder;
+                }
+                return this.env._t("Ask something ...");
+            },
             default: '',
         }),
         isOpenChatDebounced: attr({
-            compute: '_computeIsOpenChatDebounced',
+            compute() {
+                return clear();
+            },
             default: true,
         }),
         isOpeningChat: attr({
@@ -501,17 +447,26 @@ registerModel({
         }),
         isTypingTimeout: attr(),
         openChatDebounced: attr({
-            compute: '_computeOpenChatDebounced',
+            compute() {
+                return _.debounce(this._openChat, 200, true);
+            },
         }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'livechatButtonView',
         }),
         serverUrl: attr({
-            compute: '_computeServerUrl',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
+                    return this.messaging.publicLivechatGlobal.chatbot.serverUrl;
+                }
+                return this.messaging.publicLivechatGlobal.serverUrl;
+            },
         }),
         titleColor: attr({
-            compute: '_computeTitleColor',
+            compute() {
+                return this.messaging.publicLivechatGlobal.options.title_color;
+            },
         }),
         widget: attr(),
     },

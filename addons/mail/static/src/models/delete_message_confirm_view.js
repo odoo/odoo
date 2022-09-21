@@ -16,29 +16,17 @@ registerModel({
         containsElement(element) {
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
+
         onClickCancel() {
             this.dialogOwner.delete();
         },
+
         onClickDelete() {
             this.message.updateContent({
                 attachment_ids: [],
                 body: '',
             });
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessage() {
-            return this.dialogOwner.messageActionViewOwnerAsDeleteConfirm.messageAction.messageActionListOwner.message;
-        },
-        /**
-         * @private
-         * @returns {MessageView}
-         */
-        _computeMessageView() {
-            return this.message ? { message: this.message } : clear();
-        },
+        }
     },
     fields: {
         component: attr(),
@@ -47,7 +35,9 @@ registerModel({
             inverse: 'deleteMessageConfirmView',
         }),
         message: one('Message', {
-            compute: '_computeMessage',
+            compute() {
+                return this.dialogOwner.messageActionViewOwnerAsDeleteConfirm.messageAction.messageActionListOwner.message;
+            },
             required: true,
         }),
         /**
@@ -55,7 +45,9 @@ registerModel({
          * will use to display this message.
          */
         messageView: one('MessageView', {
-            compute: '_computeMessageView',
+            compute() {
+                return this.message ? { message: this.message } : clear();
+            },
             inverse: 'deleteMessageConfirmViewOwner',
             required: true,
         }),

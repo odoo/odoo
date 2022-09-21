@@ -14,6 +14,7 @@ registerModel({
         close() {
             this.delete();
         },
+
         /**
          * Returns whether the given html element is inside this attachment viewer.
          *
@@ -23,6 +24,7 @@ registerModel({
         containsElement(element) {
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
+
         /**
          * Display the next attachment in the list of attachments.
          */
@@ -32,6 +34,7 @@ registerModel({
             }
             this.dialogOwner.attachmentListOwnerAsAttachmentView.selectNextAttachment();
         },
+
         /**
          * Called when clicking on mask of attachment viewer.
          *
@@ -45,6 +48,7 @@ registerModel({
             // task-2092965
             this.close();
         },
+
         /**
          * Called when clicking on cross icon.
          *
@@ -53,6 +57,7 @@ registerModel({
         onClickClose(ev) {
             this.close();
         },
+
         /**
          * Called when clicking on download icon.
          *
@@ -62,6 +67,7 @@ registerModel({
             ev.stopPropagation();
             this.attachmentViewerViewable.download();
         },
+
         /**
          * Called when clicking on the header. Stop propagation of event to prevent
          * closing the dialog.
@@ -71,11 +77,12 @@ registerModel({
         onClickHeader(ev) {
             ev.stopPropagation();
         },
+
         /**
          * Called when clicking on image. Stop propagation of event to prevent
          * closing the dialog.
          *
-         * @param {MouseEvent} ev 
+         * @param {MouseEvent} ev
          */
         onClickImage(ev) {
             if (this.isDragging) {
@@ -83,6 +90,7 @@ registerModel({
             }
             ev.stopPropagation();
         },
+
         /**
          * Called when clicking on next icon.
          *
@@ -92,6 +100,7 @@ registerModel({
             ev.stopPropagation();
             this.next();
         },
+
         /**
          * Called when clicking on previous icon.
          *
@@ -101,6 +110,7 @@ registerModel({
             ev.stopPropagation();
             this.previous();
         },
+
         /**
          * Called when clicking on print icon.
          *
@@ -110,6 +120,7 @@ registerModel({
             ev.stopPropagation();
             this.print();
         },
+
         /**
          * Called when clicking on rotate icon.
          *
@@ -119,6 +130,7 @@ registerModel({
             ev.stopPropagation();
             this.rotate();
         },
+
         /**
          * Called when clicking on embed video player. Stop propagation to prevent
          * closing the dialog.
@@ -128,6 +140,7 @@ registerModel({
         onClickVideo(ev) {
             ev.stopPropagation();
         },
+
         /**
          * Called when new image has been loaded
          *
@@ -140,6 +153,7 @@ registerModel({
             ev.stopPropagation();
             this.update({ isImageLoading: false });
         },
+
         /**
          * Display the previous attachment in the list of attachments.
          */
@@ -149,6 +163,7 @@ registerModel({
             }
             this.dialogOwner.attachmentListOwnerAsAttachmentView.selectPreviousAttachment();
         },
+
         /**
          * Prompt the browser print of this attachment.
          */
@@ -174,54 +189,13 @@ registerModel({
                 </html>`);
             printWindow.document.close();
         },
+
         /**
          * Rotate the image by 90 degrees to the right.
          */
         rotate() {
             this.update({ angle: this.angle + 90 });
-        },
-        /**
-         * @private
-         */
-        _computeAttachmentViewerViewable() {
-            if (this.attachmentList) {
-                return {
-                    attachmentOwner: this.attachmentList.selectedAttachment,
-                };
-            }
-            return clear();
-        },
-        /**
-         * @private
-         */
-        _computeAttachmentViewerViewables() {
-            if (this.attachmentList) {
-                return this.attachmentList.viewableAttachments.map(attachment => {
-                    return { attachmentOwner: attachment };
-                });
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeImageStyle() {
-            let style = `transform: ` +
-                `scale3d(${this.scale}, ${this.scale}, 1) ` +
-                `rotate(${this.angle}deg);`;
-
-            if (this.angle % 180 !== 0) {
-                style += `` +
-                    `max-height: ${window.innerWidth}px; ` +
-                    `max-width: ${window.innerHeight}px;`;
-            } else {
-                style += `` +
-                    `max-height: 100%; ` +
-                    `max-width: 100%;`;
-            }
-            return style;
-        },
+        }
     },
     fields: {
         /**
@@ -234,10 +208,24 @@ registerModel({
             related: 'dialogOwner.attachmentListOwnerAsAttachmentView',
         }),
         attachmentViewerViewable: one("AttachmentViewerViewable", {
-            compute: "_computeAttachmentViewerViewable",
+            compute() {
+                if (this.attachmentList) {
+                    return {
+                        attachmentOwner: this.attachmentList.selectedAttachment,
+                    };
+                }
+                return clear();
+            },
         }),
         attachmentViewerViewables: many("AttachmentViewerViewable", {
-            compute: "_computeAttachmentViewerViewables",
+            compute() {
+                if (this.attachmentList) {
+                    return this.attachmentList.viewableAttachments.map(attachment => {
+                        return { attachmentOwner: attachment };
+                    });
+                }
+                return clear();
+            },
         }),
         /**
          * States the OWL component of this attachment viewer.
@@ -255,7 +243,22 @@ registerModel({
          * Style of the image (scale + rotation).
          */
         imageStyle: attr({
-            compute: '_computeImageStyle',
+            compute() {
+                let style = `transform: ` +
+                    `scale3d(${this.scale}, ${this.scale}, 1) ` +
+                    `rotate(${this.angle}deg);`;
+
+                if (this.angle % 180 !== 0) {
+                    style += `` +
+                        `max-height: ${window.innerWidth}px; ` +
+                        `max-width: ${window.innerHeight}px;`;
+                } else {
+                    style += `` +
+                        `max-height: 100%; ` +
+                        `max-width: 100%;`;
+                }
+                return style;
+            },
         }),
         /**
          * Determine whether the user is currently dragging the image.

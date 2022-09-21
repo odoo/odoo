@@ -25,6 +25,7 @@ registerModel({
                 return;
             }
         },
+
         /**
          * @param {FocusEvent} ev
          */
@@ -37,6 +38,7 @@ registerModel({
                 return;
             }
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -48,6 +50,7 @@ registerModel({
                 this.onBlur();
             }
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -72,6 +75,7 @@ registerModel({
                 return;
             }
         },
+
         /**
          * @param {Object} req
          * @param {function} res
@@ -96,74 +100,7 @@ registerModel({
                 this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSource(req, res);
                 return;
             }
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsFocusOnMount() {
-            if (this.discussViewOwnerAsMobileAddItemHeader) {
-                return true;
-            }
-            if (this.discussSidebarCategoryOwnerAsAddingItem) {
-                return true;
-            }
-            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsHtml() {
-            if (this.discussViewOwnerAsMobileAddItemHeader) {
-                return this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel;
-            }
-            if (this.discussSidebarCategoryOwnerAsAddingItem) {
-                return this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeCustomClass() {
-            if (this.discussSidebarCategoryOwnerAsAddingItem) {
-                if (this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel) {
-                    return 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions';
-                }
-            }
-            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                return this.messagingMenuOwnerAsMobileNewMessageInput.viewId + '_mobileNewMessageInputAutocomplete';
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computePlaceholder() {
-            if (this.chatWindowOwnerAsNewMessage) {
-                return this.chatWindowOwnerAsNewMessage.newMessageFormInputPlaceholder;
-            }
-            if (this.discussViewOwnerAsMobileAddItemHeader) {
-                if (this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel) {
-                    return this.discussViewOwnerAsMobileAddItemHeader.discuss.addChannelInputPlaceholder;
-                } else {
-                    return this.discussViewOwnerAsMobileAddItemHeader.discuss.addChatInputPlaceholder;
-                }
-            }
-            if (this.discussSidebarCategoryOwnerAsAddingItem) {
-                return this.discussSidebarCategoryOwnerAsAddingItem.newItemPlaceholderText;
-            }
-            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                return this.messagingMenuOwnerAsMobileNewMessageInput.mobileNewMessageInputPlaceholder;
-            }
-            return clear();
-        },
+        }
     },
     fields: {
         chatWindowOwnerAsNewMessage: one('ChatWindow', {
@@ -172,7 +109,17 @@ registerModel({
         }),
         component: attr(),
         customClass: attr({
-            compute: '_computeCustomClass',
+            compute() {
+                if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                    if (this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel) {
+                        return 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions';
+                    }
+                }
+                if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                    return this.messagingMenuOwnerAsMobileNewMessageInput.viewId + '_mobileNewMessageInputAutocomplete';
+                }
+                return clear();
+            },
             default: '',
         }),
         discussSidebarCategoryOwnerAsAddingItem: one('DiscussSidebarCategory', {
@@ -184,11 +131,30 @@ registerModel({
             inverse: 'mobileAddItemHeaderAutocompleteInputView',
         }),
         isFocusOnMount: attr({
-            compute: '_computeIsFocusOnMount',
+            compute() {
+                if (this.discussViewOwnerAsMobileAddItemHeader) {
+                    return true;
+                }
+                if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                    return true;
+                }
+                if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
         }),
         isHtml: attr({
-            compute: '_computeIsHtml',
+            compute() {
+                if (this.discussViewOwnerAsMobileAddItemHeader) {
+                    return this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel;
+                }
+                if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                    return this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel;
+                }
+                return clear();
+            },
             default: false,
         }),
         messagingMenuOwnerAsMobileNewMessageInput: one('MessagingMenu', {
@@ -196,7 +162,25 @@ registerModel({
             inverse: 'mobileNewMessageAutocompleteInputView',
         }),
         placeholder: attr({
-            compute: '_computePlaceholder',
+            compute() {
+                if (this.chatWindowOwnerAsNewMessage) {
+                    return this.chatWindowOwnerAsNewMessage.newMessageFormInputPlaceholder;
+                }
+                if (this.discussViewOwnerAsMobileAddItemHeader) {
+                    if (this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel) {
+                        return this.discussViewOwnerAsMobileAddItemHeader.discuss.addChannelInputPlaceholder;
+                    } else {
+                        return this.discussViewOwnerAsMobileAddItemHeader.discuss.addChatInputPlaceholder;
+                    }
+                }
+                if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                    return this.discussSidebarCategoryOwnerAsAddingItem.newItemPlaceholderText;
+                }
+                if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                    return this.messagingMenuOwnerAsMobileNewMessageInput.mobileNewMessageInputPlaceholder;
+                }
+                return clear();
+            },
         }),
     },
 });

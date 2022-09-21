@@ -11,23 +11,17 @@ addFields('Thread', {
      * If set, current thread is a livechat.
      */
     messagingAsPinnedLivechat: one('Messaging', {
-        compute: '_computeMessagingAsPinnedLivechat',
+        compute() {
+            if (!this.messaging || !this.channel || this.channel.channel_type !== 'livechat' || !this.isPinned) {
+                return clear();
+            }
+            return this.messaging;
+        },
         inverse: 'pinnedLivechats',
     }),
 });
 
-addRecordMethods('Thread', {
-    /**
-     * @private
-     * @returns {FieldCommand}
-     */
-    _computeMessagingAsPinnedLivechat() {
-        if (!this.messaging || !this.channel || this.channel.channel_type !== 'livechat' || !this.isPinned) {
-            return clear();
-        }
-        return this.messaging;
-    },
-});
+addRecordMethods('Thread', {});
 
 patchRecordMethods('Thread', {
     /**

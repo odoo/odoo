@@ -12,23 +12,17 @@ addFields('PopoverView', {
         inverse: 'snailmailNotificationPopoverView',
     }),
     snailmailNotificationPopoverContentView: one('SnailmailNotificationPopoverContentView', {
-        compute: '_computeSnailmailNotificationPopoverContentView',
+        compute() {
+            if (this.messageViewOwnerAsSnailmailNotificationContent) {
+                return {};
+            }
+            return clear();
+        },
         inverse: 'popoverViewOwner',
     }),
 });
 
-addRecordMethods('PopoverView', {
-    /**
-     * @private
-     * @returns {Object|FieldCommand}
-     */
-    _computeSnailmailNotificationPopoverContentView() {
-        if (this.messageViewOwnerAsSnailmailNotificationContent) {
-            return {};
-        }
-        return clear();
-    },
-});
+addRecordMethods('PopoverView', {});
 
 patchRecordMethods('PopoverView', {
     /**

@@ -26,21 +26,24 @@ registerModel({
                 startWithVideo: true,
             });
         },
+
         /**
          * @param {Event} ev
          */
         onClickHideCallSettingsMenu(ev) {
             this.threadView.update({ isCallSettingsMenuOpen: false });
         },
+
         /**
          * Handles click on the "hide member list" button.
          *
          * @param {Event} ev
          */
-         onClickHideMemberList(ev) {
-            this.threadView.update({ isMemberListOpened: false });
-            this.threadView.addComponentHint('member-list-hidden');
-        },
+        onClickHideMemberList(ev) {
+           this.threadView.update({ isMemberListOpened: false });
+           this.threadView.addComponentHint('member-list-hidden');
+       },
+
         /**
          * Handles click on the "mark all as read" button of Inbox.
          *
@@ -49,6 +52,7 @@ registerModel({
         onClickInboxMarkAllAsRead(ev) {
             this.messaging.models['Message'].markAllAsRead();
         },
+
         /**
          * Handles click on the "invite" button.
          *
@@ -61,6 +65,7 @@ registerModel({
                 this.openInvitePopoverView();
             }
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -70,6 +75,7 @@ registerModel({
             }
             await this.thread.toggleCall();
         },
+
         /**
          * @param {Event} ev
          */
@@ -80,6 +86,7 @@ registerModel({
                 isMemberListOpened: false,
             });
         },
+
         /**
          * Handles click on the "show member list" button.
          *
@@ -91,6 +98,7 @@ registerModel({
                 isMemberListOpened: true,
             });
         },
+
         /**
          * Handles click on the "thread name" of this top bar.
          *
@@ -115,6 +123,7 @@ registerModel({
                 pendingThreadName: this.thread.displayName,
             });
         },
+
         /**
          * Handles click on the "thread description" of this top bar.
          *
@@ -135,6 +144,7 @@ registerModel({
                 pendingThreadDescription: this.thread.description || "",
             });
         },
+
         /**
          * Handles click on the "unstar all" button of Starred box.
          *
@@ -143,6 +153,7 @@ registerModel({
         onClickUnstarAll(ev) {
             this.messaging.models['Message'].unstarAll();
         },
+
         /**
          * Handles click on the guest name.
          *
@@ -163,6 +174,7 @@ registerModel({
                 pendingGuestName: this.messaging.currentGuest.name,
             });
         },
+
         /**
          * Handles OWL update on this top bar component.
          */
@@ -228,12 +240,14 @@ registerModel({
                 });
             }
         },
+
         /**
          * @param {KeyboardEvent} ev
          */
         onInputGuestNameInput(ev) {
             this.update({ pendingGuestName: this.guestNameInputRef.el.value });
         },
+
         /**
          * Handles input on the "thread name" input of this top bar.
          *
@@ -242,6 +256,7 @@ registerModel({
         onInputThreadNameInput(ev) {
             this.update({ pendingThreadName: ev.target.value });
         },
+
         /**
          * Handles input on the "thread description" input of this top bar.
          *
@@ -250,6 +265,7 @@ registerModel({
         onInputThreadDescriptionInput(ev) {
             this.update({ pendingThreadDescription: ev.target.value });
         },
+
         /**
          * Handles keydown on the "guest name" input of this top bar.
          *
@@ -267,6 +283,7 @@ registerModel({
                     break;
             }
         },
+
         /**
          * Handles keydown on the "thread name" input of this top bar.
          *
@@ -282,6 +299,7 @@ registerModel({
                     break;
             }
         },
+
         /**
          * Handles keydown on the "thread description" input of this top bar.
          *
@@ -297,6 +315,7 @@ registerModel({
                     break;
             }
         },
+
         /**
          * Handles mouseenter on the "thread name" of this top bar.
          *
@@ -308,6 +327,7 @@ registerModel({
             }
             this.update({ isMouseOverThreadName: true });
         },
+
         /**
          * Handles mouseenter on the "thread description" of this top bar.
          *
@@ -319,6 +339,7 @@ registerModel({
             }
             this.update({ isMouseOverThreadDescription: true });
         },
+
         /**
          * Handles mouseenter on the "user name" of this top bar.
          *
@@ -327,6 +348,7 @@ registerModel({
         onMouseEnterUserName(ev) {
             this.update({ isMouseOverUserName: true });
         },
+
         /**
          * Handles mouseleave on the "thread name" of this top bar.
          *
@@ -335,6 +357,7 @@ registerModel({
         onMouseLeaveTopbarThreadName(ev) {
             this.update({ isMouseOverThreadName: false });
         },
+
         /**
          * Handles mouseleave on the "thread description" of this top bar.
          *
@@ -343,6 +366,7 @@ registerModel({
         onMouseLeaveTopbarThreadDescription(ev) {
             this.update({ isMouseOverThreadDescription: false });
         },
+
         /**
          * Handles mouseleave on the "user name" of this top bar.
          *
@@ -351,6 +375,7 @@ registerModel({
         onMouseLeaveUserName(ev) {
             this.update({ isMouseOverUserName: false });
         },
+
         /**
          * Open the invite popover view in this thread view topbar.
          */
@@ -362,6 +387,7 @@ registerModel({
             this.invitePopoverView.channelInvitationForm.update({ doFocusOnSearchInput: true });
             this.invitePopoverView.channelInvitationForm.searchPartnersToInvite();
         },
+
         /**
          * @private
          */
@@ -374,6 +400,7 @@ registerModel({
             }
             this._resetGuestNameInput();
         },
+
         /**
          * @private
          */
@@ -393,6 +420,7 @@ registerModel({
                 this.thread.rename(newName);
             }
         },
+
         /**
          * @private
          */
@@ -406,49 +434,7 @@ registerModel({
                 this.thread.changeDescription(newDescription);
             }
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAvatarUrl() {
-            if (this.messaging.isCurrentUserGuest) {
-                if (!this.thread) {
-                    return '';
-                }
-                return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
-            }
-            if (this.messaging.currentPartner) {
-                return this.messaging.currentPartner.avatarUrl;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasGuestNameChanged() {
-            return Boolean(
-                this.messaging.currentGuest &&
-                this.pendingGuestName !== this.messaging.currentGuest.name
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasDescriptionArea() {
-            return Boolean(this.thread && (this.thread.description || this.thread.isDescriptionEditableByCurrentUser));
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsDescriptionHighlighted() {
-            return Boolean(
-                this.isMouseOverThreadDescription &&
-                this.thread.isDescriptionEditableByCurrentUser
-            );
-        },
+
         /**
          * @private
          */
@@ -458,6 +444,7 @@ registerModel({
                 pendingThreadName: clear(),
             });
         },
+
         /**
          * @private
          */
@@ -467,6 +454,7 @@ registerModel({
                 pendingThreadDescription: clear(),
             });
         },
+
         /**
          * @private
          * @param {MouseEvent} ev
@@ -486,6 +474,7 @@ registerModel({
                 this._applyThreadChangeDescription();
             }
         },
+
         /**
          * @private
          */
@@ -494,14 +483,25 @@ registerModel({
                 isEditingGuestName: false,
                 pendingGuestName: clear(),
             });
-        },
+        }
     },
     fields: {
         /**
          * States the URL of the profile picture of the current user.
          */
         avatarUrl: attr({
-            compute: '_computeAvatarUrl',
+            compute() {
+                if (this.messaging.isCurrentUserGuest) {
+                    if (!this.thread) {
+                        return '';
+                    }
+                    return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
+                }
+                if (this.messaging.currentPartner) {
+                    return this.messaging.currentPartner.avatarUrl;
+                }
+                return clear();
+            },
             default: '',
         }),
         /**
@@ -600,13 +600,20 @@ registerModel({
          * server side.
          */
         hasGuestNameChanged: attr({
-            compute: '_computeHasGuestNameChanged',
+            compute() {
+                return Boolean(
+                    this.messaging.currentGuest &&
+                    this.pendingGuestName !== this.messaging.currentGuest.name
+                );
+            },
         }),
         /**
          * Determines whether description area should display on top bar.
          */
         hasDescriptionArea: attr({
-            compute: '_computeHasDescriptionArea',
+            compute() {
+                return Boolean(this.thread && (this.thread.description || this.thread.isDescriptionEditableByCurrentUser));
+            },
         }),
         /**
          * Determines whether the guest is currently being renamed.
@@ -630,7 +637,12 @@ registerModel({
          * States whether this thread description is highlighted.
          */
         isDescriptionHighlighted: attr({
-            compute: '_computeIsDescriptionHighlighted'
+            compute() {
+                return Boolean(
+                    this.isMouseOverThreadDescription &&
+                    this.thread.isDescriptionEditableByCurrentUser
+                );
+            }
         }),
         /**
          * Determines whether this thread is currently being renamed.

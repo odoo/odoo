@@ -17,24 +17,28 @@ addRecordMethods('ActivityMenuView', {
             isAddingNote: true,
         });
     },
+
     /**
      * @param {MouseEvent} ev
      */
     onClickSaveNote(ev) {
         this.saveNote();
     },
+
     onComponentUpdate() {
         if (this.addingNoteDoFocus && this.noteInputRef.el) {
             this.noteInputRef.el.focus();
             this.update({ addingNoteDoFocus: clear() });
         }
     },
+
     /**
      * @param {DateTime|string} date
      */
     onDateTimeChanged(date) {
         this.update({ addingNoteDate: date ? date : clear() });
     },
+
     /**
      * @param {KeyboardEvent} ev
      */
@@ -43,6 +47,7 @@ addRecordMethods('ActivityMenuView', {
             this.saveNote();
         }
     },
+
     async saveNote() {
         const note = this.noteInputRef.el.value.trim();
         if (!note) {
@@ -57,14 +62,7 @@ addRecordMethods('ActivityMenuView', {
             },
         });
         this.fetchData();
-    },
-    /**
-     * @private
-     * @returns {string}
-     */
-    _computeAddingNoteDatePlaceholder() {
-        return this.env._t("Today");
-    },
+    }
 });
 
 patchFields('ActivityMenuView', {
@@ -106,7 +104,9 @@ addFields('ActivityMenuView', {
         default: false,
     }),
     addingNoteDatePlaceholder: attr({
-        compute: '_computeAddingNoteDatePlaceholder',
+        compute() {
+            return this.env._t("Today");
+        },
     }),
     isAddingNote: attr({
         default: false,

@@ -8,31 +8,7 @@ import '@mail/models/partner';
 
 import { str_to_date } from 'web.time';
 
-addRecordMethods('Partner', {
-    /**
-     * @private
-     */
-    _computeOutOfOfficeText() {
-        if (!this.out_of_office_date_end) {
-            return clear();
-        }
-        if (!this.messaging.locale || !this.messaging.locale.language) {
-            return clear();
-        }
-        const currentDate = new Date();
-        const date = str_to_date(this.out_of_office_date_end);
-        const options = { day: 'numeric', month: 'short' };
-        if (currentDate.getFullYear() !== date.getFullYear()) {
-            options.year = 'numeric';
-        }
-        let localeCode = this.messaging.locale.language.replace(/_/g, '-');
-        if (localeCode === "sr@latin") {
-            localeCode = "sr-Latn-RS";
-        }
-        const formattedDate = date.toLocaleDateString(localeCode, options);
-        return _.str.sprintf(this.env._t("Out of office until %s"), formattedDate);
-    },
-});
+addRecordMethods('Partner', {});
 
 patchRecordMethods('Partner', {
     /**
@@ -57,6 +33,25 @@ addFields('Partner', {
      * Text shown when partner is out of office.
      */
     outOfOfficeText: attr({
-        compute: '_computeOutOfOfficeText',
+        compute() {
+            if (!this.out_of_office_date_end) {
+                return clear();
+            }
+            if (!this.messaging.locale || !this.messaging.locale.language) {
+                return clear();
+            }
+            const currentDate = new Date();
+            const date = str_to_date(this.out_of_office_date_end);
+            const options = { day: 'numeric', month: 'short' };
+            if (currentDate.getFullYear() !== date.getFullYear()) {
+                options.year = 'numeric';
+            }
+            let localeCode = this.messaging.locale.language.replace(/_/g, '-');
+            if (localeCode === "sr@latin") {
+                localeCode = "sr-Latn-RS";
+            }
+            const formattedDate = date.toLocaleDateString(localeCode, options);
+            return _.str.sprintf(this.env._t("Out of office until %s"), formattedDate);
+        },
     }),
 });

@@ -41,6 +41,7 @@ registerModel({
             }
             return constraints;
         },
+
         /**
          * @param {event} ev
          * @param {Object} param1
@@ -61,6 +62,7 @@ registerModel({
                 ev.altKey === altKey
             );
         },
+
         pushToTalkKeyFormat() {
             if (!this.pushToTalkKey) {
                 return;
@@ -73,11 +75,13 @@ registerModel({
                 key: key || false,
             };
         },
+
         pushToTalkKeyToString() {
             const { shiftKey, ctrlKey, altKey, key } = this.pushToTalkKeyFormat();
             const f = (k, name) => k ? name : '';
             return `${f(ctrlKey, 'Ctrl + ')}${f(altKey, 'Alt + ')}${f(shiftKey, 'Shift + ')}${key}`;
         },
+
         /**
          * @param {String} audioInputDeviceId
          */
@@ -88,6 +92,7 @@ registerModel({
             browser.localStorage.setItem('mail_user_setting_audio_input_device_id', audioInputDeviceId);
             await this.messaging.rtc.updateLocalAudioTrack(true);
         },
+
         /**
          * @param {string} value
          */
@@ -97,6 +102,7 @@ registerModel({
                 this._saveSettings();
             }
         },
+
         /**
          * @param {event} ev
          */
@@ -107,6 +113,7 @@ registerModel({
                 this._saveSettings();
             }
         },
+
         /**
          * @param {Object} param0
          * @param {number} [param0.guestId]
@@ -127,6 +134,7 @@ registerModel({
                 },
             });
         },
+
         /**
          * @param {float} voiceActivationThreshold
          */
@@ -135,6 +143,7 @@ registerModel({
             browser.localStorage.setItem('mail_user_setting_voice_threshold', voiceActivationThreshold.toString());
             await this.messaging.rtc.updateVoiceActivation();
         },
+
         async togglePushToTalk() {
             this.update({ localUsePushToTalk: !this.usePushToTalk });
             await this.messaging.rtc.updateVoiceActivation();
@@ -142,60 +151,14 @@ registerModel({
                 this._saveSettings();
             }
         },
+
         /**
          * toggles the display of the option window
          */
         toggleWindow() {
             this.update({ isOpen: !this.isOpen });
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computePushToTalkKey() {
-            if (this.localPushToTalkKey !== undefined) {
-                return this.localPushToTalkKey;
-            }
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.push_to_talk_key;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeUsePushToTalk() {
-            if (this.localUsePushToTalk !== undefined) {
-                return this.localUsePushToTalk;
-            }
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.use_push_to_talk;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeVoiceActiveDuration() {
-            if (this.localVoiceActiveDuration !== undefined) {
-                return this.localVoiceActiveDuration;
-            }
-            if (!this.messaging.currentUser) {
-                return clear();
-            }
-            if (!this.messaging.currentUser.res_users_settings_id) {
-                return clear();
-            }
-            return this.messaging.currentUser.res_users_settings_id.voice_active_duration;
-        },
+
         /**
          * @private
          */
@@ -211,12 +174,14 @@ registerModel({
                 audioInputDeviceId: audioInputDeviceId || undefined,
             });
         },
+
         _onChangeUseBlur() {
             if (!this.messaging.rtc.sendUserVideo) {
                 return;
             }
             this.messaging.rtc.toggleUserVideo({ force: true });
         },
+
         /**
          * @private
          * @param {Event} ev
@@ -227,6 +192,7 @@ registerModel({
                 await this.messaging.rtc.updateVoiceActivation();
             }
         },
+
         /**
          * @private
          */
@@ -248,6 +214,7 @@ registerModel({
                 { shadow: true },
             );
         },
+
         /**
          * @param {Object} param0
          * @param {number} [param0.guestId]
@@ -277,6 +244,7 @@ registerModel({
                 { shadow: true },
             );
         },
+
         /**
          * @private
          */
@@ -288,7 +256,7 @@ registerModel({
                     2000,
                 ),
             });
-        },
+        }
     },
     fields: {
         /**
@@ -317,7 +285,18 @@ registerModel({
          * String that encodes the push-to-talk key with its modifiers.
          */
         pushToTalkKey: attr({
-            compute: '_computePushToTalkKey',
+            compute() {
+                if (this.localPushToTalkKey !== undefined) {
+                    return this.localPushToTalkKey;
+                }
+                if (!this.messaging.currentUser) {
+                    return clear();
+                }
+                if (!this.messaging.currentUser.res_users_settings_id) {
+                    return clear();
+                }
+                return this.messaging.currentUser.res_users_settings_id.push_to_talk_key;
+            },
             default: '',
         }),
         useBlur: attr({
@@ -327,7 +306,18 @@ registerModel({
          * If true, push-to-talk will be used over voice activation.
          */
         usePushToTalk: attr({
-            compute: '_computeUsePushToTalk',
+            compute() {
+                if (this.localUsePushToTalk !== undefined) {
+                    return this.localUsePushToTalk;
+                }
+                if (!this.messaging.currentUser) {
+                    return clear();
+                }
+                if (!this.messaging.currentUser.res_users_settings_id) {
+                    return clear();
+                }
+                return this.messaging.currentUser.res_users_settings_id.use_push_to_talk;
+            },
             default: false,
         }),
         /**
@@ -341,7 +331,18 @@ registerModel({
          * push-to-talk key.
          */
         voiceActiveDuration: attr({
-            compute: '_computeVoiceActiveDuration',
+            compute() {
+                if (this.localVoiceActiveDuration !== undefined) {
+                    return this.localVoiceActiveDuration;
+                }
+                if (!this.messaging.currentUser) {
+                    return clear();
+                }
+                if (!this.messaging.currentUser.res_users_settings_id) {
+                    return clear();
+                }
+                return this.messaging.currentUser.res_users_settings_id.voice_active_duration;
+            },
             default: 0,
         }),
         volumeSettingsTimeouts: attr({

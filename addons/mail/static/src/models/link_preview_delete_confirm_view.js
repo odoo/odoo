@@ -15,19 +15,14 @@ registerModel({
         containsElement(element) {
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
+
         onClickCancel() {
             this.dialogOwner.delete();
         },
+
         onClickOk() {
             this.linkPreview.remove();
-        },
-        /**
-         * @private
-         * @returns {LinkPreview}
-         */
-        _computeLinkPreview() {
-            return this.dialogOwner.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm.linkPreview;
-        },
+        }
     },
     fields: {
         component: attr(),
@@ -36,7 +31,9 @@ registerModel({
             inverse: 'linkPreviewDeleteConfirmView',
         }),
         linkPreview: one('LinkPreview', {
-            compute: '_computeLinkPreview',
+            compute() {
+                return this.dialogOwner.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm.linkPreview;
+            },
             required: true,
         }),
     },

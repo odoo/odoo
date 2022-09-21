@@ -28,24 +28,28 @@ registerModel({
                 this.composerView.update({ doFocus: true });
             }
         },
+
         onAttachmentsLoadingTimeout() {
             this.update({
                 attachmentsLoaderTimer: clear(),
                 isShowingAttachmentsLoading: true,
             });
         },
+
         /**
          * Handles click on the attach button.
          */
         onClickButtonAddAttachments() {
             this.fileUploader.openBrowserFileUploader();
         },
+
         /**
          * Handles click on the attachments button.
          */
         onClickButtonToggleAttachments() {
             this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : {} });
         },
+
         /**
          * Handles click on top bar close button.
          *
@@ -54,6 +58,7 @@ registerModel({
         onClickChatterTopbarClose(ev) {
             this.component.trigger('o-close-chatter');
         },
+
         /**
          * Handles click on "log note" button.
          *
@@ -66,6 +71,7 @@ registerModel({
                 this.showLogNote();
             }
         },
+
         /**
          * Handles click on "schedule activity" button.
          *
@@ -92,6 +98,7 @@ registerModel({
                 }
             );
         },
+
         /**
          * Handles click on "send message" button.
          *
@@ -104,6 +111,7 @@ registerModel({
                 this.showSendMessage();
             }
         },
+
         /**
          * Handles scroll on this scroll panel.
          *
@@ -115,9 +123,11 @@ registerModel({
             }
             this.threadView.messageListView.component.onScroll(ev);
         },
+
         openAttachmentBoxView() {
             this.update({ attachmentBoxView: {} });
         },
+
         /**
          * Open a dialog to add partners as followers.
          */
@@ -149,6 +159,7 @@ registerModel({
                 }
             );
         },
+
         async refresh() {
             const requestData = ['activities', 'followers', 'suggestedRecipients'];
             if (this.hasMessageList) {
@@ -156,6 +167,7 @@ registerModel({
             }
             this.thread.fetchData(requestData);
         },
+
         /**
          * @param {Object} [param0={}]
          * @param {string[]} [fieldNames]
@@ -173,102 +185,19 @@ registerModel({
                 this.component.trigger('reload', options);
             }
         },
+
         showLogNote() {
             this.update({ composerView: {} });
             this.composerView.composer.update({ isLog: true });
             this.focus();
         },
+
         showSendMessage() {
             this.update({ composerView: {} });
             this.composerView.composer.update({ isLog: false });
             this.focus();
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActivityBoxView() {
-            if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeDropZoneView() {
-            if (this.useDragVisibleDropZone.isVisible) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFileUploader() {
-            return this.thread ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFollowButtonView() {
-            if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeFollowerListMenuView() {
-            if (this.hasFollowers && this.thread) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasReadAccess() {
-            return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasReadAccess);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasThreadView() {
-            return Boolean(this.thread && this.hasMessageList);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasWriteAccess() {
-            return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsPreparingAttachmentsLoading() {
-            return Boolean(this.attachmentsLoaderTimer);
-        },
-        /**
-         * @private
-         * @returns {ThreadViewer}
-         */
-        _computeThreadViewer() {
-            return {
-                hasThreadView: this.hasThreadView,
-                order: 'desc',
-                thread: this.thread ? this.thread : clear(),
-            };
-        },
+
         /**
          * @private
          */
@@ -308,6 +237,7 @@ registerModel({
                 this.thread.cache.update({ temporaryMessages: link(message) });
             }
         },
+
         /**
          * @private
          */
@@ -324,16 +254,22 @@ registerModel({
             }
             this._prepareAttachmentsLoading();
         },
+
         /**
          * @private
          */
         _prepareAttachmentsLoading() {
             this.update({ attachmentsLoaderTimer: {} });
-        },
+        }
     },
     fields: {
         activityBoxView: one('ActivityBoxView', {
-            compute: '_computeActivityBoxView',
+            compute() {
+                if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'chatter',
         }),
         attachmentBoxView: one('AttachmentBoxView', {
@@ -356,19 +292,36 @@ registerModel({
             default: {},
         }),
         dropZoneView: one('DropZoneView', {
-            compute: '_computeDropZoneView',
+            compute() {
+                if (this.useDragVisibleDropZone.isVisible) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'chatterOwner',
         }),
         fileUploader: one('FileUploader', {
-            compute: '_computeFileUploader',
+            compute() {
+                return this.thread ? {} : clear();
+            },
             inverse: 'chatterOwner',
         }),
         followButtonView: one('FollowButtonView', {
-            compute: '_computeFollowButtonView',
+            compute() {
+                if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'chatterOwner',
         }),
         followerListMenuView: one('FollowerListMenuView', {
-            compute: '_computeFollowerListMenuView',
+            compute() {
+                if (this.hasFollowers && this.thread) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'chatterOwner',
         }),
         /**
@@ -412,16 +365,22 @@ registerModel({
             default: false,
         }),
         hasReadAccess: attr({
-            compute: '_computeHasReadAccess',
+            compute() {
+                return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasReadAccess);
+            },
         }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
-            compute: '_computeHasThreadView',
+            compute() {
+                return Boolean(this.thread && this.hasMessageList);
+            },
         }),
         hasWriteAccess: attr({
-            compute: '_computeHasWriteAccess',
+            compute() {
+                return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess);
+            },
         }),
         hasTopbarCloseButton: attr({
             default: false,
@@ -444,7 +403,9 @@ registerModel({
             default: false,
         }),
         isPreparingAttachmentsLoading: attr({
-            compute: '_computeIsPreparingAttachmentsLoading',
+            compute() {
+                return Boolean(this.attachmentsLoaderTimer);
+            },
             default: false,
         }),
         isShowingAttachmentsLoading: attr({
@@ -473,7 +434,13 @@ registerModel({
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
         threadViewer: one('ThreadViewer', {
-            compute: '_computeThreadViewer',
+            compute() {
+                return {
+                    hasThreadView: this.hasThreadView,
+                    order: 'desc',
+                    thread: this.thread ? this.thread : clear(),
+                };
+            },
             inverse: 'chatter',
             required: true,
         }),

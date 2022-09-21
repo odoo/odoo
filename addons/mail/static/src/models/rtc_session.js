@@ -31,6 +31,7 @@ registerModel({
                 { shadow: true },
             );
         },
+
         /**
          * restores the session to its default values
          */
@@ -47,6 +48,7 @@ registerModel({
                 remoteCandidateType: clear(),
             });
         },
+
         /**
          * cleanly removes the video stream of the session
          */
@@ -56,6 +58,7 @@ registerModel({
                 videoStream: clear(),
             });
         },
+
         /**
          * @param {number} volume
          */
@@ -83,6 +86,7 @@ registerModel({
                 volume: this.volume,
             });
         },
+
         /**
          * Toggles the deaf state of the current session, this must be a session
          * of the current partner.
@@ -97,6 +101,7 @@ registerModel({
                 await this.messaging.rtc.deafen();
             }
         },
+
         /**
          * updates the record and notifies the server of the change
          *
@@ -111,6 +116,7 @@ registerModel({
                 broadcastTimer: { doReset: this.broadcastTimer ? true : undefined },
             });
         },
+
         /**
          * Updates the rtcSession with information on the type of candidate used
          * to establish the connections.
@@ -138,6 +144,7 @@ registerModel({
                 remoteCandidateType: clear(),
             });
         },
+
         /**
          * Updates the RtcSession with a new track.
          *
@@ -158,24 +165,7 @@ registerModel({
                 this.update({ videoStream: stream });
             }
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsMute() {
-            return this.isSelfMuted || this.isDeaf;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsOwnSession() {
-            if (!this.messaging || !this.channelMember) {
-                return;
-            }
-            return (this.channelMember.persona.partner && this.messaging.currentPartner === this.channelMember.persona.partner) ||
-                (this.channelMember.persona.guest && this.messaging.currentGuest === this.channelMember.persona.guest);
-        },
+
         /**
          * Updates the track that is broadcasted to the remote of this session.
          * This will start new transaction by triggering a negotiationneeded event
@@ -228,41 +218,7 @@ registerModel({
                 });
             }
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeRtcAsConnectedSession() {
-            if (!this.messaging || !this.messaging.rtc) {
-                return clear();
-            }
-            if (this.rtcPeerConnection) {
-                return this.messaging.rtc;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computePeerToken() {
-            return String(this.id);
-        },
-        /**
-         * @private
-         * @returns {number} float
-         */
-        _computeVolume() {
-            if (this.localVolume !== undefined) {
-                return this.localVolume;
-            }
-            if (this.channelMember && this.channelMember.persona.volumeSetting) {
-                return this.channelMember.persona.volumeSetting.volume;
-            }
-            if (this.audioElement) {
-                return this.audioElement.volume;
-            }
-        },
+
         /**
          * cleanly removes the audio stream of the session
          *
@@ -283,6 +239,7 @@ registerModel({
                 }
             }
         },
+
         _removeVideo() {
             if (this.videoStream) {
                 for (const track of this.videoStream.getTracks() || []) {
@@ -290,6 +247,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * @private
          * @param {Object} param0
@@ -340,7 +298,7 @@ registerModel({
                 }
                 console.error(error);
             }
-        },
+        }
     },
     fields: {
         /**
@@ -434,7 +392,9 @@ registerModel({
          * Determine whether current session is unable to speak.
          */
         isMute: attr({
-            compute: '_computeIsMute',
+            compute() {
+                return this.isSelfMuted || this.isDeaf;
+            },
             default: false,
         }),
         /**
@@ -445,7 +405,13 @@ registerModel({
          * use this.rtcAsCurrentSession instead.
          */
         isOwnSession: attr({
-            compute: '_computeIsOwnSession',
+            compute() {
+                if (!this.messaging || !this.channelMember) {
+                    return;
+                }
+                return (this.channelMember.persona.partner && this.messaging.currentPartner === this.channelMember.persona.partner) ||
+                    (this.channelMember.persona.guest && this.messaging.currentGuest === this.channelMember.persona.guest);
+            },
         }),
         /**
          * Determines if the user is sharing their screen.
@@ -470,7 +436,9 @@ registerModel({
          * id of the record.
          */
         peerToken: attr({
-            compute: '_computePeerToken',
+            compute() {
+                return String(this.id);
+            },
         }),
         /**
          * RTCIceCandidate.type String
@@ -486,7 +454,15 @@ registerModel({
             inverse: 'currentRtcSession',
         }),
         rtcAsConnectedSession: one('Rtc', {
-            compute: '_computeRtcAsConnectedSession',
+            compute() {
+                if (!this.messaging || !this.messaging.rtc) {
+                    return clear();
+                }
+                if (this.rtcPeerConnection) {
+                    return this.messaging.rtc;
+                }
+                return clear();
+            },
             inverse: 'connectedRtcSessions',
         }),
         rtcPeerConnection: one('RtcPeerConnection', {
@@ -509,8 +485,18 @@ registerModel({
          * The volume of the audio played from this session.
          */
         volume: attr({
+            compute() {
+                if (this.localVolume !== undefined) {
+                    return this.localVolume;
+                }
+                if (this.channelMember && this.channelMember.persona.volumeSetting) {
+                    return this.channelMember.persona.volumeSetting.volume;
+                }
+                if (this.audioElement) {
+                    return this.audioElement.volume;
+                }
+            },
             default: 0.5,
-            compute: '_computeVolume',
         }),
     },
 });

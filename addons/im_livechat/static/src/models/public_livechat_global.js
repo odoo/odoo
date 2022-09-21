@@ -39,57 +39,12 @@ registerModel({
             }
             this.update({ hasLoadedQWebTemplate: true });
         },
+
         async willStart() {
             await this._willStart();
             await this._willStartChatbot();
         },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeChannelId() {
-            return this.options.channel_id;
-        },
-        /**
-         * Compares the last message of the conversation to this livechat's operator id.
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsLastMessageFromCustomer() {
-            if (!this.lastMessage) {
-                return clear();
-            }
-            if (!this.publicLivechat) {
-                return clear();
-            }
-            return this.lastMessage.authorId !== this.publicLivechat.operator.id;
-        },
-        /**
-          * @private
-          * @returns {FieldCommand}
-          */
-         _computeLastMessage() {
-            if (this.messages.length === 0) {
-                return clear();
-            }
-            return this.messages[this.messages.length - 1];
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLivechatButtonView() {
-            if (this.isAvailable && this.isAvailableForMe && this.hasLoadedQWebTemplate && this.env.services.public_livechat_service) {
-                return {};
-            }
-            return clear();
-        },
-        _computeWelcomeMessages() {
-            return this.messages.filter((message) => {
-                return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
-            });
-        },
+
         async _willStart() {
             const cookie = get_cookie('im_livechat_session');
             if (cookie) {
@@ -116,6 +71,7 @@ registerModel({
             }
             return this.loadQWebTemplate();
         },
+
         /**
          * This override handles the following use cases:
          *
@@ -175,7 +131,7 @@ registerModel({
                 // -> restore the user's session (see 'Chatbot/restoreSession')
                 this.chatbot.restoreSession();
             }
-        },
+        }
     },
     fields: {
         HISTORY_LIMIT: attr({
@@ -192,7 +148,9 @@ registerModel({
             },
         }),
         channelId: attr({
-            compute: '_computeChannelId',
+            compute() {
+                return this.options.channel_id;
+            },
         }),
         chatbot: one('Chatbot', {
             default: {},
@@ -217,17 +175,35 @@ registerModel({
             default: false,
         }),
         isLastMessageFromCustomer: attr({
-            compute: '_computeIsLastMessageFromCustomer',
+            compute() {
+                if (!this.lastMessage) {
+                    return clear();
+                }
+                if (!this.publicLivechat) {
+                    return clear();
+                }
+                return this.lastMessage.authorId !== this.publicLivechat.operator.id;
+            },
             default: false,
         }),
         isTestChatbot: attr({
             default: false,
         }),
         lastMessage: one('PublicLivechatMessage', {
-            compute: '_computeLastMessage',
+            compute() {
+               if (this.messages.length === 0) {
+                   return clear();
+               }
+               return this.messages[this.messages.length - 1];
+           },
         }),
         livechatButtonView: one('LivechatButtonView', {
-            compute: '_computeLivechatButtonView',
+            compute() {
+                if (this.isAvailable && this.isAvailableForMe && this.hasLoadedQWebTemplate && this.env.services.public_livechat_service) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'publicLivechatGlobalOwner',
         }),
         livechatInit: attr(),
@@ -248,7 +224,11 @@ registerModel({
         sessionCookie: attr(),
         testChatbotData: attr(),
         welcomeMessages: many('PublicLivechatMessage', {
-            compute: '_computeWelcomeMessages',
+            compute() {
+                return this.messages.filter((message) => {
+                    return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
+                });
+            },
         }),
     },
 });

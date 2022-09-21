@@ -29,6 +29,7 @@ registerModel({
                 }),
             });
         },
+
         /**
          * @param {integer} scrollTop
          * @param {ThreadCache} threadCache
@@ -49,27 +50,7 @@ registerModel({
                     [threadCache.localId]: scrollTop,
                 }),
             });
-        },
-        /**
-         * @private
-         * @returns {ThreadViewer|undefined}
-         */
-        _computeThreadView() {
-            return this.hasThreadView ? {} : clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeThreadView_hasComposerThreadTyping() {
-            if (this.discussPublicView) {
-                return true;
-            }
-            if (this.discuss) {
-                return true;
-            }
-            return clear();
-        },
+        }
     },
     fields: {
         chatter: one('Chatter', {
@@ -158,11 +139,21 @@ registerModel({
          * States the `ThreadView` currently displayed and managed by `this`.
          */
         threadView: one('ThreadView', {
-            compute: '_computeThreadView',
+            compute() {
+                return this.hasThreadView ? {} : clear();
+            },
             inverse: 'threadViewer',
         }),
         threadView_hasComposerThreadTyping: attr({
-            compute: '_computeThreadView_hasComposerThreadTyping',
+            compute() {
+                if (this.discussPublicView) {
+                    return true;
+                }
+                if (this.discuss) {
+                    return true;
+                }
+                return clear();
+            },
         }),
     },
 });

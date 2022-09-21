@@ -27,6 +27,7 @@ registerModel({
         closeSuggestions() {
             this.update({ suggestionDelimiterPosition: clear() });
         },
+
         /**
          * Returns whether the given html element is inside this composer view,
          * including whether it's inside the emoji popover when active.
@@ -41,6 +42,7 @@ registerModel({
             }
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
+
         /**
          * Hides the composer, which only makes sense if the composer is
          * currently used as a Discuss Inbox reply composer or as message
@@ -59,6 +61,7 @@ registerModel({
                 threadView.update({ replyingToMessageView: clear() });
             }
         },
+
         /**
          * Called when current partner is inserting some input in composer.
          * Useful to notify current partner is currently typing something in the
@@ -80,6 +83,7 @@ registerModel({
                 this.composer.thread.registerCurrentPartnerIsTyping();
             }
         },
+
         /**
          * Inserts text content in text input based on selection.
          *
@@ -108,6 +112,7 @@ registerModel({
             }
             this.update({ suggestionDelimiterPosition });
         },
+
         /**
          * Inserts the active suggestion at the current cursor position.
          */
@@ -151,6 +156,7 @@ registerModel({
                 composerView.update({ hasToRestoreContent: true });
             }
         },
+
         /**
          * Called when clicking on attachment button.
          */
@@ -160,6 +166,7 @@ registerModel({
                 this.update({ doFocus: true });
             }
         },
+
         /**
          * Handles click on the emojis button.
          */
@@ -170,6 +177,7 @@ registerModel({
                 this.update({ emojisPopoverView: clear() });
             }
         },
+
         /**
          * Handles click on the cancel link.
          *
@@ -181,6 +189,7 @@ registerModel({
                 this.discard();
             }
         },
+
         /**
          * Discards the composer when clicking away.
          *
@@ -200,6 +209,7 @@ registerModel({
                 this.discard();
             }
         },
+
         /**
          * Called when clicking on "discard" button.
          *
@@ -208,6 +218,7 @@ registerModel({
         onClickDiscard(ev) {
             this.discard();
         },
+
         /**
          * @private
          * @param {MouseEvent} ev
@@ -220,12 +231,14 @@ registerModel({
             }
             this.update({ emojisPopoverView: clear() });
         },
+
         /**
          * Called when clicking on "expand" button.
          */
         onClickFullComposer() {
             this.openFullComposer();
         },
+
         /**
          * @private
          * @param {MouseEvent} ev
@@ -233,6 +246,7 @@ registerModel({
         onClickReplyingToMessage(ev) {
             this.threadView.replyingToMessageView.update({ doHighlight: true });
         },
+
         /**
          * Handles click on the save link.
          *
@@ -242,6 +256,7 @@ registerModel({
             ev.preventDefault();
             this.sendMessage();
         },
+
         /**
          * Called when clicking on "send" button.
          */
@@ -249,6 +264,7 @@ registerModel({
             this.sendMessage();
             this.update({ doFocus: true });
         },
+
         /**
          * Handles click on the "stop replying" button.
          *
@@ -259,6 +275,7 @@ registerModel({
                 replyingToMessageView: clear(),
             });
         },
+
         onClickTextarea() {
             if (!this.exists()) {
                 return;
@@ -266,12 +283,14 @@ registerModel({
             // clicking might change the cursor position
             this.saveStateInStore();
         },
+
         onFocusinTextarea() {
             if (!this.exists()) {
                 return;
             }
             this.update({ isFocused: true });
         },
+
         onFocusoutTextarea() {
             if (!this.exists()) {
                 return;
@@ -279,6 +298,7 @@ registerModel({
             this.saveStateInStore();
             this.update({ isFocused: false });
         },
+
         onInputTextarea() {
             if (!this.exists()) {
                 return;
@@ -290,6 +310,7 @@ registerModel({
             this.update({ textareaLastInputValue: this.textareaRef.el.value });
             this.updateTextInputHeight();
         },
+
         /**
          * @param {KeyboardEvent} ev
          */
@@ -305,6 +326,7 @@ registerModel({
                 this.discard();
             }
         },
+
         /**
          * @private
          * @param {KeyboardEvent} ev
@@ -318,6 +340,7 @@ registerModel({
                 markEventHandled(ev, 'Composer.closeEmojisPopover');
             }
         },
+
         /**
          * @param {KeyboardEvent} ev
          */
@@ -352,6 +375,7 @@ registerModel({
                     break;
             }
         },
+
         /**
          * @param {KeyboardEvent} ev
          */
@@ -397,6 +421,7 @@ registerModel({
                 return;
             }
         },
+
         /**
           * Key events management is performed in a Keyup to avoid intempestive RPC calls
           *
@@ -484,6 +509,7 @@ registerModel({
                     this.saveStateInStore();
             }
         },
+
         /**
          * @param {ClipboardEvent} ev
          */
@@ -493,6 +519,7 @@ registerModel({
             }
             await this.fileUploader.uploadFiles(ev.clipboardData.files);
         },
+
         /**
          * Open the full composer modal.
          */
@@ -530,6 +557,7 @@ registerModel({
             };
             await this.env.services.action.doAction(action, options);
         },
+
         /**
          * Post a message in provided composer's thread based on current composer fields values.
          */
@@ -621,6 +649,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * Saves the composer text input state in store
          */
@@ -632,6 +661,7 @@ registerModel({
                 textInputSelectionDirection: this.textareaRef.el.selectionDirection,
             });
         },
+
         /**
          * Send a message in the composer on related thread.
          *
@@ -665,6 +695,7 @@ registerModel({
             }
             this.postMessage();
         },
+
         /**
          * Updates the textarea height of text input.
          */
@@ -672,6 +703,7 @@ registerModel({
             this.mirroredTextareaRef.el.value = this.composer.textInputContent;
             this.textareaRef.el.style.height = this.mirroredTextareaRef.el.scrollHeight + 'px';
         },
+
         /**
          * Update a posted message when the message is ready.
          */
@@ -691,341 +723,7 @@ registerModel({
                 messageViewInEditing.stopEditing();
             }
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeAttachmentList() {
-            return (this.composer && this.composer.attachments.length > 0)
-                ? {}
-                : clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeComposerSuggestedRecipientListView() {
-            if (this.hasHeader && this.hasFollowers && !this.composer.isLog) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeComposer() {
-            if (this.threadView) {
-                // When replying to a message, always use the composer from that message's thread
-                if (this.threadView && this.threadView.replyingToMessageView) {
-                    return this.threadView.replyingToMessageView.message.originThread.composer;
-                }
-                if (this.threadView.thread && this.threadView.thread.composer) {
-                    return this.threadView.thread.composer;
-                }
-            }
-            if (this.messageViewInEditing && this.messageViewInEditing.composerForEditing) {
-                return this.messageViewInEditing.composerForEditing;
-            }
-            if (this.chatter && this.chatter.thread && this.chatter.thread.composer) {
-                return this.chatter.thread.composer;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeCurrentPartnerAvatar() {
-            if (this.messaging.currentUser) {
-                return url('/web/image', {
-                    field: 'avatar_128',
-                    id: this.messaging.currentUser.id,
-                    model: 'res.users',
-                });
-            }
-            return '/web/static/img/user_menu_avatar.png';
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeDropZoneView() {
-            if (this.useDragVisibleDropZone.isVisible) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasDiscardButton() {
-            if (this.messageViewInEditing) {
-                return false;
-            }
-            if (this.messaging.device.isSmall) {
-                return false;
-            }
-            if (!this.threadView) {
-                return clear();
-            }
-            if (this.threadView.threadViewer.discuss) {
-                return this.threadView.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasCurrentPartnerAvatar() {
-            if (this.messageViewInEditing) {
-                return false;
-            }
-            if (!this.threadView) {
-                return clear();
-            }
-            if (this.threadView.threadViewer.chatWindow) {
-                return false;
-            }
-            if (this.threadView.threadViewer.discuss) {
-                return !this.messaging.device.isSmall;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasFollowers() {
-            if (this.chatter) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasFooter() {
-            return Boolean(
-                this.hasThreadTyping ||
-                this.composer.attachments.length > 0 ||
-                this.messageViewInEditing ||
-                !this.isCompact
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasHeader() {
-            return Boolean(
-                (this.hasThreadName && this.composer.thread) ||
-                (this.hasFollowers && !this.composer.isLog) ||
-                (this.threadView && this.threadView.replyingToMessageView)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasMentionSuggestionsBelowPosition() {
-            if (this.chatter) {
-                return true;
-            }
-            if (this.messageViewInEditing) {
-                return false;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @return {boolean}
-         */
-        _computeHasSuggestions() {
-            return this.mainSuggestions.length > 0 || this.extraSuggestions.length > 0;
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasThreadTyping() {
-            if (this.threadView) {
-                return this.threadView.hasComposerThreadTyping;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsCompact() {
-            if (this.chatter) {
-                return false;
-            }
-            if (this.messageViewInEditing) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInDiscuss() {
-            return Boolean(
-                (this.threadView && (this.threadView.threadViewer.discuss || this.threadView.threadViewer.discussPublicView)) ||
-                (this.messageViewInEditing && this.messageViewInEditing.isInDiscuss)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInChatWindow() {
-            return Boolean(
-                (this.threadView && this.threadView.threadViewer.chatWindow) ||
-                (this.messageViewInEditing && this.messageViewInEditing.isInChatWindow)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsInChatter() {
-            return Boolean(
-                (this.threadView && this.threadView.threadViewer.chatter) ||
-                (this.messageViewInEditing && this.messageViewInEditing.isInChatter)
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasSendButton() {
-            if (this.messageViewInEditing) {
-                return false;
-            }
-            if (this.threadView && this.threadView.threadViewer.chatWindow) {
-                return this.messaging.device.isSmall;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeIsExpandable() {
-            if (this.chatter) {
-                return true;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasThreadName() {
-            if (this.threadView) {
-                return this.threadView.hasComposerThreadName;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeSendButtonText() {
-            if (
-                this.composer &&
-                this.composer.isLog &&
-                this.composer.activeThread &&
-                this.composer.activeThread.model !== 'mail.channel'
-            ) {
-                return this.env._t("Log");
-            }
-            return this.env._t("Send");
-        },
-        /**
-         * @private
-         * @returns {string[]}
-         */
-         _computeSendShortcuts() {
-            if (this.chatter) {
-                return ['ctrl-enter', 'meta-enter'];
-            }
-            if (this.messageViewInEditing) {
-                return ['enter'];
-            }
-            if (this.threadView) {
-                if (!this.messaging.device) {
-                    return clear();
-                }
-                // Actually in mobile there is a send button, so we need there 'enter' to allow new
-                // line. Hence, we want to use a different shortcut 'ctrl/meta enter' to send for
-                // small screen size with a non-mailing channel. Here send will be done on clicking
-                // the button or using the 'ctrl/meta enter' shortcut.
-                if (
-                    this.messaging.device.isSmall ||
-                    (
-                        this.messaging.discuss.threadView === this.threadView &&
-                        this.messaging.discuss.activeThread === this.messaging.inbox.thread
-                    )
-                ) {
-                    return ['ctrl-enter', 'meta-enter'];
-                }
-                return ['enter'];
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeSuggestionDelimiter() {
-            if (
-                !this.composer ||
-                this.suggestionDelimiterPosition === undefined ||
-                this.suggestionDelimiterPosition >= this.composer.textInputContent.length
-            ) {
-                return clear();
-            }
-            return this.composer.textInputContent[this.suggestionDelimiterPosition];
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeSuggestionModelName() {
-            switch (this.suggestionDelimiter) {
-                case '@':
-                    return 'Partner';
-                case ':':
-                    return 'CannedResponse';
-                case '/':
-                    return 'ChannelCommand';
-                case '#':
-                    return 'Thread';
-                default:
-                    return clear();
-            }
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeSuggestionSearchTerm() {
-            if (
-                !this.composer ||
-                this.suggestionDelimiterPosition === undefined ||
-                this.suggestionDelimiterPosition >= this.composer.textInputCursorStart
-            ) {
-                return clear();
-            }
-            return this.composer.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.composer.textInputCursorStart);
-        },
+
         /**
          * Executes the given async function, only when the last function
          * executed by this method terminates. If there is already a pending
@@ -1053,6 +751,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * @private
          * @param {string} htmlString
@@ -1072,6 +771,7 @@ registerModel({
             }
             return htmlString;
         },
+
         /**
          *
          * Generates the html link related to the mentioned partner
@@ -1121,6 +821,7 @@ registerModel({
             }
             return body;
         },
+
         _generateMessageBody() {
             const escapedAndCompactContent = escapeAndCompactTextContent(this.composer.textInputContent);
             let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
@@ -1135,6 +836,7 @@ registerModel({
             body = this._generateEmojisOnHtml(body);
             return body;
         },
+
         /**
          * @private
          * @param {string} content html content
@@ -1155,6 +857,7 @@ registerModel({
             }
             return undefined;
         },
+
         /**
          * Gather data for message post.
          *
@@ -1169,6 +872,7 @@ registerModel({
                 partner_ids: this.composer.recipients.map(partner => partner.id),
             };
         },
+
         /**
          * Handles change of this composer. Useful to reset the state of the
          * composer text input.
@@ -1176,6 +880,7 @@ registerModel({
         _onChangeComposer() {
             this.update({ hasToRestoreContent: true });
         },
+
         /**
          * @private
          */
@@ -1224,6 +929,7 @@ registerModel({
             }
             return this.update({ suggestionDelimiterPosition: clear() });
         },
+
         /**
          * Updates the suggestion state based on the currently saved composer
          * state (in particular content and cursor position).
@@ -1264,6 +970,7 @@ registerModel({
                 }
             });
         },
+
         /**
          * Updates the current suggestion list. This method should be called
          * whenever the UI has to be refreshed following change in state.
@@ -1303,16 +1010,7 @@ registerModel({
                 this.composerSuggestionListView.update({ hasToScrollToActiveSuggestionView: true });
             }
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeComposerSuggestionListView() {
-            if (this.hasSuggestions) {
-                return {};
-            }
-            return clear();
-        },
+
         /**
          * @private
          */
@@ -1323,14 +1021,18 @@ registerModel({
                     mainSuggestions: clear(),
                 });
             }
-        },
+        }
     },
     fields: {
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
         attachmentList: one('AttachmentList', {
-            compute: '_computeAttachmentList',
+            compute() {
+                return (this.composer && this.composer.attachments.length > 0)
+                    ? {}
+                    : clear();
+            },
             inverse: 'composerViewOwner',
         }),
         /**
@@ -1352,30 +1054,71 @@ registerModel({
          * States the composer state that is displayed by this composer view.
          */
         composer: one('Composer', {
-            compute: '_computeComposer',
+            compute() {
+                if (this.threadView) {
+                    // When replying to a message, always use the composer from that message's thread
+                    if (this.threadView && this.threadView.replyingToMessageView) {
+                        return this.threadView.replyingToMessageView.message.originThread.composer;
+                    }
+                    if (this.threadView.thread && this.threadView.thread.composer) {
+                        return this.threadView.thread.composer;
+                    }
+                }
+                if (this.messageViewInEditing && this.messageViewInEditing.composerForEditing) {
+                    return this.messageViewInEditing.composerForEditing;
+                }
+                if (this.chatter && this.chatter.thread && this.chatter.thread.composer) {
+                    return this.chatter.thread.composer;
+                }
+                return clear();
+            },
             inverse: 'composerViews',
             required: true,
         }),
         composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', {
-            compute: '_computeComposerSuggestedRecipientListView',
+            compute() {
+                if (this.hasHeader && this.hasFollowers && !this.composer.isLog) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'composerViewOwner',
         }),
         composerSuggestionListView: one('ComposerSuggestionListView', {
-            compute: '_computeComposerSuggestionListView',
+            compute() {
+                if (this.hasSuggestions) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'composerViewOwner',
         }),
         /**
          * Current partner image URL.
          */
         currentPartnerAvatar: attr({
-            compute: '_computeCurrentPartnerAvatar',
+            compute() {
+                if (this.messaging.currentUser) {
+                    return url('/web/image', {
+                        field: 'avatar_128',
+                        id: this.messaging.currentUser.id,
+                        model: 'res.users',
+                    });
+                }
+                return '/web/static/img/user_menu_avatar.png';
+            },
         }),
         /**
          * Determines whether this composer should be focused at next render.
          */
         doFocus: attr(),
         dropZoneView: one('DropZoneView', {
-            compute: '_computeDropZoneView',
+            compute() {
+                if (this.useDragVisibleDropZone.isVisible) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'composerViewOwner',
         }),
         /**
@@ -1392,28 +1135,74 @@ registerModel({
             required: true,
         }),
         hasCurrentPartnerAvatar: attr({
+            compute() {
+                if (this.messageViewInEditing) {
+                    return false;
+                }
+                if (!this.threadView) {
+                    return clear();
+                }
+                if (this.threadView.threadViewer.chatWindow) {
+                    return false;
+                }
+                if (this.threadView.threadViewer.discuss) {
+                    return !this.messaging.device.isSmall;
+                }
+                return clear();
+            },
             default: true,
-            compute: '_computeHasCurrentPartnerAvatar',
         }),
         hasDiscardButton: attr({
-            compute: '_computeHasDiscardButton',
+            compute() {
+                if (this.messageViewInEditing) {
+                    return false;
+                }
+                if (this.messaging.device.isSmall) {
+                    return false;
+                }
+                if (!this.threadView) {
+                    return clear();
+                }
+                if (this.threadView.threadViewer.discuss) {
+                    return this.threadView.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
+                }
+                return clear();
+            },
             default: false,
         }),
         hasFollowers: attr({
-            compute: '_computeHasFollowers',
+            compute() {
+                if (this.chatter) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
         }),
         /**
          * Determines whether composer should display a footer.
          */
         hasFooter: attr({
-            compute: '_computeHasFooter',
+            compute() {
+                return Boolean(
+                    this.hasThreadTyping ||
+                    this.composer.attachments.length > 0 ||
+                    this.messageViewInEditing ||
+                    !this.isCompact
+                );
+            },
         }),
         /**
          * Determine whether the composer should display a header.
          */
         hasHeader: attr({
-            compute: '_computeHasHeader',
+            compute() {
+                return Boolean(
+                    (this.hasThreadName && this.composer.thread) ||
+                    (this.hasFollowers && !this.composer.isLog) ||
+                    (this.threadView && this.threadView.replyingToMessageView)
+                );
+            },
         }),
         /**
          * Determines whether there is a mention RPC currently in progress.
@@ -1423,11 +1212,27 @@ registerModel({
             default: false,
         }),
         hasMentionSuggestionsBelowPosition: attr({
-            compute: '_computeHasMentionSuggestionsBelowPosition',
+            compute() {
+                if (this.chatter) {
+                    return true;
+                }
+                if (this.messageViewInEditing) {
+                    return false;
+                }
+                return clear();
+            },
             default: false,
         }),
         hasSendButton: attr({
-            compute: '_computeHasSendButton',
+            compute() {
+                if (this.messageViewInEditing) {
+                    return false;
+                }
+                if (this.threadView && this.threadView.threadViewer.chatWindow) {
+                    return this.messaging.device.isSmall;
+                }
+                return clear();
+            },
             default: true,
         }),
         /**
@@ -1435,15 +1240,27 @@ registerModel({
          * suggestion delimiter and search term, if applicable.
          */
         hasSuggestions: attr({
-            compute: '_computeHasSuggestions',
+            compute() {
+                return this.mainSuggestions.length > 0 || this.extraSuggestions.length > 0;
+            },
             default: false,
         }),
         hasThreadName: attr({
-            compute: '_computeHasThreadName',
+            compute() {
+                if (this.threadView) {
+                    return this.threadView.hasComposerThreadName;
+                }
+                return clear();
+            },
             default: false,
         }),
         hasThreadTyping: attr({
-            compute: '_computeHasThreadTyping',
+            compute() {
+                if (this.threadView) {
+                    return this.threadView.hasComposerThreadTyping;
+                }
+                return clear();
+            },
             default: false,
         }),
         /**
@@ -1457,11 +1274,24 @@ registerModel({
             default: false,
         }),
         isCompact: attr({
-            compute: '_computeIsCompact',
+            compute() {
+                if (this.chatter) {
+                    return false;
+                }
+                if (this.messageViewInEditing) {
+                    return true;
+                }
+                return clear();
+            },
             default: true,
         }),
         isExpandable: attr({
-            compute: '_computeIsExpandable',
+            compute() {
+                if (this.chatter) {
+                    return true;
+                }
+                return clear();
+            },
             default: false,
         }),
         isFocused: attr({
@@ -1471,19 +1301,34 @@ registerModel({
          * Determines if we are in the Discuss view.
          */
         isInDiscuss: attr({
-            compute: '_computeIsInDiscuss',
+            compute() {
+                return Boolean(
+                    (this.threadView && (this.threadView.threadViewer.discuss || this.threadView.threadViewer.discussPublicView)) ||
+                    (this.messageViewInEditing && this.messageViewInEditing.isInDiscuss)
+                );
+            },
         }),
         /**
          * Determines if we are in the ChatWindow view.
          */
         isInChatWindow: attr({
-            compute: '_computeIsInChatWindow',
+            compute() {
+                return Boolean(
+                    (this.threadView && this.threadView.threadViewer.chatWindow) ||
+                    (this.messageViewInEditing && this.messageViewInEditing.isInChatWindow)
+                );
+            },
         }),
         /**
          * Determines if we are in the Chatter view.
          */
         isInChatter: attr({
-            compute: '_computeIsInChatter',
+            compute() {
+                return Boolean(
+                    (this.threadView && this.threadView.threadViewer.chatter) ||
+                    (this.messageViewInEditing && this.messageViewInEditing.isInChatter)
+                );
+            },
         }),
         /**
          * Last content of textarea from input event. Useful to determine
@@ -1515,7 +1360,17 @@ registerModel({
          * Determines the label on the send button of this composer view.
          */
         sendButtonText: attr({
-            compute: '_computeSendButtonText',
+            compute() {
+                if (
+                    this.composer &&
+                    this.composer.isLog &&
+                    this.composer.activeThread &&
+                    this.composer.activeThread.model !== 'mail.channel'
+                ) {
+                    return this.env._t("Log");
+                }
+                return this.env._t("Send");
+            },
         }),
         /**
          * Keyboard shortcuts from text input to send message.
@@ -1523,7 +1378,34 @@ registerModel({
          * 'ctrl-enter', and/or 'meta-enter'.
          */
         sendShortcuts: attr({
-            compute: '_computeSendShortcuts',
+            compute() {
+               if (this.chatter) {
+                   return ['ctrl-enter', 'meta-enter'];
+               }
+               if (this.messageViewInEditing) {
+                   return ['enter'];
+               }
+               if (this.threadView) {
+                   if (!this.messaging.device) {
+                       return clear();
+                   }
+                   // Actually in mobile there is a send button, so we need there 'enter' to allow new
+                   // line. Hence, we want to use a different shortcut 'ctrl/meta enter' to send for
+                   // small screen size with a non-mailing channel. Here send will be done on clicking
+                   // the button or using the 'ctrl/meta enter' shortcut.
+                   if (
+                       this.messaging.device.isSmall ||
+                       (
+                           this.messaging.discuss.threadView === this.threadView &&
+                           this.messaging.discuss.activeThread === this.messaging.inbox.thread
+                       )
+                   ) {
+                       return ['ctrl-enter', 'meta-enter'];
+                   }
+                   return ['enter'];
+               }
+               return clear();
+           },
             default: [],
         }),
         /**
@@ -1533,7 +1415,16 @@ registerModel({
          * canned responses (:), channels (#), commands (/) and partners (@)
          */
         suggestionDelimiter: attr({
-            compute: '_computeSuggestionDelimiter',
+            compute() {
+                if (
+                    !this.composer ||
+                    this.suggestionDelimiterPosition === undefined ||
+                    this.suggestionDelimiterPosition >= this.composer.textInputContent.length
+                ) {
+                    return clear();
+                }
+                return this.composer.textInputContent[this.suggestionDelimiterPosition];
+            },
         }),
         /**
          * States the position inside textInputContent of the suggestion
@@ -1548,13 +1439,35 @@ registerModel({
          * if any.
          */
         suggestionModelName: attr({
-            compute: '_computeSuggestionModelName',
+            compute() {
+                switch (this.suggestionDelimiter) {
+                    case '@':
+                        return 'Partner';
+                    case ':':
+                        return 'CannedResponse';
+                    case '/':
+                        return 'ChannelCommand';
+                    case '#':
+                        return 'Thread';
+                    default:
+                        return clear();
+                }
+            },
         }),
         /**
          * States the search term to use for suggestions (if any).
          */
         suggestionSearchTerm: attr({
-            compute: '_computeSuggestionSearchTerm',
+            compute() {
+                if (
+                    !this.composer ||
+                    this.suggestionDelimiterPosition === undefined ||
+                    this.suggestionDelimiterPosition >= this.composer.textInputCursorStart
+                ) {
+                    return clear();
+                }
+                return this.composer.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.composer.textInputCursorStart);
+            },
         }),
         /**
          * Reference of the textarea. Useful to set height, selection and content.

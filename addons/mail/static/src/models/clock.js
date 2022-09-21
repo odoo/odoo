@@ -22,25 +22,19 @@ registerModel({
     recordMethods: {
         /**
          * @private
-         * @returns {integer}
-         */
-        _computeTickInterval() {
-            return this.messaging.browser.setInterval(this._onInterval, this.frequency);
-        },
-        /**
-         * @private
          */
         _onChangeWatchers() {
             if (this.watchers.length === 0) {
                 this.delete();
             }
         },
+
         /**
          * @private
          */
         _onInterval() {
             this.update({ date: new Date() });
-        },
+        }
     },
     fields: {
         /**
@@ -56,7 +50,9 @@ registerModel({
             identifying: true,
         }),
         tickInterval: attr({
-            compute: '_computeTickInterval',
+            compute() {
+                return this.messaging.browser.setInterval(this._onInterval, this.frequency);
+            },
         }),
         /**
          * The records that are making use of this clock.

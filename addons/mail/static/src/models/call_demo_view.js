@@ -17,6 +17,7 @@ registerModel({
             this.stopTracksOnMediaStream(this.audioStream);
             this.update({ audioStream: null });
         },
+
         /**
          * Stops recording user's video device.
          */
@@ -28,6 +29,7 @@ registerModel({
             this.stopTracksOnMediaStream(this.videoStream);
             this.update({ videoStream: null });
         },
+
         /**
          * Asks for access to the user's microphone if not granted yet, then
          * starts recording and defines the resulting audio stream as the source
@@ -45,6 +47,7 @@ registerModel({
                 // TODO: display popup asking the user to re-enable their mic
             }
         },
+
         /**
          * Asks for access to the user's video device if not granted yet, then
          * starts recording and defines the resulting video stream as the source
@@ -62,30 +65,35 @@ registerModel({
                 // TODO: display popup asking the user to re-enable their camera
             }
         },
+
         /**
          * Handles click on the "disable microphone" button.
          */
         onClickDisableMicrophoneButton() {
             this.disableMicrophone();
         },
+
         /**
          * Handles click on the "disable video" button.
          */
         onClickDisableVideoButton() {
             this.disableVideo();
         },
+
         /**
          * Handles click on the "enable microphone" button.
          */
         onClickEnableMicrophoneButton() {
             this.enableMicrophone();
         },
+
         /**
          * Handles click on the "enable video" button.
          */
         onClickEnableVideoButton() {
             this.enableVideo();
         },
+
         /**
          * Iterates tracks of the provided MediaStream, calling the `stop`
          * method on each of them.
@@ -96,32 +104,7 @@ registerModel({
             for (const track of mediaStream.getTracks()) {
                 track.stop();
             }
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeDoesBrowserSupportMediaDevices() {
-            return Boolean(
-                navigator.mediaDevices &&
-                navigator.mediaDevices.getUserMedia &&
-                window.MediaStream
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsMicrophoneEnabled() {
-            return this.audioStream !== null;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsVideoEnabled() {
-            return this.videoStream !== null;
-        },
+        }
     },
     fields: {
         /**
@@ -142,19 +125,29 @@ registerModel({
          * microphone/camera recording.
          */
         doesBrowserSupportMediaDevices: attr({
-            compute: '_computeDoesBrowserSupportMediaDevices',
+            compute() {
+                return Boolean(
+                    navigator.mediaDevices &&
+                    navigator.mediaDevices.getUserMedia &&
+                    window.MediaStream
+                );
+            },
         }),
         /**
          * States if the user's microphone is currently recording.
          */
         isMicrophoneEnabled: attr({
-            compute: '_computeIsMicrophoneEnabled',
+            compute() {
+                return this.audioStream !== null;
+            },
         }),
         /**
          * States if the user's camera is currently recording.
          */
         isVideoEnabled: attr({
-            compute: '_computeIsVideoEnabled',
+            compute() {
+                return this.videoStream !== null;
+            },
         }),
         /**
          * Ref to the video element used for the video feedback.

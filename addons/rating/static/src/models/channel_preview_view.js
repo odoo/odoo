@@ -14,17 +14,12 @@ patchRecordMethods('ChannelPreviewView', {
     },
 });
 
-addRecordMethods('ChannelPreviewView', {
-    /**
-     * @private
-     */
-    _computeIsRating() {
-        return Boolean(this.thread.lastMessage && this.thread.lastMessage.rating);
-    },
-});
+addRecordMethods('ChannelPreviewView', {});
 
 addFields('ChannelPreviewView', {
     isRating: attr({
-        compute: '_computeIsRating',
+        compute() {
+            return Boolean(this.thread.lastMessage && this.thread.lastMessage.rating);
+        },
     }),
 });

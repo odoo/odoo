@@ -115,6 +115,7 @@ registerModel({
             }
             this.delete();
         },
+
         /**
          * Opens (legacy) form view dialog to edit current activity and updates
          * the activity when dialog is closed.
@@ -144,6 +145,7 @@ registerModel({
                 })
             });
         },
+
         async fetchAndUpdate() {
             const [data] = await this.messaging.rpc({
                 model: 'mail.activity',
@@ -168,6 +170,7 @@ registerModel({
                 this.delete();
             }
         },
+
         /**
          * @param {Object} param0
          * @param {Attachment[]} [param0.attachments=[]]
@@ -193,6 +196,7 @@ registerModel({
             }
             this.delete();
         },
+
         /**
          * @param {Object} param0
          * @param {string} param0.feedback
@@ -226,38 +230,7 @@ registerModel({
                     },
                 },
             );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsCurrentPartnerAssignee() {
-            if (!this.assignee || !this.assignee.partner || !this.messaging.currentPartner) {
-                return false;
-            }
-            return this.assignee.partner === this.messaging.currentPartner;
-        },
-        /**
-         * Wysiwyg editor put `<p><br></p>` even without a note on the activity.
-         * This compute replaces this almost empty value by an actual empty
-         * value, to reduce the size the empty note takes on the UI.
-         *
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeNote() {
-            if (this.rawNote === '<p><br></p>') {
-                return clear();
-            }
-            return this.rawNote;
-        },
-        /**
-         * @private
-         * @returns {Markup}
-         */
-        _computeNoteAsMarkup() {
-            return markup(this.note);
-        },
+        }
     },
     fields: {
         activityViews: many('ActivityView', {
@@ -290,7 +263,12 @@ registerModel({
             identifying: true,
         }),
         isCurrentPartnerAssignee: attr({
-            compute: '_computeIsCurrentPartnerAssignee',
+            compute() {
+                if (!this.assignee || !this.assignee.partner || !this.messaging.currentPartner) {
+                    return false;
+                }
+                return this.assignee.partner === this.messaging.currentPartner;
+            },
             default: false,
         }),
         mailTemplates: many('MailTemplate', {
@@ -303,10 +281,17 @@ registerModel({
          * directly from user input and not from server data as it's not escaped.
          */
         note: attr({
-            compute: '_computeNote',
+            compute() {
+                if (this.rawNote === '<p><br></p>') {
+                    return clear();
+                }
+                return this.rawNote;
+            },
         }),
         noteAsMarkup: attr({
-            compute: '_computeNoteAsMarkup',
+            compute() {
+                return markup(this.note);
+            },
         }),
         rawNote: attr(),
         /**

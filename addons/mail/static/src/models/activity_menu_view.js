@@ -20,6 +20,7 @@ registerModel({
         close() {
             this.update({ isOpen: false });
         },
+
         async fetchData() {
             const data = await this.messaging.rpc({
                 model: 'res.users',
@@ -32,6 +33,7 @@ registerModel({
                 extraCount: 0,
             });
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -44,6 +46,7 @@ registerModel({
                 this.fetchData();
             }
         },
+
         /**
          * Closes the menu when clicking outside, if appropriate.
          *
@@ -61,24 +64,7 @@ registerModel({
                 return;
             }
             this.close();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActivityGroupViews() {
-            return this.activityGroups.map(activityGroup => {
-                return {
-                    activityGroup,
-                };
-            });
-        },
-        /**
-         * @private
-         */
-        _computeCounter() {
-            return this.activityGroups.reduce((total, group) => total + group.total_count, this.extraCount);
-        },
+        }
     },
     fields: {
         activityGroups: many('ActivityGroup', {
@@ -87,12 +73,20 @@ registerModel({
             }
         }),
         activityGroupViews: many('ActivityGroupView', {
-            compute: '_computeActivityGroupViews',
+            compute() {
+                return this.activityGroups.map(activityGroup => {
+                    return {
+                        activityGroup,
+                    };
+                });
+            },
             inverse: 'activityMenuViewOwner',
         }),
         component: attr(),
         counter: attr({
-            compute: '_computeCounter',
+            compute() {
+                return this.activityGroups.reduce((total, group) => total + group.total_count, this.extraCount);
+            },
         }),
         /**
          * Determines the number of activities that have been added in the

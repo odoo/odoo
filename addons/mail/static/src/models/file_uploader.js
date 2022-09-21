@@ -21,6 +21,7 @@ registerModel({
         openBrowserFileUploader() {
             this.fileInput.click();
         },
+
         /**
          * Called when there are changes in the file input.
          *
@@ -31,6 +32,7 @@ registerModel({
         onChangeAttachment(ev) {
             this.uploadFiles(ev.target.files);
         },
+
         /**
          * @param {FileList|Array} files
          * @returns {Promise}
@@ -48,40 +50,7 @@ registerModel({
             }
             this.messaging.messagingBus.trigger('o-file-uploader-upload', { files });
         },
-        /**
-         * Create an HTML element that will serve as file input.
-         * This element does not need to be inserted in the DOM since it's just
-         * use to trigger the file browser and start the upload process.
-         *
-         * @private
-         * @returns {HTMLElement}
-         */
-        _computeFileInput() {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.multiple = true;
-            fileInput.onchange = this.onChangeAttachment;
-            return fileInput;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            if (this.activityView) {
-                return this.activityView.activity.thread;
-            }
-            if (this.attachmentBoxView) {
-                return this.attachmentBoxView.chatter.thread;
-            }
-            if (this.chatterOwner) {
-                return this.chatterOwner.thread;
-            }
-            if (this.composerView) {
-                return this.composerView.composer.activeThread;
-            }
-            return clear();
-        },
+
         /**
          * @private
          * @param {Object} param0
@@ -99,6 +68,7 @@ registerModel({
             formData.append('ufile', file, file.name);
             return formData;
         },
+
         /**
          * @private
          * @param {Object} param0
@@ -121,6 +91,7 @@ registerModel({
                 ...attachmentData,
             });
         },
+
         /**
          * @private
          * @param {Object} param0
@@ -185,7 +156,7 @@ registerModel({
             if (activity && activity.exists()) {
                 activity.markAsDone({ attachments });
             }
-        },
+        }
     },
     fields: {
         activityView: one('ActivityView', {
@@ -205,10 +176,30 @@ registerModel({
             inverse: 'fileUploader',
         }),
         fileInput: attr({
-            compute: '_computeFileInput',
+            compute() {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.multiple = true;
+                fileInput.onchange = this.onChangeAttachment;
+                return fileInput;
+            },
         }),
         thread: one('Thread', {
-            compute: '_computeThread',
+            compute() {
+                if (this.activityView) {
+                    return this.activityView.activity.thread;
+                }
+                if (this.attachmentBoxView) {
+                    return this.attachmentBoxView.chatter.thread;
+                }
+                if (this.chatterOwner) {
+                    return this.chatterOwner.thread;
+                }
+                if (this.composerView) {
+                    return this.composerView.composer.activeThread;
+                }
+                return clear();
+            },
             required: true,
         })
     },

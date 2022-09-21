@@ -35,6 +35,7 @@ registerModel({
                 $composerTextField.on('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
             }
         },
+
         /**
          * Disable the input allowing the user to type.
          * This is typically used when we want to force him to click on one of the chatbot options.
@@ -47,6 +48,7 @@ registerModel({
                 .addClass('text-center fst-italic bg-200')
                 .val(disableText);
         },
+
         renderMessages() {
             const shouldScroll = !this.isFolded && this.publicLivechatView.widget.isAtBottom();
             this.widget.render();
@@ -71,21 +73,16 @@ registerModel({
                     this.disableInput(this.env._t("Select an option above"));
                 }
             }
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeInputPlaceholder() {
-            if (this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder) {
-                return this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder;
-            }
-            return this.env._t("Say something");
-        },
+        }
     },
     fields: {
         inputPlaceholder: attr({
-            compute: '_computeInputPlaceholder',
+            compute() {
+                if (this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder) {
+                    return this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder;
+                }
+                return this.env._t("Say something");
+            },
         }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,

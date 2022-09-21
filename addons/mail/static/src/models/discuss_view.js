@@ -14,6 +14,7 @@ registerModel({
                 isAddingChat: clear(),
             });
         },
+
         /**
          * Handles click on the mobile "new channel" button.
          *
@@ -22,6 +23,7 @@ registerModel({
         onClickMobileNewChannelButton(ev) {
             this.update({ isAddingChannel: true });
         },
+
         /**
          * Handles click on the mobile "new chat" button.
          *
@@ -30,6 +32,7 @@ registerModel({
         onClickMobileNewChatButton(ev) {
             this.update({ isAddingChat: true });
         },
+
         /**
          * Handles click on the "Start a meeting" button.
          *
@@ -47,12 +50,14 @@ registerModel({
             }
             this.discuss.threadView.topbar.openInvitePopoverView();
         },
+
         onHideMobileAddItemHeader() {
             if (!this.exists()) {
                 return;
             }
             this.clearIsAddingItem();
         },
+
         /**
          * @param {KeyboardEvent} ev
          */
@@ -60,6 +65,7 @@ registerModel({
             ev.stopPropagation();
             this.discuss.onInputQuickSearch(this.quickSearchInputRef.el.value);
         },
+
         /**
          * Called when clicking on a mailbox selection item.
          *
@@ -71,6 +77,7 @@ registerModel({
             }
             mailbox.thread.open();
         },
+
         /**
          * @param {Event} ev
          * @param {Object} ui
@@ -87,6 +94,7 @@ registerModel({
                 this.discuss.handleAddChatAutocompleteSelect(ev, ui);
             }
         },
+
         /**
          * @param {Object} req
          * @param {string} req.term
@@ -102,19 +110,7 @@ registerModel({
                 this.discuss.handleAddChatAutocompleteSource(req, res);
             }
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMobileAddItemHeaderAutocompleteInputView() {
-            if (
-                this.messaging.device.isSmall &&
-                (this.isAddingChannel || this.isAddingChat)
-            ) {
-                return {};
-            }
-            return clear();
-        },
+
         /**
          * @private
          */
@@ -123,7 +119,7 @@ registerModel({
                 action: this.discuss.discussView.actionId,
                 active_id: this.discuss.activeId,
             });
-        },
+        }
     },
     fields: {
         /**
@@ -162,7 +158,15 @@ registerModel({
             default: false,
         }),
         mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
-            compute: '_computeMobileAddItemHeaderAutocompleteInputView',
+            compute() {
+                if (
+                    this.messaging.device.isSmall &&
+                    (this.isAddingChannel || this.isAddingChat)
+                ) {
+                    return {};
+                }
+                return clear();
+            },
             inverse: 'discussViewOwnerAsMobileAddItemHeader',
         }),
         orderedMailboxes: many('Mailbox', {

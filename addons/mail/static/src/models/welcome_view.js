@@ -28,24 +28,28 @@ registerModel({
             }
             this.discussPublicView.switchToThreadView();
         },
+
         /**
          * @param {MouseEvent} ev
          */
         onClickJoinButton(ev) {
             this.joinChannel();
         },
+
         /**
          * Handles OWL update on this WelcomeView component.
          */
         onComponentUpdate() {
             this._handleFocus();
         },
+
         /**
          * @param {KeyboardEvent} ev
          */
         onInputGuestNameInput(ev) {
             this._updateGuestNameWithInputValue();
         },
+
         /**
          * @param {KeyboardEvent} ev
          */
@@ -54,6 +58,7 @@ registerModel({
                 this.joinChannel();
             }
         },
+
         /**
          * Adds the current guest to members of the channel linked to this
          * welcome view.
@@ -67,36 +72,7 @@ registerModel({
                 },
             });
         },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeGuestNameInputUniqueId() {
-            return `o_WelcomeView_guestNameInput_${getNextGuestNameInputId()}`;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasGuestNameChanged() {
-            return Boolean(this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsJoinButtonDisabled() {
-            return Boolean(this.messaging.currentGuest && this.pendingGuestName.trim() === '');
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallDemoView() {
-            return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
-                ? {}
-                : clear();
-        },
+
         /**
          * @private
          */
@@ -112,6 +88,7 @@ registerModel({
                 this.guestNameInputRef.el.setSelectionRange(length, length);
             }
         },
+
         /**
          * Updates `pendingGuestName` with the value of the input element
          * referred by `guestNameInputRef`.
@@ -120,7 +97,7 @@ registerModel({
          */
         _updateGuestNameWithInputValue() {
             this.update({ pendingGuestName: this.guestNameInputRef.el.value });
-        },
+        }
     },
     fields: {
         /**
@@ -150,7 +127,9 @@ registerModel({
          * Necessary to ensure the uniqueness.
          */
         guestNameInputUniqueId: attr({
-            compute: '_computeGuestNameInputUniqueId',
+            compute() {
+                return `o_WelcomeView_guestNameInput_${getNextGuestNameInputId()}`;
+            },
         }),
         /**
          * Determines whether the guest's name has been updated.
@@ -159,7 +138,9 @@ registerModel({
          * server side.
          */
         hasGuestNameChanged: attr({
-            compute: '_computeHasGuestNameChanged',
+            compute() {
+                return Boolean(this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
+            },
         }),
         /**
          * Determines whether the 'guestNameInput' should be focused the next
@@ -173,13 +154,19 @@ registerModel({
          * the current user is a guest.
          */
         isJoinButtonDisabled: attr({
-            compute: '_computeIsJoinButtonDisabled'
+            compute() {
+                return Boolean(this.messaging.currentGuest && this.pendingGuestName.trim() === '');
+            }
         }),
         /**
          * States the media preview embedded in this welcome view.
          */
         callDemoView: one('CallDemoView', {
-            compute: '_computeCallDemoView',
+            compute() {
+                return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
+                    ? {}
+                    : clear();
+            },
             inverse: 'welcomeView',
         }),
         /**

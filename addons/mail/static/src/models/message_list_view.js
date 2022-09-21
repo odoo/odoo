@@ -16,6 +16,7 @@ registerModel({
             }
             return this.component.root.el;
         },
+
         onClickRetryLoadMoreMessages() {
             if (!this.exists() || !this.thread) {
                 return;
@@ -23,6 +24,7 @@ registerModel({
             this.thread.cache.update({ hasLoadingFailed: false });
             this.thread.cache.loadMoreMessages();
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -32,55 +34,7 @@ registerModel({
                 return;
             }
             this.thread.cache.loadMoreMessages();
-        },
-        /**
-         * @private
-         * @returns {boolean|FieldCommand}
-         */
-        _computeHasScrollAdjust() {
-            if (this.threadViewOwner.threadViewer.chatter) {
-                return this.threadViewOwner.threadViewer.chatter.hasMessageListScrollAdjust;
-            }
-            return clear();
-        },
-        /***
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsAtEnd() {
-            /**
-             * The margin that we use to detect that the scrollbar is a the end of
-             * the threadView.
-             */
-            const endThreshold = 30;
-            if (this.threadViewOwner.order === 'asc') {
-                return this.scrollTop >= this.scrollHeight - this.clientHeight - endThreshold;
-            }
-            return this.scrollTop <= endThreshold;
-        },
-        /**
-         * @private
-         * @returns {MessageView[]}
-         */
-        _computeMessageListViewMessageViewItems() {
-            if (!this.threadViewOwner.threadCache) {
-                return clear();
-            }
-            const orderedMessages = this.threadViewOwner.threadCache.orderedNonEmptyMessages;
-            if (this.threadViewOwner.order === 'desc') {
-                orderedMessages.reverse();
-            }
-            const messageViewsData = [];
-            let prevMessage;
-            for (const message of orderedMessages) {
-                messageViewsData.push({
-                    isSquashed: this.threadViewOwner._shouldMessageBeSquashed(prevMessage, message),
-                    message,
-                });
-                prevMessage = message;
-            }
-            return messageViewsData;
-        },
+        }
     },
     fields: {
         clientHeight: attr(),
@@ -89,7 +43,12 @@ registerModel({
          */
         component: attr(),
         hasScrollAdjust: attr({
-            compute: '_computeHasScrollAdjust',
+            compute() {
+                if (this.threadViewOwner.threadViewer.chatter) {
+                    return this.threadViewOwner.threadViewer.chatter.hasMessageListScrollAdjust;
+                }
+                return clear();
+            },
             default: true,
         }),
         /**
@@ -98,7 +57,17 @@ registerModel({
          * the top or the bottom.
          */
         isAtEnd: attr({
-            compute: '_computeIsAtEnd',
+            compute() {
+                /**
+                 * The margin that we use to detect that the scrollbar is a the end of
+                 * the threadView.
+                 */
+                const endThreshold = 30;
+                if (this.threadViewOwner.order === 'asc') {
+                    return this.scrollTop >= this.scrollHeight - this.clientHeight - endThreshold;
+                }
+                return this.scrollTop <= endThreshold;
+            },
         }),
         /**
          * States whether there was at least one programmatic scroll since the
@@ -114,7 +83,25 @@ registerModel({
          * States the message views used to display this thread view owner's messages.
          */
         messageListViewItems: many('MessageListViewItem', {
-            compute: '_computeMessageListViewMessageViewItems',
+            compute() {
+                if (!this.threadViewOwner.threadCache) {
+                    return clear();
+                }
+                const orderedMessages = this.threadViewOwner.threadCache.orderedNonEmptyMessages;
+                if (this.threadViewOwner.order === 'desc') {
+                    orderedMessages.reverse();
+                }
+                const messageViewsData = [];
+                let prevMessage;
+                for (const message of orderedMessages) {
+                    messageViewsData.push({
+                        isSquashed: this.threadViewOwner._shouldMessageBeSquashed(prevMessage, message),
+                        message,
+                    });
+                    prevMessage = message;
+                }
+                return messageViewsData;
+            },
             inverse: 'messageListViewOwner',
         }),
         scrollHeight: attr(),

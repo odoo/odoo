@@ -24,13 +24,7 @@ registerModel({
         start() {
             browser.addEventListener('resize', this._onResize);
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasRtcSupport() {
-            return Boolean(window.RTCPeerConnection && window.MediaStream);
-        },
+
         /**
          * @private
          */
@@ -42,7 +36,7 @@ registerModel({
                 isSmall: this.env.isSmall,
                 sizeClass: this.env.services.ui.size,
             });
-        },
+        }
     },
     fields: {
         globalWindowInnerHeight: attr(),
@@ -51,7 +45,9 @@ registerModel({
             default: typeof document.createElement('canvas').getContext('2d').filter !== 'undefined',
         }),
         hasRtcSupport: attr({
-            compute: '_computeHasRtcSupport',
+            compute() {
+                return Boolean(window.RTCPeerConnection && window.MediaStream);
+            },
         }),
         /**
          * States whether this device is an actual mobile device.

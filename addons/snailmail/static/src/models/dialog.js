@@ -12,23 +12,17 @@ addFields('Dialog', {
         inverse: 'snailmailErrorDialog',
     }),
     snailmailErrorView: one('SnailmailErrorView', {
-        compute: '_computeSnailmailErrorView',
+        compute() {
+            if (this.messageViewOwnerAsSnailmailError) {
+                return {};
+            }
+            return clear();
+        },
         inverse: 'dialogOwner',
     }),
 });
 
-addRecordMethods('Dialog', {
-    /**
-     * @private
-     * @returns {FieldCommand}
-     */
-    _computeSnailmailErrorView() {
-        if (this.messageViewOwnerAsSnailmailError) {
-            return {};
-        }
-        return clear();
-    },
-});
+addRecordMethods('Dialog', {});
 
 patchRecordMethods('Dialog', {
     /**

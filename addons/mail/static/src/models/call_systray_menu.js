@@ -8,24 +8,18 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallSystrayMenu',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeButtonTitle() {
-            if (!this.messaging.rtc.channel) {
-                return clear();
-            }
-            return sprintf(
-                this.env._t("Open conference: %s"),
-                this.messaging.rtc.channel.displayName,
-            );
-        },
-    },
+    recordMethods: {},
     fields: {
         buttonTitle: attr({
-            compute: '_computeButtonTitle',
+            compute() {
+                if (!this.messaging.rtc.channel) {
+                    return clear();
+                }
+                return sprintf(
+                    this.env._t("Open conference: %s"),
+                    this.messaging.rtc.channel.displayName,
+                );
+            },
             default: '',
         }),
         rtc: one('Rtc', {

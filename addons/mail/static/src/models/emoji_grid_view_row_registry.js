@@ -31,6 +31,7 @@ registerModel({
             }
             return value;
         },
+
         computeSearchRows() {
             if (this.emojiGridViewOwner.emojiPickerViewOwner.emojiSearchBarView.currentSearch === "") {
                 return clear();
@@ -53,12 +54,7 @@ registerModel({
                 index++;
             }
             return value;
-        },
-        _sortRows() {
-            return [
-                ['smaller-first', 'index'],
-            ];
-        },
+        }
     },
     fields: {
         rows: many('EmojiGridRowView', {
@@ -75,7 +71,11 @@ registerModel({
                 return clear();
             },
             inverse: 'emojiGridViewRowRegistryOwner',
-            sort: '_sortRows',
+            sort() {
+                return [
+                    ['smaller-first', 'index'],
+                ];
+            },
         }),
         emojiGridViewOwner: one('EmojiGridView', {
             compute() {

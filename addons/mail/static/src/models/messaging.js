@@ -39,6 +39,7 @@ registerModel({
             this.update({ isInitialized: true });
             this.initializedPromise.resolve();
         },
+
         /**
          * Executes the provided functions in order, but with a potential delay between
          * them if they take too much time. This is done in order to avoid blocking the
@@ -56,6 +57,7 @@ registerModel({
                 await func();
             }
         },
+
         /**
          * Open the form view of the record with provided id and model.
          * Gets the chat with the provided person and returns it.
@@ -78,6 +80,7 @@ registerModel({
                 return partner.getChat();
             }
         },
+
         /**
          * Display a notification to the user.
          *
@@ -95,6 +98,7 @@ registerModel({
             const { message, ...options } = params;
             return this.env.services.notification.add(message, options);
         },
+
         /**
          * Opens a chat with the provided person and returns it.
          *
@@ -113,6 +117,7 @@ registerModel({
                 return;
             }
         },
+
         /**
          * Opens the form view of the record with provided id and model.
          *
@@ -135,6 +140,7 @@ registerModel({
                 this.messaging.messagingMenu.close();
             }
         },
+
         /**
          * Opens the most appropriate view that is a profile for provided id and
          * model.
@@ -172,6 +178,7 @@ registerModel({
             }
             return this.messaging.openDocument({ id, model });
         },
+
         /**
          * Perform a rpc call and return a promise resolving to the result.
          *
@@ -208,6 +215,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * Refreshes the value of `isNotificationPermissionDefault`.
          *
@@ -220,6 +228,7 @@ registerModel({
                 isNotificationPermissionDefault: Boolean(browserNotification) && browserNotification.permission === 'default',
             });
         },
+
         updateImStatusRegistration() {
             const partnerIds = [];
             for (const partner of this.models['Partner'].all()) {
@@ -234,59 +243,7 @@ registerModel({
             this.env.services['im_status'].registerToImStatus('res.partner', partnerIds);
             this.env.services['im_status'].registerToImStatus('mail.guest', guestIds);
         },
-        /**
-         * @private
-         * @returns {Object} browser
-         */
-        _computeBrowser() {
-            return browser;
-        },
-        /**
-         * @private
-         * @returns {Promise}
-         */
-        _computeInitializedPromise() {
-            return makeDeferred();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsCurrentUserGuest() {
-            return Boolean(!this.currentPartner && this.currentGuest);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsNotificationBlocked() {
-            const windowNotification = this.browser.Notification;
-            return (
-                windowNotification &&
-                windowNotification.permission !== 'granted' &&
-                !this.isNotificationPermissionDefault
-            );
-        },
-        /**
-         * @private
-         * @returns {EventBus}
-         */
-        _computeMessagingBus() {
-            if (this.messagingBus) {
-                return; // avoid overwrite if already provided (example in tests)
-            }
-            return new EventBus();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallInviteRequestPopups() {
-            if (this.ringingThreads.length === 0) {
-                return clear();
-            }
-            return this.ringingThreads.map(thread => thread.callInviteRequestPopup);
-        },
+
         /**
          * @private
          */
@@ -296,13 +253,7 @@ registerModel({
                 part: '_chat',
             });
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeNotificationHandler() {
-            return {};
-        },
+
         /**
          * @private
          */
@@ -311,6 +262,7 @@ registerModel({
                 this.env.services.bus_service.forceUpdateChannels();
             }
         },
+
         /**
          * @private
          */
@@ -319,6 +271,7 @@ registerModel({
                 this.updateImStatusRegisterThrottle.do();
             }
         },
+
         /**
          * @private
          */
@@ -328,7 +281,7 @@ registerModel({
             } else {
                 this.soundEffects.incomingCall.stop();
             }
-        },
+        }
     },
     fields: {
         allMailboxes: many('Mailbox', {
@@ -352,7 +305,9 @@ registerModel({
             inverse: 'messagingAsAllCurrentClientThreads',
         }),
         browser: attr({
-            compute: '_computeBrowser',
+            compute() {
+                return browser;
+            },
         }),
         cannedResponses: many('CannedResponse'),
         chatWindowManager: one('ChatWindowManager', {
@@ -410,7 +365,9 @@ registerModel({
          * Promise that will be resolved when messaging is initialized.
          */
         initializedPromise: attr({
-            compute: '_computeInitializedPromise',
+            compute() {
+                return makeDeferred();
+            },
             required: true,
         }),
         initializer: one('MessagingInitializer', {
@@ -420,7 +377,9 @@ registerModel({
         }),
         internalUserGroupId: attr(),
         isCurrentUserGuest: attr({
-            compute: '_computeIsCurrentUserGuest',
+            compute() {
+                return Boolean(!this.currentPartner && this.currentGuest);
+            },
         }),
         isInitialized: attr({
             default: false,
@@ -429,7 +388,14 @@ registerModel({
             default: false,
         }),
         isNotificationBlocked: attr({
-            compute: '_computeIsNotificationBlocked',
+            compute() {
+                const windowNotification = this.browser.Notification;
+                return (
+                    windowNotification &&
+                    windowNotification.permission !== 'granted' &&
+                    !this.isNotificationPermissionDefault
+                );
+            },
         }),
         /**
          * States whether browser Notification Permission is currently in its
@@ -453,7 +419,12 @@ registerModel({
          * Determines the bus that is used to communicate messaging events.
          */
         messagingBus: attr({
-            compute: '_computeMessagingBus',
+            compute() {
+                if (this.messagingBus) {
+                    return; // avoid overwrite if already provided (example in tests)
+                }
+                return new EventBus();
+            },
             required: true,
         }),
         messagingMenu: one('MessagingMenu', {
@@ -461,7 +432,9 @@ registerModel({
             isCausal: true,
         }),
         notificationHandler: one('MessagingNotificationHandler', {
-            compute: '_computeNotificationHandler',
+            compute() {
+                return {};
+            },
             isCausal: true,
         }),
         outOfFocusUnreadMessageCounter: attr({
@@ -486,7 +459,12 @@ registerModel({
             readonly: true,
         }),
         callInviteRequestPopups: many('CallInviteRequestPopup', {
-            compute: '_computeCallInviteRequestPopups',
+            compute() {
+                if (this.ringingThreads.length === 0) {
+                    return clear();
+                }
+                return this.ringingThreads.map(thread => thread.callInviteRequestPopup);
+            },
             isCausal: true,
         }),
         soundEffects: one('SoundEffects', {

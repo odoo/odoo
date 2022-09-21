@@ -14,17 +14,12 @@ patchRecordMethods('ThreadNeedactionPreviewView', {
     },
 });
 
-addRecordMethods('ThreadNeedactionPreviewView', {
-    /**
-     * @private
-     */
-    _computeIsRating() {
-        return Boolean(this.thread.lastNeedactionMessageAsOriginThread && this.thread.lastNeedactionMessageAsOriginThread.rating);
-    },
-});
+addRecordMethods('ThreadNeedactionPreviewView', {});
 
 addFields('ThreadNeedactionPreviewView', {
     isRating: attr({
-        compute: '_computeIsRating',
+        compute() {
+            return Boolean(this.thread.lastNeedactionMessageAsOriginThread && this.thread.lastNeedactionMessageAsOriginThread.rating);
+        },
     }),
 });

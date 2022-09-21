@@ -54,9 +54,11 @@ registerModel({
                 chatWindow.close();
             }
         },
+
         closeHiddenMenu() {
             this.update({ isHiddenMenuOpen: false });
         },
+
         /**
          * Closes all chat windows related to the given thread.
          *
@@ -70,6 +72,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -80,15 +83,18 @@ registerModel({
                 this.openHiddenMenu();
             }
         },
+
         openHiddenMenu() {
             this.update({ isHiddenMenuOpen: true });
         },
+
         openNewMessage() {
             if (!this.newMessageChatWindow) {
                 this.update({ newMessageChatWindow: { manager: this } });
             }
             this.newMessageChatWindow.makeActive();
         },
+
         /**
          * @param {Thread} thread
          * @param {Object} [param1={}]
@@ -134,6 +140,7 @@ registerModel({
                 thread.notifyFoldStateToServer(foldState);
             }
         },
+
         /**
          * @param {ChatWindow} chatWindow1
          * @param {ChatWindow} chatWindow2
@@ -154,170 +161,33 @@ registerModel({
                 }
             }
         },
+
         /**
          * @private
          * @returns {ChatWindow[]}
          */
         _computeAllOrdered() {
             return link(this.chatWindows);
-        },
-        /**
-         * @private
-         * @returns {ChatWindow[]}
-         */
-        _computeAllOrderedHidden() {
-            return this.visual.hiddenChatWindows;
-        },
-        /**
-         * @private
-         * @returns {ChatWindow[]}
-         */
-        _computeAllOrderedVisible() {
-            return this.visual.visible.map(({ chatWindow }) => chatWindow);
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeAvailableVisibleSlots() {
-            return this.visual.availableVisibleSlots;
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeEndGapWidth() {
-            if (this.messaging.device.isSmall) {
-                return 0;
-            }
-            return 10;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasVisibleChatWindows() {
-            return this.allOrderedVisible.length > 0;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeHiddenChatWindowHeaderViews() {
-            if (this.allOrderedHidden.length > 0) {
-                return this.allOrderedHidden.map(chatWindow => ({ chatWindowOwner: chatWindow }));
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {ChatWindow|undefined}
-         */
-        _computeLastVisible() {
-            const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
-            if (!lastVisible) {
-                return clear();
-            }
-            return lastVisible;
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeStartGapWidth() {
-            if (this.messaging.device.isSmall) {
-                return 0;
-            }
-            return 10;
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeUnreadHiddenConversationAmount() {
-            const allHiddenWithThread = this.allOrderedHidden.filter(
-                chatWindow => chatWindow.thread
-            );
-            let amount = 0;
-            for (const chatWindow of allHiddenWithThread) {
-                if (chatWindow.thread.channel.localMessageUnreadCounter > 0) {
-                    amount++;
-                }
-            }
-            return amount;
-        },
-        /**
-         * @private
-         * @returns {Object}
-         */
-        _computeVisual() {
-            let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
-            if (!this.messaging || !this.messaging.device) {
-                return visual;
-            }
-            if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
-                return visual;
-            }
-            if (!this.chatWindows.length) {
-                return visual;
-            }
-            const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - this.startGapWidth - this.endGapWidth;
-            let maxAmountWithoutHidden = Math.floor(
-                relativeGlobalWindowWidth / (this.chatWindowWidth + this.betweenGapWidth));
-            let maxAmountWithHidden = Math.floor(
-                (relativeGlobalWindowWidth - this.hiddenMenuWidth - this.betweenGapWidth) /
-                (this.chatWindowWidth + this.betweenGapWidth));
-            if (this.messaging.device.isSmall) {
-                maxAmountWithoutHidden = 1;
-                maxAmountWithHidden = 1;
-            }
-            if (this.chatWindows.length <= maxAmountWithoutHidden) {
-                // all visible
-                for (let i = 0; i < this.chatWindows.length; i++) {
-                    const chatWindow = this.chatWindows[i];
-                    const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
-                    visual.visible.push({ chatWindow, offset });
-                }
-                visual.availableVisibleSlots = maxAmountWithoutHidden;
-            } else if (maxAmountWithHidden > 0) {
-                // some visible, some hidden
-                for (let i = 0; i < maxAmountWithHidden; i++) {
-                    const chatWindow = this.chatWindows[i];
-                    const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
-                    visual.visible.push({ chatWindow, offset });
-                }
-                if (this.chatWindows.length > maxAmountWithHidden) {
-                    visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
-                    visual.hiddenMenuOffset = visual.visible[maxAmountWithHidden - 1].offset
-                        + this.chatWindowWidth + this.betweenGapWidth;
-                }
-                for (let j = maxAmountWithHidden; j < this.chatWindows.length; j++) {
-                    visual.hiddenChatWindows.push(this.chatWindows[j]);
-                }
-                visual.availableVisibleSlots = maxAmountWithHidden;
-            } else {
-                // all hidden
-                visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
-                visual.hiddenMenuOffset = this.startGapWidth;
-                visual.hiddenChatWindows.push(...this.chatWindows);
-                console.warn('cannot display any visible chat windows (screen is too small)');
-                visual.availableVisibleSlots = 0;
-            }
-            return visual;
-        },
+        }
     },
     fields: {
         allOrderedHidden: many('ChatWindow', {
-            compute: '_computeAllOrderedHidden',
+            compute() {
+                return this.visual.hiddenChatWindows;
+            },
         }),
         allOrderedVisible: many('ChatWindow', {
-            compute: '_computeAllOrderedVisible',
+            compute() {
+                return this.visual.visible.map(({ chatWindow }) => chatWindow);
+            },
         }),
         /**
          * Amount of visible slots available for chat windows.
          */
         availableVisibleSlots: attr({
-            compute: '_computeAvailableVisibleSlots',
+            compute() {
+                return this.visual.availableVisibleSlots;
+            },
             default: 0,
         }),
         betweenGapWidth: attr({
@@ -331,13 +201,25 @@ registerModel({
             default: 340,
         }),
         endGapWidth: attr({
-            compute: '_computeEndGapWidth',
+            compute() {
+                if (this.messaging.device.isSmall) {
+                    return 0;
+                }
+                return 10;
+            },
         }),
         hasVisibleChatWindows: attr({
-            compute: '_computeHasVisibleChatWindows',
+            compute() {
+                return this.allOrderedVisible.length > 0;
+            },
         }),
         hiddenChatWindowHeaderViews: many('ChatWindowHeaderView', {
-            compute: '_computeHiddenChatWindowHeaderViews',
+            compute() {
+                if (this.allOrderedHidden.length > 0) {
+                    return this.allOrderedHidden.map(chatWindow => ({ chatWindowOwner: chatWindow }));
+                }
+                return clear();
+            },
         }),
         hiddenMenuWidth: attr({
             default: 170, // max width, including width of dropup list items
@@ -346,19 +228,95 @@ registerModel({
             default: false,
         }),
         lastVisible: one('ChatWindow', {
-            compute: '_computeLastVisible',
+            compute() {
+                const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
+                if (!lastVisible) {
+                    return clear();
+                }
+                return lastVisible;
+            },
         }),
         newMessageChatWindow: one('ChatWindow', {
             inverse: 'managerAsNewMessage',
         }),
         startGapWidth: attr({
-            compute: '_computeStartGapWidth',
+            compute() {
+                if (this.messaging.device.isSmall) {
+                    return 0;
+                }
+                return 10;
+            },
         }),
         unreadHiddenConversationAmount: attr({
-            compute: '_computeUnreadHiddenConversationAmount',
+            compute() {
+                const allHiddenWithThread = this.allOrderedHidden.filter(
+                    chatWindow => chatWindow.thread
+                );
+                let amount = 0;
+                for (const chatWindow of allHiddenWithThread) {
+                    if (chatWindow.thread.channel.localMessageUnreadCounter > 0) {
+                        amount++;
+                    }
+                }
+                return amount;
+            },
         }),
         visual: attr({
-            compute: '_computeVisual',
+            compute() {
+                let visual = JSON.parse(JSON.stringify(BASE_VISUAL));
+                if (!this.messaging || !this.messaging.device) {
+                    return visual;
+                }
+                if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
+                    return visual;
+                }
+                if (!this.chatWindows.length) {
+                    return visual;
+                }
+                const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - this.startGapWidth - this.endGapWidth;
+                let maxAmountWithoutHidden = Math.floor(
+                    relativeGlobalWindowWidth / (this.chatWindowWidth + this.betweenGapWidth));
+                let maxAmountWithHidden = Math.floor(
+                    (relativeGlobalWindowWidth - this.hiddenMenuWidth - this.betweenGapWidth) /
+                    (this.chatWindowWidth + this.betweenGapWidth));
+                if (this.messaging.device.isSmall) {
+                    maxAmountWithoutHidden = 1;
+                    maxAmountWithHidden = 1;
+                }
+                if (this.chatWindows.length <= maxAmountWithoutHidden) {
+                    // all visible
+                    for (let i = 0; i < this.chatWindows.length; i++) {
+                        const chatWindow = this.chatWindows[i];
+                        const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
+                        visual.visible.push({ chatWindow, offset });
+                    }
+                    visual.availableVisibleSlots = maxAmountWithoutHidden;
+                } else if (maxAmountWithHidden > 0) {
+                    // some visible, some hidden
+                    for (let i = 0; i < maxAmountWithHidden; i++) {
+                        const chatWindow = this.chatWindows[i];
+                        const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
+                        visual.visible.push({ chatWindow, offset });
+                    }
+                    if (this.chatWindows.length > maxAmountWithHidden) {
+                        visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
+                        visual.hiddenMenuOffset = visual.visible[maxAmountWithHidden - 1].offset
+                            + this.chatWindowWidth + this.betweenGapWidth;
+                    }
+                    for (let j = maxAmountWithHidden; j < this.chatWindows.length; j++) {
+                        visual.hiddenChatWindows.push(this.chatWindows[j]);
+                    }
+                    visual.availableVisibleSlots = maxAmountWithHidden;
+                } else {
+                    // all hidden
+                    visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
+                    visual.hiddenMenuOffset = this.startGapWidth;
+                    visual.hiddenChatWindows.push(...this.chatWindows);
+                    console.warn('cannot display any visible chat windows (screen is too small)');
+                    visual.availableVisibleSlots = 0;
+                }
+                return visual;
+            },
             default: BASE_VISUAL,
         }),
     },

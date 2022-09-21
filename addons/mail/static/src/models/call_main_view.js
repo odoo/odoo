@@ -52,24 +52,28 @@ registerModel({
             }
             return optimalLayout;
         },
+
         /**
          * @param {MouseEvent} ev
          */
         onClick(ev) {
             this._showOverlay();
         },
+
         /**
          * @param {MouseEvent} ev
          */
         onClickHideSidebar(ev) {
             this.callView.update({ isSidebarOpen: false });
         },
+
         /**
          * @param {MouseEvent} ev
          */
         onClickShowSidebar(ev) {
             this.callView.update({ isSidebarOpen: true });
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -83,6 +87,7 @@ registerModel({
             }
             this.update({ showOverlay: false });
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -95,6 +100,7 @@ registerModel({
             }
             this._showOverlay();
         },
+
         /**
          * @param {MouseEvent} ev
          */
@@ -108,6 +114,7 @@ registerModel({
                 showOverlayTimer: clear(),
             });
         },
+
         onShowOverlayTimeout() {
             this.update({
                 showOverlay: false,
@@ -115,33 +122,6 @@ registerModel({
             });
         },
 
-        //----------------------------------------------------------------------
-        // Private
-        //----------------------------------------------------------------------
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasSidebarButton() {
-            return Boolean(this.callView.activeRtcSession && this.showOverlay && !this.callView.threadView.compact);
-        },
-        /**
-         * @private
-         */
-        _computeIsControllerFloating() {
-            return Boolean(this.callView.isFullScreen || this.callView.activeRtcSession && !this.callView.threadView.compact);
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMainTiles() {
-            if (this.callView.activeRtcSession) {
-                return [{ channelMember: this.callView.activeRtcSession.channelMember }];
-            }
-            return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
-        },
         /**
          * Shows the overlay (buttons) for a set a mount of time.
          *
@@ -152,7 +132,7 @@ registerModel({
                 showOverlay: true,
                 showOverlayTimer: { doReset: this.showOverlayTimer ? true : undefined },
             });
-        },
+        }
     },
     fields: {
         /**
@@ -168,17 +148,26 @@ registerModel({
             inverse: 'callMainView',
         }),
         hasSidebarButton: attr({
-            compute: '_computeHasSidebarButton',
+            compute() {
+                return Boolean(this.callView.activeRtcSession && this.showOverlay && !this.callView.threadView.compact);
+            },
         }),
         /**
          * Determines if the controller is an overlay or a bottom bar.
          */
         isControllerFloating: attr({
+            compute() {
+                return Boolean(this.callView.isFullScreen || this.callView.activeRtcSession && !this.callView.threadView.compact);
+            },
             default: false,
-            compute: '_computeIsControllerFloating',
         }),
         mainTiles: many('CallMainViewTile', {
-            compute: '_computeMainTiles',
+            compute() {
+                if (this.callView.activeRtcSession) {
+                    return [{ channelMember: this.callView.activeRtcSession.channelMember }];
+                }
+                return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
+            },
             inverse: 'callMainViewOwner',
         }),
         /**

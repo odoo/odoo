@@ -23,6 +23,7 @@ registerModel({
                 type: 'success',
             });
         },
+
         /**
          * Handles click on the "invite" button.
          *
@@ -65,6 +66,7 @@ registerModel({
                 this.delete();
             }
         },
+
         /**
          * @param {Partner} partner
          */
@@ -75,12 +77,14 @@ registerModel({
             }
             this.update({ selectedPartners: link(partner) });
         },
+
         /**
          * @param {Partner} partner
          */
         onClickSelectedPartner(partner) {
             this.update({ selectedPartners: unlink(partner) });
         },
+
         /**
          * Handles OWL update on this channel invitation form component.
          */
@@ -91,12 +95,14 @@ registerModel({
                 this.update({ doFocusOnSearchInput: clear() });
             }
         },
+
         /**
          * Handles focus on the invitation link.
          */
         onFocusInvitationLinkInput(ev) {
             ev.target.select();
         },
+
         /**
          * @param {Partner} partner
          * @param {InputEvent} ev
@@ -108,6 +114,7 @@ registerModel({
             }
             this.update({ selectedPartners: link(partner) });
         },
+
         /**
          * @param {InputEvent} ev
          */
@@ -115,6 +122,7 @@ registerModel({
             this.update({ searchTerm: ev.target.value });
             this.searchPartnersToInvite();
         },
+
         /**
          * Searches for partners to invite based on the current search term. If
          * a search is already in progress, waits until it is done to start a
@@ -157,80 +165,22 @@ registerModel({
                     }
                 }
             }
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAccessRestrictedToGroupText() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (!this.thread.authorizedGroupFullName) {
-                return clear();
-            }
-            return sprintf(
-                this.env._t('Access restricted to group "%(groupFullName)s"'),
-                { 'groupFullName': this.thread.authorizedGroupFullName }
-            );
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeInviteButtonText() {
-            if (!this.thread || !this.thread.channel) {
-                return clear();
-            }
-            switch (this.thread.channel.channel_type) {
-                case 'chat':
-                    return this.env._t("Create group chat");
-                case 'group':
-                    return this.env._t("Invite to group chat");
-            }
-            return this.env._t("Invite to Channel");
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeSelectablePartnerViews() {
-            if (this.selectablePartners.length === 0) {
-                return clear();
-            }
-            return this.selectablePartners.map(partner => ({ partner }));
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeSelectedPartnerViews() {
-            if (this.selectedPartners.length === 0) {
-                return clear();
-            }
-            return this.selectedPartners.map(partner => ({ partner }));
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            if (
-                this.popoverViewOwner &&
-                this.popoverViewOwner.threadViewTopbarOwnerAsInvite &&
-                this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread
-            ) {
-                return this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread;
-            }
-            if (this.chatWindow && this.chatWindow.thread) {
-                return this.chatWindow.thread;
-            }
-            return clear();
-        },
+        }
     },
     fields: {
         accessRestrictedToGroupText: attr({
-            compute: '_computeAccessRestrictedToGroupText',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (!this.thread.authorizedGroupFullName) {
+                    return clear();
+                }
+                return sprintf(
+                    this.env._t('Access restricted to group "%(groupFullName)s"'),
+                    { 'groupFullName': this.thread.authorizedGroupFullName }
+                );
+            },
         }),
         chatWindow: one('ChatWindow', {
             identifying: true,
@@ -262,7 +212,18 @@ registerModel({
          * Determines the text of the invite button.
          */
         inviteButtonText: attr({
-            compute: '_computeInviteButtonText',
+            compute() {
+                if (!this.thread || !this.thread.channel) {
+                    return clear();
+                }
+                switch (this.thread.channel.channel_type) {
+                    case 'chat':
+                        return this.env._t("Create group chat");
+                    case 'group':
+                        return this.env._t("Invite to group chat");
+                }
+                return this.env._t("Invite to Channel");
+            },
         }),
         /**
          * If set, this channel invitation form is content of related popover view.
@@ -295,7 +256,12 @@ registerModel({
          */
         selectablePartners: many('Partner'),
         selectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
-            compute: '_computeSelectablePartnerViews',
+            compute() {
+                if (this.selectablePartners.length === 0) {
+                    return clear();
+                }
+                return this.selectablePartners.map(partner => ({ partner }));
+            },
             inverse: 'channelInvitationFormOwner',
         }),
         /**
@@ -303,14 +269,31 @@ registerModel({
          */
         selectedPartners: many('Partner'),
         selectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
-            compute: '_computeSelectedPartnerViews',
+            compute() {
+                if (this.selectedPartners.length === 0) {
+                    return clear();
+                }
+                return this.selectedPartners.map(partner => ({ partner }));
+            },
             inverse: 'channelInvitationFormOwner',
         }),
         /**
          * States the thread on which this list operates (if any).
          */
         thread: one('Thread', {
-            compute: '_computeThread',
+            compute() {
+                if (
+                    this.popoverViewOwner &&
+                    this.popoverViewOwner.threadViewTopbarOwnerAsInvite &&
+                    this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread
+                ) {
+                    return this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread;
+                }
+                if (this.chatWindow && this.chatWindow.thread) {
+                    return this.chatWindow.thread;
+                }
+                return clear();
+            },
             required: true,
         }),
     },

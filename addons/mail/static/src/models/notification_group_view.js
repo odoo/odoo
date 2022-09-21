@@ -24,26 +24,22 @@ registerModel({
                 this.messaging.messagingMenu.close();
             }
         },
+
         /**
          * @param {MouseEvent} ev
          */
         onClickMarkAsRead(ev) {
             this.notificationGroup.notifyCancel();
-        },
-        /**
-         * @private
-         * @returns {string|undefined}
-         */
-        _computeImageSrc() {
-            if (this.notificationGroup.notification_type === 'email') {
-                return '/mail/static/src/img/smiley/mailfailure.jpg';
-            }
-            return clear();
-        },
+        }
     },
     fields: {
         imageSrc: attr({
-            compute: '_computeImageSrc',
+            compute() {
+                if (this.notificationGroup.notification_type === 'email') {
+                    return '/mail/static/src/img/smiley/mailfailure.jpg';
+                }
+                return clear();
+            },
         }),
         /**
          * Reference of the "mark as read" button. Useful to disable the

@@ -18,12 +18,14 @@ registerModel({
                 scrollRecomputeCount: increment()
             });
         },
+
         onScroll() {
             if (!this.exists()) {
                 return;
             }
             this.onScrollThrottle.do();
         },
+
         _onChangeScrollRecomputeCount() {
             for (const viewCategory of this.emojiPickerViewOwner.categories) {
                 const rowIndex = this.firstRenderedRowIndex + this.topBufferAmount;
@@ -37,6 +39,7 @@ registerModel({
                 }
             }
         },
+
         /**
          * @private
          * @returns {boolean}
@@ -44,12 +47,7 @@ registerModel({
          */
         _filterEmoji(emoji) {
             return (emoji._isStringInEmojiKeywords(this.emojiPickerViewOwner.emojiSearchBarView.currentSearch));
-        },
-        _sortRenderedRows() {
-            return [
-                ['smaller-first', 'index'],
-            ];
-        },
+        }
     },
     fields: {
         additionalRowsToRender: attr({
@@ -145,7 +143,11 @@ registerModel({
                     .filter(row => row !== undefined) // some corner cases where very briefly it doesn't sync with rows and it's bigger
                 );
             },
-            sort: '_sortRenderedRows',
+            sort() {
+                return [
+                    ['smaller-first', 'index'],
+                ];
+            },
         }),
         rowHeight: attr({
             default: 30,

@@ -18,6 +18,7 @@ registerModel({
                 selectedAttachment: this.attachment,
             });
         },
+
         /**
          * Handles the click on delete attachment and open the confirm dialog.
          *
@@ -33,14 +34,7 @@ registerModel({
             } else {
                 this.update({ attachmentDeleteConfirmDialog: {} });
             }
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasMultipleActions() {
-            return this.attachment.isDeletable && !this.attachmentList.composerViewOwner;
-        },
+        }
     },
     fields: {
         /**
@@ -60,7 +54,9 @@ registerModel({
             inverse: 'attachmentCards',
         }),
         hasMultipleActions: attr({
-            compute: '_computeHasMultipleActions',
+            compute() {
+                return this.attachment.isDeletable && !this.attachmentList.composerViewOwner;
+            },
         }),
     },
 });
