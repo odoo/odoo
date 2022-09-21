@@ -1,18 +1,11 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { CalendarCommonRenderer } from "../../../src/views/calendar/calendar_common/calendar_common_renderer";
 import { click, getFixture, nextTick, patchDate, patchWithCleanup } from "../../helpers/utils";
 import { clickEvent, toggleSectionFilter } from "../../views/calendar/helpers";
 import { makeView, setupViewRegistries } from "../../views/helpers";
-
-// const CalendarRenderer = require("web.CalendarRenderer");
-// const CalendarView = require("web.CalendarView");
-// const testUtils = require("web.test_utils");
-
-// const preInitialDate = new Date(2016, 11, 12, 8, 0, 0);
-// const initialDate = new Date(
-//     preInitialDate.getTime() - preInitialDate.getTimezoneOffset() * 60 * 1000
-// );
+import { positionalTap, swipeRight } from "../helpers";
 
 let target;
 let serverData;
@@ -192,34 +185,21 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(target, ".modal-footer .btn.btn-secondary.o_cw_popover_delete");
     });
 
-    QUnit.todo("calendar: today button", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("calendar: today button", async function (assert) {
         await makeView({
             type: "calendar",
             resModel: "event",
             serverData,
             arch: `<calendar mode="day" date_start="start" date_stop="stop"></calendar>`,
         });
+        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-12");
 
-        // TO MAKE this test pass:
-        // - implement the prev/next scale left/right swipe actions
-        // - make the view
-        // - check that the day header indicates today
-        // - swipe left or right
-        // - check that the day header indicates the new day
-        // - click on the today button
-        // - check that the day header indicates today
+        // Swipe right
+        await swipeRight(target, ".o_calendar_widget");
+        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-11");
 
-        // const previousDate = target.querySelector(".fc-day-header[data-date]").dataset.date;
-        // await click(target, ".o_calendar_button_today");
-
-        // const newDate = target.querySelector(".fc-day-header[data-date]").dataset.date;
-        // assert.notEqual(
-        //     newDate,
-        //     previousDate,
-        //     "The today button must change the view to the today date"
-        // );
+        await click(target, ".o_calendar_button_today");
+        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-12");
     });
 
     QUnit.test("calendar: show and change other calendar", async function (assert) {
@@ -266,53 +246,48 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(target, ".o_calendar_view");
     });
 
-    QUnit.todo('calendar: short tap on "Free Zone" opens quick create', async function (assert) {
+    QUnit.debug('calendar: short tap on "Free Zone" opens quick create', async function (assert) {
         assert.expect(3);
 
-        // testUtils.mock.patch(CalendarRenderer, {
-        //     _getFullCalendarOptions: function () {
-        //         const options = this._super(...arguments);
-        //         const oldSelect = options.select;
-        //         options.select = (selectionInfo) => {
-        //             assert.step("select");
-        //             if (oldSelect) {
-        //                 return oldSelect(selectionInfo);
-        //             }
-        //         };
-        //         const oldDateClick = options.dateClick;
-        //         options.dateClick = (dateClickInfo) => {
-        //             assert.step("dateClick");
-        //             if (oldDateClick) {
-        //                 return oldDateClick(dateClickInfo);
-        //             }
-        //         };
-        //         return options;
-        //     },
-        // });
+        patchWithCleanup(CalendarCommonRenderer.prototype, {
+            get options() {
+                const options = this._super();
+                const oldSelect = options.select;
+                options.select = (selectionInfo) => {
+                    assert.step("select");
+                    if (oldSelect) {
+                        return oldSelect(selectionInfo);
+                    }
+                };
+                const oldDateClick = options.dateClick;
+                options.dateClick = (dateClickInfo) => {
+                    assert.step("dateClick");
+                    if (oldDateClick) {
+                        return oldDateClick(dateClickInfo);
+                    }
+                };
+                return options;
+            },
+        });
 
-        // await makeView({
-        //     type: "calendar",
-        //     resModel: "event",
-        //     serverData,
-        //     arch: `<calendar mode="day" date_start="start" date_stop="stop"/>`,
-        // });
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `<calendar mode="day" date_start="start" date_stop="stop"/>`,
+        });
 
-        // // Simulate a "TAP" (touch)
-        // const initCell = target.querySelector(
-        //     '.fc-time-grid .fc-minor[data-time="07:30:00"] .fc-widget-content:last-child'
-        // );
-        // const boundingClientRect = initCell.getBoundingClientRect();
-        // const left = boundingClientRect.left + document.body.scrollLeft;
-        // const top = boundingClientRect.top + document.body.scrollTop;
-        // await testUtils.dom.triggerPositionalTapEvents(left, top);
+        // Simulate a "TAP" (touch)
+        const initCell = target.querySelector(
+            '.fc-time-grid .fc-minor[data-time="07:30:00"] .fc-widget-content:last-child'
+        );
+        const boundingClientRect = initCell.getBoundingClientRect();
+        const left = boundingClientRect.left + document.body.scrollLeft;
+        const top = boundingClientRect.top + document.body.scrollTop;
+        await positionalTap(left, top);
 
-        // assert.strictEqual(
-        //     $(".modal").length,
-        //     1,
-        //     "should open a Quick create modal view in mobile on short tap"
-        // );
-        // assert.verifySteps(["dateClick"]);
-
-        // testUtils.mock.unpatch(CalendarRenderer);
+        // should open a Quick create modal view in mobile on short tap
+        assert.containsOnce(target, ".modal");
+        assert.verifySteps(["dateClick"]);
     });
 });

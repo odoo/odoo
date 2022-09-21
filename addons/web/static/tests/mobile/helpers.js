@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { triggerEvent } from "../helpers/utils";
+import { findElement, triggerEvent } from "../helpers/utils";
 
 async function swipe(target, selector, direction) {
-    const touchTarget = target.querySelector(selector);
+    const touchTarget = findElement(target, selector);
     if (direction === "left") {
         // The scrollable element is set at its right limit
         touchTarget.scrollLeft = touchTarget.scrollWidth - touchTarget.offsetWidth;
@@ -55,4 +55,51 @@ export async function swipeRight(target, selector) {
  */
 export async function swipeLeft(target, selector) {
     return swipe(target, selector, "left");
+}
+
+/**
+ * Simulate a "TAP" (touch) on the target element with the given selector.
+ *
+ * @param {HTMLElement} target
+ * @param {DOMSelector} [selector]
+ * @returns {Promise}
+ */
+export async function tap(target, selector) {
+    const touchTarget = findElement(target, selector);
+    const box = touchTarget.getBoundingClientRect();
+    const x = box.left + box.width / 2;
+    const y = box.top + box.height / 2;
+    return positionalTap(x, y);
+}
+
+/**
+ * Simulate a "TAP" (touch) at the given position.
+ *
+ * @param {number} x
+ * @param {number} y
+ * @returns {Promise}
+ */
+export async function positionalTap(x, y) {
+    const touchTarget = document.elementFromPoint(x, y);
+    const touch = new Touch({
+        identifier: 0,
+        target: touchTarget,
+        clientX: x,
+        clientY: y,
+        pageX: x,
+        pageY: y,
+    });
+    await triggerEvent(touchTarget, "touchstart", {
+        touches: [touch],
+        targetTouches: [touch],
+        changedTouches: [touch],
+    });
+    await triggerEvent(touchTarget, "touchmove", {
+        touches: [touch],
+        targetTouches: [touch],
+        changedTouches: [touch],
+    });
+    await triggerEvent(touchTarget, "touchend", {
+        changedTouches: [touch],
+    });
 }

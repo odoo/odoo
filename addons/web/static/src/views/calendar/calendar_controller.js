@@ -63,6 +63,7 @@ export class CalendarController extends Component {
             createRecord: this.createRecord.bind(this),
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),
+            setDate: this.setDate.bind(this),
             displayName: this.displayName,
         };
     }
