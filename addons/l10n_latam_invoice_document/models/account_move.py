@@ -145,6 +145,12 @@ class AccountMove(models.Model):
         vendor = self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents)
         return super(AccountMove, self - vendor)._check_unique_sequence_number()
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_forbid_parts_of_chain(self):
+        """Delete vendor bills without verifying if they are the last ones of the sequence chain."""
+        vendor = self.filtered(lambda x: x._is_manual_document_number() and x.l10n_latam_use_documents)
+        return super(AccountMove, self - vendor)._unlink_forbid_parts_of_chain()
+
     @api.constrains('state', 'l10n_latam_document_type_id')
     def _check_l10n_latam_documents(self):
         """ This constraint checks that if a invoice is posted and does not have a document type configured will raise
