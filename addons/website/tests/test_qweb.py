@@ -105,6 +105,8 @@ class TestQwebProcessAtt(TransactionCase):
         self.website.cdn_activated = True
         self.website.cdn_url = "http://test.cdn"
         self.website.cdn_filters = "\n".join(["^(/[a-z]{2}_[A-Z]{2})?/a$", "^(/[a-z]{2})?/a$", "^/b$"])
+        TransactionCase.update_write_date_for_cache_longterm(self.website)
+        self.website.flush_recordset()
 
     def _test_att(self, url, expect, tag='a', attribute='href'):
         self.assertEqual(

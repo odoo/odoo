@@ -263,6 +263,7 @@ _BUILTINS = {
     'dict': dict,
     'list': list,
     'tuple': tuple,
+    'frozenset': frozenset,
     'map': map,
     'abs': abs,
     'min': min,

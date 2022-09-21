@@ -1932,6 +1932,7 @@ actual arch.
         return etree.tostring(arch_tree, encoding='unicode')
 
     @api.model
+    @tools.ormcache('template')
     def _get_view_id(self, template):
         """ Return the view ID corresponding to ``template``, which may be a
         view ID or an XML ID. Note that this method may be overridden for other
@@ -1947,6 +1948,28 @@ actual arch.
         res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(template, raise_if_not_found=True)
         assert res_model == self._name, "Call _get_view_id, expected %r, got %r" % (self._name, res_model)
         return res_id
+
+    @api.model
+    @tools.ormcache('view_id')
+    def _get_cache_longterm_key(self, view_id):
+        self.env["ir.ui.view"].flush_model(['model', 'write_date', 'inherit_id'])
+        query = """
+            WITH RECURSIVE ir_ui_view_inherits AS (
+                SELECT ir_ui_view.id, ir_ui_view.write_date, ir_ui_view.model
+                FROM ir_ui_view
+                WHERE id = %s
+            UNION
+                SELECT ir_ui_view.id, ir_ui_view.write_date, ir_ui_view.model
+                FROM ir_ui_view
+                INNER JOIN ir_ui_view_inherits parent ON parent.id = ir_ui_view.inherit_id
+                WHERE ir_ui_view.active IS TRUE
+            )
+            SELECT SUM(extract(epoch from v.write_date)), array_agg(v.id)
+            FROM ir_ui_view_inherits v
+        """
+        self.env.cr.execute(query, [view_id])
+        write_sum, all_view_ids = self.env.cr.fetchone()
+        return write_sum, frozenset(all_view_ids or ())
 
     @api.model
     def _get(self, view_ref):

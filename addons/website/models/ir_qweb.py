@@ -56,6 +56,11 @@ class IrQWeb(models.AbstractModel):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id']
 
+    def _get_cache_longterm_key(self, view_id):
+        """ Add the website information to take care the website cdn in compiled view.
+        """
+        return super()._get_cache_longterm_key(view_id) + self.env['website']._get_cache_longterm_key()
+
     def _prepare_frontend_environment(self, values):
         """ Update the values and context with website specific value
             (required to render website layout template)
@@ -113,7 +118,7 @@ class IrQWeb(models.AbstractModel):
         return irQweb
 
     def _get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
-        return AssetsBundleMultiWebsite(xmlid, files, env=env)
+        return AssetsBundleMultiWebsite(xmlid, files, env=env, css=css, js=js)
 
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):
