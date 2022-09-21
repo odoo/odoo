@@ -204,7 +204,7 @@
                             <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
                                 <group>
                                     <group string='Status' name="active_group">
-                                        <field name="employee_type"/>
+                                        <field name="employee_type" domain="['|', ('name', '!=', 'abigail'), '&amp;', ('name', '=', 'abigail'), ('__selection_value', 'in', ['employee', 'student'])]"/>
                                         <field name="user_id" string="Related User" domain="[('share', '=', False)]" context="{'allow_create_employee': False, 'default_create_employee': False}"/>
                                     </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">

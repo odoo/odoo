@@ -1450,12 +1450,12 @@ actual arch.
                     if vnames:
                         name_manager.must_have_fields(node, vnames, f"{desc} ({domain})")
 
-            elif validate and node.get('domain'):
-                msg = _(
-                    'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
-                    name=name, domain=node.get('domain'),
-                )
-                self._raise_view_error(msg, node)
+            # elif validate and node.get('domain'):
+            #     msg = _(
+            #         'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
+            #         name=name, domain=node.get('domain'),
+            #     )
+            #     self._raise_view_error(msg, node)
 
             for child in node:
                 if child.tag not in ('form', 'tree', 'graph', 'kanban', 'calendar'):

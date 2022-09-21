@@ -12,7 +12,7 @@ export class SelectionField extends Component {
             case "many2one":
                 return [...this.props.record.preloadedData[this.props.name]];
             case "selection":
-                return this.props.record.fields[this.props.name].selection.filter(
+                return this.getSelectionValues().filter(
                     (option) => option[0] !== false && option[1] !== ""
                 );
             default:
@@ -37,6 +37,40 @@ export class SelectionField extends Component {
     }
     get isRequired() {
         return this.props.record.isRequired(this.props.name);
+    }
+
+    getSelectionValues() {
+        if (this.props.record.fields[this.props.name].type !== "selection") {
+            return [];
+        }
+        const domain = this.props.record.getFieldDomain(this.props.name);
+        const selection = this.props.record.fields[this.props.name].selection;
+        if (domain.toList().length === 0) {
+            return selection;
+        }
+        const evalData = {};
+        const recordData = this.props.record.data;
+        for (const [field, value] of Object.entries(recordData)) {
+            switch (this.props.record.fields[field].type) {
+                case "many2one":
+                    evalData[field] = value && value[0];
+                    break;
+                case "many2many":
+                case "one2many":
+                    evalData[field] = value.records.map(rec => rec.resId);
+                    break;
+                default:
+                    evalData[field] = value;
+            }
+        }
+        return selection.filter((value) => {
+            if (value[0] === this.props.value) {
+                return true;
+            } else {
+                evalData["__selection_value"] = value[0];
+                return domain.contains(evalData);
+            }
+        });
     }
 
     stringify(value) {
