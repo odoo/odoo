@@ -280,9 +280,11 @@ class MailMail(models.Model):
             success_pids = []
             failure_type = None
             processing_pid = None
-            mail = None
+            mail = self.browse(mail_id)
             try:
-                mail = self.browse(mail_id)
+                if auto_commit and not mail.exists():
+                    # when auto_commit is set, afer a loop the record may no longer exist
+                    continue
                 if mail.state != 'outgoing':
                     if mail.state != 'exception' and mail.auto_delete:
                         mail.sudo().unlink()
