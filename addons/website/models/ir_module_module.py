@@ -399,8 +399,8 @@ class IrModuleModule(models.Model):
             result = active_todo.action_launch()
         else:
             result = website.button_go_website(mode_edit=True)
-        if result.get('url') and 'enable_editor' in result['url']:
-            result['url'] = result['url'].replace('enable_editor', 'with_loader=1&enable_editor')
+        if result.get('tag') == 'website_preview' and result.get('context', {}).get('params', {}).get('enable_editor'):
+            result['context']['params']['with_loader'] = True
         return result
 
     def button_remove_theme(self):
