@@ -125,7 +125,7 @@
                     </tr>
                 </thead>
                 <t t-foreach="grouped_tasks" t-as="tasks">
-                    <tbody>
+                    <tbody t-if="tasks">
                         <tr t-if="not groupby == 'none'" class="table-light">
                             <th t-if="groupby == 'project'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <!-- This div is necessary for documents_project_sale -->
@@ -149,7 +149,7 @@
                                 <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
                         </tr>
                     </tbody>
-                    <tbody>
+                    <tbody t-if="tasks">
                         <t t-foreach="tasks" t-as="task">
                             <tr>
                                 <td class="text-start">
