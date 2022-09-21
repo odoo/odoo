@@ -358,7 +358,6 @@ class LoyaltyProgram(models.Model):
         action['name'] = self._program_items_name()[self.program_type]
         action['display_name'] = action['name']
         action['context'] = {
-            'create': False,
             'program_type': self.program_type,
             'program_item_name': self._program_items_name()[self.program_type],
             'default_program_id': self.id,
