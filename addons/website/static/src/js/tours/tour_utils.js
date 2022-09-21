@@ -13,6 +13,18 @@ function addMedia(position = "right") {
         run: "click",
     };
 }
+function assertCssVariable(variableName, variableValue, trigger = 'iframe body') {
+    return {
+        content: `Check CSS variable ${variableName}=${variableValue}`,
+        trigger: trigger,
+        run: function () {
+            const styleValue = getComputedStyle(this.$anchor[0]).getPropertyValue(variableName);
+            if ((styleValue && styleValue.trim()) !== variableValue.trim()) {
+                throw new Error(`Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`);
+            }
+        },
+    };
+}
 function assertPathName(pathName, trigger) {
     return {
         content: `Check if we have been redirected to ${pathName}`,
@@ -372,6 +384,7 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
 
 return {
     addMedia,
+    assertCssVariable,
     assertPathName,
     changeBackground,
     changeBackgroundColor,
