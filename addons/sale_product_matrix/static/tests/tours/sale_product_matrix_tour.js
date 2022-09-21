@@ -162,8 +162,15 @@ tour.register('sale_matrix_tour', {
     run: 'click' // apply the matrix
 }, {
     trigger: '.o_form_button_save:contains("Save")',
+<<<<<<< HEAD
     extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")',
     run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
+||||||| parent of 4b1314f19efb... temp
+=======
+}, {
+    trigger: '.o_form_button_edit:contains("Edit")',
+    run: function () {},  // Ensure the form is saved before closing the browser
+>>>>>>> 4b1314f19efb... temp
 },
 ]);
 
