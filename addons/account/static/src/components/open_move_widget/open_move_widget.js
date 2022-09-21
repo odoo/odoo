@@ -13,7 +13,7 @@ class OpenMoveWidget extends Component {
     }
 
     async openMove(ev) {
-        const action = await this.orm.call("account.move.line", "open_move", [this.props.record.resId], {});
+        const action = await this.orm.call("account.move.line", "action_open_business_doc", [this.props.record.resId], {});
         this.action.doAction(action);
     }
 }

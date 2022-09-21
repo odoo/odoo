@@ -3303,25 +3303,33 @@ class AccountMove(models.Model):
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
 
-    def open_move(self):
+    def action_open_business_doc(self):
+        self.ensure_one()
         if self.payment_id:
-            return self.open_payment_view()
+            name = _("Payment")
+            res_model = 'account.payment'
+            res_id = self.payment_id.id
+        elif self.statement_line_id:
+            name = _("Bank Transaction")
+            res_model = 'account.bank.statement.line'
+            res_id = self.statement_line_id.id
         else:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'account.move',
-                'view_mode': 'form',
-                'res_id': self.id,
-                'views': [(False, 'form')],
-            }
+            name = _("Journal Entry")
+            res_model = 'account.move'
+            res_id = self.id
 
-    def open_payment_view(self):
         return {
+            'name': name,
             'type': 'ir.actions.act_window',
-            'res_model': 'account.payment',
             'view_mode': 'form',
-            'res_id': self.payment_id.id,
             'views': [(False, 'form')],
+            'res_model': res_model,
+            'res_id': res_id,
+            'context': {
+                'create': False,
+                'delete': False,
+            },
+            'target': 'current',
         }
 
     def open_created_caba_entries(self):
