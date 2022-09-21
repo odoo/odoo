@@ -37760,7 +37760,7 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-09-21T15:01:18.226Z';
+    exports.__info__.date = '2022-09-21T15:01:51.366Z';
     exports.__info__.hash = 'dbe3605';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
