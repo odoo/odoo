@@ -1,0 +1,43 @@
+.o_timeoff_calendar {
+    .o_calendar_renderer {
+        height: unset;
+
+        .o_calendar_widget {
+            @for $size from 1 through length($o-colors) {
+                .hr_stress_day_#{$size - 1}:not(.fc-disabled-day) {
+                    background-color: lighten(nth($o-colors, $size), 25%) !important;
+                }
+            }
+        }
+
+        .fc-bgevent {
+            border-radius: 25px;
+        }
+
+        @for $i from 1 through length($o-filter_colors) {
+            $color: nth($o-filter_colors, $i);
+
+            .o_calendar_color_#{$i - 1} {
+                &.o_event_hatched {
+                    background: repeating-linear-gradient(
+                        45deg,
+                        $color,
+                        $color 10px,
+                        rgba($color, 0.4) 10px,
+                        rgba($color, 0.4) 20px
+                    ) !important;
+
+                    .fc-bg {
+                        background: repeating-linear-gradient(
+                            45deg,
+                            $color,
+                            $color 10px,
+                            rgba($color, 0.5) 10px,
+                            rgba($color, 0.5) 20px
+                        );
+                    }
+                }
+            }
+        }
+    }
+}

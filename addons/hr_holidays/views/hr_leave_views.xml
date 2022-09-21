@@ -220,7 +220,7 @@
         <field name="model">hr.leave</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <form string="Time Off Request" class="o_hr_leave_form" js_class="allocation_leave_form">
+            <form string="Time Off Request" class="o_hr_leave_form">
             <field name="active" invisible="1"/>
             <field name="can_reset" invisible="1"/>
             <field name="can_approve" invisible="1"/>
@@ -256,10 +256,10 @@
                 <field name="leave_type_request_unit" invisible="1"/>
                 <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
-                        <div name="title" class="o_hr_leave_title">
-                            <field name="display_name" invisible="1"/>
+                        <div name="title" class="o_hr_leave_title" invisible="1">
                             <field name="employee_id" nolabel="1" readonly="1" force_save="1" invisible="1"/>
                             <field name="employee_ids" invisible="1"/>
+                            <field name="display_name" attrs="{'invisible': [('holiday_status_id', '=', False)]}"/>
                         </div>
                         <group name="col_left">
                             <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from, 'default_date_to':date_to}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}" class="w-100"/>
@@ -397,7 +397,7 @@
         <field name="name">hr.leave.view.dashboard</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <calendar js_class="time_off_calendar"
+            <calendar js_class="time_off_calendar_dashboard"
                     string="Time Off Request"
                     form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
                     event_open_popup="true"
@@ -422,7 +422,17 @@
         <field name="name">hr.leave.view.dashboard</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <calendar string="Time Off Request" js_class="time_off_employee_calendar" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="year" quick_add="False" show_unusual_days="True" color="color" hide_time="True">
+            <calendar string="Time Off Request"
+                    js_class="time_off_calendar_dashboard"
+                    form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
+                    event_open_popup="true"
+                    date_start="date_from"
+                    date_stop="date_to"
+                    mode="year"
+                    quick_add="False"
+                    show_unusual_days="True"
+                    color="color"
+                    hide_time="True">
                 <field name="display_name"/>
                 <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
@@ -440,6 +450,9 @@
         <field name="mode">primary</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='title']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
             <xpath expr="//field[@name='holiday_status_id']" position="before">
                 <field name="holiday_type" string="Mode"
                     groups="hr_holidays.group_hr_holidays_user"/>
@@ -455,14 +468,6 @@
                     'required': [('holiday_type', '=', 'department')],
                     'invisible': [('holiday_type', '!=', 'department')]
                     }"/>
-            </xpath>
-            <field name="holiday_status_id" position="replace"/>
-            <div name="title" position="inside">
-                <h1 class="d-flex flex-row align-items-end justify-content-between o_hr_leave_title">
-                    <field name="holiday_status_id" options="{'no_open': True}" context="{'request_type':'leave', 'from_manager_leave_form': True ,'employee_id': employee_id, 'default_date_from':date_from, 'default_date_to':date_to}"/>
-                </h1>
-            </div>
-            <label id="label_dates" position="before">
                     <field name="multi_employee" invisible="1" force_save="1"/>
                     <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
                         'invisible': ['|', '|', ('holiday_type', '!=', 'employee'), ('state', '!=', 'validate'), ('employee_id', '=', False)]
@@ -471,10 +476,10 @@
                         'required': [('holiday_type', '=', 'employee'), ('state', 'in', ('draft', 'cancel', 'refuse'))],
                         'invisible': ['|', ('holiday_type', '!=', 'employee'), '&amp;', ('state', '=', 'validate'), ('employee_id', '!=', False)],
                         }" widget="many2many_avatar_employee"/>
-            </label>
+            </xpath>
             <field name="name" position="replace"/>
             <field name="user_id" position="before">
-                <field name="name"/>
+                <field name="name" widget="text"/>
             </field>
             <xpath expr="//div[hasclass('col_left')]" position="after">
                 <div class="o_hr_leave_column col_right col-md-6 col-12">
@@ -495,7 +500,16 @@
         <field name="name">hr.leave.view.calendar</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <calendar js_class="time_off_calendar_all" string="Time Off Request" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="month" show_unusual_days="True" quick_add="False" color="color">
+            <calendar js_class="time_off_calendar"
+                    string="Time Off Request"
+                    form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d"
+                    event_open_popup="true"
+                    date_start="date_from"
+                    date_stop="date_to"
+                    mode="month"
+                    show_unusual_days="True"
+                    quick_add="False"
+                    color="color">
                 <field name="display_name"/>
                 <field name="holiday_status_id" color="color" filters="1" invisible="1"/>
                 <field name="employee_id" filters="1" invisible="1"/>

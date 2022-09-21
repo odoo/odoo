@@ -80,7 +80,7 @@ class HolidaysRequest(models.Model):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
         defaults = self._default_get_request_parameters(defaults)
 
-        if 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
+        if self.env.context.get('holiday_status_name_get', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
             lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1, order='sequence')
 
             if lt:
@@ -143,7 +143,7 @@ class HolidaysRequest(models.Model):
     holiday_status_id = fields.Many2one(
         "hr.leave.type", compute='_compute_from_employee_id', store=True, string="Time Off Type", required=True, readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]},
-        domain=['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)])
+        domain="[('company_id', '?=', employee_company_id), '|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)]")
     holiday_allocation_id = fields.Many2one(
         'hr.leave.allocation', compute='_compute_from_holiday_status_id', string="Allocation", store=True, readonly=False)
     color = fields.Integer("Color", related='holiday_status_id.color')
@@ -455,7 +455,8 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             holiday.manager_id = holiday.employee_id.parent_id.id
             if holiday.employee_id.user_id != self.env.user and self._origin.employee_id != holiday.employee_id:
-                holiday.holiday_status_id = False
+                if holiday.employee_id and not holiday.holiday_status_id.with_context(employee_id=holiday.employee_id.id).has_valid_allocation:
+                    holiday.holiday_status_id = False
 
     @api.depends('employee_id', 'holiday_type')
     def _compute_department_id(self):
@@ -753,6 +754,10 @@ class HolidaysRequest(models.Model):
     # ORM Overrides methods
     ####################################################
 
+    @api.depends('employee_id', 'holiday_status_id')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+
     def onchange(self, values, field_name, field_onchange):
         # Try to force the leave_type name_get when creating new records
         # This is called right after pressing create and returns the name_get for
@@ -809,7 +814,7 @@ class HolidaysRequest(models.Model):
                     display_date = fields.Date.to_string(date_from_utc) or ""
                     if leave.number_of_days > 1 and date_from_utc and date_to_utc:
                         display_date += ' / %s' % fields.Date.to_string(date_to_utc) or ""
-                    if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
+                    if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
                             leave.id,
                             _("%(leave_type)s: %(duration).2f days (%(start)s)",

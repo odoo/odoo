@@ -63,7 +63,7 @@
         <field name="model">hr.leave.allocation</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <form string="Allocation Request" js_class="allocation_leave_form">
+            <form string="Allocation Request">
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
                 <field name="holiday_type" invisible="1"/>
@@ -91,7 +91,7 @@
                         </button>
                     </div>
                     <div id="title" class="oe_title">
-                        <h2><field name="name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" attrs="{'invisible': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/>
+                        <h2><field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" attrs="{'invisible': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/>
                         <field name="name_validity" attrs="{'invisible': [('state', 'in', ('draft', 'confirm'))]}"/></h2>
                     </div>
                     <group>
@@ -102,7 +102,7 @@
                                 attrs="{'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))]}"/>
                             <field name="is_officer" invisible="1"/>
                             <field name="accrual_plan_id" attrs="{'invisible': [('allocation_type', '=', 'regular')], 'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))]}"/>
-                            <div class="o_td_label">
+                            <div class="o_td_label" name="validity_label">
                                 <label for="date_from" string="Validity Period" attrs="{'invisible': ['|', ('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
                                 <label for="date_from" string="Start Date" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
                             </div>
@@ -116,7 +116,7 @@
 
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
-                                <label for="number_of_days" string="Duration"
+                                <label for="number_of_days_display" string="Duration"
                                     attrs="{'readonly': [('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
                             </div>
                             <div name="duration_display">
@@ -224,12 +224,16 @@
             <div name="button_box" position="attributes">
                 <attribute name="invisible">1</attribute>
             </div>
+            <div name="validity_label" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </div>
             <div name="validity" position="attributes">
                 <attribute name="invisible">1</attribute>
             </div>
             <label for="date_from" position="attributes">
                 <attribute name="invisible">1</attribute>
             </label>
+            <div class="oe_chatter" position="replace"/>
         </field>
     </record>
 

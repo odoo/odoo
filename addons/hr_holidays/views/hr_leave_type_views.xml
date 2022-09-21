@@ -68,7 +68,7 @@
                                 attrs="{
                                 'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')],
                                 'required': ['|',('leave_validation_type', 'in', ['both', 'hr']), ('requires_allocation', '=', 'yes'), ('allocation_validation_type', '=', 'officer')]}"/>
-                            <field name="request_unit" widget="radio-inline"/>
+                            <field name="request_unit"/>
                             <field name="support_document" string="Allow To Attach Supporting Document" />
                             <field name="time_type" required="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
