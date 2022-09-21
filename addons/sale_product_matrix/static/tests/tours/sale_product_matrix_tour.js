@@ -147,6 +147,9 @@ tour.register('sale_matrix_tour', {
     extra_trigger: '.oe_subtotal_footer_separator:contains("640.32")',
 }, {
     trigger: '.o_form_button_save:contains("Save")',
+}, {
+    trigger: '.o_form_button_edit:contains("Edit")',
+    run: function () {},  // Ensure the form is saved before closing the browser
 },
 ]);
 
