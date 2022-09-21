@@ -683,13 +683,12 @@ class AccountMove(models.Model):
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
                 pass
-            elif (not move.name or move.name == '/') and move.quick_edit_mode:
+            elif move.quick_edit_mode and not move.posted_before:
                 # We always suggest the next sequence as the default name of the new move
                 pass
             elif (move.name and move.name != '/') or move.state != 'posted':
                 try:
-                    if not move.posted_before:
-                        move._constrains_date_sequence()
+                    move._constrains_date_sequence()
                     # Has already a name or is not posted, we don't add to a batch
                     continue
                 except ValidationError:
@@ -1574,7 +1573,7 @@ class AccountMove(models.Model):
 
     @api.onchange('name', 'highest_name')
     def _onchange_name_warning(self):
-        if self.name and self.name != '/' and self.name <= (self.highest_name or ''):
+        if self.name and self.name != '/' and self.name <= (self.highest_name or '') and not self.quick_edit_mode:
             self.show_name_warning = True
         else:
             self.show_name_warning = False
@@ -2350,6 +2349,9 @@ class AccountMove(models.Model):
     # SEQUENCE MIXIN
     # -------------------------------------------------------------------------
 
+    def _must_check_constrains_date_sequence(self):
+        return not self.posted_before and not self.quick_edit_mode
+
     def _get_last_sequence_domain(self, relaxed=False):
         # EXTENDS account sequence.mixin
         self.ensure_one()
@@ -2541,6 +2543,21 @@ class AccountMove(models.Model):
         price_untaxed = taxes.with_context(force_price_include=True).compute_all(
             self.quick_edit_total_amount - self.amount_total)['total_excluded']
         return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
+
+    @api.onchange('quick_edit_mode', 'journal_id', 'company_id')
+    def _quick_edit_mode_suggest_invoice_date(self):
+        """Suggest the Customer Invoice/Vendor Bill date based on previous invoice and lock dates"""
+        for record in self:
+            if record.quick_edit_mode and not record.invoice_date:
+                invoice_date = fields.Date.context_today(self)
+                prev_move = self.search([('state', '=', 'posted'),
+                                         ('journal_id', '=', record.journal_id.id),
+                                         ('company_id', '=', record.company_id.id),
+                                         ('invoice_date', '!=', False)],
+                                        limit=1)
+                if prev_move:
+                    invoice_date = self._get_accounting_date(prev_move.invoice_date, False)
+                record.invoice_date = invoice_date
 
     @api.onchange('quick_edit_total_amount', 'partner_id')
     def _onchange_quick_edit_total_amount(self):
