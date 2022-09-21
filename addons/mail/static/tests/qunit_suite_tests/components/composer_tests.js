@@ -1596,5 +1596,31 @@ QUnit.test('send button on mail.channel should have "Send" as label', async func
     );
 });
 
+QUnit.test('Test emoji command', async function (assert) {
+    assert.expect(2);
+
+    const pyEnv = await startServer();
+    const mailChanelId1 = pyEnv['mail.channel'].create({ channel_type: 'channel' });
+    const { click, insertText, openDiscuss } = await start({
+        discuss: {
+            context: { active_id: mailChanelId1 },
+        },
+    });
+    await openDiscuss();
+
+    assert.containsNone(
+        document.body,
+        '.o_EmojiPickerView',
+        "No emoji picker should be open"
+    );
+    await insertText('.o_ComposerTextInput_textarea', "/emoji");
+    await click('.o_Composer_buttonSend');
+    assert.containsOnce(
+        document.body,
+        '.o_EmojiPickerView',
+        "Emoji picker should be open"
+    );
+});
+
 });
 });
