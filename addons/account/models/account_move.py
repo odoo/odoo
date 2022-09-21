@@ -683,12 +683,12 @@ class AccountMove(models.Model):
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
                 pass
-            elif (not move.name or move.name == '/') and move.quick_edit_mode:
+            elif move.quick_edit_mode and not move.posted_before:
                 # We always suggest the next sequence as the default name of the new move
                 pass
             elif (move.name and move.name != '/') or move.state != 'posted':
                 try:
-                    if not move.posted_before:
+                    if move._must_check_constrains_date_sequence():
                         move._constrains_date_sequence()
                     # Has already a name or is not posted, we don't add to a batch
                     continue
@@ -1529,6 +1529,12 @@ class AccountMove(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
+    @api.onchange('journal_id')
+    def _compute_invoice_date(self):
+        sugg = self._get_quick_edit_suggestions(True)
+        if sugg:
+            self.invoice_date = sugg.get('invoice_date', False)
+
     @api.onchange('invoice_vendor_bill_id')
     def _onchange_invoice_vendor_bill(self):
         if self.invoice_vendor_bill_id:
@@ -1572,7 +1578,7 @@ class AccountMove(models.Model):
 
     @api.onchange('name', 'highest_name')
     def _onchange_name_warning(self):
-        if self.name and self.name != '/' and self.name <= (self.highest_name or ''):
+        if self.name and self.name != '/' and self.name <= (self.highest_name or '') and not self.quick_edit_mode:
             self.show_name_warning = True
         else:
             self.show_name_warning = False
@@ -2348,6 +2354,9 @@ class AccountMove(models.Model):
     # SEQUENCE MIXIN
     # -------------------------------------------------------------------------
 
+    def _must_check_constrains_date_sequence(self):
+        return not self.posted_before and not self.quick_edit_mode
+
     def _get_last_sequence_domain(self, relaxed=False):
         # EXTENDS account sequence.mixin
         self.ensure_one()
@@ -2507,7 +2516,7 @@ class AccountMove(models.Model):
         """, [partner_id, company_id])
         return self._cr.fetchone()
 
-    def _get_quick_edit_suggestions(self):
+    def _get_quick_edit_suggestions(self, ignore_null_total_amount=False):
         """
         Returns a dictionnary containing the suggested values when creating a new
         line with the quick_edit_total_amount set. We will compute the price_unit
@@ -2516,6 +2525,22 @@ class AccountMove(models.Model):
         for that partner as the default one, otherwise the default of the journal.
         """
         self.ensure_one()
+        if self.quick_edit_mode and ignore_null_total_amount:
+            # Suggest the Customer Invoice/Vendor Bill date based on previous invoice and lock dates
+            invoice_date = date.today()
+            prev_move = self.search([('state', '=', 'posted'),
+                                     ('journal_id', '=', self.journal_id.id),
+                                     ('company_id', '=', self.company_id.id),
+                                     ('invoice_date', '!=', False)],
+                                    limit=1)
+            if prev_move:
+                lock_date = prev_move.company_id._get_user_fiscal_lock_date()
+                prev_date_last_day_of_month = prev_move.invoice_date + relativedelta(day=31)
+                if lock_date and prev_date_last_day_of_month <= lock_date:
+                    invoice_date = lock_date + relativedelta(months=1) + relativedelta(day=31)
+                elif prev_date_last_day_of_month < date.today():
+                    invoice_date = prev_date_last_day_of_month
+            return {'invoice_date': invoice_date}
         if not self.quick_edit_total_amount:
             return False
         count, account_id, tax_ids = self._get_frequent_account_and_taxes(
