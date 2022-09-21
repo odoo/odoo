@@ -157,7 +157,7 @@ export class KanbanRenderer extends Component {
         const { groupByField, fields } = this.props.list;
         const { modifiers, type } = groupByField;
         return Boolean(
-            !(modifiers ? modifiers.readonly : fields[groupByField.name].readonly) &&
+            !(modifiers && "readonly" in modifiers ? modifiers.readonly : fields[groupByField.name].readonly) &&
                 (isAllowedDateField(groupByField) || MOVABLE_RECORD_TYPES.includes(type))
         );
     }
@@ -171,7 +171,7 @@ export class KanbanRenderer extends Component {
         const { groupsDraggable } = this.props.archInfo;
         return (
             groupsDraggable &&
-            !(modifiers ? modifiers.readonly : fields[groupByField.name].readonly) &&
+            !(modifiers && "readonly" in modifiers ? modifiers.readonly : fields[groupByField.name].readonly) &&
             DRAGGABLE_GROUP_TYPES.includes(type)
         );
     }
