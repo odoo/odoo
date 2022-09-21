@@ -528,7 +528,7 @@ var VariantMixin = {
         }
         this._toggleDisable($parent, isCombinationPossible);
 
-        if (combination.has_discounted_price) {
+        if (combination.has_discounted_price && !combination.compare_list_price) {
             $default_price
                 .closest('.oe_website_sale')
                 .addClass("discount");
