@@ -20,6 +20,7 @@ export const PageControllerMixin = (component) => class extends component {
         super.setup();
         this.website = useService('website');
         this.dialog = useService('dialog');
+        this.rpc = useService('rpc');
 
         this.websiteSelection = [{id: 0, name: this.env._t("All Websites")}];
 
@@ -37,14 +38,15 @@ export const PageControllerMixin = (component) => class extends component {
      * Adds the new 'website content' record depending on the targeted model and
      * 'create_action' passed in context.
      */
-    createWebsiteContent() {
+    async createWebsiteContent() {
         if (this.props.resModel === 'website.page') {
             return this.dialog.add(AddPageDialog, {selectWebsite: true});
         }
         const action = this.props.context.create_action;
         if (action) {
             if (/^\//.test(action)) {
-                window.location.replace(action);
+                const url = await this.rpc(action);
+                this.website.goToWebsite({ path: url, edition: true });
                 return;
             }
             this.actionService.doAction(action, {
