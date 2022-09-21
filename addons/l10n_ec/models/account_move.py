@@ -150,6 +150,8 @@ class AccountMove(models.Model):
                 identification_code = "01"
             elif is_dni:
                 identification_code = "05"  # TODO revert to "02" (test purposes only)
+            elif self.l10n_latam_document_type_id.internal_type == 'purchase_liquidation':  # TODO review (this made the govt/XSD accept purchase liquidation XMLs)
+                identification_code = "08"
             else:
                 identification_code = "03"
         elif move.move_type in ("out_invoice", "out_refund", "entry"): #entry for withholds
