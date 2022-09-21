@@ -119,9 +119,8 @@
                                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
                                 <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                                <field name="lang_active_count" invisible="1"/>
                                 <field name="lang_code" invisible="1"/>
-                                <field name="lang_id" invisible="lang_active_count &lt;= 1"
+                                <field name="lang_id"
                                     options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             </group>
 
@@ -292,8 +291,7 @@
                                             <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
                                         <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                                        <field name="lang_active_count" invisible="1"/>
-                                        <field name="lang_id" invisible="lang_active_count &lt;= 1"
+                                        <field name="lang_id"
                                             options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                     </group>
                                     <group class="mt48">
