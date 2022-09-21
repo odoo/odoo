@@ -3183,6 +3183,12 @@ var JournalDashboardGraph = AbstractField.extend({
                 },
                 maintainAspectRatio: false,
                 tooltips: {
+					callbacks: {
+						label: function(tooltipItem, data) {
+							var value = data.datasets[0].data[tooltipItem.index];
+							return value.toLocaleString()
+						}
+					},
                     intersect: false,
                     position: 'nearest',
                     caretSize: 0,
