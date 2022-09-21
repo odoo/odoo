@@ -3,7 +3,8 @@
 
 import re
 import warnings
-from zlib import crc32
+
+from odoo.tools.sql import make_identifier
 
 from .func import lazy_property
 
@@ -37,14 +38,7 @@ def _generate_table_alias(src_table_alias, link):
         :param str link: field name
         :return str: alias
     """
-    alias = "%s__%s" % (src_table_alias, link)
-    # Use an alternate alias scheme if length exceeds the PostgreSQL limit
-    # of 63 characters.
-    if len(alias) >= 64:
-        # We have to fit a crc32 hash and one underscore into a 63 character
-        # alias. The remaining space we can use to add a human readable prefix.
-        alias = "%s_%08x" % (alias[:54], crc32(alias.encode('utf-8')))
-    return alias
+    return make_identifier(f"{src_table_alias}__{link}")
 
 
 class Query(object):
