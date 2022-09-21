@@ -3,7 +3,6 @@
 # 	* repair
 # 
 # Translators:
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2022
 # kent_ocean <ke.tanabe@gmail.com>, 2022
 # Hau Dao <hau@quartile.co>, 2022
@@ -12,6 +11,7 @@
 # Martin Trigaux, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 江口和志 <sandwhale1010@gmail.com>, 2022\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,12 +56,19 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* \"ドラフト\"ステータスは、ユーザが未確認の新しい修理オーダーをエンコードするときに使用されます。\n"
+"* \"確認済\"ステータスは、ユーザーが修理依頼を確認するときに使用されます。\n"
+"* \"修理準備完了\"ステータスは、修理を開始するために使用され、ユーザは修理オーダが確認された後に修理を開始することができます。\n"
+"* \"修理中\"ステータスは、修理が進行中の場合に使用されます。\n"
+"* ”請求対象”ステータスは、修理の前または後に請求書を作成するために使用されます。\n"
+"* 修理が完了すると\"修理済\"ステータスが設定されます。\n"
+"* \"取消済\"ステータスは、ユーザが修理依頼を取消したときに使用されます。"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": 修理に必要な数量が不足しています"
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -98,11 +105,13 @@ msgid ""
 "<span class=\"o_stat_text\">1</span>\n"
 "                                <span class=\"o_stat_text\">Invoices</span>"
 msgstr ""
+"<span class=\"o_stat_text\">1</span>\n"
+"                                <span class=\"o_stat_text\">請求書</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">修理</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -112,7 +121,7 @@ msgstr "<strong>ロット/シリアル番号:</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
-msgstr ""
+msgstr "<strong>オペレーション</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -147,7 +156,7 @@ msgstr "<strong>合計</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
-msgstr ""
+msgstr "<strong>保証:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -187,12 +196,12 @@ msgstr "追加"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr ""
+msgstr "内部注記を追加"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes."
-msgstr ""
+msgstr "見積注記を追加"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
@@ -237,7 +246,7 @@ msgstr "カテゴリ"
 msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
-msgstr ""
+msgstr "オーダの請求先および納品先となるパートナーを選択します。パートナーは、名前、TIN、Eメール、内部参照で見つけることができます。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -297,7 +306,7 @@ msgstr "請求書作成"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
+msgstr "一括請求書（修理）作成"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -346,7 +355,7 @@ msgstr "顧客"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "デフォルト住所"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
@@ -399,7 +408,7 @@ msgstr "ドラフト"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
-msgstr ""
+msgstr "このオーダのドラフト請求書がキャンセルされます。このアクションを実行しますか。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -497,7 +506,7 @@ msgstr "チェックした場合、一部のメッセージで配信エラーが
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__priority
 msgid "Important repair order"
-msgstr ""
+msgstr "重要な修理オーダ"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -905,7 +914,7 @@ msgstr "修理"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "修理詳細"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
@@ -930,7 +939,7 @@ msgstr "修理明細(部品)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "修理注記"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -963,7 +972,7 @@ msgstr "修理オーダ"
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr ""
+msgstr "修理オーダタグ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder

@@ -12,6 +12,7 @@
 # jahzar <jahzar@gmail.com>, 2022
 # Walid Slim, 2022
 # Mohammad Ali, 2022
+# ahmed gaafer, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
@@ -786,6 +787,11 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">مفوتر</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span class=\"o_stat_text\">Journal Entry</span>"
+msgstr "<span class=\"o_stat_text\">قيد اليومية</span> "
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
@@ -901,12 +907,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
-msgstr "<span> (من)</span>"
+msgstr "<span> (CR)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (DR)</span>"
-msgstr "<span> (إلى)</span>"
+msgstr "<span> (DR)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -2239,7 +2245,7 @@ msgstr "السماح بالتسوية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
 msgid "Allow check printing and deposits"
-msgstr "السماح بطباعة الشيكات وحافظات الشيكات"
+msgstr "السماح بطباعة الشيكات وعمليات الإيداع "
 
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
@@ -4009,7 +4015,7 @@ msgstr "اسم كامل لبند التقرير هذا، حتى يتم يتم ا
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
 msgid "Composer"
-msgstr "المرسل"
+msgstr "الكاتب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composition_mode
@@ -4371,7 +4377,7 @@ msgstr "إنشاء إشعار دائن لمورد"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr "إنشاء وترحيل القيود"
+msgstr "إنشاء وترحيل الحركة "
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -5066,7 +5072,7 @@ msgstr "حساب المدينين الافتراضي لنقطة البيع "
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__purchase_tax_id
 msgid "Default Purchase Tax"
-msgstr "ضريبة المشتريات الافتراضية"
+msgstr "الضريبة الافتراضية للمشتريات "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
@@ -6977,7 +6983,7 @@ msgstr "طرق الدفع الواردة "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "مشتمل في التكلفة التحليلية"
+msgstr "مشمول في التكلفة التحليلية "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -7490,7 +7496,7 @@ msgstr "الفواتير التي تمت مطابقة عناصر دفتر الي
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
-msgstr "الفواتير الخالية من مدفوعات"
+msgstr "الفواتير غير المدفوعة "
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7708,7 +7714,6 @@ msgstr "ترتيب قيود اليومية حسب التاريخ"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #, python-format
 msgid "Journal Entry"
 msgstr "قيد اليومية"
@@ -7889,7 +7894,7 @@ msgstr "تم استخدام اليومية افتراضياً لنقل الفت�
 msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
-msgstr "دفتر اليومية الذي تم فيه ترحيل القيد الافتتاحي لحساب هذه المؤسسة."
+msgstr "دفتر اليومية الذي تم فيه ترحيل القيد الافتتاحي لحساب هذه الشركة. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
@@ -10323,7 +10328,7 @@ msgstr "الرجاء تعيين أحد النصوص المطابقة على ال
 #: code:addons/account/models/ir_module_module.py:0
 #, python-format
 msgid "Please update the Invoicing module before continuing."
-msgstr ""
+msgstr "نرجو تحديث مديول الفوترة قبل الاستمرار"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -10888,7 +10893,7 @@ msgstr "أجزاء التسوية"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Record cannot be deleted. Partner used in Accounting"
-msgstr ""
+msgstr "لا يمكن حذف السجل . لاستخدامه فى بعض الحسابات"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0

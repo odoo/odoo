@@ -7,7 +7,9 @@ import re
 import time
 
 from lxml import etree
+
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -356,6 +358,9 @@ class CurrencyRate(models.Model):
         return super().create([self._sanitize_vals(vals) for vals in vals_list])
 
     def _get_latest_rate(self):
+        # Make sure 'name' is defined when creating a new rate.
+        if not self.name:
+            raise UserError(_("The date for the current rate is empty.\nPlease set it."))
         return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
             and x.company_id == (self.company_id or self.env.company)

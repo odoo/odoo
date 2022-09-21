@@ -19,6 +19,7 @@ import {
     isBlock,
     isColorGradient,
     isContentTextNode,
+    isSelectionFormat,
     isShrunkBlock,
     isVisible,
     isVisibleStr,
@@ -374,11 +375,13 @@ export const editorCommands = {
     setFontSize: (editor, size) => formatSelection(editor, 'fontSize', {applyStyle: true, formatProps: {size}}),
     switchDirection: editor => {
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
-        const selectedTextNodes = getSelectedNodes(editor.editable)
+        const selection = editor.document.getSelection();
+        const selectedTextNodes = [selection.anchorNode, ...getSelectedNodes(editor.editable), selection.focusNode]
             .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
 
         const changedElements = [];
         const defaultDirection = editor.options.direction;
+        const shouldApplyStyle = !isSelectionFormat(editor.editable, 'switchDirection');
         for (const block of new Set(selectedTextNodes.map(textNode => closestBlock(textNode)))) {
             if (!shouldApplyStyle) {
                 block.removeAttribute('dir');

@@ -33,6 +33,9 @@ class PosOrder(models.Model):
         invoice_vals['team_id'] = self.crm_team_id
         addr = self.partner_id.address_get(['delivery'])
         invoice_vals['partner_shipping_id'] = addr['delivery']
+        sale_orders = self.lines.mapped('sale_order_origin_id')
+        if sale_orders and sale_orders[0].payment_term_id:
+            invoice_vals['invoice_payment_term_id'] = sale_orders[0].payment_term_id.id,
         return invoice_vals
 
     @api.model

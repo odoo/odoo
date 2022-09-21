@@ -464,9 +464,10 @@ class Registry(Mapping):
         if not expected:
             return
 
-        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname IN %s",
+        # retrieve existing indexes with their corresponding table
+        cr.execute("SELECT indexname, tablename FROM pg_indexes WHERE indexname IN %s",
                    [tuple(row[0] for row in expected)])
-        existing = {row[0] for row in cr.fetchall()}
+        existing = dict(cr.fetchall())
 
         for indexname, tablename, columnname, index in expected:
             if index and indexname not in existing:
@@ -475,7 +476,8 @@ class Registry(Mapping):
                         sql.create_index(cr, indexname, tablename, ['"%s"' % columnname])
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
-            elif not index and indexname in existing:
+
+            elif not index and tablename == existing.get(indexname):
                 _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
 
     def add_foreign_key(self, table1, column1, table2, column2, ondelete,
