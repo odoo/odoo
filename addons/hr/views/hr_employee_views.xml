@@ -465,7 +465,7 @@
             <field name="groups_id" eval="[(4, ref('base.group_erp_manager'))]"/>
             <field name="state">code</field>
             <field name="code">
-                action = records.action_create_user()
+                action = records.with_context(allow_create_employee=False).action_create_user()
             </field>
         </record>
 
