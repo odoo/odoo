@@ -15,6 +15,12 @@ class AccountPaymentTerm(models.Model):
     def _default_line_ids(self):
         return [Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 0, 'end_month': False})]
 
+    def _default_example_amount(self):
+        return self._context.get('example_amount') or 100  # Force default value if the context is set to False
+
+    def _default_example_date(self):
+        return self._context.get('example_date') or fields.Date.today()
+
     name = fields.Char(string='Payment Terms', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
     note = fields.Html(string='Description on the Invoice', translate=True)
@@ -22,8 +28,8 @@ class AccountPaymentTerm(models.Model):
     company_id = fields.Many2one('res.company', string='Company')
     sequence = fields.Integer(required=True, default=10)
     display_on_invoice = fields.Boolean(string='Display terms on invoice', help="If set, the payment deadlines and respective due amounts will be detailed on invoices.")
-    example_amount = fields.Float(default=100, store=False)
-    example_date = fields.Date(string='Date example', default=fields.Date.context_today, store=False)
+    example_amount = fields.Float(default=_default_example_amount, store=False)
+    example_date = fields.Date(string='Date example', default=_default_example_date, store=False)
     example_invalid = fields.Boolean(compute='_compute_example_invalid')
     example_preview = fields.Html(compute='_compute_example_preview')
 
@@ -213,6 +219,7 @@ class AccountPaymentTermLine(models.Model):
     payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
 
     def _get_due_date(self, date_ref):
+        self.ensure_one()
         due_date = fields.Date.from_string(date_ref)
         due_date += relativedelta(months=self.months)
         due_date += relativedelta(days=self.days)
