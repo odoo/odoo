@@ -41,7 +41,7 @@
 
         <xpath expr="//h2" position="replace">
             <h2>
-                <span t-if="o.move_type == 'out_invoice' and o.state == 'open'" t-field="o.journal_id.name"/>
+                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'" t-field="o.journal_id.name"/>
                 <span t-if="o.move_type == 'out_invoice' and o.state == 'draft'">Draft <span t-field="o.journal_id.name"/></span>
                 <span t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled <span t-field="o.journal_id.name"/></span>
                 <span t-if="o.move_type == 'out_refund'">Credit Note</span>
