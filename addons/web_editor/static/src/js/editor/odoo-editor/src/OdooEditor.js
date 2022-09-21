@@ -580,8 +580,6 @@ export class OdooEditor extends EventTarget {
 
         this.observerActive();
 
-        this._pluginCall('addDomListeners', []);
-
         this.addDomListener(this.editable, 'keydown', this._onKeyDown);
         this.addDomListener(this.editable, 'input', this._onInput);
         this.addDomListener(this.editable, 'beforeinput', this._onBeforeInput);
