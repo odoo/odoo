@@ -162,9 +162,7 @@ registerModel({
         }),
         orderedMailboxes: many('Mailbox', {
             related: 'messaging.allMailboxes',
-            sort() {
-                return [['smaller-first', 'sequence']];
-            },
+            sort: [['smaller-first', 'sequence']],
         }),
         /**
          * Reference of the quick search input. Useful to filter channels and

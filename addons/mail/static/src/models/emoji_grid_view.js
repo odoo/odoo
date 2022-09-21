@@ -158,11 +158,7 @@ registerModel({
                     .filter(row => row !== undefined) // some corner cases where very briefly it doesn't sync with rows and it's bigger
                 );
             },
-            sort() {
-                return [
-                    ['smaller-first', 'index'],
-                ];
-            },
+            sort: [['smaller-first', 'index']],
         }),
         rowHeight: attr({
             default: 30,
