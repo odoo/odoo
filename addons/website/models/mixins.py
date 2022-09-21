@@ -200,12 +200,7 @@ class WebsitePublishedMixin(models.AbstractModel):
         return self.write({'website_published': not self.website_published})
 
     def open_website_url(self):
-        url = self.env['website'].get_client_action_url(self.website_url)
-        return {
-            'type': 'ir.actions.act_url',
-            'url': url,
-            'target': 'self',
-        }
+        return self.env['website'].get_client_action(self.website_url)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -283,16 +278,18 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             return is_published
 
     def open_website_url(self):
-        client_action_url = self.env['website'].get_client_action_url(self.website_url)
+        website_id = False
         if self.website_id:
-            client_action_url = f'{client_action_url}&website_id={self.website_id.id}'
+            website_id = self.website_id.id
             if self.website_id.domain:
-                client_action_url = url_join(self.website_id.domain, client_action_url)
-        return {
-            'type': 'ir.actions.act_url',
-            'url': client_action_url,
-            'target': 'self',
-        }
+                client_action_url = self.env['website'].get_client_action_url(self.website_url)
+                client_action_url = f'{client_action_url}&website_id={website_id}'
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': url_join(self.website_id.domain, client_action_url),
+                    'target': 'self',
+                }
+        return self.env['website'].get_client_action(self.website_url, False, website_id)
 
 
 class WebsiteSearchableMixin(models.AbstractModel):

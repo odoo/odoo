@@ -252,11 +252,7 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self.env['website'].get_client_action_url(self._compute_website_url()),
-        }
+        return self.env['website'].get_client_action(self._compute_website_url())
 
     @api.model
     def _update_website_count(self):
@@ -974,11 +970,7 @@ class Post(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self.env['website'].get_client_action_url(self.website_url),
-        }
+        return self.env['website'].get_client_action(self.website_url)
 
     @api.model
     def _search_get_detail(self, website, order, options):

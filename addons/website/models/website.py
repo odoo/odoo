@@ -1301,18 +1301,24 @@ class Website(models.Model):
             action_params["enable_editor"] = 1
         return "/web#" + urls.url_encode(action_params)
 
+    def get_client_action(self, url, mode_edit=False, website_id=False):
+        action = self.env["ir.actions.actions"]._for_xml_id("website.website_preview")
+        action['context'] = {
+            'params': {
+                'path': url,
+                'enable_editor': mode_edit,
+                'website_id': website_id,
+            }
+        }
+        return action
+
     def button_go_website(self, path='/', mode_edit=False):
         self._force()
         if mode_edit:
             # If the user gets on a translated page (e.g /fr) the editor will
             # never start. Forcing the default language fixes this issue.
             path = url_for(path, self.default_lang_id.url_code)
-            path = self.get_client_action_url(path, True)
-        return {
-            'type': 'ir.actions.act_url',
-            'url': path,
-            'target': 'self',
-        }
+        return self.get_client_action(path, mode_edit)
 
     def _get_canonical_url_localized(self, lang, canonical_params):
         """Returns the canonical URL for the current request with translatable
