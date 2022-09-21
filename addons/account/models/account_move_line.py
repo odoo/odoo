@@ -2514,8 +2514,8 @@ class AccountMoveLine(models.Model):
         action['domain'] = [('id', 'in', ids)]
         return clean_action(action, self.env)
 
-    def open_move(self):
-        return self.move_id.open_move()
+    def action_open_business_doc(self):
+        return self.move_id.action_open_business_doc()
 
     def action_automatic_entry(self):
         action = self.env['ir.actions.act_window']._for_xml_id('account.account_automatic_entry_wizard_action')
@@ -2527,36 +2527,6 @@ class AccountMoveLine(models.Model):
         ctx['active_model'] = 'account.move.line'
         action['context'] = ctx
         return action
-
-    def action_open_business_doc_from_aml(self):
-        self.ensure_one()
-
-        if self.payment_id:
-            name = _("Payment")
-            res_model = 'account.payment'
-            res_id = self.payment_id.id
-        elif self.statement_line_id:
-            name = _("Bank Transaction")
-            res_model = 'account.bank.statement.line'
-            res_id = self.statement_line_id.id
-        else:
-            name = _("Journal Entry")
-            res_model = 'account.move'
-            res_id = self.move_id.id
-
-        return {
-            'name': name,
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'view_id': self.env.ref('account.view_move_form').id,
-            'res_model': res_model,
-            'res_id': res_id,
-            'context': {
-                'create': False,
-                'delete': False,
-            },
-            'target': 'current',
-        }
 
     # -------------------------------------------------------------------------
     # TOOLING
