@@ -59,15 +59,16 @@ def att_names(name):
     yield f"t-attf-{name}"
 
 
-def transfer_field_to_modifiers(field, modifiers):
+def transfer_field_to_modifiers(field, modifiers, view_editable=True):
     default_values = {}
     state_exceptions = {}
-    for attr in ('invisible', 'readonly', 'required'):
+    attributes = ('invisible', 'readonly', 'required') if view_editable else ('invisible',)
+    for attr in attributes:
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
     for state, modifs in field.get("states", {}).items():
         for modif in modifs:
-            if default_values[modif[0]] != modif[1]:
+            if modif[0] in attributes and default_values[modif[0]] != modif[1]:
                 state_exceptions[modif[0]].append(state)
 
     for attr, default_value in default_values.items():
@@ -1123,6 +1124,7 @@ actual arch.
 
         root_info = {
             'view_type': root.tag,
+            'view_editable': editable and self._editable_node(root, name_manager),
             'mobile': options.get('mobile'),
         }
 
@@ -1258,7 +1260,7 @@ actual arch.
 
             field_info = name_manager.field_info.get(node.get('name'))
             if field_info:
-                transfer_field_to_modifiers(field_info, node_info['modifiers'])
+                transfer_field_to_modifiers(field_info, node_info['modifiers'], node_info['view_editable'])
 
     def _postprocess_tag_form(self, node, name_manager, node_info):
         result = name_manager.model.view_header_get(False, node.tag)
