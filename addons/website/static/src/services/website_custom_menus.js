@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { EditMenuDialog } from '@website/components/dialog/edit_menu';
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
 import {PagePropertiesDialog} from '@website/components/dialog/page_properties';
+import {DuplicateObjectDialog} from '@website/components/dialog/duplicate_object';
 
 /**
  * This service displays contextual menus, depending of the state of the
@@ -82,4 +83,11 @@ registry.category('website_custom_menus').add('website.menu_page_properties', {
             });
         },
     })
+});
+registry.category('website_custom_menus').add('website.menu_duplicate_object', {
+    Component: DuplicateObjectDialog,
+    isDisplayed: (env) => env.services.website.currentWebsite && (
+        env.services.website.currentWebsite.metadata.editableInBackend
+        || (env.services.website.currentWebsite.metadata.mainObject &&
+            env.services.website.currentWebsite.metadata.mainObject.model === 'website.page')),
 });

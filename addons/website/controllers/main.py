@@ -642,6 +642,25 @@ class Website(Home):
             return bool(record.website_published)
         return False
 
+    @http.route('/website/duplicate', type='json', auth="user", website=True, methods=['POST'])
+    def duplicate(self, model, object_id, new_name):
+        """ Duplicate an object.
+        :param model: model name of the object we want to duplicate.
+        :param object_id: id of the object currently browsed.
+        :param new_name: name of the new object.
+        :return the url to the new object created
+        """
+        current_object = request.env[model].browse(int(object_id))
+        requested_name = new_name
+        counter = 1
+        while request.env[model].search([('name', '=', new_name)], limit=1):
+            new_name = '%s-%s' % (requested_name, str(counter))
+            counter += 1
+        new_object = current_object.copy(default={'name': new_name})
+        if 'website_url' in new_object:
+            return new_object.website_url
+        return new_object.go_to_website()['url']
+
     @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
     def seo_suggest(self, keywords=None, lang=None):
         language = lang.split("_")

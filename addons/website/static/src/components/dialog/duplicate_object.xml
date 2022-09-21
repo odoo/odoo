@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-name="website.DuplicateObjectDialog" owl="1">
+    <WebsiteDialog title="title" closeOnClick="false" close="props.close" primaryClick.bind="duplicate" secondaryClick="props.close">
+    <div class="mb-3 row">
+        <label class="col-form-label col-md-3">
+            Name
+        </label>
+        <div class="col-md-9">
+            <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
+        </div>
+    </div>
+    <b><t t-esc="objectName"/></b> will be duplicated.
+    </WebsiteDialog>
+</t>
+
+</templates>

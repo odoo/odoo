@@ -254,8 +254,9 @@ class BlogPost(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy_data(self, default=None):
         self.ensure_one()
-        name = _("%s (copy)", self.name)
-        default = dict(default or {}, name=name)
+        default = dict(default or {})
+        if 'name' not in default:
+            default['name'] = _("%s (copy)") % (self.name)
         return super(BlogPost, self).copy_data(default)
 
     def _get_access_action(self, access_uid=None, force_website=False):

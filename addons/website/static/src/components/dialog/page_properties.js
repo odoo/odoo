@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
 import {CheckBox} from '@web/core/checkbox/checkbox';
-import {useService, useAutofocus} from "@web/core/utils/hooks";
+import {useService} from "@web/core/utils/hooks";
 import {useWowlService} from '@web/legacy/utils';
 import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import {qweb, _t} from 'web.core';
+import {DuplicateObjectDialog} from '@website/components/dialog/duplicate_object';
 
 const {Component, onWillStart, useState, xml, useRef, markup} = owl;
 
@@ -117,48 +118,6 @@ DeletePageDialog.props = {
     close: Function,
 };
 
-export class DuplicatePageDialog extends Component {
-    setup() {
-        this.orm = useService('orm');
-        this.website = useService('website');
-        useAutofocus();
-
-        this.state = useState({
-            name: '',
-        });
-    }
-
-    async duplicate() {
-        if (this.state.name) {
-            const res = await this.orm.call(
-                'website.page',
-                'clone_page',
-                [this.props.pageId, this.state.name]
-            );
-            this.website.goToWebsite({path: res, edition: true});
-        }
-        this.props.onDuplicate();
-    }
-}
-DuplicatePageDialog.components = {WebsiteDialog};
-DuplicatePageDialog.template = xml`
-<WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
-    <div class="mb-3 row">
-        <label class="col-form-label col-md-3">
-            Page Name
-        </label>
-        <div class="col-md-9">
-            <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
-        </div>
-    </div>
-</WebsiteDialog>
-`;
-DuplicatePageDialog.props = {
-    onDuplicate: {type: Function, optional: true},
-    close: Function,
-    pageId: Number,
-};
-
 export class PagePropertiesDialog extends FormViewDialog {
     setup() {
         super.setup();
@@ -173,7 +132,7 @@ export class PagePropertiesDialog extends FormViewDialog {
     }
 
     clonePage() {
-        this.dialog.add(DuplicatePageDialog, {
+        this.dialog.add(DuplicateObjectDialog, {
             pageId: this.resId,
             onDuplicate: () => {
                 this.props.close();
