@@ -168,13 +168,13 @@ class HrEmployeePrivate(models.Model):
             'view_mode': 'form',
             'view_id': self.env.ref('hr.view_users_simple_form').id,
             'target': 'new',
-            'context': {
+            'context': dict(self._context, **{
                 'default_create_employee_id': self.id,
                 'default_name': self.name,
                 'default_phone': self.work_phone,
                 'default_mobile': self.mobile_phone,
                 'default_login': self.work_email,
-            }
+            })
         }
 
     def name_get(self):
