@@ -12,6 +12,14 @@ class MailComposeMessage(models.TransientModel):
     campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign')
     mass_mailing_name = fields.Char(string='Mass Mailing Name')
     mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
+    model_is_thread = fields.Boolean(compute='_compute_model_is_thread')
+
+    @api.depends('model')
+    def _compute_model_is_thread(self):
+        models = self.env['ir.model'].sudo().search([('model', 'in', self.mapped('model'))])
+        model_is_thread = {model.model: model.is_mail_thread for model in models}
+        for composer in self:
+            composer.model_is_thread = model_is_thread[composer.model]
 
     def get_mail_values(self, res_ids):
         """ Override method that generated the mail content by creating the
@@ -22,7 +30,7 @@ class MailComposeMessage(models.TransientModel):
         # use only for allowed models in mass mailing
         if self.composition_mode == 'mass_mail' and \
                 (self.mass_mailing_name or self.mass_mailing_id) and \
-                self.env['ir.model'].sudo().search([('model', '=', self.model), ('is_mail_thread', '=', True)], limit=1):
+                self.model_is_thread:
             mass_mailing = self.mass_mailing_id
             if not mass_mailing:
                 reply_to_mode = 'email' if self.no_auto_thread else 'thread'
