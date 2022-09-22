@@ -827,16 +827,19 @@ class MailThread(models.AbstractModel):
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
             else:
                 obj = self.env[model]
-            error_message = obj._alias_get_error_message(message, message_dict, alias)
-            if error_message:
+            error = obj._alias_get_error(message, message_dict, alias)
+            if error:
                 self._routing_warn(
-                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error_message or _('unknown error')),
+                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error.message or _('unknown error')),
                     message_id,
                     route,
                     False
                 )
-                body = alias._get_alias_bounced_body(message_dict)
-                self._routing_create_bounce_email(email_from, body, message, references=message_id)
+                if error.is_config_error:
+                    alias._set_alias_invalid(message, message_dict)
+                else:
+                    body = alias._get_alias_bounced_body(message_dict)
+                    self._routing_create_bounce_email(email_from, body, message, references=message_id)
                 return False
 
         return (model, thread_id, route[2], route[3], route[4])
@@ -1142,7 +1145,18 @@ class MailThread(models.AbstractModel):
             else:
                 # if a new thread is created, parent is irrelevant
                 message_dict.pop('parent_id', None)
-                thread = ModelCtx.message_new(message_dict, custom_values)
+                # Report failure/record success of message creation except if alias is not defined (fallback model case)
+                try:
+                    thread = ModelCtx.message_new(message_dict, custom_values)
+                except Exception:
+                    if alias:
+                        with self.pool.cursor() as new_cr:
+                            self.with_env(self.env(cr=new_cr)).env['mail.alias'].browse(alias.id) \
+                                ._set_alias_invalid(message, message_dict)
+                    raise
+                else:
+                    if alias and alias.alias_status != 'valid':
+                        alias.alias_status = 'valid'
                 thread_id = thread.id
                 subtype_id = thread._creation_subtype().id
 

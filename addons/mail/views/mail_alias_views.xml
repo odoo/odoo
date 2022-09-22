@@ -8,6 +8,11 @@
             <field name="model">mail.alias</field>
             <field name="arch" type="xml">
                 <form string="Alias">
+                    <field name="alias_status" invisible="1"/>
+                    <div attrs="{'invisible':[('alias_status', '!=', 'invalid')]}"
+                         class="alert alert-danger text-center" role="alert">
+                        The last message received on this alias has caused an error.
+                    </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="open_document" string="Open Document"
@@ -17,7 +22,13 @@
                                     type="object" class="oe_link" icon="fa-sitemap"
                                     attrs="{'invisible': ['|', ('alias_parent_model_id', '=', False), ('alias_parent_thread_id', '=', 0)]}"/>
                         </div>
-                        <h2><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
+                        <div class="d-flex">
+                            <h2 class="flex-grow-1"><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
+                            <field name="alias_status" widget="badge"
+                                   decoration-success="alias_status == 'valid'"
+                                   decoration-warning="alias_status == 'not_tested'"
+                                   decoration-danger="alias_status == 'invalid'"/>
+                        </div>
                         <group>
                             <field name="alias_model_id"/>
                             <field name="alias_force_thread_id"/>
@@ -48,6 +59,10 @@
                     <field name="alias_parent_thread_id" optional="hide"/>
                     <field name="alias_defaults" optional="hide"/>
                     <field name="alias_contact"/>
+                    <field name="alias_status" widget="badge"
+                           decoration-success="alias_status == 'valid'"
+                           decoration-warning="alias_status == 'not_tested'"
+                           decoration-danger="alias_status == 'invalid'"/>
                     <button name="open_document" type="object"
                             string="Open Document" icon="fa-sitemap"
                             attrs="{'invisible': ['|', ('alias_model_id', '=', False), ('alias_force_thread_id', '=', 0)]}"/>
