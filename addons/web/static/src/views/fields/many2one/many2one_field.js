@@ -53,9 +53,9 @@ export class Many2OneField extends Component {
 
         const computeActiveActions = (props) => {
             this.state.activeActions = {
-                canCreate: props.canCreate,
-                canCreateEdit: props.canCreateEdit,
-                canWrite: props.canWrite,
+                create: props.canCreate,
+                createEdit: props.canCreateEdit,
+                write: props.canWrite,
             };
         };
 
