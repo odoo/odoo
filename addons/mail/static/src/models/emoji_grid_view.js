@@ -43,7 +43,7 @@ registerModel({
         },
         _onChangeScrollRecomputeCount() {
             for (const viewCategory of this.emojiPickerViewOwner.categories) {
-                const rowIndex = this.firstRenderedRowIndex + this.topBufferAmount;
+                const rowIndex = this.firstRenderedRowIndex;
                 if (
                     viewCategory.emojiGridRowView &&
                     rowIndex >= viewCategory.emojiGridRowView.index &&
@@ -210,9 +210,6 @@ registerModel({
         searchRowRegistry: one('EmojiGridViewRowRegistry', {
             default: {},
             inverse: 'emojiGridViewOwnerAsSearch',
-        }),
-        topBufferAmount: attr({
-            default: 2,
         }),
         viewBlockRef: attr(),
         width: attr({
