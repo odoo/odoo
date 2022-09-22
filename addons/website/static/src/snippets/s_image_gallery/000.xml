@@ -10,7 +10,7 @@
         ========================================================================
     -->
     <t t-name="website.gallery.slideshow">
-        <div t-attf-id="#{id}" class="carousel slide" data-bs-ride="carousel" t-attf-data-interval="#{interval}" style="margin: 0 12px;">
+        <div t-attf-id="#{id}" class="carousel slide" data-bs-ride="carousel" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;">
             <div class="carousel-inner" style="padding: 0;">
                  <t t-foreach="images" t-as="image">
                     <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
