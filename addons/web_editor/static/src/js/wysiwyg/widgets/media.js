@@ -458,7 +458,7 @@ var FileWidget = SearchableMediaWidget.extend({
         if (img.image_src) {
             var src = img.image_src;
             if (!img.public && img.access_token) {
-                src += _.str.sprintf('?access_token=%s', img.access_token);
+                src += _.str.sprintf('?access_token=%s', encodeURIComponent(img.access_token));
             }
             if (!this.$media.is('img')) {
 
@@ -1289,7 +1289,7 @@ var VideoWidget = MediaWidget.extend({
             if (!videoId) {
                 return;
             }
-            fetch(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${videoId}`)
+            fetch(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`)
                 .then(response=>response.json())
                 .then((response) => {
                     $node.append($('<img>', {
@@ -1491,7 +1491,7 @@ var VideoWidget = MediaWidget.extend({
     _onSampleVideoClick(ev) {
         const vimeoId = ev.currentTarget.getAttribute('data-vimeo');
         if (vimeoId) {
-            this.$('#o_video_text').val(`https://player.vimeo.com/video/${vimeoId}`);
+            this.$('#o_video_text').val(`https://player.vimeo.com/video/${encodeURIComponent(vimeoId)}`);
             this._updateVideo();
         }
     },
@@ -1542,7 +1542,7 @@ var VideoWidget = MediaWidget.extend({
         let type;
         if (matches.youtube && matches.youtube[2].length === 11) {
             const fullscreen = options.hide_fullscreen ? '&fs=0' : '';
-            const ytLoop = loop ? loop + `&playlist=${matches.youtube[2]}` : '';
+            const ytLoop = loop ? loop + `&playlist=${encodeURIComponent(matches.youtube[2])}` : '';
             const logo = options.hide_yt_logo ? '&modestbranding=1' : '';
             // The youtube js api is needed for autoplay on mobile. Note: this
             // was added as a fix, old customers may have autoplay videos
@@ -1550,10 +1550,10 @@ var VideoWidget = MediaWidget.extend({
             // but not in mobile (so no behavior change was done in stable,
             // this should not be migrated).
             const enablejsapi = options.autoplay ? '&enablejsapi=1' : '';
-            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${matches.youtube[2]}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
+            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${encodeURIComponent(matches.youtube[2])}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
             type = 'youtube';
         } else if (matches.instagram && matches.instagram[2].length) {
-            embedURL = `//www.instagram.com/p/${matches.instagram[2]}/embed/`;
+            embedURL = `//www.instagram.com/p/${encodeURIComponent(matches.instagram[2])}/embed/`;
             type = 'instagram';
         } else if (matches.vine && matches.vine[0].length) {
             embedURL = `${matches.vine[0]}/embed/simple`;
@@ -1561,13 +1561,13 @@ var VideoWidget = MediaWidget.extend({
         } else if (matches.vimeo && matches.vimeo[3].length) {
             const vimeoAutoplay = autoplay.replace('mute', 'muted')
                 .replace('autoplay=1', 'autoplay=1&autopause=0');
-            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}${controls}`;
+            embedURL = `//player.vimeo.com/video/${encodeURIComponent(matches.vimeo[3])}${vimeoAutoplay}${loop}${controls}`;
             type = 'vimeo';
         } else if (matches.dailymotion && matches.dailymotion[2].length) {
             const videoId = matches.dailymotion[2].replace('video/', '');
             const logo = options.hide_dm_logo ? '&ui-logo=0' : '';
             const share = options.hide_dm_share ? '&sharing-enable=0' : '';
-            embedURL = `//www.dailymotion.com/embed/video/${videoId}${autoplay}${controls}${logo}${share}`;
+            embedURL = `//www.dailymotion.com/embed/video/${encodeURIComponent(videoId)}${autoplay}${controls}${logo}${share}`;
             type = 'dailymotion';
         } else if (matches.youku && matches.youku[3].length) {
             const videoId = matches.youku[3].indexOf('.html?') >= 0 ? matches.youku[3].substring(0, matches.youku[3].indexOf('.html?')) : matches.youku[3];
