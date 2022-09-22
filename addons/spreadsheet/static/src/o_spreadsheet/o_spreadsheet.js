@@ -6203,7 +6203,7 @@
                     display: !!chart.title,
                     fontSize: 22,
                     fontStyle: "normal",
-                    text: chart.title,
+                    text: _t(chart.title),
                     fontColor,
                 },
                 legend: {
@@ -7413,12 +7413,12 @@
         }
         const background = getters.getBackgroundOfSingleCellChart(chart.background, chart.keyValue);
         return {
-            title: chart.title,
+            title: _t(chart.title),
             keyValue: formattedKeyValue || keyValue,
             baselineDisplay: getBaselineText(baselineCell, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
             baselineArrow: getBaselineArrowDirection(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineMode),
             baselineColor: getBaselineColor(baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.evaluated, chart.baselineMode, keyValueCell === null || keyValueCell === void 0 ? void 0 : keyValueCell.evaluated, chart.baselineColorUp, chart.baselineColorDown),
-            baselineDescr: chart.baselineDescr,
+            baselineDescr: _t(chart.baselineDescr || ""),
             fontColor: chartFontColor(background),
             background,
             baselineStyle: chart.baselineMode !== "percentage" ? baselineCell === null || baselineCell === void 0 ? void 0 : baselineCell.style : undefined,
@@ -15170,7 +15170,7 @@
         text,
         engineering,
     };
-    const functionNameRegex = /^[A-Z0-9\.]+$/;
+    const functionNameRegex = /^[A-Z0-9\_\.]+$/;
     //------------------------------------------------------------------------------
     // Function registry
     //------------------------------------------------------------------------------
@@ -15182,7 +15182,7 @@
         add(name, addDescr) {
             name = name.toUpperCase();
             if (!name.match(functionNameRegex)) {
-                throw new Error(_lt("Invalid function name %s. Function names can exclusively contain alphanumerical values separated by dots (.)", name));
+                throw new Error(_lt("Invalid function name %s. Function names can exclusively contain alphanumerical values separated by dots (.) or underscore (_)", name));
             }
             const descr = addMetaInfoFromArg(addDescr);
             validateArguments(descr.args);
@@ -15411,7 +15411,7 @@
         return null;
     }
 
-    const functionRegex = /[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*/;
+    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
     const UNARY_OPERATORS_PREFIX = ["-", "+"];
     const UNARY_OPERATORS_POSTFIX = ["%"];
     const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
@@ -19961,6 +19961,7 @@
                     textColor: ((_a = properties.style) === null || _a === void 0 ? void 0 : _a.textColor) || LINK_COLOR,
                 },
             };
+            link.label = _t(link.label);
             super(id, lazy({ value: link.label, type: CellValueType.text }), properties);
             this.link = link;
             this.content = content;
@@ -30474,11 +30475,8 @@
                         this.dispatch("SHOW_SHEET", { sheetId: cmd.sheetIdTo });
                     }
                     this.setActiveSheet(cmd.sheetIdTo);
-                    const { col, row } = this.gridSelection.anchor.cell;
                     this.sheetsData[cmd.sheetIdFrom] = {
                         gridSelection: deepCopy(this.gridSelection),
-                        activeCol: col,
-                        activeRow: row,
                     };
                     if (cmd.sheetIdTo in this.sheetsData) {
                         Object.assign(this, this.sheetsData[cmd.sheetIdTo]);
@@ -30538,27 +30536,32 @@
                 case "UNDO":
                 case "REDO":
                 case "DELETE_SHEET":
-                    if (!this.getters.tryGetSheet(this.getters.getActiveSheetId())) {
-                        const currentSheets = this.getters.getVisibleSheetIds();
-                        this.activeSheet = this.getters.getSheet(currentSheets[0]);
-                        this.selectCell(0, 0);
-                        this.moveClient({
-                            sheetId: this.getters.getActiveSheetId(),
-                            col: 0,
-                            row: 0,
-                        });
-                    }
                     const deletedSheetIds = Object.keys(this.sheetsData).filter((sheetId) => !this.getters.tryGetSheet(sheetId));
                     for (const sheetId of deletedSheetIds) {
                         delete this.sheetsData[sheetId];
                     }
                     for (const sheetId in this.sheetsData) {
-                        const { anchor } = this.clipSelection(sheetId, this.sheetsData[sheetId].gridSelection);
+                        const gridSelection = this.clipSelection(sheetId, this.sheetsData[sheetId].gridSelection);
                         this.sheetsData[sheetId] = {
-                            gridSelection: this.gridSelection,
-                            activeCol: anchor.cell.col,
-                            activeRow: anchor.cell.row,
+                            gridSelection: deepCopy(gridSelection),
                         };
+                    }
+                    if (!this.getters.tryGetSheet(this.getters.getActiveSheetId())) {
+                        const currentSheetIds = this.getters.getVisibleSheetIds();
+                        this.activeSheet = this.getters.getSheet(currentSheetIds[0]);
+                        if (this.activeSheet.id in this.sheetsData) {
+                            const { anchor } = this.clipSelection(this.activeSheet.id, this.sheetsData[this.activeSheet.id].gridSelection);
+                            this.selectCell(anchor.cell.col, anchor.cell.row);
+                        }
+                        else {
+                            this.selectCell(0, 0);
+                        }
+                        const { col, row } = this.gridSelection.anchor.cell;
+                        this.moveClient({
+                            sheetId: this.getters.getActiveSheetId(),
+                            col,
+                            row,
+                        });
                     }
                     const sheetId = this.getters.getActiveSheetId();
                     this.gridSelection.zones = this.gridSelection.zones.map((z) => this.getters.expandZone(sheetId, z));
@@ -37760,8 +37763,8 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2022-09-21T15:12:22.485Z';
-    exports.__info__.hash = 'dbe3605';
+    exports.__info__.date = '2022-09-22T12:32:07.231Z';
+    exports.__info__.hash = '739db5a';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
