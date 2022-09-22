@@ -186,7 +186,7 @@ export class HtmlField extends Component {
     }
     updateValue() {
         const value = this.getEditingValue();
-        if (value !== null && value !== this.props.value) {
+        if (value !== null && value !== (this.props.value || '').toString()) {
             if (this.props.setDirty) {
                 this.props.setDirty(true);
             }
