@@ -346,7 +346,10 @@ export function formatMonetary(value, options = {}) {
 
     let currencyId = options.currencyId;
     if (!currencyId && options.data) {
-        const currencyField = options.currencyField || "currency_id";
+        const currencyField =
+            options.currencyField ||
+            (options.field && options.field.currency_field) ||
+            "currency_id";
         const dataValue = options.data[currencyField];
         currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
     }
