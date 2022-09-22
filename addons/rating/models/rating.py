@@ -37,6 +37,7 @@ class Rating(models.Model):
     parent_ref = fields.Reference(
         string='Parent Ref', selection='_selection_target_model',
         compute='_compute_parent_ref', readonly=True)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
     rated_partner_id = fields.Many2one('res.partner', string="Rated Operator", help="Owner of the rated resource")
     rated_partner_name = fields.Char(related="rated_partner_id.name")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")

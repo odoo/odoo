@@ -252,6 +252,12 @@
             </field>
         </record>
 
+        <record id="rating_rating_comp_rule" model="ir.rule">
+            <field name="name">Rating Company Rule</field>
+            <field name="model_id" ref="model_rating_rating"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
         <record id="rating_rating_action" model="ir.actions.act_window">
             <field name="name">Ratings</field>
             <field name="res_model">rating.rating</field>
