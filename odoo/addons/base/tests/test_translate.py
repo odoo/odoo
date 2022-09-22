@@ -9,7 +9,7 @@ from psycopg2.extras import Json
 import io
 
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tools import trans_load_data
+from odoo.tools import trans_load_data, sql
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
 
@@ -854,3 +854,37 @@ class TestLanguageInstallPerformance(TransactionCase):
         fr_BE.toggle_active()
         t1 = time.time()
         _stats_logger.info("installed language fr_BE in %.3fs", t1 - t0)
+
+
+class TestTranslationTrigramIndexPatterns(BaseCase):
+    def test_value_conversion(self):
+        cases = [
+            # pylint: disable=bad-whitespace
+            ( 'abc',    '%abc%',      'simple text is not escaped correctly'),
+            ( 'a"bc',  r'%a\\"bc%',   '" is not escaped correctly'),
+            (r'a\bc',  r'%a\\\\bc%', r'\ is not escaped correctly'),
+            ( 'a\nbc', r'%a\\nbc%',  r'\n is not escaped correctly'),
+            ( 'a_bc',  r'%a\_bc%',    '_ is not escaped correctly'),
+            ( 'a%bc',  r'%a\%bc%',    '% is not escaped correctly'),
+            ( 'a_',     '%',          'values with less than 3 characters should be dropped'),
+        ]
+        for value, expected, message in cases:
+            self.assertEqual(sql.value_to_translated_trigram_pattern(value), expected, message)
+
+    def test_pattern_conversion(self):
+        cases = [
+            # pylint: disable=bad-whitespace
+            ( 'abc',      '%abc%',      'simple pattern is not escaped correctly'),
+            ( 'a"bc',    r'%a\\"bc%',   '" is not escaped correctly'),
+            (r'a\\bc',   r'%a\\\\bc%', r'\ is not escaped correctly'),
+            ( 'a\nbc',   r'%a\\nbc%',  r'\n is not escaped correctly'),
+            (r'a\_bc',   r'%a\_bc%',   r"\_ shouldn't be escaped"),
+            (r'a\%bc',   r'%a\%bc%',   r"\% shouldn't be escaped"),
+            ( 'abc_def',  '%abc%def%',  'wildcard character _ should be changed to %'),
+            ( 'abc%def',  '%abc%def%',  "wildcard character % shouldn't be escaped"),
+            (r'a\bc',     '%abc%',     r'redundant \ for pattern should be removed'),
+            ( 'abc_de',   '%abc%',      'sub patterns less than 3 characters should be dropped'),
+            ( 'ab',       '%',          'patterns without trigram should be simplified'),
+        ]
+        for original_pattern, escaped_pattern, message in cases:
+            self.assertEqual(sql.pattern_to_translated_trigram_pattern(original_pattern), escaped_pattern, message)
