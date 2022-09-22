@@ -104,7 +104,7 @@ export class PropertyValue extends Component {
                 return {
                     id: many2manyValue[0],
                     text: hasAccess ? many2manyValue[1] : _lt('No Access'),
-                    onClick: hasAccess
+                    onClick: hasAccess && this.clickableRelational
                         && (async () => await this._openRecord(this.props.comodel, many2manyValue[0])),
                     onDelete:
                         !this.props.readonly && hasAccess
@@ -162,6 +162,15 @@ export class PropertyValue extends Component {
             return formatInteger(value);
         }
         return value.toString();
+    }
+
+    /**
+     * Return true if the relational properties are clickable.
+     *
+     * @returns {boolean}
+     */
+    get clickableRelational() {
+        return !this.env.config || this.env.config.viewType !== "kanban";
     }
 
     /**

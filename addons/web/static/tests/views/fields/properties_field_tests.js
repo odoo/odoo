@@ -57,6 +57,7 @@ QUnit.module("Fields", (hooks) => {
                                     string: "My Char",
                                     type: "char",
                                     value: "char value",
+                                    view_in_kanban: true,
                                 },
                                 {
                                     name: "property_2",
@@ -69,6 +70,7 @@ QUnit.module("Fields", (hooks) => {
                                     ],
                                     value: "b",
                                     default: "c",
+                                    view_in_kanban: true,
                                 },
                             ],
                             company_id: 37,
@@ -82,6 +84,7 @@ QUnit.module("Fields", (hooks) => {
                                     string: "My Char",
                                     type: "char",
                                     value: "char value",
+                                    view_in_kanban: true,
                                 },
                                 {
                                     name: "property_2",
@@ -94,6 +97,7 @@ QUnit.module("Fields", (hooks) => {
                                     ],
                                     value: "c",
                                     default: "c",
+                                    view_in_kanban: true,
                                 },
                                 {
                                     name: "property_3",
@@ -106,6 +110,7 @@ QUnit.module("Fields", (hooks) => {
                                     string: "My Char 4",
                                     type: "char",
                                     value: "char value 4",
+                                    view_in_kanban: true,
                                 },
                             ],
                             company_id: 37,
@@ -1051,5 +1056,43 @@ QUnit.module("Fields", (hooks) => {
         property = target.querySelector(".o_property_field:nth-child(2)");
         const propertyName6 = property.getAttribute("property-name");
         assert.strictEqual(propertyName4, propertyName6);
+    });
+
+
+    /**
+     * Check the behavior of the properties field in the kanban view.
+     */
+    QUnit.test("properties: kanban view", async function (assert) {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="company_id"/> <hr/>
+                            <field name="display_name"/> <hr/>
+                            <field name="properties" widget="properties"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+        });
+
+        // check second card
+        const property3 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(3) span");
+        assert.notEqual(property3.innerText, "char value 3",
+            "The third property should not be visible in the kanban view");
+        assert.equal(property3.innerText, "char value 4");
+        const property1 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(1) span");
+        assert.equal(property1.innerText, "char value");
+        const property2 = target.querySelector(".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(2) span");
+        assert.equal(property2.innerText, "C");
+
+        // check first card
+        const items = target.querySelectorAll(".o_kanban_record:nth-child(1) .o_kanban_property_field");
+        assert.equal(items.length, 2);
     });
 });

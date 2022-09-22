@@ -27,6 +27,15 @@ export class PropertyTags extends Component {
      * -------------------------------------------------------- */
 
     /**
+     * Return true if we should display the badges or just the tag label.
+     *
+     * @returns {array}
+     */
+    get displayBadge() {
+        return !this.env.config || this.env.config.viewType !== "kanban";
+    }
+
+    /**
      * Return the list containing tags values and actions for the TagsList component.
      *
      * @returns {array}
@@ -38,7 +47,12 @@ export class PropertyTags extends Component {
 
         // Retrieve the tags label and color
         // ['a', 'b'] =>  [['a', 'A', 5], ['b', 'B', 6]]
-        const value = this.props.tags.filter((tag) => this.props.selectedTags.indexOf(tag[0]) >= 0);
+        let value = this.props.tags.filter((tag) => this.props.selectedTags.indexOf(tag[0]) >= 0);
+
+        if (!this.displayBadge) {
+            // in kanban view e.g. to not show tag without color
+            value = value.filter(tag => tag[2]);
+        }
 
         const canDeleteTag = !this.props.readonly && this.props.canChangeTags;
 
