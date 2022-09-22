@@ -4717,9 +4717,13 @@ var BasicModel = AbstractModel.extend({
                         });
                         value = choice ? choice[1] : false;
                     }
+                    // When group_by_no_leaf key is present FIELD_ID_count doesn't exist
+                    // we have to get the count from `__count` instead
+                    // see _read_group_raw in models.py
+                    const countKey = rawGroupBy + '_count';
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
-                        count: group[rawGroupBy + '_count'],
+                        count: countKey in group ? group[countKey] : group.__count,
                         domain: group.__domain,
                         context: list.context,
                         fields: list.fields,
