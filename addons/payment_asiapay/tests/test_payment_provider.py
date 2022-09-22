@@ -37,11 +37,3 @@ class TestPaymentProvider(AsiaPayCommon):
             self.webhook_notification_data, incoming=True
         )
         self.assertEqual(calculated_signature, '3e5bf55d9a23969130a6686db7aa4f0230956d0a')
-
-    def test_neutralize(self):
-        """ Test that the sensitive fields of the provider are correctly neutralized. """
-        self.env['payment.provider']._neutralize()
-        self.assertFalse(self.provider.asiapay_merchant_id)
-        self.assertFalse(self.provider.asiapay_currency_id)
-        self.assertFalse(self.provider.asiapay_secure_hash_secret)
-        self.assertFalse(self.provider.asiapay_secure_hash_function)

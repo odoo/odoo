@@ -77,11 +77,3 @@ class PaymentProvider(models.Model):
                 'author_id': self.create_uid.partner_id.id,
             }
             self.env['mail.mail'].sudo().create(mail_values).send()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('paypal', [
-            'paypal_email_account',
-            'paypal_seller_account',
-            'paypal_pdt_token',
-        ])

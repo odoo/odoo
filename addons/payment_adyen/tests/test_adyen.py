@@ -334,10 +334,3 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': 'dummy'})
         tx = self._create_transaction('direct')
         self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
-
-    def test_adyen_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.adyen_merchant_account, False)
-        self.assertEqual(self.provider.adyen_api_key, False)
-        self.assertEqual(self.provider.adyen_hmac_key, False)

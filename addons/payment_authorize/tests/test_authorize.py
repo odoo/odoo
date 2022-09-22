@@ -46,11 +46,3 @@ class AuthorizeTest(AuthorizeCommon):
         self.assertEqual(self.authorize.authorize_currency_id, self.currency_usd)
         self.assertEqual(self.authorize._get_validation_amount(), 0.01)
         self.assertEqual(self.authorize._get_validation_currency(), self.currency_usd)
-
-    def test_authorize_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.authorize_login, False)
-        self.assertEqual(self.provider.authorize_transaction_key, False)
-        self.assertEqual(self.provider.authorize_signature_key, False)
-        self.assertEqual(self.provider.authorize_client_key, False)
