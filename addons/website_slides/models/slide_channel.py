@@ -413,6 +413,12 @@ class Channel(models.Model):
             else:
                 record.can_publish = self.env.user.has_group('website_slides.group_website_slides_manager')
 
+    def _get_placeholder_filename(self, field):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields:
+            return 'website_slides/static/src/img/channel-%s-default.jpg' % ('training' if self.channel_type == 'training' else 'documentation')
+        return super()._get_placeholder_filename(field)
+
     @api.model
     def _get_can_publish_error_message(self):
         return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")

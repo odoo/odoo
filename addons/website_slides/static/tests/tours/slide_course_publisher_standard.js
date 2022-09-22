@@ -63,7 +63,8 @@ tour.register('course_publisher_standard', {
     content: 'eLearning: is the Corgi set ?',
     trigger: 'img.o_wslides_course_pict',
     run: function () {
-        if ($('img.o_wslides_course_pict').attr('src').endsWith('GoldWinnerPembrookeWelshCorgi.jpg')) {
+        const expectedImageUrlRegex=/GoldWinnerPembrookeWelshCorgi.jpg/;
+        if (expectedImageUrlRegex.test($('img.o_wslides_course_pict').attr('src'))) {
             $('img.o_wslides_course_pict').addClass('o_wslides_tour_success');
         }
     },
