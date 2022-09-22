@@ -2401,6 +2401,10 @@ export class DynamicGroupList extends DynamicList {
                         }
                         break;
                     }
+                    // When group_by_no_leaf key is present FIELD_ID_count doesn't exist
+                    // we have to get the count from `__count` instead
+                    // see _read_group_raw in models.py
+                    case `__count`:
                     case `${groupByField.name}_count`: {
                         groupParams.count = value;
                         break;
