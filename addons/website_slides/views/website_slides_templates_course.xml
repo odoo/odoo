@@ -122,11 +122,7 @@
                             <!-- ==== Header Left ==== -->
                             <div class="col-12 col-md-4 col-lg-3">
                                 <div class="d-flex align-items-end justify-content-around h-100">
-                                    <div t-if="channel.image_1920" t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"}' class="h-100"/>
-                                    <div t-else="" class="h-100">
-                                        <img t-att-src="'/website_slides/static/src/img/channel-%s-default.jpg' % ('training' if channel.channel_type == 'training' else 'documentation')"
-                                            class="o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"/>
-                                    </div>
+                                    <div t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"}' class="h-100"/>
                                 </div>
                             </div>
 
