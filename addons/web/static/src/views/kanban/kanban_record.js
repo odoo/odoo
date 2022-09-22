@@ -207,7 +207,7 @@ export class KanbanRecord extends Component {
 
         // Widget
         const deletable = activeActions.delete && (!list.groupedBy || !list.groupedBy("m2m"));
-        const editable = archInfo.activeActions.edit;
+        const editable = activeActions.edit;
         this.widget = {
             deletable,
             editable,
