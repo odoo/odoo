@@ -48,7 +48,11 @@ options.registry.TableOfContent = options.Class.extend({
             $el.attr('id', id);
             $el[0].dataset.anchor = 'true';
         });
-        $nav.find('a:first').addClass('active');
+        $().getScrollingElement().scrollspy('dispose');
+        this.trigger_up('widgets_start_request', {
+            $target: this.$target,
+            editableMode: true,
+        });
     },
 });
 
