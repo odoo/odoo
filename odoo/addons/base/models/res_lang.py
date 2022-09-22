@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import babel
 import json
 import locale
 import logging
@@ -32,7 +33,9 @@ class Lang(models.Model):
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
+    date_format_preview = fields.Char(string='Date format preview', compute="_compute_date_format_preview")
     time_format = fields.Char(string='Time Format', required=True, default=DEFAULT_TIME_FORMAT)
+    time_format_preview = fields.Char(string='Time format preview', compute="_compute_time_format_preview")
     week_start = fields.Selection([('1', 'Monday'),
                                    ('2', 'Tuesday'),
                                    ('3', 'Wednesday'),
@@ -46,7 +49,9 @@ class Lang(models.Model):
              "[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. "
              "Provided ',' as the thousand separator in each case.")
     decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
+    decimal_point_preview = fields.Char(string="Decimal Separator Preview", compute="_compute_decimal_point_preview")
     thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
+    thousand_sep_preview = fields.Char(string="Thousands separator preview", compute='_compute_thousand_separator_preview')
 
     @api.depends('code', 'flag_image')
     def _compute_field_flag_image_url(self):
@@ -110,6 +115,46 @@ class Lang(models.Model):
                     raise ValidationError(warning)
             except Exception:
                 raise ValidationError(warning)
+
+    @api.depends('date_format')
+    def _compute_date_format_preview(self):
+        """ Sometimes language may not be activated and the format DateTime would not work as expected.
+        hence, we are directly using babel to parse the required language to format the date.
+        """
+        self.date_format_preview = False
+        for lang in self.filtered(lambda lang: lang.date_format and lang.code):
+            locale = tools.babel_locale_parse(lang.code)
+            try:
+                date_format = tools.posix_to_ldml(lang.date_format, locale=locale)
+                lang.date_format_preview = '(e.g. "' + babel.dates.format_datetime(fields.Datetime.now(), date_format, locale=locale) + '")'
+            except KeyError:
+                lang.date_format_preview = _('Preview not available')
+
+    @api.depends('decimal_point')
+    def _compute_decimal_point_preview(self):
+        self.decimal_point_preview = False
+        for lang in self.filtered('decimal_point'):
+            lang.decimal_point_preview = '(e.g. "99' + lang.decimal_point + '00")'
+
+    @api.depends('thousands_sep', 'grouping')
+    def _compute_thousand_separator_preview(self):
+        self.thousand_sep_preview = False
+        for lang in self.filtered(lambda lang: lang.grouping and lang.thousands_sep):
+            lang.thousand_sep_preview = '(e.g. "' + intersperse('999999999', ast.literal_eval(lang.grouping), lang.thousands_sep)[0] + '")'
+
+    @api.depends('time_format')
+    def _compute_time_format_preview(self):
+        """ Sometimes language may not be activated and the format DateTime would not work as expected.
+        hence, we are directly using babel to parse the required language to format the date.
+        """
+        self.time_format_preview = False
+        for lang in self.filtered(lambda lang: lang.time_format and lang.code):
+            try:
+                locale = tools.babel_locale_parse(lang.code)
+                time_format = tools.posix_to_ldml(lang.time_format, locale=locale)
+                lang.time_format_preview = '(e.g. "' + babel.dates.format_time(fields.Datetime.now(), time_format, locale=locale) + '")'
+            except (AttributeError, KeyError):
+                lang.time_format_preview = _('Preview not available')
 
     def _register_hook(self):
         # check that there is at least one active language

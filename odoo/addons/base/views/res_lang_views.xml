@@ -65,10 +65,30 @@
                             <group>
                                 <field name="direction"/>
                                 <field name="grouping"/>
-                                <field name="decimal_point"/>
-                                <field name="thousands_sep"/>
-                                <field name="date_format"/>
-                                <field name="time_format"/>
+                                <label for="decimal_point"/>
+                                <div class="o_row col-sm">
+                                    <field name="decimal_point"/>
+                                    <field name="decimal_point_preview" class="text-muted"
+                                        attrs="{'invisible': [('decimal_point_preview', '=', False)]}"/>
+                                </div>
+                                <label for="thousands_sep"/>
+                                <div class="o_row col-sm">
+                                    <field name="thousands_sep"/>
+                                    <field name="thousand_sep_preview" class="text-muted"
+                                        attrs="{'invisible': [('thousand_sep_preview', '=', False)]}"/>
+                                </div>
+                                <label for="date_format"/>
+                                <div class="o_row col-sm">
+                                    <field name="date_format"/>
+                                    <field name="date_format_preview" class="text-muted"
+                                        attrs="{'invisible': [('date_format_preview', '=', False)]}"/>
+                                </div>
+                                <label for="time_format"/>
+                                <div class="o_row">
+                                    <field name="time_format"/>
+                                    <field name="time_format_preview" class="text-muted"
+                                        attrs="{'invisible': [('time_format_preview', '=', False)]}"/>
+                                </div>
                                 <field name="week_start"/>
                             </group>
                         </group>
