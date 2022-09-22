@@ -7,6 +7,7 @@ from . import test_one2many
 from . import test_many2many
 from . import test_properties
 from . import test_qweb_float
+from . import test_indexed_translation
 from . import test_related_translation
 from . import test_ui
 from . import test_domain
