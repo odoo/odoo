@@ -209,7 +209,7 @@ const LinkPopoverWidget = Widget.extend({
             // would need to fetch the page through the server (s2s), involving
             // enduser fetching problematic pages such as illicit content.
             this.$previewFaviconImg.attr({
-                'src': `https://www.google.com/s2/favicons?sz=16&domain=${url}`
+                'src': `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(url)}`
             }).removeClass('d-none');
             this.$previewFaviconFa.addClass('d-none');
         } else {

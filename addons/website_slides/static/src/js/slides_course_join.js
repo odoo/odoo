@@ -74,7 +74,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                 url += '?fullscreen=1';
             }
         } else {
-            url = `/slides/${this.channel.channelId}`;
+            url = `/slides/${encodeURIComponent(this.channel.channelId)}`;
         }
         document.location = sprintf('/web/login?redirect=%s', encodeURIComponent(url));
     },
@@ -119,7 +119,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                     const message = data.error_signup_allowed ?
                         _t('Please <a href="/web/login?redirect=%s">login</a> or <a href="/web/signup?redirect=%s">create an account</a> to join this course') :
                         _t('Please <a href="/web/login?redirect=%s">login</a> to join this course');
-                    self._popoverAlert(self.$el, sprintf(message, document.URL, document.URL));
+                    self._popoverAlert(self.$el, sprintf(message, encodeURIComponent(document.URL), encodeURIComponent(document.URL)));
                 } else if (data.error === 'join_done') {
                     self._popoverAlert(self.$el, _t('You have already joined this channel'));
                 } else {
