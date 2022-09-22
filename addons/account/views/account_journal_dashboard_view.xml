@@ -13,11 +13,13 @@
                 <field name="activity_ids"/>
                 <field name="activity_state"/>
                 <field name="alias_domain"/>
+                <field name="kanban_dashboard_graph"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
+                            <t t-value="record.kanban_dashboard_graph.raw_value" t-set="dashboard_graph"/>
                             <t t-call="AccountDropZoneUploader"/>
                             <t t-call="JournalTop"/>
                             <div t-att-class="'container o_kanban_card_content' + (dashboard.is_sample_data ? ' o_sample_data' : '')">
@@ -30,7 +32,7 @@
                                         <t t-call="HasSequenceHoles"/>
                                     </div>
                                 </div>
-                                <t t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodyGraph"/>
+                                <t t-if="(journal_type == 'bank' || journal_type == 'cash' || journal_type == 'sale' || journal_type == 'purchase') and dashboard_graph !== false" t-call="JournalBodyGraph"/>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <t t-call="JournalManage"/>
                             </div>
