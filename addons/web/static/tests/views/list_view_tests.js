@@ -15147,4 +15147,28 @@ QUnit.module("Views", (hooks) => {
         await pagerPrevious(target);
         assert.deepEqual([...getPagerValue(target), getPagerLimit(target)], [1, 2]);
     });
+
+    QUnit.test("list with group_by_no_leaf and group by", async function (assert) {
+        assert.expect(4);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree expand="1"><field name="foo"/></tree>',
+            groupBy: ["currency_id"],
+            context: { group_by_no_leaf: true },
+        });
+
+        const groups = target.querySelectorAll(".o_group_name");
+        const groupsRecords = [...target.querySelectorAll(".o_data_row .o_data_cell")];
+        assert.strictEqual(groups.length, 2, "There should be 2 groups");
+        assert.strictEqual(groups[0].textContent, "USD (3) ", "Second group should have 3 records");
+        assert.strictEqual(groups[1].textContent, "EUR (1) ", "First group should have 1 record");
+        assert.deepEqual(
+            groupsRecords.map((groupEl) => groupEl.textContent),
+            ["blip", "gnap", "blip", "yop"],
+            "Groups should contains correct records"
+        );
+    });
 });
