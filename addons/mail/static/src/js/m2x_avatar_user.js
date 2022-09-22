@@ -2,7 +2,7 @@
 
 import core from 'web.core';
 import fieldRegistry from 'web.field_registry';
-import { FieldMany2ManyTagsAvatar, Many2OneAvatar, KanbanMany2ManyTagsAvatar } from 'web.relational_fields';
+import { FieldMany2ManyTagsAvatar, KanbanMany2ManyTagsAvatar, ListMany2ManyTagsAvatar, Many2OneAvatar } from 'web.relational_fields';
 import session from 'web.session';
 
 const { Component } = owl;
@@ -42,10 +42,11 @@ const M2XAvatarMixin = {
      *
      * @private
      * @param {Object} params
+     * @returns {Promise}
      */
     async _openChat(params) {
         const messaging = await Component.env.services.messaging.get();
-        messaging.openChat(params);
+        return messaging.openChat(params);
     },
 };
 
@@ -95,7 +96,7 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
                     hotkey: "alt+i",
                 },
                 async action() {
-                    return {
+                    return env.services.command.openPalette({
                         configByNamespace: {
                             default: {
                                 emptyMessage: env._t("No users found"),
@@ -103,7 +104,7 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
                         },
                         placeholder: env._t("Select a user..."),
                         providers: [{ provide }],
-                    };
+                    });
                 },
             });
             core.bus.trigger("set_legacy_command", "web.Many2OneAvatar.assignTo", getCommandDefinition, self.el);
@@ -191,6 +192,15 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
     }
 });
 
+export const KanbanMany2OneAvatarUser = Many2OneAvatarUser.extend({
+    _template: 'mail.KanbanMany2OneAvatarUser',
+
+    init() {
+        this._super(...arguments);
+        this.displayAvatarName = this.nodeOptions.display_avatar_name || false;
+    },
+});
+
 const M2MAvatarMixin = Object.assign(M2XAvatarMixin, {
     events: Object.assign({}, FieldMany2ManyTagsAvatar.prototype.events, {
         'click .o_m2m_avatar': '_onAvatarClicked',
@@ -267,7 +277,7 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
                     hotkey: "alt+i",
                 },
                 action() {
-                    return {
+                    return env.services.command.openPalette({
                         configByNamespace: {
                             default: {
                                 emptyMessage: env._t("No users found"),
@@ -275,9 +285,9 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
                         },
                         placeholder: env._t("Select a user..."),
                         providers: [{ provide }],
-                    };
+                    });
                 },
-            });
+            })
             core.bus.trigger("set_legacy_command", "web.FieldMany2ManyTagsAvatar.assignTo", getCommandDefinition)
 
             getCommandDefinition = (env) => ({
@@ -318,16 +328,13 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
      }
 });
 
-export const KanbanMany2OneAvatarUser = Many2OneAvatarUser.extend({
-    _template: 'mail.KanbanMany2OneAvatarUser',
-
-    init() {
-        this._super(...arguments);
-        this.displayAvatarName = this.nodeOptions.display_avatar_name || false;
-    },
-});
 export const KanbanMany2ManyAvatarUser = KanbanMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
 
+export const ListMany2ManyAvatarUser = ListMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
+
 fieldRegistry.add('many2one_avatar_user', Many2OneAvatarUser);
+fieldRegistry.add('kanban.many2one_avatar_user', KanbanMany2OneAvatarUser);
 fieldRegistry.add('activity.many2one_avatar_user', KanbanMany2OneAvatarUser);
 fieldRegistry.add('many2many_avatar_user', Many2ManyAvatarUser);
+fieldRegistry.add('kanban.many2many_avatar_user', KanbanMany2ManyAvatarUser);
+fieldRegistry.add('list.many2many_avatar_user', ListMany2ManyAvatarUser);
