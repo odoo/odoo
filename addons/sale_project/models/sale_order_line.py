@@ -150,6 +150,7 @@ class SaleOrderLine(models.Model):
             'sale_line_id': self.id,
             'active': True,
             'company_id': self.company_id.id,
+            'allow_billable': True,
         }
 
     def _timesheet_create_project(self):
