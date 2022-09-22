@@ -217,7 +217,7 @@ class HrEmployeeBase(models.AbstractModel):
 
         res = super(HrEmployeeBase, self).write(values)
         # remove users from the Responsible group if they are no longer leave managers
-        old_managers._clean_leave_responsible_users()
+        old_managers.sudo()._clean_leave_responsible_users()
 
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()
