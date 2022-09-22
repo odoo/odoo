@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { Dialog } from "../../core/dialog/dialog";
+import { isMacOS } from "@web/core/browser/feature_detection";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
-import { _lt } from "../../core/l10n/translation";
 import { session } from "@web/session";
 
 const { Component } = owl;
@@ -36,10 +35,12 @@ function supportItem(env) {
     };
 }
 
-class ShortcutsDialog extends Component {}
-ShortcutsDialog.template = "web.UserMenu.ShortcutsDialog";
-ShortcutsDialog.components = { Dialog };
-ShortcutsDialog.title = _lt("Shortcuts");
+class ShortcutsFooterComponent extends Component {
+    setup() {
+        this.runShortcutKey = isMacOS() ? "ALT + CONTROL" : "ALT";
+    }
+}
+ShortcutsFooterComponent.template = "web.UserMenu.ShortcutsFooterComponent";
 
 function shortCutsItem(env) {
     return {
@@ -48,7 +49,7 @@ function shortCutsItem(env) {
         hide: env.isSmall,
         description: env._t("Shortcuts"),
         callback: () => {
-            env.services.dialog.add(ShortcutsDialog);
+            env.services.command.openMainPalette({ FooterComponent: ShortcutsFooterComponent });
         },
         sequence: 30,
     };
