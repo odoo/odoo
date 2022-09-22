@@ -142,7 +142,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                            return_path=return_path, extra=extra,
                            email_from=email_from, msg_id=msg_id,
                            **kwargs)
-        self.env['mail.thread'].message_process(model, mail)
+        # In real use case, fetched mail processing is executed with administrative right.
+        self.env['mail.thread'].sudo().message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
     def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):

@@ -12,6 +12,7 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import email_normalize, hmac, generate_tracking_message_id
@@ -247,17 +248,18 @@ class MailGroup(models.Model):
     # MAILING
     # ------------------------------------------------------------
 
-    def _alias_get_error_message(self, message, message_dict, alias):
+    def _alias_get_error(self, message, message_dict, alias):
         self.ensure_one()
 
         if alias.alias_contact == 'followers':
             # Members only
             if not self._find_member(message_dict.get('email_from')):
-                return _('Only members can send email to the mailing list.')
+                return AliasError('error_mail_group_members_restricted',
+                                  _('Only members can send email to the mailing list.'))
             # Skip the verification because the partner is in the member list
             return
 
-        return super(MailGroup, self)._alias_get_error_message(message, message_dict, alias)
+        return super(MailGroup, self)._alias_get_error(message, message_dict, alias)
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
