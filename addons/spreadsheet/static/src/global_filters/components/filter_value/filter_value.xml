@@ -11,12 +11,12 @@
                 >
                 <input type="text"
                     class="o_input o-text-filter-input"
-                    t-att-placeholder="filter.label"
+                    t-att-placeholder="env._t(filter.label)"
                     t-att-value="filterValue"
                     t-on-change="(e) => this.onTextInput(filter.id, e.target.value)"/>
             </div>
             <span t-if="filter.type === 'relation'">
-                <RecordsSelector placeholder="filter.label"
+                <RecordsSelector placeholder="env._t(filter.label)"
                     resModel="filter.modelName"
                     resIds="filterValue"
                     onValueChanged="(value) => this.onTagSelected(filter.id, value)" />

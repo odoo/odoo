@@ -24,6 +24,7 @@ import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpe
 import PivotDataSource from "../pivot_data_source";
 import { SpreadsheetPivotTable } from "../pivot_table";
 import CommandResult from "../../o_spreadsheet/cancelled_reason";
+import { _t } from "@web/core/l10n/translation";
 
 const { CorePlugin } = spreadsheet;
 
@@ -146,7 +147,7 @@ export default class PivotCorePlugin extends CorePlugin {
      * @returns {string}
      */
     getPivotName(id) {
-        return this.pivots[id].definition.name;
+        return _t(this.pivots[id].definition.name);
     }
 
     /**

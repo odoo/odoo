@@ -5,6 +5,7 @@ import CommandResult from "../../o_spreadsheet/cancelled_reason";
 import { getMaxObjectId } from "../../helpers/helpers";
 import ListDataSource from "../list_data_source";
 import { TOP_LEVEL_STYLE } from "../../helpers/constants";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {Object} ListDefinition
@@ -142,7 +143,7 @@ export default class ListCorePlugin extends spreadsheet.CorePlugin {
      * @returns {string}
      */
     getListName(id) {
-        return this.lists[id].definition.name;
+        return _t(this.lists[id].definition.name);
     }
 
     /**
