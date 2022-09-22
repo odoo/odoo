@@ -65,6 +65,7 @@ db_port = False
 db_user = $ODOO_USER
 db_password = False
 addons_path = %{python3_sitelib}/odoo/addons
+default_productivity_apps = True
 " > $ODOO_CONFIGURATION_FILE
     chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
     chmod 0640 $ODOO_CONFIGURATION_FILE

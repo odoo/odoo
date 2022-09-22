@@ -254,6 +254,9 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
         WriteIniStr "$INSTDIR\server\odoo.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
     ${EndIf}
 
+    # Productivity Apps
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "default_productivity_apps" "True"
+     
     DetailPrint "Installing Windows service"
     nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
     ${If} ${RunningX64}
