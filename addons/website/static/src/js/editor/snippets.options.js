@@ -124,10 +124,13 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const variable = this.el.dataset.variable;
         _.times(nbFonts, fontNb => {
             const realFontNb = fontNb + 1;
+            const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
+            const fontName = fontKey === "'SYSTEM_FONTS'" ? _t("System Fonts") : fontKey.slice(1, -1);
             const fontEl = document.createElement('we-button');
             fontEl.classList.add(`o_we_option_font_${realFontNb}`);
+            fontEl.setAttribute('string', fontName);
             fontEl.dataset.variable = variable;
-            fontEl.dataset[methodName] = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
+            fontEl.dataset[methodName] = fontKey;
             fontEl.dataset.font = realFontNb;
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
