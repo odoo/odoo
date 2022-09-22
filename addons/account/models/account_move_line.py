@@ -835,7 +835,7 @@ class AccountMoveLine(models.Model):
                 product_uom=line.product_uom_id,
             )
 
-    @api.depends('product_id', 'product_uom_id')
+    @api.depends('product_id', 'product_uom_id', 'account_id')
     def _compute_tax_ids(self):
         for line in self:
             if line.display_type in ('line_section', 'line_note'):
