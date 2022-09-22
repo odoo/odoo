@@ -58,7 +58,10 @@
 
                         <div id="informations" class="row mt-4 mb-4">
                             <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
-                                <strong>Invoice Date:</strong>
+                                <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date:</strong></t>
+                                <t t-if="o.move_type == 'out_refund'"><strong>Credit Note Date:</strong></t>
+                                <t t-if="o.move_type == 'out_receipt'"><strong>Receipt Date:</strong></t>
+                                <t t-else=""><strong>Date:</strong></t>
                                 <p class="m-0" t-field="o.invoice_date"/>
                             </div>
                             <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
