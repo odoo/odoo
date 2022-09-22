@@ -45,9 +45,9 @@ export class PropertyValue extends Component {
         this.openMany2X = useOpenMany2XRecord({
             resModel: this.props.model,
             activeActions: {
-                canCreate: false,
-                canCreateEdit: false,
-                canWrite: true,
+                create: false,
+                createEdit: false,
+                write: true,
             },
             isToMany: false,
             onRecordSaved: async (record) => {

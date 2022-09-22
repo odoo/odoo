@@ -11,7 +11,7 @@ import { useSortable } from "@web/core/utils/sortable";
 import { sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { isAllowedDateField } from "@web/views/relational_model";
-import { isRelational } from "@web/views/utils";
+import { isNull, isRelational } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useBounceButton } from "@web/views/view_hook";
 import { KanbanAnimatedNumber } from "./kanban_animated_number";
@@ -20,10 +20,6 @@ import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
 const { Component, useState, useRef, onWillDestroy } = owl;
-
-function isNull(value) {
-    return [null, undefined].includes(value);
-}
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -307,18 +303,18 @@ export class KanbanRenderer extends Component {
     canArchiveGroup(group) {
         const { activeActions } = this.props.archInfo;
         const hasActiveField = "active" in group.fields;
-        return activeActions.groupArchive && hasActiveField && !this.props.list.groupedBy("m2m");
+        return activeActions.archiveGroup && hasActiveField && !this.props.list.groupedBy("m2m");
     }
 
     canCreateGroup() {
         const { activeActions } = this.props.archInfo;
-        return activeActions.groupCreate && this.props.list.groupedBy("m2o");
+        return activeActions.createGroup && this.props.list.groupedBy("m2o");
     }
 
     canDeleteGroup(group) {
         const { activeActions } = this.props.archInfo;
         const { groupByField } = this.props.list;
-        return activeActions.groupDelete && isRelational(groupByField) && group.value;
+        return activeActions.deleteGroup && isRelational(groupByField) && group.value;
     }
 
     canDeleteRecord() {
@@ -332,7 +328,7 @@ export class KanbanRenderer extends Component {
     canEditGroup(group) {
         const { activeActions } = this.props.archInfo;
         const { groupByField } = this.props.list;
-        return activeActions.groupEdit && isRelational(groupByField) && group.value;
+        return activeActions.editGroup && isRelational(groupByField) && group.value;
     }
 
     canEditRecord() {

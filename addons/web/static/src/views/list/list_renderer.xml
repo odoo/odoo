@@ -43,7 +43,7 @@
                             </th>
                             <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
                         </t>
-                        <th t-if="displayOptionalFields or (props.activeActions and props.activeActions.onDelete)" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header" style="width: 32px; min-width: 32px">
+                        <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header" style="width: 32px; min-width: 32px">
                             <Dropdown t-if="displayOptionalFields"
                                 class="'o_optional_columns_dropdown text-center border-top-0'"
                                 togglerClass="'btn p-0'"
@@ -82,7 +82,7 @@
                             </td>
                             <td t-else=""/>
                         </t>
-                        <td t-if="props.activeActions and props.activeActions.onDelete"/>
+                        <td t-if="activeActions.onDelete" />
                     </tr>
                 </tfoot>
             </table>
@@ -137,7 +137,7 @@
                     <t t-call="{{ constructor.rowsTemplate }}">
                         <t t-set="list" t-value="group.list"/>
                     </t>
-                    <tr t-if="!group.list.isGrouped and props.editable and props.activeActions['create']">
+                    <tr t-if="!group.list.isGrouped and props.editable and canCreate">
                         <td t-if="hasSelectors"/>
                         <td
                             t-att-colspan="hasSelector ? nbCols - 1 : nbCols"
@@ -249,19 +249,27 @@
                 </t>
             </t>
 
-            <t t-set="activeActions" t-value="props.activeActions" />
-            <t t-if="displayOptionalFields or activeActions">
-                <t t-set="canDelete" t-value="activeActions.canDelete" />
-                <t t-set="canUnlink" t-value="activeActions.canUnlink" />
-                <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="'canUnlink' in activeActions ? canUnlink : canDelete" class="o_list_record_remove text-center" t-on-click.stop="() => this.onDeleteRecord(record)" tabindex="-1">
-                    <button class="fa"
-                        t-att-class="{ 'fa-trash-o': 'canUnlink' in activeActions ? false : canDelete, 'fa-times': 'canUnlink' in activeActions ? canUnlink : false }"
-                        name="delete"
-                        aria-label="Delete row"
+            <t t-set="useUnlink" t-value="'unlink' in activeActions" />
+            <t t-set="hasX2ManyAction" t-value="isX2Many and (useUnlink ? activeActions.unlink : activeActions.delete)" />
+            <t t-if="displayOptionalFields or hasX2ManyAction">
+                <t t-if="hasX2ManyAction">
+                    <td class="o_list_record_remove text-center"
+                        t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
+                        t-on-click.stop="() => this.onDeleteRecord(record)"
                         tabindex="-1"
-                    />
-                </td>
-                <td t-elif="displayOptionalFields" tabindex="-1"/>
+                    >
+                        <button class="fa"
+                            t-att-class="{
+                                'fa-trash-o': !useUnlink and activeActions.delete,
+                                'fa-times': useUnlink and activeActions.unlink,
+                            }"
+                            name="delete"
+                            aria-label="Delete row"
+                            tabindex="-1"
+                        />
+                    </td>
+                </t>
+                <td t-else="" tabindex="-1" />
             </t>
         </tr>
     </t>

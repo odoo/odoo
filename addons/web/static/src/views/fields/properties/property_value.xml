@@ -89,7 +89,7 @@
                         context="props.context"
                         getDomain.bind="() => propertyDomain"
                         quickCreate.bind="onQuickCreate"
-                        activeActions="{canCreate: true, canCreateEdit: true, canWrite: true}"
+                        activeActions="{ create: true, createEdit: true, write: true }"
                     />
                     <button
                         t-if="!props.readonly &amp;&amp; propertyValue &amp;&amp; propertyValue[0] &amp;&amp; hasAccess"
@@ -118,7 +118,7 @@
                         context="props.context"
                         getDomain.bind="() => propertyDomain"
                         quickCreate.bind="onQuickCreate"
-                        activeActions="{canCreate: true, canCreateEdit: true, canWrite: true}"
+                        activeActions="{ create: true, createEdit: true, write: true }"
                         isToMany="true"
                     />
                 </div>

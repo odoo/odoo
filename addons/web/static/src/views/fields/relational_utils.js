@@ -10,16 +10,28 @@ import {
     useOwnedDialogs,
     useService,
 } from "@web/core/utils/hooks";
-import { createElement } from "@web/core/utils/xml";
 import { sprintf } from "@web/core/utils/strings";
+import { createElement } from "@web/core/utils/xml";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { evalDomain } from "@web/views/utils";
+import { evalDomain, isNull } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+
+/**
+ * @typedef {Object} RelationalActiveActions {
+ * @property {"x2m"} type
+ * @property {boolean} create
+ * @property {boolean} createEdit
+ * @property {boolean} delete
+ * @property {boolean} [link]
+ * @property {boolean} [unlink]
+ * @property {boolean} [write]
+ * @property {Function | null} onDelete
+ */
 
 const { Component, useComponent, useEffect, useEnv, useSubEnv, onWillUpdateProps } = owl;
 
@@ -33,8 +45,8 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
     function selectCreate({ domain, context, filters, title }) {
         addDialog(SelectCreateDialog, {
             title: title || env._t("Select records"),
-            noCreate: !activeActions.canCreate,
-            multiSelect: "canLink" in activeActions ? activeActions.canLink : false, // LPE Fixme
+            noCreate: !activeActions.create,
+            multiSelect: "link" in activeActions ? activeActions.link : false, // LPE Fixme
             resModel,
             context,
             domain,
@@ -47,76 +59,68 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
 }
 
 const STANDARD_ACTIVE_ACTIONS = ["create", "createEdit", "delete", "link", "unlink", "write"];
+
+/**
+ * FIXME: this should somehow be merged with 'getActiveActions' (@web/views/utils.js)
+ * Also I don't think storing a function in a collection of booleans is a good idea...
+ *
+ * @param {Object} params
+ * @param {string} params.fieldType
+ * @param {Record<string, boolean>} [params.subViewActiveActions={}]
+ * @param {Object} [params.crudOptions={}]
+ * @param {(props: Record<string, any>) => Record<any, any>} [params.getEvalParams=() => ({})]
+ * @returns {RelationalActiveActions}
+ */
 export function useActiveActions({
+    fieldType,
     subViewActiveActions = {},
     crudOptions = {},
-    fieldType,
-    getEvalParams = (props) => ({}),
+    getEvalParams = () => ({}),
 }) {
-    const props = useComponent().props;
+    const compute = ({ evalContext = {}, readonly = true }) => {
+        /** @type {RelationalActiveActions} */
+        const result = { type: fieldType, onDelete: null };
+        const evalAction = (actionName) => evals[actionName](evalContext);
 
+        // We need to take care of tags "control" and "create" to set create stuff
+        result.create = !readonly && evalAction("create");
+        result.createEdit = !readonly && result.create && crudOptions.createEdit; // always a boolean
+        result.delete = !readonly && evalAction("delete");
+
+        if (isMany2Many) {
+            result.link = !readonly && evalAction("link");
+            result.unlink = !readonly && evalAction("unlink");
+            result.write = evalAction("write");
+        }
+
+        if (result.unlink || (!isMany2Many && result.delete)) {
+            result.onDelete = crudOptions.onDelete;
+        }
+
+        return result;
+    };
+
+    const props = useComponent().props;
+    const isMany2Many = fieldType === "many2many";
+
+    // Define eval functions
     const evals = {};
-    const makeEvalAction = (actionName, defaultBool = true) => {
-        let evalFn;
-        if (crudOptions[actionName] !== undefined) {
+    for (const actionName of STANDARD_ACTIVE_ACTIONS) {
+        let evalFn = () => actionName !== "write";
+        if (!isNull(crudOptions[actionName])) {
             const action = crudOptions[actionName];
             evalFn = (evalContext) => evalDomain(action, evalContext);
-        } else {
-            evalFn = () => defaultBool;
         }
 
         if (actionName in subViewActiveActions) {
             const viewActiveAction = subViewActiveActions[actionName];
             evals[actionName] = (evalContext) => viewActiveAction && evalFn(evalContext);
-            return;
+        } else {
+            evals[actionName] = evalFn;
         }
-        evals[actionName] = evalFn;
-    };
-
-    function evalAction(actionName, evalContext) {
-        return evals[actionName](evalContext);
     }
 
-    for (const actionName of STANDARD_ACTIVE_ACTIONS) {
-        makeEvalAction(actionName, actionName !== "write");
-    }
-
-    const isMany2Many = fieldType === "many2many";
-
-    function compute({ evalContext = {}, readonly = true }) {
-        /**
-         * interface ActiveActions {
-         *     canCreate: Boolean;
-         *     canCreateEdit: Boolean;
-         *     canDelete: Boolean;
-         *     canLink: Boolean;
-         *     canUnlink: Boolean;
-         *     canWrite: Boolean;
-         * }
-         */
-
-        // We need to take care of tags "control" and "create" to set create stuff
-        const canCreate = !readonly && evalAction("create", evalContext);
-        const canCreateEdit = !readonly && canCreate && crudOptions.createEdit; // always a boolean
-        const canDelete = !readonly && evalAction("delete", evalContext);
-
-        const canLink = !readonly && evalAction("link", evalContext);
-        const canUnlink = !readonly && evalAction("unlink", evalContext);
-
-        const result = { canCreate, canCreateEdit, canDelete };
-
-        if (isMany2Many) {
-            const canWrite = evalAction("write", evalContext);
-            Object.assign(result, { canLink, canUnlink, canWrite });
-        }
-
-        result.onDelete = null;
-        if ((isMany2Many && canUnlink) || (!isMany2Many && canDelete)) {
-            result.onDelete = crudOptions.onDelete;
-        }
-        return result;
-    }
-
+    // Compute active actions
     const activeActions = compute(getEvalParams(props));
     onWillUpdateProps((nextProps) => {
         Object.assign(activeActions, compute(getEvalParams(nextProps)));
@@ -182,7 +186,7 @@ export class Many2XAutocomplete extends Component {
     }
 
     get activeActions() {
-        return this.props.activeActions;
+        return this.props.activeActions || {};
     }
 
     getCreationContext(value) {
@@ -245,11 +249,10 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        const activeActions = this.activeActions;
         const canCreateEdit =
-            "canCreateEdit" in activeActions
-                ? activeActions.canCreateEdit
-                : activeActions.canCreate;
+            "createEdit" in this.activeActions
+                ? this.activeActions.createEdit
+                : this.activeActions.create;
         if (!request.length && !this.props.value && (this.props.quickCreate || canCreateEdit)) {
             options.push({
                 label: this.env._t("Start typing..."),
@@ -267,7 +270,7 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        if (!records.length && !activeActions.canCreate) {
+        if (!records.length && !this.activeActions.create) {
             options.push({
                 label: this.env._t("No records"),
                 classList: "o_m2o_no_result",
@@ -361,15 +364,14 @@ export function useOpenMany2XRecord({
             title = sprintf(title, fieldString);
         }
 
-        const { canCreate, canWrite } = activeActions;
-
+        const { create: canCreate, write: canWrite } = activeActions;
         const mode = (resId ? canWrite : canCreate) ? "edit" : "readonly";
 
         addDialog(
             FormViewDialog,
             {
-                preventCreate: !activeActions.canCreate,
-                preventEdit: !activeActions.canWrite,
+                preventCreate: !canCreate,
+                preventEdit: !canWrite,
                 title,
                 context,
                 mode,
@@ -589,7 +591,7 @@ export function useOpenX2ManyRecord({
                 fields: { ...form.fields },
                 views: { form },
             });
-            const { canDelete, onDelete } = activeActions;
+            const { delete: canDelete, onDelete } = activeActions;
             deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(_record) : null;
         } else {
             const recordParams = {
