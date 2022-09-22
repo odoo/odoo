@@ -23,7 +23,9 @@
 
                     <div id="informations" class="row mt32 mb32">
                         <div class="col-auto mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
-                            <strong>Invoice Date:</strong>
+                            <t t-if="o.type == 'out_invoice'"><strong>Invoice Date:</strong></t>
+                            <t t-if="o.type == 'out_refund'"><strong>Credit Note Date:</strong></t>
+                            <t t-else=""><strong>Date:</strong></t>
                             <p class="m-0" t-field="o.invoice_date"/>
                         </div>
                         <div class="col-auto mw-100 mb-2" t-if="o.invoice_date_due and o.type == 'out_invoice' and o.state == 'posted'" name="due_date">
