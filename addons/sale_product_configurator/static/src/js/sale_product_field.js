@@ -13,11 +13,9 @@ import {
 
 patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
 
-    // TODO
     // 2) autofocus on first attribute in configurator
     //      unable to enter by hand custom values bc of it
     // 3) wizard opened when the variant is chosen in the 'Product Variant' field
-    // 4) matrix
 
     setup() {
         this._super(...arguments);
@@ -46,11 +44,11 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
                 }
             }
         } else {
-            if (!result.add_mode || result.add_mode === 'configurator') {
+            if (!result.mode || result.mode === 'configurator') {
                 this._openProductConfigurator('add');
             } else {
                 // only triggered when sale_product_matrix is installed.
-                this._openGridConfigurator();
+                this._openGridConfigurator(result.mode);
             }
         }
     },
@@ -59,9 +57,6 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         this._super(...arguments);
         if (this.props.record.data.is_configurable_product) {
             this._openProductConfigurator('edit');
-            // TODO matrix/grid
-            // TODO add related field on product_add_mode ?
-            // to use in matrix
         }
     },
 
