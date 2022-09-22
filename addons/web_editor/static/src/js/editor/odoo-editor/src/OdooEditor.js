@@ -3185,6 +3185,9 @@ export class OdooEditor extends EventTarget {
             }
             ev.preventDefault();
             ev.stopPropagation();
+        } else if (ev.shiftKey && ev.key === "Enter") {
+            ev.preventDefault();
+            this._applyCommand('oShiftEnter');
         } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
             // Ctrl-Z
             ev.preventDefault();
