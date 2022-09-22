@@ -1519,7 +1519,6 @@ export class ListRenderer extends Component {
     }
 
     async toggleOptionalField(fieldName) {
-        await this.props.list.unselectRecord(true);
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
         this.state.columns = this.getActiveColumns(this.props.list);
         this.saveOptionalActiveFields(
