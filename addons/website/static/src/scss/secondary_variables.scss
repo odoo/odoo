@@ -4,7 +4,8 @@
 
 // Complete the base website values palette with the first defined font in
 // $o-theme-font-configs, this allows themes to just define a list of fonts and
-// relying on the fact the first one will be used.
+// relying on the fact the first one will be used (but not SYSTEM_FONTS which
+// is defined in $o-base-theme-font-configs).
 $-first-font-name: nth(map-keys($o-theme-font-configs), 1);
 @if map-get($o-base-website-values-palette, 'font') == null {
     $o-base-website-values-palette: map-merge($o-base-website-values-palette, (
@@ -215,6 +216,10 @@ $o-we-auto-contrast-exclusions: join($o-we-auto-contrast-exclusions, map-keys($o
 // Fonts
 //------------------------------------------------------------------------------
 
+// Use $o-base-theme-font-configs to extend $o-theme-font-configs whatever
+// themes added inside.
+$o-theme-font-configs: map-merge($o-base-theme-font-configs, $o-theme-font-configs);
+
 // Merge base fonts with user-added google fonts
 @each $font-name in (o-website-value('google-fonts') or ()) {
     $o-theme-font-configs: map-merge($o-theme-font-configs, (
@@ -243,7 +248,11 @@ $o-we-auto-contrast-exclusions: join($o-we-auto-contrast-exclusions, map-keys($o
     $-font-config: o-safe-get($o-theme-font-configs, $font-name, ());
     @return map-get($-font-config, $config-key);
 }
-$o-theme-font: o-get-font-info('base') or (sans-serif,) !default;
+
+$o-theme-font: o-get-font-info('base') !default;
+// A theme which defines no default font normally automatically uses the first
+// one in $o-base-theme-font-configs. This ensures a misconfiguration also does.
+$o-theme-font: $o-theme-font or o-add-unicode-support-font($o-system-fonts);
 $o-theme-headings-font: o-get-font-info('headings') or $o-theme-font !default;
 $o-theme-navbar-font: o-get-font-info('navbar') or $o-theme-font !default;
 $o-theme-buttons-font: o-get-font-info('buttons') or $o-theme-font !default;

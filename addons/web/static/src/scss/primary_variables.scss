@@ -9,6 +9,13 @@ $o-font-size-base: 13rem * (1px / $o-root-font-size) !default;
 $o-font-size-base-touch: 15px !default;
 $o-line-height-base: 1.5 !default; // This is BS default
 
+// This is the bootstrap default, it is duplicated here as we need to process
+// it before actually using it (to add more unicode support with the special
+// Odoo font for example). Adding unicode support is not done directly here as
+// this font can be used by the website where the unicode support is already
+// automatically added.
+$o-system-fonts: (system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji") !default;
+
 // Colors
 // This is BS default
 $o-white: #FFFFFF !default;

@@ -2031,9 +2031,11 @@ $o-font-aliases-to-keys: (
 );
 $o-website-values-palettes: (
     (
-        'headings-font': 'Source Sans Pro',
-        'navbar-font': 'Source Sans Pro',
-        'buttons-font': 'Source Sans Pro',
+        // By default, the $o-base-website-values-palette for fonts are "null"
+        // but will actually automatically be filled with the first font themes
+        // define in $o-theme-font-configs (for the base one). For the default
+        // website, we want to specifically use the system fonts.
+        'font': 'SYSTEM_FONTS',
     ),
 ) !default;
 $o-website-values-palette-number: 1 !default;
@@ -2067,6 +2069,16 @@ $o-theme-h6-font-size-multiplier: 1 !default;
 //         ...,
 //     )
 // )
+// $o-base-theme-font-configs will be used to automatically extend
+// $o-theme-font-configs whatever themes added inside.
+$o-base-theme-font-configs: (
+    'SYSTEM_FONTS': (
+        // This allows users to use default system fonts, potentially improving
+        // page loading performances. This should always be kept as the first
+        // font defined in $o-base-theme-font-configs.
+        'family': $o-system-fonts,
+    ),
+) !default;
 $o-theme-font-configs: (
     'Roboto': (
         'family': ('Roboto', sans-serif),
