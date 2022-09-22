@@ -1582,6 +1582,7 @@ class StockMove(models.Model):
         # Once the quantities are assigned, we want to find a better destination location thanks
         # to the putaway rules. This redirection will be applied on moves of `moves_to_redirect`.
         moves_to_redirect = OrderedSet()
+        done_dict = dict()
         for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
             rounding = roundings[move]
             missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
@@ -1608,6 +1609,8 @@ class StockMove(models.Model):
                     for i in range(0, int(missing_reserved_quantity)):
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
                 elif missing_reserved_quantity:
+                    if move.picking_id and move.quantity_done and move.product_id and move.product_id.uom_id and not float_is_zero(move.quantity_done, precision_rounding=move.product_id.uom_id.rounding):
+                        done_dict[move.id] = move.quantity_done
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and
                                                             ml.location_dest_id == move.location_dest_id and
@@ -1623,6 +1626,8 @@ class StockMove(models.Model):
                 assigned_moves_ids.add(move.id)
                 moves_to_redirect.add(move.id)
             else:
+                if move.picking_id and move.quantity_done and move.product_id and move.product_id.uom_id and not float_is_zero(move.quantity_done, precision_rounding=move.product_id.uom_id.rounding):
+                    done_dict[move.id] = move.quantity_done
                 if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
                     assigned_moves_ids.add(move.id)
                 elif not move.move_orig_ids:
@@ -1683,6 +1688,9 @@ class StockMove(models.Model):
         self.env['stock.move.line'].create(move_line_vals_list)
         StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
         StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
+        for move in self:
+            if move.id in done_dict:
+                move.quantity_done = done_dict[move.id]
         if self.env.context.get('bypass_entire_pack'):
             return
         self.mapped('picking_id')._check_entire_pack()
