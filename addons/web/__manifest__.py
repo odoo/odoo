@@ -49,7 +49,7 @@ This module provides the core of the Odoo Web Client.
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
 
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             'web/static/src/legacy/scss/tempusdominus_overridden.scss',
@@ -63,7 +63,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/fonts/fonts.scss',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/legacy/scss/ui.scss',
-            'web/static/src/legacy/scss/ui_extra.scss',
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/animation.scss',
@@ -179,7 +178,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
 
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_bootstrap'),
@@ -302,7 +301,7 @@ This module provides the core of the Odoo Web Client.
         "web.assets_backend_legacy_lazy": [
             ("include", "web._assets_helpers"),
             ('include', 'web._assets_backend_helpers'),
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
         ],
         'web.assets_frontend_minimal': [
@@ -323,7 +322,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
 
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/luxon/luxon.js',
 
@@ -340,7 +339,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/fonts/fonts.scss',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/legacy/scss/ui.scss',
-            'web/static/src/legacy/scss/ui_extra.scss',
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/animation.scss',
@@ -499,7 +497,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_helpers'),
 
             'web/static/src/webclient/actions/reports/bootstrap_overridden_report.scss',
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_bootstrap'),
@@ -539,35 +537,35 @@ This module provides the core of the Odoo Web Client.
         #   > web._assets_helpers = define assets needed in most main bundles
 
         'web._assets_primary_variables': [
-            'web/static/src/legacy/scss/primary_variables.scss',
+            'web/static/src/scss/primary_variables.scss',
             'web/static/src/**/**/*.variables.scss',
         ],
         'web._assets_secondary_variables': [
-            'web/static/src/legacy/scss/secondary_variables.scss',
+            'web/static/src/scss/secondary_variables.scss',
         ],
         'web._assets_helpers': [
             'web/static/lib/bootstrap/scss/_functions.scss',
             'web/static/lib/bootstrap/scss/_mixins.scss',
-            'web/static/src/libs/bootstrap/mixins_forwardport.scss',
-            'web/static/src/legacy/scss/bs_mixins_overrides.scss',
+            'web/static/src/scss/mixins_forwardport.scss',
+            'web/static/src/scss/bs_mixins_overrides.scss',
             'web/static/src/legacy/scss/utils.scss',
 
             ('include', 'web._assets_primary_variables'),
             ('include', 'web._assets_secondary_variables'),
         ],
         'web._assets_bootstrap': [
-            'web/static/src/legacy/scss/import_bootstrap.scss',
-            'web/static/src/libs/bootstrap/helpers_backport.scss',
-            'web/static/src/libs/bootstrap/utilities_custom.scss',
+            'web/static/src/scss/import_bootstrap.scss',
+            'web/static/src/scss/helpers_backport.scss',
+            'web/static/src/scss/utilities_custom.scss',
             'web/static/lib/bootstrap/scss/utilities/_api.scss',
-            'web/static/src/legacy/scss/bootstrap_review.scss',
+            'web/static/src/scss/bootstrap_review.scss',
         ],
         'web._assets_backend_helpers': [
-            'web/static/src/legacy/scss/bootstrap_overridden.scss',
-            'web/static/src/legacy/scss/bs_mixins_overrides_backend.scss',
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/bs_mixins_overrides_backend.scss',
         ],
         'web._assets_frontend_helpers': [
-            'web/static/src/legacy/scss/bootstrap_overridden_frontend.scss',
+            'web/static/src/scss/bootstrap_overridden_frontend.scss',
         ],
 
         # Used during the transition of the web architecture
@@ -637,7 +635,7 @@ This module provides the core of the Odoo Web Client.
             # It is expected to add other lines coming from the web.assets_frontend
             # if we need to add more and more legacy stuff that would require other scss or js.
             ('include', 'web._assets_helpers'),
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web.frontend_legacy'),
