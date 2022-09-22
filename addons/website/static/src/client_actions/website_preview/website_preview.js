@@ -65,9 +65,9 @@ export class WebsitePreview extends Component {
                 // URL (event if it wasn't, it wouldn't be an issue as those are
                 // really considered as the same domain, the user will share the
                 // same session and CORS errors won't be a thing in such a case)
-                window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
+                window.location.href = `${encodeURI(this.websiteDomain)}/web#action=website.website_preview&path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`;
             } else {
-                this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
+                this.initialUrl = `/website/force/${encodeURIComponent(this.websiteId)}?path=${encodedPath}`;
             }
         });
 
