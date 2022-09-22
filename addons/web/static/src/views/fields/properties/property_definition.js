@@ -280,6 +280,20 @@ export class PropertyDefinition extends Component {
         this.state.propertyDefinition = propertyDefinition;
     }
 
+    /**
+     * We activate / deactivate the property in the kanban view.
+     *
+     * @param {boolean} newValue
+     */
+    onViewInKanbanChange(newValue) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            view_in_kanban: newValue,
+        };
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
+    }
+
     /* --------------------------------------------------------
      * Private methods
      * -------------------------------------------------------- */
