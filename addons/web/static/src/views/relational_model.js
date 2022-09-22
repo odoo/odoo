@@ -81,6 +81,31 @@ function orderByToString(orderBy) {
 }
 
 /**
+ * @param {RawContext} rawContext
+ * @param {Context} defaultContext
+ * @returns {Context}
+ */
+function processRawContext(rawContext, defaultContext) {
+    const contexts = [];
+    if (!rawContext) {
+        return Object.assign({}, defaultContext);
+    }
+    contexts.push({ ...defaultContext, ...rawContext.make() });
+    while (rawContext.parent) {
+        rawContext = rawContext.parent;
+        const context = rawContext.make();
+        for (const key in context) {
+            if (key.startsWith("default_")) {
+                delete context[key];
+            }
+        }
+        contexts.push(context);
+    }
+
+    return Object.assign({}, ...contexts.reverse());
+}
+
+/**
  * FIXME: don't know where this function should be:
  *   - on a dataPoint: don't want to make it accessible everywhere (e.g. in Fields)
  *   - on the model: would still be accessible by views + I like the current light API of the model
@@ -255,25 +280,7 @@ class DataPoint {
     // -------------------------------------------------------------------------
 
     get context() {
-        const contexts = [];
-        let rawContext = this.rawContext;
-        if (!rawContext) {
-            return Object.assign({}, this.defaultContext);
-        }
-        contexts.push({ ...this.defaultContext, ...rawContext.make() });
-
-        while (rawContext.parent) {
-            rawContext = rawContext.parent;
-            const context = rawContext.make();
-            for (const key in context) {
-                if (key.startsWith("default_")) {
-                    delete context[key];
-                }
-            }
-            contexts.push(context);
-        }
-
-        return Object.assign({}, ...contexts.reverse());
+        return processRawContext(this.rawContext, this.defaultContext);
     }
 
     get fieldNames() {
@@ -999,7 +1006,15 @@ export class Record extends DataPoint {
         if (!id && label) {
             // only display_name given -> do a name_create
             const res = await this.model.orm.call(relation, "name_create", [label], {
-                context: this.context,
+                context: processRawContext({
+                    parent: this.rawContext,
+                    make: () => {
+                        return makeContext(
+                            [this.activeFields[fieldName].context],
+                            this.evalContext
+                        );
+                    },
+                }),
             });
             // Check if a record is really created. Models without defined
             // _rec_name cannot create record based on name_create.
