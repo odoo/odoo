@@ -72,7 +72,7 @@
                 },
                 "A20": {
                     "style": 2,
-                    "content": "Order",
+                    "content": "=_t(\"Order\")",
                     "border": 2
                 },
                 "A21": {
@@ -240,7 +240,7 @@
                 },
                 "B20": {
                     "style": 2,
-                    "content": "Ordered on",
+                    "content": "=_t(\"Ordered on\")",
                     "border": 2
                 },
                 "B21": {
@@ -448,7 +448,7 @@
                 },
                 "C20": {
                     "style": 2,
-                    "content": "Buyer",
+                    "content": "=_t(\"Buyer\")",
                     "border": 2
                 },
                 "C21": {
@@ -596,7 +596,7 @@
                 },
                 "D20": {
                     "style": 2,
-                    "content": "Source",
+                    "content": "=_t(\"Source\")",
                     "border": 2
                 },
                 "D21": {
@@ -744,7 +744,7 @@
                 },
                 "E20": {
                     "style": 2,
-                    "content": "Vendor",
+                    "content": "=_t(\"Vendor\")",
                     "border": 2
                 },
                 "E21": {
@@ -892,7 +892,7 @@
                 },
                 "F20": {
                     "style": 9,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "F21": {
@@ -1100,7 +1100,7 @@
                 },
                 "H20": {
                     "style": 2,
-                    "content": "Country",
+                    "content": "=_t(\"Country\")",
                     "border": 2
                 },
                 "H21": {
@@ -1152,7 +1152,7 @@
                 },
                 "H34": {
                     "style": 2,
-                    "content": "Vendor"
+                    "content": "=_t(\"Vendor\")"
                 },
                 "H35": {
                     "style": 2
@@ -1207,7 +1207,7 @@
                 },
                 "H49": {
                     "style": 2,
-                    "content": "Buyer",
+                    "content": "=_t(\"Buyer\")",
                     "border": 2
                 },
                 "H50": {
@@ -1259,7 +1259,7 @@
                 },
                 "I20": {
                     "style": 9,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "I21": {
@@ -1305,7 +1305,7 @@
                 },
                 "I34": {
                     "style": 9,
-                    "content": "Orders"
+                    "content": "=_t(\"Orders\")"
                 },
                 "I35": {
                     "style": 9
@@ -1354,7 +1354,7 @@
                 },
                 "I49": {
                     "style": 9,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "I50": {
@@ -1401,7 +1401,7 @@
                 },
                 "J20": {
                     "style": 9,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "J21": {
@@ -1457,7 +1457,7 @@
                 },
                 "J34": {
                     "style": 9,
-                    "content": "Amount"
+                    "content": "=_t(\"Amount\")"
                 },
                 "J35": {
                     "style": 9
@@ -1516,7 +1516,7 @@
                 },
                 "J49": {
                     "style": 9,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "J50": {
@@ -1786,26 +1786,26 @@
             "cells": {
                 "A1": {
                     "style": 2,
-                    "content": "KPI"
+                    "content": "=_t(\"KPI\")"
                 },
                 "A2": {
-                    "content": "Untaxed total"
+                    "content": "=_t(\"Untaxed total\")"
                 },
                 "A3": {
-                    "content": "Lines"
+                    "content": "=_t(\"Lines\")"
                 },
                 "A4": {
-                    "content": "Orders"
+                    "content": "=_t(\"Orders\")"
                 },
                 "A5": {
-                    "content": "Qty ordered"
+                    "content": "=_t(\"Qty ordered\")"
                 },
                 "A6": {
-                    "content": "Days to receive"
+                    "content": "=_t(\"Days to receive\")"
                 },
                 "B1": {
                     "style": 2,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "B2": {
                     "content": "=ODOO.PIVOT(4,\"untaxed_total\")"
@@ -1824,7 +1824,7 @@
                 },
                 "C1": {
                     "style": 2,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "C2": {
                     "content": "=ODOO.PIVOT(5,\"untaxed_total\")"
@@ -1843,7 +1843,7 @@
                 },
                 "D1": {
                     "style": 2,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "D2": {
                     "style": 8,
@@ -1863,11 +1863,11 @@
                 },
                 "D6": {
                     "style": 13,
-                    "content": "=CONCATENATE(ROUNDUP(B6),\" days\")"
+                    "content": "=CONCATENATE(ROUNDUP(B6),_t(\" days\"))"
                 },
                 "E1": {
                     "style": 2,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "E2": {
                     "style": 8,
