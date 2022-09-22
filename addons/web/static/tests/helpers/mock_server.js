@@ -1547,7 +1547,8 @@ var MockServer = Class.extend({
 
             // compute count key to match dumb server logic...
             var countKey;
-            if (kwargs.lazy) {
+            const groupByNoLeaf = kwargs.context ? 'group_by_no_leaf' in kwargs.context : false;
+            if (kwargs.lazy && (groupBy.length >= 2 || !groupByNoLeaf)) {
                 countKey = groupBy[0].split(':')[0] + "_count";
             } else {
                 countKey = "__count";
