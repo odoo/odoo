@@ -25,6 +25,7 @@
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/helpers";
+import { _t } from "@web/core/l10n/translation";
 
 export default class FiltersPlugin extends spreadsheet.CorePlugin {
     constructor() {
@@ -144,7 +145,7 @@ export default class FiltersPlugin extends spreadsheet.CorePlugin {
      * @returns {GlobalFilter|undefined}
      */
     getGlobalFilterLabel(label) {
-        return this.getGlobalFilters().find((filter) => filter.label === label);
+        return this.getGlobalFilters().find((filter) => _t(filter.label) === _t(label));
     }
 
     /**
