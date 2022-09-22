@@ -63,7 +63,10 @@ export class CrmFormController extends FormController {
         let changedStage = false;
         if ("stage_id" in changes) {
             const bm = this.model.__bm__;
-            const oldStageId = bm.get(bm.localData[recordID].data.stage_id).data.id;
+            let oldStageId = false;
+            if (bm.localData[recordID].data.stage_id) {
+                oldStageId = bm.get(bm.localData[recordID].data.stage_id).data.id;
+            }
             const newStageId = bm.get(bm.localData[recordID]._changes.stage_id).data.id;
             changedStage = oldStageId !== newStageId;
         }
