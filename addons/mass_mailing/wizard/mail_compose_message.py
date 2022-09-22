@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class MailComposeMessage(models.TransientModel):
@@ -11,6 +11,13 @@ class MailComposeMessage(models.TransientModel):
     campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign', ondelete='set null')
     mass_mailing_name = fields.Char(string='Mass Mailing Name', help='If set, a mass mailing will be created so that you can track its results in the Email Marketing app.')
     mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
+    model_is_thread = fields.Boolean(compute='_compute_model_is_thread')
+
+    @api.depends('model')
+    def _compute_model_is_thread(self):
+        for composer in self:
+            model = self.env['ir.model']._get(composer.model)
+            composer.model_is_thread = model.is_mail_thread
 
     def get_mail_values(self, res_ids):
         """ Override method that generated the mail content by creating the
@@ -22,7 +29,7 @@ class MailComposeMessage(models.TransientModel):
         # use only for allowed models in mass mailing
         if self.composition_mode == 'mass_mail' and \
                 (self.mass_mailing_name or self.mass_mailing_id) and \
-                self.env['ir.model'].sudo().search_count([('model', '=', self.model), ('is_mail_thread', '=', True)]):
+                self.model_is_thread:
             mass_mailing = self.mass_mailing_id
             if not mass_mailing:
                 mass_mailing = self.env['mailing.mailing'].create({
