@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website.s_dynamic_snippet.carousel">
-        <div t-att-id="uniqueId" class="carousel slide" t-att-data-interval="interval">
+        <div t-att-id="uniqueId" class="carousel slide" t-att-data-bs-interval="interval">
             <!-- Content -->
             <t t-set="colClass" t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / chunkSize).toString()"/>
             <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/chunkSize)).keys())"/>
