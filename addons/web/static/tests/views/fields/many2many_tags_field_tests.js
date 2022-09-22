@@ -1585,6 +1585,13 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name='timmy'] input").placeholder,
             "Placeholder"
         );
+
+        await selectDropdownItem(target, "timmy", "gold");
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='timmy'] input").placeholder,
+            ""
+        );
     });
 
     QUnit.test("Many2ManyTagsField supports 'create' props to be a Boolean", async (assert) => {
