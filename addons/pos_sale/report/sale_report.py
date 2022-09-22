@@ -61,8 +61,8 @@ class SaleReport(models.Model):
             NULL as order_id
         '''
 
-        for field in fields.keys():
-            select_ += ', NULL AS %s' % (field)
+        for value in fields.values():
+            select_ += value
         return select_
 
     def _from_pos(self):
@@ -112,6 +112,8 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         res = super()._query(with_clause, fields, groupby, from_clause)
+        for key in fields:
+            fields[key] = ', NULL as %s' % (key)
         current = '(SELECT %s FROM %s WHERE %s GROUP BY %s)' % \
                   (self._select_pos(fields), self._from_pos(), self._where_pos(), self._group_by_pos())
 
