@@ -124,7 +124,7 @@ from psycopg2.sql import Composable, SQL
 
 import odoo.modules
 from ..models import BaseModel
-from odoo.tools import pycompat, Query, _generate_table_alias
+from odoo.tools import pycompat, Query, _generate_table_alias, sql
 
 
 # Domain operators.
@@ -968,11 +968,17 @@ class expression(object):
                     if self._has_trigram and field.index == 'trigram' and sql_operator in ('=', 'like', 'ilike'):
                         # a prefilter using trigram index to speed up '=', 'like', 'ilike'
                         # '!=', '<=', '<', '>', '>=', 'in', 'not in', 'not like', 'not ilike' cannot use this trick
-                        _unaccent = self._unaccent(field)
-                        _left = _unaccent(f'''jsonb_path_query_array("{alias}"."{left}", '$.*')::text''')
-                        _sql_operator = 'like' if sql_operator == '=' else sql_operator
-                        expr = f"{_left} {_sql_operator} {_unaccent('%s')} AND "
-                        params.append(f'%{right}%')
+                        if sql_operator == '=':
+                            _right = sql.value_to_translated_trigram_pattern(right)
+                        else:
+                            _right = sql.pattern_to_translated_trigram_pattern(right)
+
+                        if _right != '%':
+                            _unaccent = self._unaccent(field)
+                            _left = _unaccent(f'''jsonb_path_query_array("{alias}"."{left}", '$.*')::text''')
+                            _sql_operator = 'like' if sql_operator == '=' else sql_operator
+                            expr = f"{_left} {_sql_operator} {_unaccent('%s')} AND "
+                            params.append(_right)
 
                     unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
                     lang = model.env.lang or 'en_US'
