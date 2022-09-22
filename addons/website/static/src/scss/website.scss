@@ -23,6 +23,11 @@ $-seen-urls: ();
     // 1) Handle default values
     @include print-variable('header-font-size', $font-size-base);
 
+    $-font-website-value: o-website-value('font');
+    @include print-variable('headings-font', $-font-website-value);
+    @include print-variable('navbar-font', $-font-website-value);
+    @include print-variable('buttons-font', $-font-website-value);
+
     // 2) The values in the $theme-colors map are already printed by Bootstrap.
 
     // 3) The values in the $colors map are also printed by Bootstrap. However,
