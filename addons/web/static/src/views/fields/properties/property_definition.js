@@ -2,6 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { PropertyValue } from "./property_value";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -230,6 +231,20 @@ export class PropertyDefinition extends Component {
         this.state.propertyDefinition = propertyDefinition;
     }
 
+    /**
+     * We activate / deactivate the property in the kanban view.
+     *
+     * @param {boolean} newValue
+     */
+    onViewInKanbanChange(newValue) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            view_in_kanban: newValue,
+        };
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
+    }
+
     /* --------------------------------------------------------
      * Private methods
      * -------------------------------------------------------- */
@@ -305,6 +320,7 @@ export class PropertyDefinition extends Component {
 
 PropertyDefinition.template = "web.PropertyDefinition";
 PropertyDefinition.components = {
+    CheckBox,
     DomainSelector,
     Dropdown,
     DropdownItem,

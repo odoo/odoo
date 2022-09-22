@@ -3702,7 +3702,7 @@ class PropertiesDefinition(Field):
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default',
-        'selection', 'tags', 'domain',
+        'selection', 'tags', 'domain', 'view_in_kanban',
     )
 
     def convert_to_column(self, value, record, values=None, validate=True):

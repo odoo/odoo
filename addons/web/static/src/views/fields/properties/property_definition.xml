@@ -163,6 +163,18 @@
                         />
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <b>View In Kanban</b>
+                    </td>
+                    <td>
+                        <CheckBox
+                            value="props.propertyDefinition.view_in_kanban"
+                            disabled="props.readonly"
+                            onChange.bind="onViewInKanbanChange"
+                        />
+                    </td>
+                </tr>
             </table>
         </div>
     </t>
