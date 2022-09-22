@@ -4,8 +4,6 @@ from odoo.tools import html2plaintext
 
 from odoo.addons.base.models.res_bank import sanitize_account_number
 
-from xmlrpc.client import MAXINT
-
 
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
@@ -239,7 +237,7 @@ class AccountBankStatementLine(models.Model):
 
         for st_line in self.filtered(lambda line: line._origin.id):
             st_line.internal_index = f'{st_line.date.strftime("%Y%m%d")}' \
-                                      f'{MAXINT - st_line.sequence:0>10}' \
+                                      f'{st_line.sequence:0>10}' \
                                       f'{st_line._origin.id:0>10}'
 
     @api.depends('journal_id', 'currency_id', 'amount', 'foreign_currency_id', 'amount_currency',

@@ -713,14 +713,14 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         self.env.user.company_id = self.company_data_2['company']
 
         # the line numbers are chosen based on the order of the lines in the list view
-        line7 = self.create_bank_transaction(7, '2020-01-10', sequence=1)
-        line8 = self.create_bank_transaction(8, '2020-01-10', sequence=2)
+        line7 = self.create_bank_transaction(7, '2020-01-10', sequence=2)
+        line8 = self.create_bank_transaction(8, '2020-01-10', sequence=1)
         line2 = self.create_bank_transaction(2, '2020-01-13')
         line6 = self.create_bank_transaction(6, '2020-01-11')
-        line5 = self.create_bank_transaction(5, '2020-01-12', sequence=3)
+        line5 = self.create_bank_transaction(5, '2020-01-12', sequence=1)
         line4 = self.create_bank_transaction(4, '2020-01-12', sequence=2)
         line1 = self.create_bank_transaction(1, '2020-01-13')
-        line3 = self.create_bank_transaction(3, '2020-01-12', sequence=1)
+        line3 = self.create_bank_transaction(3, '2020-01-12', sequence=3)
 
         self.assertRecordValues(
             self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
@@ -771,7 +771,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             'is_complete': True,
         }])
         # line3, line4 and line5 have the same date. Move line5 at the first place using the sequence.
-        line5.sequence = -1
+        line5.sequence = 5
         statement1.invalidate_recordset(['is_valid'])
         self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
         self.assertRecordValues(statement1, [{
@@ -890,14 +890,14 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         self.env.user.company_id = self.company_data_2['company']
 
         # the line numbers are chosen based on the order of the lines in the list view
-        line7 = self.create_bank_transaction(7, '2020-01-10', sequence=1)
-        line8 = self.create_bank_transaction(8, '2020-01-10', sequence=2)
+        line7 = self.create_bank_transaction(7, '2020-01-10', sequence=2)
+        line8 = self.create_bank_transaction(8, '2020-01-10', sequence=1)
         line2 = self.create_bank_transaction(2, '2020-01-13')
         line6 = self.create_bank_transaction(6, '2020-01-11')
-        _line5 = self.create_bank_transaction(5, '2020-01-12', sequence=3)
+        _line5 = self.create_bank_transaction(5, '2020-01-12', sequence=1)
         line4 = self.create_bank_transaction(4, '2020-01-12', sequence=2)
         line1 = self.create_bank_transaction(1, '2020-01-13')
-        line3 = self.create_bank_transaction(3, '2020-01-12', sequence=1)
+        line3 = self.create_bank_transaction(3, '2020-01-12', sequence=3)
 
         # Split the last 2 lines by splitting on the line before last.
         statement1 = self.env['account.bank.statement'].with_context({'split_line_id': line7.id}).create({})
