@@ -421,7 +421,7 @@ var FileWidget = SearchableMediaWidget.extend({
         if (img.image_src) {
             var src = img.image_src;
             if (!img.public && img.access_token) {
-                src += _.str.sprintf('?access_token=%s', img.access_token);
+                src += _.str.sprintf('?access_token=%s', encodeURIComponent(img.access_token));
             }
             if (!this.$media.is('img')) {
 
@@ -1426,7 +1426,7 @@ var VideoWidget = MediaWidget.extend({
         let type;
         if (matches.youtube && matches.youtube[2].length === 11) {
             const fullscreen = options.hide_fullscreen ? '&fs=0' : '';
-            const ytLoop = loop ? loop + `&playlist=${matches.youtube[2]}` : '';
+            const ytLoop = loop ? loop + `&playlist=${encodeURIComponent(matches.youtube[2])}` : '';
             const logo = options.hide_yt_logo ? '&modestbranding=1' : '';
             // The youtube js api is needed for autoplay on mobile. Note: this
             // was added as a fix, old customers may have autoplay videos
