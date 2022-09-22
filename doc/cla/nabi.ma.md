@@ -10,4 +10,4 @@ North Africa Business Intelligence sarlau. y_mouafiq@nabi.ma  https://github.com
 
 List of contributors:
 
-Youssef MOUAFIQ sales@nabi.ma  https://github.com/mouafiq
+Youssef MOUAFIQ. sales@nabi.ma  https://github.com/mouafiq
