@@ -4307,7 +4307,22 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("prevent drag and drop of record if grouped by readonly", async (assert) => {
+        // Whether the kanban is grouped by state, foo or bar
+        // the user must not be able to drag and drop from one group to another,
+        // as state, foo or bar are made readonly one way or another.
+        // However, product_id must be draggable: by default, in the models, it's readonly,
+        // but a counter order is given in the view architecture: readonly="0".
+        // state must not be draggable:
+        // state is not readonly in the model. state is passed in the arch specifying readonly="1".
+        // foo must not be draggable:
+        // foo is readonly in the model fields. foo is passed in the arch but without specifying readonly.
+        // bar must not be draggable:
+        // bar is readonly in the model fields. bar is not passed in the arch.
+        // product_id must be draggable:
+        // product_id is readonly in the model fields. product_id is passed in the arch specifying readonly="0".
         serverData.models.partner.fields.foo.readonly = true;
+        serverData.models.partner.fields.bar.readonly = true;
+        serverData.models.partner.fields.product_id.readonly = true;
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4317,6 +4332,7 @@ QUnit.module("Views", (hooks) => {
                 "<templates>" +
                 '<t t-name="kanban-box"><div>' +
                 '<field name="foo"/>' +
+                '<field name="product_id" readonly="0" invisible="1"/>' +
                 '<field name="state" readonly="1"/>' +
                 "</div></t>" +
                 "</templates>" +
@@ -4326,7 +4342,8 @@ QUnit.module("Views", (hooks) => {
                 if (route === "/web/dataset/resequence") {
                     return true;
                 }
-                if (args.model === "partner" && args.method === "write") {
+                if (args.model === "partner" && args.method === "write" && !(args.args && args.args[1] && args.args[1].product_id)) {
+                    // In the test, nothing should be draggable except the test on product_id
                     throw new Error("should not be draggable");
                 }
             },
@@ -4374,6 +4391,49 @@ QUnit.module("Views", (hooks) => {
 
         // should still be able to resequence
         assert.deepEqual(getCardTexts(0), ["blipGHI", "blipDEF"]);
+
+        await reload(kanban, { groupBy: ["bar"] });
+
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
+
+        assert.deepEqual(getCardTexts(0), ["blipGHI"]);
+
+        // first record of first column moved to the bottom of second column
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        // should not be draggable
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
+
+        assert.deepEqual(getCardTexts(0), ["blipGHI"]);
+
+        await reload(kanban, { groupBy: ["product_id"] });
+
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
+
+        assert.deepEqual(getCardTexts(0), ["yopABC", "gnapGHI"]);
+
+        // first record of first column moved to the bottom of second column
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        // should be draggable
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
+
+        assert.deepEqual(getCardTexts(0), ["gnapGHI"]);
+
     });
 
     QUnit.test("prevent drag and drop if grouped by date/datetime field", async (assert) => {
