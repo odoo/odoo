@@ -3,6 +3,7 @@ odoo.define('web.calendar_tests', function (require) {
 
 const AbstractField = require('web.AbstractField');
 const BasicModel = require('web.BasicModel');
+const FormView = require('web.FormView');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
 var Dialog = require('web.Dialog');
@@ -13,6 +14,8 @@ var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
 const Widget = require('web.Widget');
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
 
 const { getFixture, patchWithCleanup } = require("@web/../tests/helpers/utils");
 
@@ -46,6 +49,10 @@ QUnit.module('LegacyViews', {
         patchWithCleanup(session, {
             uid: -1
         });
+        registry.category("views").remove("calendar"); // remove new calendar from registry
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("calendar", CalendarView); // add legacy calendar -> will be wrapped and added to new registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
         this.data = {
             event: {
                 fields: {
@@ -201,7 +208,7 @@ QUnit.module('LegacyViews', {
             },
         });
 
-        assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length,
+        assert.ok(calendar.$('.o_legacy_calendar_view').find('.fc-view-container').length,
             "should instance of fullcalendar");
 
         var $sidebar = calendar.$('.o_calendar_sidebar');
@@ -3762,7 +3769,7 @@ QUnit.module('LegacyViews', {
                 initialDate: initDate,
             },
         });
-        assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length, "should display in the calendar"); // OK
+        assert.ok(calendar.$('.o_legacy_calendar_view').find('.fc-view-container').length, "should display in the calendar"); // OK
         // Testing the order of the events: by start date
         assert.strictEqual(calendar.$('.o_event_title').length, 3, "3 events should be available"); // OK
         assert.strictEqual(calendar.$('.o_event_title').first().text(), 'First event', "First event should be on top");
