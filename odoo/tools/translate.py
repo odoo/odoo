@@ -5,9 +5,12 @@ import fnmatch
 import functools
 import inspect
 import io
+import itertools
+import json
 import locale
 import logging
 import os
+from tokenize import generate_tokens, STRING, NEWLINE, INDENT, DEDENT
 import polib
 import re
 import tarfile
@@ -889,6 +892,65 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     _extract_translatable_qweb_terms(tree.getroot(), handle_text)
     return result
 
+
+def extract_formula_terms(formula):
+    """Extract strings in a spreadsheet formula which are arguments to '_t' functions
+
+        >>> extract_formula_terms('=_t("Hello") + _t("Raoul")')
+        ["Hello", "Raoul"]
+    """
+    tokens = generate_tokens(io.StringIO(formula).readline)
+    tokens = (token for token in tokens if token.type not in {NEWLINE, INDENT, DEDENT})
+    for t1 in tokens:
+        if not t1.string == '_t':
+            continue
+        t2 = next(tokens, None)
+        if t2 and t2.string == '(':
+            t3 = next(tokens, None)
+            t4 = next(tokens, None)
+            if t4 and t4.string == ')' and t3 and t3.type == STRING:
+                yield t3.string[1:][:-1] # strip leading and trailing quotes
+
+
+def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
+    """Babel message extractor for spreadsheet data files.
+
+    :param fileobj: the file-like object the messages should be extracted from
+    :param keywords: a list of keywords (i.e. function names) that should
+                     be recognized as translation functions
+    :param comment_tags: a list of translator tags to search for and
+                         include in the results
+    :param options: a dictionary of additional options (optional)
+    :return: an iterator over ``(lineno, funcname, message, comments)``
+             tuples
+    """
+    terms = []
+    data = json.load(fileobj)
+    for sheet in data.get('sheets', []):
+        for cell in sheet['cells'].values():
+            content = cell.get('content', '')
+            if content.startswith('='):
+                terms += extract_formula_terms(content)
+            else:
+                markdown_link = re.fullmatch(r'\[(.+)\]\(.+\)', content)
+                if markdown_link:
+                    terms.append(markdown_link[1])
+        for figure in sheet['figures']:
+            terms.append(figure['data']['title'])
+            if 'baselineDescr' in figure['data']:
+                terms.append(figure['data']['baselineDescr'])
+    pivots = data.get('pivots', {}).values()
+    lists = data.get('lists', {}).values()
+    for data_source in itertools.chain(lists, pivots):
+        terms.append(data_source['name'])
+    for global_filter in data.get('globalFilters', []):
+        terms.append(global_filter['label'])
+    return (
+        (0, None, term, [])
+        for term in terms
+        if any(x.isalpha() for x in term)
+    )
+
 ImdInfo = namedtuple('ExternalId', ['name', 'model', 'res_id', 'module'])
 
 
@@ -1090,6 +1152,7 @@ class TranslationModuleReader:
         - the python strings marked with _() or _lt()
         - the javascript strings marked with _t() or _lt() inside static/src/js/
         - the strings inside Qweb files inside static/src/xml/
+        - the spreadsheet data files
         """
 
         # Also scan these non-addon paths
@@ -1116,7 +1179,10 @@ class TranslationModuleReader:
                     for fname in fnmatch.filter(files, '*.xml'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT])
-
+                if fnmatch.fnmatch(root, '*/data/*'):
+                    for fname in fnmatch.filter(files, '*_dashboard.json'):
+                        self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:extract_spreadsheet_terms',
+                                                  extra_comments=[WEB_TRANSLATION_COMMENT])
                 if not recursive:
                     # due to topdown, first iteration is in first level
                     break
