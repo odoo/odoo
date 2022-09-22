@@ -1408,10 +1408,14 @@ class Binary(http.Controller):
         '/web/assets/<int:id>-<string:unique>/<string:filename>',
         '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
     def content_assets(self, id=None, filename=None, unique=None, extra=None, **kw):
-        id = id or request.env['ir.attachment'].sudo().search_read(
-            [('url', '=like', f'/web/assets/%/{extra}/{filename}' if extra else f'/web/assets/%/{filename}')],
-             fields=['id'], limit=1)[0]['id']
-
+        if extra:
+            domain = [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
+        else:
+            domain = [
+                ('url', '=like', f'/web/assets/%/{filename}'),
+                ('url', 'not like', f'/web/assets/%/%/{filename}')
+            ]
+        id = id or request.env['ir.attachment'].sudo().search(domain, limit=1).id
         return request.env['ir.http']._get_content_common(xmlid=None, model='ir.attachment', res_id=id, field='datas', unique=unique, filename=filename,
             filename_field='name', download=None, mimetype=None, access_token=None, token=None)
 
