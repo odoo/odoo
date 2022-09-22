@@ -2,14 +2,14 @@
 // Website customizations
 //------------------------------------------------------------------------------
 
-// Complete the base website values palette with the first defined font
+// Complete the base website values palette with the first defined font in
+// $o-theme-font-configs, this allows themes to just define a list of fonts and
+// relying on the fact the first one will be used.
 $-first-font-name: nth(map-keys($o-theme-font-configs), 1);
-@each $alias, $key in $o-font-aliases-to-keys {
-    @if map-get($o-base-website-values-palette, $key) == null {
-        $o-base-website-values-palette: map-merge($o-base-website-values-palette, (
-            $key: $-first-font-name,
-        ));
-    }
+@if map-get($o-base-website-values-palette, 'font') == null {
+    $o-base-website-values-palette: map-merge($o-base-website-values-palette, (
+        'font': $-first-font-name,
+    ));
 }
 
 @function o-add-font-config($values) {
