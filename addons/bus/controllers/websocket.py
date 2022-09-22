@@ -49,6 +49,8 @@ class WebsocketController(Controller):
 
     @route('/websocket/update_bus_presence', type='json', auth='public', cors='*')
     def update_bus_presence(self, inactivity_period, im_status_ids_by_model):
+        if 'is_websocket_session' not in request.session:
+            raise SessionExpiredException()
         request.env['ir.websocket']._update_bus_presence(int(inactivity_period), im_status_ids_by_model)
         return {}
 
