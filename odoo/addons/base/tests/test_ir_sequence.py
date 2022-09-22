@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
+from datetime import timedelta
+from freezegun import freeze_time
 
 import psycopg2
 import psycopg2.errorcodes
@@ -175,10 +177,45 @@ class TestIrSequenceGenerate(BaseCase):
                 n = env['ir.sequence'].next_by_code('test_sequence_type_6')
                 self.assertEqual(n, str(i))
 
+    def test_ir_sequence_preview(self):
+        with environment() as env:
+            seq = env['ir.sequence'].create({
+                'code': 'test_sequence_type_7',
+                'name': 'Test sequence',
+                'number_next_actual': '123',
+                'prefix': 'Test-',
+                'suffix': '-Odoo'
+            })
+            self.assertEqual(seq.sequence_preview, 'Test-123-Odoo')
+
+            seq.write({
+                'use_date_range': True,
+                'date_range_ids': [(0, 0, {
+                    'date_from': odoo.fields.Date.today() + timedelta(days=5),
+                    'date_to': odoo.fields.Date.today() + timedelta(days=10),
+                    'number_next_actual': 1234,
+                }), (0, 0, {
+                    'date_from': odoo.fields.Date.today() + timedelta(days=10),
+                    'date_to': odoo.fields.Date.today() + timedelta(days=15),
+                    'number_next_actual': 12345
+                })]
+            })
+
+            with freeze_time(odoo.fields.Datetime.now() + timedelta(days=6)):
+                self.assertEqual(seq.sequence_preview, 'Test-1234-Odoo')
+
+            with freeze_time(odoo.fields.Datetime.now() + timedelta(days=11)):
+                # since we are using freeze_time, the compute method won't be called
+                # and we won't get a proper sequence preview. so, we have to invalidate
+                # the cache for the new sequence preview.
+                env["ir.sequence"].invalidate_model(fnames=["sequence_preview"])
+                self.assertEqual(seq.sequence_preview, 'Test-12345-Odoo')
+
     @classmethod
     def tearDownClass(cls):
         drop_sequence('test_sequence_type_5')
         drop_sequence('test_sequence_type_6')
+        drop_sequence('test_sequence_type_7')
 
 
 class TestIrSequenceInit(common.TransactionCase):
