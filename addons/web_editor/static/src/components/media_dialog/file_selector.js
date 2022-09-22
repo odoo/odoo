@@ -39,7 +39,7 @@ AttachmentError.template = xml `
             following pages or views:</p>
         <ul t-foreach="props.views"  t-as="view" t-key="view.id">
             <li>
-                <a t-att-href="'/web#model=ir.ui.view&amp;id=' + view.id">
+                <a t-att-href="'/web#model=ir.ui.view&amp;id=' + window.encodeURIComponent(view.id)">
                     <t t-esc="view.name"/>
                 </a>
             </li>

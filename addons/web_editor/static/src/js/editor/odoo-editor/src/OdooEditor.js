@@ -4400,7 +4400,7 @@ export class OdooEditor extends EventTarget {
                                     videoElement.setAttribute('height', '315');
                                     videoElement.setAttribute(
                                         'src',
-                                        `https://www.youtube.com/embed/${youtubeUrl[1]}`,
+                                        `https://www.youtube.com/embed/${encodeURIComponent(youtubeUrl[1])}`,
                                     );
                                     videoElement.setAttribute('title', 'YouTube video player');
                                     videoElement.setAttribute('frameborder', '0');
