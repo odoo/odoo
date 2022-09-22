@@ -458,7 +458,7 @@ var FileWidget = SearchableMediaWidget.extend({
         if (img.image_src) {
             var src = img.image_src;
             if (!img.public && img.access_token) {
-                src += _.str.sprintf('?access_token=%s', img.access_token);
+                src += _.str.sprintf('?access_token=%s', encodeURIComponent(img.access_token));
             }
             if (!this.$media.is('img')) {
 
@@ -1290,7 +1290,7 @@ var VideoWidget = MediaWidget.extend({
             if (!videoId) {
                 return;
             }
-            fetch(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${videoId}`)
+            fetch(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`)
                 .then(response=>response.json())
                 .then((response) => {
                     $node.append($('<img>', {
@@ -1491,7 +1491,7 @@ var VideoWidget = MediaWidget.extend({
     _onSampleVideoClick(ev) {
         const vimeoId = ev.currentTarget.getAttribute('data-vimeo');
         if (vimeoId) {
-            this.$('#o_video_text').val(`https://player.vimeo.com/video/${vimeoId}`);
+            this.$('#o_video_text').val(`https://player.vimeo.com/video/${encodeURIComponent(vimeoId)}`);
             this._updateVideo();
         }
     },
