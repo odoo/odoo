@@ -1,0 +1,68 @@
+@include media-breakpoint-down(md) {
+
+    .o_base_settings {
+        flex-flow: column nowrap;
+
+        > .o_control_panel {
+            @include o-webclient-padding($top: 10px, $bottom: 10px);
+        }
+
+        .o_setting_container {
+            flex-flow: column nowrap;
+
+            .settings_tab {
+                flex: 0 0 $o-base-settings-mobile-tabs-height;
+                flex-direction: row;
+                justify-content: space-between;
+                position: relative;
+                overflow: hidden;
+                overflow-x: auto;
+                padding: 0;
+                background: #5E5E5E;
+
+                .tab {
+                    display: block;
+                    width: auto;
+                    height: $o-base-settings-mobile-tabs-height;
+                    padding: $o-base-settings-mobile-tabs-height*0.25 $o-base-settings-mobile-tabs-height*0.4;
+                    text-align: center;
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: inherit;
+                    transition: 0.2s all ease 0s;
+                    transform: translate3d(0, 0, 0);
+
+                    .app_name {
+                        display: block;
+                        white-space: nowrap;
+                        text-transform: uppercase;
+                    }
+
+                    &:after {
+                        content: '';
+                        background: $o-brand-primary;
+                        opacity: 0;
+                        @include o-position-absolute(auto, 0, 0, 0);
+                        width: 100%;
+                        height: 3px;
+                        transition: 0.2s all ease 0s;
+                    }
+
+                    &.current {
+                        color: white;
+                        font-weight: bold;
+
+                        // Reset default style for 'selected' tabs
+                        box-shadow: none;
+                        background: none;
+
+                        &:after {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
