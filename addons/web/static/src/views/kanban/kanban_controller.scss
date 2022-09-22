@@ -472,9 +472,11 @@
         .o_kanban_record {
             width: 100%;
         }
-
-        &.o_kanban_small_column .o_kanban_group:not(.o_column_folded) {
-            flex-basis: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+        
+        @include media-breakpoint-up(md) {
+            &.o_kanban_small_column .o_kanban_group:not(.o_column_folded) {
+                flex-basis: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+            }
         }
     }
 
