@@ -91,6 +91,15 @@
                 Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 60})]"/>
         </record>
 
+        <record id="account_payment_term_30days_early_discount" model="account.payment.term">
+            <field name="name">2/7 Net 30</field>
+            <field name="note">Payment terms: 30 Days, 2% Early Payment Discount under 7 days</field>
+            <field name="display_on_invoice">True</field>
+            <field name="line_ids" eval="[
+                Command.clear(),
+                Command.create({'value': 'balance', 'days': 30, 'discount_percentage': 2, 'discount_days': 7})]"/>
+        </record>
+
         <!--
         Account Statement Sequences
         -->
