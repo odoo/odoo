@@ -2,6 +2,7 @@ odoo.define('web_editor.field_html_tests', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
+var FieldHtml = require('web_editor.field.html');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
@@ -322,6 +323,92 @@ QUnit.module('web_editor', {}, function () {
                 '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
+            form.destroy();
+        });
+
+    QUnit.test('media dialog: upload', async function (assert) {
+            /**
+             * Ensures _onAttachmentChange from FieldHTML is called on file upload
+             */
+            assert.expect(1);
+            const onAttachmentChangeTriggered = testUtils.makeTestPromise();
+            testUtils.mock.patch(FieldHtml, {
+                '_onAttachmentChange': function (event) {
+                    onAttachmentChangeTriggered.resolve(true);
+                }
+            });
+
+            const form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.model === 'ir.attachment') {
+                        if (args.method === "generate_access_token") {
+                            return Promise.resolve();
+                        }
+                    }
+                    if (route.indexOf('/web/image/123/transparent.png') === 0) {
+                        return Promise.resolve();
+                    }
+                    if (route.indexOf('/web_unsplash/fetch_images') === 0) {
+                        return Promise.resolve();
+                    }
+                    if (route.indexOf('/web_editor/media_library_search') === 0) {
+                        return Promise.resolve();
+                    }
+                    if (route.indexOf('/web_editor/attachment/add_data') === 0) {
+                        return Promise.resolve({"id": 5, "name": "test.jpg", "description": false, "mimetype": "image/jpeg", "checksum": "7951a43bbfb08fd742224ada280913d1897b89ab",
+                                                "url": false, "type": "binary", "res_id": 1, "res_model": "note.note", "public": false, "access_token": false,
+                                                "image_src": "/web/image/1-a0e63e61/test.jpg", "image_width": 1, "image_height": 1, "original_id": false
+                                                });
+                        }
+                    return this._super(route, args);
+                },
+            });
+            await testUtils.form.clickEdit(form);
+            const $field = form.$('.oe_form_field[name="body"]');
+
+            //init mock file data
+            const fileB64 = '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigD//2Q==';
+            const fileBytes = new Uint8Array(atob(fileB64).split('').map(char => char.charCodeAt(0)));
+
+            // the dialog load some xml assets
+            const defMediaDialog = testUtils.makeTestPromise();
+            testUtils.mock.patch(MediaDialog, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this.opened(defMediaDialog.resolve.bind(defMediaDialog));
+                    this.opened(()=>{
+                        const input = this.activeWidget.$fileInput.get(0);
+                        Object.defineProperty(input, 'files', {
+                            value: [new File(fileBytes, "test.jpg", { type: 'image/jpeg' })],
+                        });
+                        this.activeWidget._onFileInputChange();
+                        });
+                },
+            });
+
+            const pText = $field.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText, 1, pText, 2);
+
+            const wysiwyg = $field.find('.note-editable').data('wysiwyg');
+            wysiwyg.openMediaDialog();
+
+            // load static xml file (dialog, media dialog, unsplash image widget)
+            await defMediaDialog;
+
+            await testUtils.dom.click($('.modal #editor-media-image .o_existing_attachment_cell:first').removeClass('d-none'));
+
+            assert.ok(await Promise.race([onAttachmentChangeTriggered, new Promise((res, _) => setTimeout(() => res(false), 400))]),
+                      "_onAttachmentChange was not called with the new attachment, necessary for unsused upload cleanup on backend");
+
+            testUtils.mock.unpatch(MediaDialog);
+            testUtils.mock.unpatch(FieldHtml);
             form.destroy();
         });
 
