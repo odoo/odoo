@@ -211,10 +211,3 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
         self.assertRaises(
             Forbidden, PayuLatamController._verify_notification_signature, payload, tx
         )
-
-    def test_payulatam_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.payulatam_merchant_id, False)
-        self.assertEqual(self.provider.payulatam_account_id, False)
-        self.assertEqual(self.provider.payulatam_api_key, False)

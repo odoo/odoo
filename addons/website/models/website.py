@@ -1761,12 +1761,3 @@ class Website(models.Model):
                         for word in re.findall(match_pattern, value):
                             if word[0] == search[0]:
                                 yield word.lower()
-
-    # ----------------------------------------------------------
-    # ORM overrides
-    # ----------------------------------------------------------
-    def _neutralize(self):
-        super()._neutralize()
-        self.flush_model()
-        self.invalidate_model()
-        self.env.cr.execute("UPDATE website SET domain=NULL")

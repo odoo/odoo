@@ -54,7 +54,3 @@ class PaymentProvider(models.Model):
         key = self.sips_secret
         shasign = sha256((data + key).encode('utf-8'))
         return shasign.hexdigest()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('sips', ['sips_merchant_id', 'sips_secret'])

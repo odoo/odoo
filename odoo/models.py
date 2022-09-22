@@ -6629,12 +6629,6 @@ class BaseModel(metaclass=MetaModel):
             records_batches.append(self.create(create_values))
         return self.concat(*records_batches)
 
-    def _neutralize(self):
-        """ Neutralize this model's records.
-        This should prevent the database from connecting to external services.
-        """
-        return
-
 
 collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count
