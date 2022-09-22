@@ -20,6 +20,7 @@ governements, etc.)
         'views/account_payment_views.xml',
         'views/account_journal_views.xml',
         'views/mass_mail_confirm_views.xml',
+        'views/account_invoice_send_views.xml',
         'data/cron.xml'
     ],
     'installable': True,

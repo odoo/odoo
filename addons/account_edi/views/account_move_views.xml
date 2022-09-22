@@ -69,13 +69,13 @@
                          <div>The invoice will be processed asynchronously by the following E-invoicing service :
                             <field name="edi_web_services_to_process" class="oe_inline"/>
                          </div>
-                         <button name="button_process_edi_web_services" type="object" class="oe_link" string="Process now" /> 
+                         <button name="button_process_edi_web_services" type="object" class="oe_link" string="Process now" />
                     </div>
                     <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
                         attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'error')]}">
                         <div class="o_row">
                             <field name="edi_error_message" />
-                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" /> 
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
                             <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
                         </div>
                     </div>
@@ -83,14 +83,14 @@
                         attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'warning')]}">
                         <div class="o_row">
                             <field name="edi_error_message" />
-                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" /> 
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
                         </div>
                     </div>
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
                         attrs="{'invisible': ['|', ('edi_error_count', '=', 0), ('edi_blocking_level', '!=', 'info')]}">
                         <div class="o_row">
                             <field name="edi_error_message" />
-                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" /> 
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" />
                         </div>
                     </div>
                 </xpath>

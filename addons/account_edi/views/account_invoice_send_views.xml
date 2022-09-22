@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_edi_account_invoice_send_form" model="ir.ui.view">
+            <field name="name">account.edi.account.invoice.send.inherit</field>
+            <field name="model">account.invoice.send</field>
+            <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='composition_mode']" position="before">
+                    <field name="all_valid" invisible="1" readonly="1"/>
+                    <div class="alert alert-warning text-center mb-0 no_print" attrs="{'invisible': [('all_valid', '=', True)]}">
+                        <span>
+                            Some mail can't be sent (<a type="object" name="action_invalid_edi_moves">Invoices</a>).
+                        </span>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_move_tree_view_edi_state" model="ir.ui.view">
+            <field name="name">account.move.tree.edi.state</field>
+            <field name="model">account.move</field>
+            <field name="mode">primary</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree js_class="account_tree" string="Account move" create="false" delete="false" expand="true" multi_edit="0" duplicate="false" editable="bottom">
+                    <field name="date" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="amount_total" readonly="1"/>
+                    <field name="edi_state" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

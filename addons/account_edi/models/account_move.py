@@ -450,6 +450,12 @@ class AccountMove(models.Model):
                 move_result.setdefault('attachments', []).extend(edi_attachments.get('attachments', []))
         return result
 
+    def action_invoice_sent(self):
+        res = super(AccountMove, self).action_invoice_sent()
+        compose_form = self.env.ref('account_edi.account_edi_account_invoice_send_form', raise_if_not_found=False)
+        res['view_id'] = compose_form.id
+        res['views'] = [(compose_form.id, 'form')]
+        return res
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
