@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { uiService } from "@web/core/ui/ui_service";
-import { useAutofocus, useBus, useListener, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useBus, useChildRef, useForwardRefToParent, useListener, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import {
@@ -422,6 +422,69 @@ QUnit.module("utils", () => {
             assert.rejects(comp.functionService(), "Component is destroyed");
             assert.rejects(comp.functionService.call("boundThis"), "Component is destroyed");
             assert.strictEqual(nbCalls, 8);
+        });
+
+        QUnit.module("useChildRef / useForwardRefToParent");
+
+        QUnit.test("simple usecase", async function (assert) {
+            let childRef;
+            let parentRef;
+            class Child extends Component {
+                setup() {
+                    childRef = useForwardRefToParent("someRef");
+                }
+            }
+            Child.template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
+            class Parent extends Component {
+                setup() {
+                    this.someRef = useChildRef();
+                    parentRef = this.someRef;
+                }
+            }
+            Parent.template = xml`<div><Child someRef="someRef"/></div>`;
+            Parent.components = { Child };
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+
+            await mount(Parent, target, { env });
+            assert.strictEqual(childRef.el, target.querySelector(".my_span"));
+            assert.strictEqual(parentRef.el, target.querySelector(".my_span"));
+        });
+
+        QUnit.test("useForwardRefToParent in a conditional child", async function (assert) {
+            class Child extends Component {
+                setup() {
+                    useForwardRefToParent("someRef");
+                }
+            }
+            Child.template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
+            class Parent extends Component {
+                setup() {
+                    this.someRef = useChildRef();
+                    this.state = useState({ hasChild: true });
+                }
+            }
+            Parent.template = xml`<div><Child t-if="state.hasChild" someRef="someRef"/></div>`;
+            Parent.components = { Child };
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+
+            const parent = await mount(Parent, target, { env });
+            assert.containsOnce(target, ".my_span");
+            assert.strictEqual(parent.someRef.el, target.querySelector(".my_span"));
+
+            parent.state.hasChild = false;
+            await nextTick();
+
+            assert.containsNone(target, ".my_span");
+            assert.strictEqual(parent.someRef.el, null);
+
+            parent.state.hasChild = true;
+            await nextTick();
+            assert.containsOnce(target, ".my_span");
+            assert.strictEqual(parent.someRef.el, target.querySelector(".my_span"));
         });
     });
 });

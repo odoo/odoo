@@ -216,7 +216,9 @@ export function useService(serviceName) {
  */
 export function useChildRef() {
     let defined = false;
-    return function ref(value) {
+    let value;
+    return function ref(v) {
+        value = v;
         if (defined) {
             return;
         }
