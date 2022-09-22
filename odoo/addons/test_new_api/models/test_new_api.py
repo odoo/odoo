@@ -1730,3 +1730,10 @@ class RelatedTranslation3(models.Model):
     parent_id = fields.Many2one('test_new_api.related_translation_2', string='Parent Model')
     name = fields.Char('Name Related', related='parent_id.name', readonly=False)
     html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+
+
+class IndexedTranslation(models.Model):
+    _name = 'test_new_api.indexed_translation'
+    _description = 'A model to indexed translated fields'
+
+    name = fields.Text('Name trigram', translate=True, index='trigram')
