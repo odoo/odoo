@@ -5,9 +5,12 @@
 $-seen-urls: ();
 @each $alias, $key in $o-font-aliases-to-keys {
     $-url: o-get-font-info($alias, 'url');
-    @if $-url and index($-seen-urls, $-url) == null {
-        $-seen-urls: append($-seen-urls, $-url);
-        @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
+    // Do not duplicate the default font call
+    @if $-url != "Heebo:wght@300..900" {
+        @if $-url and index($-seen-urls, $-url) == null {
+            $-seen-urls: append($-seen-urls, $-url);
+            @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
+        }
     }
 }
 
