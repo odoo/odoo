@@ -593,7 +593,20 @@ class Users(models.Model):
                 # safe fields only, so we write as super-user to bypass access rights
                 self = self.sudo().with_context(binary_field_real_user=self.env.user)
 
+        if 'groups_id' in values:
+            default_user = self.env.ref('base.default_user', raise_if_not_found=False)
+            if default_user and default_user in self:
+                old_groups = default_user.groups_id
+
         res = super(Users, self).write(values)
+
+        if 'groups_id' in values and default_user and default_user in self:
+            # Sync added groups on default user template to existing users
+            added_groups = default_user.groups_id - old_groups
+            if added_groups:
+                internal_users = self.env.ref('base.group_user').users - default_user
+                internal_users.write({'groups_id': [Command.link(gid) for gid in added_groups.ids]})
+
         if 'company_id' in values:
             for user in self:
                 # if partner is global we keep it that way
