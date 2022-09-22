@@ -609,7 +609,7 @@
                 } else if (slideData.category === 'video' && slideData.videoSourceType === 'vimeo') {
                     slideData.embedCode = Markup(slideData.embedCode);
                 } else if (slideData.category === 'infographic') {
-                    slideData.embedUrl = `/web/image/slide.slide/${slideData.id}/image_1024`;
+                    slideData.embedUrl = `/web/image/slide.slide/${encodeURIComponent(slideData.id)}/image_1024`;
                 } else if (slideData.category === 'document') {
                     slideData.embedUrl = $(slideData.embedCode).attr('src');
                 }
