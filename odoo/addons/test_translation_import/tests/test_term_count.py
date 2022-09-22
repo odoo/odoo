@@ -329,3 +329,26 @@ class TestTranslationFlow(common.TransactionCase):
         self.assertIn('text node', trans_static)
         self.assertIn('slot', trans_static)
         self.assertIn('slot 2', trans_static)
+
+    def test_export_spreadsheet(self):
+        terms = []
+        po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
+        for line in po_reader:
+            _module, _ttype, name, _res_id, source, _value, _comments = line
+            if name == "addons/test_translation_import/data/files/test_spreadsheet_dashboard.json":
+                terms.append(source)
+        self.assertEqual(set(terms), {
+            'exported 1',
+            'exported 2',
+            'exported 3',
+            'Bar chart title',
+            'Scorecard description',
+            'Scorecard chart',
+            'Opportunities',
+            'Pipeline',
+            'Pipeline Analysis',
+            'link label',
+            'aa (\\"inside\\") bb',
+            'with spaces',
+            'hello \\"world\\"',
+        })
