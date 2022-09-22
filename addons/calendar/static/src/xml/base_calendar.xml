@@ -69,7 +69,7 @@
     </t>
 
     <t t-name="Calendar.calendar-box">
-        <div t-attf-class="#{record.is_highlighted ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : 'o_calendar_color_1'} fc-event o_event o_attendee_status_#{record.is_alone ? 'alone' : record.attendee_status} py-0" >
+        <div t-attf-class="#{record.is_highlighted ? 'o_event_highlight' : ''} #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : 'o_calendar_color_1'} fc-event o_event o_attendee_status_#{record.is_alone ? 'alone' : record.attendee_status} py-0" >
             <div t-attf-class="#{record.attendee_status != 'accepted' ? 'font-weight-normal' : ''} o_event_title mr-2">
                 <span t-if="record.is_alone" class="fa fa-exclamation-circle"/>
                 <t t-esc="record.display_name"/>
