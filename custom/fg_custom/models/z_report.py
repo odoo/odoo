@@ -5,9 +5,9 @@ from datetime import datetime
 from pytz import timezone
 from odoo.exceptions import UserError
 
-class FgXReport(models.AbstractModel):
-    _name = 'report.fg_custom.report_x_pos_report'
-    _description = 'X Report'
+class FgZReport(models.AbstractModel):
+    _name = 'report.fg_custom.report_z_pos_report'
+    _description = 'Z Report'
 
     def action_print(self, session_id):
         session_ids = self.env['pos.session'].browse(session_id)
@@ -33,12 +33,15 @@ class FgXReport(models.AbstractModel):
         localized_dt = timezone('UTC').localize(datetime.utcnow()).astimezone(timezone(tz_name))
         return_order_ids = self.env['pos.order']
         open_cashier_list = []
+        close_cashier_list = []
         start_end_order_list = []
         receipt_start_end_order_list = []
 
         for session_id in session_ids:
-            start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference asc')
-            end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1, order='pos_si_trans_reference desc')
+            start_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1,
+                                                          order='pos_si_trans_reference asc')
+            end_order_id = self.env['pos.order'].search([('session_id', '=', session_id.id)], limit=1,
+                                                        order='pos_si_trans_reference desc')
             return_order_ids |= session_id.order_ids.filtered(lambda x: x.is_refunded)
             if end_order_id.pos_si_trans_reference and start_order_id.pos_si_trans_reference:
                 start_end_order_list.append(start_order_id.pos_si_trans_reference + ' - ' + end_order_id.pos_si_trans_reference)
@@ -103,36 +106,40 @@ class FgXReport(models.AbstractModel):
                     changes_order_total += order.amount_return
 
             session_start_at = timezone('UTC').localize(session_id.start_at).astimezone(timezone(tz_name))
+            session_stop_at = timezone('UTC').localize(session_id.stop_at).astimezone(timezone(tz_name))
             print('-report----localized_dt, session_start_at-', localized_dt, session_start_at)
             cash_register_balance_start += session_id.cash_register_balance_start
             cash_register_balance_end_real += session_id.cash_register_balance_end_real
             open_cashier_list.append([session_id.user_id.name, session_start_at.strftime('%m/%d/%Y %H:%M:%S')])
+            close_cashier_list.append([session_id.write_uid.name, session_stop_at.strftime('%m/%d/%Y %H:%M:%S')])
         data = {'session_name': ', '.join(s.name for s in session_ids), 'open_cashier_list': open_cashier_list,
-                 'start_end_order_list': start_end_order_list,
-                 'receipt_start_end_order_list': receipt_start_end_order_list,
-                 'cash_register_balance_start': cash_register_balance_start,
-                 'cash_register_balance_end_real': cash_register_balance_end_real, 'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
-                 'total_amt': total_amt,
-                 'total_qty': int(total_qty),
-                 'return_order_count': len(return_order_ids),
-                 'return_order_total': sum([order.amount_total for order in return_order_ids if order]),
-                 'total_discount_qty': int(total_discount_qty),
-                 'total_discount_percentage': total_discount_percentage,
-                 'total_discount_global_minus': total_discount_global_minus,
-                 'total_discount_coupon_minus': total_discount_coupon_minus,
-                 'total_vat': total_vat,
-                 'total_vat_qty': int(total_vat_qty),
-                 'total_product_v': total_product_v,
-                 'total_product_e': total_product_e,
-                 'total_product_z': total_product_z,
-                 'transactions_history': transactions_history,
-                 'tender_history': tender_history,
-                 'changes_order_count': int(changes_order_count),
-                 'changes_order_total': changes_order_total,
-        }
+                'close_cashier_list': close_cashier_list,
+                'start_end_order_list': start_end_order_list,
+                'receipt_start_end_order_list': receipt_start_end_order_list,
+                'cash_register_balance_start': cash_register_balance_start,
+                'cash_register_balance_end_real': cash_register_balance_end_real,
+                'stop_at': localized_dt.strftime('%m/%d/%Y'), 'stop_time': localized_dt.strftime('%H:%M:%S'),
+                'total_amt': total_amt,
+                'total_qty': int(total_qty),
+                'return_order_count': len(return_order_ids),
+                'return_order_total': sum([order.amount_total for order in return_order_ids if order]),
+                'total_discount_qty': int(total_discount_qty),
+                'total_discount_percentage': total_discount_percentage,
+                'total_discount_global_minus': total_discount_global_minus,
+                'total_discount_coupon_minus': total_discount_coupon_minus,
+                'total_vat': total_vat,
+                'total_vat_qty': int(total_vat_qty),
+                'total_product_v': total_product_v,
+                'total_product_e': total_product_e,
+                'total_product_z': total_product_z,
+                'transactions_history': transactions_history,
+                'tender_history': tender_history,
+                'changes_order_count': int(changes_order_count),
+                'changes_order_total': changes_order_total,
+                }
         print('----report-----data----', data)
         return data
-    
+
     @api.model
     def _get_report_values(self, docids, data=None):
         if docids:
