@@ -272,7 +272,7 @@ export class ImageSelector extends FileSelector {
                         [attachment.id],
                     );
                 }
-                src += `?access_token=${accessToken}`;
+                src += `?access_token=${encodeURIComponent(accessToken)}`;
             }
             imageEl.src = src;
             imageEl.alt = attachment.description || '';

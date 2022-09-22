@@ -7,7 +7,7 @@ patch(Persona.prototype, "website_livechat", {
     get countryFlagUrl() {
         const country = this.partner?.country ?? this.country;
         return country
-            ? `/base/static/img/country_flags/${country.code.toLowerCase()}.png`
+            ? `/base/static/img/country_flags/${encodeURIComponent(country.code.toLowerCase())}.png`
             : undefined;
     },
     get nameOrDisplayName() {
