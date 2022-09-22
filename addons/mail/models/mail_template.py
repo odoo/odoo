@@ -401,13 +401,3 @@ class MailTemplate(models.Model):
         if force_send:
             mail.send(raise_exception=raise_exception)
         return mail.id  # TDE CLEANME: return mail + api.returns ?
-
-    # ------------------------------------------------------------
-    # neutralize
-    # ------------------------------------------------------------
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.flush_model()
-        self.invalidate_model()
-        self.env.cr.execute("UPDATE mail_template SET mail_server_id=NULL")

@@ -138,9 +138,3 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, Seal='dummy')
         self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)
-
-    def test_sips_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.sips_merchant_id, False)
-        self.assertEqual(self.provider.sips_secret, False)

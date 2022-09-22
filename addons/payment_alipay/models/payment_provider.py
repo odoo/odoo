@@ -68,11 +68,3 @@ class PaymentProvider(models.Model):
             return 'https://mapi.alipay.com/gateway.do'
         else:  # test environment
             return 'https://openapi.alipaydev.com/gateway.do'
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('alipay', [
-            'alipay_merchant_partner_id',
-            'alipay_md5_signature_key',
-            'alipay_seller_email',
-        ])

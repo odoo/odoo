@@ -145,12 +145,3 @@ class PaymentProvider(models.Model):
             return res
 
         return self.authorize_currency_id
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('authorize', [
-            'authorize_login',
-            'authorize_transaction_key',
-            'authorize_signature_key',
-            'authorize_client_key',
-        ])

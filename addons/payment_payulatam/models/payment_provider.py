@@ -68,11 +68,3 @@ class PaymentProvider(models.Model):
                 values['currency'],
             ])
         return md5(data_string.encode('utf-8')).hexdigest()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('payulatam', [
-            'payulatam_merchant_id',
-            'payulatam_account_id',
-            'payulatam_api_key',
-        ])

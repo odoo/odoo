@@ -49,7 +49,3 @@ class PaymentProvider(models.Model):
             keys = 'key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||salt'
             sign = '|'.join(f'{sign_values.get(k) or ""}' for k in keys.split('|'))
         return hashlib.sha512(sign.encode('utf-8')).hexdigest()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('payumoney', ['payumoney_merchant_key', 'payumoney_merchant_salt'])

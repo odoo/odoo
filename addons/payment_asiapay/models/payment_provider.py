@@ -85,12 +85,3 @@ class PaymentProvider(models.Model):
         shasign = hashnew(self.asiapay_secure_hash_function)
         shasign.update(signing_string.encode())
         return shasign.hexdigest()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('asiapay', [
-            'asiapay_merchant_id',
-            'asiapay_currency_id',
-            'asiapay_secure_hash_secret',
-            'asiapay_secure_hash_function',
-        ])

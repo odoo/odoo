@@ -121,11 +121,3 @@ class PaymentProvider(models.Model):
         else:  # Notification data.
             secret = self.razorpay_webhook_secret
             return hmac.new(secret.encode(), msg=data, digestmod=hashlib.sha256).hexdigest()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('razorpay', [
-            'razorpay_key_id',
-            'razorpay_key_secret',
-            'razorpay_webhook_secret',
-        ])

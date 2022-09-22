@@ -99,11 +99,3 @@ class PaymentProvider(models.Model):
                 "Flutterwave: " + _("Could not establish the connection to the API.")
             )
         return response.json()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('flutterwave', [
-            'flutterwave_public_key',
-            'flutterwave_secret_key',
-            'flutterwave_webhook_secret',
-        ])

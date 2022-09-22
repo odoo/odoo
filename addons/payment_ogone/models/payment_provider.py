@@ -131,13 +131,3 @@ class PaymentProvider(models.Model):
             _logger.exception("invalid API request at %s with data %s", url, payload)
             raise ValidationError("Ogone: " + _("The communication with the API failed."))
         return response.content
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('ogone', [
-            'ogone_pspid',
-            'ogone_userid',
-            'ogone_password',
-            'ogone_shakey_in',
-            'ogone_shakey_out',
-        ])

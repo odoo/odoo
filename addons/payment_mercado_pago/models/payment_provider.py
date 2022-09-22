@@ -80,10 +80,3 @@ class Paymentprovider(models.Model):
                 "Mercado Pago: " + _("Could not establish the connection to the API.")
             )
         return response.json()
-
-    def _neutralize(self):
-        super()._neutralize()
-
-        self._neutralize_fields('mercado_pago', [
-            'mercado_pago_access_token',
-        ])

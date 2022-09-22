@@ -450,19 +450,3 @@ class TestMailRender(common.MailCommon):
         self.assertEqual(result, '''<div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
                     foo<t t-out="&#34;false&#34; if 1 &gt; 2 else &#34;true&#34;"/>bar
                 </div>body''')
-
-    def test_mail_template_neutralize(self):
-        """ ensure mail templates can be neutralized """
-        fake_mail_server = self.env['ir.mail_server'].create({
-            'name': "fake test email server",
-            'smtp_host': "mail.example.com",
-            'smtp_port': 15626,
-        })
-        self.test_template.mail_server_id = fake_mail_server
-        self.env['mail.template']._neutralize()
-        self.assertFalse(self.test_template.mail_server_id)
-
-        # bonus test mail server neutralize too
-        self.assertTrue(fake_mail_server.active)
-        self.env['ir.mail_server']._neutralize()
-        self.assertFalse(fake_mail_server.active)

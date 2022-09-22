@@ -593,31 +593,3 @@ class PaymentProvider(models.Model):
             'code': 'none',
             'state': 'disabled',
         })
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.flush_model()
-        self.invalidate_model()
-        self.env.cr.execute("""
-            UPDATE payment_provider SET state = 'disabled'
-            WHERE state NOT IN ('test', 'disabled')
-        """)
-
-    def _neutralize_fields(self, provider_code, field_names):
-        """ Helper to neutralize API keys for the given provider.
-
-        :param str provider_code: The code of the provider whose fields to neutralize.
-        :param list field_names: The names of the fields to neutralize.
-        :return: None
-        """
-        self.flush_model()
-        self.invalidate_model()
-        query = sql.SQL("""
-            UPDATE payment_provider
-            SET ({fields}) = ROW({vals})
-            WHERE code = %s
-        """).format(
-            fields=sql.SQL(','.join(field_names)),
-            vals=sql.SQL(', '.join(['NULL'] * len(field_names))),
-        )
-        self.env.cr.execute(query, (provider_code,))
