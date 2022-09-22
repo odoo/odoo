@@ -264,14 +264,6 @@ class PaymentProvider(models.Model):
         """
         return {}
 
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('stripe', [
-            'stripe_secret_key',
-            'stripe_publishable_key',
-            'stripe_webhook_secret',
-        ])
-
     # === BUSINESS METHODS - STRIPE CONNECT ONBOARDING === #
 
     def _stripe_fetch_or_create_connected_account(self):

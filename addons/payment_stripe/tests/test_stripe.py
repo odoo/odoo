@@ -114,13 +114,6 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self._make_json_request(url, data=self.notification_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
-    def test_stripe_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.stripe_secret_key, False)
-        self.assertEqual(self.provider.stripe_publishable_key, False)
-        self.assertEqual(self.provider.stripe_webhook_secret, False)
-
     def test_onboarding_action_redirect_to_url(self):
         """ Test that the action generate and return an URL when the provider is disabled. """
         with patch.object(
