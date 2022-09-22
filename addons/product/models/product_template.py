@@ -489,8 +489,10 @@ class ProductTemplate(models.Model):
         # we don't see another way to do it
         tmpl_without_variant_ids = []
         if not limit or len(searched_ids) < limit:
+            # Set default order to search queries to avoid joining on ir.translation because of product.template._order = name, which is a translated field.
             tmpl_without_variant_ids = self.env['product.template'].search(
-                [('id', 'not in', self.env['product.template']._search([('product_variant_ids.active', '=', True)]))]
+                [('id', 'not in', self.env['product.template']._search([('product_variant_ids.active', '=', True)], order='id'))],
+                order='id'
             )
         if tmpl_without_variant_ids:
             domain = expression.AND([args or [], [('id', 'in', tmpl_without_variant_ids.ids)]])
