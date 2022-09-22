@@ -5616,7 +5616,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const [module, directory, fileName] = shapeName.split('/');
         let shape = this.shapeCache[fileName];
         if (!shape) {
-            const shapeURL = `/${module}/static/image_shapes/${directory}/${fileName}.svg`;
+            const shapeURL = `/${encodeURIComponent(module)}/static/image_shapes/${encodeURIComponent(directory)}/${encodeURIComponent(fileName)}.svg`;
             shape = await (await fetch(shapeURL)).text();
             this.shapeCache[fileName] = shape;
         }
@@ -5805,7 +5805,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         uiFragment.querySelectorAll('we-select-page we-button[data-set-img-shape]').forEach(btn => {
             const image = document.createElement('img');
             const [moduleName, directory, shapeName] = btn.dataset.setImgShape.split('/');
-            image.src = `/${moduleName}/static/image_shapes/${directory}/${shapeName}.svg`;
+            image.src = `/${encodeURIComponent(moduleName)}/static/image_shapes/${encodeURIComponent(directory)}/${encodeURIComponent(shapeName)}.svg`;
             $(btn).prepend(image);
 
             if (btn.dataset.animated) {
@@ -5844,7 +5844,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const img = this._getImg();
         const match = img.src.match(/\/web_editor\/image_shape\/(\w+\.\w+)/);
         if (img.dataset.shape && match) {
-            return this._loadImageInfo(`/web/image/${match[1]}`);
+            return this._loadImageInfo(`/web/image/${encodeURIComponent(match[1])}`);
         }
         return this._super(...arguments);
     },
@@ -6611,9 +6611,9 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 return `${colorName}=${encodedCol}`;
             });
         if (flip.length) {
-            searchParams.push(`flip=${flip.sort().join('')}`);
+            searchParams.push(`flip=${encodeURIComponent(flip.sort().join(''))}`);
         }
-        return `/web_editor/shape/${shape}.svg?${searchParams.join('&')}`;
+        return `/web_editor/shape/${encodeURIComponent(shape)}.svg?${searchParams.join('&')}`;
     },
     /**
      * Retrieves current shape data from the target's dataset.

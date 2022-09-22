@@ -889,7 +889,7 @@ const Wysiwyg = Widget.extend({
                 // it was modified previously, as the other modified image may be used
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
                 const newAttachmentSrc = await this._rpc({
-                    route: `/web_editor/modify_image/${el.dataset.originalId}`,
+                    route: `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
                     params: {
                         res_model: resModel,
                         res_id: parseInt(resId),
