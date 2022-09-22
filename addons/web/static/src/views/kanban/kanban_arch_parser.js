@@ -39,10 +39,10 @@ export class KanbanArchParser extends XMLParser {
         const groupsDraggable = archParseBoolean(xmlDoc.getAttribute("groups_draggable"), true);
         const activeActions = {
             ...getActiveActions(xmlDoc),
-            groupArchive: archParseBoolean(xmlDoc.getAttribute("archivable"), true),
-            groupCreate: archParseBoolean(xmlDoc.getAttribute("group_create"), true),
-            groupDelete: archParseBoolean(xmlDoc.getAttribute("group_delete"), true),
-            groupEdit: archParseBoolean(xmlDoc.getAttribute("group_edit"), true),
+            archiveGroup: archParseBoolean(xmlDoc.getAttribute("archivable"), true),
+            createGroup: archParseBoolean(xmlDoc.getAttribute("group_create"), true),
+            deleteGroup: archParseBoolean(xmlDoc.getAttribute("group_delete"), true),
+            editGroup: archParseBoolean(xmlDoc.getAttribute("group_edit"), true),
             quickCreate: archParseBoolean(xmlDoc.getAttribute("quick_create"), true),
         };
         const onCreate = xmlDoc.getAttribute("on_create");

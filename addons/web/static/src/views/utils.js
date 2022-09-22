@@ -8,6 +8,15 @@ const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
 
 /**
+ * @typedef ViewActiveActions {
+ * @property {"view"} type
+ * @property {boolean} edit
+ * @property {boolean} create
+ * @property {boolean} delete
+ * @property {boolean} duplicate
+ */
+
+/**
  * Add dependencies to activeFields
  *
  * @param {Object} activeFields
@@ -114,8 +123,13 @@ export function evalDomain(modifier, evalContext) {
     return Boolean(modifier);
 }
 
+/**
+ * @param {Element} rootNode
+ * @returns {ViewActiveActions}
+ */
 export function getActiveActions(rootNode) {
     return {
+        type: "view",
         edit: archParseBoolean(rootNode.getAttribute("edit"), true),
         create: archParseBoolean(rootNode.getAttribute("create"), true),
         delete: archParseBoolean(rootNode.getAttribute("delete"), true),
@@ -185,6 +199,14 @@ export function isX2Many(field) {
  */
 export function isNumeric(field) {
     return NUMERIC_TYPES.includes(field.type);
+}
+
+/**
+ * @param {any} value
+ * @returns {boolean}
+ */
+export function isNull(value) {
+    return [null, undefined].includes(value);
 }
 
 export function processButton(node) {

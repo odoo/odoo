@@ -21,9 +21,9 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         this.openMany2xRecord = useOpenMany2XRecord({
             resModel: this.props.relation,
             activeActions: {
-                canCreate: false,
-                canCreateEdit: false,
-                canWrite: true,
+                create: false,
+                createEdit: false,
+                write: true,
             },
             isToMany: true,
             onRecordSaved: async (record) => {
@@ -39,7 +39,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         onMounted(this.checkEmails.bind(this, this.props));
         onWillUpdateProps(this.checkEmails.bind(this));
     }
-    
+
     async checkEmails(props) {
         const invalidRecords = props.value.records.filter((record) => !record.data.email);
         // Remove records with invalid data, open form view to edit those and readd them if they are updated correctly.

@@ -56,9 +56,9 @@ export class AnalyticDistribution extends Component {
         this.openTemplate = useOpenMany2XRecord({
             resModel: "account.analytic.distribution.model",
             activeActions: {
-                canCreate: true,
-                canCreateEdit: false,
-                canWrite: true,
+                create: true,
+                edit: false,
+                write: true,
             },
             isToMany: false,
             onRecordSaved: async (record) => {
@@ -106,7 +106,7 @@ export class AnalyticDistribution extends Component {
         this.focusToSelector();
     }
 
-    async formatData(nextProps) { 
+    async formatData(nextProps) {
         const data = nextProps.value;
         const analytic_account_ids = Object.keys(data).map((id) => parseInt(id));
         const records = analytic_account_ids.length ? await this.fetchAnalyticAccounts([["id", "in", analytic_account_ids]]) : [];

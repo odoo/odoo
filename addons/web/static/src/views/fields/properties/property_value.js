@@ -45,9 +45,9 @@ export class PropertyValue extends Component {
         this.openMany2X = useOpenMany2XRecord({
             resModel: this.props.model,
             activeActions: {
-                canCreate: false,
-                canCreateEdit: false,
-                canWrite: true,
+                create: false,
+                createEdit: false,
+                write: true,
             },
             isToMany: false,
             onRecordSaved: async (record) => {
@@ -103,16 +103,20 @@ export class PropertyValue extends Component {
                 const hasAccess = many2manyValue[1] !== null;
                 return {
                     id: many2manyValue[0],
-                    text: hasAccess ? many2manyValue[1] : _lt('No Access'),
-                    onClick: hasAccess && this.clickableRelational
-                        && (async () => await this._openRecord(this.props.comodel, many2manyValue[0])),
+                    text: hasAccess ? many2manyValue[1] : _lt("No Access"),
+                    onClick:
+                        hasAccess &&
+                        this.clickableRelational &&
+                        (async () => await this._openRecord(this.props.comodel, many2manyValue[0])),
                     onDelete:
-                        !this.props.readonly && hasAccess
-                        && (() => this.onMany2manyDelete(many2manyValue[0])),
+                        !this.props.readonly &&
+                        hasAccess &&
+                        (() => this.onMany2manyDelete(many2manyValue[0])),
                     colorIndex: 0,
-                    img: this.showAvatar && hasAccess
-                        ? `/web/image/${this.props.comodel}/${many2manyValue[0]}/avatar_128`
-                        : null,
+                    img:
+                        this.showAvatar && hasAccess
+                            ? `/web/image/${this.props.comodel}/${many2manyValue[0]}/avatar_128`
+                            : null,
                 };
             });
         } else if (this.props.type === "tags") {
@@ -133,7 +137,10 @@ export class PropertyValue extends Component {
         }
         let domain = new Domain(this.props.domain);
         if (this.props.type === "many2many" && this.props.value) {
-            domain = Domain.and([domain, [['id', 'not in', this.props.value.map(rec => rec[0])]]])
+            domain = Domain.and([
+                domain,
+                [["id", "not in", this.props.value.map((rec) => rec[0])]],
+            ]);
         }
         return domain.toList();
     }
@@ -179,8 +186,10 @@ export class PropertyValue extends Component {
      * @returns {boolean}
      */
     get showAvatar() {
-        return ["many2one", "many2many"].includes(this.props.type)
-            && ["res.users", "res.partner"].includes(this.props.comodel);
+        return (
+            ["many2one", "many2many"].includes(this.props.type) &&
+            ["res.users", "res.partner"].includes(this.props.comodel)
+        );
     }
 
     /* --------------------------------------------------------
