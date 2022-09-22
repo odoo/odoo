@@ -7,6 +7,7 @@
             t-ref="button"
             t-attf-class="btn btn-sm btn-primary o_clipboard_button {{ props.className || '' }}"
             t-on-click.stop="onClick"
+            t-on-dblclick.stop=""
         >
             <span class="fa fa-clipboard mx-1"/>
             <span t-esc="props.copyText"/>
