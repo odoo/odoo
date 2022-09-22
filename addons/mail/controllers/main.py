@@ -11,7 +11,7 @@ from werkzeug import url_encode
 from odoo import api, http, registry, SUPERUSER_ID, _
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.tools import consteq, sql
 
 _logger = logging.getLogger(__name__)
 
@@ -31,6 +31,16 @@ class MailController(http.Controller):
         params.pop('token', '')
         valid_token = request.env['mail.thread']._notify_encode_link(base_link, params)
         return consteq(valid_token, str(token))
+
+    @classmethod
+    def upgrade_record_mapping(cls, model, res_id):
+        cr = request.env.cr
+        if sql.table_exists(cr, "upgrade_record_mapping"):
+            cr.execute(
+                "SELECT dst_model, dst_id FROM upgrade_record_mapping WHERE src_model=%s AND src_id=%s",
+                [model, res_id]
+            )
+            return cr.fetchone()
 
     @classmethod
     def _check_token_and_record_or_redirect(cls, model, res_id, token):
@@ -200,6 +210,14 @@ class MailController(http.Controller):
 
             models that have an access_token may apply variations on this.
         """
+        if model and res_id:
+            record_mapping = self.upgrade_record_mapping(model, res_id)
+            if record_mapping:
+                url = "/mail/view?%s" % url_encode(
+                    {"model": model, "res_id": res_id, "access_token": access_token, **kwargs}
+                )
+                return werkzeug.utils.redirect(url)
+
         # ==============================================================================================
         # This block of code disappeared on saas-11.3 to be reintroduced by TBE.
         # This is needed because after a migration from an older version to saas-11.3, the link
@@ -220,6 +238,12 @@ class MailController(http.Controller):
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
     def mail_action_assign(self, model, res_id, token=None):
+        record_mapping = self.upgrade_record_mapping(model, res_id)
+        if record_mapping:
+            url = "/mail/assign?%s" % url_encode(
+                {"model": model, "res_id": res_id, "token": token}
+            )
+            return werkzeug.utils.redirect(url)
         comparison, record, redirect = self._check_token_and_record_or_redirect(model, int(res_id), token)
         if comparison and record:
             try:
