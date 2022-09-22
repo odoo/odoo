@@ -132,7 +132,7 @@ weSnippetEditor.Class.include({
      */
     async _validateGMapAPIKey(key) {
         try {
-            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${key}`);
+            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${encodeURIComponent(key)}`);
             const isValid = (response.status === 200);
             return {
                 isValid: isValid,
