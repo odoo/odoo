@@ -585,6 +585,9 @@ class Module(models.Model):
         }
 
     def _button_immediate_function(self, function):
+        if not self.env.registry.ready or self.env.registry._init:
+            raise UserError(_('The method _button_immediate_install cannot be called on init or non loaded registries. Please use button_install instead.'))
+
         if getattr(threading.current_thread(), 'testing', False):
             raise RuntimeError(
                 "Module operations inside tests are not transactional and thus forbidden.\n"
