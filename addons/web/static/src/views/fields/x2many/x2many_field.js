@@ -89,10 +89,9 @@ export class X2ManyField extends Component {
     }
 
     get displayAddButton() {
-        const { canCreate, canLink } = this.activeActions;
         return (
             this.viewMode === "kanban" &&
-            (canLink !== undefined ? canLink : canCreate) &&
+            ("link" in this.activeActions ? this.activeActions.link : this.activeActions.create) &&
             !this.props.readonly
         );
     }

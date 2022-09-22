@@ -11103,7 +11103,7 @@ QUnit.module("Fields", (hooks) => {
         // the next line should be displayed below the newly added one
         assert.containsN(target, ".o_data_row", 2, "should have 2 records");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_data_cell")].map(el => el.textContent.trim()),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent.trim()),
             ["pi", "", "kawa", ""],
             "should display the correct records on page 1"
         );
@@ -12480,5 +12480,40 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(serverData.models.partner.records[0].int_field, 5);
         assert.strictEqual(serverData.models.turtle.records[1].turtle_int, 5);
         assert.strictEqual(serverData.models.turtle.records[0].turtle_int, 5);
+    });
+
+    QUnit.test("active actions are passed to o2m field", async (assert) => {
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="turtles">
+                        <tree editable="bottom" create="false" delete="false">
+                            <field name="display_name" />
+                            <field name="turtle_foo" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mode: "edit",
+        });
+
+        assert.containsN(target, ".o_data_row", 3);
+        assert.containsNone(target, ".o_list_record_remove");
+
+        await click(target, ".o_data_row:nth-child(3) .o_data_cell:nth-child(2)");
+
+        assert.hasClass(target.querySelector(".o_data_row:nth-child(3)"), "o_selected_row");
+
+        triggerHotkey("Enter");
+        await nextTick();
+
+        assert.containsN(target, ".o_data_row", 3);
+        assert.containsNone(target, ".o_list_record_remove");
+        assert.hasClass(target.querySelector(".o_data_row:first-child"), "o_selected_row");
     });
 });
