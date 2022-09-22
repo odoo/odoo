@@ -11470,10 +11470,10 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target.querySelector(".o_optional_columns_dropdown .dropdown-toggle"));
             await click(target.querySelector(".o_optional_columns_dropdown .dropdown-item"));
-            assert.containsNone(
+            assert.containsOnce(
                 target.querySelector(".o_field_one2many"),
                 "tr.o_selected_row",
-                "current edition mode discarded when selecting advanced field"
+                "current edition mode kept when selecting advanced field"
             );
             assert.containsN(
                 target.querySelector(".o_field_one2many"),
