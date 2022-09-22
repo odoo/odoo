@@ -139,11 +139,3 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         return f'ODOO_PARTNER_{partner_id}'
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('adyen', [
-            'adyen_merchant_account',
-            'adyen_api_key',
-            'adyen_hmac_key',
-        ])

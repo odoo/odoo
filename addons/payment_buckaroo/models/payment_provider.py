@@ -63,7 +63,3 @@ class PaymentProvider(models.Model):
         sign_string += self.buckaroo_secret_key
         # Calculate the SHA-1 hash over the signing string
         return sha1(sign_string.encode('utf-8')).hexdigest()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('buckaroo', ['buckaroo_website_key', 'buckaroo_secret_key'])

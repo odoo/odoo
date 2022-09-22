@@ -154,10 +154,3 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         ):
             self._make_http_post_request(url, data=self.notification_data)
             self.assertEqual(origin_check_mock.call_count, 1)
-
-    def test_paypal_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.paypal_email_account, False)
-        self.assertEqual(self.provider.paypal_seller_account, False)
-        self.assertEqual(self.provider.paypal_pdt_token, False)

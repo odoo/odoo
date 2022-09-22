@@ -208,10 +208,3 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, sign='dummy')
         self.assertRaises(Forbidden, AlipayController._verify_notification_signature, payload, tx)
-
-    def test_alipay_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.alipay_merchant_partner_id, False)
-        self.assertEqual(self.provider.alipay_md5_signature_key, False)
-        self.assertEqual(self.provider.alipay_seller_email, False)
