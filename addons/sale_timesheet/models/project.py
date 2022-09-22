@@ -307,7 +307,7 @@ class Project(models.Model):
 
     def _get_sale_order_lines(self):
         sale_orders = self._get_sale_orders()
-        return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True), ('is_downpayment', '=', False)], order='id asc')
+        return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_downpayment', '=', False)], order='id asc')
 
     def _get_sold_items(self):
         timesheet_encode_uom = self.env.company.timesheet_encode_uom_id
