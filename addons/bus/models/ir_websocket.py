@@ -1,5 +1,5 @@
 from odoo import models
-from odoo.http import SessionExpiredException
+from odoo.http import request, SessionExpiredException
 from odoo.service import security
 from ..models.bus import dispatch
 from ..websocket import wsrequest
@@ -25,6 +25,9 @@ class IrWebsocket(models.AbstractModel):
             :param channels: The channel list sent by the client.
         """
         channels.append('broadcast')
+        if self.env.user and not self.env.user._is_public():
+            req = wsrequest or request
+            channels.append(f'{self.env.user}_{hash(req.session.sid)}')
         return channels
 
     def _subscribe(self, data):
@@ -42,7 +45,12 @@ class IrWebsocket(models.AbstractModel):
             )
             im_status_notification = self._get_im_status(im_status_ids_by_model)
             if im_status_ids_by_model:
-                self.env['bus.bus']._sendone(self.env.user.partner_id, 'bus/im_status', im_status_notification)
+                req = wsrequest or request
+                self.env['bus.bus']._sendone(
+                    f'{self.env.user}_{hash(req.session.sid)}',
+                    'bus/im_status',
+                    im_status_notification
+                )
 
     @classmethod
     def _authenticate(cls):
