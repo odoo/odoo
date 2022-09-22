@@ -101,7 +101,11 @@ QUnit.module("Views", (hooks) => {
                         o2m: { string: "O2M field", type: "one2many", relation: "bar" },
                         m2m: { string: "M2M field", type: "many2many", relation: "bar" },
                         amount: { string: "Monetary field", type: "monetary" },
-                        amount_currency: { string: "Monetary field (currency)", type: "monetary", currency_field: "company_currency_id" },
+                        amount_currency: {
+                            string: "Monetary field (currency)",
+                            type: "monetary",
+                            currency_field: "company_currency_id",
+                        },
                         currency_id: {
                             string: "Currency",
                             type: "many2one",
@@ -2983,31 +2987,34 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("currency_field is taken into account when formatting monetary values", async (assert) => {
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
+    QUnit.test(
+        "currency_field is taken into account when formatting monetary values",
+        async (assert) => {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
                 <tree>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="amount"/>
                     <field name="amount_currency"/>
                 </tree>`,
-        });
+            });
 
-        assert.strictEqual(
-            target.querySelectorAll('.o_data_row td[name="amount"]')[0].textContent,
-            "1200.00\u00a0€",
-            "field should be formatted based on currency_id"
-        );
-        assert.strictEqual(
-            target.querySelectorAll('.o_data_row td[name="amount_currency"]')[0].textContent,
-            "$\u00a01100.00",
-            "field should be formatted based on company_currency_id"
-        );
-    });
+            assert.strictEqual(
+                target.querySelectorAll('.o_data_row td[name="amount"]')[0].textContent,
+                "1200.00\u00a0€",
+                "field should be formatted based on currency_id"
+            );
+            assert.strictEqual(
+                target.querySelectorAll('.o_data_row td[name="amount_currency"]')[0].textContent,
+                "$\u00a01100.00",
+                "field should be formatted based on company_currency_id"
+            );
+        }
+    );
 
     QUnit.test(
         "groups can not be sorted on a different field than the first field of the groupBy - 1",
@@ -15337,4 +15344,40 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("optional field selection do not unselect current row", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree editable="top">
+                        <field name="text" optional="hide"/>
+                        <field name="foo" optional="show"/>
+                        <field name="bar" optional="hide"/>
+                    </tree>`,
+        });
+
+        await click(target.querySelector(".o_list_button_add"));
+
+        assert.containsOnce(target, ".o_selected_row");
+        assert.containsOnce(target, "div[name=foo] input:focus");
+
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+
+        assert.containsOnce(target, ".o_selected_row");
+        assert.containsOnce(target, "div[name=foo] input:focus");
+
+        await click(target, ".o_optional_columns_dropdown span.dropdown-item:nth-child(3) label");
+
+        assert.containsOnce(target, ".o_selected_row");
+        assert.containsOnce(target, "div[name=foo] input:focus");
+        assert.containsOnce(target, ".o_selected_row div[name=bar]");
+
+        await click(target, ".o_optional_columns_dropdown span.dropdown-item:nth-child(1) label");
+
+        assert.containsOnce(target, ".o_selected_row");
+        // This below would be better if it still focused foo, but it is an acceptable tradeoff.
+        assert.containsOnce(target, "div[name=text] textarea:focus");
+        assert.containsOnce(target, ".o_selected_row div[name=text]");
+    });
 });
