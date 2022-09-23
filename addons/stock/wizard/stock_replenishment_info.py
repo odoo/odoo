@@ -29,7 +29,7 @@ class StockReplenishmentInfo(models.TransientModel):
             replenishment_info.wh_replenishment_option_ids = self.env['stock.replenishment.option'].create([
                 {'product_id': replenishment_info.product_id.id, 'route_id': route_id.id, 'replenishment_info_id': replenishment_info.id}
                 for route_id in replenishment_info.warehouseinfo_ids
-            ])
+            ]).sorted(lambda o: o.free_qty, reverse=True)
 
     @api.depends('orderpoint_id')
     def _compute_json_lead_days(self):
@@ -122,13 +122,15 @@ class StockReplenishmentOption(models.TransientModel):
 
     @api.depends('warehouse_id', 'free_qty', 'uom', 'qty_to_order')
     def _compute_warning_message(self):
+        self.warning_message = ''
         for record in self:
-            self.warning_message = _('{0} can only provide {1} {2}, while the quantity to order is {3} {2}.').format(
-                record.warehouse_id.name,
-                record.free_qty,
-                record.uom,
-                record.qty_to_order
-            )
+            if record.free_qty < record.qty_to_order:
+                record.warning_message = _('{0} can only provide {1} {2}, while the quantity to order is {3} {2}.').format(
+                    record.warehouse_id.name,
+                    record.free_qty,
+                    record.uom,
+                    record.qty_to_order
+                )
 
     def select_route(self):
         if self.free_qty < self.qty_to_order:
@@ -143,8 +145,9 @@ class StockReplenishmentOption(models.TransientModel):
         return self.order_all()
 
     def order_avbl(self):
+        self.replenishment_info_id.orderpoint_id.route_id = self.route_id
         self.replenishment_info_id.orderpoint_id.qty_to_order = self.free_qty
-        return self.order_all()
+        return {'type': 'ir.actions.act_window_close'}
 
     def order_all(self):
         self.replenishment_info_id.orderpoint_id.route_id = self.route_id

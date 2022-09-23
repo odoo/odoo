@@ -65,7 +65,7 @@
                     <field name="warning_message"/>
                 </div>
                 <footer>
-                    <button name="order_avbl" type="object" class="btn-primary">
+                    <button name="order_avbl" type="object" class="btn-primary" attrs="{'invisible': [('free_qty', '&lt;=', 0.0)]}">
                         Order <field name="free_qty"/>
                     </button>
                     <button name="order_all" type="object">
