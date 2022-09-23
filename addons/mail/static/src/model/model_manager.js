@@ -561,16 +561,8 @@ export class ModelManager {
      */
     _checkProcessedFieldsOnModels() {
         for (const model of Object.values(this.models)) {
-            switch (model.identifyingMode) {
-                case 'and':
-                    break;
-                case 'xor':
-                    if (model.__identifyingFieldNames.size === 0) {
-                        throw new Error(`No identifying fields has been specified for 'xor' identifying mode on ${model}`);
-                    }
-                    break;
-                default:
-                    throw new Error(`Unsupported identifying mode "${model.identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
+            if (!['and', 'xor'].includes(model.identifyingMode)) {
+                throw new Error(`Unsupported identifying mode "${model.identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
             }
             for (const field of model.__fieldList) {
                 const fieldName = field.fieldName;
