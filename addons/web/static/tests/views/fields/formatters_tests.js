@@ -167,12 +167,17 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloatTime(2), "02:00");
         assert.strictEqual(formatFloatTime(3.5), "03:30");
         assert.strictEqual(formatFloatTime(0.25), "00:15");
-
+        assert.strictEqual(formatFloatTime(0.25, { displaySeconds: true }), "00:15:00");
+        assert.strictEqual(formatFloatTime(0.25 + 15 / 3600, { displaySeconds: true }), "00:15:15");
+        assert.strictEqual(formatFloatTime(0.25 + 45 / 3600, { displaySeconds: true }), "00:15:45");
         assert.strictEqual(formatFloatTime(-0.5), "-00:30");
 
         const options = { noLeadingZeroHour: true };
         assert.strictEqual(formatFloatTime(2, options), "2:00");
         assert.strictEqual(formatFloatTime(3.5, options), "3:30");
+        assert.strictEqual(formatFloatTime(3.5, { ...options, displaySeconds: true }), "3:30:00");
+        assert.strictEqual(formatFloatTime(3.5 + 15 / 3600, { ...options, displaySeconds: true }), "3:30:15");
+        assert.strictEqual(formatFloatTime(3.5 + 45 / 3600, { ...options, displaySeconds: true }), "3:30:45");
         assert.strictEqual(formatFloatTime(-0.5, options), "-0:30");
     });
 
