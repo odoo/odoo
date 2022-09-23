@@ -44,7 +44,7 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         trigger: '[name="body_arch"] iframe .o_editable h1',
         run: () => {},
     }, {
-        trigger: 'input[name="subject"]',
+        trigger: 'input#subject',
         run: 'text Test',
     }, {
         trigger: '.o_form_view', // blur previous input
