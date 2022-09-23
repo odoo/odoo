@@ -135,6 +135,7 @@ class ReSequenceWizard(models.TransientModel):
         if self.move_ids.journal_id and self.move_ids.journal_id.restrict_mode_hash_table:
             if self.ordering == 'date':
                 raise UserError(_('You can not reorder sequence by date when the journal is locked with a hash.'))
+        self.move_ids._check_fiscalyear_lock_date()
         self.env['account.move'].browse(int(k) for k in new_values.keys()).name = False
         for move_id in self.move_ids:
             if str(move_id.id) in new_values:
