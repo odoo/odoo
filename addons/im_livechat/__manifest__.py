@@ -50,7 +50,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/components/*/*',
         ],
         'web.assets_frontend': [
-            ('include', 'mail.assets_public_livechat'),
+            ('include', 'im_livechat.assets_public_livechat'),
             'im_livechat/static/src/public/main.js',
             'im_livechat/static/src/services/*.js',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
@@ -82,7 +82,7 @@ Help your customers with this chat, and analyse their feedback.
         'mail.assets_messaging': [
             'im_livechat/static/src/models/*.js',
         ],
-        'mail.assets_public_livechat': [
+        'im_livechat.assets_public_livechat': [
             ('include', 'mail.assets_core_messaging'),
             'im_livechat/static/src/legacy/models/*',
             'im_livechat/static/src/legacy/widgets/*',
@@ -202,7 +202,7 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/utils/*.js',
             'mail/static/src/js/emojis.js',
             'mail/static/src/component_hooks/*.js',
-            ('include', 'mail.assets_public_livechat'),
+            ('include', 'im_livechat.assets_public_livechat'),
             'mail/static/src/services/messaging_service.js',
             # Framework JS
             'bus/static/src/*.js',
