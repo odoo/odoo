@@ -251,6 +251,7 @@ export class MockServer {
             doc = arch;
         }
         const editableView = editable && this._editableNode(doc, modelName);
+        const onchangeAbleView = this._onchangeAbleView(doc);
         const inTreeView = ["tree", "list"].includes(doc.tagName);
         const inFormView = doc.tagName === "form";
         // mock _postprocess_access_rights
@@ -417,7 +418,7 @@ export class MockServer {
                 });
             }
             // add onchanges
-            if (name in onchanges) {
+            if (onchangeAbleView && name in onchanges) {
                 node.setAttribute("on_change", "1");
             }
         });
@@ -482,6 +483,18 @@ export class MockServer {
             }
             default:
                 return false;
+        }
+    }
+
+    _onchangeAbleView(node) {
+        if (node.tagName === "form") {
+            return true;
+        }
+        else if (node.tagName === "tree") {
+            return true;
+        }
+        else if (node.tagName === "kanban") {
+            return true;
         }
     }
 

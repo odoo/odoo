@@ -1118,7 +1118,8 @@ actual arch.
             self._raise_view_error(_('Model not found: %(model)s', model=model_name), root)
         model = self.env[model_name]
 
-        self._postprocess_on_change(root, model)
+        if self._onchange_able_view(root):
+            self._postprocess_on_change(root, model)
 
         name_manager = NameManager(model, parent=parent_name_manager)
 
@@ -1326,6 +1327,20 @@ actual arch.
             node.get('readonly') not in ('1', 'True')
             or get_dict_asts(node.get('attrs') or "{}")
         )
+
+    def _onchange_able_view(self, node):
+        func = getattr(self, f"_onchange_able_view_{node.tag}", None)
+        if func is not None:
+            return func(node)
+
+    def _onchange_able_view_form(self, node):
+        return True
+
+    def _onchange_able_view_tree(self, node):
+        return True
+
+    def _onchange_able_view_kanban(self, node):
+        return True
 
     #-------------------------------------------------------------------
     # view validation
