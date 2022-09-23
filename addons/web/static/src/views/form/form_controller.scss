@@ -633,8 +633,8 @@
                     }
 
                     // Full width on first x2many or on second x2many if first is invisible
-                    &.o_field_x2many.o_field_x2many_list,
-                    &.o_field_widget.o_invisible_modifier + .o_field_x2many.o_field_x2many_list  {
+                    .o_field_x2many.o_field_x2many_list,
+                    &.o_invisible_modifier + .o_field_widget .o_field_x2many.o_field_x2many_list  {
                         display: block;
                         width: auto;
                         @include o-form-sheet-negative-margin;
