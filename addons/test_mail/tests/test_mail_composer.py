@@ -593,14 +593,13 @@ class TestComposerInternals(TestMailComposer):
                 self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
 
                 # update with template with void values: void value is not forced in
-                # rendering mode as well as when copying template values, except for
-                # body in rendering mode
+                # rendering mode as well as when copying template values
                 composer.write({'template_id': template_void.id})
                 # currently onchange necessary
                 composer._onchange_template_id_wrapper()
 
                 if composition_mode == 'comment':
-                    self.assertFalse(composer.body, 'Void template body resets while other fields not, maybe to fix')
+                    self.assertEqual(composer.body, 'Back to my amazing body')
                     self.assertEqual(composer.mail_server_id, self.mail_server_global)
                     self.assertEqual(composer.record_name, 'Manual update')
                     self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
