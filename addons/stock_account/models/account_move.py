@@ -46,13 +46,16 @@ class AccountMove(models.Model):
             return super()._post(soft)
 
         # Create additional COGS lines for customer invoices.
-        self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
+        anglo_saxon_out_lines_vals = self._stock_account_prepare_anglo_saxon_out_lines_vals()
+        if anglo_saxon_out_lines_vals:
+            self.env['account.move.line'].create(anglo_saxon_out_lines_vals)
 
         # Post entries.
         posted = super()._post(soft)
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
-        posted._stock_account_anglo_saxon_reconcile_valuation()
+        if anglo_saxon_out_lines_vals:
+            posted._stock_account_anglo_saxon_reconcile_valuation()
         return posted
 
     def button_draft(self):
