@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
-import { timesheetUomService } from "../src/services/timesheet_uom_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { makeView, setupViewRegistries} from "@web/../tests/views/helpers";
 import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -36,7 +35,6 @@ QUnit.module("Timesheet UOM Widgets", (hooks) => {
             },
         };
         serviceRegistry.add("ui", uiService);
-        serviceRegistry.add("timesheet_uom", timesheetUomService);
         serviceRegistry.add("company", companyService, { force: true });
         patchWithCleanup(session, {
             user_companies: {

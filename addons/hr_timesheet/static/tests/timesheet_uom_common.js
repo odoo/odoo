@@ -167,9 +167,9 @@ function SetupTimesheetUOMWidgetsTestEnvironment () {
             session.uid = sessionToApply.uid;
         }
         const serviceRegistry = registry.category("services");
-        if (!serviceRegistry.contains("legacy_timesheet_uom")) {
+        if (!serviceRegistry.contains("timesheet_uom")) {
             // Remove dependency on legacy_session since we're patching the session directly
-            serviceRegistry.add("legacy_timesheet_uom", Object.assign({}, timesheetUomService, { dependencies: [] }));
+            serviceRegistry.add("timesheet_uom", Object.assign({}, timesheetUomService, { dependencies: [] }));
         }
         await makeTestEnv(); // Start services
     };

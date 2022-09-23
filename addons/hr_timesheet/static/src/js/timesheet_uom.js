@@ -178,7 +178,7 @@ const timesheetUomService = {
         return timesheetUomInfo;
     },
 };
-registry.category("services").add("legacy_timesheet_uom", timesheetUomService);
+registry.category("services").add("timesheet_uom", timesheetUomService);
 
 return {
     FieldTimesheetFactor,
