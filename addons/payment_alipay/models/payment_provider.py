@@ -41,7 +41,8 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _get_compatible_providers(self, *args, currency_id=None, **kwargs):
-        """ Override of payment to unlist Alipay providers for unsupported currencies. """
+        """ Override of payment to unlist Alipay providers when the currency is not CNY in case of
+        express checkout. """
         providers = super()._get_compatible_providers(*args, currency_id=currency_id, **kwargs)
 
         currency = self.env['res.currency'].browse(currency_id).exists()

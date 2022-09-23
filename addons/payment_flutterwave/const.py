@@ -7,6 +7,7 @@
 SUPPORTED_CURRENCIES = [
     'GBP',
     'CAD',
+    'XAF',
     'CLP',
     'COP',
     'EGP',
@@ -24,7 +25,6 @@ SUPPORTED_CURRENCIES = [
     'TZS',
     'UGX',
     'USD',
-    'XAF',
     'XOF',
     'ZMW',
 ]
