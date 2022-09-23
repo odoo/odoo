@@ -16861,7 +16861,7 @@ class BasePreferences {
         "enablePermissions": false,
         "enablePrintAutoRotate": true,
         "enableScripting": true,
-        "externalLinkTarget": 0,
+        "externalLinkTarget": 2,
         "historyUpdateUrl": false,
         "ignoreDestinationZoom": false,
         "forcePageColors": false,
