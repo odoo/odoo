@@ -2807,10 +2807,10 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["read1", "willStart"]);
 
         await click(target.querySelector(".o_form_statusbar button.p"));
-        assert.verifySteps(["read2", "willUpdateProps", "willUpdateProps"]);
+        assert.verifySteps(["willUpdateProps", "read2", "willUpdateProps", "willUpdateProps"]);
 
         await click(target.querySelector(".o_form_statusbar button.p"));
-        assert.verifySteps(["willUpdateProps", "read3", "willUpdateProps", "willUpdateProps"]);
+        assert.verifySteps(["willUpdateProps", "willUpdateProps", "read3", "willUpdateProps", "willUpdateProps"]);
     });
 
     QUnit.test("buttons in form view, new record", async function (assert) {
