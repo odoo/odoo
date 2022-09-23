@@ -66,3 +66,8 @@ class WebsiteLivechat(LivechatController):
         if visitor_sudo:
             anonymous_name = visitor_sudo.with_context(lang=visitor_sudo.lang_id.code).display_name
         return super(WebsiteLivechat, self).get_session(channel_id, anonymous_name, previous_operator_id=previous_operator_id, chatbot_script_id=chatbot_script_id, **kwargs)
+
+    def _livechat_templates_get(self):
+        return super(WebsiteLivechat, self)._livechat_templates_get() + [
+            'website_livechat/static/src/legacy/widgets/public_livechat_floating_text_view/public_livechat_floating_text_view.xml',
+        ]

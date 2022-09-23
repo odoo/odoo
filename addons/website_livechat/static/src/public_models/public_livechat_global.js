@@ -31,4 +31,11 @@ registerPatch({
             return this._super();
         },
     },
+    fields: {
+        hasWebsiteLivechatFeature: {
+            compute() {
+                return true;
+            },
+        },
+    },
 });

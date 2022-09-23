@@ -25,11 +25,12 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'data/website_livechat_chatbot_demo.xml',
     ],
     'assets': {
+        'im_livechat.assets_public_livechat': [
+            'website_livechat/static/src/public_models/*.js',
+            'website_livechat/static/src/legacy/widgets/*/*',
+        ],
         'mail.assets_messaging': [
             'website_livechat/static/src/models/*.js',
-        ],
-        'mail.assets_public_livechat': [
-            'website_livechat/static/src/public_models/*.js',
         ],
         'mail.assets_discuss_public': [
             'website_livechat/static/src/components/*/*',
@@ -58,6 +59,10 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/tests/qunit_suite_tests/**/*.js',
+        ],
+        'im_livechat.external_lib': [
+            'website_livechat/static/src/external_lib/livechat_button.js',
+            'website_livechat/static/src/legacy/public_livechat.scss',
         ],
     },
     'license': 'LGPL-3',
