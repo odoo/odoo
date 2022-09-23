@@ -1163,6 +1163,40 @@
             }),
         ]"/>
     </record>
+    <record id="account_tax_template_oss_s_iva_ns" model="account.tax.template">
+        <field name="description">No sujeto y acogidas a la OSS (Servicios)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">No sujeto y acogidas a la OSS (Servicios)</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_303_123')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_303_123')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
     <record id="account_tax_template_s_iva_ns_b" model="account.tax.template">
         <field name="description">No sujeto (Bienes)</field>
         <field name="type_tax_use">sale</field>
@@ -1189,6 +1223,40 @@
                 'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('mod_303_120')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_oss_s_iva_ns_b" model="account.tax.template">
+        <field name="description">No sujeto y acogidas a la OSS (Bienes)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">No sujeto y acogidas a la OSS (Bienes)</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_303_123')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_303_123')],
             }),
 
             (0,0, {
