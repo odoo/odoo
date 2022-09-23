@@ -3,7 +3,7 @@
 import {PageDependencies} from '@website/components/dialog/page_properties';
 import {standardFieldProps} from '@web/views/fields/standard_field_props';
 import {useInputField} from '@web/views/fields/input_field_hook';
-import {useService} from '@web/core/utils/hooks';
+import {useAutofocus, useService} from '@web/core/utils/hooks';
 import {Switch} from '@website/components/switch/switch';
 import {registry} from '@web/core/registry';
 import {formatChar} from '@web/views/fields/formatters';
@@ -16,15 +16,17 @@ const {Component, useState, onWillStart} = owl;
  */
 class PageUrlField extends Component {
     setup() {
+        this.orm = useService('orm');
+        this.serverUrl = `${window.location.origin}/`;
+        this.pageUrl = this.fieldURL;
+
         this.state = useState({
             redirect_old_url: false,
-            url: this.props.value,
+            url: this.pageUrl,
             redirect_type: '301',
         });
-        useInputField({getValue: () => this.props.value.url || this.props.value});
 
-        this.serverUrl = window.location.origin;
-        this.pageUrl = this.props.value;
+        useInputField({getValue: () => this.fieldURL});
     }
 
     get enableRedirect() {
@@ -34,6 +36,11 @@ class PageUrlField extends Component {
     onChangeRedirectOldUrl(value) {
         this.state.redirect_old_url = value;
         this.updateValues();
+    }
+
+    get fieldURL() {
+        const value = this.props.value;
+        return (value.url !== undefined ? value.url : value).replace(/^\//g, '');
     }
 
     updateValues() {
@@ -73,6 +80,7 @@ class PageNameField extends Component {
         this.pageName = this.props.value;
         this.supportedMimetypes = {};
 
+        useAutofocus({refName: 'input'});
         onWillStart(() => this.onWillStart());
     }
 
