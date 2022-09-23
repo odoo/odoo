@@ -117,6 +117,8 @@ export class SampleServer {
                 return this._mockReadProgressBar(params);
             case "read":
                 return this._mockRead(params);
+            case "name_get":
+                return this._mockNameGet(params);
         }
         // this rpc can't be mocked by the SampleServer itself, so check if there is an handler
         // in the registry: either specific for this model (with key 'model/method'), or
@@ -340,6 +342,31 @@ export class SampleServer {
     _getRandomSubRecordId() {
         return Math.floor(Math.random() * SampleServer.SUB_RECORDSET_SIZE) + 1;
     }
+
+    /**
+     * Simulate a 'name_get' operation
+     *
+     * @private
+     * @param {Object} params
+     * @param {string} params.model
+     * @param {Array[]} params.args
+     * @returns {Array[]} a list of [id, display_name]
+     */
+    _mockNameGet(params) {
+        const { model, args } = params;
+        let ids = args[0];
+        if (!args.length) {
+            throw new Error("name_get: expected one argument");
+        } else if (!ids) {
+            return [];
+        }
+        if (!Array.isArray(ids)) {
+            ids = [ids];
+        }
+        const { records } = this.data[model];
+        return ids.map((id) => [id, records.find((r) => r.id === id).display_name]);
+    }
+
     /**
      * Mocks calls to the read method.
      * @private
