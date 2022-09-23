@@ -133,8 +133,7 @@ class TestM2MGrouping(common.TransactionCase):
         # as superuser, ir.rule should not apply
         expected = """
             SELECT
-                min("test_read_group_task".id) AS id,
-                count("test_read_group_task".id) AS "user_ids_count",
+                COUNT(*) AS "user_ids_count",
                 array_agg("test_read_group_task"."name") AS "name",
                 "test_read_group_task__user_ids"."user_id" AS "user_ids"
             FROM "test_read_group_task"
@@ -178,8 +177,7 @@ class TestM2MGrouping(common.TransactionCase):
 
         expected = """
             SELECT
-                min("test_read_group_task".id) AS id,
-                count("test_read_group_task".id) AS "user_ids_count",
+                count(*) AS "user_ids_count",
                 array_agg("test_read_group_task"."name") AS "name",
                 "test_read_group_task__user_ids"."user_id" AS "user_ids"
             FROM "test_read_group_task"

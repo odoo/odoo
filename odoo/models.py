@@ -2407,7 +2407,7 @@ class BaseModel(metaclass=MetaModel):
         else:
             existing = sorted(set().union(existing, required_dates))
 
-        empty_item = {'id': False, (groupby_name.split(':')[0] + '_count'): 0}
+        empty_item = {(groupby_name.split(':')[0] + '_count'): 0}
         empty_item.update({key: False for key in aggregated_fields})
         empty_item.update({key: False for key in [group['groupby'] for group in annotated_groupbys[1:]]})
 
@@ -2461,7 +2461,7 @@ class BaseModel(metaclass=MetaModel):
             is_many2one_id = order_field.endswith(".id")
             if is_many2one_id:
                 order_field = order_field[:-3]
-            if order_field == 'id' or order_field in groupby_fields:
+            if order_field in groupby_fields:
                 order_field_name = order_field.split(':')[0]
                 if self._fields[order_field_name].type == 'many2one' and not is_many2one_id:
                     order_clause = self._generate_order_by(order_part, query)
@@ -2632,7 +2632,6 @@ class BaseModel(metaclass=MetaModel):
         data['__domain'] = expression.AND(sections)
         if len(groupby) - len(annotated_groupbys) >= 1:
             data['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
-        del data['id']
         return data
 
     @api.model
@@ -2805,7 +2804,7 @@ class BaseModel(metaclass=MetaModel):
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
 
         query = """
-            SELECT min("%(table)s".id) AS id, count("%(table)s".id) AS "%(count_field)s" %(extra_fields)s
+            SELECT COUNT(*) AS "%(count_field)s" %(extra_fields)s
             FROM %(from)s
             %(where)s
             %(groupby)s
@@ -2813,7 +2812,6 @@ class BaseModel(metaclass=MetaModel):
             %(limit)s
             %(offset)s
         """ % {
-            'table': self._table,
             'count_field': count_field,
             'extra_fields': prefix_terms(',', select_terms),
             'from': from_clause,
