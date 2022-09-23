@@ -136,7 +136,7 @@ function addOnChanges(modelName, onChanges) {
             if (!Object.prototype.hasOwnProperty.call(onChange, 'methodName')) {
                 throw new Error("at least one onChange definition lacks a methodName (the name of the method to be called on change).");
             }
-            if (!Array.isArray(onChange.dependencies) || onChange.dependencies.some(d => typeof d !== 'string')) {
+            if (!Array.isArray(onChange.dependencies)) {
                 throw new Error("onChange dependencies must be an array of strings.");
             }
             if (typeof onChange.methodName !== 'string') {
@@ -148,6 +148,16 @@ function addOnChanges(modelName, onChanges) {
                     throw new Error(`unknown key "${key}" in onChange definition. Allowed keys: ${allowedKeys.join(", ")}.`);
                 }
             }
+            // paths of dependencies are splitted now to avoid having to do it
+            // each time the path is followed.
+            const splittedDependencies = [];
+            for (const dependency of onChange.dependencies) {
+                if (typeof dependency !== 'string') {
+                    throw new Error("onChange dependencies must be an array of strings.");
+                }
+                splittedDependencies.push(dependency.split('.'));
+            }
+            onChange.dependencies = splittedDependencies;
         }
     }, `Cannot add onChanges to model "${modelName}": `);
     registry.get(modelName).get('onChanges').push(...onChanges);

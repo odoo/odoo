@@ -6,15 +6,12 @@
  * is undefined.
  *
  * @param {Record} record
- * @param {string} relatedPath field names, dot separated to follow relations
+ * @param {string[]} relatedPath Array of field names.
  * @returns {any}
  */
 export function followRelations(record, relatedPath) {
     let target = record;
-    for (const field of relatedPath.split('.')) {
-        if (!target.constructor.__fieldMap.has(field)) {
-            throw Error(`field(${field}) does not exist on ${target}`);
-        }
+    for (const field of relatedPath) {
         target = target[field];
         if (!target) {
             break;
