@@ -14,7 +14,6 @@
                                 'border-top border-start': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog and chatterTopbar.chatter.hasExternalBorder,
                             }"
                             t-att-disabled="!chatterTopbar.chatter.hasWriteAccess"
-                            title="Send a message"
                             data-hotkey="m"
                             t-on-click="chatterTopbar.chatter.onClickSendMessage"
                         >
@@ -29,21 +28,20 @@
                             }"
                             t-att-disabled="!chatterTopbar.chatter.hasWriteAccess"
                             t-on-click="chatterTopbar.chatter.onClickLogNote"
-                            title="Log a note"
                             data-hotkey="shift+m"
                         >
                             Log note
                         </button>
                     </t>
                     <t t-if="chatterTopbar.chatter.hasActivities">
-                        <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasWriteAccess" t-on-click="chatterTopbar.chatter.onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
+                        <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasWriteAccess" t-on-click="chatterTopbar.chatter.onClickScheduleActivity" data-hotkey="shift+a">
                             <i class="fa fa-clock-o me-1"/>
                             <span>Schedule activity</span>
                         </button>
                     </t>
                     <div class="flex-grow-1"/>
                         <div class="o_ChatterTopbar_rightSection flex-grow-1 flex-shrink-0 justify-content-end d-flex">
-                            <button t-if="chatterTopbar.chatter.thread.allAttachments.length === 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonAddAttachments btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasWriteAccess" t-on-click="chatterTopbar.chatter.onClickButtonAddAttachments" title="Add Attachments">
+                            <button t-if="chatterTopbar.chatter.thread.allAttachments.length === 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonAddAttachments btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasWriteAccess" t-on-click="chatterTopbar.chatter.onClickButtonAddAttachments" >
                                 <i class="fa fa-paperclip me-1" role="img" aria-label="Attachments"/>
                                 <t t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading">
                                     <span class="o_ChatterTopbar_buttonAddAttachmentsText">Attach files</span>
@@ -52,7 +50,7 @@
                                     <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
                                 </t>
                             </button>
-                            <button t-if="chatterTopbar.chatter.thread.allAttachments.length > 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonToggleAttachments btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasReadAccess" t-att-aria-expanded="chatterTopbar.chatter.attachmentBoxView ? 'true' : 'false'" t-on-click="chatterTopbar.chatter.onClickButtonToggleAttachments" title="Show Attachments">
+                            <button t-if="chatterTopbar.chatter.thread.allAttachments.length > 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonToggleAttachments btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasReadAccess" t-att-aria-expanded="chatterTopbar.chatter.attachmentBoxView ? 'true' : 'false'" t-on-click="chatterTopbar.chatter.onClickButtonToggleAttachments">
                                 <i class="fa fa-paperclip me-1" role="img" aria-label="Attachments"/>
                                 <t t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading">
                                     <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount" t-esc="chatterTopbar.attachmentButtonText"/>
@@ -76,7 +74,7 @@
                         </div>
                 </div>
                 <t t-if="chatterTopbar.chatter.hasTopbarCloseButton">
-                    <button class="o_ChatterTopbar_buttonClose btn btn-dark flex-shrink-0 rounded-bottom-3" title="Close" t-on-click="chatterTopbar.chatter.onClickChatterTopbarClose">
+                    <button class="o_ChatterTopbar_buttonClose btn btn-dark flex-shrink-0 rounded-bottom-3" aria-label="Close" t-on-click="chatterTopbar.chatter.onClickChatterTopbarClose">
                         <i class="oi oi-large oi-close"/>
                     </button>
                 </t>
