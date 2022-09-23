@@ -66,7 +66,7 @@ export const computeReportMeasures = (
             continue;
         }
         if (
-            ["integer", "float", "monetary"].includes(field.type) ||
+            field.group_operator !== undefined ||
             additionalMeasures.includes(fieldName)
         ) {
             measures[fieldName] = field;

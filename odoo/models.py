@@ -2477,8 +2477,6 @@ class BaseModel(metaclass=MetaModel):
                 orderby_terms.append(' '.join(order_split))
             elif order_field not in self._fields:
                 raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
-            elif order_field == 'sequence':
-                pass
             else:
                 # Cannot order by a field that will not appear in the results (needs to be grouped or aggregated)
                 _logger.warning('%s: read_group order by `%s` ignored, cannot sort on empty columns (not grouped/aggregated)',
@@ -2742,8 +2740,6 @@ class BaseModel(metaclass=MetaModel):
         fnames = []                     # list of fields to flush
 
         for fspec in fields:
-            if fspec == 'sequence':
-                continue
             if fspec == '__count':
                 # the web client sometimes adds this pseudo-field in the list
                 continue
