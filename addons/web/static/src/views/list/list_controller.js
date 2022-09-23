@@ -86,7 +86,10 @@ export class ListController extends Component {
                 ? !fields.x_active.readonly
                 : false;
         useSubEnv({ model: this.model }); // do this in useModel?
-        useViewButtons(this.model, this.rootRef);
+        useViewButtons(this.model, this.rootRef, {
+            beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
+            afterExecuteAction: this.afterExecuteActionButton.bind(this),
+        });
         useSetupView({
             rootRef: this.rootRef,
             beforeLeave: async () => {
@@ -451,6 +454,10 @@ export class ListController extends Component {
             record.toggleSelection(false);
         });
     }
+
+    async beforeExecuteActionButton(clickParams) {}
+
+    async afterExecuteActionButton(clickParams) {}
 }
 
 ListController.template = `web.ListView`;
