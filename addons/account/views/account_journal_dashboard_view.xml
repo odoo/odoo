@@ -79,7 +79,7 @@
 
                     <t t-name="HasSequenceHoles">
                         <field name="has_sequence_holes" invisible="1"/>
-                        <a t-if="record.has_sequence_holes.raw_value" name="show_sequence_holes" type="object" class="text-warning">
+                        <a t-if="record.has_sequence_holes.raw_value and journal_type == 'sale'" name="show_sequence_holes" type="object" class="text-warning">
                             <i class="fa fa-exclamation-triangle"/>
                             Gaps in the sequence
                         </a>

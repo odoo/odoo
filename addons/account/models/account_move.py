@@ -745,6 +745,7 @@ class AccountMove(models.Model):
         self.env.cr.execute("""
             SELECT this.id
               FROM account_move this
+              JOIN res_company company ON company.id = this.company_id
          LEFT JOIN account_move other ON this.journal_id = other.journal_id
                                      AND this.sequence_prefix = other.sequence_prefix
                                      AND this.sequence_number = other.sequence_number + 1
@@ -752,6 +753,7 @@ class AccountMove(models.Model):
                AND this.sequence_number != 1
                AND this.name != '/'
                AND this.id = ANY(%(move_ids)s)
+               AND (company.fiscalyear_lock_date IS NULL OR this.date >= company.fiscalyear_lock_date)
         """, {
             'move_ids': self.ids,
         })
