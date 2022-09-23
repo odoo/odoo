@@ -7,8 +7,8 @@ from odoo import models
 class StockForecasted(models.AbstractModel):
     _inherit = 'stock.forecasted_product_product'
 
-    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
-        line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reservation)
+    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False):
+        line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit)
 
         if not move_out or not move_out.picking_id or not move_out.picking_id.sale_id:
             return line

@@ -2108,11 +2108,24 @@ Please change the quantity done or the rounding precision of your unit of measur
                                                          order='reservation_date, priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
 
-    def _rollup_move_dests(self, seen):
+    def _rollup_move_dests(self, seen=False):
+        if not seen:
+            seen = OrderedSet()
+        if self.id in seen:
+            return seen
+        seen.add(self.id)
         for dst in self.move_dest_ids:
-            if dst.id not in seen:
-                seen.add(dst.id)
-                dst._rollup_move_dests(seen)
+            dst._rollup_move_dests(seen)
+        return seen
+
+    def _rollup_move_origs(self, seen=False):
+        if not seen:
+            seen = OrderedSet()
+        if self.id in seen:
+            return seen
+        seen.add(self.id)
+        for org in self.move_orig_ids:
+            org._rollup_move_origs(seen)
         return seen
 
     def _get_forecast_availability_outgoing(self, warehouse):
@@ -2173,7 +2186,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             ins_per_product[in_.product_id.id].append({
                 'qty': in_.product_qty,
                 'move_date': in_.date,
-                'move_dests': in_._rollup_move_dests(set())
+                'move_dests': in_._rollup_move_dests()
             })
 
         result = defaultdict(lambda: (0.0, False))

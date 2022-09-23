@@ -32,20 +32,30 @@
                             class="fw-bold"/>
 
                         <t t-elif="line.reservation">
-                            Reserved from stock
-                            <button t-if="line.move_out and line.move_out.picking_id"
-                                class="btn btn-sm btn-primary"
+                            <a t-out="line.reservation.name" href="#" class="fw-bold"
+                               t-on-click.prevent="() => this.props.openView(line.reservation._name, 'form', line.reservation.id)"
+                                /> reserved
+                            <button t-if="displayReserve(line)"
+                                class="btn btn-sm btn-primary o_report_replenish_unreserve"
                                 name="unreserve_link"
-                                t-on-click="() => this._unreserve('stock.picking', line.move_out.picking_id.id)">
+                                t-on-click="() => this._unreserve(line.move_out.id)">
                                 Unreserve
                             </button>
+                        </t>
+                        <t t-elif="line.in_transit">
+                            <t t-if="line.move_out">
+                                <span>Stock In Transit</span>
+                            </t>
+                            <t t-else="">
+                                <span>Free Stock in Transit</span>
+                            </t>
                         </t>
                         <t t-elif="line.replenishment_filled">
                             <t t-if="line.document_out">Inventory On Hand
                                 <button t-if="displayReserve(line)"
                                     class="btn btn-sm btn-primary"
                                     name="reserve_link"
-                                    t-on-click="() => this._reserve('stock.picking', line.move_out.picking_id.id)">
+                                    t-on-click="() => this._reserve(line.move_out.id)">
                                     Reserve
                                 </button>
                             </t>
