@@ -576,16 +576,19 @@ class MailComposer(models.TransientModel):
                 values['attachment_ids'] = [att.id for att in template.attachment_ids]
             if template.mail_server_id:
                 values['mail_server_id'] = template.mail_server_id.id
+            if values.get('body_html'):
+                values['body'] = values.pop('body_html')
         elif template_id:
-            values = self._generate_email_for_composer(
-                template_id, [res_id],
+            values = self._generate_template_for_composer(
+                self.env['mail.template'].browse(template_id),
+                [res_id],
                 ('attachment_ids',
                  'body_html',
                  'email_cc',
                  'email_from',
                  'email_to',
                  'mail_server_id',
-                 'partner_to',
+                 'partner_ids',
                  'reply_to',
                  'report_template',
                  'subject',
@@ -633,9 +636,6 @@ class MailComposer(models.TransientModel):
                             'reply_to',
                             'subject',
                            ) if key in default_values)
-
-        if values.get('body_html'):
-            values['body'] = values.pop('body_html')
 
         # This onchange should return command instead of ids for x2many field.
         values = self._convert_to_write(values)
@@ -685,13 +685,14 @@ class MailComposer(models.TransientModel):
 
         # generate template-based values
         if self.template_id:
-            template_values = self._generate_email_for_composer(
-                self.template_id.id, res_ids,
+            template_values = self._generate_template_for_composer(
+                self.template_id,
+                res_ids,
                 ('attachment_ids',
                  'email_to',
                  'email_cc',
                  'mail_server_id',
-                 'partner_to',
+                 'partner_ids',
                  'report_template',
                 )
             )
@@ -713,23 +714,51 @@ class MailComposer(models.TransientModel):
 
         return template_values
 
-    @api.model
-    def _generate_email_for_composer(self, template_id, res_ids, render_fields):
-        """ Call email_template._generate_template(), get fields relevant for
-            mail.compose.message, transform email_cc and email_to into partner_ids """
-        returned_fields = list(render_fields) + ['partner_ids']
-        if 'report_template' in render_fields:
-            returned_fields.append('attachments')
-        values = dict.fromkeys(res_ids, False)
+    def _generate_template_for_composer(self, template, res_ids, render_fields,
+                                        partners_only=True):
+        """ Generate values based on template and relevant values for the
+        mail.compose.message wizard.
 
-        template_values = self.env['mail.template'].browse(template_id)._generate_template(
+        :param ercord template: a mail template, as during onchange mode it
+          may not be set on self (to remove when removing the onchange);
+        :param list res_ids: list of record IDs on which template is rendered;
+        :param list render_fields: list of fields to render on template;
+        :param boolean partners_only: transform emails into partners (find or
+          create new ones on the fly, see ``_generate_template_recipients``);
+
+        :returns: a dict containing all asked fields for each record ID given by
+          res_ids. Note that
+
+          * 'body' comes from template 'body_html' generation;
+          * 'attachments' is an additional key coming with 'attachment_ids' due
+            to report generation (in the format [(report_name, data)] where data
+            is base64 encoded);
+          * 'partner_ids' is returned due to recipients generation that gives
+            partner ids coming from default computation as well as from email
+            to partner convert (see ``partners_only``);
+        """
+        self.ensure_one()
+
+        # some fields behave / are named differently on template model
+        mapping = {'attachments': 'report_template',
+                   'body': 'body_html',
+                   'partner_ids': 'partner_to',
+                  }
+        template_fields = {mapping.get(fname, fname) for fname in render_fields}
+        template_values = template._generate_template(
             res_ids,
-            render_fields,
-            partners_only=True
+            template_fields,
+            partners_only=partners_only
         )
-        for res_id in res_ids:
-            res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
-            res_id_values['body'] = res_id_values.pop('body_html', '')
-            values[res_id] = res_id_values
 
-        return values
+        exclusion_list = ('email_cc', 'email_to') if partners_only else ()
+        mapping = {'body_html': 'body'}
+        render_results = {}
+        for res_id in res_ids:
+            render_results[res_id] = {
+                mapping.get(fname, fname): template_values[res_id][fname]
+                for fname, value in template_values[res_id].items()
+                if fname not in exclusion_list and value
+            }
+
+        return render_results
