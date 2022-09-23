@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
-import { ProductConfiguratorModal } from "@sale_product_configurator/js/product_configurator_modal";
+import { OptionalProductsModal } from "@sale_product_configurator/js/product_configurator_modal";
 import {
     selectOrCreateProduct,
     getSelectedVariantValues,
@@ -119,7 +119,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
             product_custom_attribute_values: customAttributeValues,
             no_variant_attribute_values: noVariantAttributeValues,
         };
-        const optionalProductsModal = new ProductConfiguratorModal(null, {
+        const optionalProductsModal = new OptionalProductsModal(null, {
             rootProduct: this.rootProduct,
             pricelistId: pricelistId,
             okButtonText: this.env._t("Confirm"),
