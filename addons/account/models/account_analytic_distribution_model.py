@@ -7,7 +7,7 @@ class AccountAnalyticDistributionModel(models.Model):
     _inherit = 'account.analytic.distribution.model'
 
     account_prefix = fields.Char(
-        string='Financial Accounts Prefix',
+        string='Accounts Prefix',
         help="Prefix that defines which accounts from the financial accounting this model should apply on.",
     )
     product_id = fields.Many2one(
