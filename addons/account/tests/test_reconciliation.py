@@ -325,6 +325,60 @@ class TestReconciliationExec(TestReconciliation):
             {'debit': 0.0,      'credit': 40.0,     'amount_currency': 0.0, 'currency_id': False},
         ])
 
+    def test_multicurrency_revert_entry_reconcile(self):
+        company = self.env.ref('base.main_company')
+        currency = self.currency_usd_id
+
+        foreign_recv_account = self.env['account.account'].create({
+            'name': 'RCV',
+            'code': 'RCV',
+            'user_type_id': self.env.ref('account.data_account_type_receivable').id,
+            'company_id': company.id,
+            'currency_id': currency,
+            'reconcile': True,
+        })
+        self.expense_account.write({'reconcile': True})
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-07-01',
+            'rate': 1.5,
+            'currency_id': currency,
+            'company_id': company.id
+        })
+
+        move = self.env['account.move'].create(
+            {
+                'name': "Misc move",
+                'journal_id': self.general_journal.id,
+                'line_ids': [(0, 0, {
+                    'name': 'line 1',
+                    'account_id': foreign_recv_account.id,
+                    'debit': 700.0,
+                    'credit': 0.0,
+                    'currency_id': currency,
+                    'amount_currency': 1000.0,
+                }), (0, 0, {
+                    'name': 'line 2',
+                    'account_id': foreign_recv_account.id,
+                    'debit': 0.0,
+                    'credit': 666.67,
+                    'currency_id': currency,
+                    'amount_currency': -1000.0,
+                }), (0, 0, {
+                    'name': 'line 3',
+                    'account_id': self.expense_account.id,
+                    'debit': 666.67,
+                    'credit': 0.0,
+                }), (0, 0, {
+                    'name': 'line 4',
+                    'account_id': self.expense_account.id,
+                    'debit': 0.0,
+                    'credit': 700.0,
+                })]
+            }
+        )
+        move._reverse_moves([{'date': fields.Date.today()}], cancel=True)
+        self.assertTrue(all(move.line_ids.mapped('reconciled')), "Entry should be fully reconciled with reverse move")
+
     def test_statement_euro_invoice_usd_transaction_chf(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 42, 50, self.currency_swiss_id)
         self.assertRecordValues(customer_move_lines, [

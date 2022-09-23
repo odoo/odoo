@@ -3916,6 +3916,11 @@ class AccountMoveLine(models.Model):
                     exchange_move_id = exchange_move.id
                 else:
                     missing_exchange_difference = True
+            elif to_balance:
+                for aml_to_balance, total in to_balance.values():
+                    if not total:
+                        aml_to_balance.reconcile()
+
             if not missing_exchange_difference:
                 #mark the reference of the full reconciliation on the exchange rate entries and on the entries
                 self.env['account.full.reconcile'].create({
