@@ -121,7 +121,8 @@ class Page(models.Model):
         page = self.browse(int(page_id))
         copy_param = dict(name=page_name or page.name, website_id=self.env['website'].get_current_website().id)
         if page_name:
-            copy_param['url'] = self.get_valid_page_url(page_name)
+            url = '/' + slugify(page_name, max_length=1024, path=True)
+            copy_param['url'] = self.env['website'].get_unique_path(url)
 
         new_page = page.copy(copy_param)
         # Should not clone menu if the page was cloned from one website to another
@@ -158,17 +159,16 @@ class Page(models.Model):
 
             # If URL has been edited, slug it
             if 'url' in vals:
-                url = vals['url']
+                url = vals['url'] or ''
                 redirect_old_url = redirect_type = None
                 # TODO This should be done another way after the backend/frontend merge
                 if isinstance(url, dict):
                     redirect_old_url = url.get('redirect_old_url')
                     redirect_type = url.get('redirect_type')
                     url = url.get('url')
-                if not url.startswith('/'):
-                    url = '/' + url
+                url = '/' + slugify(url, max_length=1024, path=True)
                 if page.url != url:
-                    url = self.get_valid_page_url(url, website_id)
+                    url = self.env['website'].with_context(website_id=website_id).get_unique_path(url)
                     page.menu_ids.write({'url': url})
                     if redirect_old_url:
                         self.env['website.rewrite'].create({
@@ -270,10 +270,6 @@ class Page(models.Model):
         if search and with_description:
             results = results.filtered(lambda result: filter_page(search, result, results))
         return results, count
-
-    def get_valid_page_url(self, page_url, website_id=False):
-        url = '/' + slugify(page_url, max_length=1024, path=True)
-        return self.env['website'].with_context(website_id=website_id).get_unique_path(url)
 
     def action_page_debug_view(self):
         return {
