@@ -107,7 +107,7 @@
                     <field name="base_unit_count" attrs="{'invisible': [('product_variant_count', '>', 1)]}" />
                     <field name="base_unit_id" options="{'no_open': True}" attrs="{'invisible': [('product_variant_count', '>', 1)]}" />
                     <span attrs="{'invisible': ['|', ('base_unit_price','=', 0), ('product_variant_count', '>', 1)]}">
-                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
                     </span>
                     <span class='text-muted' attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}">Based on variants</span>
                 </div>
@@ -126,7 +126,7 @@
                     <field name="base_unit_count"/>
                     <field name="base_unit_id" options="{'no_open': True}"/>
                     <span attrs="{'invisible': [('base_unit_price','=', 0)]}">
-                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
                     </span>
                 </div>
             </xpath>
@@ -179,7 +179,7 @@
                     <field name="base_unit_count"/>
                     <field name="base_unit_id" options="{'no_open': True}"/>
                     <span attrs="{'invisible': [('base_unit_price','=', 0)]}">
-                        (<field name="base_unit_price"/> / <field name="base_unit_name"/>)
+                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
                     </span>
                 </div>
             </field>
