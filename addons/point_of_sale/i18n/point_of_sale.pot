@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"PO-Revision-Date: 2022-09-23 08:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -773,8 +773,8 @@ msgid "Bank Payments"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_account_bank_statement
-msgid "Bank Statement"
+#: model:ir.model,name:point_of_sale.model_account_bank_statement_line
+msgid "Bank Statement Line"
 msgstr ""
 
 #. module: point_of_sale
@@ -952,11 +952,6 @@ msgid "Cash"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_cash_box_out
-msgid "Cash Box Out"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
@@ -977,16 +972,15 @@ msgid "Cash Journal"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_line_ids
+msgid "Cash Lines"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #, python-format
 msgid "Cash Out"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_id
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Cash Register"
 msgstr ""
 
 #. module: point_of_sale
@@ -1006,8 +1000,15 @@ msgid "Cash Roundings"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_ids
-msgid "Cash Statements"
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash difference observed during the counting (Loss)"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash difference observed during the counting (Profit)"
 msgstr ""
 
 #. module: point_of_sale
@@ -1018,20 +1019,9 @@ msgid "Cash in/out of %s is ignored."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "Cash register for %s"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_rounding_method
 msgid "Cash rounding"
-msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
-msgid "Cashbox balance"
 msgstr ""
 
 #. module: point_of_sale
@@ -1711,11 +1701,6 @@ msgid "Default"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__account_id
-msgid "Default Account"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
 msgid "Default Account Receivable (PoS)"
 msgstr ""
@@ -1836,7 +1821,6 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_difference
 #, python-format
 msgid "Difference"
 msgstr ""
@@ -2153,7 +2137,6 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_expected
 #, python-format
 msgid "Expected"
 msgstr ""
@@ -2958,12 +2941,6 @@ msgid "Line No"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
-#, python-format
-msgid "List of Cash Registers"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Load all remaining partners in the background"
 msgstr ""
@@ -3295,12 +3272,6 @@ msgid "No product found for"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
-#, python-format
-msgid "No sequence defined on the journal"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "No sessions found"
 msgstr ""
@@ -3571,11 +3542,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Opening cash"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
-msgid "Opening/Closing Values"
 msgstr ""
 
 #. module: point_of_sale
@@ -4103,6 +4069,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Please go on the %s journal and define a Loss Account. This account will be "
+"used to record cash difference."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"Please go on the %s journal and define a Profit Account. This account will "
+"be used to record cash difference."
 msgstr ""
 
 #. module: point_of_sale
@@ -5283,7 +5265,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__pos_session_id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__session_id
@@ -5470,14 +5452,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_skip_screen
 msgid "Skip Preview Screen"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
-"Cash Registers: %r"
 msgstr ""
 
 #. module: point_of_sale
@@ -5714,11 +5688,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "TOTAL"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
-msgid "Take Money In/Out"
 msgstr ""
 
 #. module: point_of_sale
@@ -6157,9 +6126,9 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
-msgid "There is no cash register for this PoS Session"
+msgid "There is no cash payment method for this PoS Session"
 msgstr ""
 
 #. module: point_of_sale
@@ -6809,14 +6778,6 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You can't validate a bank statement that is used in an opened Session of a "
-"Point of Sale."
-msgstr ""
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6840,7 +6801,8 @@ msgstr ""
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
 #, python-format
-msgid "You cannot delete a bank statement linked to Point of Sale session."
+msgid ""
+"You cannot delete a bank statement line linked to Point of Sale session."
 msgstr ""
 
 #. module: point_of_sale
@@ -6873,18 +6835,6 @@ msgstr ""
 msgid ""
 "You have enabled the \"Identify Customer\" option for %s payment method,but "
 "the order %s does not contain a customer."
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
-#, python-format
-msgid ""
-"You have to define which payment method must be available in the point of "
-"sale by reusing existing bank and cash through \"Accounting / Configuration "
-"/ Journals / Journals\". Select a journal and check the field \"PoS Payment "
-"Method\" from the \"Point of Sale\" tab. You can also create new payment "
-"methods directly from menu \"PoS Backend / Configuration / Payment "
-"Methods\"."
 msgstr ""
 
 #. module: point_of_sale

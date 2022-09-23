@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"PO-Revision-Date: 2022-09-23 08:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -99,6 +99,12 @@ msgstr ""
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "%s [reverted]"
 msgstr ""
 
 #. module: stock
@@ -4493,12 +4499,6 @@ msgid "New Transfer"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
-#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -6453,6 +6453,11 @@ msgid "Reverse Transfer"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
+msgid "Revert Inventory Adjustment"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
 #: model:ir.model.fields,field_description:stock.field_stock_route__name
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_id
@@ -7532,6 +7537,12 @@ msgid "The inter-warehouse transfers have been generated"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "The inventory adjustments have been reverted."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr ""
@@ -7668,6 +7679,12 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "There are no inventory adjustments to revert."
 msgstr ""
 
 #. module: stock
