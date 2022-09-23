@@ -466,6 +466,15 @@ class MailRenderMixin(models.AbstractModel):
         return rendered
 
     @api.model
+    def _process_scheduled_date(self, scheduled_date):
+        if scheduled_date:
+            # parse scheduled_date to make it timezone agnostic UTC as expected
+            # by the ORM
+            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
+            scheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+        return scheduled_date
+
+    @api.model
     def _render_template(self, template_src, model, res_ids, engine='inline_template',
                          add_context=None, options=None):
         """ Render the given string on records designed by model / res_ids using
