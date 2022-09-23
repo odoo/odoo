@@ -6,6 +6,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { getNextTabableElement, getPreviousTabableElement } from "@web/core/utils/ui";
 import { usePosition } from "@web/core/position_hook";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { shallowEqual } from "@web/core/utils/arrays";
 import { AnalyticAutoComplete } from "../autocomplete/autocomplete";
 
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -59,6 +60,8 @@ export class AnalyticDistribution extends Component {
             },
             fieldString: this.env._t("Analytic Distribution Template"),
         });
+        this.lastProduct = this.props.product_field ? this.props.record.data[this.props.product_field] : false;
+        this.lastAccount = this.props.account_field ? this.props.record.data[this.props.account_field] : false;
     }
 
     // Lifecycle
@@ -73,22 +76,21 @@ export class AnalyticDistribution extends Component {
         // or a model applies that contains unavailable plans
         // This should only execute when these fields have changed, therefore we use the `_field` props.
         // (consider including the plans in the computed json, python side)
-        const valueChanged = JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value);
-        if (this.applicabilityParamsChanged(nextProps) || valueChanged) {
-            await this.fetchAllPlans(nextProps);
+        let valueChanged = JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value);
+        if (!this.props.force_applicability) {
+            const currentProduct = this.props.product_field ? this.props.record.data[this.props.product_field] : false;
+            const currentAccount = this.props.account_field ? this.props.record.data[this.props.account_field] : false;
+            const shouldFetchPlans = valueChanged || !shallowEqual(this.lastProduct, currentProduct) || !shallowEqual(this.lastAccount, currentAccount);
+            if (shouldFetchPlans) {
+                this.lastProduct = currentProduct;
+                this.lastAccount = currentAccount;
+                await this.fetchAllPlans(nextProps);
+                valueChanged = true;
+            }
+        }
+        if (valueChanged) {
             await this.formatData(nextProps);
         }
-    }
-
-    applicabilityParamsChanged(nextProps) {
-        if (this.props.force_applicability) {
-            return false;
-        }
-        if (this.props.account_field && this.props.record.data[this.props.account_field] !== nextProps.record.data[this.props.account_field] ||
-            this.props.product_field && this.props.record.data[this.props.product_field] !== nextProps.record.data[this.props.product_field]) {
-            return true;
-        }
-        return false;
     }
 
     async formatData(nextProps) { 
