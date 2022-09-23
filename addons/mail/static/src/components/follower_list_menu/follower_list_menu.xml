@@ -5,8 +5,8 @@
         <t t-if="followerListMenuView">
             <div class="o_FollowerListMenu position-relative d-flex" t-attf-class="{{ className }}" t-on-keydown="followerListMenuView.onKeydown" t-ref="root">
                 <div class="o_FollowerListMenu_followers d-flex" t-ref="dropdown">
-                    <button class="o_FollowerListMenu_buttonFollowers o_ChatterTopbar_button btn btn-link" t-att-disabled="followerListMenuView.isDisabled" t-att-aria-expanded="followerListMenuView.isDropdownOpen ? 'true' : 'false'" t-on-click="followerListMenuView.onClickFollowersButton" title="Show Followers">
-                        <i class="fa fa-user" role="img" aria-label="Followers"/>
+                    <button class="o_FollowerListMenu_buttonFollowers o_ChatterTopbar_button btn btn-link" t-att-disabled="followerListMenuView.isDisabled" t-att-aria-expanded="followerListMenuView.isDropdownOpen ? 'true' : 'false'" t-on-click="followerListMenuView.onClickFollowersButton" aria-label="Show Followers">
+                        <i class="fa fa-user" role="img"/>
                         <span class="o_FollowerListMenu_buttonFollowersCount ps-1" t-esc="followerListMenuView.followerViews.length"/>
                     </button>
 
