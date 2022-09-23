@@ -200,16 +200,13 @@
 // @param {integer} [$index] - the position where to add the support font, if
 //        not given, it will be placed before the generic one.
 @function o-add-unicode-support-font($font, $index: false) {
-    @if $index == false {
-        $index: length($font);
-    }
-
     $-with-support-font: ();
     @for $i from 1 through length($font) {
-        @if $i == $index {
+        $-part: nth($font, $i);
+        @if $i == $index or $-part == serif or $-part == sans-serif {
             $-with-support-font: append($-with-support-font, 'Odoo Unicode Support Noto', $separator: comma);
         }
-        $-with-support-font: append($-with-support-font, nth($font, $i), $separator: comma);
+        $-with-support-font: append($-with-support-font, $-part, $separator: comma);
     }
 
     @return $-with-support-font;
