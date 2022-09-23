@@ -329,6 +329,59 @@ class MailTemplate(models.Model):
 
         return render_results
 
+    def _generate_template_scheduled_date(self, res_ids, render_results=None):
+        """ Render scheduled date based on template 'self'. Specific parsing is
+        done to ensure value matches ORM expected value: UTC but without
+        timezone set in value.
+
+        :param list res_ids: list of record IDs on which template is rendered;
+        :param dict render_results: res_ids-based dictionary of render values.
+          For each res_id, a dict of values based on render_fields is given;
+
+        :return: updated (or new) render_results;
+        """
+        self.ensure_one()
+        if render_results is None:
+            render_results = {}
+
+        scheduled_dates = self._render_field('scheduled_date', res_ids)
+        for res_id in res_ids:
+            scheduled_date = self._process_scheduled_date(scheduled_dates.get(res_id))
+            render_results.setdefault(res_id, {})['scheduled_date'] = scheduled_date
+
+        return render_results
+
+    def _generate_template_static_values(self, res_ids, render_fields, render_results=None):
+        """ Return values based on template 'self'. Those are not rendered nor
+        dynamic, just static values used for configuration of emails.
+
+        :param list res_ids: list of record IDs on which template is rendered;
+        :param list render_fields: list of fields to render, currently limited
+          to a subset (i.e. auto_delete, mail_server_id, model, res_id);
+        :param dict render_results: res_ids-based dictionary of render values.
+          For each res_id, a dict of values based on render_fields is given;
+
+        :return: updated (or new) render_results;
+        """
+        self.ensure_one()
+        if render_results is None:
+            render_results = {}
+
+        for res_id in res_ids:
+            values = render_results.setdefault(res_id, {})
+
+            # technical settings
+            if 'auto_delete' in render_fields:
+                values['auto_delete'] = self.auto_delete
+            if 'mail_server_id' in render_fields:
+                values['mail_server_id'] = self.mail_server_id.id
+            if 'model' in render_fields:
+                values['model'] = self.model
+            if 'res_id' in render_fields:
+                values['res_id'] = res_id or False
+
+        return render_results
+
     def _generate_template(self, res_ids, render_fields,
                            find_or_create_partners=False):
         """ Render values from template 'self' on records given by 'res_ids'.
@@ -354,6 +407,7 @@ class MailTemplate(models.Model):
             'email_to',  # recipients
             'partner_to',  # recipients
             'report_template',  # attachments
+            'scheduled_date',  # specific
             # not rendered (static)
             'auto_delete',
             'mail_server_id',
@@ -383,26 +437,19 @@ class MailTemplate(models.Model):
                     find_or_create_partners=find_or_create_partners
                 )
 
-            # add values static for all res_ids
-            for res_id in template_res_ids:
-                values = render_results[res_id]
-                if values.get('body_html'):
-                    values['body'] = tools.html_sanitize(values['body_html'])
-                # if asked in fields to return, parse generated date into tz agnostic UTC as expected by ORM
-                scheduled_date = values.pop('scheduled_date', None)
-                if 'scheduled_date' in render_fields and scheduled_date:
-                    parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
-                    values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+            # render scheduled_date
+            if 'scheduled_date' in render_fields_set:
+                template._generate_template_scheduled_date(
+                    template_res_ids,
+                    render_results=render_results
+            )
 
-                # technical settings
-                if 'auto_delete' in render_fields:
-                    values['auto_delete'] = template.auto_delete
-                if 'mail_server_id' in render_fields:
-                    values['mail_server_id'] = template.mail_server_id.id
-                if 'model' in render_fields:
-                    values['model'] = template.model
-                if 'res_id' in render_fields:
-                    values['res_id'] = res_id or False
+            # add values static for all res_ids
+            template._generate_template_static_values(
+                template_res_ids,
+                render_fields_set,
+                render_results=render_results
+            )
 
             # generate attachments if requested
             if render_fields_set & {'attachment_ids', 'report_template'}:
