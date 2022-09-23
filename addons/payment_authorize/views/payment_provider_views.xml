@@ -27,15 +27,14 @@
                 <field name="authorize_payment_method_type"
                        attrs="{'invisible': [('code', '!=', 'authorize')], 'required':[('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
             </field>
-            <field name="available_country_ids" position="after">
-                <label for="authorize_currency_id" string="Currency" attrs="{'invisible': [('code', '!=', 'authorize')]}"/>
-                <div  class="o_row" col="2" attrs="{'invisible': [('code', '!=', 'authorize')]}">
-                    <field name="authorize_currency_id"/>
-                    <button class="oe_link" icon="fa-refresh" type="object"
-                            name="action_update_merchant_details"
-                            string="Set Account Currency"/>
-                </div>
-            </field>
+            <div name="available_currencies" position="inside">
+                <button string="Set Account Currency"
+                        type="object"
+                        name="action_update_merchant_details"
+                        attrs="{'invisible': [('code', '!=', 'authorize')]}"
+                        icon="fa-refresh"
+                        class="oe_link"/>
+            </div>
         </field>
     </record>
 

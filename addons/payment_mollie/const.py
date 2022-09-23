@@ -12,11 +12,37 @@ SUPPORTED_LOCALES = [
 ]
 
 # Currency codes in ISO 4217 format supported by mollie.
-# See https://docs.mollie.com/payments/multicurrency
+# Note: support varies per payment method.
+# See https://docs.mollie.com/payments/multicurrency. Last seen online: 22 September 2022.
 SUPPORTED_CURRENCIES = [
-    'AED', 'AUD', 'BGN', 'BRL', 'CAD', 'CHF',
-    'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HRK',
-    'HUF', 'ILS', 'ISK', 'JPY', 'MXN', 'MYR',
-    'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB',
-    'SEK', 'SGD', 'THB', 'TWD', 'USD', 'ZAR'
+    'AED',
+    'AUD',
+    'BGN',
+    'BRL',
+    'CAD',
+    'CHF',
+    'CZK',
+    'DKK',
+    'EUR',
+    'GBP',
+    'HKD',
+    'HRK',
+    'HUF',
+    'ILS',
+    'ISK',
+    'JPY',
+    'MXN',
+    'MYR',
+    'NOK',
+    'NZD',
+    'PHP',
+    'PLN',
+    'RON',
+    'RUB',
+    'SEK',
+    'SGD',
+    'THB',
+    'TWD',
+    'USD',
+    'ZAR'
 ]

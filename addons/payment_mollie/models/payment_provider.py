@@ -5,7 +5,7 @@ import logging
 import requests
 from werkzeug import urls
 
-from odoo import _, api, fields, models, service
+from odoo import _, fields, models, service
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_mollie.const import SUPPORTED_CURRENCIES
@@ -27,16 +27,14 @@ class PaymentProvider(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    @api.model
-    def _get_compatible_providers(self, *args, currency_id=None, **kwargs):
-        """ Override of payment to unlist Mollie providers for unsupported currencies. """
-        providers = super()._get_compatible_providers(*args, currency_id=currency_id, **kwargs)
-
-        currency = self.env['res.currency'].browse(currency_id).exists()
-        if currency and currency.name not in SUPPORTED_CURRENCIES:
-            providers = providers.filtered(lambda p: p.code != 'mollie')
-
-        return providers
+    def _get_supported_currencies(self):
+        """ Override of `payment` to return the supported currencies. """
+        supported_currencies = super()._get_supported_currencies()
+        if self.code == 'mollie':
+            supported_currencies = supported_currencies.filtered(
+                lambda c: c.name in SUPPORTED_CURRENCIES
+            )
+        return supported_currencies
 
     def _mollie_make_request(self, endpoint, data=None, method='POST'):
         """ Make a request at mollie endpoint.

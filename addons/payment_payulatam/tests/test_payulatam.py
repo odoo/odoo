@@ -12,21 +12,11 @@ from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_payulatam.controllers.main import PayuLatamController
-from odoo.addons.payment_payulatam.models.payment_provider import SUPPORTED_CURRENCIES
 from odoo.addons.payment_payulatam.tests.common import PayULatamCommon
 
 
 @tagged('post_install', '-at_install')
 class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
-
-    def test_compatibility_with_supported_currencies(self):
-        """ Test that the PayULatam provider is compatible with all supported currencies. """
-        for supported_currency_code in SUPPORTED_CURRENCIES:
-            supported_currency = self._prepare_currency(supported_currency_code)
-            compatible_providers = self.env['payment.provider']._get_compatible_providers(
-                self.company.id, self.partner.id, self.amount, currency_id=supported_currency.id
-            )
-            self.assertIn(self.payulatam, compatible_providers)
 
     def test_incompatibility_with_unsupported_currency(self):
         """ Test that the PayULatam provider is not compatible with an unsupported currency. """

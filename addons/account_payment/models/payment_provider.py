@@ -3,7 +3,7 @@
 from odoo import api, fields, models
 
 
-class Paymentprovider(models.Model):
+class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     journal_id = fields.Many2one(

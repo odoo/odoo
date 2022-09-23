@@ -3,12 +3,7 @@
 # ISO 4217 Data for currencies supported by sips
 # NOTE: these are listed on the Atos Wordline SIPS POST documentation page
 # at https://documentation.sips.worldline.com/en/WLSIPS.001-GD-Data-dictionary.html#Sips.001_DD_en-Value-currencyCode
-# Yet with the simu environment, some of these currencies are *not* working
-# I have no way to know if this is caused by the SIMU environment, or if it's
-# the doc of SIPS that lists currencies that don't work, but since this list is
-# restrictive, I'm gonna assume they are supported when using the right flow
-# and payment methods, which may not work in SIMU...
-# Since SIPS advises to use 'in production', well...
+# Last seen on: 22 September 2022.
 SUPPORTED_CURRENCIES = {
     'ARS': '032',
     'AUD': '036',

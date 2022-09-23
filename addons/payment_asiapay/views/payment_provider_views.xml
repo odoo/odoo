@@ -11,9 +11,6 @@
                     <field name="asiapay_merchant_id"
                            string="Merchant ID"
                            attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"/>
-                    <field name="asiapay_currency_id"
-                           string="Currency"
-                           attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"/>
                     <field name="asiapay_secure_hash_secret"
                            string="Secure Hash Secret"
                            attrs="{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}"
@@ -24,6 +21,9 @@
                            groups="base.group_no_one"/>
                 </group>
             </group>
+            <field name="available_currency_ids" position="attributes">
+                <attribute name="attrs">{'required': [('code', '=', 'asiapay'), ('state', '!=', 'disabled')]}</attribute>
+            </field>
         </field>
     </record>
 
