@@ -28,13 +28,16 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
     def load_templates(self, **kwargs):
-        templates = [
+        templates = self._livechat_templates_get()
+        return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
+
+    def _livechat_templates_get(self):
+        return [
             'im_livechat/static/src/legacy/widgets/feedback/feedback.xml',
             'im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml',
             'im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml',
             'im_livechat/static/src/legacy/public_livechat_chatbot.xml',
         ]
-        return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
 
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):

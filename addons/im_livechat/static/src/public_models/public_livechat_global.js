@@ -162,6 +162,11 @@ registerModel({
         hasLoadedQWebTemplate: attr({
             default: false,
         }),
+        hasWebsiteLivechatFeature: attr({
+            compute() {
+                return false;
+            },
+        }),
         history: attr({
             default: null,
         }),
