@@ -10,8 +10,6 @@ export class SaleOrderLineProductField extends Many2OneField {
 
     setup() {
         super.setup();
-        // TODO see with SAD for a better hook to catch field updates
-        // TODO how to trigger updates on all lines/parent record (matrix)
         // TODO how to trigger the _onProductUpdate only once
         //      either when both columns are shown, or when only one is...
         //      product_template_id widget should only trigger _onProductUpdate
@@ -33,7 +31,7 @@ export class SaleOrderLineProductField extends Many2OneField {
                         this._onProductUpdate();
                     }
                 } else if (this.productConfigured) {
-                    // FIXME productConfigured = temp solution
+                    // FIXME SAD productConfigured = temp solution
                     //      we need a safe way to link configurators logic
                     //      even if both template & variant columns are enabled
                     //      jQuery ???
@@ -47,17 +45,23 @@ export class SaleOrderLineProductField extends Many2OneField {
     get hasConfigurationButton() {
         return this.isConfigurableLine || this.isConfigurableTemplate;
     }
+    get isConfigurableLine() { return false; }
+    get isConfigurableTemplate() { return false; }
 
     get configurationButtonHelp() {
         return this.env._t("Edit Configuration");
     }
 
-    get ConfigurationButtonIcon() {
-        return 'btn btn-secondary fa fa-pencil';
+    get configurationButtonIcon() {
+        return 'btn btn-secondary fa ' + this.configurationButtonFAIcon();
+    }
+
+    configurationButtonFAIcon() {
+        return 'fa-pencil';
     }
 
     async _onProductTemplateUpdate() { }
-    async _onProductUpdate() { }
+    async _onProductUpdate() { } // event_booth_sale, event_sale, sale_renting
 
     onEditConfiguration() {
         if (this.isConfigurableLine) {
@@ -66,11 +70,9 @@ export class SaleOrderLineProductField extends Many2OneField {
             this._editProductConfiguration();
         }
     }
-    _editLineConfiguration() { } // event_sale, sale_renting
+    _editLineConfiguration() { } // event_booth_sale, event_sale, sale_renting
     _editProductConfiguration() { } // sale_product_configurator, sale_product_matrix
 
-    get isConfigurableLine() { return false; }
-    get isConfigurableTemplate() { return false; }
 }
 
 SaleOrderLineProductField.template = "sale.SaleProductField";
