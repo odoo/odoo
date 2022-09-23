@@ -45,7 +45,7 @@ export const presenceService = {
         browser.addEventListener('storage', onStorage);
         browser.addEventListener('focus', () => onFocusChange(true));
         browser.addEventListener('blur', () => onFocusChange(false));
-        browser.addEventListener('unload', () => onFocusChange(false));
+        browser.addEventListener('pagehide', () => onFocusChange(false));
         browser.addEventListener('click', onPresence);
         browser.addEventListener('keydown', onPresence);
 
