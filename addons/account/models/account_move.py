@@ -2314,8 +2314,11 @@ class AccountMove(models.Model):
             if (move.name and move.name != '/' and move.sequence_number not in (0, 1) and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
                 raise UserError(_('You cannot edit the journal of an account move if it already has a sequence number assigned.'))
 
-            # You can't change the date of a move being inside a locked period.
-            if move.state == "posted" and 'date' in vals and move.date != vals['date']:
+            # You can't change the date or name of a move being inside a locked period.
+            if move.state == "posted" and (
+                    ('name' in vals and move.name != vals['name'])
+                    or ('date' in vals and move.date != vals['date'])
+            ):
                 move._check_fiscalyear_lock_date()
                 move.line_ids._check_tax_lock_date()
 
