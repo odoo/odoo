@@ -58,7 +58,7 @@
 
 .o_form_view .o_mass_mailing_mailing_form,
 .o_legacy_form_view.o_mass_mailing_mailing_form {
-    .o_mass_mailing_subject {
+    &.o_form_readonly .o_mass_mailing_subject {
         // Place the favorite button without breaking the emoji widget
         padding-right: 50px;
         .o_mass_mailing_favorite {
@@ -68,7 +68,7 @@
             margin-left: -40px;
             bottom: 0;
         }
-        span.o_field_char {
+        div.o_field_char_emojis {
             // Override widget CSS attributes to place
             // the favorite button next to the subject
             margin-right: 1rem;

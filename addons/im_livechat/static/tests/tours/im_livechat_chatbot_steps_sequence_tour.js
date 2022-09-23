@@ -16,7 +16,7 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
 }, {
     trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a'
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 1'
 }, {
     trigger: 'button:contains("Save & New")'
@@ -25,7 +25,7 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
     in_modal: false,
     run: () => {}
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 2'
 }, {
     trigger: 'button:contains("Save & New")'
@@ -34,7 +34,7 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
     in_modal: false,
     run: () => {}
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 3'
 }];
 
@@ -68,7 +68,7 @@ tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
     in_modal: false,
     run: () => {}
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 4'
 }, {
     trigger: 'button:contains("Save & New")'
@@ -77,7 +77,7 @@ tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
     in_modal: false,
     run: () => {}
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 5'
 }, {
     trigger: 'button:contains("Save & Close")'
@@ -108,7 +108,7 @@ tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
 }, {
     trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a'
 }, {
-    trigger: 'textarea[name="message"]',
+    trigger: 'textarea#message',
     run: 'text Step 6'
 }, {
     trigger: 'button:contains("Save & Close")'

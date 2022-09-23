@@ -28,10 +28,10 @@ export default {
      *
      * @param {MouseEvent} ev
      */
-    _onEmojiClick: function (ev) {
-        var unicode = ev.currentTarget.textContent.trim();
-        var textInput = this._getTargetTextElement($(ev.currentTarget))[0];
-        var selectionStart = textInput.selectionStart;
+    onEmojiClick(ev) {
+        const unicode = ev.currentTarget.textContent.trim();
+        const textInput = this._getTargetTextElement($(ev.currentTarget));
+        const selectionStart = textInput.selectionStart;
 
         textInput.value = textInput.value.slice(0, selectionStart) + unicode + textInput.value.slice(selectionStart);
         textInput.focus();
@@ -49,7 +49,7 @@ export default {
      *
      * @param {String} message a text message to format
      */
-    _formatText: function (message) {
+    _formatText(message) {
         message = escape(message);
         message = this._wrapEmojis(message);
         message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
@@ -63,7 +63,7 @@ export default {
      *
      * @param {String} message
      */
-    _wrapEmojis: function (message) {
+    _wrapEmojis(message) {
         emojis.forEach(function (emoji) {
             message = message.replace(
                 new RegExp(emoji.unicode.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
