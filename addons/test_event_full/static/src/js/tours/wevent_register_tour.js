@@ -22,6 +22,12 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
             run: 'click',
         }];
     }
+    steps = steps.concat([{
+        content: `Check we are on the "${talkName}" talk page`,
+        trigger: 'div.o_wesession_track_main',
+        run: function () {}, // it's a check
+    }]);
+
     if (reminderOn) {
         steps = steps.concat([{
             content: "Check Favorite is on",
@@ -132,11 +138,19 @@ var initTourSteps = function (eventName) {
 var browseTalksSteps = [{
     content: 'Browse Talks',
     trigger: 'a:contains("Talks")',
+}, {
+    content: 'Check we are on the talk list page',
+    trigger: 'h1:contains("Book your talks")',
+    run: function () {} // check
 }];
 
 var browseMeetSteps = [{
     content: 'Browse Meet',
     trigger: 'a:contains("Community")',
+}, {
+    content: 'Check we are on the community page',
+    trigger: 'span:contains("Join a room")',
+    run: function () {} // check
 }];
 
 
