@@ -45,3 +45,16 @@ class ReplenishmentReport(models.AbstractModel):
         res['qty']['out'] += res['draft_production_qty']['out']
 
         return res
+
+    def _get_reservation_data(self, move):
+        if move.production_id:
+            m2o = 'production_id'
+        elif move.raw_material_production_id:
+            m2o = 'raw_material_production_id'
+        else:
+            return super()._get_reservation_data(move)
+        return {
+            '_name': move[m2o]._name,
+            'name': move[m2o].name,
+            'id': move[m2o].id
+        }

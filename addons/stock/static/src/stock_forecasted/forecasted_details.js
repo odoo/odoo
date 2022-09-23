@@ -13,21 +13,21 @@ export class ForecastedDetails extends Component{
         this._formatFloat = (num) => {return formatFloat(num,{ digits: this.props.docs.precision });}
     }
 
-    async _reserve(model, modelId){
+    async _reserve(move_id){
         await this.orm.call(
-            model,
-            'action_assign',
-            [[modelId]],
+            'report.stock.report_product_product_replenishment',
+            'action_reserve_linked_picks',
+            [move_id],
             // {modelId}
         );
         this.props.reloadReport();
     }
 
-    async _unreserve(model, modelId){
+    async _unreserve(move_id){
         await this.orm.call(
-            model,
-            'do_unreserve',
-            [[modelId]],
+            'report.stock.report_product_product_replenishment',
+            'action_unreserve_linked_picks',
+            [move_id],
         );
         this.props.reloadReport();
     }
@@ -44,7 +44,7 @@ export class ForecastedDetails extends Component{
     }
 
     displayReserve(line){
-        return line.move_out && ['confirmed', 'partially_available'].includes(line.move_out.state) && line.move_out.picking_id;
+        return line.move_out && line.move_out.picking_id && !line.in_transit;
     }
 
     get futureVirtualAvailable(){
