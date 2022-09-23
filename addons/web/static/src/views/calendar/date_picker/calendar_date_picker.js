@@ -1,12 +1,7 @@
 /** @odoo-module **/
 
-//import { calculateWeekNumber } from "../date_utils";
-
 const { Component, onMounted, onWillUnmount, useEffect, useRef, xml } = owl;
 
-// This component uses JQuery!
-// Should we find another lib for date picker?
-// Or write our own date picker?
 export class CalendarDatePicker extends Component {
     setup() {
         this.rootRef = useRef("root");
@@ -39,8 +34,6 @@ export class CalendarDatePicker extends Component {
             monthNames: luxon.Info.months("short"),
             onSelect: this.onDateSelected.bind(this),
             showOtherMonths: true,
-            //calculateWeek: calculateWeekNumber, // JPP Je pense que c'est pas necesaire
-            // defaultDate: this.props.model.date.toFormat("yyyy-MM-dd"),
             dateFormat: "yy-mm-dd",
         };
     }
@@ -90,7 +83,6 @@ export class CalendarDatePicker extends Component {
         let scale = "week";
 
         if (model.date.hasSame(date, "day")) {
-            // const scales = model.scales.slice().reverse();
             const scales = ["month", "week", "day"];
             scale = scales[(scales.indexOf(model.scale) + 1) % scales.length];
         } else {

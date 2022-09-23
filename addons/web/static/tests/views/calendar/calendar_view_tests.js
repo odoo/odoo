@@ -41,7 +41,6 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { userService } from "@web/core/user_service";
-import { CalendarQuickCreate } from "@web/views/calendar/quick_create/calendar_quick_create";
 import { CharField } from "@web/views/fields/char/char_field";
 import { actionService } from "@web/webclient/actions/action_service";
 
@@ -2768,41 +2767,6 @@ QUnit.module("Views", ({ beforeEach }) => {
         def.resolve();
         await nextTick();
         assert.strictEqual(createCount, 1, "should create only one event");
-    });
-
-    // WOWL: TO DROP OR NOT TO DROP, THAT IS THE QUESTION ?
-    QUnit.test(`create an event (async dialog) [REQUIRE FOCUS]`, async (assert) => {
-        assert.expect(3);
-        const def = makeDeferred();
-        patchWithCleanup(CalendarQuickCreate.prototype, {
-            setup() {
-                this._super(...arguments);
-                owl.onWillStart(() => {
-                    return def;
-                });
-            },
-        });
-        await makeView({
-            type: "calendar",
-            resModel: "event",
-            serverData,
-            arch: `
-                <calendar class="o_calendar_test" string="Events" event_open_popup="true" date_start="start" date_stop="stop" all_day="allday" mode="month"/>
-            `,
-        });
-        // create an event
-        await clickDate(target, "2016-12-20");
-        await nextTick();
-        assert.containsNone(target, ".modal", "should not have opened the dialog yet");
-
-        def.resolve();
-        await nextTick();
-        assert.containsOnce(target, ".modal", "should have opened the dialog yet");
-        assert.strictEqual(
-            target.querySelector(".modal input"),
-            document.activeElement,
-            "should focus the input in the dialog"
-        );
     });
 
     QUnit.test(`calendar is configured to have no groupBy menu`, async (assert) => {

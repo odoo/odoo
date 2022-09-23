@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { SelectCreateDialog } from "../../view_dialogs/select_create_dialog";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 const { Component, useState } = owl;
 

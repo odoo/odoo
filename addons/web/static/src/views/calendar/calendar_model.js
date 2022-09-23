@@ -1,12 +1,16 @@
 /** @odoo-module **/
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import {
+    serializeDate,
+    serializeDateTime,
+    deserializeDate,
+    deserializeDateTime,
+} from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { Model } from "../model";
-import { deserialize, serialize } from "./date_utils";
+import { Model } from "@web/views/model";
 
 export class CalendarModel extends Model {
     setup(params, services) {
@@ -229,19 +233,20 @@ export class CalendarModel extends Model {
             data[this.meta.fieldMapping.all_day] = partialRecord.isAllDay;
         }
 
-        data[this.meta.fieldMapping.date_start] = serialize(
-            start,
-            partialRecord.isAllDay && this.hasAllDaySlot
+        data[this.meta.fieldMapping.date_start] =
+            (partialRecord.isAllDay && this.hasAllDaySlot
                 ? "date"
-                : this.fields[this.meta.fieldMapping.date_start].type
-        );
+                : this.fields[this.meta.fieldMapping.date_start].type) === "date"
+                ? serializeDate(start)
+                : serializeDateTime(start);
+
         if (this.meta.fieldMapping.date_stop) {
-            data[this.meta.fieldMapping.date_stop] = serialize(
-                end,
-                partialRecord.isAllDay && this.hasAllDaySlot
+            data[this.meta.fieldMapping.date_stop] =
+                (partialRecord.isAllDay && this.hasAllDaySlot
                     ? "date"
-                    : this.fields[this.meta.fieldMapping.date_start].type
-            );
+                    : this.fields[this.meta.fieldMapping.date_start].type) === "date"
+                    ? serializeDate(end)
+                    : serializeDateTime(end);
         }
 
         if (this.meta.fieldMapping.date_delay) {
@@ -412,8 +417,8 @@ export class CalendarModel extends Model {
      */
     computeRangeDomain(data) {
         const { fieldMapping } = this.meta;
-        const formattedEnd = serialize(data.range.end, "datetime");
-        const formattedStart = serialize(data.range.start, "datetime");
+        const formattedEnd = serializeDateTime(data.range.end);
+        const formattedStart = serializeDateTime(data.range.start);
 
         const domain = [[fieldMapping.date_start, "<=", formattedEnd]];
         if (fieldMapping.date_stop) {
@@ -431,8 +436,8 @@ export class CalendarModel extends Model {
      */
     fetchUnusualDays(data) {
         return this.orm.call(this.meta.resModel, "get_unusual_days", [
-            serialize(data.range.start, "datetime"),
-            serialize(data.range.end, "datetime"),
+            serializeDateTime(data.range.start),
+            serializeDateTime(data.range.end),
         ]);
     }
     /**
@@ -473,13 +478,19 @@ export class CalendarModel extends Model {
         const { fields, fieldMapping, filtersInfo, isTimeHidden, scale } = this.meta;
 
         const startType = fields[fieldMapping.date_start].type;
-        let start = deserialize(rawRecord[fieldMapping.date_start], startType);
+        let start =
+            startType === "date"
+                ? deserializeDate(rawRecord[fieldMapping.date_start])
+                : deserializeDateTime(rawRecord[fieldMapping.date_start]);
 
         let end = start;
         let endType = startType;
         if (fieldMapping.date_stop) {
             endType = fields[fieldMapping.date_stop].type;
-            end = deserialize(rawRecord[fieldMapping.date_stop], endType);
+            end =
+                endType === "date"
+                    ? deserializeDate(rawRecord[fieldMapping.date_stop])
+                    : deserializeDateTime(rawRecord[fieldMapping.date_stop]);
         }
 
         const duration = rawRecord[fieldMapping.date_delay] || 1;

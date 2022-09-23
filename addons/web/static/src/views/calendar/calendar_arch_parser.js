@@ -2,8 +2,8 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
-import { Field } from "../fields/field";
-import { archParseBoolean } from "../utils";
+import { Field } from "@web/views/fields/field";
+import { archParseBoolean } from "@web/views/utils";
 
 const FIELD_ATTRIBUTE_NAMES = [
     "date_start",

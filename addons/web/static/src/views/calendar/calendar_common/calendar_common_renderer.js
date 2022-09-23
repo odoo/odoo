@@ -177,7 +177,7 @@ export class CalendarCommonRenderer extends Component {
             });
             return;
         }
-        this.props.createRecord(this.FCEventToRecord(info));
+        this.props.createRecord(this.fcEventToRecord(info));
     }
     onDayRender(info) {
         const date = luxon.DateTime.fromJSDate(info.date).toISODate();
@@ -232,7 +232,7 @@ export class CalendarCommonRenderer extends Component {
     }
     async onSelect(info) {
         this.popover.close();
-        await this.props.createRecord(this.FCEventToRecord(info));
+        await this.props.createRecord(this.fcEventToRecord(info));
         this.fc.api.unselect();
     }
     isSelectionAllowed(event) {
@@ -240,13 +240,13 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventDrop(info) {
         this.fc.api.unselect();
-        this.props.model.updateRecord(this.FCEventToRecord(info.event), { moved: true });
+        this.props.model.updateRecord(this.fcEventToRecord(info.event), { moved: true });
     }
     onEventResize(info) {
         this.fc.api.unselect();
-        this.props.model.updateRecord(this.FCEventToRecord(info.event));
+        this.props.model.updateRecord(this.fcEventToRecord(info.event));
     }
-    FCEventToRecord(event) {
+    fcEventToRecord(event) {
         const { id, allDay, date, start, end } = event;
         const res = {
             start: luxon.DateTime.fromJSDate(date || start),
