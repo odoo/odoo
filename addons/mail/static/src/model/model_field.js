@@ -124,7 +124,15 @@ export class ModelField {
          * the first operation that is able to determine an order for the two
          * records.
          */
-        this.sort = sort;
+        this.sort;
+        /**
+         * Sorted fields define sorting rules that can depend on related fields.
+         * The path to a related field is defined by a period-separated sequence
+         * of the relations to follow. To avoid wasting performances splitting
+         * the path each time a relation must be followed, it is spllited at
+         * field instantiation and stored here.
+         */
+        this.sortedFieldSplittedPaths;
         /**
          * Determines whether and how elements of this field should be summed
          * into a counter field (only makes sense for relational x2many).
@@ -150,15 +158,24 @@ export class ModelField {
                 this.required = true;
             }
         }
-        /**
-         * Automatically make relateds readonly.
-         */
         if (this.related) {
+            // Automatically make relateds readonly.
             this.readonly = true;
         }
         if (this.compute) {
             // Automatically make computes readonly.
             this.readonly = true;
+        }
+        if (sort) {
+            this.sort = [];
+            // Only keep unique paths, as they will be used to create listeners,
+            // and we do not want to create useless duplicate listeners.
+            const relatedPathSet = new Set();
+            for (const [compareRule, pathAsString] of sort) {
+                relatedPathSet.add(pathAsString);
+                this.sort.push([compareRule, pathAsString.split('.')]);
+            }
+            this.sortedFieldSplittedPaths = [...relatedPathSet].map(pathAsString => pathAsString.split('.'));
         }
     }
 
