@@ -162,6 +162,7 @@
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
+                    <field name="move_id" invisible="1"/>
                     <field name="date" readonly="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
