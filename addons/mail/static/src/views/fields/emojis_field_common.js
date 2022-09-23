@@ -11,7 +11,7 @@ var QWeb = core.qweb;
 /*
  * Common code for FieldTextEmojis and FieldCharEmojis
  */
-var FieldEmojiCommon = {
+var EmojisFieldCommon = {
     /**
      * @override
      * @private
@@ -141,4 +141,4 @@ var FieldEmojiCommon = {
     }
 };
 
-export default FieldEmojiCommon;
+export default EmojisFieldCommon;
