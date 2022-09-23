@@ -528,6 +528,35 @@ export class ModelManager {
 
     /**
      * @private
+     * @throws {Error}
+     */
+    _checkOnChangesOnModels() {
+        for (const model of Object.values(this.models)) {
+            for (const { dependencies, methodName } of registry.get(model.name).get('onChanges')) {
+                for (const dependency of dependencies) {
+                    let currentModel = model;
+                    let currentField;
+                    for (const fieldName of dependency) {
+                        if (!currentModel) {
+                            throw new Error(`OnChange '${methodName}' defines a dependency with path '${dependency.join('.')}', but this dependency does not resolve: ${currentField} is not a relational field, therefore there is no relation to follow.`);
+                        }
+                        currentField = currentModel.__fieldMap.get(fieldName);
+                        if (!currentField) {
+                            throw new Error(`OnChange '${methodName}' defines a dependency with path '${dependency.join('.')}', but this path does not resolve: ${currentModel}/${fieldName} does not exist.`);
+                        }
+                        if (currentField.to) {
+                            currentModel = this.models[currentField.to];
+                        } else {
+                            currentModel = undefined;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @private
      * @throws {Error} in case some fields are not correct.
      */
     _checkProcessedFieldsOnModels() {
@@ -579,6 +608,20 @@ export class ModelManager {
                 }
                 if (![model.name, 'Record'].includes(inverseField.to)) {
                     throw new Error(`${field} has its inverse ${inverseField} referring to an invalid model (${inverseField.to}).`);
+                }
+                if (field.sort) {
+                    for (const path of field.sortedFieldSplittedPaths) {
+                        let currentField = field;
+                        for (const fieldName of path) {
+                            if (!currentField.to) {
+                                throw new Error(`Field ${field} defines a sort with path '${path.join('.')}', but this path does not resolve: ${currentField} is not a relational field, therefore there is no relation to follow.`);
+                            }
+                            if (!this.models[currentField.to].__fieldMap.has(fieldName)) {
+                                throw new Error(`Field ${field} defines a sort with path '${path.join('.')}', but this path does not resolve: ${this.models[currentField.to]}/${fieldName} does not exist.`);
+                            }
+                            currentField = this.models[currentField.to].__fieldMap.get(fieldName);
+                        }
+                    }
                 }
             }
             for (const identifyingField of model.__identifyingFieldNames) {
@@ -921,6 +964,7 @@ export class ModelManager {
          * should have matching reversed relation.
          */
         this._checkProcessedFieldsOnModels();
+        this._checkOnChangesOnModels();
     }
 
     /**
