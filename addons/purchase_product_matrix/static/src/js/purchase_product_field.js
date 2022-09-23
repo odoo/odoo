@@ -2,29 +2,76 @@
 
 import Dialog from 'web.Dialog';
 import { qweb } from "web.core";
-import { patch } from "@web/core/utils/patch";
-import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
+import { registry } from '@web/core/registry';
+import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { formatMonetary } from "@web/views/fields/formatters";
 const { markup } = owl;
 
+const { onWillUpdateProps } = owl;
 
-patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
 
-    // TODO
-    // 2) autofocus on first attribute in configurator
-    //      unable to enter by hand custom values bc of it
-    // 3) wizard opened when the variant is chosen in the 'Product Variant' field
+export class PurchaseOrderLineProductField extends Many2OneField {
 
-    async _openGridConfigurator(mode) {
-        const saleOrderRecord = this.props.record.model.root;
+    setup() {
+        super.setup();
+
+        onWillUpdateProps(async (nextProps) => {
+            if (nextProps.record.mode === 'edit' && nextProps.value) {
+                if (
+                    !this.props.value ||
+                    this.props.value[0] != nextProps.value[0]
+                ) {
+                    // Field was updated if line was open in edit mode,
+                    //      field is not emptied,
+                    //      new value is different than existing value.
+
+                    this._onProductTemplateUpdate();
+                }
+            }
+        });
+    }
+
+    get configurationButtonHelp() {
+        return this.env._t("Edit Configuration");
+    }
+    get isConfigurableTemplate() {
+        return this.props.record.data.is_configurable_product;
+    }
+
+    async _onProductTemplateUpdate() {
+        const result = await this.orm.call(
+            'product.template',
+            'get_single_product_variant',
+            [this.props.record.data.product_template_id[0]],
+        );
+        if(result && result.product_id) {
+            if (this.props.record.data.product_id != result.product_id.id) {
+                this.props.record.update({
+                    // TODO right name get (same problem as configurator)
+                    product_id: [result.product_id, 'whatever'],
+                });
+            }
+        } else {
+            this._openGridConfigurator(false);
+        }
+    }
+
+    onEditConfiguration() {
+        if (this.props.record.data.is_configurable_product) {
+            this._openGridConfigurator(true);
+        }
+    }
+
+    async _openGridConfigurator(edit) {
+        const PurchaseOrderRecord = this.props.record.model.root;
 
         // fetch matrix information from server;
-        await saleOrderRecord.update({
+        await PurchaseOrderRecord.update({
             grid_product_tmpl_id: this.props.record.data.product_template_id,
         });
 
         let updatedLineAttributes = [];
-        if (mode === 'edit') {
+        if (edit) {
             // provide attributes of edited line to automatically focus on matching cell in the matrix
             for (let ptnvav of this.props.record.data.product_no_variant_attribute_value_ids.records) {
                 updatedLineAttributes.push(ptnvav.data.id);
@@ -36,36 +83,18 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
         }
 
         this._openMatrixConfigurator(
-            saleOrderRecord.data.grid,
+            PurchaseOrderRecord.data.grid,
             this.props.record.data.product_template_id[0],
             updatedLineAttributes,
         );
 
-        if (mode !== 'edit') {
+        if (!edit) {
             // remove new line used to open the matrix
-            saleOrderRecord.data.order_line.removeRecord(this.props.record);
+            PurchaseOrderRecord.data.order_line.removeRecord(this.props.record);
         }
-    },
+    }
 
-    async _openProductConfigurator(mode) {
-        if (mode === 'edit' && this.props.record.data.product_add_mode == 'matrix') {
-            this._openGridConfigurator('edit');
-        } else {
-            this._super(...arguments);
-        }
-    },
-
-    /**
-     * Triggers Matrix Dialog opening
-     *
-     * @param {String} jsonInfo matrix dialog content
-     * @param {integer} productTemplateId product.template id
-     * @param {editedCellAttributes} list of product.template.attribute.value ids
-     *  used to focus on the matrix cell representing the edited line.
-     *
-     * @private
-    */
-     _openMatrixConfigurator: function (jsonInfo, productTemplateId, editedCellAttributes) {
+    _openMatrixConfigurator(jsonInfo, productTemplateId, editedCellAttributes) {
         const infos = JSON.parse(jsonInfo);
         const saleOrderRecord = this.props.record.model.root;
         const MatrixDialog = new Dialog(this, {
@@ -120,5 +149,9 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_matrix', {
                 MatrixDialog.$content.find('.o_matrix_input:first()').focus();
             }
         });
-    },
-});
+    }
+}
+
+PurchaseOrderLineProductField.template = "purchase.PurchaseProductField";
+
+registry.category("fields").add("pol_product_many2one", PurchaseOrderLineProductField);

@@ -132,7 +132,7 @@
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order" class="o_purchase_order" js_class="legacy_form">
+                <form string="Purchase Order" class="o_purchase_order">
                 <header>
                     <button name="action_rfq_send" states="draft" string="Send by Email" type="object" context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user" data-hotkey="k"/>
