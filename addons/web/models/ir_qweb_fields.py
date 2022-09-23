@@ -89,6 +89,8 @@ class Image(models.AbstractModel):
         atts["itemprop"] = itemprop
         atts["class"] = classes
         atts["style"] = options.get('style')
+        atts["width"] = options.get('width')
+        atts["height"] = options.get('height')
         atts["alt"] = alt
         atts["data-zoom"] = src_zoom and u'1' or None
         atts["data-zoom-image"] = src_zoom

@@ -1347,7 +1347,27 @@
 <template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
     <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
         <a href="/" t-attf-class="navbar-brand logo #{_link_class}">
-            <span t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+            <!--
+            Note: setting width *and* height attributes allows to reserve some
+            space to avoid layout shift during page loading. Of course, CSS
+            rules set the height the user chose, while the width is set to
+            'auto'. But while the image is loading, it is best to already
+            reserve some width to reduce layout shift (like making the menu move
+            or even re-render itself into a "+" menu).
+
+            The chosen values for the space reservation are the ones of the
+            default logo and theme, but it does not really matter as long as
+            they are coherent. While the image is being loaded, the chosen user
+            height is still applied and the 'auto' width rule induces a width
+            that respects the aspect ratio set by the width and height
+            attributes. That could be a problem if the real logo has a larger
+            height than width, in which case the layout shift would be increased
+            because of the arbitrary values set as width and height, but in most
+            cases, this should reduce it.
+
+            This also allows to gain some page speed scoring.
+            -->
+            <span t-field="website.logo" t-options="{'widget': 'image', 'width': 95, 'height': 40}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
         </a>
     </xpath>
 </template>
