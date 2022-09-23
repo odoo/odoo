@@ -146,7 +146,7 @@ QUnit.module('Bus', {
         ]);
     });
 
-    QUnit.test('second tab still receives notifications after main unload', async function (assert) {
+    QUnit.test('second tab still receives notifications after main pagehide', async function (assert) {
         assert.expect(4);
 
         const pyEnv = await startServer();
@@ -158,10 +158,10 @@ QUnit.module('Bus', {
         mainEnv.services['bus_service'].addChannel('lambda');
 
         // second env
-        // prevent second tab from receiving unload event.
+        // prevent second tab from receiving pagehide event.
         patchWithCleanup(browser, {
             addEventListener(eventName, callback) {
-                if (eventName === 'unload') {
+                if (eventName === 'pagehide') {
                     return;
                 }
                 this._super(eventName, callback);
@@ -176,7 +176,7 @@ QUnit.module('Bus', {
         await nextTick();
 
         // simulate unloading main
-        window.dispatchEvent(new Event('unload'));
+        window.dispatchEvent(new Event('pagehide'));
         await nextTick();
 
         pyEnv['bus.bus']._sendone('lambda', 'notifType', 'gamma');
