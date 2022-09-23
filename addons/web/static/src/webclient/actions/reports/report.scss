@@ -119,3 +119,16 @@ ol {
     -webkit-box-flex: 1 !important;
     width: 100% !important;
 }
+
+// Boostrap 5 introduces variable paddings for container which wkhtmltopdf doesn't seem to process, so we restore Boostrap 4's paddings for PDFs
+.container {
+    padding-right: $container-padding-x;
+    padding-left: $container-padding-x;
+}
+
+// Removes borders within a table-borderless as its new definition in Boostrap 5 still has its borders visible in PDFs 
+.table-borderless {
+    tbody, thead, tfoot, tr, td, th {
+        border: 0 none;
+    }
+}
