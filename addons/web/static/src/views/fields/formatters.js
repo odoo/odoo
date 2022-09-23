@@ -198,7 +198,8 @@ export function formatFloatTime(value, options = {}) {
         value = Math.abs(value);
     }
     let hour = Math.floor(value);
-    // This ensures that we do not have float issues while still considering that 59s is 00:00.
+    // Although looking quite overkill, the following line ensures that we do
+    // not have float issues while still considering that 59s is 00:00.
     let min = Math.floor(Math.round((value % 1) * 100) / 100 * 60);
     if (min === 60) {
         min = 0;
