@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"PO-Revision-Date: 2022-09-23 08:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -605,15 +605,18 @@ msgid "Amount of time between purchase approval and order by date."
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
+msgid "Analytic"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_analytic_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__account_analytic_id
 msgid "Analytic Account"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_tag_ids
-msgid "Analytic Tags"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution_stored_char
+msgid "Analytic Distribution Stored Char"
 msgstr ""
 
 #. module: purchase
@@ -1886,6 +1889,8 @@ msgid "Purchase History"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/product.py:0
+#: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Purchase History for %s"
