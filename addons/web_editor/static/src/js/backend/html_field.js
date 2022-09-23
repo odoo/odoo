@@ -186,7 +186,8 @@ export class HtmlField extends Component {
     }
     updateValue() {
         const value = this.getEditingValue();
-        if (value !== null && value !== (this.props.value || '').toString()) {
+        const lastValue = (this.props.value || "").toString();
+        if (value !== null && !(!lastValue && value === "<p><br></p>") && value !== lastValue) {
             if (this.props.setDirty) {
                 this.props.setDirty(true);
             }
@@ -388,10 +389,7 @@ export class HtmlField extends Component {
         $odooEditor.removeClass('odoo-editor-editable');
         $editable.html(html);
 
-        // Prevent history reverts.
-        this.wysiwyg.odooEditor.observerUnactive('toInline');
         await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
-        this.wysiwyg.odooEditor.observerActive('toInline');
         $odooEditor.addClass('odoo-editor-editable');
 
         this.wysiwyg.setValue($editable.html());
