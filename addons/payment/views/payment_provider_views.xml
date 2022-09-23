@@ -84,10 +84,19 @@
                                 </group>
                                 <group string="Availability" name="availability">
                                     <field name="maximum_amount"/>
+                                    <label for="available_currency_ids"/>
+                                    <!-- Use `o_row` to allow placing a button next to the field in overrides. -->
+                                    <div name="available_currencies" class="o_row">
+                                        <field name="available_currency_ids"
+                                               widget="many2many_tags"
+                                               placeholder="Select currencies. Leave empty not to restrict any."
+                                               context="{'active_test': False}"
+                                               options="{'no_create': True}"/>
+                                    </div>
                                     <field name="available_country_ids"
                                            widget="many2many_tags"
                                            placeholder="Select countries. Leave empty to make available everywhere."
-                                           options="{'no_open': True, 'no_create': True}"/>
+                                           options="{'no_create': True}"/>
                                 </group>
                                 <group string="Payment Followup" name="payment_followup" invisible="1"/>
                             </group>

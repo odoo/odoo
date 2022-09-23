@@ -102,6 +102,19 @@ class PaymentProvider(models.Model):
         column1='payment_id',
         column2='country_id',
     )
+    available_currency_ids = fields.Many2many(
+        string="Currencies",
+        help="The currencies available with this payment provider. Leave empty not to restrict "
+             "any.",
+        comodel_name='res.currency',
+        relation='payment_currency_rel',
+        column1="payment_provider_id",
+        column2="currency_id",
+        compute='_compute_available_currency_ids',
+        store=True,
+        readonly=False,
+        context={'active_test': False},
+    )
     maximum_amount = fields.Monetary(
         string="Maximum Amount",
         help="The maximum payment amount that this payment provider is available for. Leave blank "
@@ -190,6 +203,22 @@ class PaymentProvider(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+    @api.depends('code')
+    def _compute_available_currency_ids(self):
+        """ Compute the available currencies based on their support by the providers.
+
+        If the provider does not filter out any currency, the field is left empty for UX reasons.
+
+        :return: None
+        """
+        all_currencies = self.env['res.currency'].with_context(active_test=False).search([])
+        for provider in self:
+            supported_currencies = provider._get_supported_currencies()
+            if supported_currencies < all_currencies:  # Some currencies have been filtered out.
+                provider.available_currency_ids = supported_currencies
+            else:
+                provider.available_currency_ids = None
+
     @api.depends('state', 'module_state')
     def _compute_color(self):
         """ Update the color of the kanban card based on the state of the provider.
@@ -242,6 +271,7 @@ class PaymentProvider(models.Model):
             'show_cancel_msg': True,
         })
 
+    @api.depends('code')
     def _compute_feature_support_fields(self):
         """ Compute the feature support fields based on the provider.
 
@@ -415,8 +445,8 @@ class PaymentProvider(models.Model):
         """ Select and return the providers matching the criteria.
 
         The criteria are that providers must not be disabled, be in the company that is provided,
-        and support the country of the partner if it exists. The criteria can be further refined
-        by providing the keyword arguments.
+        support the country of the partner if it exists, and be compatible with the currency if
+        provided. The criteria can be further refined by providing the keyword arguments.
 
         :param int company_id: The company to which providers must belong, as a `res.company` id.
         :param int partner_id: The partner making the payment, as a `res.partner` id.
@@ -462,6 +492,16 @@ class PaymentProvider(models.Model):
                 ]
             ])
 
+        # Handle the available currencies (only if supported currencies list is not empty).
+        if currency:
+            domain = expression.AND([
+                domain, [
+                    '|',
+                    ('available_currency_ids', '=', False),
+                    ('available_currency_ids', 'in', [currency.id]),
+                ]
+            ])
+
         # Handle tokenization support requirements.
         if force_tokenization or self._is_tokenization_required(**kwargs):
             domain = expression.AND([domain, [('allow_tokenization', '=', True)]])
@@ -472,6 +512,21 @@ class PaymentProvider(models.Model):
 
         compatible_providers = self.env['payment.provider'].search(domain)
         return compatible_providers
+
+    def _get_supported_currencies(self):
+        """ Return the supported currencies for the payment provider.
+
+        By default, all currencies are considered supported, including the inactive ones. For a
+        provider to filter out specific currencies, it must override this method and return the
+        subset of supported currencies.
+
+        Note: `self.ensure_one()`
+
+        :return: The supported currencies.
+        :rtype: res.currency
+        """
+        self.ensure_one()
+        return self.env['res.currency'].with_context(active_test=False).search([])
 
     def _is_tokenization_required(self, **kwargs):
         """ Return whether tokenizing the transaction is required given its context.

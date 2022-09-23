@@ -27,10 +27,6 @@ class PaymentProvider(models.Model):
     authorize_client_key = fields.Char(
         string="API Client Key",
         help="The public client key. To generate directly from Odoo or from Authorize.Net backend.")
-    # Authorize.Net supports only one currency: "One gateway account is required for each currency"
-    # See https://community.developer.authorize.net/t5/The-Authorize-Net-Developer-Blog/Authorize-Net-UK-Europe-Update/ba-p/35957
-    authorize_currency_id = fields.Many2one(
-        string="Authorize Currency", comodel_name='res.currency')
     authorize_payment_method_type = fields.Selection(
         string="Allow Payments From",
         help="Determines with what payment method the customer can pay.",
@@ -50,6 +46,16 @@ class PaymentProvider(models.Model):
                     "type, please disable the provider and duplicate it. Then, change the payment "
                     "method type on the duplicated provider."
                 ))
+
+    # Authorize.Net supports only one currency: "One gateway account is required for each currency"
+    # See https://community.developer.authorize.net/t5/The-Authorize-Net-Developer-Blog/Authorize-Net-UK-Europe-Update/ba-p/35957
+    @api.constrains('available_currency_ids', 'state')
+    def _limit_available_currency_ids(self):
+        for provider in self.filtered(lambda p: p.code == 'authorize'):
+            if len(provider.available_currency_ids) > 1 and provider.state != 'disabled':
+                raise ValidationError(
+                    _("Only one currency can be selected by Authorize.Net account.")
+                )
 
     #=== COMPUTE METHODS ===#
 
@@ -104,23 +110,10 @@ class PaymentProvider(models.Model):
             raise UserError(_("Could not fetch merchant details:\n%s", res_content['err_msg']))
 
         currency = self.env['res.currency'].search([('name', 'in', res_content.get('currencies'))])
-        self.authorize_currency_id = currency
+        self.available_currency_ids = [Command.set(currency.ids)]
         self.authorize_client_key = res_content.get('publicClientKey')
 
     # === BUSINESS METHODS ===#
-
-    @api.model
-    def _get_compatible_providers(self, *args, currency_id=None, **kwargs):
-        """ Override of payment to unlist Authorize providers for unsupported currencies. """
-        providers = super()._get_compatible_providers(*args, currency_id=currency_id, **kwargs)
-
-        currency = self.env['res.currency'].browse(currency_id).exists()
-        if currency:
-            providers = providers.filtered(
-                lambda p: p.code != 'authorize' or currency == p.authorize_currency_id
-            )
-
-        return providers
 
     def _get_validation_amount(self):
         """ Override of payment to return the amount for Authorize.Net validation operations.
@@ -144,4 +137,4 @@ class PaymentProvider(models.Model):
         if self.code != 'authorize':
             return res
 
-        return self.authorize_currency_id
+        return self.available_currency_ids[0]
