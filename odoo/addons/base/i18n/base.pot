@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:54+0000\n"
-"PO-Revision-Date: 2022-09-20 09:54+0000\n"
+"POT-Creation-Date: 2022-09-23 08:25+0000\n"
+"PO-Revision-Date: 2022-09-23 08:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -8116,6 +8116,11 @@ msgid "Access Rights"
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
+msgid "Access Rights Mismatch"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
 msgid "Access Token"
 msgstr ""
@@ -8144,6 +8149,11 @@ msgstr ""
 #: code:addons/api.py:0 code:addons/api.py:0
 #, python-format
 msgid "Access to unauthorized or invalid companies."
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
 msgstr ""
 
 #. module: base
@@ -8666,7 +8676,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_sign_itsme
 msgid ""
-"Add support for itsme identification when signing documents (Belgium and "
+"Add support for itsme® identification when signing documents (Belgium and "
 "Netherlands only)"
 msgstr ""
 
@@ -25083,7 +25093,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sign_itsme
-msgid "Sign documents with itsme identification"
+msgid "Sign documents with itsme® identification"
 msgstr ""
 
 #. module: base
@@ -25104,6 +25114,14 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Since %(user)s is a/an \"%(category)s: %(group)s\", they will at least "
+"obtain the right %(missing_group_message)s"
 msgstr ""
 
 #. module: base
@@ -28331,6 +28349,11 @@ msgid "User"
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_users__user_group_warning
+msgid "User Group Warning"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_deletion__user_id_int
 msgid "User Id"
 msgstr ""
@@ -29570,7 +29593,6 @@ msgid "_Import"
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr ""

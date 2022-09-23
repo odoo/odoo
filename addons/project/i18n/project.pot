@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-09-23 08:01+0000\n"
+"PO-Revision-Date: 2022-09-23 08:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,13 +26,6 @@ msgid ""
 "                    Track major progress points that must be reached to achieve success.\n"
 "                </p>\n"
 "            "
-msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/project_sharing/components/chatter.xml:0
-#, python-format
-msgid "!!widget.options.res_id && widget.get('messages') || []"
 msgstr ""
 
 #. module: project
@@ -771,6 +764,11 @@ msgid "Allocated Hours"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__allow_rating
+msgid "Allow Customer Ratings"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
 msgid "Allow Sub-tasks"
 msgstr ""
@@ -783,29 +781,25 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: project
-#: model:ir.model,name:project.model_account_analytic_tag
-#: model:ir.model.fields,field_description:project.field_project_project__analytic_tag_ids
-#: model:ir.model.fields,field_description:project.field_project_task__analytic_tag_ids
-msgid "Analytic Tags"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
 #: model:ir.model.fields,help:project.field_project_task__project_analytic_account_id
 msgid ""
-"Analytic account to which this project is linked for financial management. "
-"Use an analytic account to record cost and revenue on your project."
+"Analytic account to which this project, its tasks and its timesheets are linked. \n"
+"Track the costs and revenues of your project by setting this analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
+"This analytic account can be changed on each task individually if necessary.\n"
+"An analytic account is required in order to use timesheets."
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
 msgid ""
-"Analytic account to which this task is linked for financial management. Use "
-"an analytic account to record cost and revenue on your task. If empty, the "
-"analytic account of the project will be used."
+"Analytic account to which this task and its timesheets are linked.\n"
+"Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
+"By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Analytics"
 msgstr ""
@@ -826,6 +820,8 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ancestor_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__ancestor_id
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Ancestor Task"
 msgstr ""
 
@@ -1219,6 +1215,14 @@ msgid "Collaborators in project shared"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__rating_status
+msgid ""
+"Collect feedback from your customers by sending them a rating request when a task enters a certain stage. To do so, define a rating email template on the corresponding stages.\n"
+"Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
+"Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
 #: model:ir.model.fields,field_description:project.field_project_update__color
 msgid "Color"
@@ -1243,6 +1247,11 @@ msgstr ""
 msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt. Organize priorities amongst orders using the"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_res_company
+msgid "Companies"
 msgstr ""
 
 #. module: project
@@ -1559,6 +1568,27 @@ msgid "Date of the Year"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_task__date_last_stage_update
+msgid ""
+"Date on which the stage of your task has last been modified.\n"
+"Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__date
+msgid ""
+"Date on which this project ends. The timeframe defined on the project is "
+"taken into account when viewing its planning."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__date_assign
+msgid ""
+"Date on which this task was last assigned (or unassigned). Based on this, "
+"you can get statistics on the time it usually takes to assign tasks."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_weekday
 msgid "Day Of The Week"
@@ -1619,6 +1649,18 @@ msgid "December"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_res_company__analytic_plan_id
+#: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
+msgid "Default Plan"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
+#: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
+msgid "Default Plan for a new analytic account for projects"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
 msgid "Default Values"
 msgstr ""
@@ -1666,6 +1708,13 @@ msgid "Delete Stage"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_task__milestone_id
+msgid ""
+"Deliver your services automatically when a milestone is reached by linking "
+"it to a sales order item."
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -1690,6 +1739,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Description"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__description
+msgid "Description to provide more information and context about this project"
 msgstr ""
 
 #. module: project
@@ -1859,6 +1913,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__email_cc
+msgid ""
+"Email addresses that were in the CC of the incoming emails from this task "
+"and that are not currently linked to an existing customer."
 msgstr ""
 
 #. module: project
@@ -2056,11 +2117,6 @@ msgid "Get customer feedback"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__sequence
-msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
@@ -2155,16 +2211,6 @@ msgid "Hours"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__rating_status
-msgid ""
-"How to get customer feedback?\n"
-"- Rating when changing stage: an email will be sent when a task is pulled to another stage.\n"
-"- Periodic rating: an email will be sent periodically.\n"
-"\n"
-"Don't forget to set up the email templates on the stages for which you want to get customer feedback."
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
 msgstr ""
@@ -2242,25 +2288,39 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__fold
+msgid ""
+"If enabled, this stage will be displayed as folded in the Kanban view of "
+"your projects. Projects in a folded stage are considered as closed."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type__fold
+msgid ""
+"If enabled, this stage will be displayed as folded in the Kanban view of "
+"your tasks. Tasks in a folded stage are considered as closed."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
 msgid ""
-"If set and if the project's rating configuration is 'Rating when changing "
-"stage', then an email will be sent to the customer when the task reaches "
-"this step."
+"If set, a rating request will automatically be sent by email to the customer when the task reaches this stage. \n"
+"Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
+"To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
 msgid ""
-"If set, an email will be sent to the customer when the project reaches this "
-"step."
+"If set, an email will be automatically sent to the customer when the project"
+" reaches this stage."
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
 msgid ""
-"If set, an email will be sent to the customer when the task or issue reaches"
-" this step."
+"If set, an email will be automatically sent to the customer when the task "
+"reaches this stage."
 msgstr ""
 
 #. module: project
@@ -2516,12 +2576,6 @@ msgid "Kpi Project Task Opened Value"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__label_tasks
-msgid ""
-"Label used for tasks in this project (e.g. Tasks, Features, Tickets, etc)."
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__last
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__last
 msgid "Last"
@@ -2677,7 +2731,6 @@ msgid "Link"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task__email_cc
 #: model:ir.model.fields,help:project.field_project_update__email_cc
 msgid "List of cc from incoming emails."
 msgstr ""
@@ -2886,6 +2939,11 @@ msgid "My Favorites"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
+msgid "My Private Tasks"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
@@ -2928,6 +2986,20 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__name
+msgid ""
+"Name of your project. It can be anything you want e.g. the name of a "
+"customer or a service."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__label_tasks
+msgid ""
+"Name used to refer to the tasks of your project e.g. tasks, tickets, "
+"sprints, etc..."
 msgstr ""
 
 #. module: project
@@ -3288,30 +3360,6 @@ msgid "Overpassed Tasks"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task__legend_blocked
-#: model:ir.model.fields,help:project.field_project_task_type__legend_blocked
-msgid ""
-"Override the default value displayed for the blocked state for kanban "
-"selection when the task or issue is in that stage."
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__legend_done
-#: model:ir.model.fields,help:project.field_project_task_type__legend_done
-msgid ""
-"Override the default value displayed for the done state for kanban selection"
-" when the task or issue is in that stage."
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__legend_normal
-#: model:ir.model.fields,help:project.field_project_task_type__legend_normal
-msgid ""
-"Override the default value displayed for the normal state for kanban "
-"selection when the task or issue is in that stage."
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
 msgid "Owner"
 msgstr ""
@@ -3384,7 +3432,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__personal_stage_type_ids
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Personal Stage"
@@ -3555,8 +3602,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
-#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 #, python-format
 msgid "Project"
 msgstr ""
@@ -3697,7 +3743,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.open_view_project_all_config_group_stage
 #: model:ir.actions.act_window,name:project.open_view_project_all_group_stage
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_ids
-#: model:ir.model.fields,field_description:project.field_account_analytic_tag__project_ids
 #: model:ir.model.fields,field_description:project.field_project_tags__project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type__project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__project_ids
@@ -3719,6 +3764,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type__project_ids
+msgid ""
+"Projects in which this stage is present. If you follow a similar workflow in"
+" several projects, you can share this stage among them and get consolidated "
+"information this way."
 msgstr ""
 
 #. module: project
@@ -4450,8 +4503,9 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
 msgid ""
-"Sum of the time planned of all the sub-tasks linked to this task. Usually "
-"less than or equal to the initially planned time of this task."
+"Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) "
+"linked to this task. Usually less than or equal to the allocated hours of "
+"this task."
 msgstr ""
 
 #. module: project
@@ -4651,7 +4705,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
-#: model:ir.model.fields,field_description:project.field_account_analytic_tag__task_ids
 #: model:ir.model.fields,field_description:project.field_project_milestone__task_ids
 #: model:ir.model.fields,field_description:project.field_project_project__task_ids
 #: model:ir.model.fields,field_description:project.field_project_tags__task_ids
@@ -4701,6 +4754,11 @@ msgid "Tasks Management"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Tasks Managment"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
@@ -4733,11 +4791,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__date_deadline
-msgid "The deadline for the task, which appears in the calendar view."
 msgstr ""
 
 #. module: project
@@ -4786,6 +4839,14 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__stage_id
+msgid ""
+"The step, or stage, that your project is in. You can add, remove, and move stages around to adapt the pipeline to your own needs.\n"
+"Via the stage configuration you can set up email templates and automate the sending of emails when a project moves into the stage.\n"
+"Projects in a folded stage are considered as closed."
 msgstr ""
 
 #. module: project
@@ -4860,13 +4921,6 @@ msgid "This and following tasks"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task_type__fold
-msgid ""
-"This stage is folded in the kanban view when there are no records in that "
-"stage to display."
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
@@ -4908,8 +4962,8 @@ msgid "Time Management"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task__planned_hours
-msgid "Time planned to achieve this task (including its sub-tasks)."
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Time Managment"
 msgstr ""
 
 #. module: project
@@ -4997,16 +5051,6 @@ msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task__milestone_id
-msgid ""
-"Track major progress points that must be reached to achieve success (e.g. "
-"Product Launch). After all the tasks connected to this milestone are "
-"completed, you will be invited to mark it as reached if you wish. You can "
-"deliver your services automatically when a milestone is reached by linking "
-"it to a sales order item."
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -5021,6 +5065,13 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_tags__color
+msgid ""
+"Transparent tags are not visible in the kanban view of your projects and "
+"tasks."
 msgstr ""
 
 #. module: project
@@ -5359,6 +5410,14 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_task__tag_ids
+msgid ""
+"You can only see tags that are already present in your project. If you try "
+"creating a tag that is already existing in other projects, it won't generate"
+" any duplicates."
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You can only set a personal stage on a private task."
@@ -5468,13 +5527,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/components/project_private_task_many2one_field/project_private_task_many2one_field.xml:0
-#, python-format
-msgid "displayName"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
 msgstr ""
@@ -5531,13 +5583,6 @@ msgstr ""
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "project."
-msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/components/project_private_task_many2one_field/project_private_task_many2one_field.xml:0
-#, python-format
-msgid "props.value"
 msgstr ""
 
 #. module: project
