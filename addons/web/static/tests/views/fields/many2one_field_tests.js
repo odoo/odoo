@@ -2666,6 +2666,31 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "empty list with sample data and many2one with option always_reload",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <tree sample="1">
+                    <field name="product_id" options="{'always_reload': True}"/>
+                </tree>`,
+                context: { search_default_empty: true },
+                searchViewArch: `
+                <search>
+                    <filter name="empty" domain="[('id', '&lt;', 0)]"/>
+                </search>`,
+            });
+
+            assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
+            assert.containsOnce(target, ".o_list_table");
+            assert.containsN(target, ".o_data_row", 10);
+            assert.containsN(target, "thead tr th", 2);
+        }
+    );
+
     QUnit.test("selecting a many2one, then discarding", async function (assert) {
         await makeView({
             type: "form",
