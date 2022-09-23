@@ -26,7 +26,6 @@ QUnit.test("defaults", (assert) => {
     assert.deepEqual(parseArch(`<calendar date_start="start_date" />`), {
         canCreate: true,
         canDelete: true,
-        canEdit: true,
         eventLimit: 5,
         fieldMapping: {
             date_start: "start_date",
@@ -63,19 +62,6 @@ QUnit.test("canDelete", (assert) => {
     check(assert, "delete", "false", "canDelete", false);
     check(assert, "delete", "False", "canDelete", false);
     check(assert, "delete", "0", "canDelete", false);
-});
-
-QUnit.test("canEdit", (assert) => {
-    const fields = { ...FAKE_FIELDS };
-
-    fields.start_date.readonly = false;
-    assert.strictEqual(parseArch(`<calendar date_start="start_date" />`, { fields }).canEdit, true);
-
-    fields.start_date.readonly = true;
-    assert.strictEqual(
-        parseArch(`<calendar date_start="start_date" />`, { fields }).canEdit,
-        false
-    );
 });
 
 QUnit.test("eventLimit", (assert) => {

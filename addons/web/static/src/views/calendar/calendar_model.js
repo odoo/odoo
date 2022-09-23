@@ -65,7 +65,7 @@ export class CalendarModel extends Model {
         return this.meta.canDelete;
     }
     get canEdit() {
-        return this.meta.canEdit;
+        return !this.meta.fields[this.meta.fieldMapping.date_start].readonly;
     }
     get eventLimit() {
         return this.meta.eventLimit;

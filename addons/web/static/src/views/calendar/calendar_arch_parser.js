@@ -27,7 +27,6 @@ export class CalendarArchParser extends XMLParser {
         let eventLimit = 5;
         let scales = [...SCALES];
         let scale = "week";
-        let canEdit = true;
         let canCreate = true;
         let canDelete = true;
         let hasQuickCreate = true;
@@ -57,7 +56,6 @@ export class CalendarArchParser extends XMLParser {
                             fieldMapping[fieldAttrName] = fieldName;
                         }
                     }
-                    canEdit = !fields[fieldMapping.date_start].readonly;
 
                     if (node.hasAttribute("event_limit")) {
                         eventLimit = evaluateExpr(node.getAttribute("event_limit"));
@@ -179,7 +177,6 @@ export class CalendarArchParser extends XMLParser {
         return {
             canCreate,
             canDelete,
-            canEdit,
             eventLimit,
             fieldMapping,
             fieldNames: [...fieldNames],
