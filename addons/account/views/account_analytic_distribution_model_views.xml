@@ -8,11 +8,11 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='partner_id']" position="before">
-                            <field name="account_prefix"/>
+                            <field name="account_prefix" optional="show"/>
                     </xpath>
-                    <xpath expr="//field[@name='partner_category_id']" position="after">
-                            <field name="product_id"/>
-                            <field name="product_categ_id"/>
+                    <xpath expr="//field[@name='company_id']" position="before">
+                            <field name="product_id" optional="show"/>
+                            <field name="product_categ_id" optional="hide"/>
                     </xpath>
                 </data>
             </field>
@@ -24,10 +24,10 @@
             <field name="inherit_id" ref="analytic.account_analytic_distribution_model_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='partner_id']" position="before">
+                    <xpath expr="//field[@name='partner_category_id']" position="after">
                             <field name="account_prefix"/>
                     </xpath>
-                    <xpath expr="//field[@name='partner_category_id']" position="after">
+                    <xpath expr="//field[@name='company_id']" position="before">
                             <field name="product_id"/>
                             <field name="product_categ_id"/>
                     </xpath>
