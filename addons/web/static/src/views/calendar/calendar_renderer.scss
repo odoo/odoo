@@ -1,4 +1,4 @@
-.o_calendar_view {
+.o_calendar_renderer {
     flex: 1 1 auto;
     min-width: 0;
     height: 100%;
@@ -562,7 +562,7 @@ $o-filter_colors: lighten(#000, 46.7%), #f06050, #f4a460, #f7cd1f, #6cc1ed, #814
 @for $i from 1 through length($o-filter_colors) {
     $color: nth($o-filter_colors, $i);
 
-    .o_calendar_view .fc-view {
+    .o_calendar_renderer .fc-view {
         .o_calendar_hatched_#{$i - 1} {
             background: repeating-linear-gradient(
                 45deg,
