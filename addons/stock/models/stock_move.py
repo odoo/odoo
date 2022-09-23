@@ -2015,6 +2015,13 @@ class StockMove(models.Model):
                 dst._rollup_move_dests(seen)
         return seen
 
+    def _rollup_move_origs(self, seen):
+        for org in self.move_orig_ids:
+            if org.id not in seen:
+                seen.add(org.id)
+                org._rollup_move_origs(seen)
+        return seen
+
     def _get_forecast_availability_outgoing(self, warehouse):
         """ Get forcasted information (sum_qty_expected, max_date_expected) of self for in_locations_ids as the in locations.
         It differ from _get_report_lines because it computes only the necessary information and return a

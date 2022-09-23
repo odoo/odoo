@@ -342,8 +342,8 @@ const ReplenishReport = clientAction.extend({
         const modelId = parseInt(ev.target.getAttribute('model-id'));
         return this._rpc( {
             model,
-            args: [[modelId]],
-            method: 'do_unreserve'
+            args: [modelId],
+            method: 'unreserve_pg_picks'
         }).then(() => this._reloadReport());
     },
 
@@ -357,8 +357,8 @@ const ReplenishReport = clientAction.extend({
         const modelId = parseInt(ev.target.getAttribute('model-id'));
         return this._rpc( {
             model,
-            args: [[modelId]],
-            method: 'action_assign'
+            args: [modelId],
+            method: 'reserve_pg_picks'
         }).then(() => this._reloadReport());
     },
 
