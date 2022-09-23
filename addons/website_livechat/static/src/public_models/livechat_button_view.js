@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerPatch } from '@mail/model/model_core';
+import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 import {unaccent} from 'web.utils';
@@ -50,6 +51,27 @@ registerPatch({
         },
     },
     fields: {
+        floatingTextView: one('PublicLivechatFloatingTextView', {
+            inverse: 'livechatButtonViewOwner',
+        }),
+        hasFloatingText: attr({
+            compute() {
+                return Boolean(
+                    this.messaging.publicLivechatGlobal.rule &&
+                    this.messaging.publicLivechatGlobal.rule.action === 'display_button_and_text' &&
+                    this.isWidgetMounted
+                );
+            },
+        }),
+        initialFloatingTextViewVisibilityTimer: one('Timer', {
+            compute() {
+                if (!this.floatingTextView && this.hasFloatingText) {
+                    return {};
+                }
+                return clear();
+            },
+            inverse: 'livechatButtonViewOwnerAsInitialFloatingTextVisibility',
+        }),
         isOpenChatDebounced: {
             compute() {
                 if (this.messaging.publicLivechatGlobal.isTestChatbot) {
