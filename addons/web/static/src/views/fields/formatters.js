@@ -185,8 +185,8 @@ export function formatFloatFactor(value, options = {}) {
  *
  * @param {number | false} value
  * @param {Object} [options]
- * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30
- *   otherwise, format like 01:30
+ * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30 otherwise, format like 01:30
+ * @param {boolean} [options.displaySeconds] if true, format like ?1:30:00 otherwise, format like ?1:30
  * @returns {string}
  */
 export function formatFloatTime(value, options = {}) {
@@ -198,7 +198,8 @@ export function formatFloatTime(value, options = {}) {
         value = Math.abs(value);
     }
     let hour = Math.floor(value);
-    let min = Math.round((value % 1) * 60);
+    // This ensures that we do not have float issues while still considering that 59s is 00:00.
+    let min = Math.floor(Math.round((value % 1) * 100) / 100 * 60);
     if (min === 60) {
         min = 0;
         hour = hour + 1;
@@ -207,7 +208,11 @@ export function formatFloatTime(value, options = {}) {
     if (!options.noLeadingZeroHour) {
         hour = `${hour}`.padStart(2, "0");
     }
-    return `${isNegative ? "-" : ""}${hour}:${min}`;
+    let sec = "";
+    if (options.displaySeconds) {
+        sec = ":" + `${(Math.round((value % 1) * 3600) - min * 60)}`.padStart(2, "0");
+    }
+    return `${isNegative ? "-" : ""}${hour}:${min}${sec}`;
 }
 
 /**
