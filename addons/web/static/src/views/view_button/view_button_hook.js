@@ -39,6 +39,9 @@ export function useViewButtons(model, ref, options = {}) {
         (() => {
             return true;
         });
+    const afterExecuteAction =
+        options.afterExecuteAction ||
+        (() => {});
     useSubEnv({
         async onClickViewButton({
             clickParams,
@@ -97,6 +100,7 @@ export function useViewButtons(model, ref, options = {}) {
                     error = _e;
                     await doActionParams.onClose();
                 }
+                await afterExecuteAction(clickParams);
                 enableButtons(getEl(), manuallyDisabledButtons, enableAction);
                 if (error) {
                     return Promise.reject(error);
