@@ -85,7 +85,8 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
             'publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode', 'shell_interface'
+            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode', 'shell_interface',
+            'longpolling_port',
         ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
@@ -135,7 +136,7 @@ class configmanager(object):
                               "Keep empty to listen on all interfaces (0.0.0.0)")
         group.add_option("-p", "--http-port", dest="http_port", my_default=8069,
                          help="Listen port for the main HTTP service", type="int", metavar="PORT")
-        group.add_option("--longpolling-port", dest="longpolling_port", my_default=None,
+        group.add_option("--longpolling-port", dest="longpolling_port", my_default=0,
                          help="Deprecated alias to the gevent-port option", type="int", metavar="PORT")
         group.add_option("--gevent-port", dest="gevent_port", my_default=8072,
                          help="Listen port for the gevent worker", type="int", metavar="PORT")
