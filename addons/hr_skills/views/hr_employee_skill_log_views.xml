@@ -4,9 +4,8 @@
           <field name="name">hr.employee.skill.log.view.graph</field>
           <field name="model">hr.employee.skill.log</field>
           <field name="arch" type="xml">
-            <graph string="Skills History" type="line" js_class="skills_graph">
+            <graph string="Skills History" type="line" stacked="0" js_class="skills_graph">
                 <field name="date" interval="day" type="row"/>
-                <field name="employee_id" type="row"/>
                 <field name="skill_id" type="row"/>
                 <field name="level_progress" type="measure"/>
             </graph>
@@ -17,7 +16,7 @@
           <field name="name">hr.employee.skill.log.view.graph</field>
           <field name="model">hr.employee.skill.log</field>
           <field name="arch" type="xml">
-            <graph string="Skills History" type="line" js_class="skills_graph">
+            <graph string="Skills History" type="line" stacked="0" js_class="skills_graph">
                 <field name="date" interval="day" type="row"/>
                 <field name="skill_id" type="row"/>
                 <field name="level_progress" type="measure"/>
