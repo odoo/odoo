@@ -3,7 +3,7 @@
 import { _t } from 'web.core';
 import basic_fields from 'web.basic_fields';
 import fieldRegistry from 'web.field_registry';
-import FieldTextEmojis from '@mail/js/field_text_emojis';
+import EmojisTextField from '@mail/views/fields/emojis_text_field';
 
 var DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 /**
@@ -11,7 +11,7 @@ var DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
  * the number of SMS and the number of characters. This text is computed every
  * time the user changes the body.
  */
-var SmsWidget = FieldTextEmojis.extend(DynamicPlaceholderFieldMixin, {
+var SmsWidget = EmojisTextField.extend(DynamicPlaceholderFieldMixin, {
     className: 'o_field_text',
     enableEmojis: false,
     /**
