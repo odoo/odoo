@@ -17,13 +17,22 @@ export class ForecastedDetails extends Component {
         };
     }
 
-    async _reserve(model, modelId) {
-        await this.orm.call(model, "action_assign", [[modelId]]);
+    async _reserve(move_id){
+        await this.orm.call(
+            'stock.forecasted_product_product',
+            'action_reserve_linked_picks',
+            [move_id],
+            // {modelId}
+        );
         this.props.reloadReport();
     }
 
-    async _unreserve(model, modelId) {
-        await this.orm.call(model, "do_unreserve", [[modelId]]);
+    async _unreserve(move_id){
+        await this.orm.call(
+            'stock.forecasted_product_product',
+            'action_unreserve_linked_picks',
+            [move_id],
+        );
         this.props.reloadReport();
     }
 
@@ -34,12 +43,8 @@ export class ForecastedDetails extends Component {
         this.props.reloadReport();
     }
 
-    displayReserve(line) {
-        return (
-            line.move_out &&
-            ["confirmed", "partially_available"].includes(line.move_out.state) &&
-            line.move_out.picking_id
-        );
+    displayReserve(line){
+        return line.move_out && line.move_out.picking_id && !line.in_transit;
     }
 
     get futureVirtualAvailable() {
