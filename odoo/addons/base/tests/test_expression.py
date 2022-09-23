@@ -1224,7 +1224,7 @@ class TestQueries(TransactionCase):
             ORDER BY "ir_model"."model"
             LIMIT 100
         ''']):
-            Model.name_search('foo')
+            Model.name_search('foopsnote')
 
         Model.name_search('partner', operator='not ilike')
         with self.assertQueries(['''
