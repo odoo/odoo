@@ -7,6 +7,4 @@ from . import FgOrderImport
 from . import FgMessageWizard
 from . import account_tax
 from . import x_report
-
-
-
+from . import z_report
