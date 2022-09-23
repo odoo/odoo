@@ -147,7 +147,7 @@ export const multiTabService = {
             }
         }
 
-        function onUnload() {
+        function onPagehide() {
             clearTimeout(heartbeatTimeout);
             const lastPresenceByTab = getItemFromStorage('lastPresenceByTab', {});
             delete lastPresenceByTab[tabId];
@@ -161,7 +161,7 @@ export const multiTabService = {
             }
         }
 
-        browser.addEventListener('unload', onUnload);
+        browser.addEventListener('pagehide', onPagehide);
         browser.addEventListener('storage', onStorage);
 
         // REGISTER THIS TAB
