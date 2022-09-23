@@ -849,7 +849,7 @@ def _extract_translatable_qweb_terms(element, callback):
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
                 and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
-                and not (node.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS)
+                and not (el.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS)
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
