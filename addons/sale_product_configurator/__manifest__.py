@@ -28,9 +28,9 @@ It also enables the "optional products" feature.
             'sale_product_configurator/static/src/js/product_configurator_modal.js',
             'sale_product_configurator/static/src/js/sale_product_field.js',
         ],
-        'web.qunit_suite_tests': [
-            'sale_product_configurator/static/tests/product_configurator.test.js',
-        ],
+        # 'web.qunit_suite_tests': [
+        #     'sale_product_configurator/static/tests/product_configurator.test.js',
+        # ],
     },
     'license': 'LGPL-3',
 }
