@@ -21,8 +21,8 @@ export class CalendarDatePicker extends Component {
     }
 
     get dayNamesMin() {
-        // I think this is totally wrong!
-        // why this func: names are in wrong order without it
+        // this is needed because luxon gives the week in ISO format : Monday is the first day of the week.
+        // (M T W T F S S) but the jsquery datepicker wants as day name option in US format (S M T W T F S)
         const weekdays = Array.from(luxon.Info.weekdays("narrow"));
         const last = weekdays.pop();
         return [last, ...weekdays];
