@@ -10,7 +10,14 @@
                         <group>
                             <field name="name"/>
                             <field name="type"/>
-                            <field name="model"/>
+                            <label for="model" string="Model"/>
+                            <div>
+                              <span>
+                                <field name="model" class="oe_inline"/>
+                              </span>
+                              <button icon="fa-gear" type="object" string="View model" title="View model"
+                                name="view_model" class="btn btn-link p-0"/>
+                            </div>
                             <field name="priority"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>

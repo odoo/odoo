@@ -2161,6 +2161,16 @@ actual arch.
             values,
         ))
 
+    def view_model(self):
+        model = self.env['ir.model'].search([('model', '=', self.model)], limit=1)
+        return {
+            'res_id': model.id,
+            'res_model': 'ir.model',
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+        }
+
 
 class ResetViewArchWizard(models.TransientModel):
     """ A wizard to compare and reset views architecture. """
