@@ -3,10 +3,10 @@
 # 	* gamification
 # 
 # Translators:
+# Martin Trigaux, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
@@ -118,14 +118,14 @@ msgstr ""
 "        <tr>\n"
 "            <td style=\"padding:15px 20px 10px 20px;\">\n"
 "                <p>\n"
-"                    祝贺你\n"
+"                    祝贺您\n"
 "                   <span t-out=\"object.name or ''\">Joel Willis</span>!\n"
 "                </p>\n"
 "                <p>\n"
-"                    你刚刚达到了一个新的等级：<strong t-out=\"object.rank_id.name or ''\">新手</strong>\n"
+"                    您刚刚达到了一个新的等级：<strong t-out=\"object.rank_id.name or ''\">新手</strong>\n"
 "                </p>\n"
 "                <t t-if=\"object.next_rank_id.name\">\n"
-"                    <p>继续你的工作，成为一名<strong t-out=\"object.next_rank_id.name or ''\">学生</strong>!</p>\n"
+"                    <p>继续您的工作，成为一名<strong t-out=\"object.next_rank_id.name or ''\">学生</strong>!</p>\n"
 "                </t>\n"
 "                <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                    <t t-set=\"gamification_redirection_data\" t-value=\"object.get_gamification_redirection_data()\"/>\n"
@@ -331,7 +331,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        恭喜<t t-out=\"object.user_id.name or ''\"/>!<br/>\n"
-"                        你刚刚获得了徽标<strong t-out=\"object.badge_id.name or ''\"/>!<br/>\n"
+"                        您刚刚获得了徽标<strong t-out=\"object.badge_id.name or ''\"/>!<br/>\n"
 "                        <table t-if=\"is_html_empty(object.badge_id.description)\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 560px; margin-top: 5px;\">\n"
 "                            <tbody><tr>\n"
 "                                <td valign=\"center\">\n"
@@ -349,7 +349,7 @@ msgstr ""
 "                       <br/>\n"
 "                        <t t-if=\"object.comment\" t-out=\"object.comment or ''\"/>\n"
 "                        <br/><br/>\n"
-"                        谢谢你。\n"
+"                        谢谢您。\n"
 "                        <t t-if=\"object.sender_id.signature\">\n"
 "                            <br/>\n"
 "                            <t t-out=\"object.sender_id.signature or ''\"/>\n"
@@ -827,7 +827,7 @@ msgid ""
 "A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
 "                    This is used to quickly know which user is new or old or highly or not active."
 msgstr ""
-"等级对应于固定的积分级别。你拥有的积分越多，你的排名就越高。\n"
+"等级对应于固定的积分级别。您拥有的积分越多，您的排名就越高。\n"
 "                    这用于快速判断用户是新手还是专家，或谁比较活跃。"
 
 #. module: gamification
@@ -1147,7 +1147,7 @@ msgid ""
 "deactivated should there be a period of time during which they will/should "
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
-msgstr "为系统创建和管理用户。在一段时间内使用该系统的用户可以暂不启用。你还可以给用户分配某一个组，以便他们能用到系统的指定功能."
+msgstr "为系统创建和管理用户。在一段时间内使用该系统的用户可以暂不启用。您还可以给用户分配某一个组，以便他们能用到系统的指定功能."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
@@ -1311,7 +1311,7 @@ msgstr "草稿"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
 msgid "Earn your first points and join the adventure !"
-msgstr "赢取你的第一个积分，并加入大冒险吧！"
+msgstr "赢取您的第一个积分，并加入大冒险吧！"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
@@ -1992,7 +1992,7 @@ msgstr "没有月度发放限额"
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr "没有人能像你一样解决挑战."
+msgstr "没有人能像您一样解决挑战."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__nobody
@@ -2008,7 +2008,7 @@ msgstr "没有人达到获得特殊徽标的要求."
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
 msgid "Non recurring"
-msgstr "非经常性"
+msgstr "非周期"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__remind_update_delay
@@ -2388,13 +2388,13 @@ msgstr "设置当前目标的完成值"
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr "设置你的公司数据"
+msgstr "设置您的公司数据"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin2
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr "设置你的公司LOGO标志"
+msgstr "设置您的公司LOGO标志"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_discover1
@@ -2697,7 +2697,7 @@ msgid ""
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
 "没有与当前搜索挑战相匹配的目标。\n"
-"确保你的挑战是启用的，并分配给至少一个用户。"
+"确保您的挑战是启用的，并分配给至少一个用户。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__closed
@@ -2832,7 +2832,7 @@ msgstr "谁能授予这个徽标"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
-msgstr "你想奖励谁？"
+msgstr "您想奖励谁？"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
@@ -2844,7 +2844,7 @@ msgstr "启用此选项，同一个徽标只能被同一个用户获得一次。
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
 msgid "With your brilliant ideas, you are an inspiration to others."
-msgstr "用你闪耀的创意，启发他人的灵感."
+msgstr "用您闪耀的创意，启发他人的灵感."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__yearly
@@ -2862,23 +2862,23 @@ msgstr "您不在被允许用户的列表中."
 #: code:addons/gamification/wizard/grant_badge.py:0
 #, python-format
 msgid "You can not grant a badge to yourself."
-msgstr "你不能给自己发放徽标."
+msgstr "您不能给自己发放徽标."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "You can not reset a challenge with unfinished goals."
-msgstr "你不能重新设置一个带有未完成目标的挑战."
+msgstr "您不能重新设置一个带有未完成目标的挑战."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "You can still grant"
-msgstr "你仍然可以授予"
+msgstr "您仍然可以授予"
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_good_job
 msgid "You did great at your job."
-msgstr "你的工作做的很好."
+msgstr "您的工作做的很好."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:0
@@ -2895,7 +2895,7 @@ msgstr "您在本月发放本徽标的数量已超出限额."
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
-msgstr "你发现了彩蛋徽标"
+msgstr "您发现了彩蛋徽标"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_doctor
@@ -2910,17 +2910,17 @@ msgstr "您刚刚开始冒险！欢迎您！"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_master
 msgid "You know what you are talking about. People learn from you."
-msgstr "你很清楚自己的成就。大家都在向你学习。"
+msgstr "您很清楚自己的成就。大家都在向您学习。"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_bachelor
 msgid "You love learning things. Curiosity is a good way to progress."
-msgstr "你喜欢学习。好奇心是进步的捷径。"
+msgstr "您喜欢学习。好奇心是进步的捷径。"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_student
 msgid "You're a young padawan now. May the force be with you!"
-msgstr "您的智慧与能力超出了您的年龄。公司以你为傲！"
+msgstr "您的智慧与能力超出了您的年龄。公司以您为傲！"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view

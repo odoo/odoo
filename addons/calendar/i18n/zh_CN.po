@@ -189,7 +189,7 @@ msgstr ""
 "     <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
 "\n"
 "   <p>\n"
-"        你好，<t t-out=\"object.common_name or ''\">Ready Mat</t>。<br/><br/>\n"
+"        您好，<t t-out=\"object.common_name or ''\">Ready Mat</t>。<br/><br/>\n"
 "       <t t-if=\"is_online and target_responsible\">\n"
 "           <t t-if=\"customer\">\n"
 "                您与<t t-out=\"customer.name or ''\">Jesse Brown</t> </t>的预约日期已被更新。\n"
@@ -281,7 +281,7 @@ msgstr ""
 "        </td>\n"
 "    </tr></table>\n"
 "   <br/>\n"
-"    谢谢你。\n"
+"    谢谢您。\n"
 "    <t t-if=\"object.event_id.user_id.signature\">\n"
 "        <br/>\n"
 "        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
@@ -568,7 +568,7 @@ msgstr ""
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
 "\n"
 "   <p>\n"
-"        你好，<t t-out=\"object.common_name or ''\">木头角</t>。<br/><br/>\n"
+"        您好，<t t-out=\"object.common_name or ''\">木头角</t>。<br/><br/>\n"
 "\n"
 "       <t t-if=\"is_online and target_customer\">\n"
 "            您<t t-if=\"object.event_id.appointment_type_id.category != 'custom'\"> 与<t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t>的预约<strong t-out=\"object.event_id.appointment_type_id.name or ''\">演示</strong> </t>已经被预定了。\n"
@@ -663,7 +663,7 @@ msgstr ""
 "        </td>\n"
 "    </tr></table>\n"
 "   <br/>\n"
-"    谢谢你。\n"
+"    谢谢您。\n"
 "    <t t-if=\"object.event_id.user_id.signature\">\n"
 "        <br/>\n"
 "        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
@@ -765,7 +765,7 @@ msgstr ""
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object.event_id and object.event_id.appointment_type_id\"/>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
 "   <p>\n"
-"        你好，<t t-out=\"object.common_name or ''\">Gemini Furniture</t>。<br/><br/>\n"
+"        您好，<t t-out=\"object.common_name or ''\">Gemini Furniture</t>。<br/><br/>\n"
 "        这是对以下活动的提醒。\n"
 "   </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
@@ -838,7 +838,7 @@ msgstr ""
 "        </td>\n"
 "    </tr></table>\n"
 "   <br/>\n"
-"    谢谢你。\n"
+"    谢谢您。\n"
 "    <t t-if=\"object.event_id.user_id.signature\">\n"
 "        <br/>\n"
 "        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
@@ -1306,7 +1306,7 @@ msgstr "编辑重复事件"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Edit recurring event"
-msgstr "编辑定期事件"
+msgstr "编辑周期事件"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
@@ -1511,7 +1511,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr "如果有效字段设为false，它将允许你隐藏提醒信息而不需要删除它。"
+msgstr "如果有效字段设为false，它将允许您隐藏提醒信息而不需要删除它。"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1519,8 +1519,8 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the time is shown as 'free', this event won't         be visible to other people at all. Use this option to let other people know that you are available during         that period of time."
 msgstr ""
-"如果时间显示为 \"忙\"，这个事件就会被其他人看到，并根据其隐私性，写上完整的信息或简单的 \"忙\"。使用这个选项，可以让其他人知道你在这段时间内没有时间。\n"
-" 如果时间显示为 \"空闲\"，这个事件对其他人来说就完全不可见。使用这个选项，让其他人知道你在这段时间内是有空的。"
+"如果时间显示为 \"忙\"，这个事件就会被其他人看到，并根据其隐私性，写上完整的信息或简单的 \"忙\"。使用这个选项，可以让其他人知道您在这段时间内没有时间。\n"
+" 如果时间显示为 \"空闲\"，这个事件对其他人来说就完全不可见。使用这个选项，让其他人知道您在这段时间内是有空的。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -2377,19 +2377,19 @@ msgstr "我会去。"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "You can't update a recurrence without base event."
-msgstr "没有基础活动，你就不能更新一个递归。"
+msgstr "没有基础活动，您就不能更新一个递归。"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr "你不能复制日程参与者。"
+msgstr "您不能复制日程参与者。"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "You have to choose at least one day in the week"
-msgstr "你必须在一周中至少选择一天"
+msgstr "您必须在一周中至少选择一天"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0

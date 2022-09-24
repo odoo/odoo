@@ -3,7 +3,6 @@
 # 	* pos_coupon
 # 
 # Translators:
-# 稀饭~~ <wangwhai@qq.com>, 2021
 # Martin Trigaux, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
@@ -122,7 +121,7 @@ msgstr ""
 "            恭喜<t t-out=\"object.partner_id.name or ''\">布兰登-弗里曼</t>。<br/>\n"
 "       </t>\n"
 "\n"
-"        这是<t t-out=\"object.program_id.company_id.name or ''\">你的公司</t>给你的奖励。<br/>\n"
+"        这是<t t-out=\"object.program_id.company_id.name or ''\">您的公司</t>给您的奖励。<br/>\n"
 "\n"
 "        <t t-if=\"object.program_id.reward_type == 'discount'\">\n"
 "            <t t-if=\"object.program_id.discount_type == 'fixed_amount'\">\n"
@@ -193,7 +192,7 @@ msgstr ""
 "</t>           </span><br/>\n"
 "        </t>\n"
 "       <br/>\n"
-"        谢谢你。\n"
+"        谢谢您。\n"
 "        <t t-if=\"object.source_pos_order_id.user_id.signature\">\n"
 "            <br/>\n"
 "            <t t-out=\"object.source_pos_order_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
@@ -238,7 +237,7 @@ msgstr "应用于PoS订单"
 #: code:addons/pos_coupon/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Are you sure you want to deactivate %s in this order?"
-msgstr "你确定要按照这个顺序停用%s吗？"
+msgstr "您确定要按照这个顺序停用%s吗？"
 
 #. module: pos_coupon
 #. openerp-web
@@ -309,7 +308,7 @@ msgstr "停用方案"
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Define the coupon and promotion programs you can use in this PoS."
-msgstr "定义你可以在这个PoS中使用的优惠券和促销方案。"
+msgstr "定义您可以在这个PoS中使用的优惠券和促销方案。"
 
 #. module: pos_coupon
 #. openerp-web
@@ -436,7 +435,7 @@ msgstr "要使用的促销和优惠券方案。"
 #: model:ir.ui.menu,name:pos_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:pos_coupon.res_config_view_form_inherit_pos_coupon
 msgid "Promotion Programs"
-msgstr "促销程序"
+msgstr "促销方案"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__program_id
@@ -523,7 +522,7 @@ msgstr "是"
 #. module: pos_coupon
 #: model:mail.template,report_name:pos_coupon.mail_coupon_template
 msgid "Your Coupon Code"
-msgstr "你的优惠码"
+msgstr "您的优惠码"
 
 #. module: pos_coupon
 #: model:mail.template,subject:pos_coupon.mail_coupon_template

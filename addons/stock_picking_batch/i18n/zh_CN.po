@@ -262,7 +262,7 @@ msgstr "创建时间"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Detailed Operations"
-msgstr "详细作业"
+msgstr "作业详情"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
@@ -493,7 +493,7 @@ msgstr "此批量调拨负责人"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_add_to_wave__user_id
 msgid "Person responsible for this wave transfer"
-msgstr "负责这次波次拣货的人"
+msgstr "负责这次波次调拨的人"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
@@ -700,7 +700,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"以下移动不能被添加到批量移动%s。请检查它们的状态和操作类型，如果它们不是即时调拨。\n"
+"以下移动不能被添加到批量移动%s。请检查它们的状态和作业类型，如果它们不是即时调拨。\n"
 "\n"
 "不兼容的情况。%s"
 
@@ -712,7 +712,7 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"批量调拨的目标是将可能出现的操作进行分组。\n"
+"批量调拨的目标是将可能出现的作业进行分组。\n"
 "            (需要)一起做，以提高其效率。\n"
 "            分配工作（一个人=一批人），也可能是有用的。\n"
 "            帮助业务的时间管理（下午1点要完成的任务）。"
@@ -725,16 +725,16 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"波浪调拨的目标是将不同调拨的操作组合在一起，以提高其效率。\n"
-"                    的操作组合在一起，以提高其效率。\n"
+"波浪调拨的目标是将不同调拨的作业组合在一起，以提高其效率。\n"
+"                    的作业组合在一起，以提高其效率。\n"
 "                    它也可以用来分配工作（一个人=一个批次）或\n"
-"                    帮助操作的时间管理（任务要在下午1点完成）。"
+"                    帮助作业的时间管理（任务要在下午1点完成）。"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected operations should belong to a unique company."
-msgstr "选定的操作应属于同一个公司。"
+msgstr "选定的作业应属于同一个公司。"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
@@ -752,7 +752,7 @@ msgstr "选定的调拨应属于同一个公司。"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
-msgstr "所选的调拨应属于同一个操作类型"
+msgstr "所选的调拨应属于同一个作业类型"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -842,13 +842,13 @@ msgstr "网上沟通记录"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr "你不能删除已完成的批量调拨"
+msgstr "您不能删除已完成的批量调拨"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "你必须设置一些拣货为批量。"
+msgstr "您必须设置一些拣货为批量。"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
