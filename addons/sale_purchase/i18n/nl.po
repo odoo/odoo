@@ -3,17 +3,15 @@
 # 	* sale_purchase
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +28,31 @@ msgid ""
 msgstr ""
 ".\n"
 "Handmatige acties zijn mogelijk nodig."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr "<span class=\"o_stat_text\">Inkopen</span>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">Verkopen</span>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
+msgid ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
+"                </span>\n"
+"            </span>"
+msgstr ""
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -62,27 +85,32 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
-"Indien aangevinkt zal iedere keer als u dit product verkoopt via een "
+"Indien aangevinkt zal iedere keer als je dit product verkoopt via een "
 "verkooporder, automatisch een inkooporderaanvraag worden aangemaakt. Tip: "
 "Vergeet niet een leverancier in te stellen op het product."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr "Handmatige acties zijn mogelijk nodig"
+msgstr "Handmatige acties zijn mogelijk nodig."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
-msgid "Number of Purchase Order"
-msgstr "Aantal inkooporders"
+msgid "Number of Purchase Order Generated"
+msgstr "Aantal gegenereerde inkooporders"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
+msgstr "Aantal met bron verkooporder"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr "Antal gegenereerde inkoopitems"
+msgstr "Aantal gegenereerde inkoopitems"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Bestelde hoeveelheid is verminderd!"
@@ -93,21 +121,24 @@ msgid "Origin Sale Item"
 msgstr "Originele verkoopitem"
 
 #. module: sale_purchase
-#: model:ir.model,name:sale_purchase.model_product_template
-msgid "Product Template"
-msgstr "Productsjabloon"
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
+msgstr ""
 
 #. module: sale_purchase
-#: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
+#: model:ir.model,name:sale_purchase.model_product_template
+msgid "Product"
+msgstr "Product"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
 msgid "Product that is not a service can not create RFQ."
 msgstr ""
-"Een product dat geen dienst is kan geen inkoopofferteaanvraag genereren."
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
-msgid "Purchase Automatically"
-msgstr "Automatisch inkopen"
+"Een product dat geen dienst is kan geen inkoop offerteaanvraag genereren."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -115,14 +146,20 @@ msgid "Purchase Order"
 msgstr "Inkooporder"
 
 #. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
+msgid "Purchase Order Alert"
+msgstr ""
+
+#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
 msgstr "Inkooporderregel"
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
-msgid "Purchase Orders"
-msgstr "Inkooporders"
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "Inkooporder gegenereerd van %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -149,12 +186,29 @@ msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "Verkooporder annuleer"
+
+#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Verkooporderregel"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: code:addons/sale_purchase/models/purchase_order.py:0
+#, python-format
+msgid "Sources Sale Orders %s"
+msgstr "Bron verkooporders %s"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr "Dienst uitbesteden"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -164,14 +218,14 @@ msgstr ""
 "aan dit product."
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
-"U vermindert de order hoeveelheid! Vergeet niet om handmatig de inkooporder "
-"aan te passen indien dit nodig is."
+"Je vermindert de order hoeveelheid! Vergeet niet om handmatig de inkooporder"
+" aan te passen indien dit nodig is."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -189,4 +243,4 @@ msgstr "of"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr "geordend in plaats van"
+msgstr "besteld in plaats van"

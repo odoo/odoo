@@ -3,15 +3,15 @@
 # 	* base_iban
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/base_iban/static/src/js/iban_widget.js:0
 #, python-format
 msgid "Account isn't IBAN compliant."
-msgstr ""
+msgstr "رقم الحساب غير متوافق مع نمط IBAN المعترف به. "
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -50,14 +50,14 @@ msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
-"لا يبدو رقم IBAN صحيحًا. ينبغي أن تدخل رقمًا على هذه الصيغة%s\n"
-"حيث B = رمز البنك الوطني، S = رمز الفرع، C = رقم الحساب، k = رقم التحقق"
+"يبدو أن رقم IBAN غير صحيح. كان عليك أن تدخل رقماً بهذه الصيغة %s\n"
+"حيث B = رمز البنك الوطني، S = رمز الفرع، C = رقم الحساب، k = رقم التحقق "
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr "رقم الـIBAN خاطئ، يجب أن يبدأ برمز الدولة"
+msgstr "رقم IBAN غير صحيح، يجب أن يبدأ برمز الدولة "
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:0
@@ -69,4 +69,4 @@ msgstr "لا يوجد كود IBAN."
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr "لا يمكننا اعتماد رقم الـIBAN هذا، يرجى التحقق منه."
+msgstr "لم يتخطّ رقم IBAN هذا اختبار التصديق، يرجى التحقق منه. "

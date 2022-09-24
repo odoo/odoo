@@ -3,23 +3,27 @@
 # 	* mass_mailing_sale
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "INVOICED"
+msgstr "GEFACTUREERD"
 
 #. module: mass_mailing_sale
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
@@ -32,9 +36,33 @@ msgid "Invoiced Amount"
 msgstr "Gefactureerd bedrag"
 
 #. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Invoices Analysis"
+msgstr "Factuuranalyse"
+
+#. module: mass_mailing_sale
 #: model:ir.model,name:mass_mailing_sale.model_mailing_mailing
 msgid "Mass Mailing"
 msgstr "Bulkmailing"
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "No Quotations yet!"
+msgstr ""
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "No Revenues yet!"
+msgstr ""
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "QUOTATIONS"
+msgstr "OFFERTES"
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_quotation_count
@@ -42,6 +70,52 @@ msgid "Quotation Count"
 msgstr "Aantal offertes"
 
 #. module: mass_mailing_sale
+#: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_quotation_count
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
 msgid "Quotations"
 msgstr "Offertes"
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid ""
+"Quotations will appear here once your customers add products to their Carts "
+"or when your sales reps assign this mailing."
+msgstr ""
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_invoiced_amount
+msgid "Revenues"
+msgstr "Omzet"
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Revenues will appear here once orders are turned into invoices."
+msgstr ""
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Sales Analysis"
+msgstr "Verkoopanalyse"
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,help:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
+msgid "Selection to determine the winner mailing that will be sent."
+msgstr "Selectie om te bepalen welke winnaarsmailing verstuurd wordt."
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTM Campagne"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
+msgid "Winner Selection"
+msgstr "Winnaar Selectie"

@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_discount
+# 	* pos_discount
 # 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:16+0000\n"
-"PO-Revision-Date: 2018-09-21 13:16+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,41 +20,62 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_discount
+#: code:addons/pos_discount/models/pos_config.py:0
+#, python-format
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
 msgstr "キャッシャーでのオーダ全体に対する値引を許可"
 
 #. module: pos_discount
+#: model:ir.model,name:pos_discount.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
+#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
 #, python-format
 msgid "Discount"
 msgstr "値引"
 
 #. module: pos_discount
-#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount %"
-msgstr ""
+msgstr "値引%"
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/js/discount.js:14
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 #, python-format
 msgid "Discount Percentage"
 msgstr "値引率"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
-#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Product"
 msgstr "値引プロダクト"
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/js/discount.js:28
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
 #, python-format
 msgid "No discount product found"
+msgstr ""
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "No tax"
 msgstr ""
 
 #. module: pos_discount
@@ -64,16 +86,34 @@ msgstr "オーダ値引"
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "POS設定"
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
-msgid "The default discount percentage"
+#: model:ir.model,name:pos_discount.model_pos_session
+msgid "Point of Sale Session"
+msgstr "POSセッション"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
+msgid "Pos Discount Product"
 msgstr ""
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/js/discount.js:29
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr ""
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
+msgid "The default discount percentage when clicking on the Discount button"
+msgstr ""
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
 #, python-format
 msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be"
@@ -82,5 +122,5 @@ msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
-msgid "The product used to model the discount."
+msgid "The product used to apply the discount on the ticket."
 msgstr ""

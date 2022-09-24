@@ -1,21 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * l10n_multilang
+# 	* l10n_multilang
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Linda Stockelova <stockeloval@btlnet.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 14:33+0000\n"
-"PO-Revision-Date: 2018-10-08 14:34+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +27,17 @@ msgstr "계정"
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "계정과목 일람표 서식"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group
+msgid "Account Group"
+msgstr "계정 그룹"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+msgid "Account Name"
+msgstr "계정 이름"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_tag
@@ -39,21 +45,10 @@ msgid "Account Tag"
 msgstr "계정 태그"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
-msgid ""
-"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr "국가의 행정 구역. 예를 들어 도, 시, 군"
-
-#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
 msgstr "분석 계정"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_res_country_state
-msgid "Country state"
-msgstr "국가 상태"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__description
@@ -64,7 +59,7 @@ msgstr "청구서에 표시"
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__name
 msgid "Fiscal Position"
-msgstr "재정 포지션"
+msgstr "회계 포지션"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__name
@@ -97,10 +92,10 @@ msgid "Legal mentions that have to be printed on the invoices."
 msgstr "청구서에 인쇄해야 하는 법적 문구입니다."
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group_template__name
 msgid "Name"
 msgstr "이름"
 
@@ -113,21 +108,12 @@ msgstr "메모"
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
 msgid "Spoken Languages"
-msgstr ""
+msgstr "음성 언어"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
-msgid "State Name"
-msgstr ""
-
-#. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
-msgid ""
-"State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in"
-" the final object when generating them from templates. You must provide the "
-"language codes separated by ';'"
-msgstr ""
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+msgid "Tag Name"
+msgstr "태그 이름"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
@@ -139,6 +125,11 @@ msgstr "세금"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
 msgid "Tax Name"
 msgstr "세금 이름"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group_template
+msgid "Template for Account Groups"
+msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template

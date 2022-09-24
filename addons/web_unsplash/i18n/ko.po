@@ -1,19 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_unsplash
+# 	* web_unsplash
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,30 +22,23 @@ msgstr ""
 #. module: web_unsplash
 #: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Generate an Access Key"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> 액세스 키 생성"
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
 msgid "Access Key"
+msgstr "액세스 키"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "Application ID"
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:36
-#, python-format
-msgid "Access key is not set"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:66
-#, python-format
-msgid "Add"
-msgstr "추가"
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:44
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Apply"
 msgstr "적용"
@@ -55,89 +46,140 @@ msgstr "적용"
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:40
+#: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
-msgid "Generate an access key"
+msgid "ERROR: Unknown Unsplash URL!"
+msgstr "오류 : 알 수 없는 Unsplash URL!"
+
+#. module: web_unsplash
+#: code:addons/web_unsplash/controllers/main.py:0
+#, python-format
+msgid "ERROR: Unknown Unsplash notify URL!"
+msgstr "오류 : 알 수 없는 Unsplash 알림 URL!"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "Get an Access key"
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:43
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:65
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Paste your access key here"
-msgstr ""
+msgstr "여기에 액세스 키 붙여넣기"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:27
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "Photos not found"
+msgid "Paste your application ID here"
+msgstr "여기에 응용 프로그램 ID 붙여넣기"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "Photos (via Unsplash)"
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:75
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Please check your Unsplash access key and application ID."
+msgstr "Unsplash 액세스 키 및 응용 프로그램 ID를 확인하십시오."
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Please check your internet connection or contact administrator."
-msgstr ""
+msgstr "인터넷 연결을 확인하거나 관리자에게 문의하십시오."
+
+#. module: web_unsplash
+#: model:ir.model,name:web_unsplash.model_ir_qweb_field_image
+msgid "Qweb Field Image"
+msgstr "Qweb 이미지 필드"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:61
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
-msgid "Please check your unsplash api key."
-msgstr ""
+msgid "Search is temporarily unavailable"
+msgstr "검색을 일시적으로 사용할 수 없습니다"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:8
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
-msgid "Search from Unsplash"
+msgid "Setup Unsplash to access royalty free photos."
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:50
-#, python-format
-msgid "Search is temporary unavailable"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:72
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Something went wrong"
-msgstr ""
+msgstr "문제가 발생했습니다"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:53
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid ""
 "The max number of searches is exceeded. Please retry in an hour or extend to"
 " a better account."
+msgstr "최대 검색 횟수를 초과했습니다. 한 시간 후에 다시 시도하거나 더 나은 계정으로 확장하십시오."
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Unauthorized Key"
+msgstr "승인되지 않은 키"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Uploading %s '%s' images."
 msgstr ""
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:58
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
-msgid "Unauthorized Key"
+msgid "Uploading '%s' image."
 msgstr ""
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_users
-msgid "Users"
+msgid "User"
 msgstr "사용자"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:7
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "— or —"
-msgstr "— 또는 —"
+msgid "and paste"
+msgstr ""
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "and paste it here:"
+msgstr ""
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "here:"
+msgstr ""

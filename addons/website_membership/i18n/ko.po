@@ -1,19 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_membership
+# 	* website_membership
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +20,21 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.index
-msgid "All"
-msgstr "모두"
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:83
+#: model_terms:ir.ui.view,arch_db:website_membership.index
+msgid "All"
+msgstr "전체"
+
+#. module: website_membership
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "모든 국가"
@@ -40,34 +47,41 @@ msgstr "연결"
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "Close"
-msgstr "마감"
+msgstr "닫기"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Find a business partner"
-msgstr "파트너 찾기"
+msgstr "협력사 찾기"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:126
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "Free Members"
-msgstr ""
+msgstr "무료 회원"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
 msgid "Location"
-msgstr "공간(위치)"
+msgstr "위치"
 
 #. module: website_membership
+#: code:addons/website_membership/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_membership.index
-#: model:website.menu,name:website_membership.menu_members
+#, python-format
 msgid "Members"
-msgstr "참여자"
+msgstr "회원"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
+msgid "Members Page"
+msgstr ""
 
 #. module: website_membership
 #: model:ir.model,name:website_membership.model_membership_membership_line
 msgid "Membership Line"
-msgstr ""
+msgstr "회원권 명세"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -77,14 +91,15 @@ msgstr "결과가 없습니다."
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Our Members Directory"
-msgstr "우리 구성원의 디렉토리"
+msgstr "구성원 디렉토리"
+
+#. module: website_membership
+#: model:ir.model,name:website_membership.model_website
+msgid "Website"
+msgstr "웹사이트"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
 msgid "World Map"
 msgstr "세계 지도"
-
-#. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.index
-msgid "float-left"
-msgstr ""

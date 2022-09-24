@@ -3,17 +3,15 @@
 # 	* hr_org_chart
 # 
 # Translators:
-# Martin Trigaux, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-06-09 14:06+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,11 +28,11 @@ msgstr "基本员工"
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "直接和间接下属"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:126
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Direct subordinates"
 msgstr "直接下属"
@@ -46,7 +44,7 @@ msgstr "员工"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:88
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "In order to get an organigram, set a manager and save the record."
 msgstr "为了获取组织图，请设置一个上司然后保存"
@@ -55,26 +53,27 @@ msgstr "为了获取组织图，请设置一个上司然后保存"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
-msgid "Indirect Surbordinates Count"
-msgstr "非直接下属数量"
+msgid "Indirect Subordinates Count"
+msgstr "间接下属统计"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:136
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Indirect subordinates"
 msgstr "非直接下属"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:65
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "More managers"
 msgstr "更多管理员"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:86
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "No hierarchy position."
 msgstr "没有层级位置"
@@ -89,14 +88,22 @@ msgstr "组织图表"
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_public
 msgid "Public Employee"
-msgstr "公职人员"
+msgstr "公共员工"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:155
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Redirect"
 msgstr "重定向"
+
+#. module: hr_org_chart
+#. openerp-web
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
+#, python-format
+msgid "See All"
+msgstr "查看全部"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
@@ -106,14 +113,21 @@ msgstr "下属"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:87
+#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:0
+#, python-format
+msgid "Team"
+msgstr "团队"
+
+#. module: hr_org_chart
+#. openerp-web
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "This employee has no manager or subordinate."
 msgstr "该员工没有上司或下属"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:144
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Total"
 msgstr "合计"

@@ -1,21 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_rating
+# 	* portal_rating
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
-# hoxhe Aits <hoxhe0@gmail.com>, 2019
-# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,237 +20,254 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 #, python-format
-msgid ""
-"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
-"'/mail/chatter_post'}"
-msgstr ""
+msgid "Add Review"
+msgstr "إضافة تقييم "
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#, python-format
-msgid "Add a review"
-msgstr ""
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Average"
 msgstr "متوسط"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Cancel"
-msgstr "إلغاء"
+msgstr "إلغاء "
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Close"
+msgstr "إغلاق "
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
 #, python-format
 msgid "Comment"
 msgstr "تعليق"
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_id
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_id
 msgid "Commented by"
-msgstr ""
+msgstr "تم التعليق بواسطة "
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_datetime
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_datetime
 msgid "Commented on"
-msgstr ""
+msgstr "تم التعليق في "
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Delete"
 msgstr "حذف"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Details"
 msgstr "التفاصيل"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Edit"
 msgstr "تحرير"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
+#, python-format
+msgid "Edit Review"
+msgstr ""
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+#, python-format
+msgid "Empty star"
+msgstr ""
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+#, python-format
+msgid "Full star"
+msgstr ""
+
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسار HTTP"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Half a star"
-msgstr ""
+msgstr "نصف نجمة"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I don't like it"
-msgstr "أنا لا أحب ذلك"
+msgstr "لم يعجبني "
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I hate it"
-msgstr "أنا أكره ذلك"
+msgstr "أكرهه "
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I like it"
-msgstr "احب ذلك"
+msgstr "أعجبني "
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I love it"
-msgstr "احببته"
+msgstr "أحببته "
 
-#. module: website_rating
-#: code:addons/website_rating/controllers/portal_rating.py:0
+#. module: portal_rating
+#: code:addons/portal_rating/controllers/portal_rating.py:0
 #, python-format
 msgid "Invalid rating"
-msgstr ""
+msgstr "التقييم غير صالح "
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "It's okay"
-msgstr "انه بخير"
+msgstr "لا بأس به "
 
-#. module: website_rating
-#: model:ir.model,name:website_rating.model_mail_message
-msgid "Message"
-msgstr "الرسالة"
-
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "جار التحميل..."
+
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_mail_message
+msgid "Message"
+msgstr "رسالة "
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "Modify your review"
-msgstr ""
+msgstr "قم بتعديل تقييمك "
 
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
-#, python-format
-msgid "One star"
-msgstr ""
-
-#. module: website_rating
-#: code:addons/website_rating/models/rating.py:0
+#. module: portal_rating
+#: code:addons/portal_rating/models/rating_rating.py:0
 #, python-format
 msgid "Only the publisher of the website can change the rating comment"
-msgstr ""
+msgstr "وحده ناشر الموقع الإلكتروني بوسعه تغيير تعليق التقييم "
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Post comment"
-msgstr ""
+msgstr "نشر تعليق "
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__website_published
-msgid "Published"
-msgstr "منشور"
-
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Published on"
-msgstr ""
+msgstr "تم النشر في "
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_comment
-msgid "Publisher Comment"
-msgstr ""
-
-#. module: website_rating
-#: model_terms:ir.ui.view,arch_db:website_rating.rating_rating_view_form
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_comment
 msgid "Publisher comment"
-msgstr ""
+msgstr "تعليق الناشر"
 
-#. module: website_rating
-#: model:ir.model,name:website_rating.model_rating_rating
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_rating_rating
 msgid "Rating"
 msgstr "التقييم"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Remove Selection"
+msgstr "إزالة الاختيار "
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
+#, python-format
+msgid "Review"
+msgstr "مراجعة"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
+#, python-format
+msgid ""
+"The rating is required. Please make sure to select one before sending your "
+"review."
 msgstr ""
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Update comment"
-msgstr ""
+msgstr "تحديث التعليق"
 
-#. module: website_rating
-#: model:ir.model.fields,help:website_rating.field_rating_rating__website_published
-msgid "Visible on the website as a comment"
-msgstr "ظاهر على الموقع كتعليق"
-
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_chatter.js:0
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Write a review"
+msgstr "كتابة تقييم "
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Write your comment"
-msgstr ""
+msgstr "اكتب تعليقك"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
 msgstr "الصورة الرمزية"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#, python-format
-msgid "ratings)"
-msgstr ""
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "stars"
-msgstr ""
+msgstr "نجوم"

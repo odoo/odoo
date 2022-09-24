@@ -1,21 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_requisition_stock
+# 	* purchase_requisition_stock
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
-# keecome <7017511@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Martin Trigaux, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 14:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,22 +28,28 @@ msgstr "下游移动"
 #. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "安全库存规则"
+msgstr "最小库存规则"
+
+#. module: purchase_requisition_stock
+#: model:ir.model.fields,field_description:purchase_requisition_stock.field_purchase_order__on_time_rate_perc
+#: model:ir.model.fields,field_description:purchase_requisition_stock.field_purchase_order_line__on_time_rate_perc
+msgid "OTD"
+msgstr ""
 
 #. module: purchase_requisition_stock
 #: model:ir.model.fields,field_description:purchase_requisition_stock.field_purchase_requisition__picking_type_id
 msgid "Operation Type"
-msgstr "操作类型"
-
-#. module: purchase_requisition_stock
-#: model:ir.model,name:purchase_requisition_stock.model_procurement_group
-msgid "Procurement Group"
-msgstr "补货组"
+msgstr "作业类型"
 
 #. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_purchase_order
 msgid "Purchase Order"
 msgstr "采购订单"
+
+#. module: purchase_requisition_stock
+#: model:ir.model,name:purchase_requisition_stock.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "采购订单明细"
 
 #. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_purchase_requisition
@@ -66,7 +69,7 @@ msgstr "申请明细行"
 #. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_stock_move
 msgid "Stock Move"
-msgstr "库存转移"
+msgstr "库存移动"
 
 #. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_stock_rule
@@ -77,3 +80,8 @@ msgstr "库存规则"
 #: model:ir.model.fields,field_description:purchase_requisition_stock.field_purchase_requisition__warehouse_id
 msgid "Warehouse"
 msgstr "仓库"
+
+#. module: purchase_requisition_stock
+#: model:ir.model,name:purchase_requisition_stock.model_purchase_requisition_create_alternative
+msgid "Wizard to preset values for alternative PO"
+msgstr ""

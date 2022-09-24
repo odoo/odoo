@@ -3,19 +3,16 @@
 # 	* sale_purchase
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Martin Trigaux, 2019
-# Osoul <baruni@osoul.ly>, 2019
-# Mohammed Albasha <m.albasha.ma@gmail.com>, 2019
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,25 +28,50 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"            قد تحتاج للقيام بإجراءات يدويًا."
+"            قد تضطر إلى تنفيذ إجراءات يدوياً. "
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
+msgstr ""
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr "<span class=\"o_stat_text\">المشتريات</span> "
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">البيع</span> "
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
+msgid ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
+"                </span>\n"
+"            </span>"
+msgstr ""
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "حدث خطأ في أوامر الشراء:"
+msgstr "الاستثناء (الاستثناءات) الحاصلة في أمر (أوامر) الشراء: "
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "حدث خطأ في أوامر المبيعات:"
+msgstr "الاستثناء (الاستثناءات) الحاصلة في أمر (أوامر) البيع: "
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s):"
-msgstr "الأخطاء:"
+msgstr "استثناء (الاستثناءات): "
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -64,29 +86,34 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
-"في حالة تحديده، في كل مرة تبيع هذا المنتج من خلال أمر بيع، يتم إنشاء طلب عرض"
-" سعر تلقائيًا لشراء المنتج. تلميح: لا تنسي تعيين مورد للمنتج."
+"إذا كان محدداً، في كل مرة تبيع فيها هذا المنتج من خلال أمر بيع، يتم إنشاء "
+"طلب عرض سعر تلقائياً لشراء المنتج. نصيحة: لا تنسَ تعيين مورّد للمنتج. "
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr "قد تحتاج للقيام بإجراءات يدويًا."
+msgstr "قد تضطر إلى تنفيذ إجراءات يدوياً. "
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
-msgid "Number of Purchase Order"
-msgstr "عدد أوامر الشراء"
+msgid "Number of Purchase Order Generated"
+msgstr "عدد أوامر الشراء المُنشأة "
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
+msgstr "عدد المبيعات المصدرية "
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr "عدد عناصر الشراء الناشئة"
+msgstr "عدد عناصر الشراء المُنشأة "
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "تم تقليص المكمية المطلوبة!"
+msgstr "تم تقليل المكمية المطلوبة! "
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
@@ -94,20 +121,23 @@ msgid "Origin Sale Item"
 msgstr "عنصر البيع الأصلي"
 
 #. module: sale_purchase
-#: model:ir.model,name:sale_purchase.model_product_template
-msgid "Product Template"
-msgstr "قالب المنتج"
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
+msgstr ""
 
 #. module: sale_purchase
-#: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
+#: model:ir.model,name:sale_purchase.model_product_template
+msgid "Product"
+msgstr "المنتج"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
 msgid "Product that is not a service can not create RFQ."
 msgstr "لا يمكن إنشاء طلب عرض سعر لمنتج ما لم يكن خدمة."
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
-msgid "Purchase Automatically"
-msgstr "الشراء تلقائيًا"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -115,14 +145,20 @@ msgid "Purchase Order"
 msgstr "أمر شراء"
 
 #. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
+msgid "Purchase Order Alert"
+msgstr ""
+
+#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
 msgstr "بند أمر الشراء"
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
-msgid "Purchase Orders"
-msgstr "أوامر الشراء"
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "أمر شراء تم إنشاؤه من %s "
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -136,7 +172,7 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
-msgstr "إعادة الترتيب"
+msgstr "إعادة الطلب "
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
@@ -149,26 +185,44 @@ msgid "Sales Order"
 msgstr "أمر البيع"
 
 #. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "إلغاء أمر البيع "
+
+#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "بند أمر المبيعات"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: code:addons/sale_purchase/models/purchase_order.py:0
+#, python-format
+msgid "Sources Sale Orders %s"
+msgstr "أوامر البيع المصدرية %s "
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr "التعاقد من الباطن بشأن الخدمة "
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
-msgstr "لا يوجد مورد مرتبط بالمنتج %s. برجاء تعريف مورد لهذا المنتج."
+msgstr "لا يوجد مورّد مرتبط بالمنتج %s. يرجى تحديد مورّد لهذا المنتج. "
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
-"لقد قمت بتقليص الكمية المطلوبة! لا تنس تحديث أمر الشراء يدويًا إن لزم الأمر."
+"لقد قمت بتقليل الكمية المطلوبة! لا تنس تحديث أمر الشراء يدوياً إن لزم الأمر."
+" "
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -186,4 +240,4 @@ msgstr "من"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr "تم طلبه بدلًا من"
+msgstr "تم طلبه عوضاً عن "

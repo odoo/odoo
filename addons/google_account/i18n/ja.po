@@ -1,20 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * google_account
+# 	* google_account
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# どりる <drill.dev@outlook.jp>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# Noma Yuki, 2022
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,83 +21,20 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__create_uid
-msgid "Created by"
-msgstr "作成者"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__create_date
-msgid "Created on"
-msgstr "作成日"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__display_name
-msgid "Display Name"
-msgstr "表示名"
-
-#. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "Google Service"
-msgstr ""
+msgstr "Googleサービス"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__id
-msgid "ID"
-msgstr "ID"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__write_uid
-msgid "Last Updated by"
-msgstr "最終更新者"
-
-#. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service__write_date
-msgid "Last Updated on"
-msgstr "最終更新日"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:172
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
 msgstr "サポートされていないメソッド [%s]これらは[GET、POST、PUT、PATCH、DELETE]内にありません！"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:120
-#, python-format
-msgid ""
-"Something went wrong during your token generation. Maybe your Authorization "
-"Code is invalid"
-msgstr "トークンの生成中に何か問題が発生しました。 承認コードが無効である可能性があります"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:56
+#: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
 msgstr "トークンの生成中に何か問題が発生しました。 承認コードが無効であるかすでに失効している可能性があります "
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:150
-#, python-format
-msgid ""
-"Something went wrong during your token generation. Maybe your Authorization "
-"Code is invalid or already expired [%s]"
-msgstr "トークンの生成中に何か問題が発生しました。 承認コードが無効であるかすでに失効している可能性があります [%s]"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:193
-#, python-format
-msgid "Something went wrong with your request to google"
-msgstr "Googleへのリクエストに異常があるようです"
-
-#. module: google_account
-#: code:addons/google_account/models/google_service.py:131
-#, python-format
-msgid "The account for the Google service '%s' is not configured."
-msgstr ""

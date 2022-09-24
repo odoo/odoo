@@ -3,78 +3,70 @@
 # 	* sale_product_matrix
 # 
 # Translators:
-# mymage <stefano.consolaro@mymage.it>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
 msgid "Add product mode"
-msgstr ""
+msgstr "Modalità aggiunta prodotto"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
 msgid ""
-"Configurator: choose attribute values to add the matching         product variant to the order.\n"
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Modello prodotto griglia"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
 msgid "Grid Update"
-msgstr ""
-
-#. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__report_grids
-msgid ""
-"If set, the matrix of the products configurable by matrix will be shown on "
-"the report of the order."
-msgstr ""
+msgstr "Aggiornamento griglia"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
-msgstr ""
+msgstr "Memoria locale della matrice"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
 msgid "Order Grid Entry"
-msgstr ""
+msgstr "Voce griglia per ordine"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Stampa griglie variante"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
+msgstr "Prodotto"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
 msgid "Product Configurator"
 msgstr "Configuratore prodotto"
-
-#. module: sale_product_matrix
-#: model:ir.model,name:sale_product_matrix.model_product_template
-msgid "Product Template"
-msgstr "Modello prodotto"
 
 #. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_sale_order
@@ -84,30 +76,21 @@ msgstr "Ordine di vendita"
 #. module: sale_product_matrix
 #: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
 msgid "Sales Variant Selection"
-msgstr ""
-
-#. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
-msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Selezione variante vendite"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
 msgid ""
 "Technical local storage of grid. \n"
-"If grid_update, will be loaded on the SO. \n"
+"If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
-msgstr ""
-
-#. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
-msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
 
 #. module: sale_product_matrix
 #: code:addons/sale_product_matrix/models/sale_order.py:0
 #, python-format
 msgid ""
-"You cannot change the quantity of a product present in multiple purchase "
-"lines."
+"You cannot change the quantity of a product present in multiple sale lines."
 msgstr ""
+"Impossibile cambiare la quantità di un prodotto presente in più di una riga "
+"di vendita."

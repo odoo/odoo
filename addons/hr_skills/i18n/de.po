@@ -3,18 +3,16 @@
 # 	* hr_skills
 # 
 # Translators:
-# Leon Grill <leg@odoo.com>, 2019
-# Martin Trigaux, 2019
-# Wolfgang Taferner, 2019
-# Matt <matt.fasola@braintec-group.com>, 2019
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Matt <matt.fasola@braintec-group.com>, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,25 +22,39 @@ msgstr ""
 
 #. module: hr_skills
 #. openerp-web
+#: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "ADD"
-msgstr ""
+msgstr "HINZUFÜGEN"
 
 #. module: hr_skills
 #. openerp-web
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "CREATE A NEW ENTRY"
-msgstr ""
+msgstr "NEUER EINTRAG"
 
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__display_type__classic
 msgid "Classic"
+msgstr "Klassisch"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__company_id
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: hr_skills
+#. openerp-web
+#: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
+#, python-format
+msgid "Create a new entry"
 msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__create_uid
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__create_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__create_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__create_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__create_uid
@@ -53,6 +65,7 @@ msgstr "Erstellt von"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__create_date
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__create_date
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__create_date
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__create_date
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__create_date
@@ -63,20 +76,38 @@ msgstr "Erstellt am"
 
 #. module: hr_skills
 #. openerp-web
-#: code:addons/hr_skills/static/src/js/resume_widget.js:0
+#: code:addons/hr_skills/static/src/fields/resume_one2many.xml:0
 #, python-format
 msgid "Current"
 msgstr "Aktuell"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__date
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__date_end
 msgid "Date End"
-msgstr "Datum Abschluss"
+msgstr "Enddatum"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__date_start
 msgid "Date Start"
 msgstr "Startdatum"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
+msgid "Default Level"
+msgstr "Standard-Level"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__department_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
+msgid "Department"
+msgstr "Abteilung"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__description
@@ -86,6 +117,7 @@ msgstr "Beschreibung"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
@@ -102,12 +134,53 @@ msgstr "Display-Typ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__employee_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__employee_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__employee_id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employee"
 msgstr "Mitarbeiter"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
+msgid "Employee Name"
+msgstr "Mitarbeitername"
+
+#. module: hr_skills
+#: model:ir.actions.act_window,name:hr_skills.hr_employee_skill_report_action
+msgid "Employee Skills"
+msgstr "Mitarbeiterkompetenzen"
+
+#. module: hr_skills
+#: model:ir.model,name:hr_skills.model_hr_employee_skill_report
+msgid "Employee Skills Report"
+msgstr "Berichte über Mitarbeiterkompetenzen"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
+msgid "Employees with Skills"
+msgstr "Beschäftigte mit Qualifikationen"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
+msgid "Employees without Skills"
+msgstr "Mitarbeiter ohne Kompetenzen"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
+msgid "Group By"
+msgstr "Gruppieren nach"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
+msgid "Group By..."
+msgstr "Gruppieren"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
@@ -117,7 +190,17 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_skills
+#: model:ir.model.fields,help:hr_skills.field_hr_skill_level__default_level
+msgid ""
+"If checked, this level will be the default one selected when choosing this "
+"skill."
+msgstr ""
+"Wenn diese Option aktiviert ist, wird diese Stufe bei der Auswahl dieser "
+"Qualifikation standardmäßig ausgewählt."
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill____last_update
@@ -128,6 +211,7 @@ msgstr "Letzte Änderung am"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__write_uid
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__write_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__write_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__write_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__write_uid
@@ -138,6 +222,7 @@ msgstr "Zuletzt aktualisiert von"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__write_date
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__write_date
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__write_date
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__write_date
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__write_date
@@ -147,10 +232,20 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
+msgid "Level Progress"
+msgstr "Level-Fortschritt"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_level_ids
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 msgid "Levels"
-msgstr ""
+msgstr "Niveau"
+
+#. module: hr_skills
+#: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
+msgid "Line Types"
+msgstr "Linienarten"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -162,14 +257,21 @@ msgid "Name"
 msgstr "Name"
 
 #. module: hr_skills
+#: code:addons/hr_skills/models/hr_skill_level.py:0
+#, python-format
+msgid "Only one default level is allowed per skill type."
+msgstr "Pro Kompetenztyp ist nur eine Standardstufe erlaubt."
+
+#. module: hr_skills
 #. openerp-web
-#: code:addons/hr_skills/static/src/js/resume_widget.js:0
+#: code:addons/hr_skills/static/src/views/skills_list_renderer.js:0
 #, python-format
 msgid "Other"
 msgstr "Andere"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__level_progress
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__level_progress
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__level_progress
 msgid "Progress"
 msgstr "Fortschritt"
@@ -181,14 +283,27 @@ msgstr "Fortschritt (%)"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill__level_progress
+#: model:ir.model.fields,help:hr_skills.field_hr_employee_skill_log__level_progress
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_level__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
+msgstr ""
+"Fortschritt von Nullkenntnissen (0%) bis zur vollständigen Beherrschung "
+"(100%)."
+
+#. module: hr_skills
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_skill_level_check_level_progress
+msgid "Progress should be a number between 0 and 100."
 msgstr ""
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Öffentlicher Mitarbeiter"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
+msgid "Resume"
+msgstr "Fortsetzen"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_human_resources_configuration_resume
@@ -199,117 +314,151 @@ msgstr "Öffentlicher Mitarbeiter"
 #: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Resumé"
-msgstr ""
+msgstr "Lebenslauf"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
 msgid "Resumé Line Types"
-msgstr ""
-
-#. module: hr_skills
-#. openerp-web
-#: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
-#, python-format
-msgid "Resumé empty"
-msgstr ""
+msgstr "CV Zeilentyp"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
 msgid "Resumé line of an employee"
-msgstr ""
-
-#. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_search
-msgid "Resumé line type"
-msgstr ""
+msgstr "Lebenslaufzeile eines/-er Mitarbeiters/-erin"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__resume_line_ids
 msgid "Resumé lines"
+msgstr "CV Zeilen"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
+msgid "Search Logs"
 msgstr ""
 
 #. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_search
-msgid "Résume"
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
+msgid "Search Skill"
 msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__sequence
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill__sequence
 msgid "Sequence"
 msgstr "Sequenz"
 
 #. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_tree
+msgid "Set Default"
+msgstr "Standardwert setzen"
+
+#. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__skill_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__skill_id
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Skill"
+msgstr "Qualifikation"
+
+#. module: hr_skills
+#: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_log_department
+#: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_log_employee
+#: model:ir.actions.server,name:hr_skills.action_open_skills_log_department
+#: model:ir.actions.server,name:hr_skills.action_open_skills_log_employee
+msgid "Skill History Report"
 msgstr ""
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_level
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_level_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__skill_level_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__skill_level
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_form
 msgid "Skill Level"
-msgstr ""
+msgstr "Qualifikationsniveau"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_tree
 msgid "Skill Levels"
-msgstr ""
+msgstr "Qualifikationsniveaus"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_type
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_type_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__skill_type_id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__skill_type_id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__skill_type_id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__skill_type_id
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Skill Type"
-msgstr ""
+msgstr "Qualifikationstyp"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
+#: model:ir.ui.menu,name:hr_skills.hr_skill_type_menu
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
 msgid "Skill Types"
-msgstr ""
+msgstr "Qualifikationstypen"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
 msgid "Skill level for an employee"
-msgstr ""
+msgstr "Qualifikationsniveau für einen Mitarbeiter"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__employee_skill_ids
-#: model:ir.ui.menu,name:hr_skills.hr_skill_type_menu
+#: model:ir.ui.menu,name:hr_skills.hr_employee_skill_report_menu
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
 msgid "Skills"
 msgstr "Fähigkeiten"
 
 #. module: hr_skills
-#: code:addons/hr_skills/models/hr_skills.py:0
-#, python-format
-msgid "The skill %s and skill type %s doesn't match"
+#: model:ir.model,name:hr_skills.model_hr_employee_skill_log
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_graph_department
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_graph_employee
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_tree
+msgid "Skills History"
 msgstr ""
 
 #. module: hr_skills
-#: code:addons/hr_skills/models/hr_skills.py:0
+#: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
-msgid "The skill level %s is not valid for skill type: %s "
+msgid "The skill %(name)s and skill type %(type)s doesn't match"
 msgstr ""
+"Die Fähigkeit%(name)s und die Kategorie %(type)s passen nicht zusammen"
+
+#. module: hr_skills
+#: code:addons/hr_skills/models/hr_employee_skill.py:0
+#, python-format
+msgid "The skill level %(level)s is not valid for skill type: %(type)s"
+msgstr ""
+"Die Fähigkeitsstufe %(level)s ist für den Fähigkeitstyp %(type)s nicht "
+"gültig: "
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_resume_line_date_check
 msgid "The start date must be anterior to the end date."
-msgstr "Das Start Datum muss vor dem Ende Datum sein"
+msgstr "Das Startdatum muss vor dem Enddatum liegen"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
@@ -319,6 +468,11 @@ msgstr "Titel"
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
 msgid "Two levels for the same skill is not allowed"
+msgstr "Zwei Stufen für dieselbe Kompetenz sind nicht erlaubt."
+
+#. module: hr_skills
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
+msgid "Two levels for the same skill on the same day is not allowed"
 msgstr ""
 
 #. module: hr_skills
@@ -329,14 +483,19 @@ msgstr "Typ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
 msgid "Type of a resumé line"
-msgstr ""
-
-#. module: hr_skills
-#: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
-msgid "Types"
-msgstr ""
+msgstr "Art der Zeile im Lebenslauf"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users
-msgid "Users"
+msgid "User"
 msgstr "Benutzer"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
+msgid "e.g. Languages"
+msgstr "z.B. Sprachen"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
+msgid "e.g. Odoo Inc."
+msgstr "z.B. Odoo Inc."

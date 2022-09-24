@@ -1,18 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * mass_mailing_sale
+# 	* mass_mailing_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Seksan Poltree <seksan.poltree@gmail.com>, 2018
+# Martin Trigaux, 2022
+# Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Seksan Poltree <seksan.poltree@gmail.com>, 2018\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,32 +21,102 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mail_mass_mailing_view_form
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "INVOICED"
+msgstr "ใบแจ้งหนี้"
+
+#. module: mass_mailing_sale
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
 msgid "Invoiced"
-msgstr "แจ้งหนี้แล้ว"
+msgstr "ออกใบแจ้งหนี้แล้ว"
 
 #. module: mass_mailing_sale
-#: model:ir.model.fields,field_description:mass_mailing_sale.field_mail_mass_mailing__sale_invoiced_amount
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_invoiced_amount
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "จำนวนที่ออกใบแจ้งหนี้"
 
 #. module: mass_mailing_sale
-#: model:ir.model,name:mass_mailing_sale.model_mail_mass_mailing
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Invoices Analysis"
+msgstr "การวิเคราะห์ใบแจ้งหนี้"
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_mailing_mailing
 msgid "Mass Mailing"
 msgstr "การส่งจดหมายจำนวนมาก"
 
 #. module: mass_mailing_sale
-#: model:ir.model.fields,field_description:mass_mailing_sale.field_mail_mass_mailing__sale_quotation_count
-msgid "Quotation Count"
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "No Quotations yet!"
 msgstr ""
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mail_mass_mailing_view_form
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "No Revenues yet!"
+msgstr ""
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "QUOTATIONS"
+msgstr "ใบเสนอราคา"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_quotation_count
+msgid "Quotation Count"
+msgstr "จำนวนใบเสนอราคา"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_quotation_count
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
 msgid "Quotations"
 msgstr "ใบเสนอราคา"
 
 #. module: mass_mailing_sale
-#: model:mail.mass_mailing,name:mass_mailing_sale.mass_mail_sale_order_0
-#: model:utm.source,name:mass_mailing_sale.mass_mail_sale_order_0_utm_source
-msgid "Sale Newsletter"
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid ""
+"Quotations will appear here once your customers add products to their Carts "
+"or when your sales reps assign this mailing."
 msgstr ""
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_invoiced_amount
+msgid "Revenues"
+msgstr "รายได้"
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Revenues will appear here once orders are turned into invoices."
+msgstr ""
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Sales Analysis"
+msgstr "วิเคราะห์การขาย"
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,help:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
+msgid "Selection to determine the winner mailing that will be sent."
+msgstr "การคัดเลือกเพื่อกำหนดรายชื่อผู้ชนะที่จะจัดส่ง"
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "แคมเปญ UTM "
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
+msgid "Winner Selection"
+msgstr "คัดเลือกผู้ชนะ"

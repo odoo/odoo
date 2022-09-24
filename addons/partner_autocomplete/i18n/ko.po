@@ -1,19 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * partner_autocomplete
+# 	* partner_autocomplete
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-09-21 14:23+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,124 +20,40 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "(Time Now)"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.res_config_settings_view_form
-msgid ""
-"<i class=\"fa fa-arrow-right\"/>\n"
-"                        Buy more credits"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.res_config_settings_view_form
-msgid ""
-"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; You don't "
-"have credits to auto-complete companies' data anymore."
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-building text-primary\"/>\n"
-"                <b>Company type:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-calendar text-primary\"/>\n"
-"                <b>Founded:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-cube text-primary\"/>\n"
-"                <b>Technology Used :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-envelope text-primary\"/>\n"
-"                <b>Email :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-globe text-primary\"/>\n"
-"                <b>Timezone :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-industry text-primary\"/>\n"
-"                <b>Sector:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-money text-primary\"/>\n"
-"                <b>Annual revenue:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-money text-primary\"/>\n"
-"                <b>Estimated annual revenue:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-phone text-primary\"/>\n"
-"                <b>Phone :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-users text-primary\"/>\n"
-"                <b>Employees:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.res_config_settings_view_form
-msgid "<span>&amp;times;</span>"
-msgstr ""
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
 msgid "Additional info"
-msgstr ""
+msgstr "추가 정보"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.res_config_settings_view_form
-msgid "Close"
-msgstr "마감"
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
+#, python-format
+msgid "Buy more credits"
+msgstr "추카 크레딧 구매"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
-msgstr "회사들"
+msgstr "회사"
+
+#. module: partner_autocomplete
+#: code:addons/partner_autocomplete/models/res_company.py:0
+#, python-format
+msgid "Company auto-completed by Odoo Partner Autocomplete Service"
+msgstr ""
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
 msgid "Company database ID"
-msgstr ""
+msgstr "회사 데이터베이스 ID"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner
@@ -154,12 +68,39 @@ msgstr "작성자"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
+
+#. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__iap_enrich_auto_done
+msgid "Enrich Done"
+msgstr ""
+
+#. module: partner_autocomplete
+#: model:ir.model,name:partner_autocomplete.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 라우팅"
+
+#. module: partner_autocomplete
+#: model:ir.model,name:partner_autocomplete.model_iap_account
+msgid "IAP Account"
+msgstr "IAP 계정"
+
+#. module: partner_autocomplete
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
+#, python-format
+msgid "IAP Account Token missing"
+msgstr "IAP 계정 토큰이 없습니다"
+
+#. module: partner_autocomplete
+#: model:ir.model,name:partner_autocomplete.model_iap_autocomplete_api
+msgid "IAP Partner Autocomplete API"
+msgstr ""
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
@@ -169,17 +110,17 @@ msgstr "ID"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__partner_autocomplete_insufficient_credit
 msgid "Insufficient credit"
-msgstr ""
+msgstr "크레딧 부족"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__synched
 msgid "Is synched"
-msgstr ""
+msgstr "동기화 여부"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_uid
@@ -189,50 +130,67 @@ msgstr "최근 갱신한 사람"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
+
+#. module: partner_autocomplete
+#: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
+#, python-format
+msgid "No account token"
+msgstr ""
+
+#. module: partner_autocomplete
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
+#, python-format
+msgid "Not enough credits for Partner Autocomplete"
+msgstr "파트너 자동 완성에 대한 크레딧이 부족합니다"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
 msgid "Partner"
-msgstr "협력사"
+msgstr "파트너"
 
 #. module: partner_autocomplete
 #: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
 #: model:ir.cron,cron_name:partner_autocomplete.ir_cron_partner_autocomplete
 #: model:ir.cron,name:partner_autocomplete.ir_cron_partner_autocomplete
 msgid "Partner Autocomplete : Sync with remote DB"
-msgstr ""
+msgstr "협력사 자동 완성 : 원격 DB와 동기화"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
 msgid "Partner Autocomplete Sync"
-msgstr ""
+msgstr "협력사 자동 완성 동기화"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
 msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr ""
+msgstr "Odoo 협력사 자동 완성 서비스로 만든 협력사"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:8
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Placeholder"
-msgstr ""
+msgstr "자리 표시자"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:22
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:0
 #, python-format
 msgid "Searching Autocomplete..."
-msgstr ""
+msgstr "자동 완성 검색중..."
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "Twitter :"
-msgstr ""
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
+#, python-format
+msgid "Set Your Account Token"
+msgstr "계정 토큰 설정"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "followers)"
+#: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
+#, python-format
+msgid "Test mode"
 msgstr ""

@@ -3,33 +3,21 @@
 # 	* sale_quotation_builder
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Alejandro Santana <alejandrosantana@anubia.es>, 2019
-# José Vicente <txusev@gmail.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
-# Miguel Orueta <mo@landoo.es>, 2019
-# 966ff43e6966712895a590e7320ca288, 2019
-# 715cd7e95e9ee8a7f9785bf3e53bc76f, 2019
-# Cristopher Cravioto <ccr@odoo.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
-msgid "&amp;times;"
-msgstr "&amp;times;"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -57,9 +45,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 msgid ""
 ":\n"
-"                        this content will appear on the quotation only if this\n"
-"                        product is not removed."
+"                        the content below will disappear if this\n"
+"                        product is removed from the quote."
 msgstr ""
+":\n"
+"                        el contenido de abajo desaparecerá si este\n"
+"                        producto se elimina de la cotización."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -68,6 +59,9 @@ msgid ""
 "                                    will appear on all quotations using this\n"
 "                                    template."
 msgstr ""
+"<strong>Encabezado de plantilla:</strong> este contenido\n"
+"                                    aparecerá en todas las citas usando esta\n"
+"                                    plantilla."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -77,7 +71,7 @@ msgstr "Acerca de"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
 msgid "An awesome"
-msgstr ""
+msgstr "Una asombrosa"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -86,6 +80,9 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
+"Como empresa líder de servicios profesionales,\n"
+"                                sabemos que el éxito radica en el\n"
+"                                compromiso que adquirimos en nuestros servicios más destacados."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -93,14 +90,14 @@ msgid "Close"
 msgstr "Cerrar"
 
 #. module: sale_quotation_builder
-#: model:ir.model,name:sale_quotation_builder.model_res_config_settings
-msgid "Config Settings"
-msgstr "Opciones de Configuración"
+#: model:ir.model,name:sale_quotation_builder.model_res_company
+msgid "Companies"
+msgstr "Compañías"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Design Template"
-msgstr ""
+msgstr "Plantilla de diseño"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -125,6 +122,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"Si edita un presupuesto desde la 'Vista previa' del mismo, solo\n"
+"                        actualizará el presupuesto. Si edita la plantilla de\n"
+"                        presupuesto(desde el menú Configuración), todas los futuros presupuestos\n"
+"                        utilizarán esta plantilla modificada."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
@@ -158,8 +159,8 @@ msgstr "Precio"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_product_template
-msgid "Product Template"
-msgstr "Plantilla de producto"
+msgid "Product"
+msgstr "Producto"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -168,6 +169,9 @@ msgid ""
 "                                stand on; we build it with a relentless\n"
 "                                focus on fabric, performance and craftsmanship."
 msgstr ""
+"La calidad del producto es la base en la que\n"
+"                                estamos parados; Lo construimos con un enfoque\n"
+"                                incesante en la fábrica, el rendimiento y la artesanía."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -225,7 +229,6 @@ msgstr "Términos y condiciones"
 #. module: sale_quotation_builder
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
-#: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
 msgstr "La descripción del presupuesto(no utilizada en eCommerce)"
 
@@ -247,19 +250,26 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"Esta es una <strong>plantilla de presupuesto de ejemplo</strong>. Debe\n"
+"                                personalizarla según sus necesidades desde la aplicación de <i>Ventas</i>,\n"
+"                                con el menú: Configuración /\n"
+"                                Plantillas de Presupuesto."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "This is a preview of the sale order template."
-msgstr ""
+msgstr "Esta es una vista previa de la plantilla de orden de venta."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
-"Titles with style <i>Heading 1</i> and\n"
-"                                    <i>Heading 2</i> will be used to generate the\n"
+"Titles with style <i>Heading 2</i> and\n"
+"                                    <i>Heading 3</i> will be used to generate the\n"
 "                                    table of content automatically."
 msgstr ""
+"Se usarán los títulos con estilo <i>Cabecera 2</i> y\n"
+"                                    <i>Cabecera 3</i> para generar la\n"
+"                                    tabla de contenidos automáticamente."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -268,6 +278,9 @@ msgid ""
 "                                set at a fair price so that you will be\n"
 "                                happy to buy them."
 msgstr ""
+"Siempre garantizamos que nuestros productos\n"
+"                                tengan un precio justo, de forma\n"
+"                                que se alegrará de comprarlos."
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__website_description
@@ -294,8 +307,3 @@ msgstr ""
 "                        de todos los productos de la propuesta. La tabla de contenidos\n"
 "                        de la izquierda se genera de forma automática con los estilos\n"
 "                       que haya usado en la descripción (encabezado 1, encabezado 2...)"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
-msgid "portal"
-msgstr ""

@@ -3,22 +3,21 @@
 # 	* im_livechat_mail_bot
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
@@ -29,23 +28,25 @@ msgid ""
 "discovering Odoo!"
 msgstr ""
 "Bien, vous pouvez modifier les réponses automatiques dans l'application Live"
-" chat.<br/><br/><b>C'est la fin de cette visite</b>, bonne découverte "
-"d'Odoo! "
+" chat.<br/><br/><b>C'est la fin de cette visite</b>, bonne découverte d'Odoo"
+" ! "
 
 #. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_mail_bot
 msgid "Mail Bot"
-msgstr ""
+msgstr "Mail Bot"
 
 #. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"Not sure wat you are doing. Please press : and wait for the propositions. "
-"Select one of them and press enter."
+"Not sure what you are doing. Please, type <span "
+"class=\"o_odoobot_command\">:</span> and wait for the propositions. Select "
+"one of them and press enter."
 msgstr ""
-"Pas sûr de ce que vous êtes en train de faire. Tapez : et attendez les "
-"propositions. Sélectionnez l'un d'entre eux et appuyez sur enter."
+"Pas sûr de ce que vous faites. S'il vous plaît, tapez <span "
+"class=\"o_odoobot_command\">:</span> et attendez les propositions. "
+"Sélectionnez l'une d'elles et appuyez sur Enter."
 
 #. module: im_livechat_mail_bot
 #: model:ir.model.fields,field_description:im_livechat_mail_bot.field_res_users__odoobot_state
@@ -55,17 +56,19 @@ msgstr "Statut OdooBot"
 #. module: im_livechat_mail_bot
 #: model:ir.model.fields.selection,name:im_livechat_mail_bot.selection__res_users__odoobot_state__onboarding_canned
 msgid "Onboarding canned"
-msgstr ""
+msgstr "Onboarding canned"
 
 #. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
-msgid "That's me! 🎉<br/>Try to type \":\" to use canned responses."
+msgid ""
+"That's me! 🎉<br/>Try typing <span class=\"o_odoobot_command\">:</span> to "
+"use canned responses."
 msgstr ""
-"C'est moi! 🎉<br/>Essayez de taper \":\" pour utiliser les réponses "
-"automatiques."
+"C'est moi! 🎉<br/>Essayez de taper <span class=\"o_odoobot_command\">:</span>"
+" pour utiliser des réponses prédéfinies."
 
 #. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_res_users
-msgid "Users"
-msgstr "Utilisateurs"
+msgid "User"
+msgstr "Utilisateur"

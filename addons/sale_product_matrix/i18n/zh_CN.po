@@ -3,16 +3,15 @@
 # 	* sale_product_matrix
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jeanphy <hzh0292@qq.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,11 +29,9 @@ msgstr "添加产品模式"
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
 msgid ""
-"Configurator: choose attribute values to add the matching         product variant to the order.\n"
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
-"配置：选择属性值来添加匹配的产品到订单中。\n"
-"网格：从属性值网格中快速添加一系列产品变体"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
@@ -45,13 +42,6 @@ msgstr "产品模板网格"
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
 msgid "Grid Update"
 msgstr "网格更新"
-
-#. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__report_grids
-msgid ""
-"If set, the matrix of the products configurable by matrix will be shown on "
-"the report of the order."
-msgstr "如果勾选，可配置产品矩阵将会在订单报表中显示。"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
@@ -66,17 +56,17 @@ msgstr "订单网格入口"
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "打印变体网格"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
+msgstr "产品"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
 msgid "Product Configurator"
 msgstr "产品配置器"
-
-#. module: sale_product_matrix
-#: model:ir.model,name:sale_product_matrix.model_product_template
-msgid "Product Template"
-msgstr "产品模板"
 
 #. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_sale_order
@@ -89,30 +79,16 @@ msgid "Sales Variant Selection"
 msgstr "销售变体选择"
 
 #. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
-msgid "Technical field for product_matrix functionalities."
-msgstr "产品矩阵功能的技术字段。"
-
-#. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
 msgid ""
 "Technical local storage of grid. \n"
-"If grid_update, will be loaded on the SO. \n"
+"If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
 msgstr ""
-"网格的技术本地存储。 \n"
-"如果网格更新，将会加载到SO中。\n"
-"如果没有，显示矩阵为打开状态。"
-
-#. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
-msgid "Whether the grid field contains a new matrix to apply or not."
-msgstr "网格字段包含一个新的矩阵应用与否。"
 
 #. module: sale_product_matrix
 #: code:addons/sale_product_matrix/models/sale_order.py:0
 #, python-format
 msgid ""
-"You cannot change the quantity of a product present in multiple purchase "
-"lines."
-msgstr "你不能改变显示在多个采购行中的产品数量。"
+"You cannot change the quantity of a product present in multiple sale lines."
+msgstr "您不能更改多个销售线中存在的产品数量。"

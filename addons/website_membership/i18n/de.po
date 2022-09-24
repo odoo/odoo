@@ -3,20 +3,15 @@
 # 	* website_membership
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Felix Schubert <felix.schubert@go-erp.com>, 2019
-# Wolfgang Taferner, 2019
-# Gab_Odoo <gab@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
-# Leon Grill <leg@odoo.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +34,7 @@ msgid "All"
 msgstr "Alle"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:83
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Alle Länder"
@@ -52,7 +47,7 @@ msgstr "Vereine & Verbände"
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "Close"
-msgstr "Abschliessen"
+msgstr "Abschließen"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -60,21 +55,28 @@ msgid "Find a business partner"
 msgstr "Finden Sie einen Geschäftspartner"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:126
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "Free Members"
 msgstr "Kostenbefreite Mitglieder"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
 msgid "Location"
 msgstr "Lagerort"
 
 #. module: website_membership
+#: code:addons/website_membership/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_membership.index
-#: model:website.menu,name:website_membership.menu_members
+#, python-format
 msgid "Members"
 msgstr "Mitglieder"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
+msgid "Members Page"
+msgstr ""
 
 #. module: website_membership
 #: model:ir.model,name:website_membership.model_membership_membership_line
@@ -92,11 +94,12 @@ msgid "Our Members Directory"
 msgstr "Unser Mitgliederverzeichnis"
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
-msgid "World Map"
-msgstr "Weltkarte"
+#: model:ir.model,name:website_membership.model_website
+msgid "Website"
+msgstr "Website"
 
 #. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.index
-msgid "float-left"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
+msgid "World Map"
+msgstr "Weltkarte"

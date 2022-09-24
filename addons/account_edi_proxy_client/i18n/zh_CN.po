@@ -1,0 +1,161 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_edi_proxy_client
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"PO-Revision-Date: 2022-09-22 05:44+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_edi_proxy_client
+#: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
+msgid "Account EDI proxy user"
+msgstr "账户EDI代理用户"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
+msgid "Account Edi Proxy Client"
+msgstr "帐户Edi代理客户端"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
+msgid "Active"
+msgstr "启用"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_format_code
+msgid "Code"
+msgstr "代号"
+
+#. module: account_edi_proxy_client
+#: model:ir.model,name:account_edi_proxy_client.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: account_edi_proxy_client
+#: model:ir.model,name:account_edi_proxy_client.model_account_edi_format
+msgid "EDI format"
+msgstr "EDI 格式"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_format_id
+msgid "Edi Format"
+msgstr "Edi 格式"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
+msgid "Edi Identification"
+msgstr "Edi标志"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
+msgid "Id Client"
+msgstr "客户端ID"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key
+msgid "Private Key"
+msgstr "私有密钥"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
+msgid "Refresh Token"
+msgstr "更新 Token"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key
+msgid "The key to encrypt all the user's data"
+msgstr "加密所有用户数据的密钥"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
+msgid ""
+"The unique id that identifies this user for on the edi format, typically the"
+" vat"
+msgstr "识别该用户的唯一ID，用于EDI格式，通常是VAT。"
+
+#. module: account_edi_proxy_client
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+#, python-format
+msgid ""
+"The url that this service requested returned an error. The url it tried to "
+"contact was %s"
+msgstr "这个服务所请求的网址返回了一个错误。它试图联系的网址是%s"
+
+#. module: account_edi_proxy_client
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+#, python-format
+msgid ""
+"The url that this service requested returned an error. The url it tried to "
+"contact was %s. %s"
+msgstr "这个服务所请求的网址返回了一个错误。它试图联系的网址是%s.%s"
+
+#. module: account_edi_proxy_client
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+#, python-format
+msgid ""
+"The url that this service tried to contact does not exist. The url was %r"
+msgstr "该服务试图联系的URL不存在。该网址是%r。"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_edi_identification_per_format
+msgid "This edi identification is already assigned to a user"
+msgstr "Edi认证已授予到用户"
+
+#. module: account_edi_proxy_client
+#: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
+msgid "This id_client is already used on another user."
+msgstr "这个 id_client 已经被另外一个用户使用"

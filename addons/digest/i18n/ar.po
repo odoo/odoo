@@ -3,23 +3,16 @@
 # 	* digest
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Akram Alfusayal <akram_ma@hotmail.com>, 2019
-# amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Ali zuaby <ali@zuaby.net>, 2019
-# Osoul <baruni@osoul.ly>, 2019
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
-# Ali Alrehawi <alrehawi@hotmail.com>, 2019
-# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,185 +21,24 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: digest
-#: model:mail.template,subject:digest.digest_mail_template
-msgid "${'%s: %s' % (ctx.get('user', user).company_id.name, object.name)}"
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Check our Documentation"
 msgstr ""
 
 #. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
-msgid "${', '.join(users.mapped('name'))} signed up. Say hello in the"
-msgstr "قام ${', '.join(users.mapped('name'))} بالاشتراك. رحب به في"
+#: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
+msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
+msgstr "<span class=\"button\" id=\"button_open_report\">تقرير مفتوح</span> "
 
 #. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
-msgid ""
-"% set users = object.env['res.users'].search([('share', '=' , False)], limit=10, order='id desc')\n"
-"    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
-"    <strong style=\"font-size: 16px;\">Did you know...?</strong>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
+msgid "<span class=\"odoo_link_text\">Odoo</span>"
+msgstr "<span class=\"odoo_link_text\">أودو</span> "
 
 #. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
-msgid ""
-"<strong style=\"font-size: 16px;\">Get things done with activities</strong>"
-msgstr "<strong style=\"font-size: 16px;\">أنجز مشروعاتك من خلال الأنشطة</strong>"
-
-#. module: digest
-#: model:mail.template,body_html:digest.digest_mail_template
-msgid ""
-"<table style=\"width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;\">\n"
-"    <tr>\n"
-"        <td align=\"center\" valign=\"top\" style=\"border-collapse: collapse; padding: 0\">\n"
-"            % set user = ctx.get('user', user)\n"
-"            % set company = user.company_id\n"
-"            % set data = object.compute_kpis(company, user)\n"
-"            % set tips = object.compute_tips(company, user)\n"
-"            % set kpi_actions = object.compute_kpis_actions(company, user)\n"
-"            % set kpis = data.yesterday.keys()\n"
-"            <table style=\"width: 100%; max-width: 600px; border-spacing: 0; border: 1px solid #e7e7e7; border-bottom: none; color: #6e7172; line-height: 23px; text-align: left;\">\n"
-"                <tr>\n"
-"                    <td style=\"border-collapse: collapse; padding: 10px 20px; text-align: left;\">\n"
-"                        <strong style=\"color: #000000; font-size: 22px; line-height: 32px;\">${object.name}</strong>\n"
-"                        <div style=\"color: #000000; font-size: 15px;\">${datetime.date.today().strftime('%B %d, %Y')}</div>\n"
-"                    </td>\n"
-"                    <td style=\"text-align: right; padding: 10px 20px\">\n"
-"                        <img style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" src=\"/logo.png?company=${company.id}\"/>\n"
-"                        <div style=\"padding-top: 5px;\">\n"
-"                            <a href=\"/web/login\" style=\"background-color: #875A7B; margin-left: 5px; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">Connect</a>\n"
-"                        </div>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr><td colspan=\"2\" style=\"text-align: center;\">\n"
-"                    <hr width=\"95%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 14px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"            % for kpi in kpis:\n"
-"                <table style=\"border-spacing: 0; width: 100%; max-width: 600px;\">\n"
-"                    <tr>\n"
-"                        <td style=\"border-collapse: collapse; background-color: #ffffff; border-left: 1px solid #e7e7e7; border-right: 1px solid #e7e7e7; line-height: 21px; padding: 0 20px 10px 20px; text-align: left;\"><br/>\n"
-"                            <span style=\"color: #3d466e; font-size: 18px; font-weight: 500; line-height: 23px;\">${object.fields_get()[kpi]['string']}</span>\n"
-"                            %if kpi in kpi_actions:\n"
-"                                <span style=\"float: right;\">\n"
-"                                    <a href=\"/web#action=${kpi_actions[kpi]}\">View more</a>\n"
-"                                </span>\n"
-"                            %endif\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                    <tr>\n"
-"                        <td style=\"border-collapse: collapse; margin: 0; padding:0;\">\n"
-"                            <table style=\"width: 100%; border-spacing: 0; background-color: #f9f9f9; border: 1px solid #e7e7e7; border-top: none;\">\n"
-"                                <tr>\n"
-"                                    <td style=\"border-collapse: collapse; margin: 0; padding: 0; display: block; border-top: 2px solid #56b3b5;\">\n"
-"                                        <table style=\"width: 100%; max-width: 199px; border-spacing: 0;\">\n"
-"                                            <tr>\n"
-"                                                <td style=\"border-collapse: collapse; padding: 20px; text-align: center;\">\n"
-"                                                    <span style=\"color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;\">${data['yesterday'][kpi][kpi]}</span><br/>\n"
-"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Yesterday</span>\n"
-"                                                    % if data['yesterday'][kpi]['margin'] != 0.0:\n"
-"                                                        <span style=\"color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">\n"
-"                                                            % if data['yesterday'][kpi]['margin'] is greaterthan(0.0):\n"
-"                                                                <span style=\"color: #0bbc22;\">▲</span>${\"%.2f\" % data['yesterday'][kpi]['margin']} %\n"
-"                                                            % endif\n"
-"                                                            % if data['yesterday'][kpi]['margin'] is lessthan(0.0):\n"
-"                                                                <span style=\"color: #ff0000;\">▼</span>${\"%.2f\" % data['yesterday'][kpi]['margin']} %\n"
-"                                                            % endif\n"
-"                                                        </span>\n"
-"                                                    % endif\n"
-"                                                </td>\n"
-"                                            </tr>\n"
-"                                        </table>\n"
-"                                    </td>\n"
-"                                    <td style=\"border-collapse: collapse; margin: 0; padding: 0; border-top: 2px solid #9a5b82;\">\n"
-"                                        <table style=\"width: 100%; max-width: 199px; border-spacing: 0; margin: 0; padding: 0;\">\n"
-"                                            <tr>\n"
-"                                                <td style=\"border-collapse: collapse; padding: 20px; text-align: center;\">\n"
-"                                                    <span style=\"color: #9a5b82; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;\">${data['lastweek'][kpi][kpi]}</span><br/>\n"
-"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Last 7 Days</span>\n"
-"                                                    % if data['lastweek'][kpi]['margin'] != 0.0:\n"
-"                                                        <span style=\"color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">\n"
-"                                                            % if data['lastweek'][kpi]['margin'] is greaterthan(0.0):\n"
-"                                                                <span style=\"color: #0bbc22;\">▲</span>${\"%.2f\" % data['lastweek'][kpi]['margin']} %\n"
-"                                                            % endif\n"
-"                                                            % if data['lastweek'][kpi]['margin'] is lessthan(0.0):\n"
-"                                                                <span style=\"color: #ff0000;\">▼</span>${\"%.2f\" % data['lastweek'][kpi]['margin']} %\n"
-"                                                            %endif\n"
-"                                                        </span>\n"
-"                                                    %endif\n"
-"                                                </td>\n"
-"                                            </tr>\n"
-"                                        </table>\n"
-"                                    </td>\n"
-"                                    <td style=\"border-collapse: collapse; margin: 0; padding: 15px; border-top: 2px solid #56b3b5;\">\n"
-"                                        <table style=\"width: 100%; max-width: 199px; border-spacing: 0; margin: 0; padding: 0;\">\n"
-"                                            <tr>\n"
-"                                                <td style=\"border-collapse: collapse; margin: 0; text-align: center;\">\n"
-"                                                    <span style=\"color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px\">${data['lastmonth'][kpi][kpi]}</span><br/>\n"
-"                                                    <span style=\"color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">Last 30 Days</span>\n"
-"                                                    % if data['lastmonth'][kpi]['margin'] != 0.0:\n"
-"                                                        <span style=\"color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;\">\n"
-"                                                             % if data['lastmonth'][kpi]['margin'] is greaterthan(0.0):\n"
-"                                                                <span style=\"color: #0bbc22;\">▲</span>${\"%.2f\" % data['lastmonth'][kpi]['margin']} %\n"
-"                                                            % endif\n"
-"                                                            % if data['lastmonth'][kpi]['margin'] is lessthan(0.0):\n"
-"                                                                <span style=\"color: #ff0000;\">▼</span>${\"%.2f\" % data['lastmonth'][kpi]['margin']} %\n"
-"                                                            %endif\n"
-"                                                        </span>\n"
-"                                                    %endif\n"
-"                                                </td>\n"
-"                                            </tr>\n"
-"                                        </table>\n"
-"                                    </td>\n"
-"                                </tr>\n"
-"                            </table>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </table>\n"
-"            % endfor\n"
-"            % if tips:\n"
-"                <table style=\"width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;\">\n"
-"                    <tr>\n"
-"                        <td style=\"border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0px 20px 20px;\"><br/>\n"
-"                            <div style=\"color: #3d466e; line-height: 23px;\">${tips | safe}</div>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </table>\n"
-"            % endif\n"
-"            <table style=\"width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;\">\n"
-"                <tr>\n"
-"                    <td style=\"border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0 20px 10px 20px; text-align: center;\"><br/>\n"
-"                        <div style=\"color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;\">Run your business from anywhere with Odoo Mobile.</div>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td style=\"padding-bottom:20px;\">\n"
-"                        <div style=\"text-align: center;\"><a href=\"https://play.google.com/store/apps/details?id=com.odoo.mobile\" target=\"_blank\"><img src=\"/digest/static/src/img/google_play.png\" style=\"display: inline-block; height: 30px; margin-left: auto; margin-right: 12px;\"/></a><a href=\"https://itunes.apple.com/us/app/odoo/id1272543640\" target=\"_blank\"><img src=\"/digest/static/src/img/app_store.png\" style=\"display: inline-block; height: 30px; margin-left: 12px; margin-right: auto;\"/></a>\n"
-"                        </div>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"            <table style=\"margin-top: 5px; border: 1px solid #e7e7e7; font-size: 15px; width: 100%; max-width: 600px;\">\n"
-"                <tr>\n"
-"                    <td style=\"border-collapse: collapse; margin: 0; padding: 10px 20px;\">\n"
-"                        % if user.has_group('base.group_system'):\n"
-"                            <div style=\"margin-top: 20px;\"> \n"
-"                                Want to customize this email?\n"
-"                                <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #875A7B;\">Choose the metrics you care about</a>\n"
-"                            </div>\n"
-"                            <br/>\n"
-"                        % endif\n"
-"                        <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"                            <strong>\n"
-"                                Sent by\n"
-"                                <a href=\"https://www.odoo.com\" style=\"text-decoration: none; color: #875A7B;\">Odoo</a> - <a href=\"/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}\" target=\"_blank\" style=\"color: #888888;\">Unsubscribe</a>\n"
-"                            </strong>\n"
-"                        </p>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
+msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
+msgstr "<span style=\"color: #8f8f8f;\">إلغاء الاشتراك</span> "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -215,6 +47,7 @@ msgstr "تفعيل"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__activated
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
 msgid "Activated"
 msgstr "مفعل"
 
@@ -222,12 +55,13 @@ msgstr "مفعل"
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
 msgstr ""
-"إدراج المستخدمين الجدد في قائمة استلام رسالة البريد الدورية بمقاييس رئيسية"
+"قم بإدراج المستخدمين الجدد في قائمة مستلمي رسائل البريد الدورية بمقاييس "
+"رئيسية "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
 msgid "Authorized Group"
-msgstr "المجموعة المعتمدة"
+msgstr "المجموعة المصرح لها "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__available_fields
@@ -235,33 +69,36 @@ msgid "Available Fields"
 msgstr "الحقول المتاحة"
 
 #. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Choose the metrics you care about"
+msgstr "اختر المقاييس التي تعنيك "
+
+#. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
 msgid "Company"
-msgstr "الشركة"
+msgstr "الشركة "
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_config_settings
 msgid "Config Settings"
-msgstr "ضبط الإعدادات"
+msgstr "تهيئة الإعدادات "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr "إعداد رسائل البريد التلخيصية"
+msgstr "تهيئة رسائل البريد التلخيصية"
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Connect"
+msgstr "اتصل"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected
 msgid "Connected Users"
-msgstr "المستخدمون المتصلون"
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid ""
-"Create or edit the mail template: you may get computed KPI's value using "
-"these fields:"
-msgstr ""
-"إنشاء أو تحرير قالب رسالة البريد الإلكتروني: قد تحصل على قيمة المؤشر الرئيسي"
-" المحسوبة باستخدام هذه الحقول:"
+msgstr "المستخدمين المتصلين "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
@@ -282,11 +119,22 @@ msgstr "العملة"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "Deactivate for everyone"
-msgstr "تعطيل للجميع"
+msgid "Custom"
+msgstr "مُخصص"
+
+#. module: digest
+#: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__daily
+msgid "Daily"
+msgstr "يوميًا"
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Deactivate"
+msgstr ""
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__deactivated
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
 msgid "Deactivated"
 msgstr "معطل"
 
@@ -314,23 +162,35 @@ msgstr "رسائل البريد التلخيصية"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr "اشتراكات الرسائل التلخيصية"
+msgstr "اشتراكات الرسائل الموجزة "
 
 #. module: digest
+#: model:ir.actions.act_window,name:digest.digest_tip_action
 #: model:ir.model,name:digest.model_digest_tip
+#: model:ir.ui.menu,name:digest.digest_tip_menu
 msgid "Digest Tips"
-msgstr "ملاحظات الملخص"
+msgstr "نصائح الموجز "
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Digest Title"
+msgstr ""
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:digest.field_digest_tip__display_name
 msgid "Display Name"
-msgstr "الاسم المعروض"
+msgstr "اسم العرض "
 
 #. module: digest
-#: model:ir.model.fields,field_description:digest.field_digest_digest__template_id
-msgid "Email Template"
-msgstr "قالب البريد الإلكتروني"
+#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
+msgid "Documentation"
+msgstr "التوثيق"
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Email Address"
+msgstr "عنوان البريد الإلكتروني"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -340,12 +200,17 @@ msgstr "عام"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
 msgid "Group by"
-msgstr "تجميع حسب"
+msgstr "التجميع حسب "
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "How to customize your digest?"
-msgstr "كيف تعدل رسالتك التلخيصية؟"
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
+msgid ""
+"Have a question about a document? Click on the responsible user's picture to"
+" start a conversation. If his avatar has a green dot, he is online."
+msgstr ""
+"ألديك أي أسئلة حول مستند ما؟ اضغط على صورة المستخدم المسؤول لبدء محادثة. إذا"
+" كانت هناك نقطة خضراء بجانب الصورة الرمزية لذلك المستخدم، هذا يعني أنه متصل "
+"الآن. "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -354,9 +219,10 @@ msgid "ID"
 msgstr "المُعرف"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "In order to build your customized digest, follow these steps:"
-msgstr "اتبع هذه الخطوات لتكوين رسالتك التلخيصية المعدلة:"
+#: code:addons/digest/controllers/portal.py:0
+#, python-format
+msgid "Invalid periodicity set on digest"
+msgstr "الدورية التي تم تعيينها للموجز غير صالحة "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
@@ -367,22 +233,50 @@ msgstr "هو مستخدم مشترك"
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
-msgstr "ملخص مؤشرات الأداء"
+msgstr "موجز المؤشرات الرئيسية للأداء "
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_form
+msgid "KPI Digest Tip"
+msgstr "نصيحة موجز المؤشرات الرئيسية للأداء "
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_tree
+msgid "KPI Digest Tips"
+msgstr "نصائح موجز المؤشرات الرئيسية للأداء "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "KPIs"
-msgstr "مؤشرات الأداء الرئيسية"
+msgstr "المؤشرات الرئيسية للأداء "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr "قيمة مؤشر الأداء لعدد الرسائل"
+msgstr "قيمة المؤشرات الرئيسية للأداء لعدد الرسائل "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
 msgid "Kpi Res Users Connected Value"
-msgstr "مؤشر الأداء لعدد المستخدمين المتصلين"
+msgstr "قيمة المؤشرات الرئيسية للأداء لعدد المستخدمين المتصلين "
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Last 24 hours"
+msgstr "آخر 24 ساعة "
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Last 30 Days"
+msgstr "آخر 30 يوم"
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Last 7 Days"
+msgstr "آخر 7 أيام"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest____last_update
@@ -404,8 +298,8 @@ msgstr "آخر تحديث في"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total
-msgid "Messages"
-msgstr "الرسائل"
+msgid "Messages Sent"
+msgstr ""
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__monthly
@@ -414,6 +308,7 @@ msgstr "شهرياً"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__name
+#: model:ir.model.fields,field_description:digest.field_digest_tip__name
 msgid "Name"
 msgstr "الاسم"
 
@@ -423,19 +318,44 @@ msgid ""
 "New users are automatically added as recipient of the following digest "
 "email."
 msgstr ""
-"تلقائيًا، يتم إدراج المستخدمين الجدد في قائمة استلام الرسائل التلخيصية "
-"التالية."
+"يتم إضافة المستخدمين الجدد في قائمة مستلمي رسائل البريد الإلكتروني الموجزة "
+"التالية تلقائياً. "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
-msgid "Next Send Date"
-msgstr "تاريخ الإرسال التالي"
+msgid "Next Mailing Date"
+msgstr ""
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
+msgid "Odoo Mobile"
+msgstr "أودو للهاتف المحمول "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__periodicity
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
 msgid "Periodicity"
-msgstr "التكرار"
+msgstr "الوتيرة "
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
+msgid "Powered by"
+msgstr "مشغل بواسطة "
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Prefer a broader overview ?"
+msgstr " أتفضل أن تكون النظرة العامة شاملة أكثر؟ "
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
+msgid ""
+"Press ALT in any screen to highlight shortcuts for every button in the "
+"screen. It is useful to process multiple documents in batch."
+msgstr ""
+"اضغط على زر ALT في أي شاشة لإبراز الاختصارات لكل زر في الشاشة. يكون ذلك "
+"مفيداً عند معالجة عدة مستندات في دفعة واحدة. "
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
@@ -447,12 +367,13 @@ msgstr "ربع سنوي"
 #: model:ir.model.fields,field_description:digest.field_digest_tip__user_ids
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Recipients"
-msgstr "المستلمون"
+msgstr "المستلمين"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "Select your KPIs in the KPI's tab."
-msgstr "اختر مؤشراتك الرئيسية في تبويب المؤشر الرئيسي."
+#: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
+msgid "Run your business from anywhere with <b>Odoo Mobile</b>."
+msgstr ""
+"تمكن من إدارة أعمالك من أي مكان باستخدام تطبيق <b>أودو للهاتف المحمول</b>. "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -460,9 +381,19 @@ msgid "Send Now"
 msgstr "إرسال الآن"
 
 #. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
+msgid "Sent by"
+msgstr "أُرسل من قِبَل "
+
+#. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
 msgid "Sequence"
-msgstr "المسلسل"
+msgstr "التسلسل "
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
+msgid "Statistics"
+msgstr "الإحصائيات"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__state
@@ -470,39 +401,115 @@ msgid "Status"
 msgstr "الحالة"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "Subscribe"
-msgstr "اشتراك"
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Switch to weekly Digests"
+msgstr "التبديل للموجزات الأسبوعية "
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
 msgid "Tip description"
-msgstr "وصف تلميحي"
+msgstr "وصف النصيحة "
 
 #. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_2
-msgid "To reach your full potential with Odoo, have a look at our"
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
+msgid "Tip: A calculator in Odoo"
+msgstr "نصيحة: الآلة الحاسبة في أودو "
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
+msgid "Tip: Click on an avatar to chat with a user"
+msgstr "نصيحة: اضغط على الصورة الرمزية للدردشة مع مستخدم "
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
+msgid "Tip: How to ping users in internal notes?"
+msgstr " نصيحة: كيف تقوم بتنبيه المستخدمين في الملاحظات الداخلية؟ "
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
+msgid "Tip: Knowledge is power"
+msgstr "نصيحة: المعرفة هي أساس القوة "
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
+msgid "Tip: Speed up your workflow with shortcuts"
+msgstr "نصيحة: قم بتسريع سير عملك عن طريق الاختصارات "
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_2
+msgid "Tip: A calculator in Odoo"
+msgstr "نصيحة: الآلة الحاسبة في أودو "
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_1
+msgid "Tip: Click on an avatar to chat with a user"
+msgstr "نصيحة: اضغط على الصورة الرمزية للدردشة مع مستخدم "
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_3
+msgid "Tip: How to ping users in internal notes?"
+msgstr "نصيحة: كيف تقوم بتنبيه المستخدمين في الملاحظات الداخلية؟ "
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_4
+msgid "Tip: Knowledge is power"
+msgstr "نصيحة: المعرفة هي أساس القوة "
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_0
+msgid "Tip: Speed up your workflow with shortcuts"
+msgstr "نصيحة: قم بتسريع سير عملك عن طريق الاختصارات "
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
+msgid "Title"
+msgstr "العنوان"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
+msgid ""
+"Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
+"Try to notify @OdooBot to test the feature."
 msgstr ""
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "Unsubscribe me"
-msgstr "إلغاء اشتراكي"
+"اكتب \"@\" لتنبيه شخص في رسالة، أو \"#\" لربط أحدهم بقناة. جرب تنبيه "
+"@OdooBot لاختبار هذه الخاصية. "
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
-msgstr "تستخدم لعرض ملاحظة تلخيصية في قالب البريد حسب الطلب"
+msgstr "يستخدم لعرض ملاحظة موجزة في قالب البريد الإلكتروني حسب الطلب "
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
-msgid "Users"
-msgstr "المستخدمون"
+msgid "User"
+msgstr "المستخدم"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__user_ids
 msgid "Users having already received this tip"
-msgstr "المستخدمون الذين استلموا بالفعل هذه الملحوظة"
+msgstr "المستخدمين الذين استلموا هذه النصيحة بالفعل "
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Want to add your own KPIs?<br/>"
+msgstr ""
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "Want to customize this email?"
+msgstr "أترغب في تخصيص رسالة البريد الإلكتروني هذه؟ "
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid ""
+"We have noticed you did not connect these last few days. We have "
+"automatically switched your preference to %(new_perioridicy_str)s Digests."
+msgstr ""
+"لقد لاحظنا أنك لم تكن متصلاً أبداً خلال الأيام القليلة الماضية. لقد قمنا "
+"بتغيير تفضيلك تلقائياً إلى موجزات %(new_perioridicy_str)s. "
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__weekly
@@ -510,82 +517,54 @@ msgid "Weekly"
 msgstr "أسبوعيًا"
 
 #. module: digest
-#: model:digest.digest,name:digest.digest_digest_default
-msgid "Weekly Stats in Odoo"
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
+msgid ""
+"When editing a number, you can use formulae by typing the `=` character. "
+"This is useful when computing a margin or a discount on a quotation, sale "
+"order or invoice."
 msgstr ""
+"عندما تقوم بتحرير رقم ما، بإمكانك استخدام معادلات عن طريق كتابة رمز `=`. "
+"يكون ذلك مفيداً عند احتساب الهوامش أو الخصومات في عروض الأسعار أو أوامر "
+"البيع أو الفواتير. "
 
 #. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid ""
-"You can ping colleagues by tagging them in your messages using \"@\". They "
-"will be instantly notified.<br>"
+"When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
+"Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
 msgstr ""
-"يمكنك إشعار زملاءك من خلال الإشارة إليهم في رسالتك باستخدام علامة \"@\". "
-"سيتم إخطارهم فورًا.<br>"
-
-#. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
-msgid ""
-"You don't have any activity scheduled. Use activities on any business "
-"document to schedule meetings, calls and todos."
-msgstr ""
-"ليس لديك نشاطات مجدولة. استخدم الأنشطة في أي مستند عمل لجدولة الاجتماعات "
-"والمكالمات والإجراءات المطلوبة."
+"عند متابعة المستندات، استخدم أيقونة القلم لصقل المعلومات التي تود الحصول عليها. \n"
+"قم بمتابعة مشروع / فريق مبيعات لتبقى على اطلاع بمهام المشروع / فرص الفريق. "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
-msgid "You have been successfully unsubscribed from"
-msgstr "ألغيت بنجاح اشتراكك من"
+msgid "You have been successfully unsubscribed from:<br/>"
+msgstr ""
+
+#. module: digest
+#: model:digest.digest,name:digest.digest_digest_default
+msgid "Your Odoo Periodic Digest"
+msgstr "موجزك الدوري من أودو "
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "You may want to add new computed fields with Odoo Studio:"
-msgstr "ربما تحتاج لإضافة حقول محسوبة جديدة باستديو أودو:"
+msgid "e.g. Your Weekly Digest"
+msgstr "مثال: موجزك الأسبوعي "
 
 #. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_2
-msgid "and discover new tools to work better and faster."
-msgstr ""
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "monthly"
+msgstr "شهرياً "
 
 #. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_2
-msgid "apps videos"
-msgstr ""
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "quarterly"
+msgstr "ربع سنوي "
 
 #. module: digest
-#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
-msgid "company's discussion channel."
-msgstr "قناة النقاش الخاصة بالمؤسسة."
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid ""
-"first create a boolean field called\n"
-"                                                <code>kpi_myfield</code>\n"
-"                                                and display it in the KPI's tab;"
-msgstr ""
-"قم أولًا بإنشاء حقل منطقي يُسمى\n"
-"                                                <code>kpi_myfield</code>\n"
-"                                                واعرضه في تبويب المؤشر الرئيسي؛"
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid ""
-"then create a computed field called\n"
-"                                                <code>kpi_myfield_value</code>\n"
-"                                                that will compute your customized KPI."
-msgstr ""
-"ثم أنشئ حقل محسوب يُسمى\n"
-"                                                <code>kpi_myfield_value</code>\n"
-"                                                ليحسب قيمة مؤشرك الرئيسي المعدلة."
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid ""
-"you must create 2 fields on the\n"
-"                                                <code>digest</code>\n"
-"                                                object:"
-msgstr ""
-"يجب إنشاء حقلين في\n"
-"                                                الكائن\n"
-"                                                التلخيصي:"
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "weekly"
+msgstr "أسبوعياً "

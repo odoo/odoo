@@ -3,77 +3,69 @@
 # 	* board
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Paolo Valier, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:58
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "\"%s\" added to dashboard"
+msgstr "\"%s\" aggiunto alla dashboard"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "\"Add to\n"
-"                Dashboard\""
+"                  Dashboard\""
 msgstr ""
-"\"Aggiungere alla\n"
-"                bacheca\""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:30
-#, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:132
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' aggiunto alla dashboard"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:88
-#: code:addons/board/static/src/xml/board.xml:98
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add"
 msgstr "Aggiungi"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:83
-#: code:addons/board/static/src/xml/board.xml:93
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
-msgid "Add to my Dashboard"
-msgstr "Aggiungi alla mia bacheca"
+msgid "Add to my dashboard"
+msgstr "Aggiungi alla bacheca"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:378
+#: code:addons/board/static/src/board_controller.js:0
 #, python-format
-msgid "Are you sure you want to remove this item?"
-msgstr "Rimuovere veramente questo elemento?"
+msgid "Are you sure that you want to remove this item?"
+msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:432
+#: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
 #, python-format
 msgid "Board"
@@ -81,43 +73,18 @@ msgstr "Board"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:11
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Change Layout"
 msgstr "Cambia struttura"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:9
-#, python-format
-msgid "Change Layout.."
-msgstr "Cambia la struttura..."
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:41
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "Selezionare la struttura della bacheca"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:136
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Non è possibile aggiungere il filtro alla dashboard"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_board__display_name
-msgid "Display Name"
-msgstr "Nome visualizzato"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:83
-#, python-format
-msgid "Edit Layout"
-msgstr "Modifica struttura"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board__id
@@ -125,66 +92,63 @@ msgid "ID"
 msgstr "ID"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board____last_update
-msgid "Last Modified on"
-msgstr "Ultima modifica il"
+#. openerp-web
+#: code:addons/board/static/src/board_action.xml:0
+#, python-format
+msgid "Invalid action"
+msgstr "Azione non valida"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:46
+#: code:addons/board/static/src/board_controller.xml:0
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Layout"
 msgstr "Struttura"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:46
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
 msgid "My Dashboard"
 msgstr "La mia bacheca"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:133
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Please refresh your browser for the changes to take effect."
 msgstr "Aggiornare il browser per applicare i cambiamenti."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:56
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                menu, switch to list or graph view, and click"
+"                  menu, switch to list or graph view, and click"
 msgstr ""
-"Per aggiungere il tuo primo rendiconto nella bacheca, andare in\n"
-"                un qualsiasi menù, cambiare la vista in lista o grafico e selezionare"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:60
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                dashboard using the search options."
+"                  dashboard using the search options."
 msgstr ""
-"È possibile filtrare e raggruppare i dati prima di inserirli nella \n"
-"                bacheca usando le opzioni di ricerca."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:54
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Your personal dashboard is empty"
 msgstr "La bacheca personale è vuota"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:58
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "in the extended search options."
 msgstr "nel menu \"Favoriti\" delle opzioni di ricerca. "

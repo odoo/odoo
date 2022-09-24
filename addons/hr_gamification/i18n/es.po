@@ -3,24 +3,21 @@
 # 	* hr_gamification
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jon Perez <jop@odoo.com>, 2019
-# John Guardado <jgu@odoo.com>, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -29,7 +26,7 @@ msgid ""
 "                    Goals can be created automatically by using challenges."
 msgstr ""
 "Una meta es definida por un usuario y una definición de meta.\n"
-"Las metas pueden ser creadas automáticamente usando retos."
+"                    Las metas pueden ser creadas automáticamente usando desafíos."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
@@ -39,7 +36,7 @@ msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
-"Todas las insignias del empleado, vinculadas al él ya sea directamente o a "
+"Todas las insignias del empleado, vinculadas a él ya sea directamente o a "
 "través del usuario"
 
 #. module: hr_gamification
@@ -50,8 +47,8 @@ msgid ""
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
 "Asigna una lista de metas a los usuarios elegidos para evaluarlos.\n"
-"Los retos pueden usar un periodo (semanalmente, mensualmente...) para la creación automática de metas.\n"
-"Las metas son creadas para usuarios específicos o miembros de un grupo."
+"                    El desafío puede usar un periodo (semanal, mensual...) para la creación automática de metas.\n"
+"                    Las metas son creadas para los usuarios específicos o miembros de un grupo."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
@@ -95,17 +92,17 @@ msgstr "Desafíos"
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid "Create a new challenge"
-msgstr ""
+msgstr "Crear un nuevo desafío"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid "Create a new goal"
-msgstr ""
+msgstr "Crear una nueva meta"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Describa qué hizo y por qué importa (será público)"
+msgstr "Describa qué hizo y por qué es importante (será público)"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
@@ -137,7 +134,7 @@ msgstr "Objetivos de RRHH del empleado"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "Insignia de Gamificación"
+msgstr "Insignia de gamificación"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
@@ -147,35 +144,35 @@ msgstr "Insignia de usuario de gamificación"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr ""
+msgstr "Asistente de insignia de usuario de gamificación"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
 msgid "Goal"
-msgstr "Objetivo"
+msgstr "Meta"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
 #: model:ir.ui.menu,name:hr_gamification.gamification_goal_menu_hr
 msgid "Goals History"
-msgstr "Histórico de objetivos"
+msgstr "Historial de metas"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
-msgstr "Conceder una insignia"
+msgstr "Otorgar una insignia"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
-msgstr ""
+msgstr "Otorga a este empleado su primera insignia"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
-msgstr "Concedida"
+msgstr "Otorgada"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__granted_employees_count
@@ -204,29 +201,24 @@ msgstr "Usuario relacionado con el recurso para gestionar su acceso."
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
-msgstr "Premiar al empleado"
+msgstr "Recompensar al empleado"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
-msgstr "Premiar al empleado con"
+msgstr "Recompensar al empleado con"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/models/gamification.py:18
+#: code:addons/hr_gamification/models/gamification.py:0
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
-msgstr ""
-"El empleado seleccionado no se corresponde con el usuario seleccionado."
-
-#. module: hr_gamification
-#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
-msgid "User"
-msgstr "Usuario"
+msgstr "El empleado seleccionado no corresponde con el usuario seleccionado."
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
-msgid "Users"
-msgstr "Usuarios"
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
+msgid "User"
+msgstr "Usuario"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -234,13 +226,13 @@ msgid "What are you thankful for?"
 msgstr "¿De qué está agradecido?"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:22
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can not send a badge to yourself."
-msgstr ""
+msgstr "No puede enviarse una insignia a si mismo."
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:19
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can send badges only to employees linked to a user."
 msgstr "Sólo puede enviar insignias a empleados enlazados con un usuario"

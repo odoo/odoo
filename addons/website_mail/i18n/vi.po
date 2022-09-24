@@ -3,19 +3,15 @@
 # 	* website_mail
 # 
 # Translators:
-# fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 13:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,41 +20,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
-#: model:ir.model.fields,field_description:website_mail.field_mail_message__description
-msgid "Description"
-msgstr "Mô tả"
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Follow</small><i class=\"fa fa-fw ms-1\"/>"
+msgstr ""
 
 #. module: website_mail
-#: model:ir.model,name:website_mail.model_mail_message
-msgid "Message"
-msgstr "Thông báo"
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_mail__description
-#: model:ir.model.fields,help:website_mail.field_mail_message__description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Mô tả thông điệp: hoặc chủ đề, hoặc nội dung mở đầu"
-
-#. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
-#: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
-#, python-format
-msgid "Published"
-msgstr "Đã công bố"
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Unfollow</small><i class=\"fa fa-fw ms-1\"/>"
+msgstr ""
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
-
-#. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid "Records:"
-msgstr ""
+msgstr "Hợp đồng bảo hành nhà phát hành"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
@@ -66,40 +40,9 @@ msgid "Subscribe"
 msgstr "Đăng ký nhận tin"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
-"\n"
-"(Document type: %s, Operation: %s)"
-msgstr ""
-"Hoạt động được yêu cầu không thể thực hiện vì quy định bảo mật. Vui lòng liên hệ với người quản trị hệ thống của bạn.\n"
-"\n"
-"(Loại dữ liệu: %s, Hoạt động: %s)"
-
-#. module: website_mail
-#. openerp-web
-#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
-#, python-format
-msgid "Unpublished"
-msgstr "Chưa xuất bản"
-
-#. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Unsubscribe"
-msgstr "Ngừng theo dõi"
-
-#. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:0
-#, python-format
-msgid "User:"
-msgstr "Người dùng:"
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
-#: model:ir.model.fields,help:website_mail.field_mail_message__website_published
-msgid "Visible on the website as a comment"
-msgstr "Hiển thị trên website như một lời bình"
+msgstr "Ngừng đăng ký"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow

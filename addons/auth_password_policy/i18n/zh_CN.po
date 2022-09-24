@@ -3,17 +3,15 @@
 # 	* auth_password_policy
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Ryan Zhang <so_happy_boy@hotmail.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,53 +36,57 @@ msgid ""
 msgstr "密码至少包含字符数，设定0为禁用此设置。"
 
 #. module: auth_password_policy
-#: code:addons/auth_password_policy/models/res_users.py:30
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/password_field.js:0
+#, python-format
+msgid "Password"
+msgstr "密码"
+
+#. module: auth_password_policy
+#: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
 msgstr "密码需至少%d个字符，现有%d个字符。"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:123
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid ""
-"Required: %s.\n"
+"Required: %s\n"
 "\n"
-"Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
-"要求：%s\n"
-"\n"
-"提示：增加长度，使用多个文字以及非书写字符去增强你的密码强度。"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
-msgid "Users"
+msgid "User"
 msgstr "用户"
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d character classes"
-msgstr "至少%d个字符类别"
+msgid "at least %s character classes"
+msgstr ""
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d characters"
-msgstr "至少%d个字符"
+msgid "at least %s characters"
+msgstr ""
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d words"
-msgstr "至少%d个字"
+msgid "at least %s words"
+msgstr ""
 
 #. module: auth_password_policy
 #. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid "no requirements"
 msgstr "无要求"

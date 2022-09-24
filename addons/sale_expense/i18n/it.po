@@ -3,62 +3,96 @@
 # 	* sale_expense
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
 msgid "# of Expenses"
-msgstr "N. di note spese"
-
-#. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid "<strong style=\"font-size: 16px;\">Submit expenses by email</strong>"
-msgstr ""
-"<strong style=\"font-size: 16px;\">Invio note spese tramite email</strong>"
-
-#. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid "Activate Expense Emails"
-msgstr "Attiva email per note spese"
+msgstr "N. spese"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__can_be_reinvoiced
 msgid "Can be reinvoiced"
-msgstr ""
+msgstr "Può essere rifatturata"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
+msgid "Customer to Reinvoice"
+msgstr "Cliente da rifatturare"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
-msgstr "Nota spese"
+msgstr "Spesa"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
+msgid "Expense Policy Tooltip"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Rendiconto spese"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense_split
+msgid "Expense Split"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
-msgstr "Note spese"
+msgstr "Spese"
+
+#. module: sale_expense
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid "Expenses of this category may not be added to a Sales Order."
+msgstr ""
+
+#. module: sale_expense
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid ""
+"Expenses will be added to the Sales Order at their actual cost when posted."
+msgstr ""
+
+#. module: sale_expense
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid ""
+"Expenses will be added to the Sales Order at their sales price (product "
+"price, pricelist, etc.) when posted."
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
 msgid ""
-"If the product has an expense policy, it will be reinvoiced on this sales "
+"If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
+"Se la categoria ha una politica di spesa, sarà rifatturata su questo ordine "
+"di vendita"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -72,13 +106,19 @@ msgstr "Movimento contabile"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
-msgid "Product Template"
-msgstr "Modello prodotto"
+msgid "Product"
+msgstr "Prodotto"
 
 #. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
-msgid "Reinvoice Customer"
+#: code:addons/sale_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Reinvoiced Sales Orders"
 msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
+msgid "Sale Order Count"
+msgstr "Numero ordini di vendita"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
@@ -86,7 +126,6 @@ msgid "Sales Order"
 msgstr "Ordine di vendita"
 
 #. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid ""
-"Take a snapshot of your expenses and submit your expenses by email.<br>"
-msgstr "Cattura di una istantanea delle note spese e invio tramite email.<br>"
+#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form
+msgid "Sales Orders"
+msgstr "Ordini di vendita"

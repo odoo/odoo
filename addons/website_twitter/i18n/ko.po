@@ -1,20 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_twitter
+# 	* website_twitter
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# Martin Trigaux, 2022
+# JH CHOI <hwangtog@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,36 +22,48 @@ msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ", <strong>create a project</strong> with the following information:"
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+", click on <strong>Elevated</strong> then on <strong>Apply</strong> and "
+"finally complete the form."
+msgstr ""
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                Show me how to obtain the Twitter API key and Twitter API secret"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                Twitter API 키와 Twitter API  암호를 얻는 방법 보기"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Twitter Roller</span>\n"
-"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgid "<span class=\"o_form_label\">Twitter Roller</span>"
 msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Callback URL: </strong>Leave blank"
+msgid "<strong>App Name: </strong> choose a unique name"
 msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Description: </strong> Odoo Twitter Integration"
-msgstr ""
+msgstr "<strong>설명 : </strong> Odoo Twitter 통합"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo Twitter Integration"
-msgstr ""
+msgstr "<strong>이름 : </strong> Odoo Twitter 통합"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "<strong>Website: </strong>"
+msgid "<strong>Use Case: </strong> Embedding Tweets in a website"
 msgstr ""
 
 #. module: website_twitter
@@ -66,39 +76,25 @@ msgstr "API 키"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_secret
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr ""
+msgstr "API 암호"
 
 #. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Accept terms of use and click on the Create your Twitter application button "
-"at the bottom"
-msgstr ""
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:16
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
-msgstr ""
+msgstr "인증 자격 증명이 없거나 잘못되었습니다. 화면명 트윗이 보호되어있을 수 있습니다."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "설정 구성"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid ""
-"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
-"below."
+msgid "Copy/Paste the API Key and API Key Secret values into the above fields"
 msgstr ""
-
-#. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Create a new Twitter application on"
-msgstr "새로운 트위터 응용 프로그램을 만들기"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -108,17 +104,22 @@ msgstr "작성자"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
+msgstr "즐겨찾기에서"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Get Elevated access by going to"
 msgstr ""
 
 #. module: website_twitter
@@ -127,10 +128,10 @@ msgid "Get favorites from this screen name"
 msgstr "이 화면 이름에서 관심글 가져오기"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:48
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
-msgstr ""
+msgstr "HTTP 오류 : 뭔가 잘못 설정되었습니다."
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -143,15 +144,15 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:59
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
-msgid "Internet connection refused"
+msgid "Internet connection refused: We failed to reach a twitter server."
 msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
@@ -161,17 +162,27 @@ msgstr "최근 갱신한 사람"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:61
-#: code:addons/website_twitter/models/res_config_settings.py:62
-#, python-format
-msgid "Please double-check your Twitter API Key and Secret!"
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Log in or create an account on"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:27
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "On the"
+msgstr "On the"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Once connected, and if not already done, complete the Twitter portal access "
+"process on"
+msgstr ""
+
+#. module: website_twitter
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
@@ -179,25 +190,25 @@ msgid ""
 msgstr "웹사이트 설정에서 관심글을 로드하는 트위터 화면 이름을 설정하십시오(그것은 당신일 필요는 없습니다)."
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:23
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
-msgstr "웹 사이트 설정에서 트위터 API 키와 비밀을 설정하십시오."
+msgstr "웹 사이트 설정에서 트위터 API 키와 암호를 설정하십시오."
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:21
+#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:0
 #, python-format
 msgid "Reload"
 msgstr "새로 고침"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:18
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
 "exhausted for the resource."
-msgstr ""
+msgstr "리소스에 대한 응용 프로그램 속도 제한이 소진되어 요청을 처리할 수 ​​없습니다."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__screen_name
@@ -212,61 +223,57 @@ msgid ""
 msgstr "즐겨찾기를 로드하려는 트위터 계정의 화면 이름입니다. 이것은 API 키/암호와 일치하지 않습니다."
 
 #. module: website_twitter
-#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Switch to the API Keys tab: <br/>"
-msgstr ""
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:21
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
-msgstr ""
+msgstr "트위터 서버가 가동되었지만 요청이 과부하되었습니다. 나중에 다시 시도하십시오."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:22
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
-msgstr ""
+msgstr "Twitter 서버가 가동되었지만 스택 내에서 일부 장애로 인해 요청을 처리 할 수 ​​없습니다. 나중에 다시 시도하십시오."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:17
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
-msgstr ""
+msgstr "요청이 이해되었지만 요청이 거부되었거나 액세스가 허용되지 않았습니다. 트위터 API 키와 암호를 확인하십시오."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:15
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
 msgstr ""
+"요청이 유효하지 않거나 다른 방식으로 제공 될 수 없습니다. 인증이 없는 요청은 유효하지 않은 것으로 간주되어 이 응답을 생성합니다."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:14
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "There was no new data to return."
-msgstr ""
+msgstr "반환할 새 데이터가 없습니다."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
 msgid "Tweet ID"
-msgstr "트위터 ID"
+msgstr "트윗 ID"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
 msgid "Tweets"
-msgstr "트위터"
+msgstr "트윗"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter API Credentials"
-msgstr ""
+msgstr "트위터 API 자격 증명"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
@@ -286,7 +293,7 @@ msgstr "트위터 API 키"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "트위터 API 키는 https://apps.twitter.com/ 에서 얻을 수 있습니다."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
@@ -296,47 +303,55 @@ msgstr "트위터 API 암호"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "트위터 API 암호는 https://apps.twitter.com/ 에서 얻을 수 있습니다."
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:40
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter Configuration"
 msgstr "트위터 구성"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:62
-#, python-format
-msgid "Twitter authorization error!"
-msgstr "트위터 인증 오류!"
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:20
-#, python-format
-msgid "Twitter is down or being upgraded."
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Portal"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:19
+#: code:addons/website_twitter/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Twitter authorization error! Please double-check your Twitter API Key and "
+"Secret!"
+msgstr ""
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/res_config_settings.py:0
+#, python-format
+msgid "Twitter is down or being upgraded."
+msgstr "트위터가 다운되었거나 업그레이드 중입니다."
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
+"트위터가 고장난 것 같습니다. 나중에 다시 시도하십시오. 도움을 받으려면 트위터 포럼에 문제를 게시하는 것을 고려할 수 있습니다."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
 msgid "Twitter server uri"
-msgstr ""
+msgstr "트위터 서버 URI"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter tutorial"
-msgstr ""
+msgstr "트위터 튜토리얼"
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:37
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
@@ -345,24 +360,17 @@ msgstr "트위터 사용자 @%(username)s 의 관심 트윗이 12개 미만입�
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter's user"
-msgstr ""
+msgstr "트위터 사용자"
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr ""
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:58
-#: code:addons/website_twitter/models/res_config_settings.py:59
-#, python-format
-msgid "We failed to reach a twitter server."
-msgstr ""
+msgstr "트위터 : 새로운 즐겨찾기 가져 오기"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
@@ -373,14 +381,19 @@ msgstr "웹사이트"
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "Website Twitter"
+msgstr "웹사이트 트위터"
+
+#. module: website_twitter
+#: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://developer.twitter.com/"
 msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "https://apps.twitter.com/app/new"
-msgstr "https://apps.twitter.com/app/new"
+msgid "https://developer.twitter.com/en/portal/products"
+msgstr ""
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "with the following values:"
-msgstr "다음과 같은 값 :"
+msgid "https://developer.twitter.com/portal/"
+msgstr ""

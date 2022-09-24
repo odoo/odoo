@@ -1,17 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * mrp_bom_cost
+# 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Martin Trigaux, 2022
+# Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,38 +20,195 @@ msgstr ""
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. module: mrp_bom_cost
-#: model:ir.actions.server,name:mrp_bom_cost.action_compute_price_bom_product
-#: model:ir.actions.server,name:mrp_bom_cost.action_compute_price_bom_template
-#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_ext_form_view2
-#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_view_form_normal_inherit_extended
-#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_variant_easy_edit_view_bom_inherit
-msgid "Compute Price from BoM"
-msgstr ""
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
+#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+msgid "Analytic Account"
+msgstr "บัญชีวิเคราะห์"
 
-#. module: mrp_bom_cost
-#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_ext_form_view2
-#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_view_form_normal_inherit_extended
-#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_variant_easy_edit_view_bom_inherit
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "ไลน์การวิเคราะห์"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
+msgid ""
+"Analytic account in which cost and revenue entries will take        place "
+"for financial management of the manufacturing order."
+msgstr ""
+"บัญชีวิเคราะห์รายการต้นทุนและรายได้จะเกิดขึ้นสำหรับการจัดการทางการเงินของใบสั่งผลิต"
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
+msgid ""
+"Analytic account in which cost and revenue entries will take place for "
+"financial management of the manufacturing order."
+msgstr ""
+"บัญชีวิเคราะห์รายการต้นทุนและรายได้จะเกิดขึ้นสำหรับการจัดการทางการเงินของใบสั่งผลิต"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_bom
+msgid "Bill of Material"
+msgstr "บิลวัสดุ"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
+#: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+msgid "Bills of Materials"
+msgstr "บิลวัสดุ"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
+msgid "BoM Count"
+msgstr "จำนวน BoM"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "หมวดหมู่"
+
+#. module: mrp_account
+#: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
+#: model:ir.actions.server,name:mrp_account.action_compute_price_bom_template
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
+msgid "Compute Price from BoM"
+msgstr "คำนวณราคาจาก BoM"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
+"คำนวณราคาของสินค้าโดยใช้ผลิตภัณฑ์และการปฏิบัติของบิลวัสดุที่เกี่ยวข้อง "
+"สำหรับผลิตภัณฑ์ที่ผลิตเท่านั้น"
 
-#. module: mrp_bom_cost
-#: model:ir.model,name:mrp_bom_cost.model_product_product
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
+msgid "Cost Recorded"
+msgstr "ต้นทุนที่ถูกบันทึก"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
+msgid "Extra Unit Cost"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
+msgid ""
+"Fill this only if you want automatic analytic accounting entries on "
+"production orders."
+msgstr ""
+"กรอกข้อมูลนี้เฉพาะในกรณีที่คุณต้องการรายการบัญชีวิเคราะห์อัตโนมัติในคำสั่งผลิต"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_move_line
+msgid "Journal Item"
+msgstr "รายการบันทึก"
+
+#. module: mrp_account
+#: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
+msgid "Manufacturing Order"
+msgstr "ใบสั่งผลิต"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
+#: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+msgid "Manufacturing Orders"
+msgstr "ใบสั่งผลิต"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
+msgid "Manufacturing Orders Count"
+msgstr "จำนวนใบสั่งผลิต"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
+msgid "Mo Analytic Account Line"
+msgstr "ไลน์บัญชีวิเคราะห์ Mo"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_product_template
 msgid "Product"
 msgstr "สินค้า"
 
-#. module: mrp_bom_cost
-#: model:ir.model,name:mrp_bom_cost.model_product_template
-msgid "Product Template"
-msgstr "รูปแบบสินค้า"
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_product_product
+msgid "Product Variant"
+msgstr "ตัวแปรสินค้า"
 
-#. module: mrp_bom_cost
-#: code:addons/mrp_bom_cost/models/product.py:40
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_production
+msgid "Production Order"
+msgstr "คำสั่งผลิต"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
+msgid "Show Valuation"
+msgstr "แสดงการประเมินมูลค่า"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_move
+msgid "Stock Move"
+msgstr "ย้ายสต๊อก"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_rule
+msgid "Stock Rule"
+msgstr "กฎสต๊อก"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+msgid "Valuation"
+msgstr "การประเมินมูลค่า"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_id
+msgid "Wc Analytic Account Line"
+msgstr "ไลน์บัญชีวิเคราห์ Wc"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workcenter
+msgid "Work Center"
+msgstr "ศูนย์งาน"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workorder
+msgid "Work Order"
+msgstr "คำสั่งงาน"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
+msgid "Work Order Count"
+msgstr "จำนวนคำสั่งงาน"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
+msgid "Workcenter Productivity Log"
+msgstr "บันทึกผลผลิตของศูนย์งาน"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
+msgid "Workcenters"
+msgstr "ศูนย์งาน"
+
+#. module: mrp_account
+#: code:addons/mrp_account/models/stock_move.py:0
 #, python-format
-msgid ""
-"The inventory valuation of some products %s is automated. You can only "
-"update their cost from the product form."
-msgstr ""
+msgid "[Raw] %s"
+msgstr "[Raw] %s"
+
+#. module: mrp_account
+#: code:addons/mrp_account/models/mrp_production.py:0
+#: code:addons/mrp_account/models/mrp_workorder.py:0
+#, python-format
+msgid "[WC] %s"
+msgstr "[WC] %s"

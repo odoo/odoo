@@ -1,20 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_requisition_stock
+# 	* purchase_requisition_stock
 # 
 # Translators:
-# fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.2\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-20 14:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,19 +30,25 @@ msgid "Minimum Inventory Rule"
 msgstr "Quy tắc tồn kho tối thiểu"
 
 #. module: purchase_requisition_stock
+#: model:ir.model.fields,field_description:purchase_requisition_stock.field_purchase_order__on_time_rate_perc
+#: model:ir.model.fields,field_description:purchase_requisition_stock.field_purchase_order_line__on_time_rate_perc
+msgid "OTD"
+msgstr ""
+
+#. module: purchase_requisition_stock
 #: model:ir.model.fields,field_description:purchase_requisition_stock.field_purchase_requisition__picking_type_id
 msgid "Operation Type"
 msgstr "Kiểu hoạt động"
 
 #. module: purchase_requisition_stock
-#: model:ir.model,name:purchase_requisition_stock.model_procurement_group
-msgid "Procurement Group"
-msgstr "Nhóm cung ứng"
-
-#. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_purchase_order
 msgid "Purchase Order"
 msgstr "Đơn mua hàng"
+
+#. module: purchase_requisition_stock
+#: model:ir.model,name:purchase_requisition_stock.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Chi tiết mua hàng"
 
 #. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_purchase_requisition
@@ -65,7 +68,7 @@ msgstr "Chi tiết yêu cầu mua hàng"
 #. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Hoạt động kho"
+msgstr "Dịch chuyển kho"
 
 #. module: purchase_requisition_stock
 #: model:ir.model,name:purchase_requisition_stock.model_stock_rule
@@ -76,3 +79,8 @@ msgstr "Tuyến cung ứng"
 #: model:ir.model.fields,field_description:purchase_requisition_stock.field_purchase_requisition__warehouse_id
 msgid "Warehouse"
 msgstr "Kho"
+
+#. module: purchase_requisition_stock
+#: model:ir.model,name:purchase_requisition_stock.model_purchase_requisition_create_alternative
+msgid "Wizard to preset values for alternative PO"
+msgstr ""

@@ -3,68 +3,76 @@
 # 	* website_event_questions
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2019
-# e2f <projects@e2f.com>, 2019
-# Martin Trigaux, 2019
-# Xavier Belmere <Info@cartmeleon.com>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_event_questions
-#: model_terms:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Questions</strong>"
-msgstr "<strong>Questions</strong>"
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__name
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__answer_id
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__name
 msgid "Answer"
 msgstr "Réponse"
 
 #. module: website_event_questions
+#: model:ir.actions.act_window,name:website_event_questions.action_event_registration_report
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_graph
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_pivot
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
+msgid "Answer Breakdown"
+msgstr "Répartition des réponses"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__answer_ids
-#: model:ir.model.fields,field_description:website_event_questions.field_event_registration__answer_ids
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_registration_search_inherit_question
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_question_view_form
 msgid "Answers"
 msgstr "Réponses"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_individual
-msgid "Ask each attendee"
-msgstr "Demander à chaque participant"
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question__once_per_order
+msgid "Ask once per order"
+msgstr "Demandez une fois par commande"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__create_uid
+#: model:ir.model.fields,field_description:website_event_questions.field_event_registration__registration_answer_ids
+msgid "Attendee Answers"
+msgstr "Réponses des participants"
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__partner_id
+msgid "Booked by"
+msgstr "Réservé par"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_date
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__create_date
 msgid "Created on"
 msgstr "Créé le"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__display_name
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__display_name
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__display_name
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__display_name
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__display_name
 msgid "Display Name"
 msgstr "Afficher Nom"
@@ -72,42 +80,34 @@ msgstr "Afficher Nom"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_event
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_id
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__event_id
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_id
 msgid "Event"
 msgstr "Évènement"
 
 #. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_answer
-#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_answer_id
-msgid "Event Answer"
-msgstr "Réponse à l'évènement"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_type
-msgid "Event Category"
-msgstr "Catégorie d'évènement"
-
-#. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Question d'événement"
 
 #. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question_report
-msgid "Event Question Report"
+#: model:ir.model,name:website_event_questions.model_event_question_answer
+msgid "Event Question Answer"
 msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
-#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_registration_id
 msgid "Event Registration"
 msgstr "Inscription à l'évènement"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Réponse à l'inscription à l'événement"
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_type
+msgid "Event Template"
+msgstr "Modèle d'événement"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -115,71 +115,70 @@ msgid "Event Type"
 msgstr "Type d'évènement"
 
 #. module: website_event_questions
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
-msgid "Exclude cancelled registrations"
-msgstr ""
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
 msgid "General Questions"
 msgstr "Questions générales"
 
 #. module: website_event_questions
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
-msgid "Group By"
-msgstr "Regrouper par"
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__id
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__id
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_event_questions
-#: model:ir.model.fields,help:website_event_questions.field_event_question__is_individual
+#: model:ir.model.fields,help:website_event_questions.field_event_question__once_per_order
 msgid ""
-"If True, this question will be asked for every attendee of a reservation. If"
-" not it will be asked only once and its value propagated to every attendees."
+"If True, this question will be asked only once and its value will be "
+"propagated to every attendees.If not it will be asked for every attendee of "
+"a reservation."
 msgstr ""
-"Si valide, cette question sera posée à chaque participant d'une réservation."
-" Sinon elle sera posée une seule fois et la réponse sera portée pour tous "
-"les participants."
+"Si True, cette question ne sera posée qu'une seule fois et sa valeur sera "
+"propagée à tous les participants. Sinon, elle sera posée à tous les "
+"participants d'une réservation."
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer____last_update
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_report____last_update
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer____last_update
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer____last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_uid
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__write_uid
 msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__write_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_date
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__write_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__question_id
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__question_id
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_answer_simplified_form
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_form
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_mandatory_answer
+msgid "Mandatory Answer"
+msgstr "Réponse obligatoire"
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__question_id
+#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__question_id
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_question_view_form
 msgid "Question"
 msgstr "Question"
 
 #. module: website_event_questions
-#: code:addons/website_event_questions/models/event.py:0
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question__question_type
+#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__question_type
+msgid "Question Type"
+msgstr "Type de question"
+
+#. module: website_event_questions
+#: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
@@ -188,33 +187,35 @@ msgstr ""
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_type__question_ids
-#: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_form_inherit_question
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
 msgid "Questions"
 msgstr "Questions"
 
 #. module: website_event_questions
-#: model:ir.actions.act_window,name:website_event_questions.action_event_question_report
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_graph
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_pivot
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
-msgid "Questions Analysis"
-msgstr "Analyse des questions"
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_type__use_questions
-msgid "Questions to Attendees"
-msgstr "Questions aux participants"
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__attendee_id
-#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__registration_id
 msgid "Registration"
 msgstr "Inscription"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer__sequence
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_tree
+msgid "Selected Answers"
+msgstr "Réponses sélectionnées"
+
+#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
+msgid "Selected answer"
+msgstr "Réponse sélectionnée"
+
+#. module: website_event_questions
+#: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__simple_choice
+msgid "Selection"
+msgstr "Sélection"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__sequence
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "Séquence"
 
@@ -224,6 +225,65 @@ msgid "Specific Questions"
 msgstr "Questions spécifiques"
 
 #. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_answer_id
+msgid "Suggested answer"
+msgstr "Réponse suggérée"
+
+#. module: website_event_questions
+#: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__text_box
+msgid "Text Input"
+msgstr "Saisie de texte"
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_text_box
+msgid "Text answer"
+msgstr "Réponse texte"
+
+#. module: website_event_questions
+#: model:ir.model.constraint,message:website_event_questions.constraint_event_registration_answer_value_check
+msgid "There must be a suggested value or a text value."
+msgstr "Il doit y avoir une valeur suggérée ou une valeur de texte."
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
 msgid "Title"
 msgstr "Titre"
+
+#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_form_inherit_question
+msgid "Type"
+msgstr "Type"
+
+#. module: website_event_questions
+#: code:addons/website_event_questions/models/event_question.py:0
+#, python-format
+msgid ""
+"You cannot change the question type of a question that already has answers!"
+msgstr ""
+"Vous ne pouvez pas modifier le type de question d'une question qui a déjà "
+"des réponses !"
+
+#. module: website_event_questions
+#: code:addons/website_event_questions/models/event_question.py:0
+#, python-format
+msgid ""
+"You cannot delete a question that has already been answered by attendees."
+msgstr ""
+"Vous ne pouvez pas supprimer une question à laquelle les participants ont "
+"déjà répondu."
+
+#. module: website_event_questions
+#: code:addons/website_event_questions/models/event_question.py:0
+#, python-format
+msgid ""
+"You cannot delete an answer that has already been selected by attendees."
+msgstr ""
+"Vous ne pouvez pas supprimer une réponse qui a déjà été sélectionnée par les"
+" participants."
+
+#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_question_view_form
+msgid "e.g. \"Do you have any diet restrictions?\""
+msgstr "par ex. \" Avez-vous des restrictions alimentaires ? \""

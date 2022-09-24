@@ -3,15 +3,16 @@
 # 	* pos_adyen
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
-"PO-Revision-Date: 2019-09-09 12:33+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,137 +21,138 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: pos_adyen
-#: model:ir.model.fields.selection,name:pos_adyen.selection__pos_payment_method__use_payment_terminal__adyen
-#: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
-msgid "Adyen"
-msgstr "Adyen"
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid "Add tip through payment terminal (Adyen)"
+msgstr "إضافة بقشيش من خلال جهاز الدفع بالبطاقة (Adyen) "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية لـ Adyen "
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr ""
+msgstr "خطأ في Adyen "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Adyen Latest Diagnosis"
-msgstr ""
+msgstr "آخر تشخيص لـ Adyen "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
-msgstr ""
+msgstr "آخر استجابة لـ Adyen "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr ""
+msgstr "معرف جهاز الدفع Adyen "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr ""
+msgstr "وضع الاختبار لـ Adyen "
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
-msgid "An unexpected error occured. Message from Adyen: %s"
-msgstr ""
+msgid "An unexpected error occurred. Message from Adyen: %s"
+msgstr "حدث خطأ غير متوقع. رسالة من Adyen: %s "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr ""
-
-#. module: pos_adyen
-#: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
-msgid "Ask customers to tip before paying."
-msgstr ""
+msgstr "اطلب البقشيش من العملاء "
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
+msgstr "فشلت عملية المصادقة. يرجى التحقق من بيانات اعتماد Adyen. "
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid ""
+"Cancelling the payment failed. Please cancel it manually on the payment "
+"terminal."
 msgstr ""
+"لقد فشلت عملية إلغاء الدفع. يرجى إلغاؤها يدوياً في جهاز الدفع بالبطاقة. "
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Cannot process transactions with negative amount."
+msgstr "لا يمكن معالجة المعاملات التي بها مبلغ قيمته سالبة. "
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+"تعذر الاتصال بخادم أودو. يرجى التحقق من اتصالك بالإنترنت ثم المحاولة من "
+"جديد. "
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
-msgstr ""
+msgstr "رسالة من Adyen: %s "
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
-msgstr ""
+msgstr "يرجى تهيئة منتج بقشيش لنقطة البيع %s لدعم منح البقشيش مع Adyen. "
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "إعدادات نقطة البيع"
+msgstr "تهيئة نقطة البيع "
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "طرق الدفع في نقطة البيع "
 
 #. module: pos_adyen
-#: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
-msgid "Prompt the customer to tip."
-msgstr ""
+#: model:ir.model,name:pos_adyen.model_pos_session
+msgid "Point of Sale Session"
+msgstr "جلسة نقطة البيع"
 
 #. module: pos_adyen
-#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__use_payment_terminal
-msgid "Record payments with a terminal on this journal."
+#: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip
+msgid "Pos Adyen Ask Customer For Tip"
 msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
-
-#. module: pos_adyen
-#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_response
-msgid ""
-"Technical field used to buffer the latest asynchronous notification from "
-"Adyen."
-msgstr ""
-
-#. module: pos_adyen
-#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
-msgid "Technical field used to determine if the terminal is still connected."
-msgstr ""
+msgstr "تشغيل المعاملات في بيئة الاختبار. "
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr ""
-
-#. module: pos_adyen
-#. openerp-web
-#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
-#, python-format
-msgid ""
-"The connection to your payment terminal failed. Please check if it is still "
-"connected to the internet."
-msgstr ""
-
-#. module: pos_adyen
-#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__use_payment_terminal
-msgid "Use a Payment Terminal"
-msgstr ""
+msgstr "جهاز الدفع بالبطاقة %s مستخدم بالفعل في طريقة الدفع %s. "
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
@@ -158,8 +160,12 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+"يستخدم عند الاتصال بـ Adyen: https://docs.adyen.com/user-management/how-to-"
+"get-the-api-key/#description "
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
 msgstr ""
+"[نموذج جهاز الدفع بالبطاقة]-[الرقم التسلسلي]، على سبيل المثال: "
+"P400Plus-123456789 "

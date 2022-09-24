@@ -1,19 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_unsplash
+# 	* web_unsplash
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-# Somchart Jabsung <jabsung.s@gmail.com>, 2018
+# Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Somchart Jabsung <jabsung.s@gmail.com>, 2018\n"
+"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,30 +22,23 @@ msgstr ""
 #. module: web_unsplash
 #: model_terms:ir.ui.view,arch_db:web_unsplash.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Generate an Access Key"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> สร้างคีย์การเข้าถึง"
 
 #. module: web_unsplash
 #: model:ir.model.fields,field_description:web_unsplash.field_res_config_settings__unsplash_access_key
 msgid "Access Key"
-msgstr ""
+msgstr "คีย์การเข้าถึง"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:36
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "Access key is not set"
-msgstr ""
+msgid "Application ID"
+msgstr "ไอดีแอปพลิเคชัน"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:66
-#, python-format
-msgid "Add"
-msgstr "เพิ่ม"
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:44
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Apply"
 msgstr "นำไปใช้"
@@ -55,89 +46,142 @@ msgstr "นำไปใช้"
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ตั้งค่าการกำหนดค่า"
 
 #. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:40
+#: code:addons/web_unsplash/controllers/main.py:0
 #, python-format
-msgid "Generate an access key"
-msgstr ""
+msgid "ERROR: Unknown Unsplash URL!"
+msgstr "ข้อผิดพลาด: Unsplash URL ที่ไม่รู้จัก!"
+
+#. module: web_unsplash
+#: code:addons/web_unsplash/controllers/main.py:0
+#, python-format
+msgid "ERROR: Unknown Unsplash notify URL!"
+msgstr "ข้อผิดพลาด: Unsplash notify URL ที่ไม่รู้จัก!"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:43
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:65
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "Get an Access key"
+msgstr "รับคีย์การเข้าถึง"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
 msgid "Paste your access key here"
-msgstr ""
+msgstr "วางคีย์การเข้าถึงของคุณที่นี่"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:27
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "Photos not found"
-msgstr ""
+msgid "Paste your application ID here"
+msgstr "วางไอดีแอปพลิเคชันของคุณที่นี่"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:75
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "Photos (via Unsplash)"
+msgstr "ภาพถ่าย (ผ่าน Unsplash)"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Please check your Unsplash access key and application ID."
+msgstr "โปรดตรวจสอบรหัสการเข้าถึง Unsplash และรหัสแอปพลิเคชันของคุณ"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Please check your internet connection or contact administrator."
-msgstr ""
+msgstr "โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณหรือติดต่อผู้ดูแลระบบ"
+
+#. module: web_unsplash
+#: model:ir.model,name:web_unsplash.model_ir_qweb_field_image
+msgid "Qweb Field Image"
+msgstr "ฟิลด์รูปภาพ QWeb"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:61
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
-msgid "Please check your unsplash api key."
-msgstr ""
+msgid "Search is temporarily unavailable"
+msgstr "การค้นหาไม่สามารถใช้ได้ชั่วคราว"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:8
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
-msgid "Search from Unsplash"
-msgstr ""
+msgid "Setup Unsplash to access royalty free photos."
+msgstr "ตั้งค่า Unsplash เพื่อเข้าถึงภาพถ่ายปลอดค่าลิขสิทธิ์"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:50
-#, python-format
-msgid "Search is temporary unavailable"
-msgstr ""
-
-#. module: web_unsplash
-#. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:72
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Something went wrong"
-msgstr ""
+msgstr "อะไรบางอย่างผิดปกติ"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:53
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid ""
 "The max number of searches is exceeded. Please retry in an hour or extend to"
 " a better account."
 msgstr ""
+"เกินจำนวนสูงสุดของการค้นหา "
+"โปรดลองอีกครั้งในอีกหนึ่งชั่วโมงหรือขยายไปยังบัญชีที่ดีกว่า"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:58
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Unauthorized Key"
-msgstr ""
+msgstr "คีย์ที่ไม่ได้รับอนุญาต"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Uploading %s '%s' images."
+msgstr "กำลังอัปโหลด %s '%s' รูปภาพ"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid "Uploading '%s' image."
+msgstr "อัปโหลด '%s' รูปภาพ"
 
 #. module: web_unsplash
 #: model:ir.model,name:web_unsplash.model_res_users
-msgid "Users"
-msgstr "ผู้ใช้งาน"
+msgid "User"
+msgstr "ผู้ใช้"
 
 #. module: web_unsplash
 #. openerp-web
-#: code:addons/web_unsplash/static/src/xml/unsplash_image_widget.xml:7
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
 #, python-format
-msgid "— or —"
-msgstr "— หรือ —"
+msgid "and paste"
+msgstr "ิและวาง"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "and paste it here:"
+msgstr "และวางที่นี่:"
+
+#. module: web_unsplash
+#. openerp-web
+#: code:addons/web_unsplash/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "here:"
+msgstr "ที่นี่:"

@@ -3,22 +3,16 @@
 # 	* board
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# 老窦 北京 <2662059195@qq.com>, 2019
-# 黎伟杰 <674416404@qq.com>, 2019
-# ChinaMaker <liuct@chinamaker.net>, 2019
-# 李赋 <fu792659@163.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# John An <johnxan@163.com>, 2019
+# Martin Trigaux, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: John An <johnxan@163.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,55 +22,51 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:58
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "\"%s\" added to dashboard"
+msgstr "\"%s\" 被添加到仪表板"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "\"Add to\n"
-"                Dashboard\""
+"                  Dashboard\""
 msgstr ""
-"\"添加到\n"
-"                  仪表板\""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:30
-#, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:132
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' 添加到仪表板"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:88
-#: code:addons/board/static/src/xml/board.xml:98
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add"
 msgstr "添加"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:83
-#: code:addons/board/static/src/xml/board.xml:93
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
-msgid "Add to my Dashboard"
+msgid "Add to my dashboard"
 msgstr "添加到我的仪表板"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:378
+#: code:addons/board/static/src/board_controller.js:0
 #, python-format
-msgid "Are you sure you want to remove this item?"
-msgstr "你确定要移除此项吗？"
+msgid "Are you sure that you want to remove this item?"
+msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:432
+#: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
 #, python-format
 msgid "Board"
@@ -84,43 +74,18 @@ msgstr "仪表板"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:11
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Change Layout"
 msgstr "更改布局"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:9
-#, python-format
-msgid "Change Layout.."
-msgstr "更改布局..."
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:41
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "选择仪表板布局"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:136
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "无法添加筛选到仪表板"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_board__display_name
-msgid "Display Name"
-msgstr "显示名称"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:83
-#, python-format
-msgid "Edit Layout"
-msgstr "编辑布局"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board__id
@@ -128,66 +93,63 @@ msgid "ID"
 msgstr "ID"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board____last_update
-msgid "Last Modified on"
-msgstr "最后更改日"
+#. openerp-web
+#: code:addons/board/static/src/board_action.xml:0
+#, python-format
+msgid "Invalid action"
+msgstr "无效动作"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:46
+#: code:addons/board/static/src/board_controller.xml:0
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Layout"
 msgstr "布局"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/board_view.js:46
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
 msgid "My Dashboard"
 msgstr "我的仪表板"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:133
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Please refresh your browser for the changes to take effect."
-msgstr "请刷新你的浏览器以使更改生效。"
+msgstr "请刷新您的浏览器以使更改生效。"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:56
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                menu, switch to list or graph view, and click"
+"                  menu, switch to list or graph view, and click"
 msgstr ""
-"要将第一个报告添加到此仪表板，请转到任何\n"
-"菜单，切换到列表或图表视图，然后单击"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:60
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                dashboard using the search options."
+"                  dashboard using the search options."
 msgstr ""
-"您可以在插入之前对数据进行过滤和分组\n"
-"仪表板使用搜索选项。"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:54
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Your personal dashboard is empty"
-msgstr "你的个人仪表板是空的"
+msgstr "您的个人仪表板是空的"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:58
+#: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "in the extended search options."
 msgstr "在扩展搜索选项中。"

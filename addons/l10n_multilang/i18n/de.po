@@ -1,21 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * l10n_multilang
+# 	* l10n_multilang
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Ermin Trevisan <trevi@twanda.com>, 2019
-# Rudolf Schnapka <rs@techno-flex.de>, 2019
-# darenkster <inactive+darenkster@transifex.com>, 2019
-# Jan Meyer, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 14:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Jan Meyer, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,27 +30,25 @@ msgid "Account Chart Template"
 msgstr "Kontenplanvorlage"
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group
+msgid "Account Group"
+msgstr "Kontengruppe"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+msgid "Account Name"
+msgstr "Kontoname"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_tag
 msgid "Account Tag"
 msgstr "Konto-Schlagwort"
-
-#. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
-msgid ""
-"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr ""
-"Verwaltungseinheiten eines Landes. Z.B. in Bundesstaaten, Länder, Regionen"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
 msgstr "Kostenstelle"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_res_country_state
-msgid "Country state"
-msgstr "Bundesland"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__description
@@ -99,10 +93,10 @@ msgstr ""
 "Gesetzliche Vorgaben, die auf den Rechnungen ausgegeben werden müssen."
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group_template__name
 msgid "Name"
 msgstr "Name"
 
@@ -118,22 +112,9 @@ msgid "Spoken Languages"
 msgstr "Gesprochene Sprachen"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
-msgid "State Name"
-msgstr "Bundesland"
-
-#. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
-msgid ""
-"State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in"
-" the final object when generating them from templates. You must provide the "
-"language codes separated by ';'"
-msgstr ""
-"Hier führen Sie die Sprachen an, für die die Übersetzungen der Vorlagen zur "
-"Zeit der Installation dieses Lokalisierungsmoduls geladen werden können und "
-"dann bei der Generierung aus den Vorlagen in die endgültigen Objekte kopiert"
-" werden. Sie müssen die Sprachcodes mit Semikolons ';' separieren"
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+msgid "Tag Name"
+msgstr "Tag Bezeichnung"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
@@ -145,6 +126,11 @@ msgstr "Steuer"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
 msgid "Tax Name"
 msgstr "Steuerbezeichnung"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group_template
+msgid "Template for Account Groups"
+msgstr "Vorlage für Kontengruppen"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template

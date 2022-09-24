@@ -3,23 +3,21 @@
 # 	* base_vat
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Paolo Valier, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -31,11 +29,6 @@ msgstr ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono "
 "specifici per azienda.\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-
-#. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr "<span class=\"o_vat_label\">Partita IVA</span>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -53,6 +46,11 @@ msgid "Contact"
 msgstr "Contatto"
 
 #. module: base_vat
+#: model:ir.model,name:base_vat.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Posizione fiscale"
+
+#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
@@ -62,31 +60,49 @@ msgstr ""
 "la sua partita IVA non supera la verifica del servizio europeo VIES."
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:188
+#: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
-"Note: the expected format is %s"
+"The VAT number [%(wrong_vat)s] does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
 msgstr ""
-"La partita IVA [%s] del partner [%s] non sembra essere valida. \n"
-"Nota: il formato atteso è %s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:187
+#: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
-"check or did not respect the expected format %s."
+"The VAT number [%(wrong_vat)s] either failed the VIES VAT validation check "
+"or did not respect the expected format %(expected_format)s."
 msgstr ""
-"La partita IVA [%s] del partner [%s] non ha superato la verifica di validità"
-" VIES oppure non rispetta il formato %s atteso."
 
 #. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
-msgid "VAT"
-msgstr "Partita IVA"
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"La partita IVA [%(wrong_vat)s] per %(record_label)s non sembra essere valida. \n"
+"Nota: il formato atteso è %(expected_format)s"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES "
+"VAT validation check or did not respect the expected format "
+"%(expected_format)s."
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country detected for this foreign VAT number does not match the one set "
+"on this fiscal position."
+msgstr ""
+"Il paese trovato per questa partita IVA estera non corrisponde a quello "
+"impostato su questa posizione fiscale."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
@@ -98,3 +114,15 @@ msgstr "Verificare le partite IVA"
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
 msgstr "Verifica delle partite IVA con il servizio europeo VIES"
+
+#. module: base_vat
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid "fiscal position [%s]"
+msgstr "posizione di bilancio [%s]"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "partner [%s]"
+msgstr "partner [%s]"

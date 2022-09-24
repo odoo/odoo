@@ -3,19 +3,16 @@
 # 	* purchase_product_matrix
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# snow wang <147156565@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
-# Martin Trigaux, 2019
+# Martin Trigaux, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +31,7 @@ msgstr "属性值"
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "编辑配置"
 
 #. module: purchase_product_matrix
 #. openerp-web
@@ -42,7 +39,7 @@ msgstr ""
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #, python-format
 msgid "External Link"
-msgstr ""
+msgstr "外部链接"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid
@@ -64,17 +61,17 @@ msgstr "网格更新"
 msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
-msgstr ""
+msgstr "如果设置，可配置产品的矩阵将显示在这个订单的报告上。"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "产品是否可配置？"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "打印变体网格"
 
 #. module: purchase_product_matrix
 #: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
@@ -89,7 +86,7 @@ msgstr "产品模板"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr "没有创建变量的产品属性值"
+msgstr "没有创建产品变体的产品变体值"
 
 #. module: purchase_product_matrix
 #: model:ir.model,name:purchase_product_matrix.model_purchase_order
@@ -110,9 +107,12 @@ msgstr "产品矩阵功能的技术字段。"
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
 msgid ""
 "Technical storage of grid. \n"
-"If grid_update, will be loaded on the SO. \n"
+"If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"网格的技术存储。\n"
+"如果grid_update，将被加载到PO上。\n"
+"如果不是，代表要打开的矩阵。"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
@@ -125,4 +125,4 @@ msgstr "网格字段包含一个新的矩阵应用与否。"
 msgid ""
 "You cannot change the quantity of a product present in multiple purchase "
 "lines."
-msgstr "你不能改变显示在多个采购行中的产品数量。"
+msgstr "您不能改变显示在多个采购行中的产品数量。"

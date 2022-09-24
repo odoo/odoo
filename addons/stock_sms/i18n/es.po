@@ -3,46 +3,32 @@
 # 	* stock_sms
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
-# Cristopher Cravioto <ccr@odoo.com>, 2019
-# Jon Perez <jop@odoo.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock_sms
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
-"${object.company_id.name}: We are glad to inform you that your order has been shipped.\n"
-"            %if object.carrier_tracking_ref:\n"
-"                Your tracking reference is ${object.carrier_tracking_ref}.\n"
-"            %endif"
-msgstr ""
-
-#. module: stock_sms
-#: model:mail.template,body_html:stock_sms.mail_template_no_more_credit_sms
-msgid ""
-"<p>Dear ${object.name},</p>\n"
-"                <br/>\n"
-"                <p>There are no more credits on your IAP SMS account.<br/>\n"
-"                You can charge your IAP SMS account from the Settings of the Inventory app or from the General Settings.<br/></p>\n"
-"                <br/>\n"
-"                <p>Best regards,</p>\n"
-"                <p>Odoo S.A.</p>\n"
+"\n"
+"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
+"\n"
+"                {{ (object.company_id.name + ': Nos agrada informarle que su orden con el número ' + object.origin + ' ha sido enviada.' if object.origin else object.company_id.name + ': Nos agrada informarle que su orden ha sido enviada.') + (' Su referencia de rastreo es ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -55,14 +41,9 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__company_id
-msgid "Company"
-msgstr "Compañía"
-
-#. module: stock_sms
 #: model:ir.model,name:stock_sms.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de Configuración"
+msgstr "Opciones de configuración"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -102,12 +83,7 @@ msgstr "Nombre mostrado"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr "Ha recibido un SMS de advertencia de stock "
-
-#. module: stock_sms
-#: model:mail.template,subject:stock_sms.mail_template_no_more_credit_sms
-msgid "IAP SMS Confirmation Notification"
-msgstr ""
+msgstr "Ha recibido un SMS de advertencia de stock"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
@@ -117,7 +93,7 @@ msgstr "ID"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
@@ -130,9 +106,9 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__picking_id
-msgid "Picking"
-msgstr "Albarán"
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__pick_ids
+msgid "Pick"
+msgstr "Recogida"
 
 #. module: stock_sms
 #: code:addons/stock_sms/models/stock_picking.py:0
@@ -143,6 +119,7 @@ msgstr "SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Confirmation"
 msgstr "Confirmación por SMS"
 
@@ -161,8 +138,8 @@ msgstr "Validación de SMS con movimiento de stock"
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
-msgid "SMS sent to the customer once the order is done."
-msgstr "SMS enviado al cliente una vez que se realize el pedido."
+msgid "SMS sent to the customer once the order is delivered."
+msgstr ""
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
@@ -175,3 +152,5 @@ msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
 "                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+"Está a punto de confirmar este pedido de entrega por mensaje de texto SMS.<br/>\n"
+"                Esta característica se puede desactivar fácilmente desde la Configuración de inventario o haciendo clic en \"Desactivar SMS\".<br/>"

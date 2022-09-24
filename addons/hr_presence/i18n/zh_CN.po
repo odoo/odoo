@@ -3,18 +3,16 @@
 # 	* hr_presence
 # 
 # Translators:
-# Martin Trigaux, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# 厦门-许舟 <windedge99@gmail.com>, 2019
-# Felix Yuen <fyu@odoo.com>, 2019
+# Martin Trigaux, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,25 +23,28 @@ msgstr ""
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
-"<?xml version=\"1.0\"?>\n"
 "<div>\n"
-"                    Dear ${object.name},<br/><br/>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.<br/>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
+"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
 "                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
 "                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
 "<div>\n"
-"                    致${object.name},<br/><br/>\n"
-"                    除非我们出现错误了，那么您似乎不在办公室并且没有作出休假申请。<br/>\n"
-"                   请采取适当措施，以便记录缺席。<br/>\n"
-"                    请联系您的经理或人力资源部门。\n"
-"                    <br/>顺祝　商旗<br/><br/>\n"
+"                    亲爱的<t t-out=\"object.name or ''\">阿比盖尔-彼得森</t>。<br/><br/>\n"
+"                    如果是我们的失误，那就例外了，看来您不在您的办公室，也没有向您请假。<br/>\n"
+"                    请采取适当的措施，以执行这项工作的缺席。<br/>\n"
+"                    请不要犹豫，与您的经理或人力资源部门联系。\n"
+"                    <br/> 最诚挚的问候。<br/><br/>\n"
 "                </div>\n"
 "            "
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+msgid "Absence/Presence"
+msgstr "答应/拒绝"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -86,9 +87,9 @@ msgid "Email Sent"
 msgstr "已发送邮件"
 
 #. module: hr_presence
-#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
-msgid "Employee Presence"
-msgstr "员工出席"
+#: model:mail.template,name:hr_presence.mail_template_presence
+msgid "Employee: Absence email"
+msgstr "雇员:缺勤邮件"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -96,17 +97,29 @@ msgid "Employee: Presence Reminder"
 msgstr "员工：出席提醒"
 
 #. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+msgid "Employees"
+msgstr "员工"
+
+#. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
 msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.\n"
+"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
-"除非我们出现错误了，那么您似乎不在办公室并且没有作出休假申请。\n"
-"请采取适当措施，以便记录缺席。\n"
+"如果不是我们造成的错误的话，那么您似乎不在办公室并且没有要求您离开。\n"
+"请采取适当措施，以便开展这项工作。\n"
 "请联系您的经理或人力资源部门。"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
+#: model:ir.cron,cron_name:hr_presence.ir_cron_presence_control
+#: model:ir.cron,name:hr_presence.ir_cron_presence_control
+msgid "HR Presence: cron"
+msgstr "HR Presence: cron"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -134,8 +147,8 @@ msgstr "IP连接"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
-msgid "Mail"
-msgstr "邮件"
+msgid "Log"
+msgstr "记录"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -145,6 +158,8 @@ msgid "Manually Set Present"
 msgstr "手动设置出席"
 
 #. module: hr_presence
+#: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
 msgstr "出席"
@@ -160,6 +175,11 @@ msgstr "出勤"
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "SMS"
 msgstr "短信"
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
+msgid "Set as absent"
+msgstr "设为缺席"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -181,7 +201,7 @@ msgstr "这名员工没有办工用的手机号。"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Time Off"
-msgstr "休息时间"
+msgstr "休假"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
@@ -207,3 +227,8 @@ msgstr "用户日志"
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr "您无权执行此操作。请联系管理员。"
+
+#. module: hr_presence
+#: model:ir.model,name:hr_presence.model_ir_websocket
+msgid "websocket message handling"
+msgstr ""

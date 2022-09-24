@@ -3,17 +3,16 @@
 # 	* website_profile
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,14 +21,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_profile
-#: model:mail.template,subject:website_profile.validation_email
-msgid "${object.company_id.name} Profile validation"
-msgstr "${object.company_id.name} Profiel validatie"
-
-#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "&amp;times;"
-msgstr "&amp;times;"
+msgid ""
+"!<br/>\n"
+"            Did not receive it?"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -43,7 +39,7 @@ msgid ""
 "will make you reach new ranks."
 msgstr ""
 ". Verzamel punten op het forum of op het e-learning platform. Deze punten "
-"zorgen ervoor dat je nieuwe ranks behaald."
+"zorgen ervoor dat je nieuwe rang kan behalen."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
@@ -51,36 +47,29 @@ msgid ". Try another search."
 msgstr ". Probeer een andere zoekopdracht."
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "40%"
-msgstr "40%"
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"fa fa-arrow-right me-1\"/>All Badges"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right mr-1\"/>Check all available badges"
-msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Controleer alle beschikbare badges"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right\"/> Check available badges"
-msgstr "<i class=\"fa fa-arrow-right\"/>Controleer beschikbare badges"
+msgid "<i class=\"fa fa-arrow-right\"/> All Badges"
+msgstr "<i class=\"fa fa-arrow-right\"/> Alle badges"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-left\" title=\"Edit\"/>"
+msgid "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-start\" title=\"Edit\"/>"
 msgstr ""
-"<i class=\"fa fa-pencil fa-1g float-sm-none float-md-left\" "
-"title=\"Wijzig\"/>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
-msgid "<i class=\"fa fa-pencil mr-1\"/>EDIT"
-msgstr "<i class=\"fa fa-pencil mr-1\"/>WIJZIG"
+msgid "<i class=\"fa fa-pencil me-1\"/>EDIT"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
-msgid "<i class=\"fa fa-pencil mr-2\"/>EDIT PROFILE"
-msgstr "<i class=\"fa fa-pencil mr-2\"/>WIJZIG PROFIEL"
+msgid "<i class=\"fa fa-pencil me-2\"/>EDIT PROFILE"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -89,72 +78,63 @@ msgstr "<i class=\"text-muted\"> toegekende gebruikers</i>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "<small class=\"font-weight-bold mr-2\">Current rank:</small>"
-msgstr "<small class=\"font-weight-bold mr-2\">Huidige rank:</small>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "<small class=\"font-weight-bold\">Badges</small>"
-msgstr "<small class=\"font-weight-bold\">Badges</small>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "<small class=\"font-weight-bold\">Joined</small>"
-msgstr "<small class=\"font-weight-bold\">Geregistreerd</small>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid ""
-"<span class=\"badge badge-danger font-weight-normal px-2 py-1 "
-"m-1\">Unpublished</span>"
+msgid "<small class=\"fw-bold me-2\">Current rank:</small>"
 msgstr ""
-"<span class=\"badge badge-danger font-weight-normal px-2 py-1 m-1\">Niet "
-"gepubliceerd</span>"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<small class=\"fw-bold\">Badges</small>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<small class=\"fw-bold\">Joined</small>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Biography</span>"
-msgstr "<span class=\"font-weight-bold\">Biografie</span>"
+msgid "<span class=\"fw-bold\">Biography</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">City</span>"
-msgstr "<span class=\"font-weight-bold\">Gemeente</span>"
+msgid "<span class=\"fw-bold\">City</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Country</span>"
-msgstr "<span class=\"font-weight-bold\">Land</span>"
+msgid "<span class=\"fw-bold\">Country</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Email</span>"
-msgstr "<span class=\"font-weight-bold\">E-mail</span>"
+msgid "<span class=\"fw-bold\">Email</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Public profile</span>"
-msgstr "<span class=\"font-weight-bold\">Publiek profiel</span>"
+msgid "<span class=\"fw-bold\">Name</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Real name</span>"
-msgstr "<span class=\"font-weight-bold\">Echte naam</span>"
+msgid "<span class=\"fw-bold\">Public profile</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Website</span>"
-msgstr "<span class=\"font-weight-bold\">Website</span>"
+msgid "<span class=\"fw-bold\">Website</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid "<span class=\"text-muted small font-weight-bold\">Badges</span>"
-msgstr "<span class=\"text-muted small font-weight-bold\">Badges</span>"
+msgid "<span class=\"text-muted small fw-bold\">Badges</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid "<span class=\"text-muted small font-weight-bold\">XP</span>"
-msgstr "<span class=\"text-muted small font-weight-bold\">XP</span>"
+msgid "<span class=\"text-muted small fw-bold\">XP</span>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -172,8 +152,13 @@ msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
 msgstr ""
-"<span id=\"email_validated_message\">Proficiat! Uw e-mailadres is zojuist "
-"gevalideerd.</span>"
+"<span id=\"email_validated_message\">Gefeiciteerd! Jouw e-mailadres is "
+"zojuist bevestigd.</span>"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "<strong class=\"mb-3 text-white me-2\">Rank by :</strong>"
+msgstr ""
 
 #. module: website_profile
 #: model:mail.template,body_html:website_profile.validation_email
@@ -188,11 +173,11 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"middle\">\n"
 "                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            ${object.company_id.name} Profile validation\n"
+"                            <t t-out=\"object.company_id.name or ''\">YourCompany</t> Profile validation\n"
 "                        </span>\n"
 "                    </td>\n"
 "                    <td valign=\"middle\" align=\"right\">\n"
-"                        <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
@@ -210,11 +195,11 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Hello ${object.name},<br/><br/>\n"
-"                            You have been invited to validate your email in order to get access to \"${object.company_id.name}\" website.\n"
+"                            Hello <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"                            You have been invited to validate your email in order to get access to \"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\" website.\n"
 "                            To validate your email, please click on the following link:\n"
 "                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                    Validate my account\n"
 "                                </a>\n"
 "                            </div>\n"
@@ -236,20 +221,16 @@ msgid ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"middle\" align=\"left\">\n"
-"                         ${user.company_id.name}\n"
+"                         <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
 "                    </td>\n"
 "                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
-"                        ${user.company_id.phone}\n"
-"                        % if user.company_id.email:\n"
-"                            | <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.email}\n"
-"                            </a>\n"
-"                        % endif\n"
-"                        % if user.company_id.website:\n"
-"                            | <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.website}\n"
-"                            </a>\n"
-"                        % endif\n"
+"                        <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                        <t t-if=\"user.company_id.email\">\n"
+"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        </t>\n"
+"                        <t t-if=\"user.company_id.website\">\n"
+"                            | <a t-attf-href=\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                        </t>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -279,11 +260,11 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"middle\">\n"
 "                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            ${object.company_id.name} Profiel validatie\n"
+"                            <t t-out=\"object.company_id.name or ''\">YourCompany</t> Profiel bevestiging\n"
 "                        </span>\n"
 "                    </td>\n"
 "                    <td valign=\"middle\" align=\"right\">\n"
-"                        <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
@@ -301,15 +282,15 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Hallo ${object.name},<br/><br/>\n"
-"                            U bent uitgenodigd om uw e-mail te valideren om toegang te krijgen tot  \"${object.company_id.name}\" zijn website.\n"
-"                            Klik op de volgende link om uw profiel te valideren:\n"
+"                            Hallo <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"                            Je bent uitgenodigd om je e-mailadres te bevestigen om toegang te krijgen tot de website van <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"                            Om je e-mail te bevestigen, klikt je op de volgende link:\n"
 "                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                                    Valideer mijn account\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                    Bevestig mijn account\n"
 "                                </a>\n"
 "                            </div>\n"
-"                            Bedankt voor uw medewerking!\n"
+"                            Bedankt voor je deelname!\n"
 "                        </p>\n"
 "                    </td>\n"
 "                </tr>\n"
@@ -327,20 +308,16 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"middle\" align=\"left\">\n"
-"                         ${user.company_id.name}\n"
+"                         <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
 "                    </td>\n"
 "                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
-"                        ${user.company_id.phone}\n"
-"                        % if user.company_id.email:\n"
-"                            | <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.email}\n"
-"                            </a>\n"
-"                        % endif\n"
-"                        % if user.company_id.website:\n"
-"                            | <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.website}\n"
-"                            </a>\n"
-"                        % endif\n"
+"                        <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                        <t t-if=\"user.company_id.email\">\n"
+"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        </t>\n"
+"                        <t t-if=\"user.company_id.website\">\n"
+"                            | <a t-attf-href=\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                        </t>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -353,12 +330,27 @@ msgstr ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"            Aangeboden door <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
+"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
 "        </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
 "</table>\n"
 "            "
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "<u>Correct your email address</u>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "<u>Send Again</u>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "<u>here</u>"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -371,7 +363,14 @@ msgid "All Users"
 msgstr "Alle gebruikers"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "All time"
+msgstr "Alle tijden"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Badges"
 msgstr "Badges"
@@ -380,12 +379,12 @@ msgstr "Badges"
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid ""
 "Besides gaining reputation with your questions and answers,\n"
-"                    you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
-"                    appear on your profile page, and your posts."
+"                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
+"                        appear on your profile page, and your posts."
 msgstr ""
-"Naast het behalen van reputatie met uw vragen en antwoorden,\n"
-"krijgt u badges voor uw hulp. <br class=\"d-none d-lg-inline-block\"/>Badges\n"
-"verschijnen op uw profiel pagina en uw berichten."
+"Naast het verwerven van reputatie met je vragen en antwoorden,\n"
+"                          ontvang je badges omdat je zeer behulpzaam bent. <br class=\"d-none d-lg-inline-block\"/>1Badges\n"
+"verschijnen op je profielpagina en in je berichten."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -393,9 +392,14 @@ msgid "Biography"
 msgstr "Biografie"
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
+msgid "Can Publish"
+msgstr "Kan publiceren"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Clear"
-msgstr "Zichtbaar"
+msgstr "Wissen"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -410,7 +414,7 @@ msgstr "Land..."
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Edit"
-msgstr "Wijzig"
+msgstr "Wijzigen"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -438,9 +442,9 @@ msgid "How do I score more points?"
 msgstr "Hoe behaal ik meer punten?"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "It appears your email has not been verified.<br/>"
-msgstr "Het lijkt erop alsof uw e-mailadres nog niet gecontroleerd is.<br/>"
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
+msgid "Is Published"
+msgstr "Is gepubliceerd"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -470,12 +474,17 @@ msgstr "Nav"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Next rank:"
-msgstr "Volgende rank:"
+msgstr "Volgende rang:"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_main
+msgid "No Leaderboard Yet :("
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "No badge yet"
-msgstr "Nog geen badge"
+msgid "No badges yet!"
+msgstr "Nog geen badges!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
@@ -492,14 +501,19 @@ msgstr ""
 " reacties te ontvangen."
 
 #. module: website_profile
+#: model:mail.template,name:website_profile.validation_email
+msgid "Profile: Email Verification"
+msgstr "Profiel: E-mailverificatie"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Rank badge"
-msgstr "Rank badge"
+msgstr "Rangbadge"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Ranks"
-msgstr "Ranks"
+msgstr "Rangen"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
@@ -514,7 +528,7 @@ msgstr "Zoek"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search courses"
-msgstr "Zoek opleidingen"
+msgstr "Zoek cursussen"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -522,11 +536,28 @@ msgid "Search users"
 msgstr "Zoek gebruikers"
 
 #. module: website_profile
+#: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"De volledige URL om toegang tot het document te krijgen via de website."
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This month"
+msgstr "Deze maand"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "This profile is private!"
 msgstr "Dit profiel is privé!"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This week"
+msgstr "Deze week"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "Unpublished"
 msgstr "Niet gepubliceerd"
@@ -537,15 +568,29 @@ msgid "Update"
 msgstr "Bijwerken"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
-msgid "User rank"
-msgstr "Gebruiker rank"
+#: model:ir.model,name:website_profile.model_res_users
+msgid "User"
+msgstr "Gebruiker"
 
 #. module: website_profile
-#: model:ir.model,name:website_profile.model_res_users
+#: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
+msgid "User rank"
+msgstr "Gebruikersrang"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Users"
 msgstr "Gebruikers"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "Verification Email sent to"
+msgstr ""
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
+msgid "Visible on current website"
+msgstr "Zichtbaar op huidige website"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_website
@@ -553,11 +598,22 @@ msgid "Website"
 msgstr "Website"
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
+msgid "Website URL"
+msgstr "Website URL"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
 msgstr ""
-"Wanneer u een opleiding af hebt of een mijlpaal hebt bereikt wordt u beloond"
-" met badges."
+"Wanneer je een cursus af hebt of een mijlpaal hebt bereikt wordt je beloond "
+"met badges."
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
+msgid "XP"
+msgstr "XP"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -566,14 +622,32 @@ msgid ""
 "content. Points can also be earned on the forum. Follow this link to the "
 "guidelines of the forum."
 msgstr ""
-"U kan meer punten scoren door de vragen te beantwoorden aan het einde van "
-"elke opleiding. U kan ook punten verdienen op het forum. Volg deze link naar"
-" de regels van het forum."
+"Je kunt meer punten scoren door de vragen te beantwoorden aan het einde van "
+"elke cursus. Je kunt ook punten verdienen op het forum. Volg deze link naar "
+"de regels van het forum."
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid ""
+"Your Account has not yet been verified.<br/>\n"
+"            Click"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "Your account does not have an email set up. Please set it up on"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "breadcrumb"
 msgstr "kruimelpad"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "or"
+msgstr "of"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -581,9 +655,34 @@ msgid "point"
 msgstr "punt"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "this month"
+msgstr "deze maand"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "this week"
+msgstr "deze week"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "to receive a verification email"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
 msgid "xp"
 msgstr "xp"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "your account settings"
+msgstr ""
+
+#. module: website_profile
+#: model:mail.template,subject:website_profile.validation_email
+msgid "{{ object.company_id.name }} Profile validation"
+msgstr "{{ object.company_id.name }} Profiel bevestiging"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav

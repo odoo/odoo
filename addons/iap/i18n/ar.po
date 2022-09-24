@@ -3,19 +3,16 @@
 # 	* iap
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
-# Ali Alrehawi <alrehawi@hotmail.com>, 2019
+# Malaz Abuidris <msea@odoo.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2019\n"
+"POT-Creation-Date: 2022-06-09 14:06+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,10 +28,11 @@ msgstr "معلومات الحساب"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
 msgid "Account Token"
-msgstr "كلمة سر الحساب"
+msgstr "رمز الحساب "
 
 #. module: iap
 #. openerp-web
+#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Buy credits"
@@ -42,27 +40,20 @@ msgstr "شراء رصيد"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
-#, python-format
-msgid "Buy credits at Odoo"
-msgstr "شراء رصيد في أودو"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Cancel"
-msgstr "إلغاء"
+msgstr "إلغاء "
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
-msgstr "الشركة"
+msgstr "الشركة "
 
 #. module: iap
 #: model:ir.model,name:iap.model_res_config_settings
 msgid "Config Settings"
-msgstr "ضبط الإعدادات"
+msgstr "تهيئة الإعدادات "
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
@@ -77,12 +68,17 @@ msgstr "أنشئ في"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 msgid "Display Name"
-msgstr "الاسم المعروض"
+msgstr "اسم العرض "
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+msgid "Documentation"
+msgstr "التوثيق"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
 msgid "IAP"
-msgstr "IAP"
+msgstr "الوكيل المدرك للهوية (IAP) "
 
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
@@ -98,21 +94,14 @@ msgid "IAP Accounts"
 msgstr "حسابات IAP"
 
 #. module: iap
+#: model:ir.model,name:iap.model_iap_enrich_api
+msgid "IAP Lead Enrichment API"
+msgstr "الواجهة البرمجية للتطبيق لـ IAP إثراء العملاء المهتمين "
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
 msgid "ID"
 msgstr "المُعرف"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
-msgid "In-App Purchases"
-msgstr "عمليات شراء داخل التطبيق"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
-#, python-format
-msgid "Insufficient Balance"
-msgstr "رصيد غير كاف"
 
 #. module: iap
 #. openerp-web
@@ -139,12 +128,12 @@ msgstr "آخر تحديث في"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "Odoo IAP"
-msgstr ""
+msgstr "IAP أودو "
 
 #. module: iap
 #: model:ir.actions.server,name:iap.open_iap_account
 msgid "Open IAP Account"
-msgstr ""
+msgstr "فتح حساب IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
@@ -153,25 +142,30 @@ msgstr "اسم الخدمة"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
+#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
 msgstr "بدء نسخة تجريبية في أودو"
 
 #. module: iap
-#: code:addons/iap/models/iap.py:0
+#: code:addons/iap/tools/iap_tools.py:0
 #, python-format
 msgid ""
 "The url that this service requested returned an error. Please contact the "
 "author of the app. The url it tried to contact was %s"
 msgstr ""
+"حدث خطأ ما في رابط url الذي تم طلبه من قِبَل هذه الخدمة. يرجى التواصل مع "
+"منشئ هذا التطبيق. الرابط الذي حاولت الخدمة التواصل معه هو %s "
 
 #. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+#, python-format
 msgid "View My Services"
-msgstr ""
+msgstr "عرض خدماتي "
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
-msgstr ""
+msgstr "قم عرض خدمات IAP الخاصة بك وقم بإعادة شحن رصيدك "

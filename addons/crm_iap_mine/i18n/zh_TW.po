@@ -1,21 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_lead
+# 	* crm_iap_mine
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
-# amos lin <seeing@edirect168.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
-# Kenny Chen <chen.kenny@yuanchih-consult.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Kenny Chen <chen.kenny@yuanchih-consult.com>, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,819 +19,795 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "%d credits will be consumed to find %d companies."
-msgstr ""
+msgstr "消耗 %d 點數用來查找 %d 個公司。"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "(Time Now)"
-msgstr "(現在時間)"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
 msgid "<b>Contacts</b>"
-msgstr ""
+msgstr "<b>聯絡人</b>"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "<b>Phone :</b>"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "<b>Timezone : </b>"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:mail.template,body_html:crm_iap_lead.lead_generation_no_credits
+#. module: crm_iap_mine
+#: model:mail.template,body_html:crm_iap_mine.lead_generation_no_credits
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There is no more credits on your IAP Lead Generation account.<br/>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
 "    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
 
-#. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
-#, python-format
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid ""
-"<p class=\"o_view_nocontent_empty_folder\">\n"
-"            No leads found\n"
-"        </p><p>\n"
-"            No leads could be generated according to your search criteria\n"
-"        </p>"
+"<span attrs=\"{'invisible': [('error_type', '!=', 'no_result')]}\">Your "
+"request did not return any result (no credits were used). Try removing some "
+"filters.</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('error_type', '!=', "
+"'no_result')]}\">您的請求沒有找到任何結果（沒有使用積分）。嘗試刪除一些篩選條件。</span>"
 
-#. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
-#, python-format
-msgid ""
-"<p class=\"o_view_nocontent_empty_folder\">\n"
-"            No opportunities found\n"
-"        </p><p>\n"
-"            No opportunities could be generated according to your search criteria\n"
-"        </p>"
-msgstr ""
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
+msgstr "<span class=\"col-md-6\">每個公司的額外聯絡人</span>"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_stat_text\">Leads</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">潛在商機</span>"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_stat_text\">Opportunities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">商機</span>"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_238
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
 msgid "Automobiles & Components"
-msgstr ""
+msgstr "汽車及零部件"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_157
-msgid "Banks"
-msgstr "銀行"
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
+msgid "Available State"
+msgstr "可用狀態"
 
-#. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_mining_request
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_69_157
+msgid "Banks & Insurance"
+msgstr "銀行與保險"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Buy credits."
+msgstr "購買積分。"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_1
+msgid "CEO"
+msgstr "CEO"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
+msgid "CRM IAP Lead Industry"
+msgstr "CRM IAP 潛在商機行業"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
 msgid "CRM Lead Mining Request"
-msgstr ""
+msgstr "CRM潛在商機挖掘需求"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "Cancel"
 msgstr "取消"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_162
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_162
 msgid "Capital Goods"
-msgstr ""
+msgstr "資本財貨"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__color
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__color
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__color
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__color
 msgid "Color Index"
 msgstr "顏色索引"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_163
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_163
 msgid "Commercial & Professional Services"
-msgstr ""
+msgstr "商業和專業服務"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__companies
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__companies
 msgid "Companies"
 msgstr "公司"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__people
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__people
 msgid "Companies and their Contacts"
-msgstr ""
+msgstr "公司及其聯絡人"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_max
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_max
 msgid "Company Size Max"
-msgstr ""
+msgstr "公司最大規模"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_167
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_167
 msgid "Construction Materials"
-msgstr ""
+msgstr "建築材料"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_30
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_30_155
 msgid "Consumer Discretionary"
-msgstr ""
+msgstr "非必需消費品"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_239
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_239
 msgid "Consumer Durables & Apparel"
-msgstr ""
+msgstr "耐用品和服裝"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_150
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_150_151
 msgid "Consumer Services"
-msgstr ""
+msgstr "客戶服務"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_33
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_33
 msgid "Consumer Staples"
-msgstr ""
+msgstr "日用品"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Contacts"
-msgstr "聯繫人"
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__country_ids
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__country_ids
 msgid "Countries"
 msgstr "國家"
 
-#. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Create a Lead Mining Request"
-msgstr ""
+msgstr "建立一個潛在商機挖掘申請"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__create_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__create_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__create_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__create_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__create_uid
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_uid
 msgid "Created by"
 msgstr "創立者"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__create_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__create_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__create_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__create_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__create_date
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_date
 msgid "Created on"
 msgstr "建立於"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__display_name
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__display_name
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_name
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__display_name
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__display_name
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Default Tags"
+msgstr "默認標籤"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
+msgid "Display Lead Label"
+msgstr "顯示潛在商機標籤"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_151
-msgid "Diversified Consumer Services"
-msgstr ""
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
+msgid "Diversified Financials & Financial Services"
+msgstr "多元化金融及金融服務"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_158
-msgid "Diversified Financial Services"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_159
-msgid "Diversified Financials"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__done
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Done"
 msgstr "完成"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__draft
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__draft
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Draft"
 msgstr "草稿"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
 msgid "Email"
 msgstr "Email"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_156
-msgid "Energy Equipment & Services"
-msgstr ""
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
+msgid "Energy & Utilities "
+msgstr "能源與公用事業"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__error
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__error
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__error
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Error"
 msgstr "錯誤"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_filter_type
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__error_type
+msgid "Error Type"
+msgstr "錯誤類型"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_filter_type
 msgid "Filter on"
 msgstr "篩選於"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__filter_on_size
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__filter_on_size
 msgid "Filter on Size"
-msgstr ""
+msgstr "根據規模過濾"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_153
-msgid "Food & Staples Retailing"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_154
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_153_154
 msgid "Food, Beverage & Tobacco"
-msgstr ""
+msgstr "食品、飲料和煙草"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "From"
 msgstr "來自"
 
-#. module: crm_iap_lead
+#. module: crm_iap_mine
 #. openerp-web
-#: code:addons/crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/static/src/views/generate_leads_views.xml:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 #, python-format
 msgid "Generate Leads"
-msgstr ""
+msgstr "建立潛在商機"
 
-#. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr ""
+msgstr "根據國家、行業、規模等生成新的潛在商機。"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_ids
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr ""
+msgstr "建立的潛在商機/商機"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組依據"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_160
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
 msgid "Health Care Equipment & Services"
-msgstr ""
+msgstr "醫療設備和服務"
 
-#. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_helpers
-msgid "Helper methods for crm_iap_lead modules"
-msgstr ""
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_helpers
+msgid "Helper methods for crm_iap_mine modules"
+msgstr "crm_iap_mine 模組的輔助方法"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_155
-msgid "Household & Personal Products"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:mail.template,subject:crm_iap_lead.lead_generation_no_credits
+#. module: crm_iap_mine
+#: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
+#: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
-msgstr ""
+msgstr "IAP 潛在商機生成通知"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__id
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__id
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__id
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__id
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__id
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
 msgid "ID"
 msgstr "ID"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_168
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_168
 msgid "Independent Power and Renewable Electricity Producers"
-msgstr ""
+msgstr "獨立電力和可再生電力生產商"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_146
-msgid "Industrials"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__industry_ids
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
 msgid "Industries"
-msgstr ""
+msgstr "行業"
 
-#. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
-msgid "Industry Tag"
-msgstr ""
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__name
+msgid "Industry"
+msgstr "行業/產業"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_69
-msgid "Insurance"
-msgstr ""
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_name_uniq
+msgid "Industry name already exists!"
+msgstr "行業名稱已存在！"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers____last_update
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry____last_update
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request____last_update
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role____last_update
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority____last_update
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__credits
+msgid "Insufficient Credits"
+msgstr "點數不足"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role____last_update
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority____last_update
 msgid "Last Modified on"
 msgstr "最後修改於"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__write_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__write_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__write_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__write_uid
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__write_uid
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_uid
 msgid "Last Updated by"
 msgstr "最後更新者"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__write_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__write_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__write_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__write_date
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__write_date
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_date
 msgid "Last Updated on"
 msgstr "最後更新於"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
-msgid "Lead"
-msgstr "線索"
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_contacts_credits
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
-msgstr ""
+msgstr "潛在商機聯絡點數"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_credits
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_credits
 msgid "Lead Credits"
-msgstr ""
+msgstr "潛在商機點數"
 
-#. module: crm_iap_lead
-#: model:ir.ui.menu,name:crm_iap_lead.crm_menu_lead_generation
+#. module: crm_iap_mine
+#: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr "線索生成"
+msgstr "潛在商機建立"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Lead Information"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__lead_mining_request_id
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Lead Mining Request"
-msgstr ""
+msgstr "潛在商機挖掘申請"
 
-#. module: crm_iap_lead
-#: model:ir.actions.act_window,name:crm_iap_lead.crm_iap_lead_mining_request_action
-#: model:ir.ui.menu,name:crm_iap_lead.crm_iap_lead_mining_request_menu_action
+#. module: crm_iap_mine
+#: model:ir.actions.act_window,name:crm_iap_mine.crm_iap_lead_mining_request_action
+#: model:ir.ui.menu,name:crm_iap_mine.crm_iap_lead_mining_request_menu_action
 msgid "Lead Mining Requests"
-msgstr ""
+msgstr "潛在商機挖掘申請"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_total_credits
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_total_credits
 msgid "Lead Total Credits"
-msgstr ""
+msgstr "潛在商機總點數"
 
-#. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_lead
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "線索/商機"
+msgstr "潛在商機/商機"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Leads"
-msgstr "線索"
+msgstr "潛在商機"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
 msgid ""
-"Make sure you know if you have to be GDPR compliant for storing personal "
-"data."
-msgstr ""
+"Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
+msgstr "尋找更多機會？<br>嘗試<b>潛在客戶生成</b>工具。"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_148
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
 msgid "Materials"
-msgstr ""
+msgstr "材料"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_86
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_86
 msgid "Media"
-msgstr ""
+msgstr "媒體"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__name
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__name
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
 msgid "Name"
-msgstr "名称"
+msgstr "名稱"
 
-#. module: crm_iap_lead
-#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_seniority_name_uniq
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_seniority_name_uniq
 msgid "Name already exists!"
-msgstr ""
+msgstr "名稱已存在"
 
-#. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
-msgstr "新的"
+msgstr "新增"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_number
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__no_result
+msgid "No Result"
+msgstr "查無結果"
+
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Now, just let the magic happen!"
+msgstr "現在，讓魔法發生吧！"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_number
 msgid "Number of Contacts"
 msgstr "聯絡人人數"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__leads_count
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_count
 msgid "Number of Generated Leads"
-msgstr ""
+msgstr "生成潛在商機的數量"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_number
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_number
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_tree
 msgid "Number of Leads"
-msgstr ""
+msgstr "潛在商機數量"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Opportunities"
-msgstr "商機/線索"
-
-#. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__opportunity
-msgid "Opportunity"
 msgstr "商機"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
 msgid "Opportunity created by Odoo Lead Generation"
-msgstr ""
+msgstr "由Odoo潛在商機生成產生的商機"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__role_ids
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__role_ids
 msgid "Other Roles"
-msgstr ""
+msgstr "其他角色"
 
-#. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_role
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_role
 msgid "People Role"
-msgstr ""
+msgstr "人物角色"
 
-#. module: crm_iap_lead
-#: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_seniority
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_seniority
 msgid "People Seniority"
-msgstr ""
+msgstr "人員資歷"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_161
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_161
 msgid "Pharmaceuticals, Biotechnology & Life Sciences"
-msgstr ""
+msgstr "製藥、生物技術和生命科學"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
 msgid "Phone"
 msgstr "電話"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__preferred_role_id
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__preferred_role_id
 msgid "Preferred Role"
-msgstr ""
+msgstr "首選角色"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_114
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_114
 msgid "Real Estate"
 msgstr "房地產"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Request"
-msgstr "請求"
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__name
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__name
 msgid "Request Number"
-msgstr ""
+msgstr "申請編號"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_152
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_152
 msgid "Retailing"
-msgstr ""
+msgstr "零售"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "Retry"
 msgstr "重試"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__reveal_id
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__reveal_id
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__reveal_id
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__reveal_ids
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__reveal_id
 msgid "Reveal"
-msgstr ""
+msgstr "揭示"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__reveal_id
-msgid "Reveal ID"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__role
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__role
 msgid "Role"
 msgstr "角色"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__name
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__name
 msgid "Role Name"
-msgstr ""
+msgstr "角色名稱"
 
-#. module: crm_iap_lead
-#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_role_name_uniq
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_role_name_uniq
 msgid "Role name already exists!"
-msgstr ""
+msgstr "角色名已存在!"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__team_id
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__team_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Sales Team"
 msgstr "銷售團隊"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__user_id
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__user_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Salesperson"
 msgstr "銷售員"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_164
-msgid "Semiconductors & Semiconductor Equipment"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__seniority_id
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__seniority_id
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
 msgid "Seniority"
-msgstr ""
+msgstr "Seniority"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__company_size_min
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__sequence
+msgid "Sequence"
+msgstr "序號"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_min
 msgid "Size"
 msgstr "尺寸"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_165
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_165
 msgid "Software & Services"
-msgstr ""
+msgstr "軟體和服務"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__state_ids
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state_ids
 msgid "States"
-msgstr "州/省/縣"
+msgstr "縣市"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__state
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state
 msgid "Status"
 msgstr "狀態"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "Submit"
 msgstr "提交"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__name
-msgid "Tag Name"
-msgstr "標籤名稱"
-
-#. module: crm_iap_lead
-#: model:ir.model.constraint,message:crm_iap_lead.constraint_crm_iap_lead_industry_name_uniq
-msgid "Tag name already exists!"
-msgstr "標籤名稱已存在！"
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__tag_ids
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__tag_ids
 msgid "Tags"
 msgstr "標籤"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__search_type
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__search_type
 msgid "Target"
 msgstr "目標"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_166
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_166
 msgid "Technology Hardware & Equipment"
-msgstr ""
+msgstr "技術硬體和設備"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "Technology Used :"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_149
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_149
 msgid "Telecommunication Services"
-msgstr ""
+msgstr "電信服務"
 
-#. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "This makes a total of %d credits for this request."
-msgstr ""
+msgstr "這使得此請求的總計%d積分。"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "Title"
-msgstr "稱謂"
-
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_136
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_136
 msgid "Transportation"
 msgstr "運輸"
 
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_type
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_type
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Type"
 msgstr "類型"
 
-#. module: crm_iap_lead
-#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid ""
 "Up to %d additional credits will be consumed to identify %d contacts per "
 "company."
-msgstr ""
+msgstr "將消耗%d額外的積分來識別%d每個公司的聯絡人。"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
-msgid "Utilities"
-msgstr ""
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "What do you need ?"
+msgstr "你需要什麼 ？"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_1
-msgid "ceo"
-msgstr ""
+#. module: crm_iap_mine
+#. openerp-web
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Which Industry do you want to target?"
+msgstr "您想針對哪個行業？"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_2
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "You do not have enough credits to submit this request."
+msgstr "您沒有足夠的積分來提交此請求。"
+
+#. module: crm_iap_mine
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Your request could not be executed: %s"
+msgstr "無法執行您的請求：%s"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_2
 msgid "communications"
-msgstr ""
+msgstr "交流"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_3
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_3
 msgid "consulting"
-msgstr ""
+msgstr "咨詢"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_4
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
 msgid "customer_service"
-msgstr ""
+msgstr "customer_service"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_1
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_1
 msgid "director"
-msgstr ""
+msgstr "導向器"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_5
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_5
 msgid "education"
-msgstr ""
+msgstr "教育"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "employees"
-msgstr ""
+msgstr "員工"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_6
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
 msgid "engineering"
-msgstr ""
+msgstr "工程"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_2
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_2
 msgid "executive"
-msgstr ""
+msgstr "行政人員"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_7
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_7
 msgid "finance"
-msgstr ""
+msgstr "財經"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_8
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_8
 msgid "founder"
-msgstr ""
+msgstr "創辦人"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_9
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_9
 msgid "health_professional"
 msgstr ""
+"health_professional\n"
+" "
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_10
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
 msgid "human_resources"
-msgstr ""
+msgstr "human_resources"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_11
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_11
 msgid "information_technology"
-msgstr ""
+msgstr "information_technology"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_12
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
 msgid "legal"
-msgstr ""
+msgstr "法律"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_3
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_3
 msgid "manager"
-msgstr ""
+msgstr "經理"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_13
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
 msgid "marketing"
-msgstr ""
+msgstr "市場行銷"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_14
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
 msgid "operations"
-msgstr ""
+msgstr "運營"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_15
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_15
 msgid "owner"
-msgstr ""
+msgstr "所有者"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_16
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_16
 msgid "president"
-msgstr ""
+msgstr "主席"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_17
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_17
 msgid "product"
 msgstr "商品"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_18
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_18
 msgid "public_relations"
-msgstr ""
+msgstr "public_relations"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_19
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_19
 msgid "real_estate"
-msgstr ""
+msgstr "real_estate"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_20
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_20
 msgid "recruiting"
-msgstr ""
+msgstr "招聘"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_21
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_21
 msgid "research"
-msgstr ""
+msgstr "研究"
 
-#. module: crm_iap_lead
-#: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_22
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_22
 msgid "sale"
-msgstr ""
+msgstr "銷售"
 
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
 msgstr "到"

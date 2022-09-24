@@ -3,17 +3,15 @@
 # 	* mass_mailing_sale
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,14 +20,26 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "INVOICED"
+msgstr "已结算"
+
+#. module: mass_mailing_sale
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已结算"
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_invoiced_amount
 msgid "Invoiced Amount"
-msgstr "开票金额"
+msgstr "结算金额"
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Invoices Analysis"
+msgstr "结算单分析"
 
 #. module: mass_mailing_sale
 #: model:ir.model,name:mass_mailing_sale.model_mailing_mailing
@@ -37,11 +47,75 @@ msgid "Mass Mailing"
 msgstr "群发邮件"
 
 #. module: mass_mailing_sale
-#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_quotation_count
-msgid "Quotation Count"
-msgstr "报价个数"
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "No Quotations yet!"
+msgstr ""
 
 #. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "No Revenues yet!"
+msgstr ""
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "QUOTATIONS"
+msgstr "引文"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_quotation_count
+msgid "Quotation Count"
+msgstr "报价数量"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_quotation_count
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
 msgid "Quotations"
-msgstr "报价单"
+msgstr "报价"
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid ""
+"Quotations will appear here once your customers add products to their Carts "
+"or when your sales reps assign this mailing."
+msgstr ""
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_invoiced_amount
+msgid "Revenues"
+msgstr "收入"
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Revenues will appear here once orders are turned into invoices."
+msgstr ""
+
+#. module: mass_mailing_sale
+#: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
+#, python-format
+msgid "Sales Analysis"
+msgstr "销售分析"
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_sale_order
+msgid "Sales Order"
+msgstr "销售订单"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,help:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
+msgid "Selection to determine the winner mailing that will be sent."
+msgstr "选择确定将发送的获胜者邮件。"
+
+#. module: mass_mailing_sale
+#: model:ir.model,name:mass_mailing_sale.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTM活动"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
+msgid "Winner Selection"
+msgstr "优胜者选择"

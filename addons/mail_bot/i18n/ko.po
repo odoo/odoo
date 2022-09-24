@@ -1,20 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * mail_bot
+# 	* mail_bot
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
-# Seongseok Shin <shinss61@hotmail.com>, 2018
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,32 +20,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:57
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
 "Aaaaaw that's really cute but, you know, bots don't work that way. You're "
 "too human for me! Let's keep it professional ❤️"
-msgstr ""
+msgstr "오호 정말 귀엽지만 알다시피 봇은 그런 식으로 작동하지 않아요. 날 너무 인간적으로 대하시네요! 프로답게 행동하자구요 ❤️"
 
 #. module: mail_bot
-#: model:ir.model,name:mail_bot.model_res_partner
-msgid "Contact"
-msgstr "연락처"
-
-#. module: mail_bot
-#: selection:res.users,odoobot_state:0
+#: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
 msgid "Disabled"
-msgstr ""
+msgstr "비활성화"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_mail_channel
-msgid "Discussion channel"
-msgstr "의논/토의 채널"
-
-#. module: mail_bot
-#: model:ir.model.fields,field_description:mail_bot.field_mail_bot__display_name
-msgid "Display Name"
-msgstr "이름 표시"
+msgid "Discussion Channel"
+msgstr "메일 및 채팅 채널"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_mail_thread
@@ -56,275 +43,214 @@ msgid "Email Thread"
 msgstr "이메일 스레드"
 
 #. module: mail_bot
-#. openerp-web
-#: code:addons/mail_bot/static/src/js/mailbot_service.js:42
-#, python-format
-msgid "Enable desktop notifications to chat"
-msgstr ""
-
-#. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:42
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"Great! 👍<br/>Now, try to <b>send an attachment</b>, like a picture of your "
-"cute dog..."
+"Great! 👍<br/>To access special commands, <b>start your sentence with</b> "
+"<span class=\"o_odoobot_command\">/</span>. Try getting help."
 msgstr ""
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP 라우팅"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_channel.py:38
+#: code:addons/mail_bot/models/res_users.py:0
 #, python-format
 msgid ""
 "Hello,<br/>Odoo's chat helps employees collaborate efficiently. I'm here to "
-"help you discover its features.<br/><b>Try to send me an emoji :)</b>"
+"help you discover its features.<br/><b>Try to send me an emoji</b> <span "
+"class=\"o_odoobot_command\">:)</span>"
 msgstr ""
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:74
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "Hmmm..."
+msgstr "음..."
+
+#. module: mail_bot
+#: code:addons/mail_bot/models/mail_bot.py:0
+#, python-format
+msgid ""
+"I am a simple bot, but if that's a dog, he is the cutest 😊 "
+"<br/>Congratulations, you finished this tour. You can now <b>close this chat"
+" window</b>. Enjoy discovering Odoo."
 msgstr ""
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:75
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "I'm afraid I don't understand. Sorry!"
-msgstr ""
+msgstr "죄송하지만 이해가 안 돼요. 죄송합니다!"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:59
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"I'm just a bot... :( You can check <a "
-"href=\"https://www.odoo.com/page/docs\">our documentation</a>) for more "
-"information!"
+"I'm not smart enough to answer your question.<br/>To follow my guide, ask: "
+"<span class=\"o_odoobot_command\">start the tour</span>."
 msgstr ""
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:73
-#, python-format
-msgid ""
-"I'm not smart enough to answer your question.<br/>To follow my guide, ask"
-msgstr ""
-
-#. module: mail_bot
-#: model:ir.model.fields,field_description:mail_bot.field_mail_bot__id
-msgid "ID"
-msgstr "ID"
-
-#. module: mail_bot
-#: selection:res.users,odoobot_state:0
+#: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle
 msgid "Idle"
-msgstr ""
-
-#. module: mail_bot
-#: model:ir.model.fields,field_description:mail_bot.field_mail_bot____last_update
-msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "대기"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_mail_bot
 msgid "Mail Bot"
-msgstr ""
+msgstr "메일 봇"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:45
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"Not a cute dog, but you get it 😊<br/>To access special features, <b>start "
-"your sentence with '/'</b>. Try to get help."
+"Not exactly. To continue the tour, send an emoji: <b>type</b> <span "
+"class=\"o_odoobot_command\">:)</span> and press enter."
 msgstr ""
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:65
-#, python-format
-msgid ""
-"Not exactly. To continue the tour, send an emoji, <b>type \":)\"</b> and "
-"press enter."
-msgstr ""
-
-#. module: mail_bot
-#: selection:res.users,odoobot_state:0
+#: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
 msgid "Not initialized"
+msgstr "초기화되지 않음"
+
+#. module: mail_bot
+#: code:addons/mail_bot/models/mail_bot.py:0
+#, python-format
+msgid ""
+"Not sure what you are doing. Please, type <span "
+"class=\"o_odoobot_command\">/</span> and wait for the propositions. Select "
+"<span class=\"o_odoobot_command\">help</span> and press enter"
 msgstr ""
-
-#. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:69
-#, python-format
-msgid ""
-"Not sure wat you are doing. Please press / and wait for the propositions. "
-"Select \"help\" and press enter"
-msgstr ""
-
-#. module: mail_bot
-#. openerp-web
-#: code:addons/mail_bot/static/src/js/systray_messaging_menu.js:64
-#, python-format
-msgid ""
-"Odoo has now the permission to send you native notifications on this device."
-msgstr "Odoo는 지금 이 장치에서 기본 알림을 보낼 수있는 권한을 갖습니다."
-
-#. module: mail_bot
-#. openerp-web
-#: code:addons/mail_bot/static/src/js/systray_messaging_menu.js:61
-#, python-format
-msgid ""
-"Odoo will not have the permission to send native notifications on this "
-"device."
-msgstr "Odoo는 지금 이 장치에서 기본 알림을 보낼 수있는 권한이 없습니다."
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
 msgid "OdooBot Status"
+msgstr "Odoo봇 상태"
+
+#. module: mail_bot
+#: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_failed
+msgid "Odoobot Failed"
 msgstr ""
 
 #. module: mail_bot
-#. openerp-web
-#: code:addons/mail_bot/static/src/js/mailbot_service.js:39
-#, python-format
-msgid "OdooBot has a request"
+#: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_attachement
+msgid "Onboarding attachment"
 msgstr ""
 
 #. module: mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Onboarding attachement"
-msgstr ""
-
-#. module: mail_bot
-#: selection:res.users,odoobot_state:0
-msgid "Onboarding canned"
-msgstr ""
-
-#. module: mail_bot
-#: selection:res.users,odoobot_state:0
+#: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_command
 msgid "Onboarding command"
-msgstr ""
+msgstr "온보딩 명령"
 
 #. module: mail_bot
-#: selection:res.users,odoobot_state:0
+#: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_emoji
 msgid "Onboarding emoji"
-msgstr ""
+msgstr "온보딩 이모지"
 
 #. module: mail_bot
-#: selection:res.users,odoobot_state:0
+#: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_ping
 msgid "Onboarding ping"
-msgstr ""
+msgstr "온보딩 핑"
 
 #. module: mail_bot
-#. openerp-web
-#: code:addons/mail_bot/static/src/js/systray_messaging_menu.js:60
-#, python-format
-msgid "Permission denied"
-msgstr "사용 권한이 거부되었습니다"
-
-#. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:79
-#, python-format
-msgid "Pong."
-msgstr ""
-
-#. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:76
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
 "Sorry I'm sleepy. Or not! Maybe I'm just trying to hide my unawareness of "
-"human language...<br/>I can show you features if you write"
+"human language...<br/>I can show you features if you write: <span "
+"class=\"o_odoobot_command\">start the tour</span>."
 msgstr ""
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:71
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
 "Sorry, I am not listening. To get someone's attention, <b>ping him</b>. "
-"Write \"@odoobot\" and select me."
+"Write <span class=\"o_odoobot_command\">@OdooBot</span> and select me."
 msgstr ""
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:61
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "That's not nice! I'm a bot but I have feelings... 💔"
-msgstr ""
+msgstr "그건 좋지 않아요! 저는 봇이지만 감정이 있어요... 💔"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:67
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"To <b>send an attachment</b>, click the 📎 icon on the right, and select a "
-"file."
+"To <b>send an attachment</b>, click on the <i class=\"fa fa-paperclip\" "
+"aria-hidden=\"true\"></i> icon and select a file."
 msgstr ""
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:54
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "To start, try to send me an emoji :)"
+msgstr "시작하려면 이모지 :)를 보내주세요"
+
+#. module: mail_bot
+#: code:addons/mail_bot/models/mail_bot.py:0
+#, python-format
+msgid ""
+"Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
+"discovering our product, please check <a "
+"href=\"https://www.odoo.com/documentation\" target=\"_blank\">our "
+"documentation</a> or <a href=\"https://www.odoo.com/slides\" "
+"target=\"_blank\">our videos</a>."
 msgstr ""
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
-msgid "Users"
+msgid "User"
 msgstr "사용자"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:48
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"Wow you are a natural!<br/>Ping someone to grab its attention with "
-"@nameoftheuser. <b>Try to ping me using @OdooBot</b> in a sentence."
+"Wow you are a natural!<br/>Ping someone with @username to grab their "
+"attention. <b>Try to ping me using</b> <span "
+"class=\"o_odoobot_command\">@OdooBot</span> in a sentence."
 msgstr ""
 
 #. module: mail_bot
-#. openerp-web
-#: code:addons/mail_bot/static/src/js/systray_messaging_menu.js:63
-#, python-format
-msgid "Yay, push notifications are enabled!"
-msgstr ""
-
-#. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:51
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"Yep, I am here! 🎉 <br/>You finished the tour, you can <b>close this chat "
-"window</b>. Enjoy discovering Odoo."
+"Yep, I am here! 🎉 <br/>Now, try <b>sending an attachment</b>, like a picture"
+" of your cute dog..."
 msgstr ""
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:79
-#, python-format
-msgid "Yep, OdooBot is in the place!"
-msgstr ""
-
-#. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:60
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "fuck"
-msgstr ""
+msgstr "제길."
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:58
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "help"
-msgstr ""
+msgstr "도움말"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:56
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "i love you"
-msgstr ""
+msgstr "사랑해요"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:56
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "love"
-msgstr ""
+msgstr "사랑"
 
 #. module: mail_bot
-#: code:addons/mail_bot/models/mail_bot.py:52
-#: code:addons/mail_bot/models/mail_bot.py:73
-#: code:addons/mail_bot/models/mail_bot.py:76
+#: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "start the tour"
-msgstr ""
+msgstr "둘러보기 시작"

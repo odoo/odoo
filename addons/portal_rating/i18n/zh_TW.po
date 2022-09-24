@@ -1,20 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_rating
+# 	* portal_rating
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
-# sejun huang <sejun.huang@gmail.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,237 +19,254 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 #, python-format
-msgid ""
-"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
-"'/mail/chatter_post'}"
-msgstr ""
+msgid "Add Review"
+msgstr "新增評論"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#, python-format
-msgid "Add a review"
-msgstr ""
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Average"
 msgstr "平均"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "取消"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Close"
+msgstr "關閉"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
 #, python-format
 msgid "Comment"
 msgstr "評論"
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_id
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_id
 msgid "Commented by"
-msgstr ""
+msgstr "評論者"
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_datetime
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_datetime
 msgid "Commented on"
-msgstr ""
+msgstr "評論於"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Delete"
 msgstr "刪除"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Details"
 msgstr "詳細訊息"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Edit"
 msgstr "編輯"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
+#, python-format
+msgid "Edit Review"
+msgstr ""
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+#, python-format
+msgid "Empty star"
+msgstr ""
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+#, python-format
+msgid "Full star"
+msgstr ""
+
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 路由"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Half a star"
 msgstr "半顆星"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I don't like it"
 msgstr "我不喜歡它"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I hate it"
 msgstr "我討厭它"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I like it"
 msgstr "我喜歡它"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I love it"
-msgstr "我愛它"
+msgstr "我超愛的"
 
-#. module: website_rating
-#: code:addons/website_rating/controllers/portal_rating.py:0
+#. module: portal_rating
+#: code:addons/portal_rating/controllers/portal_rating.py:0
 #, python-format
 msgid "Invalid rating"
-msgstr ""
+msgstr "無效評分"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "It's okay"
 msgstr "沒有問題"
 
-#. module: website_rating
-#: model:ir.model,name:website_rating.model_mail_message
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "載入中..."
+
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_mail_message
 msgid "Message"
 msgstr "消息"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "Modify your review"
-msgstr ""
+msgstr "修改您的評論"
 
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
-#, python-format
-msgid "One star"
-msgstr "一顆星"
-
-#. module: website_rating
-#: code:addons/website_rating/models/rating.py:0
+#. module: portal_rating
+#: code:addons/portal_rating/models/rating_rating.py:0
 #, python-format
 msgid "Only the publisher of the website can change the rating comment"
-msgstr ""
+msgstr "只有網站編輯者才能更改評論"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Post comment"
-msgstr ""
+msgstr "發表評論"
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__website_published
-msgid "Published"
-msgstr "已公開"
-
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Published on"
-msgstr ""
+msgstr "發表於"
 
-#. module: website_rating
-#: model:ir.model.fields,field_description:website_rating.field_rating_rating__publisher_comment
-msgid "Publisher Comment"
-msgstr ""
-
-#. module: website_rating
-#: model_terms:ir.ui.view,arch_db:website_rating.rating_rating_view_form
+#. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_comment
 msgid "Publisher comment"
-msgstr ""
+msgstr "網站編輯者評論"
 
-#. module: website_rating
-#: model:ir.model,name:website_rating.model_rating_rating
+#. module: portal_rating
+#: model:ir.model,name:portal_rating.model_rating_rating
 msgid "Rating"
-msgstr "點評"
+msgstr "評分"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Remove Selection"
+msgstr "刪除所選內容"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
+#, python-format
+msgid "Review"
+msgstr "審查"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_composer.js:0
+#, python-format
+msgid ""
+"The rating is required. Please make sure to select one before sending your "
+"review."
 msgstr ""
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Update comment"
-msgstr ""
+msgstr "更新評論"
 
-#. module: website_rating
-#: model:ir.model.fields,help:website_rating.field_rating_rating__website_published
-msgid "Visible on the website as a comment"
-msgstr "作為評論在網站可見"
-
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/js/portal_chatter.js:0
+#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
+#, python-format
+msgid "Write a review"
+msgstr "提供建議"
+
+#. module: portal_rating
+#. openerp-web
+#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Write your comment"
-msgstr ""
+msgstr "寫下您的評論..."
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
-#: code:addons/website_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
 msgstr "頭像"
 
-#. module: website_rating
+#. module: portal_rating
 #. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_rating_composer.xml:0
-#, python-format
-msgid "ratings)"
-msgstr ""
-
-#. module: website_rating
-#. openerp-web
-#: code:addons/website_rating/static/src/xml/portal_tools.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "stars"
 msgstr "星星"

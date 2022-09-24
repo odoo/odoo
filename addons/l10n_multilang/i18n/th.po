@@ -1,19 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * l10n_multilang
+# 	* l10n_multilang
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018
+# Wichanon Jamwutthipreecha, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 14:33+0000\n"
-"PO-Revision-Date: 2018-10-08 14:34+0000\n"
-"Last-Translator: Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018\n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,19 +28,22 @@ msgstr "บัญชี"
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "เทมเพลตแผนภูมิบัญชี"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group
+msgid "Account Group"
+msgstr "กลุ่มบัญชี"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+msgid "Account Name"
+msgstr "ชื่อบัญชี"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_tag
 msgid "Account Tag"
-msgstr ""
-
-#. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
-msgid ""
-"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr ""
-"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
+msgstr "ป้ายกำกับ"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
@@ -50,20 +52,15 @@ msgid "Analytic Account"
 msgstr "บัญชีวิเคราะห์"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_res_country_state
-msgid "Country state"
-msgstr "จังหวัด"
-
-#. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__description
 msgid "Display on Invoices"
-msgstr ""
+msgstr "แสดงในใบแจ้งหนี้"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__name
 msgid "Fiscal Position"
-msgstr "ประเภทผู้เสียภาษี"
+msgstr "ฐานะทางการเงิน"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__name
@@ -78,7 +75,7 @@ msgstr "ติดตั้งภาษา"
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_journal
 msgid "Journal"
-msgstr "สมุดบัญชี"
+msgstr "สมุดบันทึก"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_journal__name
@@ -88,18 +85,18 @@ msgstr "ชื่อสมุดรายวัน"
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__description
 msgid "Label on Invoices"
-msgstr ""
+msgstr "ฉลากบนใบแจ้งหนี้"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,help:l10n_multilang.field_account_fiscal_position__note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "ข้อกำหนดทางกฎหมายที่ต้องพิมพ์บนใบแจ้งหนี้"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group_template__name
 msgid "Name"
 msgstr "ชื่อ"
 
@@ -115,18 +112,9 @@ msgid "Spoken Languages"
 msgstr "ภาษาพูด"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
-msgid "State Name"
-msgstr "ชื่อจังหวัด"
-
-#. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
-msgid ""
-"State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in"
-" the final object when generating them from templates. You must provide the "
-"language codes separated by ';'"
-msgstr ""
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+msgid "Tag Name"
+msgstr "ชื่อแท็ก"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
@@ -140,9 +128,14 @@ msgid "Tax Name"
 msgstr "ชื่อภาษี"
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group_template
+msgid "Template for Account Groups"
+msgstr ""
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "Template for Fiscal Position"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_template

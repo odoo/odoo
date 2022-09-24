@@ -1,19 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_import_module
+# 	* base_import_module
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,13 +27,13 @@ msgstr "취소"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
-msgstr "마감"
+msgstr "닫기"
 
 #. module: base_import_module
-#: code:addons/base_import_module/controllers/main.py:31
+#: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "'%s' 데이터베이스를 선택할 수 없습니다."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
@@ -45,15 +43,15 @@ msgstr "작성자"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr "작성일자"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
-msgstr "이름 표시"
+msgstr "표시명"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:123
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "'%s' 파일이 허용된 최대 파일 크기를 초과했습니다"
@@ -77,12 +75,12 @@ msgstr "ID"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
-msgstr ""
+msgstr "앱 가져오기"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
 msgid "Import Message"
-msgstr ""
+msgstr "메시지 가져오기"
 
 #. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
@@ -100,12 +98,12 @@ msgstr "모듈 가져오기"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
 msgid "Imported Module"
-msgstr ""
+msgstr "가져온 모듈"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -115,7 +113,7 @@ msgstr "최근 갱신한 사람"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신 일자"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -128,22 +126,27 @@ msgid "Module .ZIP file"
 msgstr "모듈 .ZIP 파일"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:113
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "No file sent."
-msgstr ""
+msgstr "파일을 보내지 않았습니다."
 
 #. module: base_import_module
-#: code:addons/base_import_module/controllers/main.py:25
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Note: you can only import data modules (.xml files and static assets)"
+msgstr "참고 : 데이터 모듈(.xml 파일 및 정적 에셋)만 가져올 수 있습니다."
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
-msgstr ""
+msgstr "관리자만 모듈을 업로드할 수 있습니다."
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:115
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only zip files are supported."
-msgstr ""
+msgstr "zip 파일만 지원됩니다."
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -161,34 +164,40 @@ msgid "Status"
 msgstr "상태"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:50
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require Studio"
-msgstr ""
+msgstr "Studio 사용자 정의를 위해서는 Studio 설치가 필요합니다."
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:57
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require the Odoo Studio app."
-msgstr ""
+msgstr "Studio 사용자 정의를 위해서는 Odoo Studio 앱이 설치되어 있어야 합니다."
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:52
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Unmet module dependencies: %s"
-msgstr "충족되지 않은 모듈 의존성 : %s"
+msgid ""
+"Unmet module dependencies: \n"
+"\n"
+" - %s"
+msgstr ""
+"충족되지 않은 모듈 종속성 : \n"
+"\n"
+" - %s"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view
 msgid "View"
-msgstr "보기"
+msgstr "화면"
 
 #. module: base_import_module
-#: selection:base.import.module,state:0
+#: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__done
 msgid "done"
 msgstr "완료"
 
 #. module: base_import_module
-#: selection:base.import.module,state:0
+#: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__init
 msgid "init"
 msgstr "초기화"

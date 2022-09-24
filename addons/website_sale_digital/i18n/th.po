@@ -1,19 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_digital
+# 	* website_sale_digital
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-# monchai7 <montchye@gmail.com>, 2018
+# Wichanon Jamwutthipreecha, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: monchai7 <montchye@gmail.com>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,32 +21,40 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_digital
-#: model:ir.model,name:website_sale_digital.model_ir_attachment
-msgid "Attachment"
-msgstr "แนบ"
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
+#, python-format
+msgid "Add attachments for this digital product"
+msgstr "เพิ่มไฟล์แนบสำหรับผลิตภัณฑ์ดิจิทัลนี้"
 
 #. module: website_sale_digital
-#: code:addons/website_sale_digital/models/product.py:23
-#: code:addons/website_sale_digital/models/product.py:54
+#: model:ir.model,name:website_sale_digital.model_ir_attachment
+msgid "Attachment"
+msgstr "การแนบ"
+
+#. module: website_sale_digital
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
 #, python-format
 msgid "Digital Attachments"
-msgstr ""
+msgstr "ไฟล์แนบดิจิทัล"
 
 #. module: website_sale_digital
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
 msgid "Digital Files"
-msgstr ""
+msgstr "ไฟล์ดิจิทัล"
 
 #. module: website_sale_digital
 #: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__product_downloadable
+#: model:ir.model.fields,field_description:website_sale_digital.field_mrp_document__product_downloadable
 msgid "Downloadable from product portal"
-msgstr ""
+msgstr "สามารถดาวน์โหลดได้จากพอร์ทัลสินค้า"
 
 #. module: website_sale_digital
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.sale_order_portal_content_inherit_website_sale_digital
 msgid "Downloads"
-msgstr ""
+msgstr "ดาวน์โหลด"
 
 #. module: website_sale_digital
 #: model:ir.model.fields,field_description:website_sale_digital.field_product_product__attachment_count
@@ -56,31 +63,25 @@ msgid "File"
 msgstr "ไฟล์"
 
 #. module: website_sale_digital
-#: model:ir.model,name:website_sale_digital.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "รายการในใบแจ้งหนี้"
+#: model:ir.model,name:website_sale_digital.model_account_move_line
+msgid "Journal Item"
+msgstr "รายการบันทึก"
 
 #. module: website_sale_digital
-#: model:ir.model,name:website_sale_digital.model_product_product
+#: model:ir.model,name:website_sale_digital.model_product_template
 msgid "Product"
 msgstr "สินค้า"
 
 #. module: website_sale_digital
-#: model:ir.model,name:website_sale_digital.model_product_template
-msgid "Product Template"
-msgstr "รูปแบบสินค้า"
+#: model:ir.model,name:website_sale_digital.model_product_product
+msgid "Product Variant"
+msgstr "ตัวแปรสินค้า"
 
 #. module: website_sale_digital
-#: model:product.template,uom_name:website_sale_digital.product_1
-msgid "Unit(s)"
-msgstr "หน่วย"
-
-#. module: website_sale_digital
-#: model:product.template,name:website_sale_digital.product_1
-msgid "eBook: Office Renovation for Dummies"
-msgstr ""
-
-#. module: website_sale_digital
-#: model:product.template,weight_uom_name:website_sale_digital.product_1
-msgid "kg"
-msgstr "กก."
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
+#, python-format
+msgid ""
+"The attached files are the ones that will be purchased and sent to the "
+"customer."
+msgstr "ไฟล์แนบเป็นไฟล์ที่จะซื้อและส่งให้ลูกค้า"

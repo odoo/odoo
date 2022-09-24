@@ -3,19 +3,15 @@
 # 	* hr_recruitment_survey
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2019
-# amrnegm <amrnegm.01@gmail.com>, 2019
-# Martin Trigaux, 2019
-# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: hoxhe Aits <hoxhe0@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:58+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,43 +22,16 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid ""
-"<span class=\"o_stat_text\">Print</span>\n"
+"<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">طباعة</span>\n"
-"                        <span class=\"o_stat_text\">مقابلة</span>"
-
-#. module: hr_recruitment_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
-msgid ""
-"<span class=\"o_stat_text\">Start</span>\n"
-"                        <span class=\"o_stat_text\">Interview</span>"
-msgstr ""
-"<span class=\"o_stat_text\">أبدء</span>\n"
-"                        <span class=\"o_stat_text\">مقابلة</span>"
-
-#. module: hr_recruitment_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
-msgid "Answer related job question"
-msgstr "جاوب على الأسئلة المتعلقة بالوظيفة"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
 msgid "Applicant"
 msgstr "المتقدم"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__category
-msgid "Category"
-msgstr "فئة"
-
-#. module: hr_recruitment_survey
-#: model:ir.model.fields,help:hr_recruitment_survey.field_survey_survey__category
-msgid ""
-"Category is used to know in which context the survey is used. Various apps "
-"may define their own categories when they use survey like jobs recruitment "
-"or employee appraisal surveys."
-msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
@@ -71,25 +40,36 @@ msgid ""
 "Choose an interview form for this job position and you will be able to "
 "print/answer this interview from all applicants who apply for this job"
 msgstr ""
-"أختر نموذج المقابلة لطبيعة أو وضع هذه الوظيفة وسوف تكون قادر علي طباعة "
-"/إجابة هذه المقابلة من جميع المتقدمين الذين يتقدمون لهذه الوظيفة"
+"اختر استمارة المقابلة لهذه الوظيفة وسوف تكون قادر على طباعة /إجابة هذه "
+"المقابلة من جميع المتقدمين الذين يتقدمون لهذه الوظيفة "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
-msgstr "عرض نموذج المقابلة"
+msgstr "عرض استمارة المقابلة "
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interview Form"
-msgstr "نموذج مقابلة"
+msgstr "استمارة مقابلة "
+
+#. module: hr_recruitment_survey
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#, python-format
+msgid "Interview Form : %s"
+msgstr "استمارة المقابلة: %s "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
-msgid "Interview Forms"
-msgstr "نماذج المقابلة"
+msgid "Interview Survey"
+msgstr "استطلاع المقابلة "
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
+msgid "Interviews"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -97,27 +77,56 @@ msgid "Job Position"
 msgstr "المنصب الوظيفي"
 
 #. module: hr_recruitment_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
-msgid "No Interview Form"
-msgstr "لا نموذج مقالبلة"
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_id
+msgid "Response"
+msgstr "الرد "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
-msgid "Print interview report"
-msgstr "اطبع تقرير المقابلة"
+msgid "SEND INTERVIEW"
+msgstr "إرسال المقابلة "
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__category__hr_recruitment
-msgid "Recruitment"
-msgstr "التوظيف"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
+msgid "See interview report"
+msgstr "رؤية تقرير المقابلة "
 
 #. module: hr_recruitment_survey
-#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_id
-msgid "Response"
-msgstr "رد"
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_state
+msgid "Status"
+msgstr "الحالة"
 
 #. module: hr_recruitment_survey
-#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
+#: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
+#, python-format
 msgid "Survey"
-msgstr "استطلاع"
+msgstr "استطلاع "
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_invite
+msgid "Survey Invitation Wizard"
+msgstr "معالج دعوة الاستطلاع "
+
+#. module: hr_recruitment_survey
+#: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "مُدخلات مستخدم الاستطلاع"
+
+#. module: hr_recruitment_survey
+#: code:addons/hr_recruitment_survey/models/survey_invite.py:0
+#, python-format
+msgid "The applicant \"%s\" has finished the survey."
+msgstr "لقد أنهى المتقدم \"%s\" الاستطلاع. "
+
+#. module: hr_recruitment_survey
+#: code:addons/hr_recruitment_survey/models/survey_invite.py:0
+#, python-format
+msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
+msgstr "تم إرسال الاستطلاع %(survey_link)s إلى %(partner_link)s "
+
+#. module: hr_recruitment_survey
+#: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
+#, python-format
+msgid "You must define a Contact Name for this applicant."
+msgstr "عليك تحديد اسم لهذا المتقدم. "

@@ -3,24 +3,21 @@
 # 	* iap
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Léonie Bouchat <lbo@odoo.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"POT-Creation-Date: 2022-06-09 14:06+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -34,6 +31,7 @@ msgstr "Token account"
 
 #. module: iap
 #. openerp-web
+#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Buy credits"
@@ -41,14 +39,7 @@ msgstr "Acquista crediti"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
-#, python-format
-msgid "Buy credits at Odoo"
-msgstr "Acquista crediti su Odoo"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Annulla"
@@ -79,6 +70,11 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Documentazione"
+
+#. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
 msgid "IAP"
 msgstr "Acquisti integrati"
@@ -97,21 +93,14 @@ msgid "IAP Accounts"
 msgstr "Account acquisti integrati"
 
 #. module: iap
+#: model:ir.model,name:iap.model_iap_enrich_api
+msgid "IAP Lead Enrichment API"
+msgstr "API arricchimento contatto acquisti integrati"
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
 msgid "ID"
 msgstr "ID"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
-msgid "In-App Purchases"
-msgstr "Acquisti integrati"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
-#, python-format
-msgid "Insufficient Balance"
-msgstr "Saldo insufficiente"
 
 #. module: iap
 #. openerp-web
@@ -143,7 +132,7 @@ msgstr "Acquisti integrati Odoo"
 #. module: iap
 #: model:ir.actions.server,name:iap.open_iap_account
 msgid "Open IAP Account"
-msgstr ""
+msgstr "Apri conto acquisti integrati"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
@@ -152,13 +141,13 @@ msgstr "Nome servizio"
 
 #. module: iap
 #. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
+#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
-msgstr ""
+msgstr "Inizia una prova con Odoo"
 
 #. module: iap
-#: code:addons/iap/models/iap.py:0
+#: code:addons/iap/tools/iap_tools.py:0
 #, python-format
 msgid ""
 "The url that this service requested returned an error. Please contact the "
@@ -168,7 +157,10 @@ msgstr ""
 "dell'applicazione. URL richiesto dal servizio: %s"
 
 #. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+#, python-format
 msgid "View My Services"
 msgstr "Visualizza i servizi"
 

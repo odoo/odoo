@@ -3,15 +3,16 @@
 # 	* mass_mailing_crm
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,14 +21,42 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: mass_mailing_crm
-#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_lead_count
-msgid "Lead Count"
-msgstr "عدد الترشيحات"
+#: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
+msgid ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
+msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">العملاء المهتمين</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">الفرص</span> "
 
 #. module: mass_mailing_crm
-#: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid "LEADS"
+msgstr "العملاء المهتمين "
+
+#. module: mass_mailing_crm
+#: model:ir.model,name:mass_mailing_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "عميل مهتم/فرصة "
+
+#. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#: model:ir.model.fields.selection,name:mass_mailing_crm.selection__utm_campaign__ab_testing_winner_selection__crm_lead_count
+#, python-format
 msgid "Leads"
-msgstr "الترشيحات"
+msgstr "العملاء المهتمين "
+
+#. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid "Leads Analysis"
+msgstr "تحليل العملاء المهتمين "
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_lead_count
+msgid "Leads/Opportunities Count"
+msgstr "عدد العملاء المهتمين/الفرص "
 
 #. module: mass_mailing_crm
 #: model:ir.model,name:mass_mailing_crm.model_mailing_mailing
@@ -35,16 +64,41 @@ msgid "Mass Mailing"
 msgstr "المراسلات الجماعية"
 
 #. module: mass_mailing_crm
-#: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid "No %s yet!"
+msgstr ""
+
+#. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid ""
+"Note that Odoo cannot track replies if they are sent towards email addresses"
+" to this database."
+msgstr ""
+
+#. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
 msgid "Opportunities"
 msgstr "الفرص"
 
 #. module: mass_mailing_crm
-#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_opportunities_count
-msgid "Opportunities Count"
-msgstr "عدد الفرص"
+#: model:ir.model.fields,help:mass_mailing_crm.field_utm_campaign__ab_testing_winner_selection
+msgid "Selection to determine the winner mailing that will be sent."
+msgstr "اختيار لتحديد بريد الفائز الذي سوف يتم إرساله. "
 
 #. module: mass_mailing_crm
-#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_lead_activated
+#: model:ir.model,name:mass_mailing_crm.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "حملة UTM"
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__use_leads
 msgid "Use Leads"
-msgstr "استخدام الترشيحات"
+msgstr "استخدم بيانات العملاء المهتمين "
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_utm_campaign__ab_testing_winner_selection
+msgid "Winner Selection"
+msgstr "اختيار الفائز "

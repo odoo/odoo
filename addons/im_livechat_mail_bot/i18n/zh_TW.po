@@ -3,16 +3,15 @@
 # 	* im_livechat_mail_bot
 # 
 # Translators:
-# Martin Trigaux, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +26,7 @@ msgid ""
 "Good, you can customize canned responses in the live chat "
 "application.<br/><br/><b>It's the end of this overview</b>, enjoy "
 "discovering Odoo!"
-msgstr "太好了，您可以在及時聊天應用程序中定制錄音響應。<br/><br/><b>是這個概述的結尾</b>，享受發現Odoo！"
+msgstr "太好了，您可以在線上客服模組中設制罐頭回應。<br/><br/><b>到這裡為教學瀏覽的尾聲</b>，請享受發現Odoo！"
 
 #. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_mail_bot
@@ -38,9 +37,10 @@ msgstr "信件機器人"
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
 msgid ""
-"Not sure wat you are doing. Please press : and wait for the propositions. "
-"Select one of them and press enter."
-msgstr "不確定您的動作。請按: 然後等待。選擇其中一個選項並點選 enter 鍵。"
+"Not sure what you are doing. Please, type <span "
+"class=\"o_odoobot_command\">:</span> and wait for the propositions. Select "
+"one of them and press enter."
+msgstr ""
 
 #. module: im_livechat_mail_bot
 #: model:ir.model.fields,field_description:im_livechat_mail_bot.field_res_users__odoobot_state
@@ -55,10 +55,12 @@ msgstr "Onboarding 錄製"
 #. module: im_livechat_mail_bot
 #: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
 #, python-format
-msgid "That's me! 🎉<br/>Try to type \":\" to use canned responses."
+msgid ""
+"That's me! 🎉<br/>Try typing <span class=\"o_odoobot_command\">:</span> to "
+"use canned responses."
 msgstr ""
 
 #. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_res_users
-msgid "Users"
+msgid "User"
 msgstr "使用者"
