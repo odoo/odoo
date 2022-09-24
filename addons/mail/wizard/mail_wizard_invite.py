@@ -59,17 +59,9 @@ class Invite(models.TransientModel):
             model_name = self.env['ir.model']._get(wizard.res_model).display_name
             # send an email if option checked and if a message exists (do not send void emails)
             if wizard.send_mail and wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
-                message = self.env['mail.message'].create({
-                    'subject': _('Invitation to follow %(document_model)s: %(document_name)s', document_model=model_name, document_name=document.display_name),
-                    'body': wizard.message,
-                    'record_name': document.display_name,
-                    'email_from': email_from,
-                    'reply_to': email_from,
-                    'model': wizard.res_model,
-                    'res_id': wizard.res_id,
-                    'reply_to_force_new': True,
-                    'email_add_signature': True,
-                })
+                message = self.env['mail.message'].create(
+                    self._prepare_message_values(document, model_name, email_from)
+                )
                 email_partners_data = []
                 recipients_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)[document.id]
                 for _pid, pdata in recipients_data.items():
@@ -85,3 +77,17 @@ class Invite(models.TransientModel):
                 self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/delete', {'message_ids': message.ids})
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}
+
+    def _prepare_message_values(self, document, model_name, email_from):
+        return {
+            'subject': _('Invitation to follow %(document_model)s: %(document_name)s', document_model=model_name,
+                         document_name=document.display_name),
+            'body': self.message,
+            'record_name': document.display_name,
+            'email_from': email_from,
+            'reply_to': email_from,
+            'model': self.res_model,
+            'res_id': self.res_id,
+            'reply_to_force_new': True,
+            'email_add_signature': True,
+        }
